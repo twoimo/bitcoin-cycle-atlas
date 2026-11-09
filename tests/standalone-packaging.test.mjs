@@ -129,7 +129,7 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   assert.equal(verification.modules, Object.keys(bundle.imports).length);
   assert.equal(verification.snapshots, 10); // Existing nine plus the exact relay source.
   assert.ok(verification.forecastRecords>=5,'all five initial economic scenarios have actual preserved outputs');
-  assert.equal(verification.stylesheets, 38); // Existing 37 plus the responsive chart legend.
+  assert.equal(verification.stylesheets, 39); // Includes the responsive legend and the integrated RSI simulation.
   const monthlyStyle = `<style>\n${await readFile(resolve(root, 'dist/monthly-backtest.css'), 'utf8')}\n</style>`;
   assert.equal(html.split(monthlyStyle).length - 1, 1, 'monthly backtest styles are preserved exactly once');
   assert.match(html,/\.forecast-journal\s*\{/,'the archived forecast workspace retains its offline styles');
@@ -137,7 +137,9 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   assert.equal(html.split(replayStyle).length - 1, 1, 'inline chart replay embeds its exact stylesheet once');
   const shellStyle = `<style>\n${await readFile(resolve(root, 'dist/atlas-shell.css'), 'utf8')}\n</style>`;
   assert.equal(html.split(shellStyle).length - 1, 1, 'the shared shell remains exact and offline');
-  for(const file of ['vendor/skullet/styles.css','loading-surfaces.css','compact-toolbar.css','legacy-workspace-toolbar.css','editorial-system.css','editorial-panels.css','editorial-ledgers.css','relay-room.css','ui/chart-legend.css']){const style=`<style>\n${await readFile(resolve(root,'dist',file),'utf8')}\n</style>`;assert.equal(html.split(style).length-1,1,file+' is exact and offline');}
+  for(const file of ['vendor/skullet/styles.css','loading-surfaces.css','compact-toolbar.css','ui/rsi-simulation.css','legacy-workspace-toolbar.css','editorial-system.css','editorial-panels.css','editorial-ledgers.css','relay-room.css','ui/chart-legend.css']){const style=`<style>\n${await readFile(resolve(isolated.dist,file),'utf8')}\n</style>`;assert.equal(html.split(style).length-1,1,file+' is exact and offline');}
+  const simulationStyle=`<style>\n${await readFile(resolve(isolated.dist,'ui/rsi-simulation.css'),'utf8')}\n</style>`;
+  await assert.rejects(verifyStandaloneArtifact(html.replace(simulationStyle,''),isolated.dist),/Missing or changed stylesheet: ui\/rsi-simulation\.css/);
   const editorialStyle = `<style>\n${await readFile(resolve(root, 'dist/editorial-system.css'), 'utf8')}\n</style>`;
   await assert.rejects(verifyStandaloneArtifact(html.replace(editorialStyle, ''), isolated.dist), /Missing or changed stylesheet: editorial-system\.css/);
   await assert.rejects(verifyStandaloneArtifact(html.replace(replayStyle, '<style>.chart-replay-controls{display:none}</style>'), isolated.dist), /Missing or changed stylesheet: chart-replay\.css/);

@@ -8,7 +8,8 @@
     "./rsi-bars": "./src/rsi-bars.js",
     "./housing": "./src/housing.ts",
     "./themes": "./src/themes.ts",
-    "./us-direction": "./src/us-direction.ts"
+    "./us-direction": "./src/us-direction.ts",
+    "./rsi-simulation": "./src/rsi-simulation.js"
   },
   "dependencies": {
     "@atlas/contracts": "*"

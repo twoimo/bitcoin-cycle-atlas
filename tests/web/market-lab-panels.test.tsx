@@ -174,6 +174,17 @@ test('React economics independently submits the same cash flows, terminal recove
 
 async function mountedApp(load: typeof import('../../apps/web/src/load-snapshot.js').loadSnapshot) {
   const { window, document } = parseHTML('<html><body><div id="root"></div></body></html>');
+  // Linkedom has no native dialog lifecycle; model only the platform methods
+  // so these retained-snapshot cases can exercise the actual modal controls.
+  const createElement=document.createElement.bind(document);
+  document.createElement=((name:string)=>{
+    const node=createElement(name);
+    if(name==='dialog'){
+      Object.defineProperty(node,'open',{configurable:true,get:()=>node.hasAttribute('open')});
+      Object.assign(node,{showModal(){node.setAttribute('open','');},close(){if(!node.hasAttribute('open'))return;node.removeAttribute('open');node.dispatchEvent(new window.Event('close'));}});
+    }
+    return node;
+  }) as typeof document.createElement;
   const globals = { document, window, IS_REACT_ACT_ENVIRONMENT: true };
   const previous = new Map(Object.keys(globals).map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
   for (const [key, value] of Object.entries(globals)) Object.defineProperty(globalThis, key, { configurable: true, value });
@@ -254,8 +265,13 @@ test('React app retains a newer populated document when an older empty fallback 
   assert.match(fixture.document.querySelector('.ml-delivery')!.textContent!,/연결 실패 · 직전 자료 유지/);
   assert.doesNotMatch(fixture.document.querySelector('.ml-delivery')!.textContent!,/저장본 표시/);
   await fixture.click('[data-atlas-page="outlook"]');
-  await fixture.click('.rsi-workbench-tabs button:nth-child(2)');
-  assert.equal(fixture.document.querySelector('.rsi-backtest-form button[type=submit]')!.hasAttribute('disabled'),false,'retained API revision still owns the retained observations');
+  const chart=fixture.document.querySelector('.rsi-chart-canvas svg')!,range=[chart.getAttribute('data-start'),chart.getAttribute('data-end')];
+  await fixture.click('[data-rsi-view="backtest"]');
+  const dialog=fixture.document.querySelector('dialog[data-rsi-dialog="backtest"][open]');
+  assert(dialog,'backtest opens in its detail modal');
+  assert.equal(fixture.document.querySelector('.rsi-chart-canvas svg'),chart,'detail modal retains the chart node');
+  assert.deepEqual([chart.getAttribute('data-start'),chart.getAttribute('data-end')],range,'detail modal preserves the observed range');
+  assert.equal(dialog.querySelector('.rsi-backtest-form button[type=submit]')!.hasAttribute('disabled'),false,'retained API revision still owns the retained observations');
 });
 
 test('React retry retains accepted RSI revision while replacement is pending and after failure', async t => {
@@ -268,8 +284,15 @@ test('React retry retains accepted RSI revision while replacement is pending and
   await fixture.click('.ml-collection-line button');
   assert(fixture.document.querySelector('.atlas-inline-loading'));
   await fixture.click('[data-atlas-page="outlook"]');
-  await fixture.click('.rsi-workbench-tabs button:nth-child(2)');
-  const enabled=()=>assert.equal(fixture.document.querySelector('.rsi-backtest-form button[type=submit]')!.hasAttribute('disabled'),false);
+  const chart=fixture.document.querySelector('.rsi-chart-canvas svg')!,range=[chart.getAttribute('data-start'),chart.getAttribute('data-end')];
+  await fixture.click('[data-rsi-view="backtest"]');
+  const enabled=()=>{
+    const dialog=fixture.document.querySelector('dialog[data-rsi-dialog="backtest"][open]');
+    assert(dialog,'backtest remains an open detail modal during the retry');
+    assert.equal(dialog.querySelector('.rsi-backtest-form button[type=submit]')!.hasAttribute('disabled'),false);
+    assert.equal(fixture.document.querySelector('.rsi-chart-canvas svg'),chart,'pending or failed retry retains the chart node');
+    assert.deepEqual([chart.getAttribute('data-start'),chart.getAttribute('data-end')],range,'pending or failed retry preserves the observed range');
+  };
   enabled();
   await act(async()=>reject(new Error('second request failed')));
   enabled();

@@ -6,6 +6,7 @@ import {CAPITAL_POLICIES} from '../../dist/treasury-instruments.js';
 import * as equityData from '../../dist/equity-market-data.js';
 import { readChartUrlState, writeChartUrlState } from '../../dist/ui/chart-url-state.js';
 import { nativeDateRange } from '../../dist/native-chart-workbench.js';
+import { forecastAvailabilityForSeries } from '../../dist/forecast/forecast-ui-gate.js';
 
 export function deferred() {
   let resolve, reject;
@@ -65,7 +66,7 @@ export function equityPayload(symbol, revision) {
   };
 }
 
-export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname = '/', project } = {}) {
+export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname = '/', project, useActualSufficiency = false } = {}) {
   const requests = [], frames = new Map(), draws = [], calculations = [], errors = [], events = [], articles = [];
   const window = new Surface(), document = new Surface();
   const bootTimers = new Map(); let bootTimerId = 0;
@@ -82,7 +83,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
   document.createElement = () => new Node();
   document.fonts = { ready: Promise.resolve() };
   for (const type of ['atlas:ready', 'atlas:boot-error']) document.addEventListener(type, () => events.push(type));
-  let frameId = 0, navigation;
+  let frameId = 0, navigation, replayOptions;
   const mount = () => ({ cancel() {}, cancelPending() {}, destroy() {} });
   const deps = {
     withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,writeChartUrlState,nativeDateRange,
@@ -91,6 +92,9 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     mountNativeChartWorkbench: () => ({update(){},inspect(){},measure(){},beginGesture(){},endGesture(){},destroy(){}}),
     setLoadingSurface:(element,busy)=>element?.setAttribute('data-skeleton',String(busy)),
     ...equityData,CAPITAL_POLICIES,
+    // These tiny fixtures isolate request ownership, not sample sufficiency.
+    // Gate integration tests explicitly enable the real completed-history gate.
+    forecastAvailabilityForSeries: useActualSufficiency ? forecastAvailabilityForSeries : () => ({ allowed:true, tier:'T2', observations:5, reasons:[], sampleLabel:'test fixture' }),
     drawIntradayChart: options => { draws.push(options); return {}; },
     bindChartNavigation: options => {
       navigation = options;
@@ -98,7 +102,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     },
     mountChartTouchTracking: mount, clearChartHover() {}, mountSymbolSelector: mount,
     // Inline replay owns a separate lifecycle, exercised by chart-replay-ui.test.mjs.
-    mountChartReplay: () => ({isActive:()=>false,open(){},exit(){},destroy(){}}),
+    mountChartReplay: options => { replayOptions=options; return {isActive:()=>false,open(){},exit(){},destroy(){}}; },
     bindPreservedArchiveDownload() {}, // DOM download behavior is verified separately.
     mountDialogViewport: mount, EQUITY_FORECAST_BAR_NOTE: 'simulated values',
     TREASURY_EVENTS: [], TREASURY_SOURCES: [], treasuryEventMarkup() {},
@@ -162,6 +166,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     scenario: value => app.querySelector('#equity-scenario').onchange({ target: { value } }),
     pan: range => navigation.onRangeChange(range),
     navigationRange: () => navigation.getRange(),
+    replayAvailability: () => replayOptions.getForecastAvailability(),
     priceRange: range => navigation.onPriceRangeChange(range),
     latest: () => draws.at(-1),
     status: () => app.querySelector('#equity-status').textContent,

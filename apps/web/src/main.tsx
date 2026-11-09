@@ -13,9 +13,11 @@ import './themes.css';
 import './us-direction.css';
 import './workspace.css';
 import '../../../dist/compact-toolbar.css';
+import '../../../dist/ui/rsi-simulation.css';
 import '../../../dist/legacy-workspace-toolbar.css';
 import '../../../dist/editorial-system.css';
 import '../../../dist/editorial-panels.css';
 import './instrument-workbench.css';
+import '../../../dist/ui/chart-legend.css';
 
 createRoot(document.getElementById('root')!).render(<MarketLabApp embedded={new URLSearchParams(location.search).get('embedded')==='1'} />);

@@ -6,6 +6,7 @@ import { parseGoToRequest } from './chart-view-policy.js?v=1.36.1';
 import { normalizePriceDomain } from './price-axis.js';
 import { createChartSvgExport, createChartPngFromSvg } from './chart-export.js';
 import { isIntradayInterval } from './ohlc-data.js';
+import { mountNativeChartLegend } from './ui/native-chart-legend.js?v=1.36.1';
 
 const glyphs={
   crosshair:'<path d="M12 2v5m0 10v5M2 12h5m10 0h5"/><circle cx="12" cy="12" r="4"/>',
@@ -75,6 +76,7 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
   const button=(name,label,id,action,value)=>{const node=make('button','workbench-icon');node.type='button';node.innerHTML=icon(name);node.title=label;node.setAttribute('aria-label',label);if(id)node.id=id;if(action)node.onclick=()=>emit('atlas:chart-command',{action,value});return node;};
   const emit=(name,detail)=>doc.dispatchEvent(new win.CustomEvent(name,{detail}));
   const timeZone=symbol==='ETHUSD'?'UTC':'뉴욕 거래 세션일';
+  const legend=mountNativeChartLegend({plot,symbol,state,getSeries});
   let inspection=null,readerKind=null,readerOpener=null,destroyed=false,exportUrl=null,exportVector=null;
   const owned=[];const listen=(target,type,handler,options)=>{target.addEventListener(type,handler,options);owned.push(()=>target.removeEventListener(type,handler,options));};
   const uiHistory=createWorkspaceHistory({read:()=>nativeChartSnapshot(state),apply:snapshot=>{cancelInteraction();const changed=state.frequency!==snapshot.frequency;Object.assign(state,snapshot);onRestore?.({frequencyChanged:changed});onChange();},onChange:()=>update()});
@@ -202,6 +204,7 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
   }
   function update(){
     if(!active()||destroyed)return;const series=getSeries(),ready=Boolean(series&&state.controller),historyState=uiHistory.status();
+    legend.update();
     interval.value=state.frequency;type.innerHTML=icon(state.chartType==='candles'?'candles':'line');type.setAttribute('aria-pressed',String(state.chartType==='candles'));type.title=`${symbol} ${state.chartType==='candles'?'선':'캔들'}으로 변경`;type.setAttribute('aria-label',type.title);
     for(const node of left.querySelectorAll('[data-chart-tool]'))node.setAttribute('aria-pressed',String(node.dataset.chartTool===state.tool));
     for(const node of segmented.querySelectorAll('[data-lab-frequency]')){node.setAttribute('aria-pressed',String(node.dataset.labFrequency===state.frequency));node.tabIndex=node.dataset.labFrequency===state.frequency?0:-1;}
@@ -238,5 +241,5 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
   return {update,command,inspect(detail){inspection=detail;if(active()&&!reader.hidden&&readerKind==='selection')renderReader();},
     beginGesture(){if(active())uiHistory.begin('차트 이동');},endGesture(){return uiHistory.commit();},
     measure(value){uiHistory.run('두 지점 측정',()=>{state.measurement=value;});update();},
-    destroy(){if(destroyed)return;destroyed=true;for(const cleanup of owned)cleanup();mobile.destroy();bottom.destroy();releaseExport();dateDialog.node.remove();exportDialog.node.remove();reader.remove();left.remove();rail.remove();}};
+    destroy(){if(destroyed)return;destroyed=true;for(const cleanup of owned)cleanup();legend.destroy();mobile.destroy();bottom.destroy();releaseExport();dateDialog.node.remove();exportDialog.node.remove();reader.remove();left.remove();rail.remove();}};
 }

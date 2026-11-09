@@ -561,6 +561,31 @@ async function journalCase(cdp,width,receipt,symbol,archive){
   assert.equal(await evaluate(cdp,()=>document.querySelector('#asset-forecast-journal').dataset.state),'closed');
 }
 
+async function verifyNativeCommonLegend(cdp,width,receipt){
+  const state=await evaluate(cdp,()=>{
+    const plot=document.querySelector('.atlas-plot'),svg=plot.querySelector(':scope > svg'),dock=plot.querySelector('.chart-legend-dock'),source=dock?.querySelector('.lab-legend');
+    const box=node=>{const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
+    const painted=node=>Boolean(node&&!node.hidden&&!node.closest('[hidden]')&&node.getClientRects().length);
+    return {dock:dock?{...box(dock),painted:painted(dock),mode:dock.dataset.legendMode,scrollWidth:dock.scrollWidth,clientWidth:dock.clientWidth}:null,
+      priceWidth:Number(svg.dataset.plotRight)-Number(svg.dataset.plotLeft),
+      text:source?.textContent||'',entries:[...source?.querySelectorAll('.chart-legend-entry')||[]].filter(painted).map(box),
+      disclosure:[...dock?.querySelectorAll('.chart-legend-open,.chart-legend-more')||[]].find(painted)?.className||null};
+  });
+  assert.ok(state.dock?.painted,'Native instrument needs the shared visible legend dock');
+  assert.ok(state.dock.left>=0&&state.dock.right<=width+1);
+  assert.ok(state.dock.width<=state.priceWidth*.42+1,'Native legend exceeds 42% of its price pane');
+  assert.ok(state.dock.scrollWidth<=state.dock.clientWidth+1,'Native legend content overflows');
+  for(const entry of state.entries)assert.ok(entry.width>0&&entry.left>=state.dock.left-1&&entry.right<=state.dock.right+1);
+  if(state.disclosure){
+    const selector=state.dock.mode==='chip'?'.chart-legend-open:not([hidden])':'.chart-legend-more:not([hidden])';
+    await click(cdp,selector);await settled(cdp);
+    const dialog=await bounds(cdp,'#chart-legend-dialog');assert.equal(dialog.open,true);visibleBounds(dialog,width);
+    state.expandedText=dialog.text;await click(cdp,'#chart-legend-dialog > header > button');
+    assert.equal((await bounds(cdp,'#chart-legend-dialog')).open,false);
+  }
+  receipt.commonLegend=state;return state;
+}
+
 async function ethCase(cdp,width,receipt,expected,archive){
   await until(()=>evaluate(cdp,()=>{
     const s=document.querySelector('#eth-chart');return s&&Number(s.dataset.observedCandleCount)>0&&Number(s.dataset.forecastPointCount)>0;
@@ -585,8 +610,8 @@ async function ethCase(cdp,width,receipt,expected,archive){
   assert.equal(chart.future.dash,'7 5');assert.equal(chart.baseline.dash,'2 4');assert.equal(chart.price,expected.price);assert.equal(chart.date,expected.date);assert.equal(chart.kind,'');
   assert.equal(chart.note.hidden,false);assert.equal(chart.dataset.forecastModel,'adaptive');assert.ok(chart.note.text.includes('적중률 미보정'));
   for(const text of ['실제 관측','모형 중앙값','모형 예시 1개','음영: 모의 10–90%'])assert.ok(chart.note.text.includes(text),'Missing forecast semantic label '+text);
-  assert.ok(chart.note.bottom<=chart.note.plotTop+1,'Forecast legend overlaps plotted prices');
-  assert.ok(chart.note.keys.every(k=>k.width>0&&k.left>=0&&k.right<=width),'A forecast legend key is clipped');
+  const legend=await verifyNativeCommonLegend(cdp,width,receipt);
+  for(const text of ['실제 관측','모형 중앙값','모형 예시 1개','음영: 모의 10–90%'])assert.ok((legend.expandedText||legend.text).includes(text),'Common ETH legend lost meaning '+text);
   dark(chart.background,'ETH plot');
   await screenshot(cdp,'eth-'+width+'-loaded.png',receipt);
   if(width===320)receipt.infoDataLinks=await verifyInfoDataLinks(cdp,'ETHUSD');
@@ -699,8 +724,9 @@ async function equityCase(cdp,width,receipt,symbol,archive){
   const label=symbol.toLowerCase();
   await until(()=>evaluate(cdp,()=>{
     const s=document.querySelector('#equity-chart');
-    return s&&Number(s.dataset.observedCandleCount)>0&&Number(s.dataset.forecastPointCount)>0;
-  }),symbol+' observed and conditional paths');
+    const gate=document.querySelector('.equity-plot'),notice=document.querySelector('#equity-forecast-unavailable');
+    return s&&Number(s.dataset.observedCandleCount)>0&&(Number(s.dataset.forecastPointCount)>0||gate?.dataset.forecastAllowed==='false'&&notice&&!notice.hidden);
+  }),symbol+' observed chart and resolved forecast availability');
   await settled(cdp);
   receipt.chart=await evaluate(cdp,()=>{
     const chart=document.querySelector('#equity-chart');
@@ -708,16 +734,39 @@ async function equityCase(cdp,width,receipt,symbol,archive){
     return {width:innerWidth,scrollWidth:document.documentElement.scrollWidth,dataset:{...chart.dataset},
       symbol:document.querySelector('#equity-symbol .symbol-selector-label').textContent,price:document.querySelector('#equity-price').textContent,
       date:document.querySelector('#equity-bar-time').textContent,pathLength:path?.getTotalLength()??0,
-      pathData:path?.getAttribute('d')??'',background:getComputedStyle(document.querySelector('.equity-plot')).backgroundColor};
+      pathData:path?.getAttribute('d')??'',background:getComputedStyle(document.querySelector('.equity-plot')).backgroundColor,
+      forecastGate:{allowed:document.querySelector('.equity-plot').dataset.forecastAllowed,tier:document.querySelector('.equity-plot').dataset.forecastTier,
+        observations:Number(document.querySelector('.equity-plot').dataset.forecastObservations),
+        message:document.querySelector('#equity-forecast-unavailable [data-forecast-message]')?.textContent,
+        sample:document.querySelector('#equity-forecast-unavailable [data-forecast-sample]')?.textContent,
+        visible:!document.querySelector('#equity-forecast-unavailable')?.hidden,
+        futureMarkers:chart.querySelectorAll('.equity-forecast-evidence').length,
+        scenarioDisabled:document.querySelector('#equity-scenario').disabled}};
   });
   assert.equal(receipt.chart.symbol,symbol);assert.ok(receipt.chart.scrollWidth<=width+1,symbol+' horizontal page overflow');
-  assert.ok(receipt.chart.pathLength>0&&!/NaN|Infinity/.test(receipt.chart.pathData));
+  const blocked=symbol==='BMNR';
+  if(blocked){
+    const actual=JSON.parse(await readFile(resolve(dist,'data/'+label+'-ohlc.json'),'utf8'));
+    assert.equal(receipt.chart.forecastGate.allowed,'false');assert.equal(receipt.chart.forecastGate.tier,'T3');
+    assert.equal(receipt.chart.forecastGate.observations,actual.candles.length);
+    assert.equal(receipt.chart.forecastGate.message,'표본 부족으로 미래 경로를 제공하지 않습니다');
+    assert.ok(receipt.chart.forecastGate.sample.includes('관측 '+actual.candles.length+'거래일'));
+    assert.equal(receipt.chart.forecastGate.visible,true);assert.equal(receipt.chart.forecastGate.scenarioDisabled,true);
+    assert.equal(Number(receipt.chart.dataset.forecastPointCount),0);assert.equal(receipt.chart.pathLength,0);assert.equal(receipt.chart.forecastGate.futureMarkers,0);
+  }else assert.ok(receipt.chart.pathLength>0&&!/NaN|Infinity/.test(receipt.chart.pathData));
   dark(receipt.chart.background,symbol+' plot');
+  await verifyNativeCommonLegend(cdp,width,receipt);
   await screenshot(cdp,label+'-'+width+'-loaded.png',receipt);
   if(width===320)receipt.infoDataLinks=await verifyInfoDataLinks(cdp,symbol);
   await nativeForecast(cdp,'[data-equity-action="forecast"]');
   receipt.dialog=await bounds(cdp,'#equity-detail-dialog');
   assert.equal(receipt.dialog.open,true);visibleBounds(receipt.dialog,width);dark(receipt.dialog.background,symbol+' evidence dialog');
+  if(blocked){
+    receipt.sufficiencyDialog=await evaluate(cdp,()=>document.querySelector('#equity-detail-content').textContent);
+    assert.ok(receipt.sufficiencyDialog.includes(receipt.chart.forecastGate.message));
+    assert.ok(receipt.sufficiencyDialog.includes(receipt.chart.forecastGate.sample));
+    assert.ok(receipt.sufficiencyDialog.includes('보존 기록은 당시 작성된 자료'));
+  }else{
   receipt.clockLabels=await evaluate(cdp,()=>{
     const pairs=[...document.querySelectorAll('#equity-detail-content dl dt')].map(dt=>[dt.textContent,dt.nextElementSibling?.textContent]);
     const dt=[...document.querySelectorAll('#equity-detail-content dt')].find(el=>el.textContent==='실제 발행 시각');
@@ -727,6 +776,7 @@ async function equityCase(cdp,width,receipt,symbol,archive){
   assert.equal(receipt.clockLabels['모형 작성·검토일'],'2026-10-26');
   assert.equal(receipt.clockLabels['실제 발행 시각'],'화면 계산 · 발행 원장에 저장되지 않음');
   assert.equal(receipt.clockLabels['정보 컷오프'],'개별 자료 수집 기록 참조');
+  }
   await settled(cdp);
   await screenshot(cdp,label+'-'+width+'-clock.png',receipt);
   await journalCase(cdp,width,receipt,symbol,archive);

@@ -121,6 +121,24 @@ async function mount(content: React.ReactNode, fetchSource?: typeof fetch, publi
   };
 }
 
+test('the React chart mounts one common legend and cleans up its dialog when the active instrument changes',async()=>{
+  const series:InstrumentSeries={frequency:'daily',prices:[['2025-01-01',10],['2025-12-31',20]],bars:[],timeline:['2025-01-01','2025-12-31'],volumes:[]};
+  const props={symbol:'HYPE',unit:'USDC',series,prices:series.prices,bars:[],rows:[],view:initialInstrumentView(series),active:true,menuPulse:0,hover:null,svgRef:{current:null},
+    onView:()=>{},onStart:()=>{},onEnd:()=>{},onHover:()=>{},onPick:()=>{}};
+  const fixture=await mount(<RsiChartCanvas {...props}/>,undefined,undefined,{width:390,height:600});
+  try{
+    const original=fixture.document.querySelector('#chart-legend-dialog');assert.ok(original);
+    assert.equal(fixture.document.querySelectorAll('.chart-legend-dock').length,1);
+    assert.equal(fixture.document.querySelector('.rsi-chart-canvas')?.getAttribute('data-legend-dock'),'top-right');
+    assert.match(fixture.document.querySelector('.lab-legend')?.textContent||'',/실제 가격/);
+    await fixture.render(<RsiChartCanvas {...props} symbol="HOUSING-SEOUL" unit="지수" series={{...series,frequency:'monthly'}}/>);
+    assert.equal(original.isConnected,false);assert.equal(fixture.document.querySelectorAll('#chart-legend-dialog').length,1);
+    assert.match(fixture.document.querySelector('.lab-legend')?.textContent||'',/실제 지수/);
+    assert.equal(fixture.document.querySelectorAll('.chart-legend-dock').length,1);
+  }finally{await fixture.cleanup();}
+  assert.equal(fixture.document.querySelector('#chart-legend-dialog'),null);
+});
+
 test('edge evidence groups stay inside the price plot while their guides and selection retain the original dates', async () => {
   const series:InstrumentSeries={frequency:'daily',prices:[['2025-01-01',10],['2025-12-31',20]],bars:[],timeline:['2025-01-01','2025-12-31'],volumes:[]};
   for(const [width,height]of [[320,808],[390,338],[1335,820]]){
