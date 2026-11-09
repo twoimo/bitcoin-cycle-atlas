@@ -56,11 +56,12 @@ export function wp6ScreenshotLogBytes(image){
 }
 /** Every capture stays in its native report. Only this declared, bounded set
  * enters public logs; selecting a screenshot does not establish retrieval. */
-export function planWp6ScreenshotTransport(inventory,{phases,budget=wp6TransportBudget,suite='wp6'}={}){
+export function planWp6ScreenshotTransport(inventory,{phases,budget=wp6TransportBudget,suite='wp6',imageGroup='all'}={}){
   assert.ok(Array.isArray(inventory));for(const key of ['pngBytes','logBytes'])assert.ok(Number.isSafeInteger(budget[key])&&budget[key]>0);
   phases??=[...new Set(inventory.map(image=>image.phase))];
   const required=phases.flatMap(phase=>wp6EvidenceViewports.flatMap(([width,height])=>[...(suite==='chart-qa'?['btcusd','compare']:['tqqq']).map(symbol=>phase+'/'+symbol+'-'+width+'x'+height+'-chart.png'),...(suite==='chart-qa'&&phase!=='before'&&width<=390?[phase+'/btcusd-'+width+'x'+height+'-interval-30m.png']:[])]));
-  const priority=image=>suite==='chart-qa'?(required.includes(image.phase+'/'+image.file)?0:null):screenshotPriority(image);
+  const groupPattern={all:/./,mobile:/-(390x844|320x740)-/,medium:/-(768x1024|1024x768)-/,large:/-(1440x900|1920x1080)-/,'1920':/-1920x1080-/}[imageGroup];assert.ok(groupPattern,'Unknown image transport group');
+  const priority=image=>!groupPattern.test(image.file)?null:suite==='chart-qa'?(required.includes(image.phase+'/'+image.file)?0:null):screenshotPriority(image);
   const identity=image=>image.phase+'/'+image.file,available=new Set(inventory.map(identity)),selected=[],omitted=[],errors=[];
   for(const name of required)if(!available.has(name))errors.push('Required viewport screenshot was not captured: '+name);
   let pngBytes=0,logBytes=0;
@@ -69,12 +70,12 @@ export function planWp6ScreenshotTransport(inventory,{phases,budget=wp6Transport
     if(pngBytes+image.bytes>budget.pngBytes||logBytes+cost>budget.logBytes){omitted.push({...image,reason:'PNG or encoded log budget exceeded'});if(required.includes(identity(image)))errors.push('Required viewport screenshot exceeds transport budget: '+identity(image));continue;}
     selected.push(image);pngBytes+=image.bytes;logBytes+=cost;
   }
-  for(const image of inventory)if(priority(image)===null)omitted.push({...image,reason:'Additional captured state retained in native report; omitted from representative log transport'});
-  return {budget,capturedImages:inventory.length,selected,omitted,errors,pngBytes,logBytes,order:'candidate/after TQQQ six, before TQQQ six, current native details, baseline details, failure frames'};
+  for(const image of inventory)if(priority(image)===null)omitted.push({...image,reason:!groupPattern.test(image.file)?'Omitted from explicit '+imageGroup+' image transport group; the native case still executed':'Additional captured state retained in native report; omitted from representative log transport'});
+  return {budget,imageGroup,capturedImages:inventory.length,selected,omitted,errors,pngBytes,logBytes,order:'candidate/after TQQQ six, before TQQQ six, current native details, baseline details, failure frames'};
 }
 
 export async function emitWp6ScreenshotTransport(queue,{write=line=>new Promise((accept,reject)=>process.stdout.write(line,error=>error?reject(error):accept())),
-  drain=()=>drainVerificationOutput(),pause=ms=>new Promise(accept=>setTimeout(accept,ms)),batchBytes=64_000,delayMs=100}={}){
+  drain=()=>drainVerificationOutput(),pause=ms=>new Promise(accept=>setTimeout(accept,ms)),batchBytes=8_000,delayMs=100}={}){
   let logBytes=0,images=0,batch=0;
   for(const item of queue){
     const lines=[];emitBrowserEvidenceChunks('ETH_BROWSER_IMAGE_CHUNK',item.bytes,{name:item.name,log:line=>lines.push(line+'\n')});
@@ -175,14 +176,14 @@ async function pinnedNode(){
 
 export async function runWp6CloudflareReview(args=process.argv.slice(2)){
   const option=(key,fallback)=>{const i=args.indexOf(key);return i<0?fallback:args[i+1];};
-  const suite=option('--suite','wp6');assert.ok(['wp6','chart-qa'].includes(suite));
+  const suite=option('--suite','wp6'),imageGroup=option('--image-group','all');assert.ok(['wp6','chart-qa'].includes(suite));assert.ok(['all','mobile','medium','large','1920'].includes(imageGroup));
   const phase=option('--phase','review'),origin=option('--origin','https://bitcoin-cycle-atlas.twoimo.workers.dev').replace(/\/$/,''),expectedSource=option('--expected-source',null);
   assert.ok(['before','after','candidate','review'].includes(phase));assert.equal(new URL(origin).origin,origin);assert.equal(new URL(origin).protocol,'https:');
   if(phase==='after')assert.match(expectedSource??'',/^[a-f0-9]{40}$/,'--expected-source is required for after evidence');
   if(expectedSource)assert.match(expectedSource,/^[a-f0-9]{40}$/);
   const started=Date.now(),deadline=started+19*60*1000,remaining=()=>{const value=deadline-Date.now();assert.ok(value>1000,'WP6 diagnostic time budget exhausted');return value;};
   const directory=resolve(root,'build/wp6-review',phase);await mkdir(directory,{recursive:true});
-  const receipt={schemaVersion:1,kind:'atlas-supplementary-wp6-review',suite,phase,origin,expectedSource,startedAt:new Date(started).toISOString(),status:'RUNNING',
+  const receipt={schemaVersion:1,kind:'atlas-supplementary-wp6-review',suite,imageGroup,phase,origin,expectedSource,startedAt:new Date(started).toISOString(),status:'RUNNING',
     diagnosticOnly:true,qualifiesForPublication:false,canonicalBrowserGateUnchanged:true,deploymentPerformed:false,providerBuildUuid:process.env.WORKERS_CI_BUILD_UUID??null,
     outputDirectory:relative(root,directory),errors:[],screenshots:[],phases:[]};
   let candidateServer;const imageQueue=[],reportQueue=[];
@@ -243,7 +244,7 @@ export async function runWp6CloudflareReview(args=process.argv.slice(2)){
   finally{
     if(candidateServer)try{await candidateServer.close();}catch(error){receipt.status='FAIL';receipt.errors.push(errorText(error));}
     if(receipt.phases.length===1){receipt.nativeReport=receipt.phases[0].nativeReport;receipt.exitCode=receipt.phases[0].exitCode;}
-    const plan=planWp6ScreenshotTransport(receipt.screenshots,{phases:receipt.phases.map(result=>result.phase),suite,budget:suite==='chart-qa'?{pngBytes:1_900_000,logBytes:2_650_000}:wp6TransportBudget});receipt.screenshotPlan=plan;
+    const plan=planWp6ScreenshotTransport(receipt.screenshots,{phases:receipt.phases.map(result=>result.phase),suite,imageGroup,budget:suite==='chart-qa'?{pngBytes:1_900_000,logBytes:2_650_000}:wp6TransportBudget});receipt.screenshotPlan=plan;
     if(plan.errors.length){receipt.status='FAIL';receipt.errors.push(...plan.errors);}
     const selectedQueue=plan.selected.map(image=>imageQueue.find(item=>item.name==='wp6-'+image.phase+'/'+image.file));
     assert.ok(selectedQueue.every(Boolean),'Selected screenshot bytes are missing');
@@ -259,7 +260,7 @@ export async function runWp6CloudflareReview(args=process.argv.slice(2)){
       nativeStatus:receipt.nativeReport?.status,cases:receipt.nativeReport?.cases,screenshotTransport:receipt.screenshotTransport,transport,errors:receipt.errors}));
     const emitted=await emitWp6ScreenshotTransport(selectedQueue);
     assert.equal(emitted.images,selectedQueue.length);assert.equal(emitted.logBytes,plan.logBytes);
-    console.log('ATLAS_WP6_REVIEW_IMAGES_COMPLETE '+JSON.stringify({...emitted,pngBytes:plan.pngBytes,capturedImages:receipt.screenshotTransport.capturedImages,omittedImages:plan.omitted.length}));await drainVerificationOutput();
+    console.log('ATLAS_WP6_REVIEW_IMAGES_COMPLETE '+JSON.stringify({...emitted,pngBytes:plan.pngBytes,capturedImages:receipt.screenshotTransport.capturedImages,omittedImages:plan.omitted.length}));await drainVerificationOutput();await new Promise(accept=>setTimeout(accept,2000));
   }
   return receipt;
 }

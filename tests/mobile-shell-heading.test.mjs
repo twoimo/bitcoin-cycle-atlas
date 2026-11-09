@@ -141,7 +141,7 @@ test('narrow CSS reserves both mobile tray buttons and wraps observed text withi
   const normalized=value=>value.replace(/["\s]/g,'');
   const read=part=>rules.find(rule=>rule.selectorText&&normalized(rule.selectorText).includes(normalized(part)))?.style;
   assert.equal(read('[data-shell-region=top][data-mobile-heading=two-row]').getPropertyValue('grid-template-rows'),'44px 44px');
-  assert.equal(normalized(read('[data-shell-region=top][data-mobile-heading=two-row]').getPropertyValue('grid-template-columns')),'minmax(80px,1fr)repeat(5,44px)');
+  assert.equal(normalized(read('[data-shell-region=top][data-mobile-heading=two-row]').getPropertyValue('grid-template-columns')),'minmax(80px,1fr)56pxrepeat(4,44px)');
   assert.equal(read('>#mobile-tools-toggle').getPropertyValue('grid-area'),'1/5');
   assert.equal(read('>#mobile-details-toggle').getPropertyValue('grid-area'),'1/6');
   assert.equal(read('.center-workspace-toolbar [data-toolbar-open]').getPropertyValue('max-height'),'none');
