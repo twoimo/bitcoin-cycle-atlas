@@ -65,22 +65,52 @@ test('WP6 readiness tolerates the empty document during native navigation',()=>{
   assert.equal(result.boot,null);assert.equal(result.chart,null);assert.equal(result.rootWidth,0);assert.equal(result.bodyWidth,0);
 });
 
-test('WP6 probes the painted iframe chart and its legend instead of the retained hidden BTC surface',()=>{
+function paintedIframeFixture(){
   const rectangle={left:10,right:610,top:20,bottom:420,width:600,height:400};
-  let frame,outerPlot,innerPlot,retained,active,dock,legend;
+  let frame,outerPlot,innerPlot,retained,active,dock,legend,criteria;
   const makeDocument=child=>({documentElement:{dataset:{boot:'ready'},scrollWidth:1440},body:{scrollWidth:1440},defaultView:{getComputedStyle:()=>({visibility:'visible'})},title:'Actual chart',
     querySelector:selector=>selector==='.atlas-plot'?(child?innerPlot:outerPlot):null,
-    querySelectorAll:selector=>selector==='.atlas-center-frame'?(child?[]:[frame]):selector==='#lab-chart,#eth-chart,#equity-chart,.rsi-chart-canvas > svg'?[child?active:retained]:[]});
+    querySelectorAll:selector=>selector==='.atlas-center-frame'?(child?[]:[frame]):selector==='#lab-chart,#eth-chart,#equity-chart,.rsi-chart-canvas > svg'?[child?active:retained]:selector==='[data-rsi-criteria]'&&child&&criteria?[criteria]:[]});
   const parent=makeDocument(false),child=makeDocument(true);
-  const node=(ownerDocument,props={})=>({ownerDocument,dataset:{},hidden:false,textContent:'',scrollWidth:100,clientWidth:100,getClientRects:()=>[rectangle],getBoundingClientRect:()=>rectangle,closest:()=>null,querySelector:()=>null,querySelectorAll:()=>[],...props});
+  const node=(ownerDocument,props={})=>({ownerDocument,dataset:{},hidden:false,textContent:'',scrollWidth:100,clientWidth:100,getClientRects:()=>[rectangle],getBoundingClientRect:()=>rectangle,getAttribute:()=>null,closest:()=>null,querySelector:()=>null,querySelectorAll:()=>[],...props});
   frame=node(parent,{src:'https://atlas.test/app/?symbol=TQQQ',dataset:{centerStatus:'ready',centerLoaded:'true'},contentDocument:child});
   outerPlot=node(parent,{dataset:{chartSymbol:'BTCUSD'}});innerPlot=node(child,{querySelector:selector=>selector==='.chart-legend-dock'?dock:null});
   retained=node(parent,{id:'lab-chart',closest:selector=>selector==='.atlas-plot'?outerPlot:{inert:true}});
-  active=node(child,{id:'active-rsi-chart',dataset:{plotLeft:'10',plotRight:'610',observedCandleCount:'0',observedLineCount:'63'},closest:selector=>selector==='.atlas-plot'?innerPlot:null,
+  const svgAttributes={width:'1200',height:'800',viewBox:'0 0 1200 800'};
+  active=node(child,{id:'active-rsi-chart',dataset:{plotLeft:'24',plotRight:'1136',plotTop:'56',priceBottom:'656',observedCandleCount:'0',observedLineCount:'63'},getAttribute:name=>svgAttributes[name]??null,closest:selector=>selector==='.atlas-plot'?innerPlot:null,
     querySelector:selector=>selector==='desc'?{textContent:'TQQQ actual observations'}:null,querySelectorAll:selector=>selector==='path[d]'?[{},{}]:[]});
   legend=node(child,{textContent:'TQQQ actual legend'});dock=node(child,{dataset:{legendMode:'rows'},querySelector:selector=>selector==='.lab-legend'?legend:null});
-  const result=observe(parent);assert.equal(result.chart.id,'active-rsi-chart');assert.equal(result.chart.embedded,true);assert.equal(result.chart.observedCount,63);
+  return {document:parent,child,node,setCriteria:value=>{criteria=value;}};
+}
+
+test('WP6 probes the painted iframe chart and its legend instead of the retained hidden BTC surface',()=>{
+  const {document}=paintedIframeFixture();
+  const result=observe(document);assert.equal(result.chart.id,'active-rsi-chart');assert.equal(result.chart.embedded,true);assert.equal(result.chart.observedCount,63);
   assert.equal(result.legend.text,'TQQQ actual legend');assert.equal(result.legend.rect.left,20);assert.equal(result.chart.rect.top,40);
+});
+
+test('WP6 criteria evidence reads all current fields and scales the price-pane area independently of the RSI pane',()=>{
+  const f=paintedIframeFixture();
+  const rectangle={left:360,right:560,top:80,bottom:230,width:200,height:150};
+  const values=[['criteria','RSI 33.5 / 29.5 / 40 / 43'],['win-rate','전체 승률 62.5% · n=8'],['current','현재 미충족'],['buy','1차 대기 · 2차 대기'],['sell','1차 대기 · 2차 대기'],['strong','적극 매수 비활성 · 적극 매도 비활성'],['neutral','중립 활성']];
+  const fields=values.map(([key,textContent])=>f.node(f.child,{dataset:{criteriaField:key},textContent}));
+  const criteria=f.node(f.child,{dataset:{rsiCriteria:'TQQQ',criteriaCollapsed:'false',criteriaState:'not-met',criteriaThrough:'2026-11-09'},textContent:'매매 기준',
+    getClientRects:()=>[rectangle],getBoundingClientRect:()=>rectangle,
+    querySelector:selector=>selector==='[data-criteria-field="win-rate"]'?fields.find(node=>node.dataset.criteriaField==='win-rate')??null:null,
+    querySelectorAll:selector=>selector==='[data-criteria-field]'?fields:[]});
+  f.setCriteria(criteria);
+  const result=observe(f.document);
+  assert.equal(result.criteria.collapsed,'false');assert.equal(result.criteria.state,'not-met');assert.equal(result.criteria.through,'2026-11-09');
+  assert.deepEqual(Array.from(result.criteria.fields,field=>[field.key,field.text]),values);
+  assert.equal(result.badge.text,'전체 승률 62.5% · n=8');
+  assert.equal(result.criteria.rect.left,370);assert.equal(result.criteria.rect.top,100,'iframe offsets apply to the visible criteria box');
+  const pricePaneArea=(1136-24)*(656-56)*(600/1200)*(400/800);
+  assert.equal(result.criteria.areaRatio,200*150/pricePaneArea);
+  assert.ok(result.criteria.areaRatio>0&&result.criteria.areaRatio<=.22);
+  criteria.dataset.criteriaCollapsed='true';fields.length=0;
+  const collapsed=observe(f.document);
+  assert.equal(collapsed.criteria.collapsed,'true');assert.equal(collapsed.criteria.fields.length,0);
+  assert.equal(collapsed.badge.text,'매매 기준','the collapsed card remains the interaction target without fabricated win-rate text');
 });
 
 test('native heading input follows the actual responsive scroll owner, including the tablet instrument slot',()=>{

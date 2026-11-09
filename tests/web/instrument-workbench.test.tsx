@@ -231,6 +231,25 @@ test('standalone RSI criteria summaries own keyboard input while the chart short
   }finally{await fixture.cleanup();}
 });
 
+test('criteria settings action closes its modal and keeps an already open settings pane open',async()=>{
+  const market=marketSnapshot.markets.find((item:{id:string})=>item.id==='tqqq'),rows=calculateRsiSeries(market.prices,14,9);
+  const fixture=await mount(<RsiWorkbench symbol="TQQQ" market={market} snapshot={marketSnapshot} now={new Date('2026-11-09T12:00:00Z')}
+    rows={rows} epoch={13} active embedded onDate={()=>{}} comparison={null} references={null}/>);
+  try{
+    const dialog=fixture.document.querySelector('.rsi-detail-dialog')!,dom=fixture.document.defaultView!;
+    Object.defineProperty(dialog,'open',{configurable:true,get:()=>dialog.hasAttribute('open')});
+    Object.assign(dialog,{showModal(){dialog.setAttribute('open','');},close(){if(dialog.hasAttribute('open')){dialog.removeAttribute('open');dialog.dispatchEvent(new dom.Event('close'));}}});
+    await fixture.message({kind:'atlas:center-command',epoch:13,symbol:'TQQQ',action:'pane',value:'settings'});
+    const settings=fixture.document.querySelector('.rsi-workbench-panel .rsi-simulation-settings');assert(settings,'settings start open');
+    await fixture.click('[data-rsi-criteria]');assert(dialog.hasAttribute('open'));
+    assert.equal(fixture.document.querySelector('.rsi-workbench-panel .rsi-simulation-settings'),settings,'opening criteria preserves the underlying pane');
+    await fixture.click('[data-rsi-simulation-settings]');
+    assert.equal(dialog.hasAttribute('open'),false,'the native modal closes before returning to the chart pane');
+    assert.equal(fixture.document.querySelector('.rsi-workbench-panel .rsi-simulation-settings'),settings,'an explicit settings action cannot toggle the existing pane closed');
+    assert.equal(fixture.document.querySelector('.rsi-workbench-panel')?.getAttribute('aria-label'),'TQQQ settings');
+  }finally{await fixture.cleanup();}
+});
+
 test('HYPE HUD uses canonical daily and weekly USDC RSI without enabling an oscillator or changing retained prices',async()=>{
   const bars=structuredClone(themes.asset.bars);
   const series:InstrumentSeries={frequency:'daily',bars,prices:bars.map((bar:any)=>[bar[0],bar[4]]),timeline:bars.map((bar:any)=>bar[0]),volumes:bars.map((bar:any)=>({date:bar[0],value:bar[5]}))};

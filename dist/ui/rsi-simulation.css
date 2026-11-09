@@ -41,5 +41,6 @@
 .rsi-criteria-details>dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 20px;margin:0 0 14px;font-variant-numeric:tabular-nums}
 .rsi-criteria-details>dl>div{min-width:0;padding-bottom:7px;border-bottom:1px solid var(--border)}.rsi-criteria-details dt{color:var(--muted);font-size:11px}.rsi-criteria-details dd{margin:3px 0 0;font-size:13px;overflow-wrap:anywhere}
 .rsi-criteria-details>p,.rsi-criteria-details details p{color:var(--muted);line-height:1.7}
+.rsi-criteria-details>h3{margin:16px 0 8px;font-size:13px}
 .rsi-detail-dialog .rsi-criteria-details summary,.rsi-detail-dialog .rsi-split-summary>summary,.rsi-detail-dialog .rsi-simulation-hud button{min-height:44px}
 @media(max-width:430px){.rsi-criteria-details>dl{grid-template-columns:1fr;gap:8px}.rsi-criteria-details>dl>div{display:grid;grid-template-columns:74px minmax(0,1fr);gap:6px}.rsi-criteria-details dd{margin:0}}

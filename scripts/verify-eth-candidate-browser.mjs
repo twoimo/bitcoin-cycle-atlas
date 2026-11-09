@@ -1014,8 +1014,8 @@ async function main(){
             title:button?.title,disabled:button?.disabled,busy:button?.classList.contains('busy'),refreshButtonVisible:visible,
             cutoff:doc.querySelector('#sidebar-asof')?.textContent,page:doc.body?.dataset.page,
             nativeSymbol:doc.documentElement?.dataset.symbol,center:doc.body?.dataset.centerTool,
-            price:doc.querySelector('#lab-metrics .readout-main > strong')?.textContent,
-            priceDate:doc.querySelector('#lab-metrics .atlas-observation-date')?.textContent,
+            price:doc.querySelector('#lab-metrics .quote-hud-price,#lab-metrics .readout-main > strong')?.textContent,
+            priceDate:doc.querySelector('#lab-metrics .quote-hud-time,#lab-metrics .atlas-observation-date')?.textContent,
             priceKind:doc.querySelector('#lab-metrics')?.dataset.kind};
         },{preview,consolidatedEvidence});
         const observed=await until(async()=>{const value=await read();return value?.title==='갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.'&&value.disabled===false&&!value.busy?value:null;},'explicit failed offline refresh state');

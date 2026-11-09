@@ -62,8 +62,8 @@ export async function verifyEmbeddedDataSurface(api){
         const el=document.querySelector(selector);return [selector,{connected:Boolean(el?.isConnected),...rect(el)}];
       }))};
   };
-  const readSource=()=>({timeOrigin:performance.timeOrigin,price:document.querySelector('#lab-metrics .readout-main > strong')?.textContent,
-    date:document.querySelector('#lab-metrics .atlas-observation-date')?.textContent,kind:document.querySelector('#lab-metrics')?.dataset.kind,
+  const readSource=()=>({timeOrigin:performance.timeOrigin,price:document.querySelector('#lab-metrics .quote-hud-price,#lab-metrics .readout-main > strong')?.textContent,
+    date:document.querySelector('#lab-metrics .quote-hud-time,#lab-metrics .atlas-observation-date')?.textContent,kind:document.querySelector('#lab-metrics')?.dataset.kind,
     cutoff:document.querySelector('#sidebar-asof')?.textContent,product:document.querySelector('#lab-chart')?.dataset.product});
   const rawPointer=async(selector,context=cdp,frame=null)=>{
     const target=await evaluate(context,readNativeInteractiveTarget,selector);

@@ -175,7 +175,7 @@ export function RsiWorkbench(props:Props) {
         <TradingCriteriaDetails symbol={symbol} result={simulation.overallResult} error={simulation.overallError}/>
         {simulation.overallResult&&<details className="rsi-split-summary"><summary>전체 기간 체결·성과</summary><SimulationDetails result={simulation.overallResult} unit={market.unit} symbol={symbol}/></details>}
         <h3>선택 기간 평단가·성과</h3>
-        <SimulationHud symbol={symbol} unit={market.unit} result={simulation.result} error={simulation.error} onDetails={()=>setTab('backtest')} onSettings={()=>command.current('pane','settings')}/>
+        <SimulationHud symbol={symbol} unit={market.unit} result={simulation.result} error={simulation.error} onDetails={()=>setTab('backtest')} onSettings={()=>{if(!live.current.props.active)return;setHover(null);setTab('chart');setPane('settings');}}/>
         {simulation.result&&<SimulationDetails result={simulation.result} unit={market.unit} symbol={symbol}/>}
       </>:tab!=='chart'&&<>
         {tab==='backtest'&&<details className="rsi-split-summary"><summary>매매 기준 · 전체 기간 판정</summary><TradingCriteriaDetails symbol={symbol} result={simulation.overallResult} error={simulation.overallError}/></details>}

@@ -181,9 +181,9 @@ function readMeasurements() {
   const points = [...pathData.matchAll(/[ML]\s*(-?[\d.e+]+)[,\s]+(-?[\d.e+]+)/gi)].map(match => [Number(match[1]), Number(match[2])]);
   const candleNodes = [...(svg?.querySelectorAll('.observed-candle,.market-candle,[data-candle]') || [])];
   const count = Math.max(Number(svg?.dataset.observedCandleCount || 0), Number(svg?.dataset.observedLineCount || 0), candleNodes.length, svg?.closest('.rsi-chart-canvas') ? points.length : 0);
-  const readout = find('#lab-metrics,.eth-readout');
-  const priceNode = find('#lab-metrics .readout-main > strong,#eth-price,#equity-price,[data-rsi-hud="current-price"],.rsi-price-text');
-  const dateNode = find('#lab-metrics .atlas-observation-date,#eth-bar-time,#equity-bar-time,[data-rsi-hud="updated-at"],.rsi-date-text');
+  const readout = find('.atlas-quote-hud,#lab-metrics,.eth-readout');
+  const priceNode = find('.atlas-quote-hud [data-quote-field="price"],#lab-metrics .readout-main > strong,#eth-price,#equity-price,[data-rsi-hud="current-price"],.rsi-price-text');
+  const dateNode = find('.atlas-quote-hud [data-quote-field="time"],#lab-metrics .atlas-observation-date,#eth-bar-time,#equity-bar-time,[data-rsi-hud="updated-at"],.rsi-date-text');
   const heading = document.querySelector('.atlas-canvas-heading');
   const dock = svg?.closest('.atlas-plot')?.querySelector('.chart-legend-dock');
   const controlRows = [...(heading?.querySelectorAll('button,select,input') || [])].filter(visible).map(node => ({ id: node.id, label: node.getAttribute('aria-label'), text: node.tagName === 'SELECT' ? text(node.selectedOptions[0]) : text(node), rect: box(node), value: node.value, inDisclosure: Boolean(node.closest('#atlas-shell-features-panel')) }));

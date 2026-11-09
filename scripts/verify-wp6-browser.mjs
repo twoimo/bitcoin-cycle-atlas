@@ -48,7 +48,10 @@ function readWp6(){
   const docs=[...(child?[child]:[]),document],find=selector=>docs.flatMap(d=>[...d.querySelectorAll(selector)]).find(painted)||null;
   const box=n=>{if(!n)return null;const r=n.getBoundingClientRect(),offset=n.ownerDocument===document?{left:0,top:0}:frame.getBoundingClientRect();return {left:r.left+offset.left,right:r.right+offset.left,top:r.top+offset.top,bottom:r.bottom+offset.top,width:r.width,height:r.height,painted:painted(n),scrollWidth:n.scrollWidth,clientWidth:n.clientWidth};};
   const plot=document.querySelector('.atlas-plot'),svg=find('#lab-chart,#eth-chart,#equity-chart,.rsi-chart-canvas > svg');
-  const chartOwner=svg?.closest('.atlas-plot'),dock=chartOwner?.querySelector('.chart-legend-dock'),legend=dock?.querySelector('.lab-legend'),badge=find('[data-rsi-win-badge]'),hud=find('.rsi-simulation-hud');
+  const chartOwner=svg?.closest('.atlas-plot'),dock=chartOwner?.querySelector('.chart-legend-dock'),legend=dock?.querySelector('.lab-legend'),criteria=find('[data-rsi-criteria]'),badge=criteria?.querySelector('[data-criteria-field="win-rate"]')||criteria||find('[data-rsi-win-badge]'),hud=find('.rsi-simulation-hud');
+  const svgRect=svg?.getBoundingClientRect(),scaleX=svgRect?.width/Number(svg?.getAttribute('width')),scaleY=svgRect?.height/Number(svg?.getAttribute('height'));
+  const pricePaneArea=(Number(svg?.dataset.plotRight)-Number(svg?.dataset.plotLeft))*(Number(svg?.dataset.priceBottom)-Number(svg?.dataset.plotTop))*scaleX*scaleY;
+  const criteriaRect=box(criteria);
   const controls=[...document.querySelectorAll('.chart-replay-controls [data-cr]')].filter(n=>['play','next','speed','live','transport-more','update-interval'].includes(n.dataset.cr)).map(n=>{const owner=n.closest('.chart-replay-actions'),r=box(n),o=box(owner);return {name:n.dataset.cr,rect:r,disabled:n.disabled,owner:owner?'bar':'menu',inOwner:Boolean(r?.painted&&(!o||r.left>=o.left-1&&r.right<=o.right+1)),label:n.getAttribute('aria-label'),text:n.textContent.trim(),value:n.value};});
   const notice=document.querySelector('#equity-forecast-unavailable');
   return {url:location.href,width:innerWidth,height:innerHeight,boot:document.documentElement?.dataset.boot??null,symbol:plot?.dataset.chartSymbol,rootWidth:document.documentElement?.scrollWidth??0,bodyWidth:document.body?.scrollWidth??0,
@@ -57,6 +60,8 @@ function readWp6(){
     legend:dock?{rect:box(dock),mode:dock.dataset.legendMode,sourceRect:box(legend),text:legend?.textContent.trim(),priceWidth:Number(svg?.dataset.plotRight)-Number(svg?.dataset.plotLeft),items:[...legend?.querySelectorAll('.chart-legend-entry')||[]].map(n=>({text:n.textContent.trim(),rect:box(n)})),chip:box(dock.querySelector('.chart-legend-open'))}:null,
     inlineLegend:[...document.querySelectorAll('#eth-forecast-note,.equity-legend')].map(n=>({text:n.textContent.trim(),rect:box(n)})),
     badge:badge?{text:badge.textContent.trim(),rect:box(badge),dataset:{...badge.dataset}}:null,
+    criteria:criteria?{rect:criteriaRect,collapsed:criteria.dataset.criteriaCollapsed,state:criteria.dataset.criteriaState,through:criteria.dataset.criteriaThrough,
+      areaRatio:criteriaRect.width*criteriaRect.height/pricePaneArea,fields:[...criteria.querySelectorAll('[data-criteria-field]')].map(node=>({key:node.dataset.criteriaField,text:node.textContent.trim()}))}:null,
     hud:hud?{text:hud.textContent.trim(),rect:box(hud),fields:[...hud.querySelectorAll('[data-rsi-hud]')].map(n=>({key:n.dataset.rsiHud,text:n.textContent.trim(),rect:box(n)})),ongoing:hud.querySelector('[data-rsi-ongoing]')?.textContent.trim()}:null,
     forecastGate:{tier:plot?.dataset.forecastTier,allowed:plot?.dataset.forecastAllowed,observations:plot?.dataset.forecastObservations,notice:notice?{text:notice.textContent.trim(),rect:box(notice)}:null,paths:svg?.querySelectorAll('.equity-forecast-line,.replay-forecast-path').length,labels:[...svg?.querySelectorAll('.equity-forecast-evidence text')||[]].map(n=>n.textContent.trim())},
     replay:{active:svg?.dataset.chartReplayActive,bar:box(document.querySelector('.chart-replay-bar')),actions:box(document.querySelector('.chart-replay-actions')),controls,cursor:svg?.dataset.replayCursor,mode:svg?.dataset.replayMode},
@@ -159,10 +164,14 @@ async function runCase(spec,debugBase){
       assert.match(receipt.initial.forecastGate.notice.text,/표본 부족으로 미래 경로를 제공하지 않습니다/);assert.match(receipt.initial.forecastGate.notice.text,/관측 \d+거래일/);
     }
     if(symbol==='TQQQ'&&phase!=='before'){
-      assert.match(receipt.initial.badge?.text||'',/승률.*n\s*=\s*\d+/);
+      if(receipt.initial.criteria?.collapsed!=='true')assert.match(receipt.initial.badge?.text||'',/승률.*n\s*=\s*\d+/);
       if(width<=390)assert.ok(receipt.initial.badge.rect.height>=44,'Mobile win badge must retain a 44px native hit target');
-      assert.deepEqual(receipt.initial.hud?.fields.map(x=>x.key).sort(),['holdings','quantity','average-cost','current-price','pnl','next-trigger','updated-at'].sort());
-      await click(cdp,'[data-rsi-win-badge]');await until(()=>evaluate(cdp,()=>Boolean(document.querySelector('[data-rsi-dialog="simulation"][open]'))),'statistics modal');
+      if(receipt.initial.criteria){
+        assert.ok(receipt.initial.criteria.areaRatio>0&&receipt.initial.criteria.areaRatio<=.2201,'Criteria exceed the measured price-pane area budget');
+        assert.match(receipt.initial.criteria.through,/^\d{4}-\d{2}-\d{2}$/);
+        if(receipt.initial.criteria.collapsed!=='true')assert.deepEqual(receipt.initial.criteria.fields.map(x=>x.key).sort(),['criteria','win-rate','current','buy','sell','strong','neutral'].sort());
+      }else assert.deepEqual(receipt.initial.hud?.fields.map(x=>x.key).sort(),['holdings','quantity','average-cost','current-price','pnl','next-trigger','updated-at'].sort());
+      await click(cdp,'[data-rsi-criteria],[data-rsi-win-badge]');await until(()=>evaluate(cdp,()=>Boolean(document.querySelector('[data-rsi-dialog="simulation"][open]'))),'statistics modal');
       receipt.simulationDialog=await evaluate(cdp,readWp6);
       for(const text of ['PF','기대값','보유','낙폭','bp','기간','체결'])assert.ok(receipt.simulationDialog.dialogs.some(d=>d.text.includes(text)),'Statistics modal missing '+text);
       assert.ok((await locate(cdp,'[data-rsi-dialog="simulation"] [data-rsi-dialog-close]'))?.visible,'Statistics close is clipped');

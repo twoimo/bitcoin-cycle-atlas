@@ -217,5 +217,92 @@ test('three symbol criteria start as mobile chips, expose every rule in a native
   await fixture.render(<Harness key="desktop" symbol="TQQQ" width={1440}/>);
   const card=fixture.document.querySelector('[data-rsi-criteria]')!;
   assert.equal(card.getAttribute('data-criteria-collapsed'),'false');assert.equal(card.querySelectorAll('[data-criteria-field]').length,7);
-  assert.match(card.textContent!,/분할 매수1차 33.5 · 2차 29.5/);assert.match(card.textContent!,/분할 매도1차 40 · 2차 43/);assert.match(card.textContent!,/적극매수 ≤29.5 · 매도 ≥43/);
+  assert.match(card.querySelector('[data-criteria-field="criteria"]')!.textContent!,/RSI 33\.5\/29\.5\/40\/43/);
+  const buy=card.querySelector('[data-criteria-field="buy"]')!,sell=card.querySelector('[data-criteria-field="sell"]')!,strong=card.querySelector('[data-criteria-field="strong"]')!;
+  assert.match(buy.textContent!,/분할 매수1차 체결대기 · 2차 순서대기/);assert.match(buy.getAttribute('title')!,/1차 RSI 33\.5.*2차 RSI 29\.5/);
+  assert.match(sell.textContent!,/분할 매도1차 보유없음 · 2차 보유없음/);assert.match(sell.getAttribute('title')!,/1차 RSI 40.*2차 RSI 43/);
+  assert.match(strong.textContent!,/적극 구간매수 비활성 · 매도 비활성/);assert.match(strong.getAttribute('title')!,/매수 RSI ≤ 29\.5 · 매도 RSI ≥ 43/);
+});
+
+const criteriaResult=(end:string,start=prices[0][0],input=prices)=>simulateRsiTranches(input,{start,end,confirmedThrough:end,capital:1000,feeBps:5});
+
+test('criteria rows expose both tranche stages across pending, filled, closed and reset cycles',async t=>{
+  const cases=[
+    ['2025-01-26',['waiting','blocked'],['blocked','blocked'],'1차 신호대기 · 2차 순서대기','1차 보유없음 · 2차 보유없음'],
+    ['2025-01-27',['pending','blocked'],['blocked','blocked'],'1차 체결대기 · 2차 순서대기','1차 보유없음 · 2차 보유없음'],
+    ['2025-01-28',['holding','pending'],['waiting','blocked'],'1차 보유 · 2차 체결대기','1차 신호대기 · 2차 보유없음'],
+    ['2025-01-29',['holding','holding'],['waiting','blocked'],'1차 보유 · 2차 보유','1차 신호대기 · 2차 순서대기'],
+    ['2025-02-11',['holding','holding'],['pending','blocked'],'1차 보유 · 2차 보유','1차 체결대기 · 2차 순서대기'],
+    ['2025-02-12',['closed','holding'],['closed','pending'],'1차 청산완료 · 2차 보유','1차 완료 · 2차 체결대기'],
+    ['2025-02-13',['waiting','blocked'],['blocked','blocked'],'1차 신호대기 · 2차 순서대기','1차 보유없음 · 2차 보유없음'],
+  ] as const;
+  const content=(result:ReturnType<typeof criteriaResult>)=><><TradingCriteriaHud symbol="TQQQ" result={result} error="" geometry={criteriaGeometry(1440)} open={false} onDetails={()=>{}}/>
+    <TradingCriteriaDetails symbol="TQQQ" result={result} error=""/></>;
+  const fixture=await mount(content(criteriaResult(cases[0][0])));t.after(fixture.cleanup);
+  for(const [end,buyStatus,sellStatus,buyText,sellText] of cases){
+    const result=criteriaResult(end),before=structuredClone(result);await fixture.render(content(result));
+    for(const [side,statuses,value]of [['buy',buyStatus,buyText],['sell',sellStatus,sellText]] as const){
+      const row=fixture.document.querySelector(`[data-criteria-field="${side}"]`)!;
+      assert.deepEqual([row.getAttribute('data-first-status'),row.getAttribute('data-second-status')],statuses,`${end} ${side}`);
+      assert.equal(row.querySelector('strong')!.textContent,value,`${end} ${side} visible status`);
+      assert.equal(fixture.document.querySelector(`[data-criteria-detail="${side}"] dd`)!.textContent,value,`${end} ${side} detail status`);
+    }
+    assert.deepEqual(result,before,'presenting current stages must not mutate the engine ledger');
+  }
+});
+
+test('aggressive and neutral activation describe RSI display bands while unavailable readings retain unknown slots',async t=>{
+  const content=(result:ReturnType<typeof criteriaResult>|null,error='')=><TradingCriteriaHud symbol="SOXL" result={result} error={error} geometry={criteriaGeometry(1440)} open={false} onDetails={()=>{}}/>;
+  const fixture=await mount(content(criteriaResult('2025-01-27')));t.after(fixture.cleanup);
+  const cases=[
+    ['2025-01-27','buy',false,false,false],
+    ['2025-01-29','strong-buy',true,false,false],
+    ['2025-02-10','neutral',false,false,true],
+    ['2025-02-11','sell',false,false,false],
+    ['2025-02-13','strong-sell',false,true,false],
+  ] as const;
+  for(const [end,band,buyActive,sellActive,neutralActive]of cases){
+    const result=criteriaResult(end);await fixture.render(content(result));
+    const card=fixture.document.querySelector('[data-rsi-criteria]')!,strong=card.querySelector('[data-criteria-field="strong"]')!,neutral=card.querySelector('[data-criteria-field="neutral"]')!;
+    assert.equal(card.getAttribute('data-criteria-band'),band);
+    assert.equal(strong.getAttribute('data-buy-active'),String(buyActive));assert.equal(strong.getAttribute('data-sell-active'),String(sellActive));
+    assert.equal(strong.querySelector('strong')!.textContent,`매수 ${buyActive?'활성':'비활성'} · 매도 ${sellActive?'활성':'비활성'}`);
+    assert.equal(neutral.getAttribute('data-neutral-active'),String(neutralActive));assert.equal(neutral.querySelector('strong')!.textContent,neutralActive?'활성':'비활성');
+    if(end==='2025-01-29'){assert.equal(result.pending.length,0);assert.equal(card.getAttribute('data-criteria-state'),'unmet','the strong-buy band does not create an order while both tranches are held');}
+    if(end==='2025-02-10')assert.equal(result.holdings.length,2,'a neutral display band does not imply an empty position');
+    if(end==='2025-02-13'){assert.equal(result.holdings.length,0);assert.equal(result.pending.length,0,'a strong-sell display band does not create a sell without holdings');}
+  }
+  const insufficientWithSignal=criteriaResult('2025-01-27','2025-01-27');
+  assert.equal(insufficientWithSignal.status,'insufficient');assert.equal(insufficientWithSignal.pending.length,1);
+  for(const [result,error]of [[null,''],[criteriaResult('2025-01-10'),''],[insufficientWithSignal,''],[criteriaResult('2025-01-27'),'출처 확인 대기']] as const){
+    await fixture.render(content(result,error));
+    const card=fixture.document.querySelector('[data-rsi-criteria]')!,strong=card.querySelector('[data-criteria-field="strong"]')!,neutral=card.querySelector('[data-criteria-field="neutral"]')!;
+    assert.equal(card.getAttribute('data-criteria-band'),'unavailable');assert.equal(card.getAttribute('data-criteria-state'),'waiting');
+    assert.equal(strong.getAttribute('data-buy-active'),'unknown');assert.equal(strong.getAttribute('data-sell-active'),'unknown');assert.equal(strong.querySelector('strong')!.textContent,'매수 — · 매도 —');
+    assert.equal(neutral.getAttribute('data-neutral-active'),'unknown');assert.equal(neutral.querySelector('strong')!.textContent,'—');
+    for(const side of ['buy','sell']){
+      const row=card.querySelector(`[data-criteria-field="${side}"]`)!;
+      assert.equal(row.getAttribute('data-first-status'),'unavailable');assert.equal(row.getAttribute('data-second-status'),'unavailable');assert.equal(row.querySelector('strong')!.textContent,'1차 — · 2차 —');
+    }
+  }
+});
+
+test('criteria details show only the latest five real signals and distinguish pending signal dates from filled dates',async t=>{
+  const repeated:Point[]=[...prices,...prices].map(([,close],index)=>[new Date(Date.UTC(2025,0,index+1)).toISOString().slice(0,10),close]);
+  const result=criteriaResult('2025-04-11',repeated[0][0],repeated),before=structuredClone(result);
+  assert.equal(result.trades.length,7);assert.deepEqual(result.pending.map(signal=>[signal.date,signal.side,signal.tranche]),[['2025-04-11','Sell',2]]);
+  const fixture=await mount(<TradingCriteriaDetails symbol="233740" result={result} error=""/>);t.after(fixture.cleanup);
+  const table=fixture.document.querySelector('[data-rsi-recent-signals]')!;assert(table);
+  assert.deepEqual([...table.querySelectorAll('thead th')].map(cell=>cell.textContent),['신호','신호일','체결일','상태']);
+  const rows=[...table.querySelectorAll('tbody tr')];assert.equal(rows.length,5);
+  assert.deepEqual(rows.map(row=>({status:row.getAttribute('data-status'),cells:[...row.querySelectorAll('td')].map(cell=>cell.textContent)})),[
+    {status:'pending',cells:['2차 매도','2025-04-11','—','체결 대기']},
+    {status:'filled',cells:['1차 매도','2025-04-10','2025-04-11','체결']},
+    {status:'filled',cells:['2차 매수','2025-03-28','2025-03-29','체결']},
+    {status:'filled',cells:['1차 매수','2025-03-26','2025-03-27','체결']},
+    {status:'filled',cells:['2차 매도','2025-02-12','2025-02-13','체결']},
+  ]);
+  assert.deepEqual(result,before,'rendering recent records must not reorder or alter the engine history');
+  await fixture.render(<TradingCriteriaDetails symbol="233740" result={criteriaResult('2025-01-26')} error=""/>);
+  assert.equal(fixture.document.querySelector('[data-rsi-recent-signals]'),null);assert.match(fixture.document.body.textContent!,/계산 구간에 발생한 신호 없음/);
 });
