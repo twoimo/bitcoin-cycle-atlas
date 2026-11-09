@@ -28,7 +28,7 @@ export function mountPageDescription(document, {header, heading} = {}) {
   heading.setAttribute('aria-describedby', description.id);
   copy.append(heading, description);
   header.append(copy);
-  let destroyed = false;
+  let destroyed = false, lastToolbar = null;
   function sync() {
     if (destroyed) return;
     const page = document.body.dataset.page || 'outlook';
@@ -38,6 +38,7 @@ export function mountPageDescription(document, {header, heading} = {}) {
     if (description.textContent !== info.description) description.textContent = info.description;
     if (copy.dataset.pageIntro !== info.id) copy.dataset.pageIntro = info.id;
     const toolbar = chart ? document.querySelector('.atlas-canvas-heading') : null;
+    lastToolbar = toolbar;
     if (toolbar) {
       copy.className = 'atlas-page-intro';
       copy.hidden = false;
@@ -53,9 +54,16 @@ export function mountPageDescription(document, {header, heading} = {}) {
   // must not rewrite the page header or disturb its current focus owners.
   const workspace = document.querySelector('.workspace');
   const Observer = document.defaultView?.MutationObserver || globalThis.MutationObserver;
-  const observer = workspace && Observer ? new Observer(records => {
-    const containsToolbar = node => node.nodeType === 1 && (node.matches('.atlas-canvas-heading') || node.querySelector('.atlas-canvas-heading'));
-    if (records.some(record => [...record.addedNodes, ...record.removedNodes].some(containsToolbar))) sync();
+  // Replay rewrites chart internals on every frame. One deferred identity check
+  // per mutation batch replaces a per-node subtree query, and the header is only
+  // rewritten when the toolbar owner actually appears or disappears.
+  let queued = false;
+  const observer = workspace && Observer ? new Observer(() => {
+    if (queued) return;
+    queued = true;
+    const check = () => { queued = false; if (document.querySelector('.atlas-canvas-heading') !== lastToolbar) sync(); };
+    const microtask = document.defaultView?.queueMicrotask || globalThis.queueMicrotask;
+    if (microtask) microtask(check); else check();
   }) : null;
   observer?.observe(workspace, {childList:true, subtree:true});
   sync();
