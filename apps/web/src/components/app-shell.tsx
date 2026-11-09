@@ -7,11 +7,13 @@ import { readShellPreference, writeShellPreference } from '../../../../dist/atla
 
 import { atlasNavigationPages, atlasNavigationId, atlasPageHref } from '../../../../dist/atlas-navigation.js';
 import { workspaceInstrument } from '../../../../dist/workspace-instruments.js';
+import { atlasPageDescription } from '../../../../dist/ui/page-description.js';
 
 function storage() { try { return globalThis.localStorage; } catch { return undefined; } }
 export function DashboardChrome({ title, currentPage, chartSymbol, onNavigate }: { title: string; currentPage: string; chartSymbol?: string; onNavigate: (id: string) => void }) {
   const [compact, setCompact] = useState(() => readShellPreference(storage()));
   const chartPage = workspaceInstrument(chartSymbol)?.page;
+  const pageDescription = atlasPageDescription(currentPage);
   useLayoutEffect(() => { document.body.dataset.shell = 'dashboard'; document.body.dataset.sidebar = compact ? 'compact' : 'full'; }, [compact]);
   return <>
     <aside className="atlas-sidebar atlas-dashboard-sidebar" aria-label="주요 페이지">
@@ -23,7 +25,7 @@ export function DashboardChrome({ title, currentPage, chartSymbol, onNavigate }:
       </a>)}</nav>
     </aside>
     <header className="atlas-dashboard-header"><button className="atlas-sidebar-toggle" type="button" aria-expanded={!compact} aria-label={compact ? '탐색 메뉴 펼치기' : '탐색 메뉴 접기'}
-      onClick={() => { setCompact(!compact); writeShellPreference(storage(), !compact); }}>☰</button><h1 className="atlas-shell-heading">{title}</h1>
+      onClick={() => { setCompact(!compact); writeShellPreference(storage(), !compact); }}>☰</button><div className="atlas-shell-copy" data-page-intro={pageDescription.id}><h1 className="atlas-shell-heading" aria-describedby="atlas-page-description">{title}</h1><p id="atlas-page-description" className="atlas-page-description">{pageDescription.description}</p></div>
     </header>
   </>;
 }

@@ -21,12 +21,21 @@ test('current navigation follows the open workspace through first chart construc
   const heading = document.createElement('header'); heading.className = 'mobile-tray-heading';
   const extras = document.createElement('nav'); extras.className = 'mobile-extra-actions';
   const tools = document.createElement('nav'); tools.className = 'workbench-detail-tools';
+  const stage = document.createElement('section'); stage.className = 'atlas-chart-stage';
+  stage.innerHTML = '<header class="atlas-canvas-heading"><button id="original-symbol" aria-label="TQQQ 종목 선택">삼플레</button></header><div class="atlas-plot"></div>';
+  document.querySelector('.workspace main')!.append(stage);
+  const toolbar = stage.querySelector('.atlas-canvas-heading')!;
+  const symbol = toolbar.firstElementChild;
+  const toolbarMarkup = toolbar.outerHTML;
   rail.append(heading, extras, tools, nav);
   document.querySelector('.workspace')!.append(rail);
   await settle();
   assert.equal(document.querySelector('.atlas-nav'), nav);
   assert.deepEqual([...rail.children], [heading, extras, nav, tools]);
   assert.deepEqual(selected(), ['market-us'], 'mounting the background price chart cannot select its destination');
+  const intro = stage.querySelector('[data-page-intro]')!;
+  assert.equal(toolbar.nextElementSibling, intro);
+  assert.equal(intro.querySelector('h1')!.textContent, '시장 분석');
 
   assert.equal(nav.querySelectorAll('[data-atlas-page="outlook"]').length, 1);
   assert.equal(nav.querySelector('[data-atlas-page="rsi"]'), null);
@@ -34,6 +43,11 @@ test('current navigation follows the open workspace through first chart construc
     document.body.dataset.centerTool = workspace;
     await settle();
     assert.deepEqual(selected(), [destination], workspace);
+    assert.equal(toolbar.nextElementSibling, intro);
+    assert.equal(intro.getAttribute('data-page-intro'), destination === 'market-us' ? 'market' : destination);
+    assert.equal(intro.querySelector('h1')!.getAttribute('aria-describedby'), intro.querySelector('p')!.id);
+    assert.equal(toolbar.firstElementChild, symbol);
+    assert.equal(toolbar.outerHTML, toolbarMarkup);
   }
   delete document.body.dataset.centerTool;
   await settle();

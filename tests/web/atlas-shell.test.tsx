@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 import { parseHTML } from 'linkedom';
 import { initAtlasShell } from '../../dist/atlas-shell.js';
 import { readShellPreference, writeShellPreference, SHELL_STORAGE_KEY } from '../../dist/atlas-shell-state.js';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { DashboardChrome } from '../../apps/web/src/components/app-shell.js';
+import { atlasPageDescription } from '../../dist/ui/page-description.js';
 
 test('dashboard/chart shell moves the existing navigation without replacing handlers or owner controls', async t => {
   const { document, window } = parseHTML('<html><body data-page="data"><aside class="atlas-sidebar"><button class="atlas-brand"><div>Cycle Atlas</div></button><nav class="atlas-nav"><button data-view="outlook">통합 차트</button><button data-view="market">세 축 연구실</button></nav></aside><div class="workspace"><main><div class="daily-heading"><button id="export">CSV</button></div></main></div></body></html>');
@@ -23,7 +26,21 @@ test('dashboard/chart shell moves the existing navigation without replacing hand
   document.body.dataset.page = 'evidence'; await new Promise(resolve => setImmediate(resolve));
   assert.equal(nav.parentElement, document.querySelector('.atlas-sidebar'));
   assert.equal(document.querySelector('.atlas-shell-heading')!.textContent, '리서치');
+  const pageHeading = document.querySelector('.atlas-shell-heading')!;
+  assert.equal(document.getElementById(pageHeading.getAttribute('aria-describedby')!)!.textContent, atlasPageDescription('evidence').description);
   assert.equal(exportButton.parentElement, document.querySelector('.daily-heading'));
+});
+
+test('the React standalone shell keeps its actual title and current destination with the shared description', () => {
+  for (const [page, title] of [['rsi','삼플레 · 가격 차트'], ['market-kr','국내 시장 진단'], ['scenario','조건 실험']]) {
+    const html = renderToStaticMarkup(<DashboardChrome title={title} currentPage={page} chartSymbol="TQQQ" onNavigate={() => {}}/>);
+    const {document} = parseHTML(`<html><body>${html}</body></html>`);
+    const heading = document.querySelector('h1')!;
+    assert.equal(heading.textContent, title);
+    assert.equal(document.getElementById(heading.getAttribute('aria-describedby')!)!.textContent, atlasPageDescription(page).description);
+    assert.equal(document.querySelectorAll('#atlas-page-description').length, 1);
+    assert.equal(document.querySelector('[aria-current="page"]')!.getAttribute('data-atlas-page'), page === 'rsi' ? 'outlook' : 'market-us');
+  }
 });
 test('sidebar preference uses one versioned bounded key and remains optional', () => {
   const data = new Map<string, string>();

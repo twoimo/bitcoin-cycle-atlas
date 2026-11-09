@@ -281,3 +281,19 @@ body[data-shell=chart] .shell-feature-panel[data-shell-measuring=true] .shell-fe
   body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row]>:is(.symbol-selector-trigger,.workbench-symbol){flex-basis:80px;width:80px;min-width:80px;max-width:80px;padding-inline:4px}
   body[data-shell=chart] .shell-feature-panel{left:4px;right:4px;width:auto}
 }
+
+/* Page context uses its own normal-flow block below the unchanged controls.
+   It never occupies the quote/legend plot or a child iframe's toolbar. */
+.atlas-page-intro,.atlas-shell-copy{min-width:0;box-sizing:border-box}
+.atlas-page-intro{display:flex;flex-direction:column;flex:none;gap:2px;width:100%;padding:4px 12px;border-bottom:1px solid var(--border-soft);background:var(--bg);color:var(--text)}
+.atlas-page-intro>.atlas-shell-heading{margin:0;font-size:13px;line-height:18px;letter-spacing:0;white-space:normal}
+.atlas-page-description{margin:0;color:var(--muted);font:11px/14px var(--font);white-space:normal;word-break:normal;overflow-wrap:break-word}
+.atlas-shell-copy{flex:1 1 auto;display:flex;flex-direction:column;gap:2px}
+.atlas-shell-copy>.atlas-shell-heading{position:static;width:auto;height:auto;margin:0;line-height:18px;clip-path:none;overflow:visible}
+.atlas-dashboard-header>.atlas-shell-controls,body[data-shell=dashboard] .atlas-dashboard-header>#market-header-slot.atlas-shell-controls{flex:0 1 auto;max-width:45%;min-width:0}
+body[data-embedded=true] .atlas-page-intro{display:none}
+@media(max-width:640px){
+  .atlas-page-intro{padding-inline:8px}
+  .atlas-dashboard-header:has(.atlas-shell-controls:not(:empty)) .atlas-shell-copy>.atlas-shell-heading{position:static;width:auto;height:auto;clip-path:none;overflow:visible}
+  .atlas-dashboard-header>.atlas-shell-controls,body[data-shell=dashboard] .atlas-dashboard-header>#market-header-slot.atlas-shell-controls{max-width:44px;min-width:44px}
+}

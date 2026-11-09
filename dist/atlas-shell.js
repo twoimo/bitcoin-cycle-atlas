@@ -28,8 +28,7 @@ import { atlasPages, atlasNavigationPages, atlasNavigationId, labPageFromLocatio
 import { readShellPreference, writeShellPreference } from './atlas-shell-state.js';
 import { mountCenterWorkbench } from './center-workbench.js?v=1.36.1';
 import { mountShellSlots } from './ui/shell-slots.js';
-
-const pageNames = { outlook: '통합 차트', compare: '사이클 비교', evidence: '리서치 자료', data: '자산 비교표', ipo: '공모주 캘린더', market: '세 축 연구실' };
+import { mountPageDescription } from './ui/page-description.js';
 
 // The compact rails keep their Korean names visible for pointer and keyboard
 // users. A body-level tooltip avoids clipping inside the scrolling rail.
@@ -127,6 +126,7 @@ export function initAtlasShell() {
   toggle.textContent = '☰';
   const heading = document.createElement('h1'); heading.className = 'atlas-shell-heading';
   header.append(toggle, heading); document.body.insertBefore(header, workspace);
+  const pageDescription = mountPageDescription(document, {header, heading});
   const group = document.createElement('div'); group.className = 'atlas-sidebar-group'; sidebar.append(group);
   function preference() {
     document.body.dataset.sidebar = compact ? 'compact' : 'full';
@@ -138,7 +138,7 @@ export function initAtlasShell() {
     const chart = page === 'outlook';
     document.body.dataset.shell = chart ? 'chart' : 'dashboard';
     header.hidden = chart; group.hidden = chart;
-    heading.textContent = page === 'market' ? labPageFromLocation(globalThis.location).title : atlasPages.find(item => item.view === page)?.title || pageNames[page] || 'Cycle Atlas';
+    pageDescription.sync();
     const navigation = document.querySelector('.atlas-nav'), rail = document.querySelector('.workbench-rail');
     if (navigation && chart && rail) {
       const tools = rail.querySelector('.workbench-detail-tools');
@@ -164,5 +164,5 @@ export function initAtlasShell() {
   sync();
   const removeRailTooltip = mountRailTooltip(document);
   const shellSlots = mountShellSlots(document);
-  return () => { shellSlots.destroy(); removeRailTooltip(); pageObserver.disconnect(); workspaceObserver.disconnect(); document.removeEventListener('click', routeToService, true); };
+  return () => { pageDescription.destroy(); shellSlots.destroy(); removeRailTooltip(); pageObserver.disconnect(); workspaceObserver.disconnect(); document.removeEventListener('click', routeToService, true); };
 }
