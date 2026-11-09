@@ -1,0 +1,39 @@
+✔ ETH reads only supported presentation choices and ignores BTC scenarios, dates, price domains and layers (6.202253ms)
+✔ ETH share queries round-trip supported intervals through the common keys without model state (17.087344ms)
+✔ the default four-year daily view ends at the last observed candle boundary, never a forecast horizon (10.073967ms)
+✔ weekly default and all-history windows remain on the Monday UTC grid and end at a completed week (2.737805ms)
+✔ short or missing archives do not invent history and all date presets clamp to available observations (0.549926ms)
+✔ real navigation operations keep ETH daily and weekly ranges bounded and grid-aligned through repeated pans/zooms (21.613634ms)
+✔ ETH routing loads and awaits only the ETH workspace, while BTC and unsupported symbols retain the BTC entry (51.550393ms)
+✔ a failed ETH import or initialization reports the boot error and never falls back to a mislabeled BTC chart (7.047416ms)
+✔ the complete ETH module graph excludes BTC workspaces, forecast engines and cycle-analysis controllers (109.22424ms)
+✔ ETHUSD first entry retains the supplied URL; explicit chart edits still serialize (61.82179ms)
+✔ MSTR first entry retains the supplied URL; explicit chart edits still serialize (23.917041ms)
+✔ BMNR first entry retains the supplied URL; explicit chart edits still serialize (18.254293ms)
+✔ ETHUSD restores shared viewport keys without first-entry URL or history writes (13.826871ms)
+✔ MSTR restores shared viewport keys without first-entry URL or history writes (9.358163ms)
+✔ BMNR restores shared viewport keys without first-entry URL or history writes (5.53875ms)
+✔ MSTR / enters its own native chart before any ETF frame can mount (9.343724ms)
+✔ MSTR /market-lab/charts/ enters its own native chart before any ETF frame can mount (5.584206ms)
+✔ BMNR / enters its own native chart before any ETF frame can mount (2.987536ms)
+✔ BMNR /market-lab/charts/ enters its own native chart before any ETF frame can mount (6.452933ms)
+✔ native canonical entry keeps project roots and supplied chart settings without inserting defaults (3.991829ms)
+✔ BTCUSD root deep link dispatches to the instrument's own chart family (2.533079ms)
+✔ ETHUSD root deep link dispatches to the instrument's own chart family (2.17444ms)
+✔ MSTR root deep link dispatches to the instrument's own chart family (1.797563ms)
+✔ TQQQ root deep link dispatches to the instrument's own chart family (1.693557ms)
+✔ SOXL root deep link dispatches to the instrument's own chart family (2.329347ms)
+✔ 233740 root deep link dispatches to the instrument's own chart family (2.051915ms)
+✔ workspace root aliases preserve supplied chart settings, project root and hash (0.571695ms)
+✔ workspace root routing preserves explicit non-chart owners and existing fallback boundaries (5.627001ms)
+✔ visible navigation has one price chart while retaining every legacy route identity (6.850063ms)
+✔ price-chart links retain all twelve instruments without changing their source route (1.779384ms)
+✔ canonical chart selection preserves exact instrument and housing region at project subpaths (1.07255ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 444.488076

@@ -1,0 +1,24 @@
+{
+  "codeCommit": "851ddef68ab98d6157b582ae4164a556ee953cf7",
+  "codeTree": "0d99ce6efd00ed4b633e4f59a3e94d13fce225f0",
+  "command": "PATH=/tmp/atlas-node-runtime/node_modules/node/bin:$PATH npm test -- --test-concurrency=2",
+  "node": "v24.22.2",
+  "platform": "linux",
+  "architecture": "x64",
+  "exitCode": 0,
+  "complete": true,
+  "tests": 3172,
+  "pass": 3172,
+  "fail": 0,
+  "skipped": 0,
+  "batches": 1,
+  "durationMs": 1077144.906046,
+  "log": {
+    "file": "r0-npm-test.log.gz",
+    "uncompressedSha256": "865d28d7db862c66650dc6a13aadbe23324ac6b0ece5af3c1df87beeb590007a",
+    "uncompressedBytes": 764598,
+    "gzipSha256": "8ace599029be603adc19660da1f0edda9379a0f353262789c75c51a57bf56e4e",
+    "gzipBytes": 151086
+  },
+  "sourceMeaning": "Application and regression-test bytes remained unchanged during the run; the remote source tree was matched before publishing the code commit. This is a local test result, not Cloudflare CI or a production deployment."
+}

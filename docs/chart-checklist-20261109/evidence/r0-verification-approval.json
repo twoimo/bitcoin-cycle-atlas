@@ -1,0 +1,21 @@
+{
+  "status": "BLOCKED_BY_AUTOMATIC_APPROVAL_REVIEW",
+  "action": "Create a separate verification-only Cloudflare build trigger for this checklist branch",
+  "branch": "fix/r0-r6-chart-checklist-20261109",
+  "script": "scripts/chart-checklist/cloudflare.mjs",
+  "buildCommand": "node scripts/chart-checklist/cloudflare.mjs --item R0 --baseline ff772757d49805a543f4a84edcb8a9c859777cf8",
+  "deployCommand": "node --version",
+  "productionDeployment": false,
+  "reusesExistingRepositoryConnection": true,
+  "createsNewCredentials": false,
+  "newTriggerCreated": false,
+  "diagnosticBuildStarted": false,
+  "existingTriggersModified": false,
+  "reason": "The automatic approval review requires explicit authorization for a persistent build trigger using the existing build token and repository connection.",
+  "preparedWorker": {
+    "name": "bitcoin-cycle-atlas-checklist-20261109",
+    "deployed": false,
+    "publicSubdomainEnabled": false,
+    "previewUrlsEnabled": false
+  }
+}
