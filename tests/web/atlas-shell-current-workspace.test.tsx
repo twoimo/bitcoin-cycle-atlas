@@ -34,27 +34,48 @@ test('current navigation follows the open workspace through first chart construc
   assert.deepEqual([...rail.children], [heading, extras, nav, tools]);
   assert.deepEqual(selected(), ['market-us'], 'mounting the background price chart cannot select its destination');
   const intro = stage.querySelector('[data-page-intro]')!;
+  const description = intro.querySelector('p')!;
+  const descriptionFields = [...description.children];
   assert.equal(toolbar.nextElementSibling, intro);
   assert.equal(intro.querySelector('h1')!.textContent, '시장 분석');
+  assert.match(description.textContent!, /FRED/);assert.match(description.textContent!, /수동/);
+  assert.equal(descriptionFields.length, 2);
 
   assert.equal(nav.querySelectorAll('[data-atlas-page="outlook"]').length, 1);
   assert.equal(nav.querySelector('[data-atlas-page="rsi"]'), null);
-  for (const [workspace, destination] of [['rsi', 'outlook'], ['housing', 'outlook'], ['themes', 'outlook'], ['scenario', 'market-us'], ['cashflow', 'market-us'], ['data', 'data'], ['ipo', 'ipo'], ['evidence', 'evidence']]) {
+  for (const [workspace, destination, context] of [
+    ['rsi', 'outlook', /Yahoo/], ['housing', 'outlook', /한국부동산원/], ['themes', 'outlook', /Hyperliquid/],
+    ['scenario', 'market-us', /입력.*재계산/], ['cashflow', 'market-us', /입력.*재계산/],
+    ['data', 'data', /자산별|종목별/], ['ipo', 'ipo', /KST|한국 날짜/], ['evidence', 'evidence', /게시/],
+  ] as const) {
     document.body.dataset.centerTool = workspace;
     await settle();
     assert.deepEqual(selected(), [destination], workspace);
     assert.equal(toolbar.nextElementSibling, intro);
     assert.equal(intro.getAttribute('data-page-intro'), destination === 'market-us' ? 'market' : destination);
     assert.equal(intro.querySelector('h1')!.getAttribute('aria-describedby'), intro.querySelector('p')!.id);
+    assert.match(description.textContent!, context, workspace);
+    assert.deepEqual([...description.children], descriptionFields, 'context updates retain the two description fields');
     assert.equal(toolbar.firstElementChild, symbol);
     assert.equal(toolbar.outerHTML, toolbarMarkup);
   }
   delete document.body.dataset.centerTool;
   await settle();
   assert.deepEqual(selected(), ['outlook']);
+  assert.match(description.textContent!, /Coin Metrics/);assert.match(description.textContent!, /공개본 6시간 확인/);
+  document.dispatchEvent(new window.CustomEvent('atlas:workbench-state', {detail:{frequency:'1h',chartType:'line',marketSeries:{source:'Coinbase Exchange'}}}));
+  assert.match(description.textContent!, /Coinbase/);assert.match(description.textContent!, /수동/);assert.doesNotMatch(description.textContent!, /6시간/);
+  document.body.dataset.market = 'MSTR';await settle();
+  assert.match(description.textContent!, /Yahoo/);assert.match(description.textContent!, /수동/);
   document.body.dataset.centerTool = 'housing';
   document.body.dataset.page = 'evidence';
   await settle();
   assert.equal(nav.parentElement, document.querySelector('.atlas-sidebar'));
   assert.deepEqual(selected(), ['evidence'], 'a direct dashboard page owns its current destination');
+  assert.equal(intro.parentElement, document.querySelector('.atlas-dashboard-header'));
+  assert.match(description.textContent!, /게시/);
+  const directDescription = description.textContent;
+  document.dispatchEvent(new window.CustomEvent('atlas:active-symbol', {detail:{symbol:'ETHUSD'}}));
+  document.dispatchEvent(new window.CustomEvent('atlas:workbench-state', {detail:{frequency:'daily',marketSeries:{source:'Coinbase Exchange'}}}));
+  assert.equal(description.textContent, directDescription, 'late background chart events cannot replace a direct research page context');
 });

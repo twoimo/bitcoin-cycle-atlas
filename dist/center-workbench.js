@@ -300,7 +300,12 @@ export function mountCenterWorkbench() {
     if(suspended||!frame||!activePage?.tab||event.source!==frame.contentWindow||event.origin!==location.origin)return;
     if(loading?.status==='error')return;
     if(['atlas:rsi-state','atlas:chart-state'].includes(event.data?.kind)){
-      if(controls.update(event.data)&&loading?.accept())frame.dataset.centerLoaded='true';
+      if(controls.update(event.data)){
+        if(loading?.accept())frame.dataset.centerLoaded='true';
+        // Only the acknowledged control owner can update outer page context.
+        // Provider labels stay with the host's source policy, not child input.
+        document.dispatchEvent(new CustomEvent('atlas:page-context',{detail:{page:activePage.id,symbol:activeSymbol,epoch,frequency:event.data.frequency,chartType:event.data.chartType}}));
+      }
       return;
     }
     if(event.data?.kind==='atlas:center-select') {
@@ -325,7 +330,12 @@ export function mountCenterWorkbench() {
     const nextInstrument=workspaceInstrument(event.data.symbol);
     if(activePage.id===page.id && (!isWorkspaceChart(page)||nextInstrument?.page===page.id&&activeSymbol===nextInstrument.symbol)&&event.data.epoch===epoch){
       // The route acknowledgement can precede price data and a painted chart.
-      if(!isWorkspaceChart(page)&&loading?.accept())frame.dataset.centerLoaded='true';
+      if(!isWorkspaceChart(page)){
+        if(loading?.accept())frame.dataset.centerLoaded='true';
+        // The host chooses the service/static renderer. Its US service view
+        // requeries every minute; never accept a child's collection claim.
+        document.dispatchEvent(new CustomEvent('atlas:page-context',{detail:{page:activePage.id,symbol:lastChart?.symbol||originalSymbol,epoch,refreshMode:service&&activePage.id==='market-us'?'poll':'manual',refreshIntervalMs:60000}}));
+      }
       return;
     }
     frame.contentWindow.postMessage(navigateMessage(),location.origin);

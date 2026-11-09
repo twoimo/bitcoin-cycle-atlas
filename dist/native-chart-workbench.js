@@ -216,7 +216,7 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
     updateButton.title=oldStatus?.title||`${symbol} 자료 출처`;for(const node of ranges.querySelectorAll('[data-chart-span]'))node.setAttribute('aria-pressed',String(spanMap[node.dataset.chartSpan]===state.span&&!state.rangeTouched));
     bottom.update({mode:'price',intraday,frequency:state.frequency,window:Object.keys(spanMap).find(key=>spanMap[key]===state.span),customRange:state.rangeTouched,navigationAvailable:ready});
     for(const node of [indicators,settings,search,...details.querySelectorAll('[data-reader]')]){const kind=node===indicators?'layers':node===settings?'settings':node===search?'search':node.dataset.reader;node.setAttribute('aria-expanded',String(!reader.hidden&&readerKind===kind));}
-    emit('atlas:workbench-state',{mode:'price',frequency:state.frequency,intraday,tool:state.tool,magnet:state.magnet});
+    emit('atlas:workbench-state',{mode:'price',symbol,frequency:state.frequency,chartType:state.chartType,source:series?.source,intraday,tool:state.tool,magnet:state.magnet});
   }
   const onKey=event=>{
     if(!active()||event.defaultPrevented||event.isComposing||event.target.closest?.('input,textarea,select,dialog[open],[contenteditable=true]'))return;

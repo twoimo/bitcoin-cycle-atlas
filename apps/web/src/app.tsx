@@ -213,7 +213,7 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
   const independent=navigation.tab==='housing'||navigation.tab==='themes';
   const snapshotLoading=(snapshotRequested||needsSnapshot)&&data.phase==='loading';
   return <CompactToolbarProvider embedded={embedded} active={centerActive} epoch={centerEpoch}>
-    {!embedded && <DashboardChrome title={workspaceTitle} currentPage={page.id} chartSymbol={chartWorkspace?currentInstrument.symbol:workspaceSymbol} onNavigate={navigatePage} />}
+    {!embedded && <DashboardChrome title={workspaceTitle} currentPage={page.id} chartSymbol={chartWorkspace?currentInstrument.symbol:workspaceSymbol} descriptionContext={{refreshMode:liveUs?'poll':'manual',refreshIntervalMs:60000}} onNavigate={navigatePage} />}
     <main data-workspace={chartWorkspace ? 'charts' : 'market'} data-loading-kind={snapshotLoading&&!data.doc&&!independent?navigation.tab:undefined} className={embedded?'atlas-embedded-workspace':'workspace atlas-service-workspace'}><h1 className="atlas-sr-only">{workspaceTitle}</h1>
       <CompactToolbarHost />
       {chartWorkspace ? !embedded && <CompactToolbar label="종목 선택" order={0}><ChartWorkspaceToolbar instrument={currentInstrument} onSelect={selectInstrument}/></CompactToolbar> : <MarketWorkspaceToolbar page={page.id} onNavigate={navigatePage}/>}

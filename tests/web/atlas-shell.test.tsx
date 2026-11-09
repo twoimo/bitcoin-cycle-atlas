@@ -32,14 +32,35 @@ test('dashboard/chart shell moves the existing navigation without replacing hand
 });
 
 test('the React standalone shell keeps its actual title and current destination with the shared description', () => {
-  for (const [page, title] of [['rsi','삼플레 · 가격 차트'], ['market-kr','국내 시장 진단'], ['scenario','조건 실험']]) {
-    const html = renderToStaticMarkup(<DashboardChrome title={title} currentPage={page} chartSymbol="TQQQ" onNavigate={() => {}}/>);
+  const cases: Array<{page:string;title:string;symbol:string;destination:string;basis:RegExp[];context?:Parameters<typeof atlasPageDescription>[1]}> = [
+    {page:'rsi', title:'삼플레 · 가격 차트', symbol:'TQQQ', destination:'outlook', basis:[/Yahoo/, /수동/]},
+    {page:'rsi', title:'속쓸 · 가격 차트', symbol:'SOXL', destination:'outlook', basis:[/Yahoo/, /수동/], context:{symbol:'BTCUSD'}},
+    {page:'rsi', title:'코스닥150 2배 · 가격 차트', symbol:'233740', destination:'outlook', basis:[/Yahoo/, /수동/]},
+    {page:'outlook', title:'비트코인 · 가격 차트', symbol:'BTCUSD', destination:'outlook', basis:[/Coin Metrics/, /공개본 6시간 확인/]},
+    {page:'outlook', title:'비트코인 보존본', symbol:'BTCUSD', destination:'outlook', basis:[/Coin Metrics/, /보존/], context:{retained:true}},
+    {page:'outlook', title:'이더리움 · 가격 차트', symbol:'ETHUSD', destination:'outlook', basis:[/Coinbase/, /수동/]},
+    {page:'outlook', title:'스트래티지 · 가격 차트', symbol:'MSTR', destination:'outlook', basis:[/Yahoo/, /수동/]},
+    {page:'housing', title:'서울 아파트 · 가격 차트', symbol:'HOUSING-SEOUL', destination:'outlook', basis:[/한국부동산원/, /월별|월간/, /수동/]},
+    {page:'themes', title:'하이퍼리퀴드 · 가격 차트', symbol:'HYPE', destination:'outlook', basis:[/Hyperliquid/, /현물/, /수동/]},
+    {page:'market-kr', title:'국내 시장 진단', symbol:'TQQQ', destination:'market-us', basis:[/FRED/, /한은|한국은행/, /Yahoo/, /수동/]},
+    {page:'market-us', title:'미국 시장 진단', symbol:'TQQQ', destination:'market-us', basis:[/FRED/, /1분 재조회/], context:{refreshMode:'poll',refreshIntervalMs:60000}},
+    {page:'scenario', title:'조건 실험', symbol:'TQQQ', destination:'market-us', basis:[/입력/, /재계산/]},
+    {page:'cashflow', title:'현금흐름', symbol:'TQQQ', destination:'market-us', basis:[/입력/, /재계산/]},
+  ];
+  for (const {page,title,symbol,destination,basis,context} of cases) {
+    const html = renderToStaticMarkup(<DashboardChrome title={title} currentPage={page} chartSymbol={symbol} descriptionContext={context} onNavigate={() => {}}/>);
     const {document} = parseHTML(`<html><body>${html}</body></html>`);
     const heading = document.querySelector('h1')!;
+    const description = document.getElementById(heading.getAttribute('aria-describedby')!)!;
+    const info = atlasPageDescription(page, {...context,symbol});
     assert.equal(heading.textContent, title);
-    assert.equal(document.getElementById(heading.getAttribute('aria-describedby')!)!.textContent, atlasPageDescription(page).description);
+    assert.equal(description.textContent, info.description);
+    assert.deepEqual([...description.children].map(node => node.textContent), [info.purpose,info.basis]);
+    for (const token of basis) assert.match(description.textContent!, token, `${page}/${symbol}`);
+    assert.doesNotMatch(description.textContent!, /15분|실시간/);
+    if (context?.retained) assert.doesNotMatch(description.textContent!, /공개본 6시간 확인/);
     assert.equal(document.querySelectorAll('#atlas-page-description').length, 1);
-    assert.equal(document.querySelector('[aria-current="page"]')!.getAttribute('data-atlas-page'), page === 'rsi' ? 'outlook' : 'market-us');
+    assert.equal(document.querySelector('[aria-current="page"]')!.getAttribute('data-atlas-page'), destination);
   }
 });
 test('sidebar preference uses one versioned bounded key and remains optional', () => {

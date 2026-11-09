@@ -6,6 +6,8 @@ test('center navigation retains all perimeter nodes, restores controls and bound
   const {document,window:dom}=parseHTML('<html><head><meta name="atlas-service-base" content="/market-lab/"></head><body><aside class="workbench-tools"><button id="measure">측정</button></aside><header class="atlas-canvas-heading"><button class="symbol-selector-trigger">BTCUSD</button><button id="type">캔들</button></header><aside class="workbench-rail"><nav><a data-atlas-page="rsi">RSI</a><a data-atlas-page="scenario">조건 실험</a><button data-atlas-page="outlook">가격 차트</button></nav></aside><div class="chart-navigation"><button id="outside-zoom" data-chart-navigation="in">확대</button></div><footer class="workbench-bottom-bar"><button id="range">전체</button></footer></body></html>');
   const original=new Map(['document','window','location','MutationObserver','CustomEvent'].map(k=>[k,Object.getOwnPropertyDescriptor(globalThis,k)]));
   const listeners=new Map<string,Function>(), posts:unknown[]=[],urls:string[]=[];
+  const pageContexts:unknown[]=[];
+  document.addEventListener('atlas:page-context',(event:any)=>pageContexts.push(event.detail));
   const window={parent:null as unknown,addEventListener:(key:string,fn:Function)=>listeners.set(key,fn),history:{pushState:(_a:unknown,_b:unknown,url:string)=>urls.push(url),replaceState:(_a:unknown,_b:unknown,url:string)=>urls.push(url)}};window.parent=window;
   for(const [key,value]of Object.entries({document,window,location:new URL('http://localhost/?page=outlook'),MutationObserver:dom.MutationObserver,CustomEvent:dom.CustomEvent}))Object.defineProperty(globalThis,key,{value,configurable:true});
   t.after(()=>{for(const [key,value]of original){if(value)Object.defineProperty(globalThis,key,value);else Reflect.deleteProperty(globalThis,key);}});
@@ -56,16 +58,42 @@ test('center navigation retains all perimeter nodes, restores controls and bound
   assert.equal(document.getElementById(frame.dataset.toolbarId!),toolbar,'Reopening reuses the live portal owner');
   assert.equal(toolbar.hidden,false);assert.equal(toolbar.inert,true,'Retained portal actions wait for the current symbol and epoch');
   assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,true,'The background chart stays protected during the new load');
-  listeners.get('message')!({source:(frame as any).contentWindow,origin:'http://localhost',data:{
+  const ready={
     kind:'atlas:chart-state',ready:true,symbol:'TQQQ',epoch:Number(frame.dataset.centerEpoch),unit:'USD',timezone:'America/New_York',
     start:'2025-01-01',end:'2026-01-01',first:'2010-02-11',last:'2026-01-01',selected:'2026-01-01',close:50,
     frequency:'daily',frequencies:['daily','weekly'],scale:'log',chartType:'line',tool:'crosshair',magnet:'off',
     autoScale:true,candles:true,canUndo:false,canRedo:false,measurement:false,
-  }});
+    source:'Unvalidated child provider',page:'market-us',
+  };
+  const acknowledge=(data:Record<string,unknown>,origin='http://localhost',source:unknown=(frame as any).contentWindow)=>listeners.get('message')!({source,origin,data});
+  acknowledge(ready,'http://evil.test');
+  acknowledge(ready,'http://localhost',{});
+  for(const rejected of [{epoch:ready.epoch-1},{symbol:'SOXL'},{frequency:'1m'},{ready:false}])acknowledge({...ready,...rejected});
+  assert.deepEqual(pageContexts,[],'foreign, stale or unready chart states cannot change outer page context');
+  acknowledge(ready);
+  const accepted={page:'rsi',symbol:'TQQQ',epoch:ready.epoch,frequency:'daily',chartType:'line'};
+  assert.deepEqual(pageContexts,[accepted],'the accepted host scope exposes only validated chart context, without a child source or page');
   assert.notEqual(toolbar.inert,true,'The acknowledged toolbar is not a background-chart control');
   assert.equal(retainedButton.disabled,false,'Reopening does not disable retained portal buttons');
   assert.equal(retainedSelect.disabled,false,'Reopening does not disable retained portal selects');
   assert.equal(svg.getAttribute('aria-hidden'),'true','The hidden native plot remains concealed after the active child owns shared controls');
+  acknowledge({...ready,kind:'atlas:rsi-state',frequency:'weekly',chartType:'candles'});
+  assert.deepEqual(pageContexts,[accepted,{...accepted,frequency:'weekly',chartType:'candles'}],'later accepted view changes update context after the loader is already ready');
+  document.dispatchEvent(new dom.CustomEvent('atlas:symbol-select',{cancelable:true,detail:{symbol:'BTCUSD'}}));
+  acknowledge(ready);
+  assert.equal(pageContexts.length,2,'a retired child cannot replace the restored native page context');
+  click('[data-atlas-page=scenario]');
+  select({page:'market-us',symbol:'TQQQ',epoch:Number(frame.dataset.centerEpoch)});
+  const marketAck={kind:'atlas:center-state',page:'market-us',symbol:'TQQQ',epoch:Number(frame.dataset.centerEpoch),refreshMode:'manual',refreshIntervalMs:15000,source:'Unvalidated child provider'};
+  acknowledge(marketAck,'http://evil.test');acknowledge(marketAck,'http://localhost',{});
+  acknowledge({...marketAck,epoch:marketAck.epoch-1});acknowledge({...marketAck,page:'market-kr'});
+  assert.equal(pageContexts.length,2,'foreign, stale or mismatched market acknowledgements cannot publish context');
+  acknowledge(marketAck);
+  assert.deepEqual(pageContexts.at(-1),{page:'market-us',symbol:'BTCUSD',epoch:marketAck.epoch,refreshMode:'poll',refreshIntervalMs:60000},'the accepted US service route owns its requery cadence and displayed native symbol');
+  select({page:'market-kr',symbol:'TQQQ',epoch:marketAck.epoch});
+  acknowledge(marketAck);assert.equal(pageContexts.length,3,'a prior US acknowledgement cannot reset the newly selected Korean market');
+  acknowledge({...marketAck,page:'market-kr',epoch:Number(frame.dataset.centerEpoch),refreshMode:'poll'});
+  assert.deepEqual(pageContexts.at(-1),{page:'market-kr',symbol:'BTCUSD',epoch:Number(frame.dataset.centerEpoch),refreshMode:'manual',refreshIntervalMs:60000},'the Korean service view cannot inherit a child-supplied US polling claim');
 });
 
 test('static project navigation retains perimeter identity and rejects stale or foreign frames',async t=>{
@@ -73,6 +101,7 @@ test('static project navigation retains perimeter identity and rejects stale or 
   const original=new Map(['document','window','location','MutationObserver','CustomEvent'].map(k=>[k,Object.getOwnPropertyDescriptor(globalThis,k)]));
   document.documentElement.dataset.symbol='ETHUSD';
   const selectedSymbols:string[]=[];document.addEventListener('atlas:active-symbol',(event:any)=>selectedSymbols.push(event.detail.symbol));
+  const pageContexts:unknown[]=[];document.addEventListener('atlas:page-context',(event:any)=>pageContexts.push(event.detail));
   const listeners=new Map<string,Function>(), posts:unknown[]=[],urls:string[]=[];
   const window={parent:null as unknown,addEventListener:(key:string,fn:Function)=>listeners.set(key,fn),history:{pushState:(_a:unknown,_b:unknown,url:string)=>urls.push(url),replaceState:(_a:unknown,_b:unknown,url:string)=>urls.push(url)}};window.parent=window;
   for(const [key,value]of Object.entries({document,window,location:new URL('http://localhost/bitcoin-cycle-atlas/?page=outlook&symbol=ETHUSD'),MutationObserver:dom.MutationObserver,CustomEvent:dom.CustomEvent}))Object.defineProperty(globalThis,key,{value,configurable:true});
@@ -100,6 +129,12 @@ test('static project navigation retains perimeter identity and rejects stale or 
   assert.equal((frame as HTMLIFrameElement).hidden,true);assert.equal(svg.hasAttribute('aria-hidden'),false);assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,false);assert.equal((document.querySelector('#outside-zoom') as HTMLButtonElement).disabled,false);
   assert.equal(selectedSymbols.at(-1),'ETHUSD','returning to the background chart restores its actual asset identity');
   assert.equal(new URL(urls.at(-1)!).searchParams.get('symbol'),'ETHUSD');
+  click('[data-atlas-page=scenario]');
+  const acknowledge=(data:Record<string,unknown>)=>listeners.get('message')!({source:(frame as any).contentWindow,origin:'http://localhost',data});
+  acknowledge({kind:'atlas:center-select',page:'market-us',symbol:'TQQQ',epoch:Number(frame.dataset.centerEpoch)});
+  const epoch=Number(frame.dataset.centerEpoch);
+  acknowledge({kind:'atlas:center-state',page:'market-us',symbol:'TQQQ',epoch,refreshMode:'poll',refreshIntervalMs:15000,source:'Unvalidated child provider'});
+  assert.deepEqual(pageContexts,[{page:'market-us',symbol:'ETHUSD',epoch,refreshMode:'manual',refreshIntervalMs:60000}],'the accepted static US route retains manual loading regardless of child cadence claims');
 });
 
 for(const symbol of ['ETHUSD','MSTR','BMNR'])test(`${symbol} source actions stay concealed across acknowledged child charts and restore on return`,async t=>{

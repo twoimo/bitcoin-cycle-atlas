@@ -5,7 +5,7 @@
   --border:#27303e;--border-soft:#1d2633;--text:#e6ebf2;--muted:#a1adbf;--subtle:#8493a8;--focus:#8db2ff;
 }
 body[data-sidebar=compact]{--app-sidebar-width:68px}
-.atlas-dashboard-header{position:fixed;top:0;left:var(--app-sidebar-width);right:0;z-index:45;height:var(--app-header-height);display:flex;align-items:center;gap:12px;padding:0 24px;border-bottom:1px solid var(--border);background:var(--bg)}
+.atlas-dashboard-header{position:fixed;top:0;left:var(--app-sidebar-width);right:0;z-index:45;height:auto;min-height:64px;display:flex;align-items:center;gap:12px;padding:6px 24px;box-sizing:border-box;border-bottom:1px solid var(--border);background:var(--bg)}
 .atlas-dashboard-header[hidden]{display:none}
 .atlas-sidebar-toggle{width:32px;height:36px;flex:none;display:grid;place-items:center;border:0;background:transparent;color:var(--muted);font-size:18px;cursor:pointer;border-radius:6px}
 .atlas-sidebar-toggle:hover{background:var(--surface-hover);color:var(--text)}
@@ -71,7 +71,7 @@ body[data-sidebar=compact][data-shell=dashboard] .atlas-sidebar :is(.atlas-brand
   .atlas-dashboard-header{padding-inline:16px;gap:12px}
 }
 @media(max-width:640px){
-  body[data-shell=dashboard]{--app-sidebar-width:52px;--app-header-height:56px}
+  body[data-shell=dashboard]{--app-sidebar-width:52px;--app-header-height:64px}
   body[data-shell=dashboard] .atlas-sidebar,body[data-shell=dashboard] #root>.atlas-sidebar{padding:12px 4px}
   body[data-shell=dashboard] .atlas-sidebar :is(.atlas-brand,.atlas-nav a,.atlas-nav button){min-height:44px;height:44px}
   .atlas-dashboard-header{padding-inline:12px;gap:8px}
@@ -325,8 +325,9 @@ body[data-shell=chart] .shell-feature-panel[data-shell-measuring=true] .shell-fe
 .atlas-page-intro{display:flex;flex-direction:column;flex:none;gap:2px;width:100%;padding:4px 12px;border-bottom:1px solid var(--border-soft);background:var(--bg);color:var(--text)}
 .atlas-page-intro>.atlas-shell-heading{margin:0;font-size:13px;line-height:18px;letter-spacing:0;white-space:normal}
 .atlas-page-description{margin:0;color:var(--muted);font:11px/14px var(--font);white-space:normal;word-break:normal;overflow-wrap:break-word}
+.atlas-page-description>span{display:block}
 .atlas-shell-copy{flex:1 1 auto;display:flex;flex-direction:column;gap:2px}
-.atlas-shell-copy>.atlas-shell-heading{position:static;width:auto;height:auto;margin:0;line-height:18px;clip-path:none;overflow:visible}
+.atlas-shell-copy>.atlas-shell-heading{position:static;width:auto;height:auto;margin:0;line-height:18px;clip-path:none;overflow:visible;white-space:normal;overflow-wrap:break-word}
 .atlas-dashboard-header>.atlas-shell-controls,body[data-shell=dashboard] .atlas-dashboard-header>#market-header-slot.atlas-shell-controls{flex:0 1 auto;max-width:45%;min-width:0}
 body[data-embedded=true] .atlas-page-intro{display:none}
 @media(max-width:640px){
