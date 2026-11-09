@@ -231,7 +231,7 @@ body[data-shell=chart] [data-disabled-reason]{cursor:not-allowed}
   body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top][data-mobile-heading=two-row]{display:grid;grid-template-columns:minmax(80px,1fr) repeat(5,44px);grid-template-rows:44px 44px;gap:0;height:calc(92px + var(--mobile-top,0px));min-height:calc(92px + var(--mobile-top,0px));padding:calc(1px + var(--mobile-top,0px)) 4px 1px;overflow:visible;touch-action:manipulation}
   body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>:is(.symbol-selector-trigger,.workbench-symbol){grid-area:1/1;width:100%;max-width:none;min-width:0;height:44px;min-height:44px;justify-self:stretch;box-sizing:border-box}
   body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#workbench-frequency{grid-area:1/2;min-width:0;width:44px;height:44px;margin:0;box-sizing:border-box}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] #workbench-interval-select{width:44px;max-width:44px;height:44px;min-height:44px;padding:4px 12px 4px 4px;box-sizing:border-box}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] #workbench-interval-select{width:44px;min-width:44px;max-width:44px;height:44px;min-height:44px;padding:4px 12px 4px 4px;box-sizing:border-box}
   body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#workbench-chart-type{grid-area:1/3}
   body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#atlas-mode-menu{grid-area:1/4}
   body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#mobile-tools-toggle{grid-area:1/5}
@@ -246,6 +246,7 @@ body[data-shell=chart] [data-disabled-reason]{cursor:not-allowed}
   body[data-shell=chart] .shell-feature-header strong{font-weight:600;overflow-wrap:anywhere;white-space:normal}
   body[data-shell=chart] .shell-feature-header button{min-width:44px;min-height:44px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text);font:12px var(--font);cursor:pointer}
   body[data-shell=chart] .shell-feature-actions{display:flex;flex-wrap:wrap;align-items:center;gap:4px;min-width:0;width:100%;box-sizing:border-box;white-space:normal}
+  body[data-shell=chart] .shell-feature-actions>button{min-width:44px;min-height:44px;box-sizing:border-box}
   body[data-shell=chart] .shell-feature-actions>.workbench-icon{display:inline-flex;align-items:center;justify-content:center;flex:none;width:44px;min-width:44px;height:44px;min-height:44px;padding:8px;border:0;border-radius:4px;box-sizing:border-box}
   body[data-shell=chart] .shell-feature-actions>select{min-height:44px;min-width:0;max-width:100%;flex:1 1 auto;box-sizing:border-box}
   body[data-shell=chart] .shell-feature-actions>#equity-scenario{max-width:100%;width:auto}

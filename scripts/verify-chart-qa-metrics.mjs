@@ -32,7 +32,7 @@ export function readChartQa(selector='#lab-chart') {
     text:{rawCount:texts.length,rawPairs:rawPairs.length,rawPairDetails:rawPairs,paintedCount:visibleTexts.length,paintedPairs:visiblePairs.length,paintedPairDetails:visiblePairs},
     annotations:{rawCount:annotations.length,paintedCount:visibleAnnotations.length,pairs:annotationPairs.length,pairDetails:annotationPairs,labels:annotations},
     axis:{quote:quoteEntry,ticks,rawPairs:quotePairs(false).length,paintedPairs:quotePairs(true).length,rawPairDetails:quotePairs(false),paintedPairDetails:quotePairs(true)},
-    heading:heading?{rect:h,scrollWidth:heading.scrollWidth,clientWidth:heading.clientWidth,mode:heading.dataset.mobileHeading||'legacy',toolbarLabels:[heading,...heading.querySelectorAll('[role="toolbar"]')].map(n=>n.getAttribute('aria-label')).filter(Boolean),controls,clippedControls:controls.filter(c=>c.clipped),smallControls:controls.filter(c=>c.small),featurePanelOpen:document.querySelector('#atlas-shell-features-toggle')?.getAttribute('aria-expanded')==='true'}:null};
+    heading:heading?{rect:h,scrollWidth:heading.scrollWidth,clientWidth:heading.clientWidth,mode:heading.dataset.mobileHeading||'legacy',toolbarLabels:[heading,...heading.querySelectorAll('[role="toolbar"]')].map(n=>n.getAttribute('aria-label')).filter(Boolean),controls,overlapPairs:pairs(controls.filter(c=>!c.inPanel)),clippedControls:controls.filter(c=>c.clipped),smallControls:controls.filter(c=>c.small),featurePanelOpen:document.querySelector('#atlas-shell-features-toggle')?.getAttribute('aria-expanded')==='true'}:null};
 }
 
 /** Coordinates for native pointer input. No synthetic dispatch or DOM state

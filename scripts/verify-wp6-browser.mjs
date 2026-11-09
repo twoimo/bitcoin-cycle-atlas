@@ -222,7 +222,7 @@ async function runChartQaCase(spec,debugBase){
       if(phase!=='before'){
         assert.equal(receipt.maximumAnnotationPairs,0,'Painted event/period/milestone text overlaps, including native hover');
         if(width<=390){
-          const heading=receipt.initial.heading;assert.equal(heading.mode,'two-row');assert.ok(heading.scrollWidth<=heading.clientWidth+1,'Heading horizontally overflows');assert.deepEqual(heading.clippedControls,[],'Core controls clipped');assert.deepEqual(heading.smallControls,[],'44px core targets lost');
+          const heading=receipt.initial.heading;assert.equal(heading.mode,'two-row');assert.ok(heading.scrollWidth<=heading.clientWidth+1,'Heading horizontally overflows');assert.deepEqual(heading.clippedControls,[],'Core controls clipped');assert.deepEqual(heading.overlapPairs,[],'Core header controls overlap');assert.deepEqual(heading.smallControls,[],'44px core targets lost');
           assert.ok(heading.toolbarLabels.some(label=>label==='BTCUSD 차트 상단 도구'),'Instrument-specific accessible toolbar name changed');
           await click(cdp,'#atlas-shell-features-toggle');receipt.menu=await evaluate(cdp,readChartQa,selector);assert.equal(receipt.menu.heading.featurePanelOpen,true);assert.deepEqual(receipt.menu.heading.clippedControls,[],'Menu controls clipped');assert.deepEqual(receipt.menu.heading.smallControls,[],'44px menu targets lost');
           await screenshot(cdp,id+'-heading-menu.png',receipt);await key(cdp,'Escape','Escape',27);
