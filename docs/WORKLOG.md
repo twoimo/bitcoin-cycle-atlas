@@ -43,3 +43,9 @@
 - 검증: `node --test tests/forecast-models.test.mjs` 8개 통과, eth-review·verify:static 통과
 - 결과 요지: 자산군별 모델 계열(점프·구조·레버리지·부트스트랩·월별 AR)과 추정/가정 구분을 코드로 고정. 레버리지 감쇄는 −½L(L−1)σ²t 유도식, BMNR은 등록돼 있지만 T3로 경로 생성 거부
 - 남음: 실제 경로 생성기, 화면 배지(WP4)
+
+## 2026-11-09 · 요구사항 문서화 (인증·비공개 / 릴레이 3열·RAG)
+- 브랜치: `docs/requirements-auth-relay-rag-20261109`
+- 산출물: `docs/requirements/REQ_AUTH_PRIVATE_20261109.md`, `docs/requirements/REQ_RELAY_RAG_20261109.md`, `docs/requirements/README.md`
+- 내용: 초대·승인·강등·자기관리·Google 로그인, 블러 우회 대응 원칙(데이터 미전송), 보안 7종 도구 통과 기준, 3열 레이아웃 계약, RAG 파이프라인·OpenAI 키 취급·평가 메트릭 임계값·QA 시나리오
+- 남음: 미결정 항목 확정, 구현 마일스톤 승인
