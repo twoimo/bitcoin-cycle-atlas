@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "plspo-2026-10-31",
+  "inputsConfirmed": null,
+  "inputRoot": null,
+  "existingAssetCount": null,
+  "finalPdf": {
+    "path": null,
+    "sha256": null
+  },
+  "r17Pdf": {
+    "path": null,
+    "sha256": null,
+    "variant": null,
+    "approvedSha256": null
+  },
+  "audioSources": [
+    { "id": "plaud-1", "path": null, "sha256": null, "t0": 0, "durationSec": 18000 },
+    { "id": "plaud-2", "path": null, "sha256": null, "t0": 18000, "durationSec": 2400 }
+  ],
+  "render": { "longEdge": 1800, "quality": 80 },
+  "audio": {
+    "format": null,
+    "split": null,
+    "bitrateKbps": 40,
+    "chunkSeconds": null,
+    "sessions": null
+  }
+}
