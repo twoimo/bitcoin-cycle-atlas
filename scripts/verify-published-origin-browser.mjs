@@ -149,7 +149,8 @@ function inspectPage(){
     primaryCount:primary.length,chart,
     ownerCounts:Object.fromEntries(['.atlas-canvas-heading','.workbench-tools','.workbench-rail','.workbench-bottom-bar'].map(selector=>[selector,document.querySelectorAll(selector).length])),
     nav:[...document.querySelectorAll('.workbench-rail .atlas-nav [data-atlas-page]')].map(node=>node.dataset.atlasPage),
-    top:box(document.querySelector('.atlas-canvas-heading')),bottom:box(document.querySelector('.workbench-bottom-bar')),
+    top:box(document.querySelector('.atlas-canvas-heading')),headingLayout:document.querySelector('.atlas-canvas-heading')?.dataset.mobileHeading||null,
+    headingScroll:{width:document.querySelector('.atlas-canvas-heading')?.scrollWidth,client:document.querySelector('.atlas-canvas-heading')?.clientWidth},bottom:box(document.querySelector('.workbench-bottom-bar')),
     refreshNotice:box(document.querySelector('#btc-refresh-notice')),
     left:box(document.querySelector('.atlas-sidebar')),right:box(document.querySelector('.workbench-rail')),
     trayOpen:document.querySelector('.workbench-rail')?.hasAttribute('data-mobile-open')===true,
@@ -229,12 +230,16 @@ export function validatePage(state,spec){
     inside(state.left,'Left rail');inside(state.right,'Right rail');
     assert.ok(Math.abs(state.left.width-52)<1&&Math.abs(state.right.width-45)<1,'Desktop rail widths must remain 52px / 45px');
     assert.ok(state.chart.allocation.left>=state.left.right-1&&state.chart.allocation.right<=state.right.left+1,'Plot overlaps the side rails');
-  }else{assert.equal(state.left.painted,false);assert.equal(state.right.painted,false);assert.equal(state.top.height,48);}
-  assert.equal(state.top.height,spec.width>620?38:48,'The top controls must retain one fixed-height row');
+  }else{assert.equal(state.left.painted,false);assert.equal(state.right.painted,false);}
+  assert.equal(state.top.height,spec.width>620?38:spec.width<=390?92:48,'The top controls must retain their fixed-height row layout');
+  if(spec.width<=390){assert.equal(state.headingLayout,'two-row');assert.ok(state.headingScroll.width<=state.headingScroll.client,'Narrow primary controls cannot require horizontal scrolling');}
   if(target.center){inside(state.frame.box,'Active iframe');assert.ok(Math.abs(state.frame.box.width-state.frame.width)<=1&&Math.abs(state.frame.box.height-state.frame.height)<=1,'Iframe coordinates must map one-to-one');}
   assert.deepEqual(state.cspViolations,[],'Actual document emitted a CSP violation');
 }
 async function click(cdp,selector){
+  if(await evaluate(cdp,s=>Boolean(document.querySelector(s)?.closest('.shell-feature-panel[hidden]')),selector)){
+    await click(cdp,'#atlas-shell-features-toggle');await settled(cdp);
+  }
   const point=await evaluate(cdp,selector=>{
     const node=document.querySelector(selector);if(!node||node.disabled)throw new Error('Missing or disabled native target '+selector);
     const b=node.getBoundingClientRect(),x=b.left+b.width/2,y=b.top+b.height/2,hit=document.elementFromPoint(x,y);

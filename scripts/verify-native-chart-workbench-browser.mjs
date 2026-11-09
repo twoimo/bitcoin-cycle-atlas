@@ -71,7 +71,7 @@ export async function verifyNativeChartWorkbench(api) {
     assert.equal(record.geometry.top.height,record.shell.coarse?48:38);
     assert.ok(record.geometry.plot.left>=record.geometry.left.right&&record.geometry.plot.right<=record.geometry.right.left,'Canvas overlaps side rails');
   }else{
-    assert.equal(record.geometry.top.height,48);
+    assert.equal(record.geometry.top.height,width<=390?92:48,'Narrow phones retain two complete 44px control rows');
     for(const [trigger,selector]of [['#mobile-tools-toggle','.atlas-sidebar'],['#mobile-details-toggle','.workbench-rail']]){
       await click(cdp,trigger);inside(await bounds(cdp,selector),selector+' tray');
       await click(cdp,selector+' .mobile-tray-heading button');

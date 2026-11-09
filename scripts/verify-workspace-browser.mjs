@@ -83,6 +83,7 @@ export async function verifyEmbeddedDataSurface(api){
     await settled(context);
   };
   const revealHeadingControl=async(selector)=>{
+      if(await evaluate(cdp,s=>Boolean(document.querySelector(s)?.closest('.shell-feature-panel[hidden]')),selector))await rawPointer('#atlas-shell-features-toggle');
       for(let attempt=0;attempt<18;attempt++){
         const target=await evaluate(cdp,readNativeInteractiveTarget,selector);
         if(complete(target))return target;
