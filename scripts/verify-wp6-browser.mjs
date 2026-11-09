@@ -200,8 +200,8 @@ async function runChartQaCase(spec,debugBase){
     const {targetId}=await browser.send('Target.createTarget',{url:'about:blank',browserContextId:contextId});
     const target=await until(async()=>{const list=await(await fetch(debugBase+'/json/list')).json();return list.find(t=>t.id===targetId&&t.webSocketDebuggerUrl);},'chart QA target');
     cdp=await Cdp.connect(target.webSocketDebuggerUrl);receipt.contextId=contextId;
-    const requests=new Set();let networkChanged=Date.now();
-    cdp.on('Network.requestWillBeSent',event=>{if(/^https?:/.test(event.request?.url||'')){requests.add(event.requestId);networkChanged=Date.now();}});
+    const requests=new Map();let networkChanged=Date.now();
+    cdp.on('Network.requestWillBeSent',event=>{if(/^https?:/.test(event.request?.url||'')){requests.set(event.requestId,{url:event.request.url,type:event.type});networkChanged=Date.now();}});
     for(const eventName of ['Network.loadingFinished','Network.loadingFailed'])cdp.on(eventName,event=>{requests.delete(event.requestId);networkChanged=Date.now();});
     cdp.on('Runtime.exceptionThrown',event=>receipt.runtimeErrors.push(event.exceptionDetails));
     await cdp.send('Page.enable');await cdp.send('Runtime.enable');await cdp.send('Network.enable');await cdp.send('Network.setCacheDisabled',{cacheDisabled:true});
@@ -214,9 +214,11 @@ async function runChartQaCase(spec,debugBase){
     await until(async()=>{
       const state=await evaluate(cdp,selector=>{const svg=document.querySelector(selector),plot=svg?.closest('.atlas-plot');return {boot:document.documentElement?.dataset.boot,busy:plot?.getAttribute('aria-busy')==='true',source:svg?Object.fromEntries(['start','end','interval','forecastValueSignature','observedLineCount','observedCandleCount','priceMin','priceMax'].map(k=>[k,svg.dataset[k]])):null};},selector);
       const next=JSON.stringify(state);if(next!==signature){signature=next;changed=Date.now();}
-      const ready=state.boot==='ready'&&!state.busy&&requests.size===0&&Date.now()-networkChanged>=750&&Date.now()-changed>=1000;
-      if(ready)receipt.ready={...state,networkQuietMs:Date.now()-networkChanged,sourceStableMs:Date.now()-changed};return ready;
-    },id+' completed model and stable source',60000);
+      const pending=[...requests.values()],pendingData=pending.filter(r=>['Fetch','XHR'].includes(r.type));
+      receipt.readinessLast={...state,pendingRequests:pending,pendingDataRequests:pendingData,networkQuietMs:Date.now()-networkChanged,sourceStableMs:Date.now()-changed};
+      const ready=state.boot==='ready'&&!state.busy&&pendingData.length===0&&receipt.readinessLast.networkQuietMs>=750&&receipt.readinessLast.sourceStableMs>=1000;
+      if(ready)receipt.ready=receipt.readinessLast;return ready;
+    },id+' completed model and stable source',60000).catch(error=>{throw new Error(error.message+' '+JSON.stringify(receipt.readinessLast));});
     await settled(cdp);receipt.initial=await evaluate(cdp,readChartQa,selector);await screenshot(cdp,id+'-chart.png',receipt);
     assert.ok(receipt.initial.chart.painted&&receipt.initial.chart.paths>0,'No painted chart');
     if(symbol==='BTCUSD'){
