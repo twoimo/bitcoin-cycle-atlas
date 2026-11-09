@@ -1,4 +1,3 @@
-import { quoteRsiAt } from '../../dist/ui/quote-rsi.js';
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
 import { withChartSpacing,retargetChartRange } from '../../dist/chart-view-policy.js';
@@ -86,7 +85,7 @@ export function ethPayload(revision = 1) {
  * private function is extracted or rewritten. Requests deliberately permit late
  * success after abort so ownership cannot accidentally rely on browser abort. */
 export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
-  const requests = [], liveRequests = [], frames = new Map(), timers = new Map(), draws = [], emitted = [], hudUpdates = [], hudMounts = [];
+  const requests = [], liveRequests = [], frames = new Map(), timers = new Map(), draws = [], emitted = [];
   const window = new Surface(), document = new Surface();
   const bootTimers = new Map(); let bootTimerId = 0;
   window.setTimeout = callback => { bootTimers.set(++bootTimerId, callback); return bootTimerId; };
@@ -105,8 +104,6 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     const pending = deferred(); requests.push({ url, options, ...pending }); return pending.promise;
   };
   const deps = {
-    quoteRsiAt,
-    mountQuoteHud:(host,options)=>{hudMounts.push({host,options});return {update:value=>hudUpdates.push({...value}),destroy(){}};},
     withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,nativeDateRange,
     mountNativeChartApp: app => document.body.append(app),
     // The real shell adapter is exercised separately with a parsed DOM. This
@@ -159,7 +156,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     app.dispatchEvent({ type: 'click', target });
   };
   return {
-    requests, liveRequests, frames, timers, draws, events: emitted, initialization, document, app, location, urlWrites, hudUpdates, hudMounts,
+    requests, liveRequests, frames, timers, draws, events: emitted, initialization, document, app, location, urlWrites,
     microtasks, frame, settle,
     reply: (index, payload) => requests[index].resolve({ ok: true, json: async () => payload }),
     reject: (index, message = 'Archive failed') => requests[index].reject(new Error(message)),

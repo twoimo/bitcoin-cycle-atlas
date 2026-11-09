@@ -92,7 +92,7 @@ export function refreshShellSlots(document, {symbol} = {}) {
   } else heading.querySelector('.shell-history-slot')?.remove();
   const top = [heading.querySelector('.symbol-selector-trigger,.workbench-symbol'), $('#workbench-frequency'), $('#workbench-chart-type'), $('#atlas-mode-menu'), feature, history, $('#workbench-workspace'), $('#workbench-chart-menu'), $('#lab-svg'), $('#atlas-display-options')];
   top.forEach((node, index) => slot(node, 'top', index));
-  ordered(heading, [...top, ...[...heading.children].filter(node => !top.includes(node))].filter(node => !instance?.mobileHeading.owns(node)));
+  ordered(heading, [...top, ...[...heading.children].filter(node => !top.includes(node))]);
   for (const spacer of heading.querySelectorAll('.workbench-spacer,.eth-divider')) if (!spacer.hidden) spacer.hidden = true;
 
   const footer = $('.workbench-bottom-bar');

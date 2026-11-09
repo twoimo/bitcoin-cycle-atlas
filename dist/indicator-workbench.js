@@ -148,23 +148,13 @@ export function mountIndicatorWorkbench({plot,stage}) {
     for(const [id,selector] of [['readout','#lab-metrics'],['source','.workbench-market-info'],['legend','.lab-chart-foot']]){
       const node=plot.querySelector(selector);if(node)node.hidden=!isIndicatorVisible(state,id);
     }
-    const sourceVisible=isIndicatorVisible(state,'source'),quoteSource=plot.querySelector('[data-quote-field="source"]');
-    if(readoutNode)readoutNode.dataset.sourceVisible=String(sourceVisible);
-    if(quoteSource){
-      quoteSource.dataset.sourceVisible=String(sourceVisible);
-      quoteSource.setAttribute('aria-hidden',String(!sourceVisible));
-      if(sourceVisible)quoteSource.style.removeProperty('visibility');else quoteSource.style.setProperty('visibility','hidden');
-    }
     updateOverlayOffsets();
   }
   function updateOverlayOffsets(){
     // Actual wrapped text height is measured by ResizeObserver, never by a
     // pointer handler. Position changes cannot resize these absolute overlays.
     const sourceTop=7+(isIndicatorVisible(state,'readout')?(overlaySizes.get(readoutNode)??36)+4:0);
-    // The shared quote owns the visible source row. Its original refresh
-    // control sits beside that quote in the price-axis header, not below it.
-    const sourceInHeader=sourceNode?.matches('.quote-hud-source-controls');
-    const indicatorTop=sourceTop+(!sourceInHeader&&isIndicatorVisible(state,'source')?(overlaySizes.get(sourceNode)??20)+6:0);
+    const indicatorTop=sourceTop+(isIndicatorVisible(state,'source')?(overlaySizes.get(sourceNode)??20)+6:0);
     for(const [property,value] of [['--source-top',sourceTop],['--indicator-top',indicatorTop]])if(plot.style.getPropertyValue(property)!==`${value}px`)plot.style.setProperty(property,`${value}px`);
   }
   function paintValueRows(rows,details,{chart=false}={}){
