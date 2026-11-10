@@ -546,7 +546,9 @@
     "tests/helpers/eth-prospective-growth-fixture.mjs",
     "tests/journal-entry-ownership.test.mjs",
     "tests/treasury-instruments.test.mjs",
-    "tests/treasury-model.test.mjs"
+    "tests/treasury-model.test.mjs",
+    "dist/compare-shell-host.js",
+    "dist/comparison-url-state.js"
   ],
   "dynamicResolutions": [
     {
