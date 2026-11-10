@@ -18,13 +18,14 @@ async function mount(content: React.ReactNode, publicUrl: string) {
   let frameId = 0;
   const parent = { document, location, postMessage: (message: unknown) => posts.push(message) };
   const window = { document, location, parent, HTMLIFrameElement: dom.HTMLIFrameElement,
+    CustomEvent: dom.CustomEvent, Event: dom.Event,
     addEventListener(kind: string, listener: (event: any) => void) { if (!listeners.has(kind)) listeners.set(kind, new Set()); listeners.get(kind)!.add(listener); },
     removeEventListener: (kind: string, listener: (event: any) => void) => listeners.get(kind)?.delete(listener),
     requestAnimationFrame(callback: FrameRequestCallback) { frames.set(++frameId, callback); return frameId; },
     cancelAnimationFrame: (id: number) => frames.delete(id),
   };
   Object.defineProperty(document, 'defaultView', { value: window, configurable: true });
-  const globals = { document, window, location, Element: dom.Element, IS_REACT_ACT_ENVIRONMENT: true,
+  const globals = { document, window, location, Element: dom.Element, CustomEvent: dom.CustomEvent, Event: dom.Event, IS_REACT_ACT_ENVIRONMENT: true,
     history: { state: { retained: true }, replaceState(state: unknown, _title: string, url: string) {
       assert.deepEqual(state, { retained: true }); urlWrites.push(url); location.href = new URL(url, location.href).href;
     } },
