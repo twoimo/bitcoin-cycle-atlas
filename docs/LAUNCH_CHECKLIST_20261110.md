@@ -53,7 +53,8 @@ Pro가 지적한 나머지는 미수정으로 남긴다. D03 reader를 연 채 �
 - compare 셸 실브라우저 검사 **PASSED**(실패 0). 계약은 수정된 구성에 맞췄다: 사이드바가 렌더되면 내비는 사이드바 소유이고 오른쪽 레일은 그리지 않으며, 640px 이하에서만 레일이 내비를 소유한다. 왕복 뒤 노드 동일성·footer 소유·source 잠금/복원 검사는 유지했다.
 - 전체 사이트 53-case 네이티브 브라우저 스위트 **53/53 passed, failures 0**. 검사 분모는 base 26 + workspace 13 + forecast-replay 4 + chart-replay 7 + consolidated 3이다. 하네스 쪽에서 stale 가정 두 곳을 제품 구성에 맞췄다: phone 폭에서는 sidebar가 렌더되지 않으므로 차트 복귀 컨트롤을 레일 항목으로 판정하고, 데이터 표의 아래 정렬 기준을 viewport 대신 콘텐츠 바 상단으로 계산한다. 검사 자체를 삭제하거나 허용치를 늘리지 않았다.
 - `?page=relay` 새 문서 로드가 간헐적으로 boot error가 되는 현상은 기준 상태(`dist` 미수정)에서도 4회 중 2회 재현됐다. 이번 수정으로 생긴 회귀가 아니며 원인은 아직 확정하지 않았다.
-- 전체 `npm test`는 최종 소스에서 다시 실행 중이다. 결과는 아래 실행 영수증에 추가한다.
+- 전체 `npm test`(Docker 데몬 기동 포함): `ATLAS_TEST_TOTAL {"complete":true,"tests":3358,"pass":3353,"fail":0,"skipped":5,"batches":2}`. 고정 Linux/x64 Node v24.22.2 frozen replay까지 실행됐고 수치 허용오차·저장 출력은 바꾸지 않았다. Docker 데몬이 내려가 있던 중간 실행은 `complete:false`였으며 그 값을 통과로 쓰지 않았다.
+- 최종 소스 커밋은 `2a0162760b866a2f6d3a49e2fa3a40f93b5245bc`다. 이 커밋의 검사 묶음은 위와 같고, 배포·CI·릴리스는 여전히 별도다.
 
 아직 닫히지 않은 것: 위 D03~D09, WP-A 미디어·청취·동기화·PDF·Linux 원자 게시, macOS 외부 AppKit 메뉴·Safari·실기기, 원격 CI·배포. `mediaPrepared:false`와 출시 보류를 유지한다.
 
