@@ -193,3 +193,24 @@ test('the layout lock ignores the moving select box but keeps the viewport', () 
   assert.equal(lock.innerWidth, 1440);
   assert.deepEqual(lock.plot, [83, 56, 1335, 779]);
 });
+
+for (const failure of ['override', 'readiness', 'geometry']) {
+  test('popup emulation is restored after a failed ' + failure + ' step', async () => {
+    const h = harness({ layouts: [layout, layout, layout] });
+    const send = h.cdp.send;
+    let reads = 0, waits = 0, ran = false;
+    h.cdp.send = async (method, params) => {
+      await send(method, params);
+      if (failure === 'override' && method === 'Emulation.setDeviceMetricsOverride' && params.mobile) throw new Error('injected override');
+    };
+    const evaluate = async (...args) => {
+      if (args[1].name === 'readNativeSelectLayout' && ++reads === 2 && failure === 'geometry') throw new Error('injected geometry');
+      return h.evaluate(...args);
+    };
+    const settled = async () => { if (++waits === 1 && failure === 'readiness') throw new Error('injected readiness'); };
+    await assert.rejects(inNativeSelectPopupMode({ cdp: h.cdp, evaluate, settled, selector: '#s', viewport: desktop,
+      run: async () => { ran = true; } }), new RegExp('injected ' + failure));
+    assert.equal(ran, false);
+    assert.deepEqual(h.metrics().map(call => call.params.mobile), [true, false]);
+  });
+}

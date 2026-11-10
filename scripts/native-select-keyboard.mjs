@@ -67,7 +67,7 @@ export function readNativeSelectLayout(selector) {
     document.querySelector('.atlas-plot') || document.querySelector('svg[data-chart="price"]');
   const select = document.querySelector(selector);
   return {
-    innerWidth, clientWidth: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth,
+    innerWidth, innerHeight, clientWidth: document.documentElement.clientWidth, clientHeight: document.documentElement.clientHeight, scrollWidth: document.documentElement.scrollWidth,
     bodyWidth: Math.round(document.body.getBoundingClientRect().width * 100) / 100,
     devicePixelRatio, coarsePointer: matchMedia('(pointer: coarse)').matches,
     heading: document.querySelector('.atlas-canvas-heading')?.dataset.mobileHeading ?? null,
@@ -119,18 +119,18 @@ export async function inNativeSelectPopupMode({ cdp, evaluate, context, settled,
     await cdp.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: value });
   };
   const before = nativeSelectLayoutLock(await evaluate(reader, readNativeSelectLayout, selector));
-  await apply(true);
-  await settled(reader);
-  const after = nativeSelectLayoutLock(await evaluate(reader, readNativeSelectLayout, selector));
-  if (JSON.stringify(after) !== JSON.stringify(before)) {
-    await apply(mobile);
-    await settled(reader);
-    throw new Error('Internal popup emulation changed the tested desktop layout: ' + JSON.stringify({ before, after }));
-  }
-  receipt.internalPopupMode = true;
-  receipt.popupMenu = { before: 'external-appkit', during: 'internal', after: 'external-appkit' };
-  receipt.layoutLocked = after;
   try {
+    // Even a rejected switch, readiness barrier or geometry read must attempt
+    // restoration: the browser may already have accepted the override.
+    await apply(true);
+    await settled(reader);
+    const after = nativeSelectLayoutLock(await evaluate(reader, readNativeSelectLayout, selector));
+    if (JSON.stringify(after) !== JSON.stringify(before)) {
+      throw new Error('Internal popup emulation changed the tested desktop layout: ' + JSON.stringify({ before, after }));
+    }
+    receipt.internalPopupMode = true;
+    receipt.popupMenu = { before: 'external-appkit', during: 'internal', after: 'external-appkit' };
+    receipt.layoutLocked = after;
     receipt.sequence = await run();
   } finally {
     await apply(mobile);
@@ -167,8 +167,7 @@ export async function selectNativeOptionByKeyboard({ cdp, evaluate, context, set
       if (!state.focused) throw new Error('Native select did not accept keyboard focus: ' + selector);
       await settled(reader);
     };
-    await focus();
-    // Re-establish focus inside the popup mode: the switch may have re-rendered the panel.
+    // Establish focus inside the popup mode: the switch may have re-rendered the panel.
     await focus();
     const keys = [];
     if (homeReset) {
