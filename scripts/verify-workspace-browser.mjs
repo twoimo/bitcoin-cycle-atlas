@@ -1064,7 +1064,7 @@ export async function verifyWorkspaceSurface(api) {
         assert.ok(Math.abs(qa.chart.width-qa.chart.viewWidth)<=1&&Math.abs(qa.chart.height-qa.chart.viewHeight)<=1,'Reported mobile SVG must remain pixel-sized');
         for(const event of qa.events)for(const period of qa.periods)assert.ok(!overlaps(event,period),'Historical label covers period comparison: '+JSON.stringify({qaWidth,qaHeight,event,period}));
         assert.ok(qa.headers.length===2&&qa.ticks.length>0,'Source/quote headers and actual price ticks must be present');
-        assert.ok(qa.evidence.length>=4&&qa.periods.length>0,'Model evidence and visible period labels must be present for the collision check');
+        assert.ok(qa.evidence.length>=4&&qa.periods.length>0,'Model evidence and visible period labels must be present for the collision check: '+JSON.stringify({qaWidth,qaHeight,evidence:qa.evidence.length,periods:qa.periods.length,chart:qa.chart}));
         assert.ok(qa.cycleTags.length>0&&qa.periodPaint.length>0,'Cycle tags and visible period strokes must be present for the collision check');
         assert.deepEqual(qa.strokeCollisions,[],'A period line or arrow crosses a cycle/history/evidence tag, HUD or price badge: '+JSON.stringify({qaWidth,qaHeight,collisions:qa.strokeCollisions}));
         for(const evidence of qa.evidence)for(const period of qa.periods)assert.ok(!overlaps(evidence,period),'Model evidence control covers period text: '+JSON.stringify({qaWidth,qaHeight,evidence,period}));

@@ -67,7 +67,7 @@ function priceSegments(points) {
   return segments;
 }
 
-function labelAt(item, y, { bounds, placed, obstacles, segments }) {
+function labelAt(item, y, { bounds, placed, obstacles, segments, clearNeighborStrokes = false }) {
   const available = item.x2 - item.x1 - 12;
   if (available <= 0) return null;
   const dense = item.lanePitch < 18, fontSize = dense ? 8 : 10, height = dense ? 10 : 14, labelGap = dense ? 1 : 3;
@@ -90,7 +90,7 @@ function labelAt(item, y, { bounds, placed, obstacles, segments }) {
       .flatMap(box => [box.x - width - labelGap - 3, box.x + box.width + labelGap + 3]);
     for (const x of new Set([center, start, end, (start + center) / 2, (center + end) / 2, ...edges].map(value => clamp(value, start, end)))) {
       const box = { x, y: variant.top, width, height: variant.height };
-      if (obstacles.some(other => intersects(box, other, 2)) || placed.some(other => (other.labelBox && intersects(box, other.labelBox, labelGap)) || intersects(box, { x: other.x1, y: other.y - 2, width: other.x2 - other.x1, height: 4 }, 1))) continue;
+      if (obstacles.some(other => intersects(box, other, 2)) || placed.some(other => (other.labelBox && intersects(box, other.labelBox, labelGap)) || (!clearNeighborStrokes && intersects(box, { x: other.x1, y: other.y - 2, width: other.x2 - other.x1, height: 4 }, 1)))) continue;
       const priceHits = segments.reduce((count, segment) => count + Number(segmentIntersectsBox(segment, box)), 0);
       // Relation names carry the meaning. Prefer the smaller two-line name to
       // a bare number even when a price segment makes the name less convenient.
@@ -245,6 +245,20 @@ export function cycleIntervalsOverlayMarkup({ intervals = [], comparisons = null
     item.labelBox = labelAt(item, item.y, { bounds, placed: items.filter(other => other !== item), obstacles: safeObstacles.filter(box => box.x < item.x2 + 2 && box.x + box.width > item.x1 - 2), segments: segments.filter(segment => Math.max(segment.x1, segment.x2) >= item.x1 && Math.min(segment.x1, segment.x2) <= item.x2) });
     item.labelMode = item.labelBox?.mode || 'hidden';
     item.crowded = items.some(other => other !== item && Math.abs(other.y - item.y) < 6 && horizontalOverlap(item, other, 5) > 0);
+  }
+  // In a very short plot every row can be closer than one text line. Keep one
+  // readable label rather than a completely unlabeled band. Clear neighboring
+  // paint and hit strokes around it, exactly as for a fixed HUD. The original
+  // endpoints, row positions, full dates and keyboard access stay unchanged.
+  if (lanePitch < 14 && !items.some(item => item.labelBox)) {
+    for (const item of [...items].sort((a, b) => Number(b.active) - Number(a.active) || Number(b.related) - Number(a.related))) {
+      const label = labelAt(item, item.y, { bounds, placed: items.filter(other => other !== item), obstacles: safeObstacles, segments, clearNeighborStrokes: true });
+      if (!label) continue;
+      item.labelBox = label;
+      item.labelMode = label.mode;
+      for (const other of items) if (other !== item) other.strokeObstacles.push(label);
+      break;
+    }
   }
   for (const row of rows) {
     row.spans = items.filter(item => item.relation.id === row.id);

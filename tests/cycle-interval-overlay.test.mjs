@@ -194,11 +194,17 @@ test('short mobile plots retain every relationship and its detail access while o
   assert.equal(groups(result.markup).length, 9);
   assert.ok(result.items.some(item => item.compact), 'fixed rows compress inside the existing bottom band');
   assert.ok(result.hiddenLabelCount > 0, 'small plots omit text instead of using the upper chart');
+  assert.equal(result.labelCount, 1, 'a crowded band keeps one readable label without allocating more chart height');
+  assert.ok(active.labelBox, 'the selected relationship gets the scarce readable label first');
   for (const item of result.items) {
     assert.ok(item.y - item.capHeight >= result.bandTop && item.y + item.capHeight <= result.bandBottom);
     if (item.labelBox) {
       assert.ok(item.labelBox.y >= result.bandTop && item.labelBox.y + item.labelBox.height <= result.bandBottom);
-      for (const other of result.items) if (other !== item) assert.equal(overlap(item.labelBox, { x: other.x1, y: other.y - 2, width: other.x2 - other.x1, height: 4 }), false, 'crowding sacrifices labels before drawing another interval through their text');
+      for (const line of tags(result.markup, 'cycle-interval-line')) {
+        if (Math.abs(Number(line.y1) - item.y) < 1e-6) continue;
+        const radius = Number(line['stroke-width']) / 2;
+        assert.equal(overlap(item.labelBox, { x: Number(line.x1) - radius, y: Number(line.y1) - radius, width: Number(line.x2) - Number(line.x1) + 2 * radius, height: 2 * radius }), false, 'actual neighboring paint must leave the readable label clear');
+      }
     }
   }
   const activeGroup = groups(result.markup).find(group => group['data-cycle-interval'] === 'r8');
@@ -336,4 +342,19 @@ test('filtering, invalid dates, projection failures, and hostile metadata cannot
     assert.doesNotMatch(invalid.markup, /NaN|Infinity/);
   }
   assert.equal(cycleIntervalsOverlayMarkup().visibleCount, 0);
+});
+
+
+test('short-plot fallback preserves endpoint identity and yields to a fully blocking HUD', () => {
+  const entries = Object.freeze(INTERVAL_RELATIONS.map((relation, index) => Object.freeze(interval('r'+index, relation.id, '2020-01-01', '2024-01-01'))));
+  const config = options({ intervals: entries, left: 8, right: 326, top: 18, bottom: 153 });
+  const before = JSON.stringify(entries), normal = cycleIntervalsOverlayMarkup(config);
+  assert.equal(normal.labelCount, 1);
+  const blocked = cycleIntervalsOverlayMarkup({ ...config, obstacles: [{ x: 8, y: normal.bandTop, width: 318, height: normal.bandBottom - normal.bandTop }] });
+  assert.equal(blocked.labelCount, 0, 'an actual HUD is never overwritten to satisfy a label quota');
+  assert.equal(blocked.visibleCount, normal.visibleCount);
+  const identity = result => result.items.map(item => [item.interval.id, item.x1, item.x2, item.rawX1, item.rawX2, item.y, item.days, item.duration]);
+  assert.deepEqual(identity(blocked), identity(normal));
+  assert.deepEqual(groups(blocked.markup).map(group => group['aria-label']), groups(normal.markup).map(group => group['aria-label']));
+  assert.equal(JSON.stringify(entries), before);
 });
