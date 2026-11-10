@@ -2,18 +2,23 @@ const axisEscape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;'
 // Glyph advances depend on the loaded face, the letter spacing and the SVG
 // user units (viewBox). Cache across drawings, and bump the epoch whenever the
 // document finishes loading a font so a fallback measurement cannot survive.
-const axisGlyphWidths=new Map(),axisFontEpochs=new WeakMap();
 // Numeric labels repeat the same ten glyphs. Once each glyph advance is known
 // for a font and size, a new price string composes its width from those cached
 // advances instead of forcing an SVG layout flush for every label. One real
 // sample per (size, length) calibrates the composition against the browser.
-const axisCharWidths=new Map(),axisCompositionRatios=new Map();
-function axisFontEpoch(doc,view){
-  const owner=doc||view;if(!owner)return 0;
-  let entry=axisFontEpochs.get(owner);
-  if(!entry){entry={epoch:0};axisFontEpochs.set(owner,entry);
-    try{owner.fonts?.addEventListener?.('loadingdone',()=>{entry.epoch+=1;});}catch{}}
-  return entry.epoch;
+// Caches live per document: another iframe or a second SVG must not inherit
+// these advances, and a font load clears the document's cache outright.
+const axisDocumentCaches=new WeakMap();
+const axisLooseCache={glyphs:new Map(),chars:new Map(),ratios:new Map(),rawOnly:new Set(),epoch:0};
+function axisCacheFor(doc){
+  if(!doc)return axisLooseCache;
+  let entry=axisDocumentCaches.get(doc);
+  if(!entry){
+    entry={glyphs:new Map(),chars:new Map(),ratios:new Map(),rawOnly:new Set(),epoch:0};
+    axisDocumentCaches.set(doc,entry);
+    try{doc.fonts?.addEventListener?.('loadingdone',()=>{entry.epoch+=1;entry.glyphs.clear();entry.chars.clear();entry.ratios.clear();entry.rawOnly.clear();});}catch{}
+  }
+  return entry;
 }
 const axisNumberFormats=new Map();
 const axisNumber=(value,digits)=>{if(!axisNumberFormats.has(digits))axisNumberFormats.set(digits,new Intl.NumberFormat('en-US',{maximumFractionDigits:digits}));return axisNumberFormats.get(digits).format(value);};
@@ -28,7 +33,9 @@ function priceAxisTextMetrics(svg){
   const cache=new Map(),viewBox=svg?.getAttribute?.('viewBox')||'';
   let probe=null;
   try{if(doc?.createElementNS&&svg?.appendChild){probe=doc.createElementNS('http://www.w3.org/2000/svg','text');for(const [name,value] of Object.entries({'font-family':font.family,'font-weight':font.weight,'font-style':font.style,'font-variant-numeric':'tabular-nums','letter-spacing':font.spacing,x:0,y:0,visibility:'hidden','pointer-events':'none','aria-hidden':'true'}))probe.setAttribute(name,value);}}catch{}
-  let cachePrefix=`${font.family}|${font.weight}|${font.style}|${font.spacing}|${viewBox}|${axisFontEpoch(doc,view)}`;
+  const store=axisCacheFor(doc);
+  const typeKey=`${font.family}|${font.weight}|${font.style}|${font.spacing}|${viewBox}`;
+  let cachePrefix=`${typeKey}|${store.epoch}`;
   function probeMeasure(text,size){
     text=String(text);const key=`${size}:${text}`;if(cache.has(key))return cache.get(key);
     let width=0;
@@ -43,7 +50,7 @@ function priceAxisTextMetrics(svg){
   }
   function direct(text,size){
     text=String(text);const key=`${size}:${text}`;if(cache.has(key))return cache.get(key);
-    const shared=`${cachePrefix}|${key}`;if(axisGlyphWidths.has(shared)){const width=axisGlyphWidths.get(shared);cache.set(key,width);return width;}
+    const shared=`${cachePrefix}|${key}`;if(store.glyphs.has(shared)){const width=store.glyphs.get(shared);cache.set(key,width);return width;}
     let width=0;
     if(probe){
       try{probe.setAttribute('font-size',size);probe.textContent=text;svg.appendChild(probe);const advance=probe.getComputedTextLength?.(),box=probe.getBBox?.();width=Math.max(Number.isFinite(advance)?advance:0,box&&Number.isFinite(box.width)?box.x+box.width:0)-Math.min(0,box?.x||0);}catch{}
@@ -54,33 +61,40 @@ function priceAxisTextMetrics(svg){
       width=[...text].reduce((sum,char)=>sum+(/[., ]/.test(char)?.34:/[-+]/.test(char)?.55:char==='%'?.9:.68)*size,0)+Math.max(0,text.length-1)*font.spacing;
     }
     width=Math.max(0,width);if(cache.size>256)cache.clear();cache.set(key,width);
-    if(axisGlyphWidths.size>2048)axisGlyphWidths.clear();axisGlyphWidths.set(shared,width);return width;
+    if(store.glyphs.size>2048)store.glyphs.clear();store.glyphs.set(shared,width);return width;
   }
   const numeric=/^[$%+\-\d.,\s]+$/;
   function charWidth(character,size){
     const key=`${cachePrefix}|${size}|${character}`;
-    const cached=axisCharWidths.get(key);if(cached!==undefined)return cached;
-    const width=direct(character,size);if(axisCharWidths.size>1024)axisCharWidths.clear();axisCharWidths.set(key,width);return width;
+    const cached=store.chars.get(key);if(cached!==undefined)return cached;
+    const width=direct(character,size);if(store.chars.size>1024)store.chars.clear();store.chars.set(key,width);return width;
   }
   function compose(text,size){
     const characters=[...String(text)];
     return characters.reduce((sum,character)=>sum+charWidth(character,size),0)+Math.max(0,characters.length-1)*font.spacing;
   }
+  function calibration(size,length){
+    const ratioKey=`${cachePrefix}|${size}:${length}`,stored=store.ratios.get(ratioKey);if(stored)return stored;
+    // Two real samples bracket the glyph mix: plain digits and a currency form
+    // with separators. Composition is used only while both stay within 5% of
+    // the browser's own advance; otherwise this font measures raw.
+    const zeros='0'.repeat(length),currency='$'+'0'.repeat(Math.max(1,length-1));
+    let reliable=true,ratio=1;
+    for(const sample of [zeros,currency]){
+      const measured=direct(sample,size),composedSample=compose(sample,size);if(!(composedSample>0))continue;
+      const value=measured/composedSample;ratio=Math.max(ratio,value);if(value<0.95||value>1.05)reliable=false;
+    }
+    const entry={ratio,reliable};if(store.ratios.size>512)store.ratios.clear();store.ratios.set(ratioKey,entry);return entry;
+  }
   function measure(text,size){
     text=String(text);const key=`${size}:${text}`;if(cache.has(key))return cache.get(key);
-    if(!text||!numeric.test(text))return direct(text,size);
-    const composed=compose(text,size);
-    const ratioKey=`${cachePrefix}|${size}:${Math.min(32,[...text].length)}`;
-    let ratio=axisCompositionRatios.get(ratioKey);
-    if(ratio===undefined){
-      const sample='0'.repeat(Math.min(32,[...text].length)),measured=direct(sample,size),composedSample=compose(sample,size);
-      ratio=composedSample>0?measured/composedSample:1;
-      if(axisCompositionRatios.size>512)axisCompositionRatios.clear();axisCompositionRatios.set(ratioKey,ratio);
-    }
+    if(!text||!numeric.test(text)||store.rawOnly.has(`${cachePrefix}|${size}`))return direct(text,size);
+    const composed=compose(text,size),{ratio,reliable}=calibration(size,Math.min(32,[...text].length));
+    if(!reliable){store.rawOnly.add(`${cachePrefix}|${size}`);return direct(text,size);}
     const width=Math.max(0,composed*ratio);if(cache.size>256)cache.clear();cache.set(key,width);
-    if(axisGlyphWidths.size>2048)axisGlyphWidths.clear();axisGlyphWidths.set(`${cachePrefix}|${key}`,width);return width;
+    if(store.glyphs.size>2048)store.glyphs.clear();store.glyphs.set(`${cachePrefix}|${key}`,width);return width;
   }
-  return {font,measure,raw:probeMeasure,setSample(value){cachePrefix=`${font.family}|${font.weight}|${font.style}|${font.spacing}|${viewBox}|${axisFontEpoch(doc,view)}|${value}`;}};
+  return {font,measure,raw:probeMeasure,setSample(value){cachePrefix=`${typeKey}|${store.epoch}|${value}`;}};
 }
 
 /** A fixed gutter gives the recovered width to the price plot. Actual glyph

@@ -164,3 +164,23 @@ test('font and fitted bounds survive the actual SVG export and PNG input seriali
   await createChartPngExport(svg);const pngInput=await imageSource.text();for(const label of labels(pngInput))contained(label,320);
   const csv=createObservedChartCsv({candles:h.candles,range:{start:first,end:first+7200},frequency:'1h',source:'Coinbase'});assert.ok(csv.includes(String(h.candles.at(-1).close)));assert.equal(h.candles.at(-1).close,1234567890.123456);
 });
+
+test('glyph caches are document-scoped and composition falls back to raw when it drifts',()=>{
+  const first=fixture(390,1),second=fixture(390,1);
+  const a=createPriceAxisLayout({svg:first,width:390}),b=createPriceAxisLayout({svg:second,width:390});
+  assert.equal(a.measure('$74,967.72',11),b.measure('$74,967.72',11),'equal documents compose the same width');
+
+  // This document's renderer kerns every multi-character run 20% wider than the
+  // sum of its glyphs. A cached composition from another document would be 20%
+  // short, so the fitter must notice the calibration drift and measure raw.
+  const kerned=fixture(390,1),create=kerned.ownerDocument.createElementNS;
+  kerned.ownerDocument.createElementNS=(namespace,tag)=>{
+    const node=create(namespace,tag),advance=node.getComputedTextLength.bind(node);
+    node.getComputedTextLength=()=>{const width=advance();return [...node.textContent].length>1?width*1.2:width;};
+    return node;
+  };
+  const c=createPriceAxisLayout({svg:kerned,width:390});
+  const raw=[...('$100,000')].reduce((sum,char)=>sum+(/[.,]/.test(char)?.25:char==='%'?.9:/[-+]/.test(char)?.4:/\d/.test(char)?.61:.59)*11*1.2,0);
+  assert.ok(Math.abs(c.measure('$100,000',11)-raw)<0.01,'drifted composition falls back to the browser measurement');
+  assert.equal(a.measure('$100,000',11),b.measure('$100,000',11),'a fallback in one document never rewrites another document cache');
+});
