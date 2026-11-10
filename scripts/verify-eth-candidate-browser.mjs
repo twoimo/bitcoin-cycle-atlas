@@ -99,7 +99,9 @@ class Cdp {
 }
 async function evaluate(cdp,fn,...args){
   const expression='('+fn.toString()+')('+args.map(a=>JSON.stringify(a)).join(',')+')';
-  const result=await cdp.send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});
+  let result;
+  try{result=await cdp.send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});}
+  catch(error){throw new Error('Browser evaluation transport failed in '+(fn.name||fn.toString().slice(0,200))+': '+error.message,{cause:error});}
   if(result.exceptionDetails)throw new Error('Browser evaluation failed: '+JSON.stringify(result.exceptionDetails));
   return result.result.value;
 }

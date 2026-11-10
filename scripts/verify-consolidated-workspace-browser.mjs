@@ -124,7 +124,8 @@ export function readConsolidatedChartAllocation() {
       const s=doc.defaultView.getComputedStyle(node);return s.display!=='none'&&!['absolute','fixed'].includes(s.position)&&node.getClientRects().length;
     }).map(node=>({kind:node===body?'body':node.classList?.contains('rsi-trading-criteria')?'criteria':node.matches('.rsi-workbench-status')?'status':'unexpected',...measured(node)}))},
     criteria:criteria?{...measured(criteria),symbol:criteria.dataset.rsiCriteria??null,label:criteria.getAttribute('aria-label'),
-      hasPopup:criteria.getAttribute('aria-haspopup'),expanded:criteria.getAttribute('aria-expanded'),
+      hasPopup:criteria.getAttribute('aria-haspopup'),expanded:criteria.getAttribute('aria-expanded'),collapsed:criteria.getAttribute('data-criteria-collapsed'),
+      chip:criteria.querySelector('.rsi-criteria-chip')?{...measured(criteria.querySelector('.rsi-criteria-chip')),text:criteria.querySelector('.rsi-criteria-chip').textContent.trim()}:null,
       fields:[...criteria.querySelectorAll('[data-criteria-field]')].map(node=>({key:node.dataset.criteriaField,text:node.textContent.trim(),...measured(node)}))}:null};
 }
 
@@ -172,9 +173,15 @@ export function assertConsolidatedChartAllocation(result,symbol) {
   assert.equal(a.criteria.hasPopup,'dialog',symbol+': criteria overlay declares its details dialog');
   assert.ok(a.criteria.visible&&valid(a.criteria.rect)&&a.criteria.rect.width>0&&a.criteria.rect.height>0,symbol+': criteria overlay is painted');
   assert.ok(inside(a.criteria.rect,a.canvas.content),symbol+': criteria overlay stays inside the chart canvas it covers');
-  assert.deepEqual(a.criteria.fields.map(field=>field.key).sort(),['buy','criteria','current','neutral','sell','strong','win-rate'].sort(),
-    symbol+': every trading-criteria row remains present');
-  for(const field of a.criteria.fields)assert.ok(field.text&&field.visible&&inside(field.rect,a.criteria.rect),symbol+': criteria row remains visible and contained: '+field.key);
+  assert.ok(['true','false'].includes(a.criteria.collapsed),symbol+': criteria declares its responsive layout');
+  if(a.criteria.collapsed==='true'){
+    assert.equal(a.criteria.fields.length,0,symbol+': collapsed criteria uses its dedicated chip, not clipped rows');
+    assert.ok(a.criteria.chip?.text&&a.criteria.chip.visible&&inside(a.criteria.chip.rect,a.criteria.rect),symbol+': collapsed criteria retains a readable contained trigger');
+  }else{
+    assert.deepEqual(a.criteria.fields.map(field=>field.key).sort(),['buy','criteria','current','neutral','sell','strong','win-rate'].sort(),
+      symbol+': every trading-criteria row remains present');
+    for(const field of a.criteria.fields)assert.ok(field.text&&field.visible&&inside(field.rect,a.criteria.rect),symbol+': criteria row remains visible and contained: '+field.key);
+  }
 }
 
 // Read the details dialog and the position HUD it now owns, whichever document
@@ -185,6 +192,7 @@ export function readSimulationDetailsState() {
   const dialog=owners.map(owner=>owner.querySelector('dialog.rsi-detail-dialog[open]')).find(Boolean)||null;
   const hud=dialog?.querySelector('.rsi-simulation-hud')||null;
   const criteria=(doc||document).querySelector('.rsi-trading-criteria');
+  const criteriaDetails=dialog?.querySelector('.rsi-criteria-details'),criteriaList=criteriaDetails?.querySelector('dl');
   const rect=node=>{if(!node)return null;const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
   const pixels=value=>Number.parseFloat(value)||0;
   const measured=node=>{
@@ -195,7 +203,9 @@ export function readSimulationDetailsState() {
     return {rect:r,content:{...content,width:content.right-content.left,height:content.bottom-content.top},
       visible:node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})};
   };
-  return {dialog:dialog?{...measured(dialog),open:Boolean(dialog.open),name:dialog.dataset.rsiDialog??null,label:dialog.getAttribute('aria-label')}:null,
+  return {owner:dialog?.ownerDocument===document?'parent':'child',
+    dialog:dialog?{...measured(dialog),body:measured(dialog.querySelector('.rsi-detail-body')),open:Boolean(dialog.open),name:dialog.dataset.rsiDialog??null,label:dialog.getAttribute('aria-label')}:null,
+    criteria:criteriaList?{...measured(criteriaList),label:criteriaDetails.getAttribute('aria-label'),fields:[...criteriaList.querySelectorAll('[data-criteria-detail]')].map(node=>({key:node.dataset.criteriaDetail,text:node.textContent.trim(),...measured(node)}))}:null,
     hud:hud?{...measured(hud),label:hud.getAttribute('aria-label'),
       fields:[...hud.querySelectorAll('[data-rsi-hud]')].map(node=>({key:node.dataset.rsiHud,text:node.textContent.trim(),...measured(node)}))}:null,
     criteriaExpanded:criteria?.getAttribute('aria-expanded')??null};
@@ -214,7 +224,11 @@ export function assertSimulationDetailsRoundTrip({symbol,before,opened,after}) {
   assert.ok(hud&&hud.visible,symbol+': position HUD must exist inside the opened details');
   assert.equal(hud.label,symbol+' 분할 매매 평단가',symbol+': HUD retains its selected instrument owner');
   assert.deepEqual(hud.fields.map(field=>field.key).sort(),[...seven].sort(),symbol+': all seven HUD fields remain present');
-  assert.ok(inside(hud.rect,dialog.content),symbol+': HUD stays inside the details dialog content');
+  assert.ok(inside(hud.rect,dialog.body?.content),symbol+': HUD stays inside the details dialog content');
+  assert.equal(opened.criteria?.label,symbol+' 매매 기준과 전체 기간 결과',symbol+': detailed criteria retains its selected instrument owner');
+  assert.deepEqual(opened.criteria.fields.map(field=>field.key).sort(),['buy','criteria','current','neutral','sell','strong','win-rate'].sort(),symbol+': all seven detailed criteria fields remain present');
+  assert.ok(opened.criteria.visible&&inside(opened.criteria.rect,opened.criteriaViewport),symbol+': detailed criteria were scrolled into the visible dialog body');
+  for(const field of opened.criteria.fields)assert.ok(field.text&&field.visible&&inside(field.rect,opened.criteria.rect),symbol+': detailed criteria field remains visible and contained: '+field.key);
   for(const field of hud.fields)assert.ok(field.text&&field.visible&&inside(field.rect,hud.rect),symbol+': HUD field remains visible and contained: '+field.key);
   const closed=after?.allocation;
   assert.equal(closed?.criteria?.expanded,'false',symbol+': criteria control returns to its collapsed state');
@@ -454,16 +468,21 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
       assert.fail(symbol+': native Tab navigation never reached '+selector);
     }
     for(const input of ['pointer','keyboard']){
-      const before=await evaluate(cdp,readConsolidatedChartAllocation);
+      const before={allocation:await evaluate(cdp,readConsolidatedChartAllocation)};
       if(input==='pointer')await pointer(child,criteria);
       else{await pointer(child,canvas);await keyboardFocus(criteria);await key('Enter','Enter',13);}
       await settled(child);
-      const opened=await until(async()=>{const state=await evaluate(cdp,readSimulationDetailsState);return state?.dialog?.open&&state.hud?state:null;},symbol+': '+input+' opens the simulation details');
+      let opened=await until(async()=>{const state=await evaluate(cdp,readSimulationDetailsState);return state?.dialog?.open&&state.hud?state:null;},symbol+': '+input+' opens the simulation details');
+      const dialogContext=opened.owner==='parent'?cdp:child;
+      await reveal(dialogContext,'dialog.rsi-detail-dialog[open] .rsi-criteria-details dl');
+      const criteriaState=await evaluate(cdp,readSimulationDetailsState);
+      await reveal(dialogContext,'dialog.rsi-detail-dialog[open] .rsi-simulation-hud');
+      opened={...await evaluate(cdp,readSimulationDetailsState),criteria:criteriaState.criteria,criteriaViewport:criteriaState.dialog.body.content};
       assert.equal(await evaluate(cdp,()=>document.querySelector('.atlas-center-frame:not([hidden])')?.contentDocument?.querySelector('.rsi-trading-criteria')?.getAttribute('aria-expanded')),'true',symbol+': '+input+' opens the criteria details');
       await snap(symbol.toLowerCase()+'-simulation-'+input);
       await key('Escape','Escape',27);await settled(child);
       await until(async()=>{const state=await evaluate(cdp,readSimulationDetailsState);return state?.dialog===null;},symbol+': '+input+' closes the simulation details');
-      const after=await evaluate(cdp,readConsolidatedChartAllocation);
+      const after={allocation:await evaluate(cdp,readConsolidatedChartAllocation)};
       (evidence.simulationDetails??=[]).push({symbol,input,
         dialog:{name:opened.dialog.name,label:opened.dialog.label,rect:opened.dialog.rect},
         hud:{label:opened.hud.label,fields:opened.hud.fields.map(field=>({key:field.key,text:field.text}))},

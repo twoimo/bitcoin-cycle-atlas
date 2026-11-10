@@ -20,7 +20,7 @@ function allocation({width=390,height=708,statusHeight=0,symbol='TQQQ'}={}){
   const canvas=measured({...body.rect}),svg=measured({...body.rect});
   rows.push({kind:'body',...structuredClone(body)});
   const criteriaTop=canvas.rect.top+24,criteriaHeight=Math.min(120,canvas.rect.height-48),rowHeight=(criteriaHeight-8)/criteriaRows.length;
-  const criteria={...measured(rect(canvas.rect.left+8,criteriaTop,width-16,criteriaHeight)),symbol,label:symbol+' 매매 기준 상세 · 현재 미충족',hasPopup:'dialog',expanded:'false',
+  const criteria={...measured(rect(canvas.rect.left+8,criteriaTop,width-16,criteriaHeight)),symbol,label:symbol+' 매매 기준 상세 · 현재 미충족',hasPopup:'dialog',expanded:'false',collapsed:'false',chip:null,
     fields:criteriaRows.map((key,index)=>({key,text:key,...measured(rect(canvas.rect.left+12,criteriaTop+4+index*rowHeight,width-24,rowHeight-2))}))};
   return {svg:{width,height:svg.rect.height,visible:true},childHeight:height,allocation:{
     frame:{source:'https://example.test/bitcoin-cycle-atlas/market-lab/app/?embedded=1',documentUrl:'https://example.test/bitcoin-cycle-atlas/market-lab/app/?embedded=1',parentUrl:'https://example.test/bitcoin-cycle-atlas/market-lab/charts/?symbol=TQQQ',rect:rect(0,92,width,height)},
@@ -31,9 +31,10 @@ function allocation({width=390,height=708,statusHeight=0,symbol='TQQQ'}={}){
 }
 
 function detailsOpen(symbol='TQQQ',{fields=hudFields}={}){
-  return {dialog:{...measured(rect(0,0,600,700)),open:true,name:'simulation',label:symbol+' 매매 기준 · 분할 매매 성과'},
+  return {dialog:{...measured(rect(0,0,600,700)),body:measured(rect(4,40,592,656)),open:true,name:'simulation',label:symbol+' 매매 기준 · 분할 매매 성과'},
     hud:{...measured(rect(12,60,576,320)),label:symbol+' 분할 매매 평단가',
       fields:fields.map((key,index)=>({key,text:key,...measured(rect(16,70+index*40,560,30))}))},
+    criteria:{...measured(rect(12,60,576,240)),label:symbol+' 매매 기준과 전체 기간 결과',fields:criteriaRows.map((key,index)=>({key,text:key,...measured(rect(16,64+index*30,560,24))}))},criteriaViewport:rect(4,40,592,656),
     criteriaExpanded:'true'};
 }
 
@@ -169,4 +170,17 @@ test('an unexplained spacer cannot become a legitimate deduction from chart heig
 test('the canonical 53 cases and three original consolidated viewport cases are unchanged',()=>{
   assert.equal(createEthBrowserCaseSpecs().length,53);
   assert.deepEqual(selectEthBrowserCaseSpecs('workspace-consolidated').map(({width,height})=>[width,height]),[[320,900],[390,844],[1440,900]]);
+});
+
+
+test('collapsed criteria preserves its reachable chip and still requires all seven detailed fields',()=>{
+  const result=allocation();result.allocation.criteria.collapsed='true';result.allocation.criteria.fields=[];
+  result.allocation.criteria.chip={...measured(rect(16,28,100,24)),text:'매매 기준'};
+  assert.doesNotThrow(()=>assertConsolidatedChartAllocation(result,'TQQQ'));
+  const missing=structuredClone(result);missing.allocation.criteria.chip=null;
+  assert.throws(()=>assertConsolidatedChartAllocation(missing,'TQQQ'),/readable contained trigger/);
+  const opened=detailsOpen();opened.criteria.fields.pop();
+  assert.throws(()=>assertSimulationDetailsRoundTrip({symbol:'TQQQ',before:result,opened,after:result}),/all seven detailed criteria fields/);
+  const clipped=detailsOpen();clipped.criteriaViewport=rect(4,600,592,50);
+  assert.throws(()=>assertSimulationDetailsRoundTrip({symbol:'TQQQ',before:result,opened:clipped,after:result}),/scrolled into the visible dialog body/);
 });
