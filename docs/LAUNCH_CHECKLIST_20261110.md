@@ -106,6 +106,18 @@ Pro가 제안한 진단 보강(fail()에 phase·elapsed·route·resource URL 기
 
 남은 항목: D04(960px compare CSS/JS), D05(reader 내부 44px), D08(Linux fixture), D02 데이터 owner 준비 상태 설계, 320/390 첫 진입 간헐 실패의 진단 계측, WP-A 미디어·청취·PDF·Linux 게시, macOS 외부 AppKit·Safari·실기기, 원격 CI·배포.
 
+## 2026-11-11 후속 5 — D05 reader 내부 44px
+
+reader(차트 상세 패널)의 설정·날짜·명령 조작부는 620px 이하에서만 44px이었고, 621–1100px fine pointer에서는 28~36px로 남아 있었다. `atlas-shell.css`의 44px 계약과 차트 프레임 자체 계약이 1100px까지인데 reader만 빠져 있던 것이다.
+
+`dist/eth-view.css`에 1100px 이하 블록을 추가해 reader의 설정·날짜·명령 동작과 reader 내부 패널(설정·지표·날짜)의 select·button·텍스트 input을 44px로 올리고, 체크박스는 입력이 아니라 그 행(label)을 44px 타깃으로 만들었다.
+
+첫 시도는 적용되지 않았다. `.chart-details-panel .atlas-settings-body #atlas-reset{min-height:28px}`가 명시도 (1,2,1)로 `#chart-reader :is(select,button)` (1,0,1)을 이겼기 때문이다. reader body id로 스코프해 (2,0,1)로 올린 뒤 적용됐다. 이 사실은 스타일시트 캐스케이드를 실제 계산으로 확인해 찾았고, 추측으로 넘기지 않았다.
+
+실측(reader 열림): 1440에서 28px(데스크톱 fine pointer 유지), 1100·1024·768·620에서 select·reset·체크박스 행이 모두 44px. 실행 결과: 53-case 53/53 통과, 전체 `npm test` `complete:true` 3,360개 중 3,355 통과·실패 0·제외 5, typecheck·static·Pages build/verify 통과.
+
+남은 항목: D04(960px compare CSS/JS), D08(Linux fixture), D09의 3항목(scrollTop 직접 대입·ancestor hit·왕복 반올림), D02 데이터 owner 준비 상태 설계, 320/390 첫 진입 간헐 실패의 진단 계측, WP-A 미디어, macOS 외부 AppKit·Safari·실기기, 원격 CI·배포.
+
 ## 목표와 경계
 
 - 관측 데이터·모형·출처·불변 기록을 보존하면서 화면의 불필요한 장식과 중복을 줄인다.
