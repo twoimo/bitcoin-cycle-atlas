@@ -30,7 +30,15 @@ export function createCompareShellHost({document}) {
 
   function lockPriceControls() {
     for (const control of priceControls()) {
-      if (!priorDisabled.has(control)) priorDisabled.set(control, control.disabled === true);
+      if (!priorDisabled.has(control)) {
+        // Both native and ARIA disabled states are the control's own; a control
+        // may start enabled, natively disabled, or aria-disabled true/false and
+        // must return to exactly that state.
+        priorDisabled.set(control, {
+          disabled: control.disabled === true,
+          ariaDisabled: control.hasAttribute('aria-disabled') ? control.getAttribute('aria-disabled') : null,
+        });
+      }
       control.disabled = true;
       control.setAttribute('aria-disabled', 'true');
       if (!control.hasAttribute('aria-description') && !control.hasAttribute('data-disabled-reason')) {
@@ -41,10 +49,11 @@ export function createCompareShellHost({document}) {
   }
 
   function releasePriceControls() {
-    for (const [control, wasDisabled] of priorDisabled) {
+    for (const [control, previous] of priorDisabled) {
       if (!control.isConnected) continue;
-      control.disabled = wasDisabled;
-      control.removeAttribute('aria-disabled');
+      control.disabled = previous.disabled;
+      if (previous.ariaDisabled === null) control.removeAttribute('aria-disabled');
+      else control.setAttribute('aria-disabled', previous.ariaDisabled);
       if (described.has(control)) control.removeAttribute('data-disabled-reason');
     }
     priorDisabled.clear();

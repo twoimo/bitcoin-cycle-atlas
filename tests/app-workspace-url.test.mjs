@@ -2,14 +2,16 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
+import { parseComparisonUrl } from '../dist/comparison-url-state.js';
 
 const source = await readFile(new URL('../dist/app.js', import.meta.url), 'utf8');
 const persistSource = source.slice(source.indexOf('function persistUrl() {'), source.indexOf("document.documentElement.dataset.theme = 'dark';"));
-const initialStateSource = source.slice(source.indexOf('const params = new URLSearchParams(location.search);'), source.indexOf('let toastTimer;'));
+const initialStateSource = source.slice(source.indexOf('const urlState = parseComparisonUrl(location.search);'), source.indexOf('let toastTimer;'));
 
 function appUrl(search = '', overrides = {}) {
   const location = { pathname: '/bitcoin-cycle-atlas/', search }, writes = [];
-  const context = { location, URLSearchParams, Set, history: { replaceState(_state, _unused, path) { writes.push(path);location.search = path.includes('?') ? path.slice(path.indexOf('?')) : ''; } } };
+  const history = { replaceState(_state, _unused, path) { writes.push(path);location.search = path.includes('?') ? path.slice(path.indexOf('?')) : ''; } };
+  const context = { location, URLSearchParams, Set, parseComparisonUrl, history };
   const state = runInNewContext(`${initialStateSource}\nstate;`, context);
   Object.assign(state, overrides);context.state = state;
   runInNewContext(persistSource, context);

@@ -379,7 +379,6 @@ export function initLabView() {
     state.cycleCollapsed?p.set('cycle-panel','closed'):p.delete('cycle-panel');
     state.cycleRelation==='all'?p.delete('cycle-relation'):p.set('cycle-relation',state.cycleRelation);
     writeWorkspaceViewport(p,{frequency:state.frequency,unit:state.unit,range:isIntradayInterval(state.frequency)?state.marketRange:state.priceRange,priceDomain:state.priceDomain,invertScale:state.invertScale,priceOnlyAuto:state.priceOnlyAuto});
-    if(p.get('page')==='compare'&&!p.has('legacy'))p.delete('page');
     try{history.replaceState(null,'',`${location.pathname}${p.size?'?'+p:''}`);}catch{}
   }
   function inspect(detail,options={}){

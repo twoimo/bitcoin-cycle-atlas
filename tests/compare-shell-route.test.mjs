@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
+import { parseComparisonUrl } from '../dist/comparison-url-state.js';
 
 // WP-C: the legacy bare compare route joins the single standard shell.
 // These are source contracts; the rendered four-region evidence lives in the
@@ -14,9 +15,10 @@ const css = await readFile(new URL('../dist/atlas-shell.css', import.meta.url), 
 const html = await readFile(new URL('../dist/index.html', import.meta.url), 'utf8');
 const host = await readFile(new URL('../dist/compare-shell-host.js', import.meta.url), 'utf8');
 
-const initialStateSource = app.slice(app.indexOf('const params = new URLSearchParams(location.search);'), app.indexOf('let toastTimer;'));
+const initialStateSource = app.slice(app.indexOf('const urlState = parseComparisonUrl(location.search);'), app.indexOf('let toastTimer;'));
 const viewFor = (search) => {
-  const context = { location: { pathname: '/bitcoin-cycle-atlas/', search }, URLSearchParams, Set };
+  // The initial parse now delegates to the shared pure parser.
+  const context = { location: { pathname: '/bitcoin-cycle-atlas/', search }, parseComparisonUrl, URLSearchParams, Set };
   return runInNewContext(`${initialStateSource}\nstate.view;`, context);
 };
 
@@ -76,8 +78,9 @@ test('the compare toolbar is cached, moved and restored as the same node', () =>
 
 test('price-only frame controls are locked with a reason and released by their own prior state', () => {
   assert.match(host, /const PRICE_CONTROL_SELECTOR = '\.workbench-tools button, \.workbench-bottom-bar :is\(button,select\):not\(#atlas-update-status\)'/);
-  assert.match(host, /if \(!priorDisabled\.has\(control\)\) priorDisabled\.set\(control, control\.disabled === true\)/, 'the prior disabled state is remembered');
-  assert.match(host, /control\.disabled = wasDisabled;/, 'and restored individually');
+  assert.match(host, /priorDisabled\.set\(control, \{\n\s*disabled: control\.disabled === true,\n\s*ariaDisabled: control\.hasAttribute\('aria-disabled'\)/, 'native and ARIA state are remembered together');
+  assert.match(host, /control\.disabled = previous\.disabled;/, 'the native state is restored individually');
+  assert.match(host, /if \(previous\.ariaDisabled === null\) control\.removeAttribute\('aria-disabled'\);\n      else control\.setAttribute\('aria-disabled', previous\.ariaDisabled\);/, 'and ARIA is restored exactly');
   assert.match(host, /data-disabled-reason', DISABLED_REASON/, 'the reason is exposed to the rail tooltip');
   assert.match(host, /document\.body\?\.dataset\.embedded === 'true'\) return;/, 'an embedded child is never locked or nested');
 });

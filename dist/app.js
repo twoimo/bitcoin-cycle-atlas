@@ -3,6 +3,7 @@ import { buildComparison, getAnchors, getPointAtDay, comparisonToCsv, validateDa
 import { fetchLatestDataset } from "./data-source.js?v=1.29.0";
 import { inspectPublishedDataset, shouldCheckPublishedSnapshot } from "./published-data.js?v=1.29.0";
 import { createCompareShellHost } from './compare-shell-host.js?v=1.37.8';
+import { parseComparisonUrl, comparisonUrlChanged } from './comparison-url-state.js?v=1.37.8';
 import { mountBtcRefreshStatus } from "./btc-refresh-status.js?v=1.29.0";
 import { analyzeCycleTiming } from './cycle-timing.js?v=1.29.0';
 import { renderTimingView } from './timing-view.js?v=1.29.0';
@@ -57,24 +58,23 @@ const icons = {
 const icon = name => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${icons[name] || icons.chart}</svg>`;
 $$('[data-icon]').forEach(el => el.innerHTML = icon(el.dataset.icon));
 
-const params = new URLSearchParams(location.search);
-// Old comparison links used `unit`; new links keep its choice separate from
-// the atlas viewport, which can change while the comparison remains hidden.
-const comparisonUnit = params.get('compare-unit') ?? (params.has('legacy') ? params.get('unit') : null);
+// The initial parse and history restore share one pure parser, so the fields
+// this controller owns are read the same way from the URL both times.
+const urlState = parseComparisonUrl(location.search);
 const state = {
-  mode: ['halving','bottom','top','breakout'].includes(params.get('mode')) ? params.get('mode') : 'halving',
-  unit: comparisonUnit === 'indexed' ? 'indexed' : 'rebased',
-  scale: params.get('scale') === 'linear' ? 'linear' : 'log',
-  horizon: ['365','730','1461','current','all'].includes(params.get('range')) ? params.get('range') : '1461',
-  cursor: /^\d{1,5}$/.test(params.get('day') || '') ? Number(params.get('day')) : null,
-  hidden: new Set((params.get('hide') || '').split(',').filter(Boolean)),
-  view: ['outlook','compare','evidence','data','ipo','market','relay'].includes(params.get('page')) ? params.get('page') : 'outlook', dataset: null, comparison: null, chart: null,
-  timing: null, timingDataset: null, timingBaseline: ['previous','recent2','all3'].includes(params.get('baseline')) ? params.get('baseline') : 'recent2',
-  analysisView: ['forecast','peak','timing'].includes(params.get('analysis')) ? params.get('analysis') : 'forecast',
-  peakThreshold: ['0.9','0.93','0.94','0.95','0.98'].includes(params.get('zone')) ? Number(params.get('zone')) : .95,
+  mode: urlState.mode,
+  unit: urlState.unit,
+  scale: urlState.scale,
+  horizon: urlState.horizon,
+  cursor: urlState.cursor,
+  hidden: new Set(urlState.hidden),
+  view: urlState.view, dataset: null, comparison: null, chart: null,
+  timing: null, timingDataset: null, timingBaseline: urlState.timingBaseline,
+  analysisView: urlState.analysisView,
+  peakThreshold: urlState.peakThreshold,
   peakAnalysis: null, peakDataset: null,
-  forecast: null, forecastDataset: null, forecastView: params.get('future') === 'analogues' ? 'analogues' : 'macro',
-  forecastScenario: ['bottom-holds','calendar-48m','calendar-minus-3m','calendar-minus-4m','calendar-minus-5m'].includes(params.get('scenario')) ? params.get('scenario') : 'bottom-holds',
+  forecast: null, forecastDataset: null, forecastView: urlState.forecastView,
+  forecastScenario: urlState.forecastScenario,
 };
 let toastTimer;
 const btcRefreshStatus=mountBtcRefreshStatus({onRetry:()=>refreshData()});
@@ -198,18 +198,31 @@ function syncPage() {
 syncPage();
 if (state.view === 'data') renderData();
 
-// Back/forward must leave the rendered destination and the URL in agreement.
+// Back/forward restores exactly the fields this controller owns, read with the
+// same parser as the first load. The URL is never rewritten from memory here:
+// other owners' fields (center, unit, atlas viewport, indicators) belong to
+// their own history entry, and a same-page query change must still apply.
 window.addEventListener('popstate', () => {
-  const query = new URLSearchParams(location.search);
-  const requested = query.get('page');
-  const view = ['outlook','compare','evidence','data','ipo','market','relay'].includes(requested) ? requested : 'outlook';
-  if (view === state.view) return;
-  state.view = view;
-  if (!['data','ipo','market','relay'].includes(view)) void ensureDataset();
+  const next = parseComparisonUrl(location.search);
+  if (!comparisonUrlChanged(state, next)) return;
+  const previousView = state.view;
+  state.view = next.view;
+  state.mode = next.mode;
+  state.unit = next.unit;
+  state.scale = next.scale;
+  state.horizon = next.horizon;
+  state.cursor = next.cursor;
+  state.hidden = new Set(next.hidden);
+  state.timingBaseline = next.timingBaseline;
+  state.analysisView = next.analysisView;
+  state.peakThreshold = next.peakThreshold;
+  state.forecastView = next.forecastView;
+  state.forecastScenario = next.forecastScenario;
+  if (!['data','ipo','market','relay'].includes(state.view)) void ensureDataset();
   syncPage();
-  if (view === 'compare') requestAnimationFrame(() => render());
-  else if (view === 'data') renderData();
-  persistUrl();
+  if (state.view === 'compare') requestAnimationFrame(() => render());
+  else if (state.view === 'data') renderData();
+  else if (state.view === 'outlook' && previousView !== 'outlook') requestAnimationFrame(() => render());
 });
 
 function render(recalculate = true) {

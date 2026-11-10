@@ -107,3 +107,32 @@ test('activation is idempotent for repeat calls with the same state', () => {
   assert.equal(document.querySelectorAll('.lab-toolbar').length, 1);
   assert.equal(host.lockedControls.length, 4, 'both rail buttons, the range button and the range select');
 });
+
+test('native and ARIA disabled states are captured and restored individually', () => {
+  const { document } = fixture();
+  const host = createCompareShellHost({ document });
+  const plain = document.querySelector('#tool-crosshair');
+  const native = document.querySelector('#workbench-clear');           // disabled, no aria
+  const ariaTrue = document.querySelector('#range-4y');                // enabled, aria-disabled="true"
+  ariaTrue.setAttribute('aria-disabled', 'true');
+  const ariaFalse = document.querySelector('#workbench-range-select'); // enabled, aria-disabled="false"
+  ariaFalse.setAttribute('aria-disabled', 'false');
+  const update = document.querySelector('#atlas-update-status');
+
+  host.setActive(true);
+  for (const control of [plain, native, ariaTrue, ariaFalse]) {
+    assert.equal(control.disabled, true, 'locked while compare is active');
+    assert.equal(control.getAttribute('aria-disabled'), 'true');
+  }
+  assert.equal(update.disabled, false, 'the source status stays usable');
+
+  host.setActive(false);
+  assert.equal(plain.disabled, false);
+  assert.equal(plain.hasAttribute('aria-disabled'), false, 'a control without aria-disabled keeps none');
+  assert.equal(native.disabled, true, 'a natively disabled control stays natively disabled');
+  assert.equal(native.hasAttribute('aria-disabled'), false, 'and gains no aria attribute');
+  assert.equal(ariaTrue.disabled, false);
+  assert.equal(ariaTrue.getAttribute('aria-disabled'), 'true', 'a pre-existing aria-disabled=true is restored');
+  assert.equal(ariaFalse.disabled, false);
+  assert.equal(ariaFalse.getAttribute('aria-disabled'), 'false', 'a pre-existing aria-disabled=false is restored, not dropped');
+});
