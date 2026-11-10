@@ -151,7 +151,10 @@ export function initAtlasShell() {
     // Non-chart routes keep the shell's right rail and bottom bar too.
     contentShell.setActive(!chart && CONTENT_SHELL_PAGES.includes(page));
     pageDescription.sync();
-    const navigation = document.querySelector('.atlas-nav'), rail = document.querySelector('.workbench-rail');
+    const navigation = document.querySelector('.atlas-nav');
+    // Only the chart frame's own rail hosts the chart navigation; the content
+    // rail is a separate node that exists while a dashboard route is active.
+    const rail = document.querySelector('.workbench-rail:not(.content-rail)');
     if (navigation && chart && rail) {
       const tools = rail.querySelector('.workbench-detail-tools');
       // Keep visual and keyboard order together while reusing the same links.

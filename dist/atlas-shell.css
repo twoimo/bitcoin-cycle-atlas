@@ -32,6 +32,8 @@ body[data-shell=dashboard] .atlas-sidebar .atlas-nav :is(.active,[aria-current=p
 body[data-shell=dashboard] .atlas-nav svg{width:15px;height:15px;flex:none;opacity:.9}
 body[data-shell=dashboard] .atlas-nav button>span:last-child:not([data-icon]){position:static;clip-path:none;width:auto;height:auto;overflow:visible;margin:0}
 body[data-shell=dashboard] .atlas-side-foot,body[data-shell=dashboard] .workbench-tools,body[data-shell=dashboard] .mobile-chart-home{display:none!important}
+/* The dashboard composition shows only the region it mounts itself. */
+body[data-shell=dashboard] .workbench-rail:not(.content-rail),body[data-shell=dashboard] .workbench-bottom-bar:not(.content-bottom-bar){display:none!important}
 body[data-shell=dashboard] .workspace,body[data-shell=dashboard] #root>.workspace{
   margin-left:var(--app-sidebar-width)!important;margin-top:var(--app-header-height);width:calc(100% - var(--app-sidebar-width));height:calc(100dvh - var(--app-header-height));min-height:0;
 }
@@ -366,6 +368,8 @@ body[data-page=compare] .atlas-canvas-heading>.lab-toolbar .lab-toolbar-group{di
 }
 @media(max-width:620px){
   body[data-shell=chart][data-center-tool]:not([data-chart-controls]) .atlas-canvas-heading[data-mobile-heading=phone-dock]>:not(.center-workspace-toolbar):not(.center-data-actions):not(#mobile-details-toggle):not(.symbol-selector-trigger){display:none!important}
+  /* The non-chart centre keeps only its own instrument search, at a fixed slot. */
+  body[data-shell=chart][data-center-tool]:not([data-chart-controls]) .atlas-canvas-heading[data-mobile-heading=phone-dock]>.symbol-selector-trigger{flex:0 0 80px;width:80px;min-width:0;max-width:80px}
   body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock]>.center-workspace-toolbar{flex:1 1 0;min-width:0;width:auto;max-width:100%;height:44px;min-height:44px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x pinch-zoom}
 }
 
@@ -392,7 +396,10 @@ body[data-shell=dashboard] .workspace{padding-right:44px;padding-bottom:var(--co
   body[data-shell=dashboard]{--app-sidebar-width:68px}
   body[data-shell=dashboard] .atlas-nav .atlas-nav-label{display:none!important}
 }
-@media(max-width:760px),(pointer:coarse){body[data-shell=dashboard] .workbench-bottom-bar .footer :is(a,button){display:inline-flex;align-items:center;min-height:44px}}
+@media(max-width:1100px){
+  body[data-shell=dashboard] .workbench-bottom-bar .footer :is(a,button){display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px}
+  body[data-shell=dashboard] .workbench-rail .atlas-nav :is(a,button){width:44px;min-width:44px;height:44px;min-height:44px}
+}
 @media(max-width:620px){body[data-shell=dashboard] .workbench-rail{display:flex}body[data-shell=dashboard] .workbench-rail .atlas-nav{flex-direction:column}}
 @media(max-width:640px){
   body[data-shell=dashboard]{--app-sidebar-width:0px;--app-header-height:52px}
@@ -409,3 +416,5 @@ body[data-shell=dashboard] .workspace{padding-right:44px;padding-bottom:var(--co
 :root{--content-bottom-height:44px}
 /* The rail owns the navigation, so the label-width preference has no target. */
 body[data-shell=dashboard] .atlas-sidebar-toggle{display:none}
+/* The chart frame and the content routes never show two copies of a region. */
+body[data-shell=chart] :is(.content-rail,.content-bottom-bar){display:none!important}

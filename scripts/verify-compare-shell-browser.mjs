@@ -595,27 +595,154 @@ const main = async () => {
         if (!shellTargets.railOwnsNav) fail(where, 'the navigation is not owned by the shell rail');
         if (!shellTargets.bottomOwnsFooter) fail(where, 'the source footer is not owned by the bottom bar');
         if (shellTargets.navLabelled < shellTargets.navItems) fail(where, `${shellTargets.navItems - shellTargets.navLabelled} rail links without an accessible name`);
-        if (w <= 760 && shellTargets.tiny.length) fail(where, `${shellTargets.tiny.length} shell targets below 44px: ` + shellTargets.tiny.map(t => `${t.name} ${t.w}x${t.h}`).join('; '));
+        if (w <= 1100 && shellTargets.tiny.length) fail(where, `${shellTargets.tiny.length} shell targets below 44px: ` + shellTargets.tiny.map(t => `${t.name} ${t.w}x${t.h}`).join('; '));
         if (errors.length) fail(where, 'console/runtime errors: ' + errors.slice(0, 2).join(' | '));
       }
       // The bottom bar keeps the source information sheet as its real control.
+      // These routes do not load the price dataset, so the control stays on its
+      // original node with a feature-scoped disabled state and the exact reason
+      // instead of opening an empty dialog.
       await goto(url, 1440, 900);
       const opener = await evaluate(cdp, () => {
-        const b = document.querySelector('.workbench-bottom-bar [data-method]');
-        return b ? { found: true, inBottom: Boolean(b.closest('.workbench-bottom-bar')), label: (b.textContent || '').trim().slice(0, 40) } : { found: false };
+        const b = document.querySelector(".content-bottom-bar [data-method]");
+        if (!b) return { found: false };
+        return {
+          found: true, sameNode: Boolean(b.closest(".workbench-bottom-bar")), label: (b.textContent || "").trim().slice(0, 40),
+          disabled: b.disabled === true, ariaDisabled: b.getAttribute("aria-disabled"),
+          reason: b.getAttribute("data-disabled-reason"), description: b.getAttribute("aria-description"),
+        };
       });
-      const sheetClick = opener.found ? await domClick('.workbench-bottom-bar [data-method]') : { ok: false, reason: 'no source control in the bottom bar' };
-      await sleep(700);
+      const sheetClick = opener.found ? await domClick(".content-bottom-bar [data-method]") : { ok: false, reason: "no source control in the bottom bar" };
+      await sleep(600);
       const sheet = await evaluate(cdp, () => {
-        const d = document.getElementById('method-dialog');
-        return { open: Boolean(d?.open), title: d?.querySelector('h2')?.textContent?.trim() || null, toast: document.getElementById('toast')?.hidden === false ? document.getElementById('toast').textContent.trim().slice(0, 60) : null, hasDataset: Boolean(document.querySelector('#lab-chart')), rows: document.querySelectorAll('#lab-events-body tr').length };
+        const d = document.getElementById("method-dialog");
+        return { open: Boolean(d?.open) };
       });
       report.contentWidths.push({ route: name, infoSheet: { opener, click: sheetClick, dialog: sheet } });
-      // Reachability and ownership are the shell's contract; whether the sheet
-      // renders its body depends on the price dataset the page loads.
-      if (!sheetClick.ok) fail(`content ${name} bottom-bar control`, 'source sheet control not clickable: ' + JSON.stringify(sheetClick));
-      else if (!sheet.open) report.findings.push(`content ${name} bottom-bar control: source sheet did not open (${JSON.stringify(sheet)})`);
-      if (sheet.open) { await evaluate(cdp, () => document.getElementById('method-dialog')?.close()); await sleep(300); }
+      if (!opener.found) fail(`content ${name} bottom-bar control`, "the source control left the bottom bar");
+      else {
+        if (!opener.disabled || opener.ariaDisabled !== "true") fail(`content ${name} bottom-bar control`, "source control is not exactly disabled: " + JSON.stringify(opener));
+        if (!opener.reason || opener.reason !== opener.description) fail(`content ${name} bottom-bar control`, "missing or unclear disabled reason: " + JSON.stringify(opener));
+        if (sheet.open) fail(`content ${name} bottom-bar control`, "an empty source sheet was shown for a route without price data");
+      }
+      if (sheet.open) { await evaluate(cdp, () => document.getElementById("method-dialog")?.close()); await sleep(250); }
+    }
+
+    // Phase E: leaving a content route must hand the chart frame back its own
+    // regions, and coming back must restore the same content nodes.
+    for (const [name, url] of [["evidence", "index.html?page=evidence"], ["relay", "index.html?page=relay"]]) {
+      for (const [w, h] of [[1440, 900], [390, 844]]) {
+        await goto(url, w, h);
+        await evaluate(cdp, () => {
+          window.__wpcContent = {
+            rail: document.querySelector(".content-rail"),
+            bottom: document.querySelector(".content-bottom-bar"),
+            header: document.querySelector(".atlas-dashboard-header"),
+            nav: document.querySelector(".atlas-nav"),
+            footer: document.querySelector(".footer"),
+            source: document.querySelector(".content-bottom-bar [data-method]") || document.querySelector("#main > .footer [data-method]"),
+          };
+          return true;
+        });
+        const before = await evaluate(cdp, () => {
+          const marks = window.__wpcContent;
+          const source = marks.source;
+          const painted = n => {
+            if (!n || !n.isConnected || n.hidden) return false;
+            const cs = getComputedStyle(n);
+            if (cs.display === "none" || cs.visibility === "hidden") return false;
+            const r = n.getBoundingClientRect();
+            return r.width > 1 && r.height > 1;
+          };
+          return {
+            page: document.body.dataset.page, shell: document.body.dataset.shell,
+            railInDoc: Boolean(marks.rail?.isConnected), bottomInDoc: Boolean(marks.bottom?.isConnected),
+            railHidden: marks.rail ? marks.rail.hidden : null,
+            navInRail: Boolean(marks.rail?.contains(marks.nav)), footerInBottom: Boolean(marks.bottom?.contains(marks.footer)),
+            railCount: [...document.querySelectorAll(".workbench-rail")].filter(painted).length,
+            bottomCount: [...document.querySelectorAll(".workbench-bottom-bar")].filter(painted).length,
+            sourceDisabled: source ? source.disabled === true : null,
+            sourceReason: source?.getAttribute("data-disabled-reason") || null,
+          };
+        });
+        const navClick = await domClick('.atlas-nav [data-atlas-page="outlook"]');
+        await sleep(1400);
+        const onChart = await evaluate(cdp, () => {
+          const marks = window.__wpcContent;
+          const canvasHeading = document.querySelector(".atlas-canvas-heading");
+          const nativeRail = document.querySelector(".workbench-rail");
+          const source = document.querySelector("#main .footer [data-method]");
+          return {
+            page: document.body.dataset.page, shell: document.body.dataset.shell,
+            contentRailPresent: Boolean(document.querySelector(".content-rail")),
+            contentBottomPresent: Boolean(document.querySelector(".content-bottom-bar")),
+            railCount: [...document.querySelectorAll(".workbench-rail")].filter(n => n.getClientRects().length && getComputedStyle(n).display !== "none").length,
+            bottomCount: [...document.querySelectorAll(".workbench-bottom-bar")].filter(n => n.getClientRects().length && getComputedStyle(n).display !== "none").length,
+            railIsNative: Boolean(nativeRail) && !nativeRail.classList.contains("content-rail"),
+            nativeRailOwnsNav: Boolean(nativeRail?.contains(document.querySelector(".atlas-nav"))),
+            topIsChartToolbar: Boolean(canvasHeading) && !canvasHeading.classList.contains("atlas-dashboard-header"),
+            headerHidden: Boolean(document.querySelector(".atlas-dashboard-header")?.hidden),
+            sourceDisabled: source ? source.disabled === true : null,
+            sourceReason: source?.getAttribute("data-disabled-reason") || null,
+            footerInMain: Boolean(document.querySelector("#main > .footer")),
+            nodesPreserved: {
+              nav: marks.nav === document.querySelector(".atlas-nav"),
+              footer: marks.footer === document.querySelector(".footer"),
+              source: marks.source === source,
+            },
+          };
+        });
+        await cdp.send("Runtime.evaluate", { expression: "history.back()", returnByValue: true });
+        await sleep(1500);
+        const back = await evaluate(cdp, () => {
+          const marks = window.__wpcContent;
+          const rail = document.querySelector(".content-rail");
+          const item = rail?.querySelector(".atlas-nav [data-atlas-page]");
+          let hit = null;
+          if (item) {
+            const r = item.getBoundingClientRect();
+            const target = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+            hit = { inside: Boolean(target && (target === item || item.contains(target))), w: Math.round(r.width), h: Math.round(r.height) };
+          }
+          const source = document.querySelector(".content-bottom-bar [data-method]");
+          return {
+            page: document.body.dataset.page, shell: document.body.dataset.shell,
+            sameRail: marks.rail === rail, sameBottom: marks.bottom === document.querySelector(".content-bottom-bar"),
+            navInRail: Boolean(rail?.contains(document.querySelector(".atlas-nav"))),
+            footerInBottom: Boolean(document.querySelector(".content-bottom-bar")?.contains(document.querySelector(".footer"))),
+            railCount: [...document.querySelectorAll(".workbench-rail")].filter(n => n.isConnected && !n.hidden && getComputedStyle(n).display !== "none").length,
+            bottomCount: [...document.querySelectorAll(".workbench-bottom-bar")].filter(n => n.isConnected && !n.hidden && getComputedStyle(n).display !== "none").length,
+            railVisible: Boolean(rail) && !rail.hidden,
+            navHit: hit,
+            sourceDisabled: source ? source.disabled === true : null,
+            sourceReason: source?.getAttribute("data-disabled-reason") || null,
+          };
+        });
+        report.contentTrips = report.contentTrips || [];
+        report.contentTrips.push({ route: name, viewport: `${w}x${h}`, navClick, before, onChart, back });
+        const where = `trip ${name} ${w}x${h}`;
+        if (!before.railInDoc || !before.bottomInDoc || before.railCount !== 1 || before.bottomCount !== 1) fail(where, "content regions not owned once on entry: " + JSON.stringify(before));
+        if (!before.navInRail || !before.footerInBottom) fail(where, "navigation/footer not owned by the content regions: " + JSON.stringify(before));
+        if (before.sourceDisabled !== true || !before.sourceReason) fail(where, "source control not disabled with a reason: " + JSON.stringify(before));
+        if (!navClick.ok) fail(where, "chart navigation unreachable from the content rail: " + JSON.stringify(navClick));
+        if (onChart.page !== "outlook") fail(where, "navigation did not reach the price chart: " + onChart.page);
+        if (onChart.contentRailPresent || onChart.contentBottomPresent) fail(where, "content regions survived the chart return");
+        if (w > phoneMax && (onChart.railCount !== 1 || onChart.bottomCount !== 1)) fail(where, "duplicate shell regions on the chart: " + onChart.railCount + "/" + onChart.bottomCount);
+        if (w <= phoneMax && (onChart.railCount > 1 || onChart.bottomCount > 1)) fail(where, "duplicate shell regions on the phone chart: " + onChart.railCount + "/" + onChart.bottomCount);
+        if (!onChart.railIsNative || !onChart.nativeRailOwnsNav) fail(where, "chart rail did not take the navigation back: " + JSON.stringify(onChart));
+        if (!onChart.topIsChartToolbar || !onChart.headerHidden) fail(where, "top region identity wrong on the chart: " + JSON.stringify(onChart));
+        if (onChart.sourceReason) fail(where, "source control kept the content disabled reason on the chart: " + onChart.sourceReason);
+        if (!onChart.footerInMain) fail(where, "source footer did not return to the page");
+        if (Object.values(onChart.nodesPreserved).some(v => !v)) fail(where, "shell nodes were replaced instead of preserved: " + JSON.stringify(onChart.nodesPreserved));
+        if (back.page !== name) fail(where, "back did not restore the content route: " + back.page);
+        if (back.railCount !== 1 || back.bottomCount !== 1) fail(where, "duplicate shell regions after return: " + back.railCount + "/" + back.bottomCount);
+        if (!back.sameRail || !back.sameBottom) fail(where, "content regions were re-created after the return");
+        if (!back.railVisible) fail(where, "content rail stayed hidden after the return");
+        if (!back.navInRail || !back.footerInBottom) fail(where, "navigation/footer ownership not restored");
+        if (!back.navHit?.inside) fail(where, "rail navigation is not hit-testable after the return: " + JSON.stringify(back.navHit));
+        if (w <= 1100 && (back.navHit.w < 44 || back.navHit.h < 44)) fail(where, "rail navigation is not a 44px target after the return: " + JSON.stringify(back.navHit));
+        if (back.sourceDisabled !== true || !back.sourceReason) fail(where, "source control state not restored on the content route: " + JSON.stringify(back));
+      }
     }
 
     for (const [w, h] of [[390, 844], [1280, 800], [1920, 1080]]) {
