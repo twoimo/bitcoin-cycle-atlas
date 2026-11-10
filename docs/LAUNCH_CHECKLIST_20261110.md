@@ -81,6 +81,31 @@ Pro가 지적한 나머지는 미수정으로 남긴다. D03 reader를 연 채 �
 
 남은 항목: N01/N02 외의 D03(reader Back), D04(960px compare CSS/JS), D05(reader 내부 44px), D08(Linux native-select fixture), D02의 데이터 owner 준비 상태 설계, 위 boot error 간헐화, WP-A 미디어·청취·PDF·Linux 게시, macOS 외부 AppKit 메뉴·Safari·실기기, 원격 CI·배포. `mediaPrepared:false`와 출시 보류를 유지한다.
 
+## 2026-11-11 후속 3 — D03 reader 수명과 Pro 3차 요청
+
+Pro 3차 검토를 `eee4ae6` 기준으로 요청했고, 그 사이 D03을 직접 처리했다.
+
+- D03(reader를 연 채 브라우저 Back) 수정: 상세 패널은 workspace의 형제 노드라 `[data-view]` 클릭에서만 닫혔다. history 핸들러가 복원된 화면을 적용하기 전에 패널 소유자(`atlas:close-detail`)에게 닫기를 요청한다. 같은 여정 A/B 실측: 수정 전에는 Back 뒤 `evidence`로 돌아가도 `#chart-reader`가 열린 채 `workspace.dataset.detailsOpen='true'`로 남았고, 수정 후에는 `readerOpen:false`, `detailsOpen:'false'`였다.
+- 이 수정의 첫 전체 회귀에서 히스토리 스텁에 `document.querySelector`가 없는 테스트 4건이 실패했고(`document.querySelector is not a function`), 옵셔널 호출로 고친 뒤 해당 파일 51/51과 전체 3,360개가 다시 통과했다. 실패를 제외로 돌리지 않고 원인을 고쳤다.
+- 커밋 `edf4760`(D03) 이후 최종 확인: 전체 `npm test` `complete:true`, 3,360개 중 3,355 통과·실패 0·제외 5, 53-case 사이트 인벤토리는 같은 코드 계열에서 53/53 통과.
+
+남은 항목: D04(960px compare CSS/JS), D05(reader 내부 44px), D08(Linux fixture), D02의 데이터 owner 준비 상태 설계, 320/390 첫 페인트 간헐 boot error(Pro 3차 검토 대상), WP-A 미디어·청취·PDF·Linux 게시, macOS 외부 AppKit·Safari·실기기, 원격 CI·배포.
+
+## 2026-11-11 후속 4 — Pro 3차 검토의 boot error 원인과 relay 소유권 수정
+
+Pro 3차 검토(고정 SHA `eee4ae6`, 3차 답변 원문은 세션 artifact `atlas-pro-review2` 이후 별도 보존)는 boot error를 단정하지 않고 경로를 분해했다. 핵심은 두 가지였다.
+
+1. 전역 20초 타이머가 body bootstrap 시점부터 돌고, ETH/equity의 자체 20초 타이머는 나중에 시작한다. 그래서 데이터가 오래 pending이면 전역 타이머가 자산 로컬 오류 UI보다 먼저 실패로 고정될 수 있고, 이 경로에는 예외나 `console.error`가 필요 없다. 이번 실패가 실제로 20초 지점이었다는 측정은 없으므로 원인으로 확정하지 않았다.
+2. Relay는 가격 dataset 없이 준비 완료될 수 있는 화면인데(`finishInitialPage`), 초기 진입의 `ensureDataset()` 호출은 `data/ipo/market`만 제외하고 relay를 포함했다. BTC 요청이 실패하면 `init()`의 catch가 relay 화면에서도 전역 `atlas:boot-error`를 발행한다. popstate 경로는 이미 relay를 제외해 두 경로가 불일치했다.
+
+두 번째는 코드로 확인되고 재현됐으므로 초기 호출도 relay를 제외하도록 고쳤다. 실측: `?page=relay` 새 문서 로드 8회가 모두 `boot='ready'`였다(수정 전 같은 조건에서 4회 중 2회 error). 차트 경로는 그대로 dataset을 요청하며 `?page=outlook`에서 89개 path와 관측일이 정상 렌더됐다. relay 내용은 자체 자료를 쓰고, 차트로 이동하면 새 문서에서 dataset을 확보한다.
+
+Pro가 제안한 진단 보강(fail()에 phase·elapsed·route·resource URL 기록, early CSS 실패 URL 보존, Network/Log 수집)은 아직 구현하지 않았다. 320/390 첫 진입의 나머지 실패를 좁히려면 이 기록이 먼저 필요하다. timeout 확대나 늦은 ready로 error를 덮는 방식은 쓰지 않는다.
+
+최종 확인(커밋 `edf4760` 이후 D03 + relay 수정 포함 작업트리): 53-case 사이트 인벤토리 53/53 통과, compare PASSED, 전체 `npm test` `complete:true` 3,360개 중 3,355 통과·실패 0·제외 5, typecheck·static·Pages build/verify 통과.
+
+남은 항목: D04(960px compare CSS/JS), D05(reader 내부 44px), D08(Linux fixture), D02 데이터 owner 준비 상태 설계, 320/390 첫 진입 간헐 실패의 진단 계측, WP-A 미디어·청취·PDF·Linux 게시, macOS 외부 AppKit·Safari·실기기, 원격 CI·배포.
+
 ## 목표와 경계
 
 - 관측 데이터·모형·출처·불변 기록을 보존하면서 화면의 불필요한 장식과 중복을 줄인다.

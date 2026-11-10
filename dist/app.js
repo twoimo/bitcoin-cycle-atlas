@@ -206,7 +206,7 @@ window.addEventListener('popstate', () => {
   // A history move can leave the chart frame. Its detail panel is a sibling of
   // the workspace, so it must be closed by its own owner instead of surviving
   // the move and holding the next page under an orphan overlay.
-  const detailPanel = document.querySelector('#chart-reader');
+  const detailPanel = document.querySelector?.('#chart-reader');
   if (detailPanel && !detailPanel.hidden) document.dispatchEvent(new CustomEvent('atlas:close-detail'));
   const next = parseComparisonUrl(location.search);
   if (!comparisonUrlChanged(state, next)) return;
@@ -566,4 +566,7 @@ async function init() {
     else document.dispatchEvent(new CustomEvent('atlas:boot-error'));
   }
 }
-if (!['data','ipo','market'].includes(state.view)) void ensureDataset();
+// Relay is ready without the price dataset (see finishInitialPage). Requesting
+  // it here made a failed dataset fetch a fatal boot error on a page that never
+  // shows prices; the history path already skips Relay for the same reason.
+  if (!['data','ipo','market','relay'].includes(state.view)) void ensureDataset();
