@@ -9,6 +9,7 @@ const PRICE_CONTROL_SELECTOR = '.workbench-tools button, .workbench-bottom-bar :
 export function createCompareShellHost({document}) {
   let section = null, toolbar = null;
   let sectionHome = null, sectionNext = null, toolbarHome = null, toolbarNext = null;
+  let home = null, homeParent = null, homeNext = null;
   const priorDisabled = new Map();
   const described = new Set();
   let active = false;
@@ -75,10 +76,16 @@ export function createCompareShellHost({document}) {
     if (value) {
       if (plot && section.parentElement !== plot) plot.append(section);
       if (toolbar && heading && toolbar.parentElement !== heading) heading.append(toolbar);
+      const currentHome = document.getElementById('mobile-chart-home');
+      if (currentHome && currentHome !== home) {
+        home = currentHome; homeParent = home.parentElement; homeNext = home.nextSibling;
+      }
+      if (home?.isConnected && heading && home.parentElement !== heading) heading.insertBefore(home, toolbar?.parentElement === heading ? toolbar : null);
       lockPriceControls();
       return;
     }
     releasePriceControls();
+    if (home?.isConnected && homeParent && home.parentElement !== homeParent) homeParent.insertBefore(home, homeNext?.parentNode === homeParent ? homeNext : null);
     if (toolbar && toolbar.parentElement !== toolbarHome) toolbarHome.insertBefore(toolbar, toolbarNext);
     if (section.parentElement !== sectionHome) sectionHome.insertBefore(section, sectionNext);
   }

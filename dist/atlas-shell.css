@@ -372,3 +372,10 @@ body[data-page=compare] .atlas-canvas-heading>.lab-toolbar .lab-toolbar-group{di
 @media(max-width:760px),(pointer:coarse){
   body[data-page=compare] .atlas-canvas-heading>.lab-toolbar :is(button,select){min-height:44px}
 }
+
+/* The original return control shares compare's real mobile toolbar. Its former
+   standalone 52px reservation must not create a second chrome row. */
+@media(max-width:620px){
+  body[data-shell=chart][data-page=compare] .workspace.atlas-details-layout>#main{padding-top:0}
+  body[data-shell=chart][data-page=compare] .atlas-canvas-heading>.mobile-chart-home{position:static;display:flex!important;flex:none;align-items:center;justify-content:center;width:44px;min-width:44px;height:44px;min-height:44px;margin:0;padding:12px;gap:0;border:0;border-radius:0;background:transparent;font-size:0}
+}

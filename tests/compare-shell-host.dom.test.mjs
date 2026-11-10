@@ -136,3 +136,15 @@ test('native and ARIA disabled states are captured and restored individually', (
   assert.equal(ariaFalse.disabled, false);
   assert.equal(ariaFalse.getAttribute('aria-disabled'), 'false', 'a pre-existing aria-disabled=false is restored, not dropped');
 });
+
+test('mobile return keeps its original identity, listener, label and slot across compare trips', () => {
+  const {document,window}=fixture();
+  const home=document.createElement('button'),next=document.createElement('div');home.id='mobile-chart-home';home.setAttribute('aria-label','통합 차트로 돌아가기');document.body.append(home,next);
+  let calls=0;home.addEventListener('click',()=>calls++);const host=createCompareShellHost({document});
+  for(let i=0;i<3;i++){host.setActive(true);host.setActive(true);assert.equal(home.parentElement===document.querySelector('.atlas-canvas-heading'),true);assert.equal(home.nextElementSibling===host.toolbar,true);assert.equal(document.querySelectorAll('#mobile-chart-home').length,1);assert.equal(home.disabled,false);home.dispatchEvent(new window.Event('click'));host.setActive(false);assert.equal(home.parentElement===document.body,true);assert.equal(home.nextSibling===next,true);}
+  assert.equal(calls,3);assert.equal(home.getAttribute('aria-label'),'통합 차트로 돌아가기');
+});
+
+test('a late-created mobile return is hosted, while removed controls are not resurrected', () => {
+  const {document}=fixture(),host=createCompareShellHost({document});host.setActive(true);const home=document.createElement('button');home.id='mobile-chart-home';document.body.append(home);host.setActive(true);assert.equal(home.parentElement===document.querySelector('.atlas-canvas-heading'),true);home.remove();host.setActive(false);assert.equal(home.isConnected,false);assert.equal(document.getElementById('mobile-chart-home'),null);
+});
