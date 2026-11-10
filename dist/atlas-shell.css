@@ -1,35 +1,35 @@
 /* Dashboard-01 composition: shadcn/ui (MIT). Local tokens and financial semantics remain Atlas-owned. */
 :root{
-  --app-sidebar-width:224px;--app-header-height:64px;--ui-primary:#7da7ff;--nav-active-bg:#21304a;--nav-active-text:#b6cdff;
+  --app-sidebar-width:216px;--app-header-height:48px;--ui-primary:#7da7ff;--nav-active-bg:#21304a;--nav-active-text:#b6cdff;
   --bg:#0b0e14;--sidebar:#10141c;--surface:#131922;--surface-raised:#1b2330;--surface-hover:#202a39;
   --border:#27303e;--border-soft:#1d2633;--text:#e6ebf2;--muted:#a1adbf;--subtle:#8493a8;--focus:#8db2ff;
 }
 body[data-sidebar=compact]{--app-sidebar-width:68px}
-.atlas-dashboard-header{position:fixed;top:0;left:var(--app-sidebar-width);right:0;z-index:45;height:var(--app-header-height);display:flex;align-items:center;gap:12px;padding:0 24px;border-bottom:1px solid var(--border);background:var(--bg)}
+.atlas-dashboard-header{position:fixed;top:0;left:var(--app-sidebar-width);right:0;z-index:45;height:var(--app-header-height);display:flex;align-items:center;gap:8px;padding:0 16px 0 12px;border-bottom:1px solid var(--border);background:var(--bg)}
 .atlas-dashboard-header[hidden]{display:none}
-.atlas-sidebar-toggle{width:32px;height:36px;flex:none;display:grid;place-items:center;border:0;background:transparent;color:var(--muted);font-size:18px;cursor:pointer;border-radius:6px}
+.atlas-sidebar-toggle{width:26px;height:26px;flex:none;display:grid;place-items:center;border:0;background:transparent;color:var(--subtle);font-size:14px;line-height:1;cursor:pointer;border-radius:2px}
 .atlas-sidebar-toggle:hover{background:var(--surface-hover);color:var(--text)}
-.atlas-shell-heading{font-size:17px;font-weight:600;line-height:1.3;letter-spacing:-.03em;margin:0;white-space:nowrap}
+.atlas-shell-heading{font-size:13px;font-weight:600;line-height:1.3;letter-spacing:0;margin:0;white-space:nowrap}
 .atlas-shell-controls{margin-left:auto;min-width:0;display:flex;align-items:center;gap:12px;overflow-x:auto;scrollbar-width:none}
 body[data-shell=dashboard] #market-header-slot.atlas-shell-controls{display:flex;align-items:center;min-width:0;max-width:100%;overflow-x:auto;overflow-y:hidden;gap:12px}
 body[data-shell=dashboard] #market-header-slot .ml-tabs{flex:none;overflow:visible}
 body[data-shell=dashboard] #market-header-slot .ml-region{flex:none;margin:0}
 body[data-shell=dashboard] .atlas-sidebar,body[data-shell=dashboard] #root>.atlas-sidebar{
   position:fixed;inset:0 auto 0 0;width:var(--app-sidebar-width);height:100dvh;min-height:100dvh;max-height:none;
-  display:flex;flex-direction:column;align-items:stretch;gap:0;padding:24px 12px;border:0;border-right:1px solid var(--border);background:var(--sidebar);overflow-x:hidden;overflow-y:auto;z-index:46;
+  display:flex;flex-direction:column;align-items:stretch;gap:0;padding:12px 8px;border:0;border-right:1px solid var(--border);background:var(--sidebar);overflow-x:hidden;overflow-y:auto;z-index:46;
 }
 body[data-shell=dashboard] .atlas-sidebar .atlas-brand{
-  display:flex;align-items:center;justify-content:flex-start;gap:12px;width:100%;height:44px;min-height:44px;padding:0 12px;margin:0 0 32px;border:0;background:none;text-decoration:none;white-space:nowrap;
+  display:flex;align-items:center;justify-content:flex-start;gap:8px;width:100%;height:36px;min-height:36px;padding:0 8px;margin:0 0 12px;border:0;background:none;text-decoration:none;white-space:nowrap;
 }
-body[data-shell=dashboard] .atlas-sidebar .atlas-brand>span{font-size:26px;color:var(--accent);flex:none}
-body[data-shell=dashboard] .atlas-sidebar .atlas-brand>div,body[data-shell=dashboard] .atlas-sidebar .atlas-brand>strong{display:block!important;color:var(--text);font-size:15px;font-weight:650;letter-spacing:-.02em}
-body[data-shell=dashboard] .atlas-sidebar .atlas-brand small{display:block!important;font-size:10px;letter-spacing:normal;color:var(--subtle);font-weight:500;margin-top:4px}
+body[data-shell=dashboard] .atlas-sidebar .atlas-brand>span{font-size:21px;color:var(--accent);flex:none}
+body[data-shell=dashboard] .atlas-sidebar .atlas-brand>div,body[data-shell=dashboard] .atlas-sidebar .atlas-brand>strong{display:block!important;color:var(--text);font-size:13px;font-weight:600;letter-spacing:0}
+body[data-shell=dashboard] .atlas-sidebar .atlas-brand small{display:block!important;font-size:10px;letter-spacing:normal;color:var(--subtle);font-weight:500;margin-top:2px}
 .atlas-sidebar-group{display:none}
-body[data-shell=dashboard] .atlas-sidebar .atlas-nav{display:flex;flex-direction:column;align-items:stretch;gap:8px;width:100%;margin:0;overflow:visible;order:2}
-body[data-shell=dashboard] .atlas-sidebar .atlas-nav :is(a,button){position:relative;display:flex;align-items:center;gap:12px;width:100%;height:42px;min-height:42px;padding:12px 12px;border:0;border-radius:7px;background:none;color:var(--muted);font-size:12px;font-weight:500;text-decoration:none;text-align:left;white-space:nowrap}
+body[data-shell=dashboard] .atlas-sidebar .atlas-nav{display:flex;flex-direction:column;align-items:stretch;gap:1px;width:100%;margin:0;overflow:visible;order:2}
+body[data-shell=dashboard] .atlas-sidebar .atlas-nav :is(a,button){position:relative;display:flex;align-items:center;justify-content:flex-start;gap:8px;width:100%;height:32px;min-height:32px;padding:6px 8px;border:0;border-radius:2px;background:none;color:var(--muted);font-size:12px;font-weight:450;text-decoration:none;text-align:left;white-space:nowrap}
 body[data-shell=dashboard] .atlas-sidebar .atlas-nav :is(a,button):hover{background:var(--surface-hover);color:var(--text)}
 body[data-shell=dashboard] .atlas-sidebar .atlas-nav :is(.active,[aria-current=page]){background:var(--nav-active-bg);color:var(--nav-active-text)}
-body[data-shell=dashboard] .atlas-nav svg{width:18px;height:18px;flex:none}
+body[data-shell=dashboard] .atlas-nav svg{width:15px;height:15px;flex:none;opacity:.9}
 body[data-shell=dashboard] .atlas-nav button>span:last-child:not([data-icon]){position:static;clip-path:none;width:auto;height:auto;overflow:visible;margin:0}
 body[data-shell=dashboard] .atlas-side-foot,body[data-shell=dashboard] .workbench-tools,body[data-shell=dashboard] .workbench-rail,body[data-shell=dashboard] .mobile-chart-home{display:none!important}
 body[data-shell=dashboard] .workspace,body[data-shell=dashboard] #root>.workspace{
@@ -37,19 +37,19 @@ body[data-shell=dashboard] .workspace,body[data-shell=dashboard] #root>.workspac
 }
 body[data-shell=dashboard] .workspace.atlas-details-layout{display:block;grid-template-columns:none}
 body[data-shell=dashboard] #main{height:100%;min-height:0;padding-top:0!important}
-body[data-shell=dashboard] :is(.daily-heading,.ipo-heading,.evidence-controls){position:relative;top:auto;right:auto;left:auto;height:auto;min-height:46px;width:100%;max-width:none;z-index:2;display:flex;align-items:center;gap:12px;padding:8px 0;margin:0 0 12px;background:transparent;border:0;box-shadow:none;overflow-x:auto;white-space:nowrap}
+body[data-shell=dashboard] :is(.daily-heading,.ipo-heading,.evidence-controls){position:relative;top:auto;right:auto;left:auto;height:auto;min-height:36px;width:100%;max-width:none;z-index:2;display:flex;align-items:center;gap:8px;padding:4px 0;margin:0 0 8px;background:transparent;border:0;box-shadow:none;overflow-x:auto;white-space:nowrap}
 body[data-shell=dashboard] :is(.daily-heading-title,.ipo-heading-title,.evidence-mobile-heading){display:none!important}
-body[data-shell=dashboard] #data-view .daily-heading{padding:8px 16px;border-bottom:1px solid var(--border);background:var(--surface);margin:0}
+body[data-shell=dashboard] #data-view .daily-heading{padding:4px 16px;border-bottom:1px solid var(--border);background:transparent;margin:0}
 body[data-shell=dashboard] #ipo-view{padding:16px 24px 24px;gap:12px}
 body[data-shell=dashboard] .ipo-heading{justify-content:space-between;flex:none;margin:0}
-body[data-shell=dashboard] :is(.ipo-table-shell,.daily-table-shell,.evidence-table-wrap){border:1px solid var(--border);border-radius:10px;background:var(--surface);overflow:auto}
+body[data-shell=dashboard] :is(.ipo-table-shell,.daily-table-shell,.evidence-table-wrap){border:1px solid var(--border);border-radius:0;background:var(--surface);overflow:auto}
 body[data-shell=dashboard] #evidence-view{padding:16px 24px 24px}
 body[data-shell=dashboard] .ml-scroll{padding:8px 24px 24px}
 body[data-shell=dashboard] .ml-score-row{gap:16px;margin:16px 0}
-body[data-shell=dashboard] .ml-score{border-radius:10px;min-height:144px;background:var(--surface);border-left-width:2px}
+body[data-shell=dashboard] .ml-score{border-radius:0;min-height:144px;background:var(--surface);border-left-width:1px}
 body[data-shell=dashboard] .ml-score .ml-axis-value{font-size:36px}
-body[data-shell=dashboard] .ml-card{border-radius:10px;background:var(--surface);color:var(--text)}
-body[data-shell=dashboard] .ml-sources,body[data-shell=dashboard] .ml-original{background:transparent;border-color:var(--border);border-radius:7px}
+body[data-shell=dashboard] .ml-card{border-radius:0;background:var(--surface);color:var(--text)}
+body[data-shell=dashboard] .ml-sources,body[data-shell=dashboard] .ml-original{background:transparent;border-color:var(--border);border-radius:0}
 body[data-sidebar=compact][data-shell=dashboard] .atlas-brand :is(div,strong),body[data-sidebar=compact][data-shell=dashboard] .atlas-sidebar-group,body[data-sidebar=compact][data-shell=dashboard] .atlas-nav .atlas-nav-label,body[data-sidebar=compact][data-shell=dashboard] .atlas-nav button>span:last-child:not([data-icon]){display:none!important}
 body[data-sidebar=compact][data-shell=dashboard] .atlas-sidebar :is(.atlas-brand,.atlas-nav a,.atlas-nav button){justify-content:center;padding-inline:0}
 /* The chart keeps TradingView's top/left/right/bottom working regions. */
@@ -323,14 +323,18 @@ body[data-shell=chart] .shell-feature-panel[data-shell-measuring=true] .shell-fe
    It never occupies the quote/legend plot or a child iframe's toolbar. */
 .atlas-page-intro,.atlas-shell-copy{min-width:0;box-sizing:border-box}
 .atlas-page-intro{display:flex;flex-direction:column;flex:none;gap:2px;width:100%;padding:4px 12px;border-bottom:1px solid var(--border-soft);background:var(--bg);color:var(--text)}
-.atlas-page-intro>.atlas-shell-heading{margin:0;font-size:13px;line-height:18px;letter-spacing:0;white-space:normal}
+.atlas-page-intro>.atlas-shell-heading{margin:0;font-size:12px;line-height:16px;letter-spacing:0;white-space:normal}
 .atlas-page-description{margin:0;color:var(--muted);font:11px/14px var(--font);white-space:normal;word-break:normal;overflow-wrap:break-word}
-.atlas-shell-copy{flex:1 1 auto;display:flex;flex-direction:column;gap:2px}
+.atlas-page-intro>.atlas-page-description{color:var(--subtle)}
+.atlas-shell-copy{flex:1 1 auto;display:flex;flex-direction:row;align-items:baseline;gap:10px}
+.atlas-dashboard-header .atlas-page-description{flex:0 1 auto;min-width:0;color:var(--subtle);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .atlas-shell-copy>.atlas-shell-heading{position:static;width:auto;height:auto;margin:0;line-height:18px;clip-path:none;overflow:visible}
 .atlas-dashboard-header>.atlas-shell-controls,body[data-shell=dashboard] .atlas-dashboard-header>#market-header-slot.atlas-shell-controls{flex:0 1 auto;max-width:45%;min-width:0}
 body[data-embedded=true] .atlas-page-intro{display:none}
 @media(max-width:640px){
   .atlas-page-intro{padding-inline:8px}
+  .atlas-shell-copy{flex-direction:column;align-items:flex-start;gap:1px}
+  .atlas-dashboard-header .atlas-page-description{display:none}
   .atlas-dashboard-header:has(.atlas-shell-controls:not(:empty)) .atlas-shell-copy>.atlas-shell-heading{position:static;width:auto;height:auto;clip-path:none;overflow:visible}
   .atlas-dashboard-header>.atlas-shell-controls,body[data-shell=dashboard] .atlas-dashboard-header>#market-header-slot.atlas-shell-controls{max-width:44px;min-width:44px}
 }

@@ -156,3 +156,50 @@ Compare the actual source and Atlas at the same viewport and state when that
 state corresponds. Record Atlas-specific adaptations and any remaining gaps.
 The final release record must cite the new source's own checks and deployment;
 prior release results remain historical evidence.
+
+## 2026-11-10 launch cleanup — flat shell chrome
+
+Scope: `dist/atlas-shell.css` and `dist/styles.css` only (dashboard shell and
+base stylesheet). No application, chart, price-axis or CI file was edited.
+
+Observed defects in the rendered local build, then corrected:
+
+- Dashboard navigation rows inherited `justify-content:center` from the narrow
+  icon-rail stylesheet, so every destination label sat in the middle of a
+  224px column with a different left edge. Rows now share one left edge
+  (`justify-content:flex-start`), 32px height, 1px list gap, 2px corner.
+- The destination rows, ledger shells, market cards and score cards used 7–10px
+  radii, reading as stacked cards. Tables, sections and cards are now square
+  and separated by the existing hairlines; only dialogs keep rounding.
+- The dashboard header was a 64px two-line hero (17px tracked title plus a
+  second-line sentence). It is now a single 48px row: 13px title and the same
+  basis sentence inline at 11px, muted, ellipsised. On phones the sentence is
+  dropped and the title alone remains.
+- `body :is(#outlook-view,…) p` set `font-size:max(12px,1em)` and was also
+  catching the chart page's context block, forcing 13px/20.8px there. That
+  selector now excludes `.atlas-page-description`, so page-context chrome keeps
+  its 11px/14px while prose keeps its reading size. The 320px context block
+  drops from 69px to 55px without losing text.
+- Removed the last decorative gradient (`reading-card`), the oversized
+  `--shadow` blur is no longer painted anywhere measured, and the brand mark no
+  longer rotates.
+
+Preserved and re-verified: four chart perimeter regions, the narrow 44/45px
+rail geometry, the 390px two-row disclosure contract (`44px 44px` rows,
+`minmax(80px,1fr) 56px repeat(4,44px)` columns), 44px coarse-pointer controls,
+semantic gain/loss and 12 series colours, real toolbar handlers, independent
+scroll owners and native accessibility names.
+
+Verified by serving this worktree's `dist/` and inspecting real Chrome renders
+at 1440×900, 900×800, 390×844 and 320×740 for 가격 차트, 자산 비교, 공모주 and
+릴레이 콘텐츠. `tests/shell-flat-chrome.test.mjs` (new, dependency-free) guards
+the flattening and the mobile disclosure contract; `tests/daily-data-view`,
+`tests/boot-shell`, `tests/ipo-*`, `tests/static-module-references` and
+`tests/cloudflare-artifact` pass on this tree.
+
+Not verified here and still open: the market-lab React route needs its API, so
+only its error state was reachable from a static server; chart annotation label
+collisions at 320–390px and the chart legend/indicator chips belong to
+`cycle-milestones.css`, `chart-legend.css` and `analysis-dock.css`; the
+production build could not run on this host (rolldown native module blocked by
+macOS policy), so no build or deployment claim is made.
