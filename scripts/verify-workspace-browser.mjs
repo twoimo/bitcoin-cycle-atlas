@@ -874,7 +874,13 @@ export async function verifyWorkspaceSurface(api) {
     }
     receipt.workspace.researchResizeReturns=resizeReturns;
     if(width<=620){
-      const returnSelector=await evaluate(cdp,()=>document.body.dataset.shell==='dashboard'?'.atlas-sidebar .atlas-brand[data-view="outlook"]':'#evidence-back');
+      // The dashboard sidebar holds the chart return while it is rendered; on phone
+      // widths the same route identity is the icon rail's chart entry.
+      const returnSelector=await evaluate(cdp,()=>{
+        if(document.body.dataset.shell!=='dashboard')return '#evidence-back';
+        const brand=document.querySelector('.atlas-sidebar .atlas-brand[data-view="outlook"]');
+        return brand&&brand.getClientRects().length?'.atlas-sidebar .atlas-brand[data-view="outlook"]':'.content-rail [data-atlas-page="outlook"]';
+      });
       await click(cdp,returnSelector);
       await until(()=>evaluate(cdp,()=>document.body.dataset.page==='outlook'&&document.querySelectorAll('#lab-chart path').length>0),'mobile research back to chart');
       receipt.workspace.mobileReturn={selector:returnSelector,actualChart:true};

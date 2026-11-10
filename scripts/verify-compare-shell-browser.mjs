@@ -572,6 +572,9 @@ const main = async () => {
             navItems: nav ? nav.querySelectorAll('[data-atlas-page],[data-view]').length : 0,
             navLabelled: nav ? [...nav.querySelectorAll('[data-atlas-page],[data-view]')].filter(n => n.getAttribute('aria-label') || n.getAttribute('title')).length : 0,
             headerIsTop: Boolean(document.querySelector('.atlas-canvas-heading')?.matches('.atlas-dashboard-header')),
+            sidebarRendered: Boolean(document.querySelector('.atlas-sidebar')?.getClientRects().length),
+            sidebarOwnsNav: Boolean(document.querySelector('.atlas-sidebar')?.contains(nav)),
+            railPainted: Boolean(rail?.getClientRects().length),
             bottomOwnsFooter: Boolean(document.querySelector('.workbench-bottom-bar .footer')),
           };
         });
@@ -586,13 +589,17 @@ const main = async () => {
         if (bootState !== 'ready') fail(where, 'boot ' + bootState);
         for (const key of ['top', 'left', 'right', 'bottom']) if (!state.present[key]) fail(where, `missing shell region ${key}`);
         if (state.regions.top !== 'visible') fail(where, 'top region ' + state.regions.top);
-        if (w > phoneMax && state.regions.right !== 'visible') fail(where, 'right region ' + state.regions.right);
+        // The dashboard composition keeps the navigation in its sidebar; the right
+        // icon rail is the phone-width host for the same node, never a second copy.
+        if (shellTargets.sidebarRendered && (state.regions.right === 'visible' || shellTargets.railPainted)) fail(where, 'dashboard kept a right rail beside the rendered sidebar');
+        if (!shellTargets.sidebarRendered && state.regions.right !== 'visible') fail(where, 'right region ' + state.regions.right);
         if (w > phoneMax && state.regions.bottom !== 'visible') fail(where, 'bottom region ' + state.regions.bottom);
         if (w >= 960 && state.regions.left !== 'visible') fail(where, 'left region ' + state.regions.left);
         if (state.overflow > 1) fail(where, `horizontal overflow ${state.overflow}px`);
         if (state.headings.length !== 1) fail(where, 'visible h1 count ' + state.headings.length + ' (' + state.headings.map(h => h.id || h.text).join(' | ') + ')');
         if (state.duplicates.length) fail(where, 'duplicate ids ' + state.duplicates.join(','));
-        if (!shellTargets.railOwnsNav) fail(where, 'the navigation is not owned by the shell rail');
+        if (shellTargets.sidebarRendered && !shellTargets.sidebarOwnsNav) fail(where, 'the rendered dashboard sidebar does not own the navigation');
+        if (!shellTargets.sidebarRendered && !shellTargets.railOwnsNav) fail(where, 'phone content route lost its navigation host');
         if (!shellTargets.bottomOwnsFooter) fail(where, 'the source footer is not owned by the bottom bar');
         if (shellTargets.navLabelled < shellTargets.navItems) fail(where, `${shellTargets.navItems - shellTargets.navLabelled} rail links without an accessible name`);
         if (w <= 1100 && shellTargets.tiny.length) fail(where, `${shellTargets.tiny.length} shell targets below 44px: ` + shellTargets.tiny.map(t => `${t.name} ${t.w}x${t.h}`).join('; '));
@@ -659,6 +666,8 @@ const main = async () => {
             railInDoc: Boolean(marks.rail?.isConnected), bottomInDoc: Boolean(marks.bottom?.isConnected),
             railHidden: marks.rail ? marks.rail.hidden : null,
             navInRail: Boolean(marks.rail?.contains(marks.nav)), footerInBottom: Boolean(marks.bottom?.contains(marks.footer)),
+            navInSidebar: Boolean(document.querySelector(".atlas-sidebar")?.contains(marks.nav)),
+            sidebarRendered: Boolean(document.querySelector(".atlas-sidebar")?.getClientRects().length),
             railCount: [...document.querySelectorAll(".workbench-rail")].filter(painted).length,
             bottomCount: [...document.querySelectorAll(".workbench-bottom-bar")].filter(painted).length,
             sourceDisabled: source ? source.disabled === true : null,
@@ -697,7 +706,7 @@ const main = async () => {
         const back = await evaluate(cdp, () => {
           const marks = window.__wpcContent;
           const rail = document.querySelector(".content-rail");
-          const item = rail?.querySelector(".atlas-nav [data-atlas-page]");
+          const item = document.querySelector('.atlas-nav [data-atlas-page="outlook"]');
           let hit = null;
           if (item) {
             const r = item.getBoundingClientRect();
@@ -709,10 +718,12 @@ const main = async () => {
             page: document.body.dataset.page, shell: document.body.dataset.shell,
             sameRail: marks.rail === rail, sameBottom: marks.bottom === document.querySelector(".content-bottom-bar"),
             navInRail: Boolean(rail?.contains(document.querySelector(".atlas-nav"))),
+            navInSidebar: Boolean(document.querySelector(".atlas-sidebar")?.contains(document.querySelector(".atlas-nav"))),
             footerInBottom: Boolean(document.querySelector(".content-bottom-bar")?.contains(document.querySelector(".footer"))),
             railCount: [...document.querySelectorAll(".workbench-rail")].filter(n => n.isConnected && !n.hidden && getComputedStyle(n).display !== "none").length,
             bottomCount: [...document.querySelectorAll(".workbench-bottom-bar")].filter(n => n.isConnected && !n.hidden && getComputedStyle(n).display !== "none").length,
-            railVisible: Boolean(rail) && !rail.hidden,
+            railVisible: Boolean(rail) && !rail.hidden && Boolean(rail.getClientRects().length),
+            sidebarRendered: Boolean(document.querySelector(".atlas-sidebar")?.getClientRects().length),
             navHit: hit,
             sourceDisabled: source ? source.disabled === true : null,
             sourceReason: source?.getAttribute("data-disabled-reason") || null,
@@ -721,8 +732,14 @@ const main = async () => {
         report.contentTrips = report.contentTrips || [];
         report.contentTrips.push({ route: name, viewport: `${w}x${h}`, navClick, before, onChart, back });
         const where = `trip ${name} ${w}x${h}`;
-        if (!before.railInDoc || !before.bottomInDoc || before.railCount !== 1 || before.bottomCount !== 1) fail(where, "content regions not owned once on entry: " + JSON.stringify(before));
-        if (!before.navInRail || !before.footerInBottom) fail(where, "navigation/footer not owned by the content regions: " + JSON.stringify(before));
+        const railOwnsNav = before.sidebarRendered === false;
+        if (!before.bottomInDoc || before.bottomCount !== 1) fail(where, "content bottom region not owned once on entry: " + JSON.stringify(before));
+        if (railOwnsNav) {
+          if (!before.railInDoc || before.railHidden || !before.navInRail || before.railCount !== 1) fail(where, "phone content rail did not take the navigation: " + JSON.stringify(before));
+        } else if (!before.railInDoc || !before.railHidden || before.navInRail || !before.navInSidebar || before.railCount !== 0) {
+          fail(where, "rendered dashboard sidebar must own the navigation without a painted rail: " + JSON.stringify(before));
+        }
+        if (!before.footerInBottom) fail(where, "footer not owned by the content bottom region: " + JSON.stringify(before));
         if (before.sourceDisabled !== true || !before.sourceReason) fail(where, "source control not disabled with a reason: " + JSON.stringify(before));
         if (!navClick.ok) fail(where, "chart navigation unreachable from the content rail: " + JSON.stringify(navClick));
         if (onChart.page !== "outlook") fail(where, "navigation did not reach the price chart: " + onChart.page);
@@ -735,11 +752,16 @@ const main = async () => {
         if (!onChart.footerInMain) fail(where, "source footer did not return to the page");
         if (Object.values(onChart.nodesPreserved).some(v => !v)) fail(where, "shell nodes were replaced instead of preserved: " + JSON.stringify(onChart.nodesPreserved));
         if (back.page !== name) fail(where, "back did not restore the content route: " + back.page);
-        if (back.railCount !== 1 || back.bottomCount !== 1) fail(where, "duplicate shell regions after return: " + back.railCount + "/" + back.bottomCount);
+        const expectedRails = back.sidebarRendered ? 0 : 1;
+        if (back.railCount !== expectedRails || back.bottomCount !== 1) fail(where, "shell regions after return: " + back.railCount + "/" + back.bottomCount);
         if (!back.sameRail || !back.sameBottom) fail(where, "content regions were re-created after the return");
-        if (!back.railVisible) fail(where, "content rail stayed hidden after the return");
-        if (!back.navInRail || !back.footerInBottom) fail(where, "navigation/footer ownership not restored");
-        if (!back.navHit?.inside) fail(where, "rail navigation is not hit-testable after the return: " + JSON.stringify(back.navHit));
+        if (back.sidebarRendered === false) {
+          if (!back.railVisible || !back.navInRail) fail(where, "phone content rail stopped owning the navigation after the return");
+        } else if (back.railVisible || back.navInRail || !back.navInSidebar) {
+          fail(where, "dashboard sidebar lost the navigation or the rail reappeared: " + JSON.stringify(back));
+        }
+        if (!back.footerInBottom) fail(where, "footer ownership not restored");
+        if (!back.navHit?.inside) fail(where, "navigation is not hit-testable after the return: " + JSON.stringify(back.navHit));
         if (w <= 1100 && (back.navHit.w < 44 || back.navHit.h < 44)) fail(where, "rail navigation is not a 44px target after the return: " + JSON.stringify(back.navHit));
         if (back.sourceDisabled !== true || !back.sourceReason) fail(where, "source control state not restored on the content route: " + JSON.stringify(back));
       }

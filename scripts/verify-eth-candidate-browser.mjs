@@ -211,13 +211,25 @@ async function dataCase(cdp,width,receipt){
         name:el.getAttribute('aria-label')||el.textContent.trim()};
     };
     const controls=[...document.querySelectorAll('.daily-heading .daily-action')].map(read);
+    // The dashboard keeps its navigation in the rendered sidebar. Below 641px that
+    // sidebar is not rendered, so the same route identity lives in the icon rail
+    // and the rail entry is the reachable way back to the price chart.
     const sidebar=document.querySelector('.atlas-sidebar'),sidebarBox=sidebar.getBoundingClientRect();
+    const sidebarRendered=Boolean(sidebar.getClientRects().length);
+    const rail=document.querySelector('.content-rail');
+    const returnOwner=sidebarRendered?sidebar:rail;
+    const returnBox=returnOwner?returnOwner.getBoundingClientRect():sidebarBox;
     const navigation={shell:document.body.dataset.shell,page:document.body.dataset.page,
       heading:read(document.querySelector('.atlas-dashboard-header .atlas-shell-heading')),
-      returnAction:read(document.querySelector('.atlas-sidebar .atlas-brand[data-view="outlook"]')),
-      returnClip:{left:sidebarBox.left+sidebar.clientLeft,top:sidebarBox.top+sidebar.clientTop,
-        right:sidebarBox.left+sidebar.clientLeft+sidebar.clientWidth,bottom:sidebarBox.top+sidebar.clientTop+sidebar.clientHeight},
-      activeData:document.querySelector('.atlas-sidebar [data-atlas-page="data"]')?.getAttribute('aria-current'),
+      returnAction:read(sidebarRendered?document.querySelector('.atlas-sidebar .atlas-brand[data-view="outlook"]')
+        :document.querySelector('.content-rail [data-atlas-page="outlook"]')),
+      returnOwner:sidebarRendered?'sidebar':'rail',
+      returnClip:{left:returnBox.left+(returnOwner?.clientLeft||0),top:returnBox.top+(returnOwner?.clientTop||0),
+        right:returnBox.left+(returnOwner?.clientLeft||0)+(returnOwner?.clientWidth||0),bottom:returnBox.top+(returnOwner?.clientTop||0)+(returnOwner?.clientHeight||0)},
+      // The dashboard keeps its navigation in the rendered sidebar and hands the
+      // same node to the phone icon rail, so either host may own it.
+      activeData:(document.querySelector('.atlas-sidebar [data-atlas-page="data"]')
+        ||document.querySelector('.content-rail [data-atlas-page="data"]'))?.getAttribute('aria-current'),
       legacy:[read(document.querySelector('.daily-heading .daily-back')),read(document.querySelector('.daily-heading h1'))]};
     return {width:innerWidth,scrollWidth:document.documentElement.scrollWidth,
       symbols:rows.map(r=>r.dataset.assetSymbol),btcName:rows[0].querySelector('.asset-name-label').textContent,judgments:rows.map(r=>r.querySelector('.asset-judgment')?.textContent),controls,navigation,headingHeight:document.querySelector('.daily-heading').getBoundingClientRect().height,headingBackground:getComputedStyle(document.querySelector('.daily-heading')).backgroundColor,
@@ -342,6 +354,7 @@ function readDataGeometry(){
     documentWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,
     symbols:rows.map(r=>r.dataset.assetSymbol),btcName:rows[0].querySelector('.asset-name-label').textContent,
     root:rect(document.querySelector('#data-view')),panel:panelBox,header:rect(table.tHead),
+    barTop:(()=>{const bar=document.querySelector('.content-bottom-bar');return bar&&bar.getClientRects().length?rect(bar).top:null;})(),
     clientHeight:panel.clientHeight,scrollHeight:panel.scrollHeight,scrollTop:panel.scrollTop,
     clientBottom:panelBox.top+panel.clientTop+panel.clientHeight,clientTop:panelBox.top+panel.clientTop,
     rows:rowBoxes,buttons:[...table.tBodies[0].querySelectorAll('.asset-identity,.asset-judgment')].map(rect),
@@ -356,9 +369,10 @@ function assertDataGeometry(g,{width,height,fill}){
   assert.ok(Math.max(g.documentWidth,g.bodyWidth)<=width+1,'Body horizontal overflow');
   assert.deepEqual(g.symbols,expectedAssetSymbols);assert.equal(new Set(g.symbols).size,expectedAssetSymbols.length);assert.equal(g.symbols[0],'BTC');assert.equal(g.btcName,'비트코인');
   assert.ok(Math.abs(g.header.height-54)<=1,'Header expanded instead of body rows');
-  assert.ok(Math.abs(g.root.bottom-height)<=2,'Data view no longer fills the viewport');
+  const contentBottom=g.barTop==null?height:g.barTop;
+  assert.ok(Math.abs(g.root.bottom-contentBottom)<=2,'Data view no longer fills its content area: '+JSON.stringify({rootBottom:g.root.bottom,contentBottom,barTop:g.barTop}));
   // The inner client area may be shorter by its horizontal scrollbar; the panel itself reaches the bottom.
-  assert.ok(Math.abs(g.panel.bottom-height)<=3,'Table viewport leaves unused bottom space');
+  assert.ok(Math.abs(g.panel.bottom-contentBottom)<=3,'Table viewport leaves unused bottom space: '+JSON.stringify({panelBottom:g.panel.bottom,contentBottom,barTop:g.barTop}));
   assert.ok(g.rows.every(r=>r.height>=(g.coarse?48:40)-1),'Body rows were compressed');
   const buttonMin=g.coarse||width<=760?44:30;
   assert.ok(g.buttons.every(b=>b.height>=buttonMin-1),'Reading or touch target compressed');

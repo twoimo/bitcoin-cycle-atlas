@@ -1,10 +1,10 @@
-// The dashboard composition (evidence, data, ipo, relay, market) already owns
-// the shell's top header and left rail. This module gives those routes the same
-// right and bottom regions the price chart has, using the nodes that already
-// carry that information: the service navigation moves into the right rail and
-// the page footer, with its source links and its info-sheet opener, becomes the
-// bottom bar. Nothing is cloned, so ids, listeners, dialogs and data owners stay
-// with their original element, and the chart frame keeps its own regions.
+// The dashboard composition (evidence, data, ipo, relay, market) keeps the
+// sidebar, header and inset content of the authored dashboard layout. Only the
+// page footer moves, into a bottom region, so its source links and info-sheet
+// opener stay reachable; on phone widths, where the sidebar is not rendered,
+// the service navigation moves into a right icon rail instead of disappearing.
+// Nothing is cloned, so ids, listeners, dialogs and data owners stay with their
+// original element, and the chart frame keeps its own regions.
 export const CONTENT_SHELL_PAGES = Object.freeze(['evidence', 'data', 'ipo', 'relay', 'market']);
 
 // The source sheet is rendered from the price dataset, which these routes do
@@ -15,7 +15,7 @@ export const SOURCE_SHEET_REASON = '가격 자료가 없어 방법론 시트를 
 export function createContentShell({ document }) {
   let rail = null, bottom = null, nav = null, footer = null;
   let navHome = null, navNext = null, footerHome = null, footerNext = null;
-  let active = false;
+  let active = false, media = null;
   const lockedSources = new Map();
 
   function build() {
@@ -53,6 +53,9 @@ export function createContentShell({ document }) {
   }
 
   function lockSources() {
+    // The source sheet renders from the price dataset. When this document still
+    // owns a mounted plot the sheet is ready, so the control keeps working.
+    if (document.querySelector('.atlas-plot')) { unlockSources(); return; }
     for (const control of document.querySelectorAll('.footer [data-method], .content-bottom-bar [data-method]')) {
       if (!lockedSources.has(control)) {
         lockedSources.set(control, {
@@ -83,13 +86,28 @@ export function createContentShell({ document }) {
     lockedSources.clear();
   }
 
+  // The authored dashboard keeps its navigation in the sidebar. The right icon
+  // rail exists only for widths where that sidebar is not rendered, so the
+  // navigation is never duplicated and never leaves a dead column behind.
+  function sidebarOwnsNav() {
+    const sidebar = document.querySelector('.atlas-sidebar');
+    if (!sidebar) return false;
+    const style = sidebar.ownerDocument?.defaultView?.getComputedStyle?.(sidebar);
+    if (style && style.display === 'none') return false;
+    return sidebar.getClientRects().length > 0;
+  }
+
   function place() {
     mount();
     nav = nav || document.querySelector('.atlas-nav');
     if (nav) {
       if (navHome === null) { navHome = nav.parentElement; navNext = nav.nextElementSibling; }
-      if (nav.parentElement !== rail) rail.prepend(nav);
+      const host = sidebarOwnsNav() ? (navHome || document.querySelector('.atlas-sidebar')) : rail;
+      if (host && nav.parentElement !== host) {
+        if (host === rail) rail.prepend(nav); else host.append(nav);
+      }
     }
+    rail.hidden = !nav || nav.parentElement !== rail;
     footer = footer || document.querySelector('#main > .footer') || document.querySelector('.footer');
     if (footer) {
       if (footerHome === null) { footerHome = footer.parentElement; footerNext = footer.nextElementSibling; }
@@ -112,6 +130,10 @@ export function createContentShell({ document }) {
       if (!build()) return;
       place();
       active = true;
+      if (!media) {
+        media = document.defaultView?.matchMedia?.('(max-width: 640px)') || null;
+        media?.addEventListener?.('change', () => { if (active) place(); });
+      }
       return;
     }
     if (!active) return;

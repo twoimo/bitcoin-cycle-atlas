@@ -32,6 +32,31 @@
 
 폭은 서로 다른 계약을 지우고 하나로 축소하지 않는다. 반응형 320/390/456/620/768/1024/1440, 기존 전체 셸 1280, WP-A/C 1920 및 reader 959/960 경계를 해당 여정에서 보존한다.
 
+## 2026-11-11 후속 결과 — Pro 검토 + 수정 + 재검증
+
+Pro(6 Pro, GPT-6/Pro 5단계) 검토를 [전용 스레드](https://chatgpt.com/c/6af34824-c838-83e8-8a29-674f636a56df)에서 23분 44초에 받았다. 원문은 세션 artifact `atlas-pro-review-963abda-verbatim.txt`에 보존했고, Pro가 밝힌 확인 수준(소스 읽기 / 정적 판단 / 실제 실행)을 그대로 구분한다. Pro는 고정 SHA `963abdae`를 읽었고, 원격 head가 `93535e0`으로 이동한 뒤에도 판정은 고정 SHA에 두었다. 접근 실패도 기록했다: 고정 SHA에서 `build/accepted-responsive-BTCUSD/report.json`과 `build/accepted-native-prices/report.json`은 HTTP 404였고, Aside 세션 경로의 원본 로그에는 접근하지 못했다.
+
+Pro가 제시한 결함 목록(D01~D09)은 가설로 취급해 소스에서 다시 확인했다. 이번에 확인·수정한 항목:
+
+| ID | 판정 | 근거 |
+|---|---|---|
+| D01 relay 직접 진입 클릭 소실 | 수정·재현 확인 | `?page=relay`에서 리서치·데이터·IPO·시장 클릭이 아무 동작도 하지 않던 것을 재현했다. center-workbench의 직접 진입 분기에 `relay`가 없어 `open()`이 차트 호스트를 찾다 삼켰다. 클릭 핸들러에서 차트 호스트가 없으면 `atlasSitePath(page.href)`로 이동하게 고쳤고, relay→evidence→relay 왕복과 `aria-current`를 실브라우저에서 확인했다. |
+| D02 준비된 자료도 무조건 잠금 | 수정 | `content-shell.lockSources()`가 `[data-method]`를 무조건 비활성화했다. 가격 데이터(`.atlas-plot`)가 이 문서에 살아 있으면 잠그지 않도록 조건을 넣었고, `?page=data`처럼 자료가 없는 경로에서는 기존 이유 문구와 비활성 상태가 그대로 유지됨을 확인했다. |
+| 대시보드 내비 소유권(자체 발견) | 수정 | 대시보드 라우트에서 내비게이션이 오른쪽 44px 레일로 빠지고 좌측 216px 사이드바가 브랜드만 남은 빈 칸이 됐다. `design.md`의 dashboard-01(sidebar/header/inset)과 `atlas-shell.css`의 `body[data-shell=dashboard] .atlas-sidebar .atlas-nav` 규칙에 맞춰, 사이드바가 렌더되는 폭에서는 사이드바가 내비를 소유하고 640px 이하에서만 레일로 넘기도록 고쳤다. 리사이즈 시에도 재배치한다. |
+
+Pro가 지적한 나머지는 미수정으로 남긴다. D03 reader를 연 채 브라우저 Back 시 reader가 남는 경로, D04 960px compare의 CSS/입력 모드 불일치, D05 reader 내부 44px 미달 조작부, D06·D09 독립 44-case·compare 프로세스의 emulation 전 native client 검사 부재, D07 select 실패 후 복원 readback 생략·오류 가림, D08 Linux에서 native-select 13건 실패. 이 항목들은 Pro의 소스 근거와 재현 조건만 확보했고 이번에 실행 재현하지 않았다.
+
+이번 후보에서 다시 실행한 검증:
+
+- `npm run typecheck`, `npm run verify:static` 통과(967 files, 214 scripts, 992 references).
+- `npm run build:pages`, `npm run verify:pages` 통과(12 files, 9 routes).
+- compare 셸 실브라우저 검사 **PASSED**(실패 0). 계약은 수정된 구성에 맞췄다: 사이드바가 렌더되면 내비는 사이드바 소유이고 오른쪽 레일은 그리지 않으며, 640px 이하에서만 레일이 내비를 소유한다. 왕복 뒤 노드 동일성·footer 소유·source 잠금/복원 검사는 유지했다.
+- 전체 사이트 53-case 네이티브 브라우저 스위트 **53/53 passed, failures 0**. 검사 분모는 base 26 + workspace 13 + forecast-replay 4 + chart-replay 7 + consolidated 3이다. 하네스 쪽에서 stale 가정 두 곳을 제품 구성에 맞췄다: phone 폭에서는 sidebar가 렌더되지 않으므로 차트 복귀 컨트롤을 레일 항목으로 판정하고, 데이터 표의 아래 정렬 기준을 viewport 대신 콘텐츠 바 상단으로 계산한다. 검사 자체를 삭제하거나 허용치를 늘리지 않았다.
+- `?page=relay` 새 문서 로드가 간헐적으로 boot error가 되는 현상은 기준 상태(`dist` 미수정)에서도 4회 중 2회 재현됐다. 이번 수정으로 생긴 회귀가 아니며 원인은 아직 확정하지 않았다.
+- 전체 `npm test`는 최종 소스에서 다시 실행 중이다. 결과는 아래 실행 영수증에 추가한다.
+
+아직 닫히지 않은 것: 위 D03~D09, WP-A 미디어·청취·동기화·PDF·Linux 원자 게시, macOS 외부 AppKit 메뉴·Safari·실기기, 원격 CI·배포. `mediaPrepared:false`와 출시 보류를 유지한다.
+
 ## 목표와 경계
 
 - 관측 데이터·모형·출처·불변 기록을 보존하면서 화면의 불필요한 장식과 중복을 줄인다.

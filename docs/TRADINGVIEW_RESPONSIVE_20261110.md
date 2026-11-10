@@ -241,3 +241,11 @@ UI 실조작과 빌드 및 기존 출시 gate는 각각 판정한다. 남은 실
 현재 제품 소스는 c6b34b984b2919b7dc691f023ea4ee800c468d49이며 §10의 이전 반응형 44/44는 그 당시 후보 증거다. compare reader 고정/원래 차트 문서 폭, 1100px 이하 44px 터치, dashboard 네 면·원래 nav/footer 이동과 차트 복귀 복원, replay 정보 시트 inert 보존, TQQQ 대화상자 재개방 스크롤 초기화를 통합했다.
 
 headless native client를 emulation 전에 검증하는 helper와 consolidated disclosure 관측 수정도 통합했다. 별도 진단 트리의 BTC 3/3·consolidated 3/3을 최종 후보의 전체 53-case 또는 WP6 통과로 소급하지 않는다. native-select Blink 내부 팝업 입력은 외부 macOS AppKit 메뉴 검증이 아니다. 최종 통합 후보에서 typecheck/static/Pages build/verify 및 관련 focused 30/30을 확인했으며, 전체 브라우저와 전체 회귀는 Pro 인계 후 남은 작업이다. 정확한 수용·출시 보류는 [현재 체크리스트](LAUNCH_CHECKLIST_20261110.md)를 따른다.
+
+## 13. 2026-11-11 후속 수정과 재검증
+
+대시보드(evidence/data/ipo/relay/market) 구성에서 내비게이션이 오른쪽 44px 레일로 빠지고 좌측 216px 사이드바가 브랜드만 남은 빈 칸이 되던 문제를 고쳤다. `dist/content-shell.js`는 이제 사이드바가 렌더되는 폭에서는 원래 `.atlas-nav` 노드를 사이드바에 두고, 640px 이하에서 사이드바가 렌더되지 않을 때만 같은 노드를 오른쪽 레일로 옮긴다. 리사이즈 시 재배치하며, 노드는 복제하지 않는다. 방법론 시트 잠금은 가격 데이터가 이 문서에 살아 있을 때 해제된다. `?page=relay`로 바로 들어와 다른 대시보드 메뉴를 눌러도 이동하지 않던 경로도 클릭 핸들러에서 고쳤다(직접 진입 분기에 relay가 없었다).
+
+검증 계약도 구성에 맞춰 조정했다. 내비 소유자는 사이드바(렌더 시) 또는 폰 레일이고, 데이터 표의 아래 정렬은 viewport가 아니라 콘텐츠 바 상단을 기준으로 계산한다. 검사 항목을 삭제하거나 허용치를 늘리지 않았다.
+
+실행 결과: 53-case 네이티브 브라우저 스위트 53/53 passed(failures 0), compare 셸 실브라우저 PASSED, typecheck·verify:static·build:pages·verify:pages 통과. 전체 `npm test`는 최종 소스에서 재실행했다. 이 결과는 macOS 외부 AppKit 메뉴·Safari·실기기 검증이 아니며, 44-case·WP6 여정과 원격 CI·배포는 별도다.
