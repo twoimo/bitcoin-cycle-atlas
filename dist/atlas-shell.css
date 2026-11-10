@@ -31,7 +31,7 @@ body[data-shell=dashboard] .atlas-sidebar .atlas-nav :is(a,button):hover{backgro
 body[data-shell=dashboard] .atlas-sidebar .atlas-nav :is(.active,[aria-current=page]){background:var(--nav-active-bg);color:var(--nav-active-text)}
 body[data-shell=dashboard] .atlas-nav svg{width:15px;height:15px;flex:none;opacity:.9}
 body[data-shell=dashboard] .atlas-nav button>span:last-child:not([data-icon]){position:static;clip-path:none;width:auto;height:auto;overflow:visible;margin:0}
-body[data-shell=dashboard] .atlas-side-foot,body[data-shell=dashboard] .workbench-tools,body[data-shell=dashboard] .workbench-rail,body[data-shell=dashboard] .mobile-chart-home{display:none!important}
+body[data-shell=dashboard] .atlas-side-foot,body[data-shell=dashboard] .workbench-tools,body[data-shell=dashboard] .mobile-chart-home{display:none!important}
 body[data-shell=dashboard] .workspace,body[data-shell=dashboard] #root>.workspace{
   margin-left:var(--app-sidebar-width)!important;margin-top:var(--app-header-height);width:calc(100% - var(--app-sidebar-width));height:calc(100dvh - var(--app-header-height));min-height:0;
 }
@@ -365,6 +365,47 @@ body[data-page=compare] .atlas-canvas-heading>.lab-toolbar .lab-toolbar-group{di
   body[data-shell=chart] .workspace .chart-details-panel :is(.reader-heading,.reader-pagination) button{width:44px;min-width:44px;height:44px;min-height:44px}
 }
 @media(max-width:620px){
-  body[data-shell=chart][data-center-tool]:not([data-chart-controls]) .atlas-canvas-heading[data-mobile-heading=phone-dock]>:not(.center-workspace-toolbar):not(.center-data-actions):not(#mobile-details-toggle){display:none!important}
+  body[data-shell=chart][data-center-tool]:not([data-chart-controls]) .atlas-canvas-heading[data-mobile-heading=phone-dock]>:not(.center-workspace-toolbar):not(.center-data-actions):not(#mobile-details-toggle):not(.symbol-selector-trigger){display:none!important}
   body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock]>.center-workspace-toolbar{flex:1 1 0;min-width:0;width:auto;max-width:100%;height:44px;min-height:44px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x pinch-zoom}
 }
+
+/* Non-chart routes keep the shell's right rail and bottom bar: the page header
+   is the top region (it carries the shell heading and page description), the
+   sidebar stays the left region, and content-shell.js moves the service
+   navigation and the source footer into the two regions it owns. */
+body[data-shell=dashboard] .atlas-dashboard-header.atlas-canvas-heading{position:fixed;top:0;left:var(--app-sidebar-width);right:0;width:auto;max-width:none;height:var(--app-header-height);min-height:var(--app-header-height);padding:0 16px 0 12px;gap:8px;background:var(--bg);border-bottom:1px solid var(--border)}
+body[data-shell=dashboard] .workbench-rail{position:fixed;top:var(--app-header-height);right:0;bottom:var(--content-bottom-height);width:44px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;border-left:1px solid var(--border);border-bottom:0;background:var(--bg);overflow-x:hidden;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:none;z-index:44}
+body[data-shell=dashboard] .workbench-rail .atlas-nav{display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;margin:0;overflow:visible}
+body[data-shell=dashboard] .workbench-rail .atlas-nav :is(a,button){display:grid;place-items:center;width:36px;min-height:36px;height:36px;padding:8px;overflow:hidden;border:0;background:none;color:var(--muted);text-decoration:none;cursor:pointer}
+body[data-shell=dashboard] .workbench-rail .atlas-nav :is(a,button):hover{background:var(--surface-hover);color:var(--text)}
+body[data-shell=dashboard] .workbench-rail .atlas-nav :is(a,button).active,body[data-shell=dashboard] .workbench-rail .atlas-nav :is(a,button)[aria-current=page]{background:var(--nav-active-bg);color:var(--nav-active-text)}
+body[data-shell=dashboard] .workbench-rail .atlas-nav svg{width:18px;height:18px;flex:none;opacity:1}
+body[data-shell=dashboard] .workbench-rail .atlas-nav :is(a,button)>span:last-child:not([data-icon]){position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);margin:0;white-space:nowrap}
+body[data-shell=dashboard] .workbench-bottom-bar{position:fixed;left:var(--app-sidebar-width);right:44px;bottom:0;height:var(--content-bottom-height);display:flex;align-items:center;padding:0 12px;box-sizing:border-box;border-top:1px solid var(--border);background:var(--bg);overflow-x:auto;overflow-y:hidden;scrollbar-width:none;z-index:44}
+body[data-shell=dashboard] .workbench-bottom-bar .footer{flex:1 1 auto;min-width:0;height:100%;margin:0;padding:0;border:0;display:flex;align-items:center;justify-content:flex-start;gap:12px;font-size:11px;color:var(--subtle);white-space:nowrap}
+body[data-shell=dashboard] .workbench-bottom-bar .footer>span{flex:none}
+body[data-shell=dashboard] .workbench-bottom-bar .footer>span:last-child{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:left}
+body[data-shell=dashboard] .workbench-bottom-bar .footer button{flex:none;min-height:100%;min-width:44px;padding:0 4px;font-size:11px;color:var(--muted);background:none;border:0;cursor:pointer}
+body[data-shell=dashboard] .workbench-bottom-bar .footer button:hover{color:var(--accent)}
+body[data-shell=dashboard] .workspace{padding-right:44px;padding-bottom:var(--content-bottom-height)}
+@media(max-width:1000px){
+  body[data-shell=dashboard]{--app-sidebar-width:68px}
+  body[data-shell=dashboard] .atlas-nav .atlas-nav-label{display:none!important}
+}
+@media(max-width:760px),(pointer:coarse){body[data-shell=dashboard] .workbench-bottom-bar .footer :is(a,button){display:inline-flex;align-items:center;min-height:44px}}
+@media(max-width:620px){body[data-shell=dashboard] .workbench-rail{display:flex}body[data-shell=dashboard] .workbench-rail .atlas-nav{flex-direction:column}}
+@media(max-width:640px){
+  body[data-shell=dashboard]{--app-sidebar-width:0px;--app-header-height:52px}
+  body[data-shell=dashboard] .atlas-sidebar{display:none}
+  body[data-shell=dashboard] .atlas-dashboard-header.atlas-canvas-heading{padding-inline:8px}
+}
+@media(max-width:760px),(pointer:coarse){
+  body[data-shell=dashboard] .workbench-rail .atlas-nav :is(a,button){width:44px;min-width:44px;min-height:44px;height:44px}
+  body[data-shell=dashboard] .workbench-rail{width:52px}
+  body[data-shell=dashboard] .workbench-bottom-bar{right:52px}
+  body[data-shell=dashboard] .workspace{padding-right:52px}
+}
+
+:root{--content-bottom-height:44px}
+/* The rail owns the navigation, so the label-width preference has no target. */
+body[data-shell=dashboard] .atlas-sidebar-toggle{display:none}

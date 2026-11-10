@@ -321,14 +321,11 @@ const main = async () => {
       report.inventory.push(entry);
       const where = 'inventory ' + item.route;
       if (bootState !== 'ready') fail(where, 'boot ' + bootState);
-      const chartClass = !['evidence', 'data', 'ipo', 'relay'].includes(item.route);
-      entry.chartShell = chartClass;
-      if (chartClass) {
-        for (const key of ['top', 'left', 'right', 'bottom']) if (!state.present[key]) fail(where, `missing shell region ${key}`);
-      } else {
-        const missing = ['top', 'left', 'right', 'bottom'].filter(key => !state.present[key]);
-        if (missing.length) report.findings.push(`${where}: non-chart route without ${missing.join('/')} perimeter (chart shell is chart-class only)`);
-      }
+      // Every registered route owns the same four perimeter regions. A content
+      // route keeps its page header, sidebar, page information rail and source
+      // bar; the price-chart frame keeps the chart toolbar and its own rails.
+      entry.shellRegions = state.regions;
+      for (const key of ['top', 'left', 'right', 'bottom']) if (!state.present[key]) fail(where, `missing shell region ${key}`);
       if (!state.present.pageHeading) fail(where, 'missing #atlas-page-heading');
       if (state.headings.length !== 1) fail(where, `visible h1 count ${state.headings.length} (${state.headings.map(h => h.id || h.text).join(' | ')})`);
       if (state.duplicates.length) fail(where, 'duplicate ids: ' + state.duplicates.join(','));
@@ -539,6 +536,88 @@ const main = async () => {
       if (errors.length) fail(where, 'console/runtime errors: ' + errors.slice(0, 2).join(' | '));
     }
 
+    // Phase D: the four content routes keep the shell's perimeter at every width.
+    const contentRoutes = [
+      ['evidence', 'index.html?page=evidence'],
+      ['data', 'index.html?page=data'],
+      ['ipo', 'index.html?page=ipo'],
+      ['relay', 'index.html?page=relay'],
+    ];
+    report.contentWidths = [];
+    for (const [name, url] of contentRoutes) {
+      for (const [w, h] of [[320, 740], [390, 844], [768, 1024], [1024, 768], [1440, 900], [1920, 1080]]) {
+        const bootState = await goto(url, w, h);
+        const state = await evaluate(cdp, readState);
+        const shellTargets = await evaluate(cdp, () => {
+          const painted = n => {
+            if (!n || n.closest('[hidden],[inert]')) return false;
+            if (n.getAttribute('aria-hidden') === 'true') return false;
+            const cs = getComputedStyle(n);
+            if (cs.display === 'none' || cs.visibility === 'hidden') return false;
+            const r = n.getBoundingClientRect();
+            return r.width > 1 && r.height > 1;
+          };
+          const regions = ['.atlas-canvas-heading', '.workbench-rail', '.workbench-bottom-bar'];
+          const nodes = [...document.querySelectorAll(regions.map(s => s + ' button,' + s + ' a[href],' + s + ' select,' + s + ' summary').join(','))];
+          const targets = nodes.filter(n => painted(n) && !n.disabled).map(n => {
+            const r = n.getBoundingClientRect();
+            return { name: (n.getAttribute('aria-label') || n.textContent || '').trim().slice(0, 24), w: Math.round(r.width), h: Math.round(r.height) };
+          });
+          const rail = document.querySelector('.workbench-rail');
+          const nav = document.querySelector('.atlas-nav');
+          return {
+            shellTargets: targets.length,
+            tiny: targets.filter(t => t.w < 44 || t.h < 44),
+            railOwnsNav: Boolean(rail && nav && rail.contains(nav)),
+            navItems: nav ? nav.querySelectorAll('[data-atlas-page],[data-view]').length : 0,
+            navLabelled: nav ? [...nav.querySelectorAll('[data-atlas-page],[data-view]')].filter(n => n.getAttribute('aria-label') || n.getAttribute('title')).length : 0,
+            headerIsTop: Boolean(document.querySelector('.atlas-canvas-heading')?.matches('.atlas-dashboard-header')),
+            bottomOwnsFooter: Boolean(document.querySelector('.workbench-bottom-bar .footer')),
+          };
+        });
+        const entry = {
+          route: name, viewport: `${w}x${h}`, klass: w <= phoneMax ? 'phone' : w <= tabletMax ? 'tablet' : 'desktop',
+          boot: bootState, regions: state.regions, present: state.present, overflow: state.overflow,
+          headings: state.headings.length, duplicates: state.duplicates,
+          ...shellTargets, errors: [...errors],
+        };
+        report.contentWidths.push(entry);
+        const where = `content ${name} ${w}x${h}`;
+        if (bootState !== 'ready') fail(where, 'boot ' + bootState);
+        for (const key of ['top', 'left', 'right', 'bottom']) if (!state.present[key]) fail(where, `missing shell region ${key}`);
+        if (state.regions.top !== 'visible') fail(where, 'top region ' + state.regions.top);
+        if (w > phoneMax && state.regions.right !== 'visible') fail(where, 'right region ' + state.regions.right);
+        if (w > phoneMax && state.regions.bottom !== 'visible') fail(where, 'bottom region ' + state.regions.bottom);
+        if (w >= 960 && state.regions.left !== 'visible') fail(where, 'left region ' + state.regions.left);
+        if (state.overflow > 1) fail(where, `horizontal overflow ${state.overflow}px`);
+        if (state.headings.length !== 1) fail(where, 'visible h1 count ' + state.headings.length + ' (' + state.headings.map(h => h.id || h.text).join(' | ') + ')');
+        if (state.duplicates.length) fail(where, 'duplicate ids ' + state.duplicates.join(','));
+        if (!shellTargets.railOwnsNav) fail(where, 'the navigation is not owned by the shell rail');
+        if (!shellTargets.bottomOwnsFooter) fail(where, 'the source footer is not owned by the bottom bar');
+        if (shellTargets.navLabelled < shellTargets.navItems) fail(where, `${shellTargets.navItems - shellTargets.navLabelled} rail links without an accessible name`);
+        if (w <= 760 && shellTargets.tiny.length) fail(where, `${shellTargets.tiny.length} shell targets below 44px: ` + shellTargets.tiny.map(t => `${t.name} ${t.w}x${t.h}`).join('; '));
+        if (errors.length) fail(where, 'console/runtime errors: ' + errors.slice(0, 2).join(' | '));
+      }
+      // The bottom bar keeps the source information sheet as its real control.
+      await goto(url, 1440, 900);
+      const opener = await evaluate(cdp, () => {
+        const b = document.querySelector('.workbench-bottom-bar [data-method]');
+        return b ? { found: true, inBottom: Boolean(b.closest('.workbench-bottom-bar')), label: (b.textContent || '').trim().slice(0, 40) } : { found: false };
+      });
+      const sheetClick = opener.found ? await domClick('.workbench-bottom-bar [data-method]') : { ok: false, reason: 'no source control in the bottom bar' };
+      await sleep(700);
+      const sheet = await evaluate(cdp, () => {
+        const d = document.getElementById('method-dialog');
+        return { open: Boolean(d?.open), title: d?.querySelector('h2')?.textContent?.trim() || null, toast: document.getElementById('toast')?.hidden === false ? document.getElementById('toast').textContent.trim().slice(0, 60) : null, hasDataset: Boolean(document.querySelector('#lab-chart')), rows: document.querySelectorAll('#lab-events-body tr').length };
+      });
+      report.contentWidths.push({ route: name, infoSheet: { opener, click: sheetClick, dialog: sheet } });
+      // Reachability and ownership are the shell's contract; whether the sheet
+      // renders its body depends on the price dataset the page loads.
+      if (!sheetClick.ok) fail(`content ${name} bottom-bar control`, 'source sheet control not clickable: ' + JSON.stringify(sheetClick));
+      else if (!sheet.open) report.findings.push(`content ${name} bottom-bar control: source sheet did not open (${JSON.stringify(sheet)})`);
+      if (sheet.open) { await evaluate(cdp, () => document.getElementById('method-dialog')?.close()); await sleep(300); }
+    }
+
     for (const [w, h] of [[390, 844], [1280, 800], [1920, 1080]]) {
       await goto('index.html?page=compare&legacy=1&compare-unit=rebased', w, h);
       const shot = await cdp.send('Page.captureScreenshot', { format: 'png', fromSurface: true }).catch(() => null);
@@ -548,6 +627,8 @@ const main = async () => {
     report.assertions.widthsCovered = report.widths.map(r => r.viewport);
     report.assertions.widthsWithOverflow = report.widths.filter(r => r.overflow > 1).map(r => r.viewport);
     report.assertions.routesWithAllRegions = report.inventory.filter(r => Object.values(r.present).every(Boolean)).map(r => r.route);
+    report.assertions.contentWidthsCovered = report.contentWidths.filter(e => e.viewport).map(e => e.route + ' ' + e.viewport);
+    report.assertions.contentWidthsWithOverflow = report.contentWidths.filter(e => e.overflow > 1).map(e => e.route + ' ' + e.viewport);
     report.assertions.failureCount = failed;
     report.status = failed ? 'FAILED' : 'PASSED';
   } catch (error) {

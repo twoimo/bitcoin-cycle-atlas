@@ -29,6 +29,7 @@ import { readShellPreference, writeShellPreference } from './atlas-shell-state.j
 import { mountCenterWorkbench } from './center-workbench.js?v=1.36.1';
 import { mountShellSlots } from './ui/shell-slots.js';
 import { mountPageDescription } from './ui/page-description.js';
+import { createContentShell, CONTENT_SHELL_PAGES } from './content-shell.js?v=1.38.0';
 
 // The compact rails keep their Korean names visible for pointer and keyboard
 // users. A body-level tooltip avoids clipping inside the scrolling rail.
@@ -44,7 +45,7 @@ export function mountRailTooltip(document) {
   const hide = () => { tooltip.hidden = true; current = null; };
   const show = node => {
     const reason = node?.getAttribute('data-disabled-reason') || node?.getAttribute('aria-description');
-    if (!node || node.disabled && !reason || document.body.dataset.shell !== 'chart' || view?.matchMedia?.('(max-width: 620px)').matches) { hide(); return; }
+    if (!node || node.disabled && !reason || !['chart','dashboard'].includes(document.body.dataset.shell || '') || view?.matchMedia?.('(max-width: 620px)').matches) { hide(); return; }
     const label = node.getAttribute('aria-label') || node.getAttribute('title');
     if (!label) { hide(); return; }
     current = node;
@@ -113,6 +114,7 @@ export function initAtlasShell() {
     if (label) { label.classList.add('atlas-nav-label'); label.textContent = page.label; }
     originalNav.append(item);
   }
+  const contentShell = createContentShell({document});
   let storage; try { storage = localStorage; } catch { /* Optional preference. */ }
   let compact = readShellPreference(storage);
   const routeToService = event => {
@@ -122,6 +124,8 @@ export function initAtlasShell() {
   };
   if (service === '/market-lab/' || document.querySelector('meta[name="atlas-static-entry"]')) mountCenterWorkbench();
   const header = document.createElement('header'); header.className = 'atlas-dashboard-header'; header.dataset.atlasShell = 'dashboard-01';
+  // The page header becomes the top region only on non-chart routes; on the
+  // chart route the frame's own toolbar owns that identity (see sync()).
   const toggle = document.createElement('button'); toggle.type = 'button'; toggle.className = 'atlas-sidebar-toggle';
   toggle.textContent = '☰';
   const heading = document.createElement('h1'); heading.className = 'atlas-shell-heading';
@@ -140,6 +144,12 @@ export function initAtlasShell() {
     const chart = page === 'outlook' || page === 'compare';
     document.body.dataset.shell = chart ? 'chart' : 'dashboard';
     header.hidden = chart; group.hidden = chart;
+    // One top region per route: the chart frame keeps its own toolbar selector, and
+    // the page header carries it only while the dashboard composition is active.
+    header.classList.toggle('atlas-canvas-heading', !chart);
+    if (chart) delete header.dataset.shellRegion; else header.dataset.shellRegion = 'top';
+    // Non-chart routes keep the shell's right rail and bottom bar too.
+    contentShell.setActive(!chart && CONTENT_SHELL_PAGES.includes(page));
     pageDescription.sync();
     const navigation = document.querySelector('.atlas-nav'), rail = document.querySelector('.workbench-rail');
     if (navigation && chart && rail) {
@@ -150,7 +160,7 @@ export function initAtlasShell() {
         if (navigation.nextElementSibling !== tools) rail.insertBefore(navigation, tools);
       } else if (navigation.parentElement !== rail) rail.append(navigation);
     }
-    if (navigation && !chart && navigation.parentElement !== sidebar) sidebar.append(navigation);
+    if (navigation && !chart && !contentShell.isActive() && navigation.parentElement !== sidebar) sidebar.append(navigation);
     const currentWorkspace = chart && document.body.dataset.centerTool;
     const activePage = atlasNavigationId(currentWorkspace || (page === 'market' ? labPageFromLocation(globalThis.location).id : atlasPages.find(item => item.view === page)?.id));
     for (const item of navigation?.querySelectorAll('[data-atlas-page]') || []) {

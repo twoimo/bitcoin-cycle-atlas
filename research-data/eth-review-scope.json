@@ -548,6 +548,7 @@
     "tests/treasury-instruments.test.mjs",
     "tests/treasury-model.test.mjs",
     "dist/compare-shell-host.js",
+    "dist/content-shell.js",
     "dist/comparison-url-state.js"
   ],
   "dynamicResolutions": [
