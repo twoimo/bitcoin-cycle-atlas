@@ -98,3 +98,17 @@ PASS는 정확한 revision, 실행 결과, 관측 수용 기준이 모두 있는
 ## 재개 조건
 
 로컬 후보는 `fix/launch-compact-period-20261110`에서 보존한다. 네이티브 두 실패의 원인을 확인하고 기존 기준으로 통과시킨 뒤, 정책이 허용된 빌드 환경에서 `build:pages`·`verify:pages`와 생성 artifact의 source/content identity를 검증해야 한다. WP-A 부분 산출물은 별도 미디어 gate를 유지한다. 이 미완료 상태에서는 새 후보 push·merge·배포·정식 릴리스를 수행하지 않는다.
+
+## 후속 반응형 후보: 2d9d99f
+
+이 절은 앞의 `acdd1f9` 검사 기록을 소급 변경하지 않는다. 새 후보는 격리 브랜치 `fix/tradingview-responsive-20261110`의 제품 소스 `2d9d99fcf33e46be314c2ba07111e89b3b5bf1db`다.
+
+- 하단 48px 단일 도크, 원래 컨트롤의 disclosure·정보 시트 이동/복원, 태블릿 overlay와 데스크톱 split을 적용했다. 가격 상태 hook의 앱 소유권도 보존한다.
+- BTC·ETH·MSTR·BMNR의 반응형 44/44 통과. 7개 기본 폭, 3개 짧은 화면, 종목별 폰→데스크톱→폰 왕복을 포함한다. 검사 전후 159개 소스 해시 일치.
+- 전체 회귀 3,321개: 3,316 통과, 실패 0, 기존 제외 5. 고정 Linux/x64 출력 41건 포함. 후속 검증 코드 테스트 12/12 통과.
+- 이 후보의 typecheck·verify:static·build:pages·verify:pages는 통과했다. OS 권한·서명이나 수치 허용 오차를 변경하지 않았다. 이전 macOS 빌드 실패를 성공으로 바꾸는 기록이 아니다.
+- 기존 가격 차트 브라우저 검사 14/15 통과. `[blocked]` ETH 1440px native 모델 선택 입력이 수용되지 않았다. 원래 값 대입 없는 native 입력 기준을 유지한다.
+- 기존 BTC 작업공간 2/3 통과. `[blocked]` 320px 범례 touch scroll은 후보와 기준선 53b5458 양쪽에서 동일하게 실패했다. 기준선의 1440px 검사 중 390×430 내부 구간선 검사는 실패했지만 후보에서는 통과했다. 이 비교를 성능 향상이나 전체 사이트 수용으로 확대하지 않는다.
+- 이전 TQQQ 320px·Nasdaq native select 1440px 및 WP-A 미디어 gate는 그대로 남는다. 신규 push·merge·배포·PR 변경은 하지 않았다.
+
+세부 범위: [반응형 계약·검증 기록](TRADINGVIEW_RESPONSIVE_20261110.md), [소스·결과 해시 원장](tradingview-responsive-20261110/verification.json).

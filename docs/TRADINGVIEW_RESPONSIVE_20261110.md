@@ -219,9 +219,13 @@ UI 실조작과 빌드 및 기존 출시 gate는 각각 판정한다. 남은 실
 - 발견·수정: 네이티브 footer 이동이 ETH/MSTR/BMNR 컨트롤러의 app-scoped 상태 hook을 함께 옮겼다. 원래 상태 hook은 원래 앱에 보존하고 표시 문자열만 기존 update 경로에서 footer에 반영한다. 세 종목의 회귀 테스트와 실제 부트를 확인했다.
 - 전체 npm test v3: 3,321개 중 3,316 통과, 실패 0, 기존 제외 5. 설치된 Docker Desktop과 고정 Linux/x64 Node digest로 frozen 41건도 실행했다. 수치 허용 오차·저장 출력·검사 수를 줄이지 않았다.
 - typecheck, verify:static, build:pages, verify:pages: 후보에서 정상 종료. 공유 lock hash·패키지 버전과 OS 권한·서명은 변경하지 않았다.
-- 기존 추가 브라우저 검사: 정보 시트 접근·48px 헤더 기대를 새 배치에 맞춰 검증 경로에 반영했다. 가격·거래량·축·확대·측정·내보내기 및 입력 수용 assert는 유지한다. 최종 소스에 묶은 재검증은 진행 중이다.
+- 최종 검사 제품 소스: `2d9d99fcf33e46be314c2ba07111e89b3b5bf1db`. 검사 전후 159개 소스 해시가 일치했다. 원장: [verification.json](tradingview-responsive-20261110/verification.json).
+- 기존 가격 차트 브라우저 회귀: 15건 중 14건 통과. ETH 1440px의 native 모델 선택이 `adaptive`에서 `valuation`으로 바뀌지 않아 1건 미통과다. native 방향키·플랫폼 키 코드 시도도 통과하지 않았으며 값 대입이나 기준 완화로 대체하지 않았다. 그 실패만으로 실제 사용자 선택이 불가능하다고 단정하지 않는다.
+- 기존 BTC 작업공간: 3건 중 2건 통과. 320px 범례 native touch scroll은 아래 기준선에서도 실패했다. 1440px와 900×430은 통과했다. 전체 53건 사이트 검사를 완료한 것은 아니다.
+- 정보 시트 접근·48px 헤더 기대만 새 배치에 맞췄다. 가격·거래량·축·확대·측정·내보내기 및 입력 수용 assert는 유지했다. 최종 검증 코드 관련 12개 테스트도 통과했다.
+- Aside의 실제 미리보기에서도 fresh navigation 후 ETH 관측 봉 914개, 48px 도크, 정보 시트 열기·닫기, 원래 source hook 및 트리거 초점 복귀를 확인했다. 이전 문서 reload의 부트 오류는 별도 관측이며 원인을 단정하지 않는다.
 - 기준선 53b5458에서도 320px 범례의 native touch scroll이 동일하게 실패했다. 후보의 새 회귀로 분류하지 않으며, native touch 수용은 여전히 미완료다. 320px TQQQ와 1440px native select의 별도 gate도 유지한다.
-- WP-A `mediaPrepared:false`, push·merge·배포·PR 변경 금지 유지.
+- 구현 및 위의 제한된 검증·기록 작업은 완료했다. 나머지 native 입력 gate는 `[blocked]`로 남는다. WP-A `mediaPrepared:false`, push·merge·배포·PR 변경 금지 유지.
 
 ## 11. 되돌리기 / 중단 조건
 

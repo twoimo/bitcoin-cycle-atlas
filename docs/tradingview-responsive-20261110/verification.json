@@ -1,0 +1,867 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-10T14:18:25.806Z",
+  "candidate": "2d9d99fcf33e46be314c2ba07111e89b3b5bf1db",
+  "branch": "fix/tradingview-responsive-20261110",
+  "baseCommit": "53b5458b079e1b38461200516237989786edb797",
+  "sourceIdentity": {
+    "sourceCommit": "2d9d99fcf33e46be314c2ba07111e89b3b5bf1db",
+    "sourceTree": "bef227c12ca0c1ab503c8adaa4b8ac147f3c494a",
+    "sourceHashes": {
+      "scripts/browser-paint-readiness.mjs": "6cde752f4ec9eb3571bf5b28923524db92f6e48d09667bd8f9d3c9d548038717",
+      "scripts/eth-browser-case-specs.mjs": "360b9a180001a6c9eb99c88e17ca3db567a8788544f6904601b287e71e99a618",
+      "scripts/browser-evidence-transport.mjs": "f4d812fd85e3aeb4a02c5e424eb2ca4d54245e486dfa723c34a39d637ed36155",
+      "scripts/browser-project-resource-policy.mjs": "47b265327879deaab7c8ac8ccee9322a05b03116bf22336d59a826fc74d1d8b6",
+      "scripts/chart-replay-profile.mjs": "9c7132c839b8f5c844eba8b0c2417f967f6975cc0f140b0dfa57201f1ba1bcdc",
+      "scripts/verify-chart-zoom-browser.mjs": "d4e2f97681c10d79c6ef0c026a504f0331fde564894e0c91f39b5945e450d8e9",
+      "dist/chart-navigation.js": "f6a987a9fc14e72f8de01fe0e21d0d142b872939188f8328cf153b7b8f7a03c0",
+      "dist/chart-view-policy.js": "7f4a1f7f13000797997dd60546ce50d2f286cd508c32b94b15141b8477264136",
+      "dist/price-axis.js": "dee046eec4431b14c3e73e973e8e1511fd5709712e2bebe1485ef04776870ee7",
+      "dist/empty-price-chart.js": "85e852331c0f7559919a6bd4fd2efc54892007d572b8ed44c2ff8875d04cedae",
+      "dist/relay-room.js": "d051de4421fa1e605455ccc10eabd090776bad81fdd76e922191223ff6ce96d8",
+      "dist/relay-room.css": "1875a86d3ae646186f5f10587d042537b358d092a95d232f5cc2b4e8c4569033",
+      "dist/index.html": "0ee58ac4eb4a647eaeb4050d9e3ef93d87c0b195bb9c00fe610a274e75ca9ca3",
+      "dist/site-entry.js": "6bf7df60a64e572451b0786290d13c5cb0370b02055032ccd2adb81c4b612347",
+      "dist/asset-comparison.js": "d0112fae4ff80de80dd3acce787f83159ddc3c1834ac8f3663e6427060b30c85",
+      "dist/asset-judgment-history.js": "190be9550616f51ad0ea64c449d6fa68fd7ce4804a39cb799e199927392745cf",
+      "dist/daily-data-view.js": "f804d9f2dc5bc984aa94bb614abe6a98a8386a799b6967e4c282304b78eefd1e",
+      "dist/daily-data.css": "d12492a59cc1a4195fc0ecd3b3bdca23231103bfe7c628e66b765e446fddbf7b",
+      "dist/eth-view.js": "f77eecd9cc2d2aa5b41f6ec0415bee4777904c69c3a6f0f16852b82da895f2cb",
+      "dist/eth-view.css": "a8511905204336191d9023486990fed1072ff8eac33dff292f59d22c72c8628d",
+      "dist/ethereum-forecast.js": "b86e6e917c8d72c9db892dc4931694f915d6d73352dbab54798a64bd5ee3db4c",
+      "dist/ethereum-adaptive-model.js": "87c06d4301f720e4bf9ec43956847789022de73dccaba5b7bce73bb1f2da0e7d",
+      "dist/ethereum-pooled-model.js": "36be841d383693f8c7b86155550920850e3c14b9ef0b1e99eb8d760a2d7ae467",
+      "dist/eth-view-state.js": "33d89ecc0e1714dde6c0b11820c55212b99123dc2d148fdbd542bfe0c74df27c",
+      "dist/ethereum-adoption-scenarios.js": "f49532abd2479a2531bb7e23aaf7ff2b8505a3c2ce0a84436f3768a25c18dc86",
+      "dist/ethereum-research-panel.js": "f699155933c465057d8f1dc442c9b0de699e3a9d9eb1090a6566f46b724b93cc",
+      "dist/ethereum-research-catalog.js": "1c7638bec65dd4f948bc260434355f7e79c3ff9d572515d3fa5ec142dcf38e35",
+      "dist/eth-market-data.js": "95d4858708d5ffcc3146884a105c1ae82f984b21de3a5a29ec4ca9b3fc8dd075",
+      "dist/intraday-chart.js": "341b8906982e2966e16d85fb4ffa478be21013da35a96b47b960763cc4121114",
+      "dist/equity-forecast-chart.js": "f1fc5b96f2edb14da6153ca90781852107dc29aa7d5e0b6d2cb16d62d86ef783",
+      "dist/equity-view.js": "d605504ae30550cfb229bb7c1477ac6c09b06c0514a35efb2ff010152114c540",
+      "dist/treasury-projection.js": "9cf7e6660124880e5a9ad654f41c846d10deb309ace18cf59b96699963948fd1",
+      "dist/treasury-model.js": "4812b36b65912209201eabf46ba39868cec7d7ddb014421e556476412b8e1739",
+      "dist/forecast-information-time.js": "2b1872e0e9d644a77cc71ff0746dfa6ad8f32f8866ee393a6afa9737af66ae23",
+      "dist/data/bmnr-ohlc.json": "64f8734f5cfdd99b1d5c7066874d171e46926054f15c8e2e4bb0e338ed7d3690",
+      "dist/data/eth-ohlc.json": "a6bfab88a2a5ba982bb68ecf78932bf3438713cad54b2a075894ebbad0b445a5",
+      "scripts/verify-eth-candidate-browser.mjs": "c7e7e8f261923a9363ba9c97db4e6042e0a9239d44a94fa6196b794efd6d8add",
+      "scripts/btc-offline-refresh-policy.mjs": "da9810a7faad88565c6238bda313b943d0b99a08b6bc47c1f361e727e46aca27",
+      "tests/ethereum-offline-refresh-policy.test.mjs": "843f099c30be79a7d3674ac77fe2f4515dcc371a96eafd83d8dacf6a6959ca6d",
+      "dist/data/btc-daily.json": "d04c7443eb4ccd17d93ddc2d61b75e844d86b6cf5f5d456aa986def86e97aca9",
+      "dist/app.js": "17e09a3c83d640e4a80af31589ef6bfbb856f82641993bed513281ec7e8f0fb5",
+      "dist/btc-refresh-status.js": "806ca5d59e4a9194bc9c2759c60821da154173a65944328a24010307808b2036",
+      "tests/ethereum-btc-refresh-status.test.mjs": "a840171a6fa636993b9ae735cf1c8b3089ca76f9ef05d17bd98846da75372b73",
+      "dist/data-source.js": "1cde9df18712feb1373d1cd77362437e7fc59e2dfee9165d461170f55953e60b",
+      "dist/published-data.js": "48fb43d2b39b31ac755b41dffa2907620f1c622a0c7ca4cd3adf90ed15747010",
+      "dist/asset-forecast-journal.js": "73a696d1da568e0f6702228592fded2cd5517df1e95aa5b3f44bfb4d45885179",
+      "dist/asset-forecast-records.js": "fefdd5345bd9e0f4a8532b0480e384b0bb7f1b344cc18262dfc72dbad3f224c2",
+      "dist/journal-entry.js": "a758cf9b43c704f68d372664e54a49168aa13a33c9a8566a30781b1268fddbf0",
+      "dist/forecast-journal.css": "e1022cf360430f2d730a46686cb1fb3a86739973f36d95aefb4476f49ecf07c1",
+      "dist/data/asset-forecast-ledger/index.json": "2620f75f54b9755f417296348a4e31e14d584c338bcd2b67b0ac15c2c59bbe62",
+      "dist/data/mstr-ohlc.json": "acea405cfa7b40d5a8ee815f5d7f749bab63e8fc59323cea8a6a9f589b2f8f74",
+      "dist/lab-view.js": "e80e21c9c5d1884ad0244795f5d82d50bcdcc7789f3247badcf348589336aaa4",
+      "dist/analysis-dock.css": "1572e261f7dd1e5508384457d2558896a7269b909fa087dc29fdfb5d0544eeea",
+      "dist/compact-chart-layout.css": "f39461eeed0c4aa9c1997d98205480897b373f47ac16a1b5340cb4ac3500cb43",
+      "dist/mobile-workspace.css": "6ab01d2a86e0673276a86d166a1b31c8ffa7469ec65551541462aa3c67dd9016",
+      "dist/mobile-preview.js": "9d1ad1cdaf3e316579e4a33054d81d300e002b0214635a1481140b1a133acc9c",
+      "scripts/verify-workspace-browser.mjs": "89824a40fbbf301244bb1b79e0e590d359cf5f5b9b562362805d38c19659d944",
+      "dist/native-chart-workbench.js": "85fd2bf7626e1d7203053c6f06b31dc8ff09cf43b67315bef54c7c0a2d41581a",
+      "dist/rsi-workbench-controls.js": "5cbb494715fa1fe9829d968b4bb5b1f0304c82b72834a06d3086d1a0407feee1",
+      "dist/atlas-navigation.js": "2b0f2cff6aa0537b36c1db967396b37d24a51f91aaa56bb5f3c99b823d4ddc8e",
+      "scripts/verify-native-chart-workbench-browser.mjs": "d4c569064ed63d0c5a0bfaafe876ccbdae92950daaa2217f8bdd8f4b8b868783",
+      "dist/atlas.css": "48b590d347ac4120971927ed3e7dd6117949b50cf80f91b153fe18e7c32e36b6",
+      "dist/atlas-shell.css": "461530abee8c404e5d18371a28f2ffe0a186400026828907c1205b366052a1f0",
+      "dist/atlas-shell.js": "9c2f403d696525e1b2636953697c82c2520d61a7f0ab6c9f1735c46b34297079",
+      "dist/center-workbench.js": "4736d5917af03b9c663661977bc6ee0ae3d7d591b820eb8bd9a39906546b1e41",
+      "dist/market-lab.css": "68e9b99aeaa189540f919c464eb0bf5e7a307195c0544dad384b53580a9b1637",
+      "dist/loading-surfaces.css": "033d3256e4fe171c10daf16f355e31dbbb6641f8641f89b9b8e64bdc5acf5a3b",
+      "dist/loading-surfaces.js": "f62d142df3ee3ae00ae10f63373d0421d785c253e7fc71acb8231714340e07cb",
+      "dist/chart-bottom-bar.css": "359e6d5473279150c9b8181369aede6be6b412df03661fa38011287a3aef99de",
+      "dist/chart-details-panel.css": "aa092f0153ba5df07ef48e6df7b966b1b9e497ad4fdfa60d867d7fb6a1f245ee",
+      "dist/chart-export-workbench.css": "cc75c4bee60dd01bddd75b177061123dce8b25e0afef70d527eaac6d0295f636",
+      "dist/chart-magnet.css": "e2e1194702545645f04d48e305548bfd0aa426b744a0c6e6c6f5dee2d32c3021",
+      "dist/chart-workspace-controls.css": "5f295a4fa2439c9cbf4dbca060a7494b4b2ec2e96a6ada196dff77f5541537c4",
+      "dist/compact.css": "b053d7db784d53b9143465994396460153e1efcda59e4fafe1a45a65918a5d5e",
+      "dist/cycle-milestones.css": "9b0ab20a9ee8970a4d843acad296bea977f7aa3f52466595bed4e71d796f36ca",
+      "dist/equity-view.css": "b232077549c7b9bdb49e5d4700de3184027dfe7067a28136ecf58c86418f29bf",
+      "dist/ethereum-history.css": "6201f4f255571ea22c4d968367fef7a9ca4d9e3437bcca43b7b5a24c818f03d1",
+      "dist/lab.css": "0048af46f7cedfeeffc1405e46299028f75c14803570fb4f6b8559ecf12ea2c1",
+      "dist/outlook.css": "4597e59bf9ab28f8db2457c89658f3e95c5559faaa45c59d49398730a4c39be7",
+      "dist/research-annotations.css": "18319d5fd93cbc25d249de0570accabffb244d002934ed6705ae624dfb48ffdd",
+      "dist/research-reader.css": "38ac37728d7f717c2320e79e9e8a8a85bc3876f5094a1ad638c3ee098db40a72",
+      "dist/styles.css": "4fb68aa4bc7f56b98c6cc3556b8ca80e764de50a9027fb53f7aec4e5c6293469",
+      "dist/symbol-selector.css": "fd8dd668f238c57840b8759b0f77bc4be44e322ee14eb18bd31145a6a67f6cc3",
+      "dist/viewport.css": "3d7073ed61bbe380dae52e8d998d8ab6f24208f734a22c17017ca0b010a09c83",
+      "dist/workspace-tools.css": "f7529cbd0c64b1d695033706b44395e21b97322e951d697c5885632717b708b1",
+      "dist/chart-bottom-bar.js": "e7dcdfce8326d5d4cf83265d1bd3fb715d26490b489b43523bbd72befd273b06",
+      "dist/preserved-archive-download.js": "fdc1ae671b866a2d3731d645b57998bdb23a53de6b3bfd0b61946faeda5434fd",
+      "dist/workspace-tools.js": "0e94b855cd8cd30c0a4a9c80c90a19a7774a133bdc587704774a13d23b3ad7c1",
+      "dist/research-annotations-workbench.js": "296c51cce5f994df1f08dab65d263f2e82d94ab4e81280d8170b88b0ab4a0d5f",
+      "dist/mobile-preview.html": "97e25757b0770f2064ec0f520b09874bfa0644f4371f516c0b8622ee72c0e31d",
+      "dist/symbol-selector.js": "a96f215bdce12657280e856ac20b8e1d7256927f8ed2aca6b6ac45f6dcd13b1c",
+      "dist/research-reader.js": "ed196aaa3aa6cea3646fc5c85940e62ef03625a0f8d2422b399505d47ac90694",
+      "dist/evidence-view.js": "607f1b7fe3aee231d4ba3078a3cb3e9f09aeae7fbc8a17c640a1c408bfc1633e",
+      "dist/viewport-workspace.js": "b12eddb9a62244e27f479d6bfa7ba88b11665a78edb0f2734aea8fe17935bf33",
+      "dist/workbench-chrome.js": "d4f2581d44e9d17dc410c9ffd3501922cffec47ed2d8328b22d0829cd7bea4f2",
+      "dist/forecast-replay.js": "1263ac5f16ea9e999346431c1c11ed24274b73617c1a531870b62c6d8e0e5793",
+      "dist/forecast-replay-sources.js": "26d99528a81a49e8c738c542a2e2fbd911674efd874f02070c1ddd958e07cd52",
+      "dist/forecast-replay-view.js": "54a400c2787554f2edca88f91629824a53c88a51e91228ed530142ddbdd8cb77",
+      "dist/data/replay-eth-ohlc.json": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+      "scripts/verify-forecast-replay-browser.mjs": "fa259bf923fa5fed38a4f758d14c239341b7869871711c2957598f0302847502",
+      "dist/chart-replay.js": "ee624a2890754af41c1d38d3b637336522e039e5e5f3c07408629b621b826cde",
+      "dist/chart-replay-snapshot.js": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6",
+      "dist/chart-replay-state.js": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908",
+      "dist/chart-replay-renderer.js": "499af8c8d6c1d767d35c88ca86c6da875da47160d9c6c9055bca46ff0342d315",
+      "dist/chart-replay-sources.js": "eda71aeffa8739bb233a9fb8413883ee0be3be357a271e761073873bacd63e3d",
+      "dist/chart-replay.css": "5893616eefc9c29a1296ce666b5e4d45e6f4750cd8c1ec751903de9c8ca9d33e",
+      "dist/asset-forecast-loader.js": "2d373afa2f588f8d640b7432b1e226d64580fb1a96efc6631c6e2dcb7e1168cb",
+      "dist/data/btc-volume.json": "a602ba904b78284138684377ea559598173063ee435350ce281de430150a9993",
+      "scripts/verify-chart-replay-browser.mjs": "d1e2161c486d465696cdc558b0a680ebac75dad3300ef38cad2cbd379db73da1",
+      "dist/chart-replay-atlas.js": "e0fb33a53c777231d42291b8f267d2668a542fffaf565a732645a78d4a2dc2bc",
+      "dist/atlas-price-chart.js": "df1ccb5d8c74da236c80693ab53c1a5353a774232ba087ebd54c3e03a80f40b4",
+      "dist/project-replay-baseline.js": "b24462b0b8ac13b8640fc0717e98ed5cf198a779281cbd64bd3551a4529c6861",
+      "dist/data/project-origin-btc-2026-10-21.json": "571d0d3421d7ae40da4fb3020ab0290aa534822d5a439f9e98f55dc31d5f19ac",
+      "scripts/build-project-replay-baseline.mjs": "1ddf49e09ad015afd526996112c521d23fba5e539af73439c85628dec13aed83",
+      "scripts/verify-consolidated-workspace-browser.mjs": "d0490e4e7b5046c2a79b2426bd56b48235c07f10be951f894c8e52c29ae02225",
+      "dist/workspace-instruments.js": "e0c63c6e4c0cc308c8aacf93220a3c4b5fc0d558fccdfdc79fa2d8e39fcddf2b",
+      "dist/data-header-actions.js": "27bb8eba8f4621e4342c42a6aded57a148287ff6606f5bbcde9e0626bcbb39c1",
+      "dist/compact-toolbar.css": "53295313312c109d89650f7128b5fe8fdf610801a9df66e0807c940d045ee322",
+      "dist/legacy-workspace-toolbar.js": "8ee5c721cef1714c3749e22e73486db710101ab28d4c7206e126fe6b3769a204",
+      "dist/legacy-workspace-toolbar.css": "735cbefcee14b838229b2af6608a0366e5f34525f59f728f2a3b2548febc5f9f",
+      "dist/data/asset-comparison.json": "d8d4a867a1b84c28d0a86c9f744a775a2335a359f3948102c2e59c03a9e3782e",
+      "dist/ipo-view.js": "4f6c0041ddc7b767648cca030068badeccec1dc349603505ff46f23835ec6508",
+      "dist/ipo-view.css": "0f1d3706fa8384c30dea3d712e20561ffd1a8ef8463c640184df400c71030cc1",
+      "dist/ipo-month-calendar.js": "b660ac3f549d0d37c6d21e0658227a9c90d04aeb641b35c3089b9a06acab50f7",
+      "dist/market-lab/app/assets/index-CxXBq_lw.css": "e75769478f2c56cf5c0efa1f0836d35712c4e48908c1c6d36c928d242712af84",
+      "dist/market-lab/app/assets/index-D-Db46Zb.js": "357f82fc0ffc7d435180440d10488b0ceccae5efe586efca58985123657a8552",
+      "dist/market-lab/app/index.html": "a7434f281c406904cdc4fcf599d62814d5c3473c25d608035f37cce36095a296",
+      "scripts/browser-source-identity.mjs": "8cfa4a139576da0123052923955cb39dbe46d1846544fd2cdd4a0707b8d3ad58",
+      "scripts/browser-fast-cadence-contract.mjs": "b01e94760384d5f5b57cae7eaa117b603d9b034e2102d93eef9995cab3b6cff4",
+      "scripts/verify-native-browser-suite.mjs": "a351972fedf8c4dc187440582e88c06713a3558fa88461f99f1d536c69ef2796",
+      "scripts/cloudflare-gate-runner.mjs": "673d2dc42aff2b444d4b67ef889727a035ba48393332dbd0646b7f46521c8866",
+      "scripts/cloudflare-priority-command.mjs": "146dd2468364d40260a2b8ec598fd61257e5a1287c97a215f4cfdb50d5b9035a",
+      "scripts/cloudflare-build-contract.mjs": "710e7ff1f20c61c0caeafefd86e3a215d4290871f4b24e43331e880d152ed6dd",
+      "scripts/cloudflare-browser-source.mjs": "fbfee575c225b99191d31c171c87bc97877d1e1f2072eb38d1063be4993e96a0",
+      "scripts/cloudflare-staged-contract.mjs": "15a0733ad305878e69582649051b29052e7cd2542644ecaebd5d9a7a79ac1b56",
+      "scripts/cloudflare-model-provider-policy.mjs": "88bba405797f3577717c7439474cf914c65b0b58c2cf2f75bfb04bf72cce220e",
+      "dist/cycle-period-comparison.js": "5039d937694a18798a01c7e7c3d3778d8d7e596c20218c21a5f0853b88df7a7c",
+      "dist/cycle-interval-overlay.js": "2b2e991a65efb15e514588e2ba60a12b4249a25e96cb463173db2ee88ffc44be",
+      "dist/cycle-milestones-view.js": "71382f5d7eda033edfbcc9b9b321195644122eecb6f67e3e53ebd01280ab5301",
+      "dist/atlas-analysis.js": "515a9aaf23f2e9b5025e3f63f8cee673140047f935ca124caa80e2284769201d",
+      "dist/ui/center-loading.js": "2c6ae05d85ae27c1665da154d94640acce1e650eaad5e41d136dccf7a00abe54",
+      "dist/ui/chart-annotation-layout.js": "2342908c83b91666a0ee12dbe8a0b7311bb933c2a0b6adad9c9436c792162bf9",
+      "dist/ui/chart-legend-layout.js": "b547ae2f89b3ecb890d37584d67023de02de887e5bf02fba61bdac9195bb2f6a",
+      "dist/ui/chart-legend.css": "98ffb0745f2dac141888f700038f8e0e1c90b8fa11beaebd2f40c9a29aca126c",
+      "dist/ui/chart-legend.js": "53550bcd5aceab37b02ac10123fae4de0779193f0707fd083facd45d44b872e8",
+      "dist/ui/chart-url-state.js": "9446c9ebe6ec9f1acd7cc33a0ed7f1306019d72d54f00f2bb857cc4b59cfeabf",
+      "dist/ui/instrument-chart-legend.js": "f7df954f68f3371fd92253100fa9d7526af0a370ec5ba86668a5d9c923b3c555",
+      "dist/ui/mobile-shell-heading.js": "b13d9612749a74c6649edccbda1853bc86c27b278dcdbb7e9f6f055ad736b303",
+      "dist/ui/native-chart-legend.js": "97f2f560082831c28b2b9329c100e585153ca6d0d94dcb3d75123329ba86ee85",
+      "dist/ui/page-description.js": "c037667d3a52d27f96154d8b4df1e1dea1c5627de665404961937a39e68e1760",
+      "dist/ui/quote-hud.css": "1d79cbd0beb68742483635e98e4549f3f700a2621c01efd177a2d804f58de287",
+      "dist/ui/quote-hud.js": "0077e769f5055ea7964ff8b7cf2cab6922b58422cc6aec719749f66da99df378",
+      "dist/ui/quote-rsi.js": "9e7b74d25dc26117239e5668cae653e5b5799454bf93910bdd9cae8b2f98f021",
+      "dist/ui/rsi-criteria-layout.js": "6e9290b6003a9a0cfc20f2db263eaf96191171b0bce33a44364a1b19365bd866",
+      "dist/ui/rsi-simulation.css": "5e2d8d999ca578b5fdbc37a925eeb4085e1c05cb4614d2c38489c57cb5514c35",
+      "dist/ui/shell-slots.js": "f1b1be5f61f4277c7e6bc3ea02cc6e2cb436e1d14049b4065e575e61481e1d24",
+      "dist/mobile-workspace.js": "d6e849d50440d03e6d93bf42a119a8bff5ab4c556fa713edf7c5ad4975508ea0",
+      "dist/editorial-system.css": "482221d393972d025c5ca8f79100e6431f0a2b216514e9e1534614631f4a0668",
+      "scripts/verify-responsive-workbench-browser.mjs": "4b6fa33313558e878a812ebab3621ea2bc5f915361c590c5c29ca2d90be41247"
+    },
+    "beforeAfterUnchanged": true,
+    "files": 159
+  },
+  "unitTests": {
+    "complete": true,
+    "tests": 3321,
+    "pass": 3316,
+    "fail": 0,
+    "skipped": 5,
+    "batches": 2,
+    "log": "/Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/responsive-full-tests-v3.log",
+    "sha256": "ad056ff06e9dd20a824b9a5448055b5df58d5b8f64a397fa758ade02d7d6d568",
+    "note": "Product source unchanged after this run; final verifier-only follow-up: 12/12 passed."
+  },
+  "staticChecks": {
+    "typecheckExit": 0,
+    "staticExit": 0
+  },
+  "pages": {
+    "status": "verified",
+    "base": "/bitcoin-cycle-atlas/",
+    "files": 12,
+    "routes": 9,
+    "logs": [
+      {
+        "path": "/Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/responsive-build-v3.log",
+        "sha256": "24faec8365c467de8c61f5674ca88dee68807197b0494e44886bf2a48c375e1a"
+      },
+      {
+        "path": "/Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/responsive-pages-v3.log",
+        "sha256": "bb1e900a98aadbfb4b2f982646ac6e2f27ce80e93449151e6126a8230ea3c900"
+      }
+    ]
+  },
+  "responsive": {
+    "passed": 44,
+    "total": 44,
+    "reports": [
+      {
+        "symbol": "BTCUSD",
+        "path": "build/accepted-responsive-BTCUSD/report.json",
+        "sha256": "becf2963d71c97edecdcb94c0c0f5555b69ac1ff13f80988f69801e469a70702",
+        "bytes": 259367,
+        "status": "passed",
+        "startedAt": "2026-11-10T14:05:28.174Z",
+        "finishedAt": "2026-11-10T14:05:51.111Z",
+        "cases": [
+          {
+            "label": "phone-320x568",
+            "width": 320,
+            "height": 568,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-390x844",
+            "width": 390,
+            "height": 844,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-456x800",
+            "width": 456,
+            "height": 800,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-620x900",
+            "width": 620,
+            "height": 900,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "tablet-768x1024",
+            "width": 768,
+            "height": 1024,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "desktop-1024x768",
+            "width": 1024,
+            "height": 768,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "desktop-1440x900",
+            "width": 1440,
+            "height": 900,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-320x430-short",
+            "width": 320,
+            "height": 430,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-390x430-short",
+            "width": 390,
+            "height": 430,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "tablet-900x430-short",
+            "width": 900,
+            "height": 430,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "identity-phone-desktop-phone",
+            "width": 390,
+            "height": 844,
+            "status": "passed",
+            "runtimeErrors": 0,
+            "identity": [
+              {
+                "phase": "phone-initial",
+                "trackedControls": 43,
+                "duplicates": 0,
+                "propertyMismatch": 0
+              },
+              {
+                "phase": "desktop",
+                "trackedControls": 43,
+                "duplicates": 0,
+                "propertyMismatch": 0
+              },
+              {
+                "phase": "phone-restored",
+                "trackedControls": 43,
+                "duplicates": 0,
+                "propertyMismatch": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "symbol": "ETHUSD",
+        "path": "build/accepted-responsive-ETHUSD/report.json",
+        "sha256": "ed394b98268cb8d524a6c809c4db88e4ffa8bc461d904f307543e7d3ba6e8b40",
+        "bytes": 221217,
+        "status": "passed",
+        "startedAt": "2026-11-10T14:05:28.174Z",
+        "finishedAt": "2026-11-10T14:05:48.223Z",
+        "cases": [
+          {
+            "label": "phone-320x568",
+            "width": 320,
+            "height": 568,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-390x844",
+            "width": 390,
+            "height": 844,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-456x800",
+            "width": 456,
+            "height": 800,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-620x900",
+            "width": 620,
+            "height": 900,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "tablet-768x1024",
+            "width": 768,
+            "height": 1024,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "desktop-1024x768",
+            "width": 1024,
+            "height": 768,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "desktop-1440x900",
+            "width": 1440,
+            "height": 900,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-320x430-short",
+            "width": 320,
+            "height": 430,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-390x430-short",
+            "width": 390,
+            "height": 430,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "tablet-900x430-short",
+            "width": 900,
+            "height": 430,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "identity-phone-desktop-phone",
+            "width": 390,
+            "height": 844,
+            "status": "passed",
+            "runtimeErrors": 0,
+            "identity": [
+              {
+                "phase": "phone-initial",
+                "trackedControls": 37,
+                "duplicates": 0,
+                "propertyMismatch": 0
+              },
+              {
+                "phase": "desktop",
+                "trackedControls": 37,
+                "duplicates": 0,
+                "propertyMismatch": 0
+              },
+              {
+                "phase": "phone-restored",
+                "trackedControls": 37,
+                "duplicates": 0,
+                "propertyMismatch": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "symbol": "MSTR",
+        "path": "build/accepted-responsive-MSTR/report.json",
+        "sha256": "04955fd96d4a58e135f310c4a06314216442a35833747b718a3d200b1952277e",
+        "bytes": 202581,
+        "status": "passed",
+        "startedAt": "2026-11-10T14:05:28.174Z",
+        "finishedAt": "2026-11-10T14:05:50.328Z",
+        "cases": [
+          {
+            "label": "phone-320x568",
+            "width": 320,
+            "height": 568,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-390x844",
+            "width": 390,
+            "height": 844,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-456x800",
+            "width": 456,
+            "height": 800,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-620x900",
+            "width": 620,
+            "height": 900,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "tablet-768x1024",
+            "width": 768,
+            "height": 1024,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "desktop-1024x768",
+            "width": 1024,
+            "height": 768,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "desktop-1440x900",
+            "width": 1440,
+            "height": 900,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-320x430-short",
+            "width": 320,
+            "height": 430,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-390x430-short",
+            "width": 390,
+            "height": 430,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "tablet-900x430-short",
+            "width": 900,
+            "height": 430,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "identity-phone-desktop-phone",
+            "width": 390,
+            "height": 844,
+            "status": "passed",
+            "runtimeErrors": 0,
+            "identity": [
+              {
+                "phase": "phone-initial",
+                "trackedControls": 32,
+                "duplicates": 0,
+                "propertyMismatch": 0
+              },
+              {
+                "phase": "desktop",
+                "trackedControls": 32,
+                "duplicates": 0,
+                "propertyMismatch": 0
+              },
+              {
+                "phase": "phone-restored",
+                "trackedControls": 32,
+                "duplicates": 0,
+                "propertyMismatch": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "symbol": "BMNR",
+        "path": "build/accepted-responsive-BMNR/report.json",
+        "sha256": "adfeccc4dca03274c67ee52a1aaa1657615669631dcac22faa2eda7a3a9ab5e5",
+        "bytes": 204851,
+        "status": "passed",
+        "startedAt": "2026-11-10T14:05:28.175Z",
+        "finishedAt": "2026-11-10T14:05:47.786Z",
+        "cases": [
+          {
+            "label": "phone-320x568",
+            "width": 320,
+            "height": 568,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-390x844",
+            "width": 390,
+            "height": 844,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-456x800",
+            "width": 456,
+            "height": 800,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-620x900",
+            "width": 620,
+            "height": 900,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "tablet-768x1024",
+            "width": 768,
+            "height": 1024,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "desktop-1024x768",
+            "width": 1024,
+            "height": 768,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "desktop-1440x900",
+            "width": 1440,
+            "height": 900,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-320x430-short",
+            "width": 320,
+            "height": 430,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "phone-390x430-short",
+            "width": 390,
+            "height": 430,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "tablet-900x430-short",
+            "width": 900,
+            "height": 430,
+            "status": "passed",
+            "runtimeErrors": 0
+          },
+          {
+            "label": "identity-phone-desktop-phone",
+            "width": 390,
+            "height": 844,
+            "status": "passed",
+            "runtimeErrors": 0,
+            "identity": [
+              {
+                "phase": "phone-initial",
+                "trackedControls": 32,
+                "duplicates": 0,
+                "propertyMismatch": 0
+              },
+              {
+                "phase": "desktop",
+                "trackedControls": 32,
+                "duplicates": 0,
+                "propertyMismatch": 0
+              },
+              {
+                "phase": "phone-restored",
+                "trackedControls": 32,
+                "duplicates": 0,
+                "propertyMismatch": 0
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "nativePrices": {
+    "path": "build/accepted-native-prices/report.json",
+    "sha256": "aba855365f65e0f469eadb2f9647683917bff512a51387ce5877de376fd368c6",
+    "bytes": 796257,
+    "status": "failed",
+    "startedAt": "2026-11-10T14:04:08.343Z",
+    "finishedAt": "2026-11-10T14:08:08.312Z",
+    "cases": [
+      {
+        "label": "eth",
+        "width": 320,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": 0
+      },
+      {
+        "label": "bmnr",
+        "width": 320,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": 0
+      },
+      {
+        "label": "mstr",
+        "width": 320,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": 0
+      },
+      {
+        "label": "eth",
+        "width": 390,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": 0
+      },
+      {
+        "label": "bmnr",
+        "width": 390,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": 0
+      },
+      {
+        "label": "mstr",
+        "width": 390,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": 0
+      },
+      {
+        "label": "eth",
+        "width": 768,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": 0
+      },
+      {
+        "label": "bmnr",
+        "width": 768,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": 0
+      },
+      {
+        "label": "mstr",
+        "width": 768,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": 0
+      },
+      {
+        "label": "eth",
+        "width": 1024,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": 0
+      },
+      {
+        "label": "bmnr",
+        "width": 1024,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": 0
+      },
+      {
+        "label": "mstr",
+        "width": 1024,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": 0
+      },
+      {
+        "label": "eth",
+        "width": 1440,
+        "height": 900,
+        "status": "failed",
+        "runtimeErrors": 0,
+        "error": "AssertionError [ERR_ASSERTION]: Native arrow input must select the model\n+ actual - expected\n\n+ 'adaptive'\n- 'valuation'\n\n    at selectModel (file:///Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/wt-tradingview-responsive/scripts/verify-eth-candidate-browser.mjs:648:14)\n    at async ethCase (file:///Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/wt-tradingview-responsive/scripts/verify-eth-candidate-browser.mjs:651:5)\n    at async main (file:///Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/wt-tradingview-responsive/scripts/verify-eth-candidate-browser.mjs:1104:159)\n    at async file:///Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/wt-tradingview-responsive/scripts/verify-eth-candidate-browser.mjs:1135:5"
+      },
+      {
+        "label": "bmnr",
+        "width": 1440,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": 0
+      },
+      {
+        "label": "mstr",
+        "width": 1440,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": 0
+      }
+    ]
+  },
+  "existingWorkspace": {
+    "path": "build/responsive-final-workspace-btc/report.json",
+    "sha256": "7f27a6182b2bf74c613da5378b017940abca56ddde1462c0cda1b96731314f43",
+    "bytes": 543772,
+    "status": "failed",
+    "startedAt": "2026-11-10T13:54:56.990Z",
+    "finishedAt": "2026-11-10T13:55:56.568Z",
+    "cases": [
+      {
+        "label": "workspace-btc",
+        "width": 320,
+        "height": 900,
+        "status": "failed",
+        "runtimeErrors": 0,
+        "error": "AssertionError [ERR_ASSERTION]: Native legend input failed to move its own scrollport\n    at verifyPriceLegendScrollOwnership (file:///Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/wt-tradingview-responsive/scripts/verify-workspace-browser.mjs:499:14)\n    at async verifyWorkspaceSurface (file:///Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/wt-tradingview-responsive/scripts/verify-workspace-browser.mjs:1023:57)\n    at async main (file:///Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/wt-tradingview-responsive/scripts/verify-eth-candidate-browser.mjs:1099:9)\n    at async file:///Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/wt-tradingview-responsive/scripts/verify-eth-candidate-browser.mjs:1135:5"
+      },
+      {
+        "label": "workspace-btc",
+        "width": 1440,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": 0
+      },
+      {
+        "label": "workspace-btc-short",
+        "width": 900,
+        "height": 430,
+        "status": "passed",
+        "runtimeErrors": 0
+      }
+    ]
+  },
+  "baselineWorkspace": {
+    "path": "../wt-launch-period/build/responsive-baseline-workspace/report.json",
+    "sha256": "22341b8722951c3f1be1e73d77699f731db57c9b526649517d05404a6e178f20",
+    "bytes": 507327,
+    "status": "failed",
+    "startedAt": "2026-11-10T13:57:05.403Z",
+    "finishedAt": "2026-11-10T13:58:01.481Z",
+    "cases": [
+      {
+        "label": "workspace-btc",
+        "width": 320,
+        "height": 900,
+        "status": "failed",
+        "runtimeErrors": 0,
+        "error": "AssertionError [ERR_ASSERTION]: Native legend input failed to move its own scrollport\n    at verifyPriceLegendScrollOwnership (file:///Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/wt-launch-period/scripts/verify-workspace-browser.mjs:499:14)\n    at async verifyWorkspaceSurface (file:///Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/wt-launch-period/scripts/verify-workspace-browser.mjs:1013:57)\n    at async main (file:///Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/wt-launch-period/scripts/verify-eth-candidate-browser.mjs:1093:9)\n    at async file:///Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/wt-launch-period/scripts/verify-eth-candidate-browser.mjs:1129:5"
+      },
+      {
+        "label": "workspace-btc",
+        "width": 1440,
+        "height": 900,
+        "status": "failed",
+        "runtimeErrors": 0,
+        "error": "AssertionError [ERR_ASSERTION]: Model evidence and visible period labels must be present for the collision check: {\"qaWidth\":390,\"qaHeight\":430,\"evidence\":4,\"periods\":0,\"chart\":{\"left\":0,\"right\":390,\"top\":200,\"bottom\":386,\"width\":390,\"height\":186,\"viewWidth\":390,\"viewHeight\":186}}\n    at verifyWorkspaceSurface (file:///Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/wt-launch-period/scripts/verify-workspace-browser.mjs:1067:16)\n    at async main (file:///Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/wt-launch-period/scripts/verify-eth-candidate-browser.mjs:1093:9)\n    at async file:///Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/wt-launch-period/scripts/verify-eth-candidate-browser.mjs:1129:5"
+      },
+      {
+        "label": "workspace-btc-short",
+        "width": 900,
+        "height": 430,
+        "status": "passed",
+        "runtimeErrors": 0
+      }
+    ]
+  },
+  "liveBrowser": {
+    "url": "http://127.0.0.1:8161/bitcoin-cycle-atlas/?legacy=1&page=outlook&symbol=ETHUSD&qa=2d9d99f",
+    "boot": "ready",
+    "headingHeight": 48,
+    "observedCandles": 914,
+    "informationSheetOpenedAndClosed": true,
+    "focusReturnedTo": "mobile-details-toggle",
+    "sourceHookPreserved": true,
+    "screenshot": "/Users/twoimo/.aside/u/0/sessions/2026-11-09_887EO75N9Cn1E5h0/tmp/responsive-mobile-final.png",
+    "screenshotSha256": "e94db46be82c818c464bc0f703ffef233c3d1e9a6422f5697582d864cb9b2101",
+    "note": "An old preview reload was in boot error; a fresh document navigation reached ready without changing product files or stored data."
+  },
+  "release": {
+    "approved": false,
+    "push": false,
+    "merge": false,
+    "deployment": false,
+    "prChanged": false,
+    "mediaPrepared": false,
+    "remaining": [
+      "320px native legend touch scroll failed on candidate and unchanged baseline.",
+      "1440px ETH native model selection did not accept the requested value; no synthetic value assignment.",
+      "Previous 320px TQQQ dialog and 1440px Nasdaq selector gates remain unresolved.",
+      "WP-A listening/sync/full media and Linux atomic publication remain incomplete.",
+      "Full 53-case site inventory, Safari and physical-device coverage are not claimed."
+    ]
+  },
+  "cleanup": {
+    "previewTabClosed": true,
+    "ports": [
+      {
+        "port": 8161,
+        "listening": false
+      },
+      {
+        "port": 8162,
+        "listening": false
+      }
+    ],
+    "dockerStopExit": "0",
+    "worktreeRetainedForBlockedFollowup": true,
+    "otherTabsAndWorktreesPreserved": true
+  }
+}
