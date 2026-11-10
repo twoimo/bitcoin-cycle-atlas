@@ -1,0 +1,82 @@
+/* 사이드바 하단 릴리즈 노트. 셸 토큰을 그대로 사용하고 차트 레일에서는 숨긴다. */
+.atlas-release-notes{
+  order:3;
+  flex:none;
+  margin-top:auto;
+  padding:12px 0 0;
+  border-top:1px solid var(--border-soft);
+}
+.atlas-release-trigger{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  min-height:38px;
+  padding:8px 12px;
+  border:0;
+  border-radius:7px;
+  background:none;
+  color:var(--muted);
+  font:500 12px/1.4 var(--font);
+  text-align:left;
+  white-space:nowrap;
+  cursor:pointer;
+}
+.atlas-release-trigger:hover{background:var(--surface-hover);color:var(--text)}
+.atlas-release-trigger:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.atlas-release-trigger-icon{display:grid;place-items:center;width:18px;flex:none;color:var(--subtle);font-size:13px;line-height:1}
+.atlas-release-trigger-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.atlas-release-trigger-version{
+  flex:none;padding:1px 6px;border:1px solid var(--border);border-radius:999px;
+  color:var(--subtle);font:11px/16px var(--font-mono,monospace);font-variant-numeric:tabular-nums;
+}
+body[data-shell=chart] .atlas-release-notes{display:none!important}
+
+/* 대화상자 */
+.atlas-release-dialog{width:min(660px,calc(100% - 32px))}
+.atlas-release-close{
+  width:32px;height:32px;display:grid;place-items:center;border:1px solid var(--border);
+  border-radius:6px;background:none;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;
+}
+.atlas-release-close:hover{background:var(--surface-hover);color:var(--text)}
+.atlas-release-close:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.atlas-release-lead{max-width:58ch}
+.atlas-release-list{display:grid;gap:12px;margin-top:20px}
+.atlas-release-entry{
+  margin:0;padding:14px 16px;border:1px solid var(--border);border-radius:9px;background:var(--bg);
+}
+.atlas-release-entry.atlas-release-current{border-color:var(--nav-active-bg);background:var(--surface)}
+.atlas-release-entry-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.atlas-release-entry h3{margin:0;font-size:15px;font-weight:650;letter-spacing:-.02em;color:var(--text)}
+.atlas-release-entry time{flex:none;color:var(--subtle);font:11px/1.6 var(--font-mono,monospace);font-variant-numeric:tabular-nums}
+.atlas-release-badge{
+  display:inline-block;margin-left:8px;padding:1px 6px;border:1px solid var(--nav-active-bg);
+  border-radius:999px;color:var(--nav-active-text);font:10px/16px var(--font);vertical-align:2px;
+}
+.atlas-release-entry-title{margin:4px 0 0;color:var(--muted);font-size:12px;line-height:1.7}
+.atlas-release-entry ul{margin:10px 0 0;padding-left:18px}
+.atlas-release-entry li{color:var(--muted);font-size:11px;line-height:1.85}
+.atlas-release-entry li+li{margin-top:4px}
+.atlas-release-entry summary{
+  display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;align-items:baseline;gap:10px;
+  cursor:pointer;list-style:none;
+}
+.atlas-release-entry summary::-webkit-details-marker{display:none}
+.atlas-release-entry summary:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:4px}
+.atlas-release-entry summary::before{content:'＋';color:var(--subtle);font-size:12px}
+.atlas-release-entry[open] summary::before{content:'−'}
+.atlas-release-entry-version{color:var(--text);font:600 12px/1.6 var(--font-mono,monospace);font-variant-numeric:tabular-nums}
+.atlas-release-entry summary .atlas-release-entry-title{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Below 1000px the dashboard sidebar collapses to an icon rail; the release
+   trigger keeps its icon and accessible name instead of overflowing. */
+@media(max-width:1000px){
+  body[data-shell=dashboard] .atlas-release-trigger{justify-content:center;padding-inline:0}
+  body[data-shell=dashboard] .atlas-release-trigger-icon{width:auto}
+  body[data-shell=dashboard] .atlas-release-trigger-label,
+  body[data-shell=dashboard] .atlas-release-trigger-version{display:none}
+}
+@media(max-width:680px){
+  .atlas-release-notes{display:none!important}
+  .atlas-release-dialog{width:calc(100% - 24px);padding:20px}
+  .atlas-release-entry-head{align-items:flex-start;flex-direction:column;gap:2px}
+}

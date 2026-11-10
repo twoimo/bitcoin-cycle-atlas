@@ -1,5 +1,6 @@
 import { enhanceBootSkeleton } from './loading-surfaces.js';
 import { initAtlasShell } from './atlas-shell.js?v=1.36.1';
+import { mountReleaseNotes } from './release-notes-view.js?v=1.37.9';
 import { canonicalNativeChartEntry } from './atlas-navigation.js?v=1.36.1';
 import { canonicalWorkspaceChartEntry } from './atlas-navigation.js?v=1.36.1';
 import { mountJournalEntry } from './journal-entry.js?v=1.29.0';
@@ -13,6 +14,7 @@ if (chartEntry) {
 } else {
   enhanceBootSkeleton();
   initAtlasShell();
+  mountReleaseNotes();
   initPerformanceDiagnostics();
   mountJournalEntry();
   const requested = new URLSearchParams(location.search).get('symbol')?.toUpperCase();
