@@ -1,161 +1,15 @@
 {
   "schema": 1,
   "source": "RelayDeck",
-  "generated_at": "2026-11-10T07:06:18+09:00",
+  "generated_at": "2026-11-10T10:09:39+09:00",
   "rooms": [
     {
       "id": "telegram",
       "kind": "chat",
       "title": "소수의견(26년 4분기)",
       "subtitle": "Telegram",
-      "updated_at": "2026-11-09T21:12:35+09:00",
+      "updated_at": "2026-11-10T09:08:38+09:00",
       "messages": [
-        {
-          "id": "2345",
-          "at": "2026-11-07T16:48:46+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2345.jpg",
-              "width": 1085,
-              "height": 1023,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2346",
-          "at": "2026-11-07T16:48:57+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "FT\"젠슨황은 중국 스파이와 '로맨틱한 관계'였다"
-        },
-        {
-          "id": "2347",
-          "at": "2026-11-07T17:48:30+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "<🐵주간 소수의견>\n한주간 중요한 이슈를 정리하고\n다음주를 대비하는 \n주간 소수의견 브리핑 시간입니다!"
-        },
-        {
-          "id": "2348",
-          "at": "2026-11-07T17:48:39+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2348.jpg",
-              "width": 969,
-              "height": 658,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2349",
-          "at": "2026-11-07T17:49:09+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "⬇️역대급 최악의 한주,\n민주당 압승 반영하며\nAI인프라 주도 증시 약세 마감\n반도체-13%, 나스닥-5%"
-        },
-        {
-          "id": "2350",
-          "at": "2026-11-07T17:49:20+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2350.jpg",
-              "width": 1142,
-              "height": 722,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2351",
-          "at": "2026-11-07T17:49:59+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "⚠️핵심지 민주당 싹쓸이,\n데이터센터 규제 우려를 \n급하게 반영한 한주였습니다"
-        },
-        {
-          "id": "2352",
-          "at": "2026-11-07T17:50:19+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2352.jpg",
-              "width": 1147,
-              "height": 723,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2353",
-          "at": "2026-11-07T17:51:58+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "⚠️데이터센터 주요 권한은\n주지사한테 있는데요\n\n주지사도 민주당이 쓸었습니다\n가장 중요한 텍사스가\n컴퓨팅 용량의 30%였는데요\n여기도 민주당 주지사가 \n당선되었습니다\n\nTop10지역 중 7개가\n민주당 주지사로\n컴퓨팅 계획의 약 41%에\n해당합니다\n\n뿐만아니라\n같은날 투표한\n주민투표 41개 중\n40개가 데이터센터에\n부정적인 결과가 나왔습니다\n(민심 반영)"
-        },
-        {
-          "id": "2354",
-          "at": "2026-11-07T17:52:23+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2354.jpg",
-              "width": 714,
-              "height": 688,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2355",
-          "at": "2026-11-07T17:54:11+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "<🐒주간 주요 특징주>\n\n⬇️AI인프라주는 특히\n폭락에 가깝게 대다수가 두자리\n하락을 보였습니다\n\n⬇️암호화폐 규제 강화 우려로\n코인주도 약세보였습니다\n\n⬆️이란 전쟁 종식을\n주요 과제로 삼으면서\n기대감에 유가, 금리 하락하고\n반대로 소비/여행/배당/리츠\n상승했습니다\n\n⬆️기타 민주당 보조금 확대\n기대로 대표 테마주인\n1) 태양광 2)의료보험(병원)이\n상대적 강세보였습니다"
-        },
-        {
-          "id": "2356",
-          "at": "2026-11-07T17:54:20+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2356.jpg",
-              "width": 704,
-              "height": 703,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2357",
-          "at": "2026-11-07T17:54:50+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "<🐒주간 ETF 특징>\n⬆️상승 : 태양광/신재생(민주당)\n⬇️하락 : AI인프라/에너지(규제)"
-        },
-        {
-          "id": "2358",
-          "at": "2026-11-07T17:55:09+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2358.jpg",
-              "width": 653,
-              "height": 749,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2359",
-          "at": "2026-11-07T17:55:27+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "<🗺주간 대형주 히트맵>"
-        },
         {
           "id": "2360",
           "at": "2026-11-07T17:56:15+09:00",
@@ -778,6 +632,260 @@
           "at": "2026-11-09T21:12:35+09:00",
           "author": "소수의견(26년 4분기)",
           "text": "🐒AI인프라가 아닌 주식들은\n개인적으로 크게 나쁘지 않아서\n(에센피, 다우 등) \n이번주 추세를 잘 지키고\n반등시작하면 추가 매수도\n나쁘지 않아보입니다"
+        },
+        {
+          "id": "2419",
+          "at": "2026-11-10T08:32:59+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2419-01.jpg",
+              "width": 1280,
+              "height": 564,
+              "alt": "텔레그램 사진 (1/4)"
+            },
+            {
+              "src": "data/relay/assets/telegram-2419-02.jpg",
+              "width": 1280,
+              "height": 233,
+              "alt": "텔레그램 사진 (2/4)"
+            },
+            {
+              "src": "data/relay/assets/telegram-2419-03.jpg",
+              "width": 922,
+              "height": 355,
+              "alt": "텔레그램 사진 (3/4)"
+            },
+            {
+              "src": "data/relay/assets/telegram-2419-04.jpg",
+              "width": 920,
+              "height": 351,
+              "alt": "텔레그램 사진 (4/4)"
+            }
+          ],
+          "post_ids": [
+            "2419",
+            "2420",
+            "2421",
+            "2422"
+          ]
+        },
+        {
+          "id": "2423",
+          "at": "2026-11-10T08:33:20+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "↗️미 증시, 유가 하락과 \n저가 매수 들어오며 강하게 반등했습니다"
+        },
+        {
+          "id": "2424",
+          "at": "2026-11-10T08:34:16+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2424.jpg",
+              "width": 1203,
+              "height": 1118,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2425",
+          "at": "2026-11-10T08:34:56+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "🐒나스닥은 기술적 상승 추세 위에서\n반등 시도, 에센피/다우 역시 200일선 위에서\n반등을 시도합니다"
+        },
+        {
+          "id": "2426",
+          "at": "2026-11-10T08:37:09+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2426.jpg",
+              "width": 747,
+              "height": 524,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2427",
+          "at": "2026-11-10T08:37:15+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2427.jpg",
+              "width": 665,
+              "height": 708,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2428",
+          "at": "2026-11-10T08:37:28+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2428.jpg",
+              "width": 1030,
+              "height": 1127,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2429",
+          "at": "2026-11-10T08:37:48+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "↗️사실상 엔비디아 빼고\n다오른 하루 수준이네요"
+        },
+        {
+          "id": "2430",
+          "at": "2026-11-10T08:39:59+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2430.jpg",
+              "width": 448,
+              "height": 568,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2431",
+          "at": "2026-11-10T08:48:31+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "🐒오늘은 시장이\n1. 엔비디아 불륜\n2. 종전기대감(유가 하락)\n3. 시장 저가매수세 강한반등시도\n\n이 정도 특징 외에 전반적으로\n조용했습니다"
+        },
+        {
+          "id": "2432",
+          "at": "2026-11-10T09:01:11+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<🗞소몽선정 데일리 뉴스,11/10>\n[테크]\n앤트로픽, 다음 주 나스닥 상장\n워런, 빅테크·월가 조사 예고\n페이블 5.2 1위·API 20% 인하\n스페이스X, 텍사스 32조 AI센터\n월가 IB \"AI주 급락 과도\"\n미 의회, 젠슨 황 조사 압박\n트럼프 \"젠슨 황 괜찮을 것\"\n가스터빈 품귀, 납기 6년\n메타, 경량 모델 '뮤즈 엠버' 공개\n\n[정치/선거]\n백악관 부비서실장도 퇴임\n헤그세스 탄핵 이틀내 표결\n미·중 무역휴전 1월까지 연장\nWTI 4% 급락, 2개월來 최저\n\n출처 : 소수의견 🐒\n(기사 누르면 링크 연결됩니다)",
+          "links": [
+            {
+              "offset": 27,
+              "length": 17,
+              "url": "https://www.digitaltoday.co.kr/news/articleView.html?idxno=714001"
+            },
+            {
+              "offset": 45,
+              "length": 16,
+              "url": "https://www.fnnews.com/news/202611100516239610"
+            },
+            {
+              "offset": 62,
+              "length": 21,
+              "url": "https://www.aitimes.com/news/articleView.html?idxno=217196"
+            },
+            {
+              "offset": 84,
+              "length": 19,
+              "url": "https://n.news.naver.com/mnews/article/001/0016432261"
+            },
+            {
+              "offset": 104,
+              "length": 17,
+              "url": "https://n.news.naver.com/mnews/article/421/0009279925"
+            },
+            {
+              "offset": 122,
+              "length": 16,
+              "url": "https://www.aitimes.com/news/articleView.html?idxno=217195"
+            },
+            {
+              "offset": 139,
+              "length": 16,
+              "url": "https://www.sedaily.com/article/20112198"
+            },
+            {
+              "offset": 156,
+              "length": 14,
+              "url": "https://www.g-enews.com/article/Global-Biz/2026/11/202611091737589144fda4f5ab74_1"
+            },
+            {
+              "offset": 171,
+              "length": 20,
+              "url": "https://www.digitaltoday.co.kr/news/articleView.html?idxno=713999"
+            },
+            {
+              "offset": 201,
+              "length": 13,
+              "url": "https://www.donga.com/news/Inter/article/all/20261109/134992748/1"
+            },
+            {
+              "offset": 215,
+              "length": 14,
+              "url": "https://www.yna.co.kr/view/AKR20261110006900071"
+            },
+            {
+              "offset": 230,
+              "length": 16,
+              "url": "https://n.news.naver.com/mnews/article/014/0005601697"
+            },
+            {
+              "offset": 247,
+              "length": 18,
+              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4443844"
+            }
+          ],
+          "previews": [
+            {
+              "url": "https://digitaltoday.co.kr/news/articleView.html?idxno=714001",
+              "title": "앤트로픽, AI주 급락에도 IPO 강행...\"다음 주 나스닥 상장 목표\"",
+              "description": "[디지털투데이 황치규 기자]앤트로픽이 최근 AI 관련 기업들 주가 급락에도 11월말 기업공개(IPO)를 예정대로 추진한다고 월스트리트저널이 9일(현지시간) 보도했다.보도에 따르면 앤트로픽은 이번 주 주요 투자...",
+              "site_name": "DigitalToday",
+              "display_url": "digitaltoday.co.kr/news/articleView.html?idxno=714001"
+            }
+          ]
+        },
+        {
+          "id": "2433",
+          "at": "2026-11-10T09:07:04+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2433.jpg",
+              "width": 974,
+              "height": 537,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2434",
+          "at": "2026-11-10T09:07:22+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<😅공식)UFC회장, 브리핑룸에 서다>"
+        },
+        {
+          "id": "2435",
+          "at": "2026-11-10T09:07:48+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "🐒AI인줄 알고 몇번을 확인했습니다\n진짜네요, 좀전에 대통령하고 UFC회장이\n같이 브리핑룸에 섰습니다 \n기자 브리핑했습니다"
+        },
+        {
+          "id": "2436",
+          "at": "2026-11-10T09:08:38+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2436.jpg",
+              "width": 894,
+              "height": 602,
+              "alt": "텔레그램 사진"
+            }
+          ]
         }
       ]
     },
