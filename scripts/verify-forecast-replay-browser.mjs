@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {mkdir,mkdtemp,readdir,readFile} from 'node:fs/promises';
 import {resolve,relative} from 'node:path';
 import {createHash} from 'node:crypto';
+import { inNativeSelectPopupMode } from './native-select-keyboard.mjs';
 
 export const replayBrowserCases=[
   {symbol:'BTCUSD',surface:'btc',width:1440,height:900,touch:false},
@@ -37,7 +38,7 @@ export async function verifyForecastReplaySurface(api){
   const close=dialog+(btc?' [data-journal-close]':' [data-asset-journal-close]');
   const panel=dialog+' [data-forecast-replay]',control=name=>panel+' [data-replay-'+name+']';
   const prefix=receipt.page+'-'+width+'x'+height;
-  const evidence=receipt.replay={symbol,nativeInput:true,entries:[],states:[],exports:[],lifecycle:[],archiveRequests:[],expectedCanceledRequests:[],
+  const evidence=receipt.replay={symbol,nativeInput:true,entries:[],states:[],exports:[],lifecycle:[],archiveRequests:[],expectedCanceledRequests:[],nativeSelections:[],
     scope:'Checked-out real page, native CDP pointer/keyboard input and real JSON downloads. Historical reconstruction is not evidence of prospective accuracy.'};
   const ledger=resolve(root,'dist/data',btc?'forecast-ledger':'asset-forecast-ledger');
   const index=JSON.parse(await readFile(resolve(ledger,'index.json'),'utf8'));
@@ -66,10 +67,18 @@ export async function verifyForecastReplaySurface(api){
   async function select(selector,value){
     const choices=await evaluate(cdp,s=>[...document.querySelector(s).options].filter(option=>!option.disabled).map(option=>option.value),selector);
     const target=choices.indexOf(value);assert.ok(target>=0,'Native option unavailable: '+value);
-    await click(cdp,selector);
-    await key('Home','Home',36,0,{wait:false});
-    for(let i=0;i<target;i++)await key('ArrowDown','ArrowDown',40,0,{wait:false});
-    await key('Enter','Enter',13);
+    // macOS headless keeps AppKit popup menus enabled for a desktop target, where a
+    // closed <select> cannot be driven by keys. The identical native click/key
+    // sequence runs in Blink's internal popup mode and the tested layout is proven
+    // unchanged; the product state machine is not touched.
+    evidence.nativeSelections.push({selector,value,...await inNativeSelectPopupMode({cdp,evaluate,settled,selector,
+      viewport:{width,height,mobile:Boolean(receipt.touch)},run:async()=>{
+        await click(cdp,selector);
+        await key('Home','Home',36,0,{wait:false});
+        for(let i=0;i<target;i++)await key('ArrowDown','ArrowDown',40,0,{wait:false});
+        await key('Enter','Enter',13);
+        return {steps:target};
+      }})});
     await until(()=>evaluate(cdp,({selector,value})=>document.querySelector(selector)?.value===value,{selector,value}),'native selection and replacement control: '+value);
   }
   async function ready(){

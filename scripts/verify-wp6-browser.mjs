@@ -11,6 +11,7 @@ import { createHash } from 'node:crypto';
 import { readChartReplayFloatingGeometry } from './verify-chart-replay-browser.mjs';
 import { readNativeInteractiveTarget } from './verify-workspace-browser.mjs';
 import { readChartQa,readAnnotationHoverTargets } from './verify-chart-qa-metrics.mjs';
+import { inNativeSelectPopupMode } from './native-select-keyboard.mjs';
 
 const root=resolve(fileURLToPath(new URL('..',import.meta.url)));
 const argv=process.argv.slice(2),arg=(key,fallback)=>{const i=argv.indexOf(key);return i<0?fallback:argv[i+1];};
@@ -241,9 +242,15 @@ async function runChartQaCase(spec,debugBase){
           assert.equal(await evaluate(cdp,()=>document.activeElement?.id),'atlas-shell-features-toggle','Disclosure focus not restored');
           const choice=await evaluate(cdp,()=>{const s=document.querySelector('#workbench-interval-select');return {value:s.value,label:s.selectedOptions[0]?.textContent,index:[...s.options].filter(o=>!o.disabled&&!o.hidden).findIndex(o=>o.value==='30m')};});
           assert.equal(choice.label,'1D');assert.ok(choice.index>=0,'Native30m choice missing');receipt.intervalInitial=choice;
-          await click(cdp,'#workbench-interval-select');await key(cdp,'Home','Home',36);
-          for(let i=0;i<choice.index;i++)await key(cdp,'ArrowDown','ArrowDown',40);
-          await key(cdp,'Enter','Enter',13);
+          // macOS headless keeps AppKit popup menus for a desktop target, where a closed
+          // <select> cannot be driven by keys; the same native sequence runs in Blink's
+          // internal popup mode and the tested layout is proven unchanged.
+          receipt.intervalNative=await inNativeSelectPopupMode({cdp,evaluate,settled,selector:'#workbench-interval-select',viewport:{width,height,mobile:false},run:async()=>{
+            await click(cdp,'#workbench-interval-select');await key(cdp,'Home','Home',36);
+            for(let i=0;i<choice.index;i++)await key(cdp,'ArrowDown','ArrowDown',40);
+            await key(cdp,'Enter','Enter',13);
+            return {steps:choice.index};
+          }});
           await until(()=>evaluate(cdp,()=>document.querySelector('#workbench-interval-select').value==='30m'),'Native30m selection');
           receipt.intervalSelected=await evaluate(cdp,()=>{const s=document.querySelector('#workbench-interval-select'),r=s.getBoundingClientRect(),c=getComputedStyle(s);return {value:s.value,label:s.selectedOptions[0]?.textContent,rect:{left:r.left,top:r.top,width:r.width,height:r.height},fontSize:c.fontSize,padding:c.padding};});
           await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',x:1,y:height-1});await settled(cdp);

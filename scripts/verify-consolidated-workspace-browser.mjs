@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { readNativeInteractiveTarget } from './verify-workspace-browser.mjs';
 import { verifyChartZoomBrowser } from './verify-chart-zoom-browser.mjs';
+import { inNativeSelectPopupMode } from './native-select-keyboard.mjs';
 
 // Only an explicit pre-dispatch bounds rejection permits another native path.
 // Timeouts and all other failures stay unknown/failed and are never replayed.
@@ -384,9 +385,16 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
   async function select(context, selector, value) {
     const options = await evaluate(context, selector => [...document.querySelector(selector).options].map(option => option.value), selector);
     const index = options.indexOf(value); assert.ok(index >= 0, 'Native option exists: ' + value);
-    await pointer(context, selector); await key('Home', 'Home', 36);
-    for (let step = 0; step < index; step++) await key('ArrowDown', 'ArrowDown', 40);
-    await key('Enter', 'Enter', 13); await settled(context);
+    // macOS headless keeps AppKit popup menus enabled for a desktop target, where a
+    // closed <select> cannot be driven by keys; run the same native sequence in
+    // Blink's internal popup mode and prove the tested layout is untouched.
+    evidence.inputs.push({kind:'native-select-keyboard',selector,value,...await inNativeSelectPopupMode({cdp,evaluate,context,settled,selector,
+      viewport:{width:receipt.width,height:receipt.height,mobile:Boolean(receipt.touch)},run:async()=>{
+        await pointer(context, selector); await key('Home', 'Home', 36);
+        for (let step = 0; step < index; step++) await key('ArrowDown', 'ArrowDown', 40);
+        await key('Enter', 'Enter', 13); await settled(context);
+        return {steps:index};
+      }})});
     await until(() => evaluate(context, (selector, value) => document.querySelector(selector)?.value === value, selector, value), 'selected ' + value);
   }
   async function state(label) {

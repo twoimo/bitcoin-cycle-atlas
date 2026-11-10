@@ -9,6 +9,7 @@ import {verifyChartReplaySurface,isEarlyChartReplayCadenceCase} from './verify-c
 import {consolidatedPagesBase,verifyConsolidatedWorkspaceSurface} from './verify-consolidated-workspace-browser.mjs';
 import {createEthBrowserCaseSpecs,ethBrowserCaseScopes,selectEthBrowserCaseSpecs} from './eth-browser-case-specs.mjs';
 import {readBrowserSourceIdentity} from './browser-source-identity.mjs';
+import {selectNativeOptionByKeyboard} from './native-select-keyboard.mjs';
 import {classifyProjectBrowserResource,verifyProjectGeneratedImages} from './browser-project-resource-policy.mjs';
 import {mountUiReviewCase,uiContractBrowserCases,verifyUiContractSurface,verifyUiShellSurface} from './verify-ui-contract-browser.mjs';
 import {verifyNativeChartWorkbench} from './verify-native-chart-workbench-browser.mjs';
@@ -642,9 +643,9 @@ async function ethCase(cdp,width,receipt,expected,archive){
   if(width===320||width===1440){
     const nativeKey=async(key,code,num)=>{const native=process.platform==='darwin'?({ArrowDown:125,ArrowUp:126,Enter:36,End:119,Home:115})[code]??0:num;for(const type of ['keyDown','keyUp'])await cdp.send('Input.dispatchKeyEvent',{type,key,code,windowsVirtualKeyCode:num,nativeVirtualKeyCode:native,...(type==='keyDown'&&key==='Enter'?{text:'\r',unmodifiedText:'\r'}:{})});await settled(cdp);};
     const selectModel=async value=>{
-      const move=await evaluate(cdp,value=>{const node=document.querySelector('#eth-model'),options=[...node.options];return {from:node.selectedIndex,to:options.findIndex(option=>option.value===value&&!option.disabled)};},value);
-      assert.ok(move.to>=0,'The requested model must be a real enabled option');
-      for(let i=0;i<Math.abs(move.to-move.from);i++)await nativeKey(move.to>move.from?'ArrowDown':'ArrowUp',move.to>move.from?'ArrowDown':'ArrowUp',move.to>move.from?40:38);
+      // Native keystrokes only: the helper never assigns .value or fabricates change events.
+      const selected=await selectNativeOptionByKeyboard({cdp,evaluate,settled,selector:'#eth-model',value,viewport:{width,height:receipt.height??height,mobile:width<=390}});
+      (receipt.nativeModelSelect??=[]).push(selected);
       assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-model').value),value,'Native arrow input must select the model');
     };
     await evaluate(cdp,()=>{document.querySelector('#eth-model').scrollIntoView({block:'center'});document.querySelector('#eth-model').focus();});
@@ -654,7 +655,9 @@ async function ethCase(cdp,width,receipt,expected,archive){
     assert.equal(await evaluate(cdp,()=>document.activeElement.id),'eth-model','Native model selection must retain keyboard focus');
     assert.ok((await bounds(cdp,'#eth-data-dialog')).text.includes('조건 기준선과 무작위 예시 1개'));
     await screenshot(cdp,'eth-'+width+'-legacy-model.png',receipt);
-    await nativeKey('ArrowUp','ArrowUp',38);await nativeKey('Enter','Enter',13);await settled(cdp);
+    // Same relative step (valuation -> pooled is one ArrowUp), routed through the
+    // shared native helper so the keystroke runs where Blink handles closed selects.
+    await selectModel('pooled');await nativeKey('Enter','Enter',13);await settled(cdp);
     const pooled=await evaluate(cdp,()=>({
       selected:document.querySelector('#eth-model').value,focus:document.activeElement.id,
       model:document.querySelector('#eth-chart').dataset.forecastModel,
