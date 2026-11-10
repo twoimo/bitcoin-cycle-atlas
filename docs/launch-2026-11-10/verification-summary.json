@@ -1,0 +1,345 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-launch-local-qa",
+  "recordedAt": "2026-11-10T12:19:51.303Z",
+  "testedSourceCommit": "acdd1f9629280125f4160d2c363f458615397906",
+  "launchReady": false,
+  "fullSuite": {
+    "complete": true,
+    "tests": 3294,
+    "pass": 3289,
+    "fail": 0,
+    "skipped": 5,
+    "batches": 2,
+    "logSha256": "502d099e06baeabbff49d4a796d9f905e3241d19b35442f7cf31fb1e68329e7a",
+    "skippedCases": [
+      "ok 622 - real priority wrapper and child/grandchild inherit0 while its parent and sibling stay unchanged # SKIP",
+      "ok 623 - real priority wrapper and child/grandchild inherit10 while its parent and sibling stay unchanged # SKIP",
+      "ok 624 - applied priority cannot turn a signal-terminated model command into success # SKIP",
+      "ok 632 - a failed gate cancels its sibling process group and waits for descendant output closure # SKIP",
+      "ok 636 - an actual SIGTERM propagates through the shared handler and joins managed children # SKIP"
+    ]
+  },
+  "static": {
+    "status": "ok",
+    "files": 966,
+    "checkedScripts": 213,
+    "checkedReferences": 991,
+    "basePath": "/bitcoin-cycle-atlas/",
+    "standalone": null,
+    "exitCode": 0,
+    "logSha256": "d522074e84773d14efb62e45cce21ba8d1f9209c148ed92f2d39af76ff8b253b"
+  },
+  "formal": {
+    "commandsPassed": 5,
+    "tlcConfigurations": 27,
+    "normalModelExits": 8,
+    "expectedInvariantViolations": 19,
+    "detectedActualSourceNegativeControls": 32,
+    "receipts": {
+      "market": {
+        "receipt": "formal/market.json",
+        "sha256": "b963ce0bb33bf36200086cc211b5b30629569f7bbccd18d36475e2e919cfd2ca"
+      },
+      "equity": {
+        "receipt": "formal/equity.json",
+        "sha256": "b1aabba1599a4c96b5a792b1bc30ece4ee656f17a42d180dffa7cf1932e2be63"
+      },
+      "eth": {
+        "receipt": "formal/eth.json",
+        "sha256": "dfe5e27584ff879d24e7fc631cd83421f38507fc206ca795ee4419f715bfd3c5"
+      },
+      "publication": {
+        "receipt": "formal/publication.json",
+        "sha256": "349c4fd59ccc8c4d4d75476ecf3198e3065a5f595538162db3a35151f92922a9"
+      },
+      "replay": {
+        "receipt": "formal/replay.json",
+        "sha256": "f08069e98e424bd25e8c0fbb0cfb29695fe83788e41b0193c3134f613ce07b9e"
+      }
+    },
+    "scope": "Existing bounded model and real-source verifiers rerun; not an unbounded proof, browser QA, or new correspondence/statechart certification."
+  },
+  "comparison": {
+    "sourceHashes": {
+      "dist/compare-shell-host.js": "017c029fe04ded93556e21ad71c6d42e54fa4b9014996a6f69048bcd7dd0f5d1",
+      "dist/atlas-shell.css": "b4881543052d339435801c54cd5f4d992430f5d35f0f2a94ff2a6283b712d412",
+      "dist/chart-bottom-bar.css": "359e6d5473279150c9b8181369aede6be6b412df03661fa38011287a3aef99de",
+      "tests/compare-shell-host.dom.test.mjs": "0720082ce6729f954b5c5eb71c1fa90f9420c15b64d85c3624cc0bd226bb3589",
+      "tests/mobile-toolbar-targets.test.mjs": "1b8cf042f94eb44a258bb4875d5db101d9a88d6eb05285e2dc8315125477bb86"
+    },
+    "receiptSha256": "4d8f9bb246f64b2e810b831a51ad2f46a51d94833a6668bdfbd32f35024247e1",
+    "cases": [
+      {
+        "viewport": "320x740",
+        "rows": 97,
+        "documentOverflow": 0,
+        "errors": [],
+        "smallTargets": 0,
+        "regions": {
+          "top": "visible",
+          "left": "hidden",
+          "right": "hidden",
+          "bottom": "visible"
+        },
+        "plot": {
+          "x": 0,
+          "y": 103,
+          "w": 320,
+          "h": 593
+        },
+        "bottom": {
+          "x": 0,
+          "y": 696,
+          "w": 320,
+          "h": 44
+        }
+      },
+      {
+        "viewport": "390x844",
+        "rows": 97,
+        "documentOverflow": 0,
+        "errors": [],
+        "smallTargets": 0,
+        "regions": {
+          "top": "visible",
+          "left": "hidden",
+          "right": "hidden",
+          "bottom": "visible"
+        },
+        "plot": {
+          "x": 0,
+          "y": 103,
+          "w": 390,
+          "h": 697
+        },
+        "bottom": {
+          "x": 0,
+          "y": 800,
+          "w": 390,
+          "h": 44
+        }
+      },
+      {
+        "viewport": "456x900",
+        "rows": 97,
+        "documentOverflow": 0,
+        "errors": [],
+        "smallTargets": 0,
+        "regions": {
+          "top": "visible",
+          "left": "hidden",
+          "right": "hidden",
+          "bottom": "visible"
+        },
+        "plot": {
+          "x": 0,
+          "y": 103,
+          "w": 456,
+          "h": 753
+        },
+        "bottom": {
+          "x": 0,
+          "y": 856,
+          "w": 456,
+          "h": 44
+        }
+      },
+      {
+        "viewport": "768x1024",
+        "rows": 97,
+        "documentOverflow": 0,
+        "errors": [],
+        "smallTargets": 44,
+        "regions": {
+          "top": "visible",
+          "left": "visible",
+          "right": "visible",
+          "bottom": "visible"
+        },
+        "plot": {
+          "x": 56,
+          "y": 83,
+          "w": 663,
+          "h": 903
+        },
+        "bottom": {
+          "x": 56,
+          "y": 986,
+          "w": 663,
+          "h": 38
+        }
+      },
+      {
+        "viewport": "1280x800",
+        "rows": 97,
+        "documentOverflow": 0,
+        "errors": [],
+        "smallTargets": 44,
+        "regions": {
+          "top": "visible",
+          "left": "visible",
+          "right": "visible",
+          "bottom": "visible"
+        },
+        "plot": {
+          "x": 56,
+          "y": 83,
+          "w": 1175,
+          "h": 679
+        },
+        "bottom": {
+          "x": 56,
+          "y": 762,
+          "w": 1175,
+          "h": 38
+        }
+      },
+      {
+        "viewport": "1440x900",
+        "rows": 97,
+        "documentOverflow": 0,
+        "errors": [],
+        "smallTargets": 44,
+        "regions": {
+          "top": "visible",
+          "left": "visible",
+          "right": "visible",
+          "bottom": "visible"
+        },
+        "plot": {
+          "x": 56,
+          "y": 83,
+          "w": 1335,
+          "h": 779
+        },
+        "bottom": {
+          "x": 56,
+          "y": 862,
+          "w": 1335,
+          "h": 38
+        }
+      }
+    ],
+    "checks": {
+      "nativeMobileReturn": {
+        "before": {
+          "x": 26,
+          "y": 23.5,
+          "width": 44,
+          "height": 44,
+          "inHeader": true,
+          "topmost": true,
+          "label": "통합 차트로 돌아가기"
+        },
+        "after": {
+          "page": "outlook",
+          "homeParent": "BODY",
+          "search": "?legacy=1&compare-unit=rebased"
+        }
+      },
+      "aliasUnit": {
+        "pressed": [
+          "indexed"
+        ],
+        "search": "?page=compare&legacy=1&unit=indexed"
+      }
+    },
+    "scope": "comparison six-viewport rendering plus native mobile return; not full-site/native/build acceptance"
+  },
+  "native": {
+    "sourceCommit": "acdd1f9629280125f4160d2c363f458615397906",
+    "status": "failed",
+    "receiptSha256": "f31615b33f1cf51d824cf55eb037cc7e203bab30ebb70388fa41451af54ba082",
+    "cases": [
+      {
+        "width": 320,
+        "status": "failed",
+        "error": "Error: Required action remains clipped: dialog.rsi-detail-dialog[open] .rsi-criteria-details dl: {\"selector\":\"dialog.rsi-detail-dialog[open] .rsi-criteria-details dl\",\"box\":{\"left\":21,\"right\":299,\"top\":-29,\"bottom\":229.65625,\"width\":278,\"height\":258.65625},\"clip\":{\"left\":21,\"right\":299,\"top\":62,\"bottom\":229.65625,\"width\":278,\"height\":167.65625},\"x\":160,\"y\":100.328125,\"viewport\":{\"width\":320,\"height\":900},\"inside\":true,\"painted\":true,\"disabled\":false,\"topmost\":true,\"tag\":\"DL\",\"label\":\"매매 기준RSI 33.5/29.5/40/43전체 승률72.7% · n=66현재RSI 33.9 · 미충족분할 매수1차 33.5 · 2차 29.5분\",\"outline\":\"none\",\"outlineWidth\":3,\"outlineColor\":\"rgb(219, 219, 219)\"}"
+      },
+      {
+        "width": 390,
+        "status": "passed",
+        "error": null
+      },
+      {
+        "width": 1440,
+        "status": "failed",
+        "error": "Error: Timed out: selected nasdaq"
+      }
+    ]
+  },
+  "axisMeasurement": {
+    "revisions": {
+      "baseline": "38b9e66",
+      "candidate": "5c22aa8"
+    },
+    "pairs": 3,
+    "blockMs": 20000,
+    "paired": {
+      "cold": {
+        "baselineMedians": [
+          0.37999999998137357,
+          0.3850000001490116,
+          0.3650000002235174
+        ],
+        "candidateMedians": [
+          0.22499999944120647,
+          0.225,
+          0.23500000014901162
+        ],
+        "ratios": [
+          1.6888888930005057,
+          1.7111111117733848,
+          1.5531914893279737
+        ],
+        "medianRatio": 1.6888888930005057
+      },
+      "warm": {
+        "baselineMedians": [
+          0.005800000004470348,
+          0.005800000004470348,
+          0.005799999997019768
+        ],
+        "candidateMedians": [
+          0.005799999997019768,
+          0.005600000001490116,
+          0.006
+        ],
+        "ratios": [
+          1.0000000012845829,
+          1.0357142862369668,
+          0.9666666661699613
+        ],
+        "medianRatio": 1.0000000012845829
+      }
+    },
+    "outputDifferences": 8,
+    "identicalOutput": false,
+    "scope": "Same input label set; output attributes differ. Not a claim of end-to-end or identical-output performance gain.",
+    "measuredPriceAxisMatchesFinal": true
+  },
+  "production": {
+    "observedAt": "2026-11-10T12:17:35.804Z",
+    "url": "https://bitcoin-cycle-atlas.twoimo.workers.dev/publication.json",
+    "httpStatus": 200,
+    "sourceCommit": "36e7db09f7f66016753f63452a8cba44adcbed28",
+    "matchesCandidate": false
+  },
+  "blocked": [
+    "320px TQQQ dialog clip assertion; actual-user behavior and root cause unresolved",
+    "1440px macOS native select input did not select nasdaq",
+    "Pages native library rejected by macOS policy; build:pages and verify:pages incomplete",
+    "WP-A direct listening, ten-point sync, 547 PDF pages and full Linux atomic publication incomplete"
+  ],
+  "externalChanges": {
+    "newCandidatePushed": false,
+    "mainMerged": false,
+    "newDeployment": false,
+    "wpAPrChanged": false
+  },
+  "typecheck": {
+    "exitCode": 0,
+    "logSha256": "105590b0774e0b7bfc27e4ac54de5e61ef04fdf38cf96da4aba62c93d0904ba8"
+  }
+}

@@ -1,0 +1,352 @@
+{
+  "kind": "atlas-replay-state-verification",
+  "schemaVersion": 1,
+  "baselineCommit": "aca73b74a5128a5466488a0c701e86f5e854af46",
+  "previousFollowupBaselineCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "originalAuditBaselineCommit": "94a1b1dda9eb359de70747043808340da369d087",
+  "node": "v24.22.2",
+  "sourcePath": "dist/chart-replay-state.js",
+  "sourceSha256": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908",
+  "testPath": "tests/chart-replay-state.test.mjs",
+  "testSha256": "1ae620d55fd750fbc951b0980f8eed58a2a64cf4eb2a83dc9b74626601badabc",
+  "method": "Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, manual-date rejection, destroy-during-save cases and isolated real-source negative controls",
+  "coordinatorPath": "dist/chart-replay.js",
+  "coordinatorSha256": "ee624a2890754af41c1d38d3b637336522e039e5e5f3c07408629b621b826cde",
+  "coordinatorTestPath": "tests/chart-replay-ui.test.mjs",
+  "coordinatorTestSha256": "09999057e2e0a430b2f47885af539200d3394af890da50b32336a5e733e8d57f",
+  "snapshotPath": "dist/chart-replay-snapshot.js",
+  "snapshotSha256": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6",
+  "bounds": {
+    "playback": {
+      "commands": 10,
+      "maxTraceLength": 4,
+      "traces": 10000,
+      "prefixes": 11111,
+      "transitions": 40000,
+      "observableStates": 52,
+      "observableEdges": 380,
+      "playbackBars": 3
+    },
+    "asyncLoads": 2,
+    "selectionCommands": 6,
+    "selectionMaxTraceLength": 3,
+    "selectionTraces": 259,
+    "destruction": {
+      "pendingExplicitSaves": 1,
+      "completionSchedules": [
+        "deferred callback resumes",
+        "deferred callback rejects"
+      ],
+      "destroyCallsPerSchedule": 2
+    },
+    "manualDates": {
+      "submissionMethods": [
+        "button",
+        "Enter"
+      ],
+      "entryStates": [
+        "resumed capture",
+        "unconfirmed selection"
+      ],
+      "invalidKinds": [
+        "above maximum",
+        "below minimum",
+        "empty",
+        "malformed",
+        "impossible day",
+        "impossible month",
+        "zero year",
+        "native invalidity"
+      ],
+      "finiteSelectionAlphabetUnchanged": true
+    }
+  },
+  "formalProof": false,
+  "modelCheckerRun": false,
+  "excluded": [
+    "Unlimited trace lengths",
+    "Native browser DOM, rendering and events",
+    "Real forecast generation and scoring in coordinator doubles",
+    "Exhaustive network completion schedules",
+    "Exhaustive persistence and concurrent-tab schedules",
+    "Wall-clock scheduling accuracy",
+    "Cutoff-model loading in the coordinator fixture"
+  ],
+  "original": {
+    "status": "pass",
+    "tests": 16,
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0,
+    "exitStatus": 0,
+    "enumeration": {
+      "commands": 10,
+      "maxTraceLength": 4,
+      "traces": 10000,
+      "prefixes": 11111,
+      "transitions": 40000,
+      "observableStates": 52,
+      "observableEdges": 380,
+      "playbackBars": 3
+    }
+  },
+  "mutations": {
+    "unguarded-session-completion": {
+      "status": "expected behavioral failure",
+      "tests": 16,
+      "passed": 13,
+      "failed": 3,
+      "skipped": 0,
+      "exitStatus": 1,
+      "enumeration": {
+        "commands": 10,
+        "maxTraceLength": 4,
+        "traces": 10000,
+        "prefixes": 11111,
+        "transitions": 40000,
+        "observableStates": 52,
+        "observableEdges": 380,
+        "playbackBars": 3
+      },
+      "sourceSha256": "348148c6695a199177d96df3d21a128732f8b5c4b8874e89e5b29888a4705033"
+    },
+    "unguarded-timer-generation": {
+      "status": "expected behavioral failure",
+      "tests": 16,
+      "passed": 12,
+      "failed": 4,
+      "skipped": 0,
+      "exitStatus": 1,
+      "sourceSha256": "4b4f3ff7fba8c67aec5c703c378b6f33a0e5d3f29353de100abbea9080ec666f"
+    },
+    "mutable-session-output": {
+      "status": "expected behavioral failure",
+      "tests": 16,
+      "passed": 15,
+      "failed": 1,
+      "skipped": 0,
+      "exitStatus": 1,
+      "enumeration": {
+        "commands": 10,
+        "maxTraceLength": 4,
+        "traces": 10000,
+        "prefixes": 11111,
+        "transitions": 40000,
+        "observableStates": 52,
+        "observableEdges": 380,
+        "playbackBars": 3
+      },
+      "sourceSha256": "e34df04a83296d59bb4422159b8cc580c080867dc94725214a6e7775e1e3119e"
+    },
+    "implicit-rewind-at-archive-end": {
+      "status": "expected behavioral failure",
+      "tests": 16,
+      "passed": 12,
+      "failed": 4,
+      "skipped": 0,
+      "exitStatus": 1,
+      "sourceSha256": "464d1bf9f32f230405b54914963b0f9a16029068f8e9abcb392738b2e99c2418"
+    }
+  },
+  "selection": {
+    "original": {
+      "status": "pass",
+      "commands": [
+        "mode:atlas-chart",
+        "mode:project-baseline",
+        "horizon:90",
+        "horizon:365",
+        "confirm",
+        "pick"
+      ],
+      "maxTraceLength": 3,
+      "traces": 259,
+      "transitions": 726,
+      "observableStates": 24,
+      "observableEdges": 78,
+      "sourceSha256": "ee624a2890754af41c1d38d3b637336522e039e5e5f3c07408629b621b826cde",
+      "scope": "Actual coordinator and controller with deterministic DOM, source, forecast and renderer doubles; exhaustive bounded traces without state merging"
+    },
+    "mutations": {
+      "mode-model-settings-confirm-start": {
+        "status": "fail",
+        "invariant": "settings-preserve-unconfirmed-start",
+        "code": "ERR_ASSERTION",
+        "shortestCounterexample": [
+          "open selection",
+          "mode:atlas-chart"
+        ],
+        "traces": 2,
+        "transitions": 0,
+        "observableStates": 1,
+        "observableEdges": 0,
+        "sourceSha256": "691877bca3935babd3e4c95db45472ba4b749cbfee54d4834d2920e0cc3ff0b4"
+      },
+      "horizon-settings-confirm-start": {
+        "status": "fail",
+        "invariant": "settings-preserve-unconfirmed-start",
+        "code": "ERR_ASSERTION",
+        "shortestCounterexample": [
+          "open selection",
+          "horizon:90"
+        ],
+        "traces": 4,
+        "transitions": 2,
+        "observableStates": 2,
+        "observableEdges": 2,
+        "sourceSha256": "1eb03afcd371809dc9590cc35a19d110dace6c871d73afce8da36bf3700abb19"
+      }
+    },
+    "restored": {
+      "status": "pass",
+      "commands": [
+        "mode:atlas-chart",
+        "mode:project-baseline",
+        "horizon:90",
+        "horizon:365",
+        "confirm",
+        "pick"
+      ],
+      "maxTraceLength": 3,
+      "traces": 259,
+      "transitions": 726,
+      "observableStates": 24,
+      "observableEdges": 78,
+      "sourceSha256": "ee624a2890754af41c1d38d3b637336522e039e5e5f3c07408629b621b826cde",
+      "scope": "Actual coordinator and controller with deterministic DOM, source, forecast and renderer doubles; exhaustive bounded traces without state merging"
+    }
+  },
+  "savedEntry": {
+    "original": [
+      {
+        "status": "pass",
+        "name": "default cutoff entry preserves current-chart save and Continue across mode changes",
+        "sourceSha256": "ee624a2890754af41c1d38d3b637336522e039e5e5f3c07408629b621b826cde",
+        "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+      },
+      {
+        "status": "pass",
+        "name": "saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories",
+        "sourceSha256": "ee624a2890754af41c1d38d3b637336522e039e5e5f3c07408629b621b826cde",
+        "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+      }
+    ],
+    "mutations": {
+      "entry-resets-selected-storage-mode": {
+        "status": "expected behavioral failure",
+        "name": "default cutoff entry preserves current-chart save and Continue across mode changes",
+        "assertion": "the last selected current-chart mode must find its own saved slot",
+        "exitStatus": 1,
+        "sourceSha256": "929b365246e68b65532c5585de86d779a35e9bfc221e23816dc2d4bb0e985b29"
+      },
+      "entry-accepts-cross-mode-storage": {
+        "status": "expected behavioral failure",
+        "name": "saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories",
+        "assertion": "invalid or cross-mode records must not borrow another slot",
+        "exitStatus": 1,
+        "sourceSha256": "b3af03f6dc221e0366fda0ecb2749b5244cf1b28ec20cffc0021975744cf1009"
+      }
+    },
+    "restored": [
+      {
+        "status": "pass",
+        "name": "default cutoff entry preserves current-chart save and Continue across mode changes",
+        "sourceSha256": "ee624a2890754af41c1d38d3b637336522e039e5e5f3c07408629b621b826cde",
+        "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+      },
+      {
+        "status": "pass",
+        "name": "saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories",
+        "sourceSha256": "ee624a2890754af41c1d38d3b637336522e039e5e5f3c07408629b621b826cde",
+        "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+      }
+    ]
+  },
+  "destruction": {
+    "original": {
+      "status": "pass",
+      "name": "destroy during an explicit save releases replay once and ignores late completion",
+      "sourceSha256": "ee624a2890754af41c1d38d3b637336522e039e5e5f3c07408629b621b826cde",
+      "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+    },
+    "mutations": {
+      "destroy-defers-to-interactive-save-guard": {
+        "status": "expected behavioral failure",
+        "name": "destroy during an explicit save releases replay once and ignores late completion",
+        "assertion": "destroy must release replay even while an explicit save is pending",
+        "exitStatus": 1,
+        "sourceSha256": "8487fc01628fcb35255fccc0b19fc00446117b52bb49876dfd2390b6cad2723d"
+      },
+      "late-exit-completion-updates-destroyed-controls": {
+        "status": "expected behavioral failure",
+        "name": "destroy during an explicit save releases replay once and ignores late completion",
+        "assertion": "destroyed save completion cannot update detached controls",
+        "exitStatus": 1,
+        "sourceSha256": "197410e633f6593a5d0bb09ba5380d321155fc3d331ece39f69ce065b018a69b"
+      }
+    },
+    "restored": {
+      "status": "pass",
+      "name": "destroy during an explicit save releases replay once and ignores late completion",
+      "sourceSha256": "ee624a2890754af41c1d38d3b637336522e039e5e5f3c07408629b621b826cde",
+      "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+    }
+  },
+  "manualDates": {
+    "original": [
+      {
+        "status": "pass",
+        "name": "manual date button and Enter reject invalid dates without changing a resumed capture",
+        "sourceSha256": "ee624a2890754af41c1d38d3b637336522e039e5e5f3c07408629b621b826cde",
+        "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+      },
+      {
+        "status": "pass",
+        "name": "manual invalid dates leave an unconfirmed replay start unconfirmed",
+        "sourceSha256": "ee624a2890754af41c1d38d3b637336522e039e5e5f3c07408629b621b826cde",
+        "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+      }
+    ],
+    "mutations": {
+      "manual-date-validation-bypassed": {
+        "status": "expected behavioral failure",
+        "name": "manual date button and Enter reject invalid dates without changing a resumed capture",
+        "assertion": "manual invalid date cannot replace the current session",
+        "exitStatus": 1,
+        "sourceSha256": "09a7f61451218f99a72c197a719733fb1c748fc0a214b515eec12b1feb60e1b3"
+      }
+    },
+    "restored": [
+      {
+        "status": "pass",
+        "name": "manual date button and Enter reject invalid dates without changing a resumed capture",
+        "sourceSha256": "ee624a2890754af41c1d38d3b637336522e039e5e5f3c07408629b621b826cde",
+        "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+      },
+      {
+        "status": "pass",
+        "name": "manual invalid dates leave an unconfirmed replay start unconfirmed",
+        "sourceSha256": "ee624a2890754af41c1d38d3b637336522e039e5e5f3c07408629b621b826cde",
+        "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+      }
+    ]
+  },
+  "restored": {
+    "status": "pass",
+    "tests": 16,
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0,
+    "exitStatus": 0,
+    "enumeration": {
+      "commands": 10,
+      "maxTraceLength": 4,
+      "traces": 10000,
+      "prefixes": 11111,
+      "transitions": 40000,
+      "observableStates": 52,
+      "observableEdges": 380,
+      "playbackBars": 3
+    }
+  }
+}

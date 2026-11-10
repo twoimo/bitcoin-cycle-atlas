@@ -1,0 +1,129 @@
+{
+  "recordedAt": "2026-11-10T12:24:16.549Z",
+  "scope": "Only worktrees under this task session; retained current candidate, all local branches and original checkout",
+  "removedWorktrees": [
+    {
+      "name": "wt-compare-shell",
+      "head": "e58c824c84976ce40c31f47115dae096f6027be4",
+      "branch": "fix/compare-shell-20261110",
+      "backupRef": null,
+      "retainedIgnored": [],
+      "status": "removed"
+    },
+    {
+      "name": "wt-launch-ci",
+      "head": "631a184ac08c7c7f9c08e264260f7d13ec88f9cb",
+      "branch": "fix/launch-ci-20261110",
+      "backupRef": null,
+      "retainedIgnored": [
+        "build"
+      ],
+      "status": "removed"
+    },
+    {
+      "name": "wt-launch-integration",
+      "head": "b553093c692d07f8aa7d4a43ee89e30b455e5abf",
+      "branch": "release/launch-readiness-20261110",
+      "backupRef": null,
+      "retainedIgnored": [
+        "build"
+      ],
+      "status": "removed"
+    },
+    {
+      "name": "wt-launch-ui",
+      "head": "24e15e8f70a094666c02df86d546f8134ee0eb45",
+      "branch": "fix/launch-ui-20261110",
+      "backupRef": null,
+      "retainedIgnored": [],
+      "status": "removed"
+    },
+    {
+      "name": "wt-merge-main",
+      "head": "fb1eac0e080b4a0437a453097699ad29e39910ea",
+      "branch": null,
+      "backupRef": null,
+      "retainedIgnored": [],
+      "status": "removed"
+    },
+    {
+      "name": "wt-perf-base",
+      "head": "36e7db09f7f66016753f63452a8cba44adcbed28",
+      "branch": null,
+      "backupRef": null,
+      "retainedIgnored": [],
+      "status": "removed"
+    },
+    {
+      "name": "wt-perf-main",
+      "head": "05603e317aeebad21f97525d197a3944c82ac906",
+      "branch": "cleanup/merge-20261110",
+      "backupRef": null,
+      "retainedIgnored": [
+        "scripts/__pycache__"
+      ],
+      "status": "removed"
+    },
+    {
+      "name": "wt-perf2",
+      "head": "1f651ae336f8eee8833eeb801b19f05e6a92b189",
+      "branch": "fix/launch-axis-20261110",
+      "backupRef": null,
+      "retainedIgnored": [
+        "build",
+        "scripts/__pycache__"
+      ],
+      "status": "removed"
+    },
+    {
+      "name": "wt-pr80",
+      "head": "d8209f3a7a19e124ac4100ec7f75e19b6640bf7c",
+      "branch": null,
+      "backupRef": "backup/launch-cleanup-wt-pr80-20261110",
+      "retainedIgnored": [],
+      "status": "removed"
+    },
+    {
+      "name": "wt-pr85",
+      "head": "fb1eac0e080b4a0437a453097699ad29e39910ea",
+      "branch": null,
+      "backupRef": null,
+      "retainedIgnored": [
+        "build"
+      ],
+      "status": "removed"
+    },
+    {
+      "name": "wt-pr90",
+      "head": "0e8604d1f5a54b3ec6fe2461462ef2e93fd3bb93",
+      "branch": null,
+      "backupRef": "backup/launch-cleanup-wt-pr90-20261110",
+      "retainedIgnored": [],
+      "status": "removed"
+    },
+    {
+      "name": "wt-typefix",
+      "head": "b348d641983548351b4229e0566457499c7a64b7",
+      "branch": null,
+      "backupRef": null,
+      "retainedIgnored": [
+        "build",
+        "scripts/__pycache__"
+      ],
+      "status": "removed"
+    }
+  ],
+  "preservedOutputRoot": "retained-worktree-output/",
+  "stoppedOwnedServers": [
+    {
+      "port": 8153,
+      "pid": 95432
+    },
+    {
+      "port": 8154,
+      "pid": 95434
+    }
+  ],
+  "preservedCandidate": "wt-launch-period",
+  "remoteBranchesDeleted": false
+}

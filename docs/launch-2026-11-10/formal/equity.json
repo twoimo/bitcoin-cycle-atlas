@@ -1,0 +1,199 @@
+{
+  "tool": {
+    "name": "TLC",
+    "release": "1.7.4",
+    "jarSha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+  },
+  "bounds": {
+    "requestGenerations": 3,
+    "intervals": [
+      "daily",
+      "weekly"
+    ],
+    "rangeChoices": [
+      "auto",
+      "custom"
+    ]
+  },
+  "model": {
+    "current": {
+      "status": "pass",
+      "invariant": null,
+      "exitStatus": 0,
+      "generated": 303261,
+      "distinct": 46252,
+      "remaining": 0
+    },
+    "original-boot-order": {
+      "status": "expected invariant violation",
+      "invariant": "UsableRenderReleasesBoot",
+      "exitStatus": 12,
+      "generated": 68,
+      "distinct": 38,
+      "remaining": 27
+    },
+    "unguarded-prices": {
+      "status": "expected invariant violation",
+      "invariant": "NoStalePublication",
+      "exitStatus": 12,
+      "generated": 40,
+      "distinct": 25,
+      "remaining": 17
+    },
+    "unguarded-projection": {
+      "status": "expected invariant violation",
+      "invariant": "NoStalePublication",
+      "exitStatus": 12,
+      "generated": 3383,
+      "distinct": 1147,
+      "remaining": 600
+    },
+    "unguarded-errors": {
+      "status": "expected invariant violation",
+      "invariant": "NoStalePublication",
+      "exitStatus": 12,
+      "generated": 41,
+      "distinct": 26,
+      "remaining": 18
+    },
+    "retained-old-projection": {
+      "status": "expected invariant violation",
+      "invariant": "ProjectionMatchesPrices",
+      "exitStatus": 12,
+      "generated": 7255,
+      "distinct": 2253,
+      "remaining": 1105
+    },
+    "hidden-ready": {
+      "status": "expected invariant violation",
+      "invariant": "NoHiddenReadiness",
+      "exitStatus": 12,
+      "generated": 265,
+      "distinct": 115,
+      "remaining": 74
+    },
+    "overwritten-range": {
+      "status": "expected invariant violation",
+      "invariant": "UserRangePreserved",
+      "exitStatus": 12,
+      "generated": 2317,
+      "distinct": 806,
+      "remaining": 429
+    }
+  },
+  "implementation": {
+    "tests": 28,
+    "original": "pass",
+    "isolated": "pass",
+    "restored": "pass",
+    "fixtureModules": [
+      "dist/asset-daily-observations.js",
+      "dist/asset-forecast-loader.js",
+      "dist/asset-forecast-records.js",
+      "dist/atlas-navigation.js",
+      "dist/chart-bottom-bar.js",
+      "dist/chart-export.js",
+      "dist/chart-hover.js",
+      "dist/chart-magnet.js",
+      "dist/chart-math.js",
+      "dist/chart-navigation.js",
+      "dist/chart-overlays.js",
+      "dist/chart-replay-renderer.js",
+      "dist/chart-replay-snapshot.js",
+      "dist/chart-replay-sources.js",
+      "dist/chart-replay-state.js",
+      "dist/chart-replay.js",
+      "dist/chart-touch-tracking.js",
+      "dist/chart-view-policy.js",
+      "dist/chart-window.js",
+      "dist/cycle-calibration.js",
+      "dist/cycle-engine.js",
+      "dist/cycle-timing.js",
+      "dist/data-freshness.js",
+      "dist/detailed-forecast.js",
+      "dist/dialog-viewport.js",
+      "dist/empty-price-chart.js",
+      "dist/equity-forecast-chart.js",
+      "dist/equity-market-data.js",
+      "dist/equity-view.js",
+      "dist/eth-market-data.js",
+      "dist/ethereum-adaptive-model.js",
+      "dist/ethereum-forecast.js",
+      "dist/ethereum-pooled-model.js",
+      "dist/forecast-evaluation.js",
+      "dist/forecast-information-time.js",
+      "dist/forecast-records.js",
+      "dist/forecast-replay-sources.js",
+      "dist/forecast-replay.js",
+      "dist/forecast/forecast-models.js",
+      "dist/forecast/forecast-sufficiency.js",
+      "dist/forecast/forecast-ui-gate.js",
+      "dist/index.html",
+      "dist/intraday-chart.js",
+      "dist/intraday-history.js",
+      "dist/loading-surfaces.js",
+      "dist/long-horizon-evidence.js",
+      "dist/long-horizon-forecast.js",
+      "dist/market-structure.js",
+      "dist/mobile-workspace.js",
+      "dist/native-chart-workbench.js",
+      "dist/ohlc-data.js",
+      "dist/preserved-archive-download.js",
+      "dist/price-axis.js",
+      "dist/price-display.js",
+      "dist/price-legend.js",
+      "dist/project-replay-baseline.js",
+      "dist/research-annotations.js",
+      "dist/research-format.js",
+      "dist/research-library-data.js",
+      "dist/research-reader.js",
+      "dist/research-source-data.js",
+      "dist/rsi-chart-layout.js",
+      "dist/rsi-instruments.js",
+      "dist/symbol-selector.js",
+      "dist/treasury-asset-paths.js",
+      "dist/treasury-catalog.js",
+      "dist/treasury-instruments.js",
+      "dist/treasury-liquidity.js",
+      "dist/treasury-model.js",
+      "dist/treasury-projection.js",
+      "dist/treasury-research.js",
+      "dist/ui/chart-annotation-layout.js",
+      "dist/ui/chart-legend-layout.js",
+      "dist/ui/chart-legend.js",
+      "dist/ui/chart-url-state.js",
+      "dist/ui/native-chart-legend.js",
+      "dist/vendor/skullet/skullet.js",
+      "dist/volume-data.js",
+      "dist/workspace-history.js",
+      "dist/workspace-instruments.js",
+      "dist/workspace-state.js",
+      "tests/equity-load-ownership.test.mjs",
+      "tests/helpers/equity-view-fixture.mjs"
+    ],
+    "sourceSha256": "d605504ae30550cfb229bb7c1477ac6c09b06c0514a35efb2ff010152114c540",
+    "mutations": {
+      "deferred-readiness": "expected assertion failure",
+      "unguarded-prices": "expected assertion failure",
+      "unguarded-projection": "expected assertion failure",
+      "unguarded-coin-error": "expected assertion failure",
+      "retained-old-projection": "expected assertion failure",
+      "hidden-ready": "expected assertion failure",
+      "overwritten-range": "expected assertion failure"
+    },
+    "mutationExitStatuses": {
+      "deferred-readiness": 1,
+      "unguarded-prices": 1,
+      "unguarded-projection": 1,
+      "unguarded-coin-error": 1,
+      "retained-old-projection": 1,
+      "hidden-ready": 1,
+      "overwritten-range": 1
+    }
+  },
+  "limitations": [
+    "Finite request-state model, not an unbounded proof",
+    "UI replay injects import, HTTP, animation-frame and DOM boundaries",
+    "No economic accuracy, visual pixels, browser timing or liveness proof"
+  ]
+}
