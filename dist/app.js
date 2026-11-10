@@ -203,6 +203,11 @@ if (state.view === 'data') renderData();
 // other owners' fields (center, unit, atlas viewport, indicators) belong to
 // their own history entry, and a same-page query change must still apply.
 window.addEventListener('popstate', () => {
+  // A history move can leave the chart frame. Its detail panel is a sibling of
+  // the workspace, so it must be closed by its own owner instead of surviving
+  // the move and holding the next page under an orphan overlay.
+  const detailPanel = document.querySelector('#chart-reader');
+  if (detailPanel && !detailPanel.hidden) document.dispatchEvent(new CustomEvent('atlas:close-detail'));
   const next = parseComparisonUrl(location.search);
   if (!comparisonUrlChanged(state, next)) return;
   const previousView = state.view;
