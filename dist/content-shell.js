@@ -52,10 +52,11 @@ export function createContentShell({ document }) {
     rail.remove(); bottom.remove();
   }
 
+  // These routes render the site footer, whose source control belongs to the
+  // price document. Measured on 2026-11-11: with the dataset loaded the moved
+  // control still opens no sheet, so it stays disabled with its reason instead
+  // of exposing a dead action.
   function lockSources() {
-    // The source sheet renders from the price dataset. When this document still
-    // owns a mounted plot the sheet is ready, so the control keeps working.
-    if (document.querySelector('.atlas-plot')) { unlockSources(); return; }
     for (const control of document.querySelectorAll('.footer [data-method], .content-bottom-bar [data-method]')) {
       if (!lockedSources.has(control)) {
         lockedSources.set(control, {
@@ -102,7 +103,10 @@ export function createContentShell({ document }) {
     nav = nav || document.querySelector('.atlas-nav');
     if (nav) {
       if (navHome === null) { navHome = nav.parentElement; navNext = nav.nextElementSibling; }
-      const host = sidebarOwnsNav() ? (navHome || document.querySelector('.atlas-sidebar')) : rail;
+      // The dashboard host is the authored sidebar itself. navHome only records
+      // where the node came from so the chart frame can take it back; using it
+      // here would keep the navigation inside the chart rail the shell hides.
+      const host = sidebarOwnsNav() ? document.querySelector('.atlas-sidebar') : rail;
       if (host && nav.parentElement !== host) {
         if (host === rail) rail.prepend(nav); else host.append(nav);
       }

@@ -34,6 +34,7 @@
  */
 import assert from 'node:assert/strict';
 import {spawn,execFileSync} from 'node:child_process';
+import {headlessWindowArgument,verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
 import {createHash} from 'node:crypto';
 import {mkdir,mkdtemp,readFile,rm,writeFile} from 'node:fs/promises';
 import {resolve,relative} from 'node:path';
@@ -743,6 +744,7 @@ async function launch(){
   profile=await mkdtemp(resolve(tmpdir(),'atlas-responsive-workbench-'));
   chrome=spawn(binary,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-background-networking',
     '--disable-component-update','--disable-sync','--no-first-run','--no-default-browser-check',
+    headlessWindowArgument,
     '--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe']});
   report.browser.pid=chrome.pid;report.browser.profile=profile;
   let spawnError=null;
@@ -770,6 +772,10 @@ async function launch(){
   await cdp.send('Page.enable');
   await cdp.send('Runtime.enable');
   await cdp.send('Network.enable');
+  // The native client envelope is checked on the fresh blank target, before any
+  // viewport emulation, so a small window cannot silently host a larger page.
+  report.browser.nativeWindowEnvelope=await verifyHeadlessWindowEnvelope(cdp,
+    {width:Math.max(...viewports.map(v=>v.width)),height:Math.max(...viewports.map(v=>v.height))});
   await cdp.send('Network.setBlockedURLs',{urls:['https://*']});
   return true;
 }

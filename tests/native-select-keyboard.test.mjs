@@ -214,3 +214,26 @@ for (const failure of ['override', 'readiness', 'geometry']) {
     assert.deepEqual(h.metrics().map(call => call.params.mobile), [true, false]);
   });
 }
+
+test('a failing keystroke run still reads the restored layout and keeps the first error', async () => {
+  const h = harness({ layouts: [layout, layout, layout] });
+  let layoutReads = 0;
+  const evaluate = async (...args) => {
+    if (args[1].name === 'readNativeSelectLayout') layoutReads++;
+    return h.evaluate(...args);
+  };
+  const error = await inNativeSelectPopupMode({ cdp: h.cdp, evaluate, settled: h.settled, selector: '#s', viewport: desktop,
+    run: async () => { throw new Error('injected keystroke'); } }).then(() => null, failure => failure);
+  assert.equal(error?.message, 'injected keystroke');
+  assert.equal(layoutReads, 3, 'the restoration read must still run after a failing sequence');
+  assert.deepEqual(h.metrics().map(call => call.params.mobile), [true, false]);
+  assert.equal(error?.restoreError, undefined);
+});
+
+test('a failed restoration is reported next to the original error instead of replacing it', async () => {
+  const h = harness({ layouts: [layout, layout, { ...layout, innerWidth: 900, clientWidth: 900, scrollWidth: 900, bodyWidth: 900 }] });
+  const error = await inNativeSelectPopupMode({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#s', viewport: desktop,
+    run: async () => { throw new Error('injected keystroke'); } }).then(() => null, failure => failure);
+  assert.equal(error?.message, 'injected keystroke');
+  assert.match(error?.restoreError ?? '', /not restored|injected/);
+});

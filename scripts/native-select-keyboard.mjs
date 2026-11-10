@@ -119,6 +119,7 @@ export async function inNativeSelectPopupMode({ cdp, evaluate, context, settled,
     await cdp.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: value });
   };
   const before = nativeSelectLayoutLock(await evaluate(reader, readNativeSelectLayout, selector));
+  let failure = null;
   try {
     // Even a rejected switch, readiness barrier or geometry read must attempt
     // restoration: the browser may already have accepted the override.
@@ -132,15 +133,27 @@ export async function inNativeSelectPopupMode({ cdp, evaluate, context, settled,
     receipt.popupMenu = { before: 'external-appkit', during: 'internal', after: 'external-appkit' };
     receipt.layoutLocked = after;
     receipt.sequence = await run();
-  } finally {
+  } catch (error) {
+    failure = error;
+  }
+  // Restoration and its readback run for every outcome. A restoration failure is
+  // recorded next to the original error instead of replacing it.
+  let restoreFailure = null;
+  try {
     await apply(mobile);
     await settled(reader);
+    const restored = nativeSelectLayoutLock(await evaluate(reader, readNativeSelectLayout, selector));
+    if (JSON.stringify(restored) !== JSON.stringify(before)) {
+      restoreFailure = new Error('Native select emulation was not restored to the tested desktop viewport: ' + JSON.stringify({ before, restored }));
+    } else receipt.restored = true;
+  } catch (error) {
+    restoreFailure = restoreFailure || error;
   }
-  const restored = nativeSelectLayoutLock(await evaluate(reader, readNativeSelectLayout, selector));
-  if (JSON.stringify(restored) !== JSON.stringify(before)) {
-    throw new Error('Native select emulation was not restored to the tested desktop viewport: ' + JSON.stringify({ before, restored }));
+  if (failure) {
+    if (restoreFailure) failure.restoreError = String(restoreFailure.message || restoreFailure);
+    throw failure;
   }
-  receipt.restored = true;
+  if (restoreFailure) throw restoreFailure;
   return receipt;
 }
 

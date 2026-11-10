@@ -8,6 +8,7 @@
  * deployment or release.
  */
 import { spawn, execFileSync } from 'node:child_process';
+import { headlessWindowArgument, verifyHeadlessWindowEnvelope } from './headless-browser-window.mjs';
 import { createServer } from 'node:http';
 import { mkdtemp, readFile, writeFile, mkdir, rm, stat, realpath } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -170,7 +171,7 @@ const main = async () => {
   await mkdir(OUT, { recursive: true });
   const { server, base } = await staticServer();
   const profile = await mkdtemp(resolve(tmpdir(), 'atlas-wpc-shell-'));
-  const chrome = spawn(BIN, ['--headless=new', '--disable-gpu', '--disable-dev-shm-usage', '--disable-background-networking', '--no-first-run', '--hide-scrollbars', '--remote-debugging-port=0', '--user-data-dir=' + profile, 'about:blank'], { stdio: ['ignore', 'ignore', 'pipe'], env: { ...process.env, PATH: `/opt/homebrew/bin:${process.env.PATH}` } });
+  const chrome = spawn(BIN, ['--headless=new', '--disable-gpu', '--disable-dev-shm-usage', '--disable-background-networking', '--no-first-run', '--hide-scrollbars', headlessWindowArgument, '--remote-debugging-port=0', '--user-data-dir=' + profile, 'about:blank'], { stdio: ['ignore', 'ignore', 'pipe'], env: { ...process.env, PATH: `/opt/homebrew/bin:${process.env.PATH}` } });
   let stderr = '';
   chrome.stderr.on('data', b => { stderr = (stderr + b).slice(-4000); });
   const report = {
@@ -196,6 +197,9 @@ const main = async () => {
     const list = await (await fetch(`http://127.0.0.1:${port[0]}/json/list`)).json();
     const cdp = await Cdp.connect(list.find(t => t.id === targetId).webSocketDebuggerUrl);
     await cdp.send('Page.enable'); await cdp.send('Runtime.enable'); await cdp.send('Log.enable');
+    // Verified before the first emulation: the phone-to-1920 journey must fit in
+    // the native client, not only in the emulated viewport.
+    report.nativeWindowEnvelope = await verifyHeadlessWindowEnvelope(cdp, { width: 1920, height: 1080 });
     let errors = [];
     cdp.on('Runtime.exceptionThrown', p => errors.push('EXC ' + String(p.exceptionDetails?.exception?.description || p.exceptionDetails?.text).slice(0, 200)));
     cdp.on('Runtime.consoleAPICalled', p => { if (p.type === 'error') errors.push('console ' + p.args.map(a => a.value ?? a.description ?? '').join(' ').slice(0, 200)); });
@@ -557,7 +561,11 @@ const main = async () => {
             const r = n.getBoundingClientRect();
             return r.width > 1 && r.height > 1;
           };
-          const regions = ['.atlas-canvas-heading', '.workbench-rail', '.workbench-bottom-bar'];
+          // The navigation owner differs by width, so its real host is collected
+          // instead of only the chart's own rail.
+          const navHost = document.querySelector('.content-rail .atlas-nav') ? '.content-rail'
+            : document.querySelector('.atlas-sidebar .atlas-nav') ? '.atlas-sidebar' : '.workbench-rail';
+          const regions = ['.atlas-canvas-heading', navHost, '.workbench-bottom-bar'];
           const nodes = [...document.querySelectorAll(regions.map(s => s + ' button,' + s + ' a[href],' + s + ' select,' + s + ' summary').join(','))];
           const targets = nodes.filter(n => painted(n) && !n.disabled).map(n => {
             const r = n.getBoundingClientRect();

@@ -398,6 +398,10 @@ body[data-shell=dashboard] .workspace{padding-right:44px;padding-bottom:var(--co
 }
 @media(max-width:1100px){
   body[data-shell=dashboard] .workbench-bottom-bar .footer :is(a,button){display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px}
+  /* The navigation lives in the rendered sidebar until phone widths hand it to
+     the rail; both hosts keep the same 44px floor up to 1100px. */
+  body[data-shell=dashboard] :is(.atlas-sidebar,.content-rail) .atlas-nav :is(a,button){width:100%;min-height:44px;height:44px}
+  body[data-shell=dashboard] .atlas-sidebar .atlas-brand{min-height:44px;height:44px}
   body[data-shell=dashboard] .workbench-rail .atlas-nav :is(a,button){width:44px;min-width:44px;height:44px;min-height:44px}
 }
 @media(max-width:620px){body[data-shell=dashboard] .workbench-rail{display:flex}body[data-shell=dashboard] .workbench-rail .atlas-nav{flex-direction:column}}
