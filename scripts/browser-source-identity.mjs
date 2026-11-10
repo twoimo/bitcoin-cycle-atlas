@@ -20,6 +20,7 @@ export async function readBrowserSourceIdentity(root){
   const sourceCommit=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
   const sourceTree=execFileSync('git',['rev-parse','HEAD^{tree}'],{cwd:root,encoding:'utf8'}).trim();
   const sourceHashes={};
+  sourceHashes['scripts/browser-paint-readiness.mjs']=digest(await readFile(resolve(root,'scripts/browser-paint-readiness.mjs')));
   sourceHashes['scripts/eth-browser-case-specs.mjs']=digest(await readFile(resolve(root,'scripts/eth-browser-case-specs.mjs')));
   sourceHashes['scripts/browser-evidence-transport.mjs']=digest(await readFile(resolve(root,'scripts/browser-evidence-transport.mjs')));
   sourceHashes['scripts/browser-project-resource-policy.mjs']=digest(await readFile(resolve(root,'scripts/browser-project-resource-policy.mjs')));

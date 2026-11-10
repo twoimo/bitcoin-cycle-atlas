@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import {ensureOwnedVisibleForPaint} from './browser-paint-readiness.mjs';
 import {isExpectedOfflineBtcRefresh,offlineBtcRefreshSurface,ownsOfflineBtcPriceReadout} from './btc-offline-refresh-policy.mjs';
 // PR-only verification of checked-out dist files. Does not deploy or alter UI.
 import assert from 'node:assert/strict';
@@ -106,7 +107,14 @@ async function evaluate(cdp,fn,...args){
   return result.result.value;
 }
 async function settled(cdp){
-  await evaluate(cdp,async()=>{await document.fonts.ready;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});
+  await ensureOwnedVisibleForPaint(cdp,evaluate,until);
+  try{
+    await evaluate(cdp,async()=>{await document.fonts.ready;});
+    await evaluate(cdp,async()=>{await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});
+  }catch(error){
+    const state=await evaluate(cdp,()=>({visibility:document.visibilityState,focus:document.hasFocus(),fonts:document.fonts.status,loading:[...document.fonts].filter(font=>font.status==='loading').map(font=>font.family),active:document.activeElement?.tagName})).catch(()=>null);
+    throw new Error(error.message+'; settle state '+JSON.stringify(state),{cause:error});
+  }
   await delay(150);
 }
 async function screenshot(cdp,name,receipt){
