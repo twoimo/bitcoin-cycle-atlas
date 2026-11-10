@@ -54,7 +54,9 @@ test('one described h1 follows chart and dashboard destinations while original c
     assert.equal(clicks, 1);
     document.body.dataset.page = 'compare';
     controller.sync();
-    assert.equal(copy.parentElement, header);
+    assert.equal(copy.parentElement === toolbar.parentElement, true, 'compare stays in the shared chart frame');
+    assert.equal(toolbar.nextElementSibling === copy, true, 'one introduction follows the real compare toolbar');
+    assert.equal(copy.parentElement === header, false, 'compare no longer uses the dashboard composition');
     assert.equal(heading.textContent, '사이클 비교', 'direct page owns the introduction even with a stale center id');
     assert.match(description.textContent, /일별 종가\(UTC\)/);
     assert.equal(document.querySelectorAll('h1[aria-describedby="atlas-page-description"]').length, 1);
