@@ -203,3 +203,42 @@ collisions at 320–390px and the chart legend/indicator chips belong to
 `cycle-milestones.css`, `chart-legend.css` and `analysis-dock.css`; the
 production build could not run on this host (rolldown native module blocked by
 macOS policy), so no build or deployment claim is made.
+
+## 2026-11-10 launch cleanup — relay, data filters and chart panels
+
+Second unit, same branch, expanded scope granted after the first review:
+`dist/relay-room.css`, `dist/daily-data.css`, `dist/ui/chart-legend.css`,
+`dist/analysis-dock.css`. Data series, model maths, circular status dots and
+semantic price/judgment colours were not touched.
+
+- Relay reader: the message bubble dropped its tailed `12px 12px 12px 4px`
+  chat shape, room rows, count badges, refresh button, page chips, edition
+  chips, the sticky date chip, the media foot overlay and the paper stage all
+  moved to 2px; the media thumbnails keep square frames. The date divider's
+  fade gradient was replaced by the pane's own surface colour, so the sticky
+  band is invisible against the thread, and the 0 1px 6px drop shadow and the
+  2px backdrop blur were removed. Status dots stay circular.
+- Data page: the filter row keeps native horizontal scrolling but now owns
+  `scroll-snap-type:x proximity` with `scroll-snap-align:start` per control,
+  `overscroll-behavior-x:contain`, `touch-action:pan-x pinch-zoom` and
+  `scroll-padding-inline`, so a swipe lands on a control edge and the gesture
+  cannot chain to the page. Measured at 390px: client 338px, scroll 692px,
+  reachable to `scrollLeft 354` with the reset control fully visible.
+- Chart legend dock: the chip row and its `+N` affordance moved from 4px to
+  2px; line samples, series colours and the entry typography are unchanged.
+- Indicator dock: the floating indicator window, the countdown HUD, list rows,
+  the template row and the grouped fieldset moved to 2px; controls were
+  normalised from 5/6px to the shared 4px control radius; dialogs stay at 8px.
+
+Verification for this unit: every touched file parses with no dropped rules
+(CSSOM rule count equals source block count: atlas-shell 328, styles 527,
+relay-room 224, daily-data 309, chart-legend 42, analysis-dock 236), and
+`tests/shell-flat-chrome.test.mjs` grew to 9 tests covering pills, shadows,
+blur, gradients, circular dots and the filter row's scroll contract.
+
+Correction to the previous note: `market-lab` is not API-only. It is a
+generated static page under `market-lab/` that boots through
+`meta[name=atlas-static-entry]` and needs the deployed root prefix
+(`/bitcoin-cycle-atlas/`). Served at that prefix it renders real S&P 500 data
+with no failed requests; the earlier "HTTP 404" banner came from serving it at
+`/`, where the boot script rewrote the URL to a missing prefixed path.
