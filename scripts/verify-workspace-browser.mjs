@@ -571,6 +571,12 @@ export async function verifyLegacyMethodReader(api){
     await until(()=>evaluate(cdp,()=>!document.querySelector('#chart-reader').hidden&&document.querySelector('#chart-reader').dataset.kind==='method'),'legacy method reader opens');
     const close=await evaluate(cdp,readNativeInteractiveTarget,'#chart-reader .reader-heading button');
     const next=await evaluate(cdp,readNativeInteractiveTarget,'#chart-reader [aria-label="다음 설명 페이지"]');
+    record.openedGeometry=await evaluate(cdp,()=>{
+      const read=node=>{const b=node.getBoundingClientRect(),s=getComputedStyle(node);return {id:node.id,className:node.className,box:b.toJSON(),position:s.position,overflow:s.overflow,scrollTop:node.scrollTop,scrollHeight:node.scrollHeight,clientHeight:node.clientHeight,transform:s.transform};};
+      const reader=document.querySelector('#chart-reader'),ancestors=[];
+      for(let node=reader;node;node=node.parentElement)ancestors.push(read(node));
+      return {shell:document.body.dataset.shell,page:document.body.dataset.page,ancestors};
+    });
     assert.ok(complete(close)&&complete(next),'Scrolled reader close/pager is outside its viewport: '+JSON.stringify({close,next}));
     const opened=await evaluate(cdp,readState);record.latestOpened=opened;assert.ok(Math.abs(opened.scrollTop-before.scrollTop)<=1,'Opening reader moved the long document');assert.deepEqual(opened.widths,before.widths,'Opening reader changed document or chart workspace width');assert.equal(opened.pathHash,before.pathHash,'Opening reader changed chart paths');
     const initialPage=await evaluate(cdp,()=>document.querySelector('#chart-reader .reader-pagination span').textContent);
