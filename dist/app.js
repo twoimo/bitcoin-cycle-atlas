@@ -253,7 +253,8 @@ function render(recalculate = true) {
   $('#sidebar-asof').textContent=`관측 · ${state.dataset.prices.at(-1)[0].replaceAll('-','.')} UTC`;
   btcRefreshStatus.update({asOf:state.dataset.prices.at(-1)[0]});
   $('#loading-state').hidden = true;
-  persistUrl();
+  // Rendering also runs after history restore, data arrival and frame creation.
+  // Only explicit user-intent handlers may write the URL, never a repaint.
   // The first visible-page draw and validated data must both finish. Chart and
   // evidence renderers report their own completion after their scheduled frame.
   finishInitialPage();
@@ -321,7 +322,7 @@ function renderLegend() {
   $$('[data-series]').forEach(b => b.addEventListener('click', () => {
     if (!state.hidden.has(b.dataset.series) && c.series.filter(s => !state.hidden.has(s.id)).length === 1) return toast('비교할 사이클을 하나 이상 선택해 주세요.');
     state.hidden.has(b.dataset.series) ? state.hidden.delete(b.dataset.series) : state.hidden.add(b.dataset.series);
-    render(false);
+    render(false); persistUrl();
   }));
   $('#mode-explainer').textContent = modeExplanation();
 }
@@ -452,12 +453,12 @@ $$('[data-view]').forEach(b => b.addEventListener('click', () => {
 }));
 // Comparison controls must not capture clicks or keys that bubble from the
 // separate analysis dock, which also publishes its current mode in the DOM.
-$$('#compare-view .anchor-tab[data-mode]').forEach(b=>b.addEventListener('click',()=>{state.mode=b.dataset.mode;state.cursor=null;state.hidden.clear();render();}));
+$$('#compare-view .anchor-tab[data-mode]').forEach(b=>b.addEventListener('click',()=>{state.mode=b.dataset.mode;state.cursor=null;state.hidden.clear();render();persistUrl();}));
 $$('#compare-view .anchor-tab[data-mode]').forEach((b,i,all)=>b.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const next=e.key==='Home'?0:e.key==='End'?all.length-1:(i+(e.key==='ArrowRight'?1:-1)+all.length)%all.length;all[next].click();all[next].focus();}));
-$$('[data-unit]').forEach(b=>b.addEventListener('click',()=>{state.unit=b.dataset.unit;render(false);}));
-$$('[data-scale]').forEach(b=>b.addEventListener('click',()=>{state.scale=b.dataset.scale;render(false);}));
-$('#horizon').addEventListener('change',e=>{state.horizon=e.target.value;render();});
-$('#reset-chart').addEventListener('click',()=>{state.mode='halving';state.unit='rebased';state.scale='log';state.horizon='1461';state.cursor=null;state.hidden.clear();render();toast('기본 비교 화면으로 돌아왔습니다.');});
+$$('[data-unit]').forEach(b=>b.addEventListener('click',()=>{state.unit=b.dataset.unit;render(false);persistUrl();}));
+$$('[data-scale]').forEach(b=>b.addEventListener('click',()=>{state.scale=b.dataset.scale;render(false);persistUrl();}));
+$('#horizon').addEventListener('change',e=>{state.horizon=e.target.value;render();persistUrl();});
+$('#reset-chart').addEventListener('click',()=>{state.mode='halving';state.unit='rebased';state.scale='log';state.horizon='1461';state.cursor=null;state.hidden.clear();render();persistUrl();toast('기본 비교 화면으로 돌아왔습니다.');});
 $('#day-cursor').addEventListener('input',e=>setCursor(e.target.value));
 $('#day-number').addEventListener('input',e=>{if(e.target.value!=='')setCursor(e.target.value);});
 $('#day-number').addEventListener('change',e=>setCursor(e.target.value));
