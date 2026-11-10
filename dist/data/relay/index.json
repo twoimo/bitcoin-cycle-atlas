@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "source": "RelayDeck",
-  "generated_at": "2026-11-11T01:06:23+09:00",
+  "generated_at": "2026-11-11T02:07:25+09:00",
   "rooms": [
     {
       "id": "telegram",
@@ -430,7 +430,15 @@
           "id": "2452",
           "at": "2026-11-10T21:39:37+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2452.jpg",
+              "width": 1280,
+              "height": 863,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2453",
@@ -448,7 +456,15 @@
           "id": "2455",
           "at": "2026-11-10T21:41:07+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2455.jpg",
+              "width": 1280,
+              "height": 548,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2456",
@@ -460,7 +476,15 @@
           "id": "2457",
           "at": "2026-11-10T21:55:24+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2457.jpg",
+              "width": 1280,
+              "height": 551,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2458",
@@ -472,7 +496,15 @@
           "id": "2459",
           "at": "2026-11-10T21:57:28+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2459.jpg",
+              "width": 1280,
+              "height": 638,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2460",
@@ -490,7 +522,15 @@
           "id": "2462",
           "at": "2026-11-10T22:41:38+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2462.jpg",
+              "width": 1280,
+              "height": 551,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2463",
@@ -514,7 +554,15 @@
           "id": "2466",
           "at": "2026-11-10T22:51:24+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2466.jpg",
+              "width": 1280,
+              "height": 691,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2467",
@@ -526,7 +574,15 @@
           "id": "2468",
           "at": "2026-11-10T23:35:15+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2468.jpg",
+              "width": 1280,
+              "height": 550,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2469",
@@ -538,7 +594,15 @@
           "id": "2470",
           "at": "2026-11-10T23:35:40+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2470.jpg",
+              "width": 758,
+              "height": 945,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2471",
@@ -591,7 +655,15 @@
           "id": "2476",
           "at": "2026-11-10T23:48:49+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2476.jpg",
+              "width": 1206,
+              "height": 1075,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2477",
