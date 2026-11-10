@@ -2,7 +2,35 @@
 
 시작 기준은 2026-11-10의 `38b9e66`이다. 현재 인계 브랜치는 `fix/tradingview-responsive-20261110`, 통합 제품 소스는 `c6b34b984b2919b7dc691f023ea4ee800c468d49`이다. 이 문서와 Pages 재생성 산출물을 포함하는 인계 커밋은 브랜치의 Git identity로 확인한다. 아래 현재 작업판은 2026-11-11 KST 갱신이며, 이전 리비전의 검증 결과를 새 후보 전체 통과로 읽지 않는다.
 
-## 현재 작업판 — Pro 인계
+## 현재 작업판 — 자동 진행 (2026-11-11 기준)
+
+이 표가 이 저장소의 단일 진행 원장이다. 아래 `## 2026-11-11 후속 2~8` 절과 `## 역사 기록` 절은 각 시점의 영수증이며, 현재 판정은 이 표를 따른다. 브랜치 `fix/tradingview-responsive-20261110`, 기준 커밋 `8a0e2276f0d59fdd6f54bf22b67fdb04a1d5ae97`.
+
+| ID | 상태 | 닫는 조건 |
+|---|---|---|
+| R0 인계·셸·reader 기본 수정 | 완료 | D01 relay 클릭, N01/N02 내비 소유권·44px, 하네스 수집 범위, D03 reader Back, D05 reader 44px, D06/D09 사전 native client 검사·휠 도달·자손 hit, D07 복원 readback, D08 플랫폼 고정, relay dataset 소유권, 부트 진단 계측까지 반영. 44-case 44/44, 53-case 53/53, compare PASSED, npm test `complete:true` 3,360/3,355/0/5. |
+| R1 D04 compare reader 겹침 | 진행 | 960px 이상에서 reader가 차트 316px를 덮으면서 `overlay=false`(키보드 트랩 없음)인 결함. 열 폭을 `var(--detail-width,320px)`로 예약해 겹침 0을 만들고, `verify-workspace-browser`의 "폭 불변" 단언을 새 계약(문서 폭 불변 + 워크스페이스 축소 = reader 폭 + 차트 미가림 + 닫기 도달)으로 교체한다. 53-case·compare·npm test 재통과가 조건. 실패하면 되돌리고 이유를 기록한다. |
+| R2 D02 source sheet 준비 상태 | 대기 | `renderMethod()`가 `state.comparison`을 무가드로 읽는다. `showMethod()`는 dataset만 검사한다. 데이터 owner가 준비(`comparison` 생성)됐을 때만 잠금을 풀고, 미준비 상태에서 handler가 예외 없이 명시적으로 처리해야 한다. `?page=data` 직접 진입은 잠금+이유 유지, compare 준비 후 이동은 시트가 실제 내용으로 열려야 한다. |
+| R3 D09 왕복 반올림 범위 | 대기 | compare 왕복 폭 비교의 허용 오차 범위를 명시적으로 문서화하고, 실제 반올림으로 인한 차이와 회귀를 구분하는 단언을 추가한다. |
+| R4 WP6 여정 | 대기 | `node scripts/verify-wp6-browser.mjs --origin <로컬 후보 origin> --out build/wp6-<sha> --phase candidate --expected-source <HEAD SHA>`로 5종목×6 viewport(30)와 chart-qa(BTCUSD·COMPARE×6)를 실행해 결과를 이 표에 기록한다. 운영 origin 결과를 후보 증거로 쓰지 않는다. |
+| R5 원격 상태·CI | 대기 | 원격 브랜치 SHA와 `gh run list`/PR #98 상태를 실제 조회해 기록한다. 조회 결과를 배포·출시 승인으로 바꾸지 않는다. |
+| R6 WP-A 미디어 | 차단 | `mediaPrepared:false` 유지. 직접 청취·동기화 10지점, PDF 547페이지, 전체 미디어, Linux `renameat2` 원자 게시 검수는 이 저장소 자동화 범위 밖이다. |
+| R7 native 외부·실기기 | 차단 | macOS 외부 AppKit 메뉴, Safari, 실제 iOS/Android 기기 검증은 자동화 대상이 아니다. Blink 내부 팝업 trusted 입력과 동일시하지 않는다. |
+| R8 문서 최종화 | 대기 | R1~R5가 닫히면 요청사항·반응형·이 체크리스트의 판정을 최종 상태로 정리하고, 남은 차단 항목만 명시한다. |
+
+진행 규칙(자동 실행 포함):
+
+1. 한 번에 한 항목만 처리하고, 처리한 항목의 판정과 정확한 수치를 이 표에 갱신한다. 끝난 항목은 완료로 바꾸고 커밋 SHA를 남긴다.
+2. 브라우저 검사는 Node 정적 서버로 서빙한다. `python3 -m http.server`는 동시 모듈·스타일시트 요청을 흘려 `Failed to fetch dynamically imported module`로 boot error를 만든다. 표준 절차: `mkdir -p /tmp/atlas-serve && ln -sfn <repo>/dist /tmp/atlas-serve/bitcoin-cycle-atlas` 후 Node 정적 서버를 8171에 띄우고 `ATLAS_RESPONSIVE_BASE_URL=http://127.0.0.1:8171/bitcoin-cycle-atlas/`를 쓴다.
+3. `ATLAS_BROWSER_PATH=/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`가 필요하다. 없으면 검사는 blocked이며 skip이 아니다.
+4. 검사가 도는 동안 저장소 파일을 수정하지 않는다. 브라우저 스위트는 실행 중 소스 변경을 `Browser evidence cannot bind sources that changed during the run`으로 실패시킨다.
+5. `npm test`의 frozen 배치는 Docker가 필요하다. Docker Desktop이 내려가 있으면 켜고 소켓 `/Users/twoimo/.docker/run/docker.sock`이 생길 때까지 기다린다. `complete:false`는 통과가 아니다.
+6. 검사 삭제·허용치 완화·합성 값 대입으로 통과시키지 않는다. 실패는 원인을 고쳐 다시 돌린다.
+7. main push·merge·force push·배포·PR 변경·유료 용량·계정/권한 변경은 금지다. 커밋과 브랜치 push만 한다.
+
+## 역사 기록 — Pro 인계 시점 작업판 (2026-11-11 01:30)
+
+
 
 요청 정본: [WP-A/B/C 및 후속 실행 계약](requirements/REQ_WP_ABC_20261110.md), [반응형 세부 계약](TRADINGVIEW_RESPONSIVE_20261110.md). 사용자가 현재까지의 작업 커밋·작업 브랜치 push와 Pro 인계·후속 예약을 요청했다. 따라서 **이 인계 체크포인트 push만 허용**하며, main 병합·배포·PR #98 변경·출시 승인은 여전히 보류한다.
 
