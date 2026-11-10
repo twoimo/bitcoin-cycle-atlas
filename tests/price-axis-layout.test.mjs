@@ -184,3 +184,44 @@ test('glyph caches are document-scoped and composition falls back to raw when it
   assert.ok(Math.abs(c.measure('$100,000',11)-raw)<0.01,'drifted composition falls back to the browser measurement');
   assert.equal(a.measure('$100,000',11),b.measure('$100,000',11),'a fallback in one document never rewrites another document cache');
 });
+
+test('font completion updates hover fitting but preserves the previous render identity',()=>{
+  const svg=fixture(390),listeners=new Map();
+  svg.ownerDocument.fonts={addEventListener:(name,fn)=>listeners.set(name,fn)};
+  const layout=createPriceAxisLayout({svg,width:390}),text='$100,000';
+  const before=layout.measure(text,11),identity=layout.metricKey;
+  svg.ownerDocument.widthScale=1.5;listeners.get('loadingdone')();
+  assert.equal(layout.measure(text,11),naturalWidth(text,11,1.5));
+  const fresh=createPriceAxisLayout({svg,width:390});
+  assert.equal(layout.metricKey,identity,'previous render identity stays frozen');
+  assert.notEqual(layout.metricKey,fresh.metricKey,'React must not treat the new font layout as the previous rendered one');
+  const previous={axis:layout},next={axis:fresh};
+  assert.equal(previous.axis.metricKey===next.axis.metricKey?previous:next,next);
+  const node=new Node('text',svg.ownerDocument);node.textContent='$1';layout.fitNode(node);
+  assert.equal(Number(node.getAttribute('textLength')),Number(naturalWidth('$1',11,1.5).toFixed(3)));
+  assert.ok(layout.measure(text,11)>before);
+  svg.ownerDocument.widthScale=1.25;listeners.get('loadingerror')();
+  assert.equal(layout.measure(text,11),naturalWidth(text,11,1.25));
+});
+
+test('equal sample totals cannot leak different digit widths across documents',()=>{
+  const left=fixture(),right=fixture();const make=right.ownerDocument.createElementNS;
+  right.ownerDocument.createElementNS=(ns,tag)=>{
+    const n=make(ns,tag),base=n.getComputedTextLength.bind(n);
+    n.getComputedTextLength=()=>base()+([...n.textContent].filter(x=>x==='1').length-[...n.textContent].filter(x=>x==='2').length)*2;return n;
+  };
+  const a=createPriceAxisLayout({svg:left,width:390}),b=createPriceAxisLayout({svg:right,width:390});
+  assert.equal(a.metricKey,b.metricKey,'font fingerprint totals deliberately collide');
+  assert.equal(b.measure('$111',11),a.measure('$111',11)+6);
+  assert.equal(b.measure('$222',11),a.measure('$222',11)-6);
+});
+
+test('cross-draw exact-width caching avoids repeated probes but remains bounded',()=>{
+  const svg=fixture(),doc=svg.ownerDocument;
+  const first=createPriceAxisLayout({svg,width:390});first.measure('$123',11);
+  const next=createPriceAxisLayout({svg,width:390}),before=doc.measures;
+  assert.equal(next.measure('$123',11),naturalWidth('$123',11));assert.equal(doc.measures,before);
+  for(let i=0;i<2300;i++)next.measure('$'+i,11);
+  const last=createPriceAxisLayout({svg,width:390}),evicted=doc.measures;
+  last.measure('$123',11);assert.ok(doc.measures>evicted,'old entries are evicted at the fixed limit');
+});
