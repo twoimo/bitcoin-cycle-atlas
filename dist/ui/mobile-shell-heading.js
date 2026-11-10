@@ -6,8 +6,9 @@ export function shellFeatureContainer(feature) {
 
 export function mountMobileShellHeading(document) {
   const view=document.defaultView || globalThis;
-  const media=view.matchMedia?.('(max-width:390px)');
+  const media=view.matchMedia?.('(max-width:620px)');
   let heading=null,feature=null,symbol='',trigger=null,panel=null,actions=null,title=null,closeButton=null,open=false;
+  const secondary=new Map();
   const set=(node,key,value)=>{if(node.getAttribute(key)!==String(value))node.setAttribute(key,String(value));};
   const focus=node=>node?.focus?.({preventScroll:true});
   const sourceFocus=()=>[...actions?.querySelectorAll('button:not(:disabled),select:not(:disabled),input:not(:disabled),a[href],[tabindex="0"]')||[]]
@@ -15,12 +16,15 @@ export function mountMobileShellHeading(document) {
   function setOpen(value,{restore=false,enter=false}={}) {
     if(!trigger)return;
     open=value;panel.hidden=!value;trigger.setAttribute('aria-expanded',String(value));
+    if(value)document.dispatchEvent(new view.CustomEvent('atlas:mobile-sheet-open',{detail:{id:panel.id}}));
     if(enter&&value)focus(sourceFocus() || closeButton);
-    else if(restore)focus(trigger);
+    else if(restore||(!value&&panel.contains(document.activeElement)))focus(trigger);
   }
   function restore() {
     if(!trigger)return;
     const active=document.activeElement,ownedFocus=feature.contains(active),source=actions.contains(active)?active:null;
+    for(const [node,marker]of secondary){marker.replaceWith(node);delete node.dataset.mobileSecondary;}
+    secondary.clear();
     feature.append(...actions.childNodes);
     trigger.remove();panel.remove();
     delete heading.dataset.mobileHeading;delete feature.dataset.mobileDisclosure;
@@ -29,9 +33,8 @@ export function mountMobileShellHeading(document) {
   }
   function apply() {
     if(!heading||!feature||!media?.matches||document.body.dataset.shell!=='chart'){restore();return;}
-    // Center workspaces replace the plot, not its surrounding shell. Retain
-    // the two-row perimeter and exact protected chart controls while their
-    // independently owned toolbar occupies the second row.
+    // Only presentation changes: all controls remain inside the same heading
+    // and native event-delegation tree, including source-owned portal hosts.
     const chart=!document.body.dataset.centerTool||Boolean(document.body.dataset.chartControls);
     if(!chart)setOpen(false);
     if(!trigger){
@@ -51,7 +54,15 @@ export function mountMobileShellHeading(document) {
       closeButton.addEventListener('click',()=>setOpen(false,{restore:true}));
       if(retainFocus){setOpen(true);focus(active);}
     }
-    set(heading,'data-mobile-heading','two-row');set(feature,'data-mobile-disclosure','true');
+    let movedFocus=null;
+    for(const node of heading.querySelectorAll('#workbench-chart-type,.workspace-history-controls,#workbench-workspace,#workbench-chart-menu,#lab-svg,#atlas-display-options')){
+      if(node.parentElement!==heading||secondary.has(node))continue;
+      if(node===document.activeElement||node.contains(document.activeElement))movedFocus=document.activeElement;
+      const marker=document.createComment('phone secondary control');node.before(marker);
+      secondary.set(node,marker);node.dataset.mobileSecondary='true';actions.append(node);
+    }
+    if(chart&&movedFocus&&!movedFocus.disabled&&!movedFocus.hidden){setOpen(true);focus(movedFocus);}
+    set(heading,'data-mobile-heading','phone-dock');set(feature,'data-mobile-disclosure','true');
     if(title.textContent!==`${symbol} 종목 기능`)title.textContent=`${symbol} 종목 기능`;
     set(trigger,'aria-label',`${symbol} 종목 기능 더 보기`);
     set(closeButton,'aria-label',`${symbol} 종목 기능 닫기`);
@@ -66,6 +77,8 @@ export function mountMobileShellHeading(document) {
   const key=event=>{if(open&&event.key==='Escape'&&!event.defaultPrevented&&feature.contains(event.target)){
     event.preventDefault();event.stopPropagation();setOpen(false,{restore:true});
   }};
+  const onSheet=event=>{if(open&&event.detail?.id!==panel?.id)setOpen(false);};
+  document.addEventListener('atlas:mobile-sheet-open',onSheet);
   document.addEventListener('pointerdown',outside,true);
   document.addEventListener('focusin',outside);
   document.addEventListener('keydown',key);
@@ -74,5 +87,5 @@ export function mountMobileShellHeading(document) {
     if(heading!==next.heading||feature!==next.feature){restore();heading=next.heading;feature=next.feature;}
     if(symbol&&symbol!==next.symbol)setOpen(false);
     symbol=next.symbol;apply();
-  },destroy(){restore();document.removeEventListener('pointerdown',outside,true);document.removeEventListener('focusin',outside);document.removeEventListener('keydown',key);media?.removeEventListener?.('change',apply);}};
+  },destroy(){restore();document.removeEventListener('atlas:mobile-sheet-open',onSheet);document.removeEventListener('pointerdown',outside,true);document.removeEventListener('focusin',outside);document.removeEventListener('keydown',key);media?.removeEventListener?.('change',apply);}};
 }

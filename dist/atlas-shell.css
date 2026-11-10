@@ -224,61 +224,10 @@ body[data-shell=chart] [data-disabled-reason]{cursor:not-allowed}
   body[data-shell=chart] .workbench-rail[data-shell-region=right][data-mobile-open=true] [data-shell-owner=right]{width:auto;min-width:0;max-width:none}
 }
 
-/* Keep PR #89's two-row fallback scoped to its layout; the active R1
-   one-row rules below retain their independent sizing and disclosure styles. */
-/* At phone widths the primary controls occupy a fixed, touch-sized first row.
-   The original instrument actions open below the second row without clipping
-   observed text or changing their native/React event owners. */
-@media(max-width:390px){
-  body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top][data-mobile-heading=two-row]{display:grid;grid-template-columns:minmax(80px,1fr) 56px repeat(4,44px);grid-template-rows:44px 44px;gap:0;height:calc(92px + var(--mobile-top,0px));min-height:calc(92px + var(--mobile-top,0px));padding:calc(1px + var(--mobile-top,0px)) 4px 1px;overflow:visible;touch-action:manipulation}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>:is(.symbol-selector-trigger,.workbench-symbol){grid-area:1/1;width:100%;max-width:none;min-width:0;height:44px;min-height:44px;justify-self:stretch;box-sizing:border-box}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#workbench-frequency{grid-area:1/2;min-width:0;width:56px;height:44px;margin:0;box-sizing:border-box}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] #workbench-interval-select{width:56px;min-width:56px;max-width:56px;height:44px;min-height:44px;padding:4px 0;font-size:12px;box-sizing:border-box}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#workbench-chart-type{grid-area:1/3}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#atlas-mode-menu{grid-area:1/4}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#mobile-tools-toggle{grid-area:1/5}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#mobile-details-toggle{grid-area:1/6}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>.shell-instrument-slot{grid-area:2/1/3/6;position:static;width:auto;min-width:0;max-width:100%;height:44px;overflow:visible;justify-self:stretch;align-self:center;box-sizing:border-box}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#workbench-workspace{grid-area:2/6;width:44px;min-width:44px;max-width:44px;height:44px;min-height:44px;box-sizing:border-box}
-  body[data-shell=chart][data-center-tool]:not([data-chart-controls]) .atlas-canvas-heading[data-mobile-heading=two-row]>.center-workspace-toolbar{grid-area:2/1/3/-1;width:100%;min-width:0;max-width:100%;height:44px;min-height:44px;max-height:44px;align-self:center;box-sizing:border-box}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-instrument-slot[data-mobile-disclosure=true] .shell-feature-toggle{display:flex;align-items:center;justify-content:flex-start;width:100%;min-width:44px;min-height:44px;height:44px;padding:4px 12px;border:0;border-radius:4px;background:transparent;color:var(--text);font:12px var(--font);cursor:pointer;box-sizing:border-box}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-instrument-slot[data-mobile-disclosure=true] .shell-feature-toggle:hover,body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-instrument-slot[data-mobile-disclosure=true] .shell-feature-toggle[aria-expanded=true]{background:var(--surface-hover)}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-panel{position:absolute;top:calc(100% + 4px);left:4px;right:4px;z-index:52;display:flex;flex-direction:column;max-height:calc(100dvh - 112px - var(--mobile-top,0px));padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);overflow:auto;overscroll-behavior:contain;box-sizing:border-box}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-panel[hidden]{display:none!important}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-header{display:flex;align-items:center;justify-content:space-between;gap:8px;flex:none;position:sticky;top:-8px;z-index:1;min-width:0;padding:0 0 4px;background:var(--surface);font-size:12px}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-header strong{font-weight:600;overflow-wrap:anywhere;white-space:normal}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-header button{min-width:44px;min-height:44px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text);font:12px var(--font);cursor:pointer}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-actions{display:flex;flex-wrap:wrap;align-items:center;gap:4px;min-width:0;width:100%;box-sizing:border-box;white-space:normal}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-actions>button{min-width:44px;min-height:44px;box-sizing:border-box}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-actions>.workbench-icon{display:inline-flex;align-items:center;justify-content:center;flex:none;width:44px;min-width:44px;height:44px;min-height:44px;padding:8px;border:0;border-radius:4px;box-sizing:border-box}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-actions>select{min-height:44px;min-width:0;max-width:100%;flex:1 1 auto;box-sizing:border-box}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-actions>#equity-scenario{max-width:100%;width:auto}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-actions .center-workspace-toolbar{height:auto;min-width:0;width:100%;max-width:100%;flex:1 1 100%;flex-wrap:wrap;overflow:visible;white-space:normal;box-sizing:border-box}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-actions :is(.compact-toolbar-group,.compact-toolbar-tabs){height:auto;min-width:0;max-width:100%;flex-wrap:wrap;white-space:normal;box-sizing:border-box}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-actions .compact-toolbar-group{width:100%;flex:1 1 100%;padding:0;border:0}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-actions .center-workspace-toolbar [data-toolbar-open]{max-width:100%;min-width:44px;min-height:44px;max-height:none;white-space:normal;overflow:visible;text-overflow:clip;flex:0 1 auto;box-sizing:border-box}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-actions .compact-toolbar-summary{display:flex;flex-wrap:wrap;min-width:0;max-width:100%;white-space:normal;gap:4px}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-actions :is(button,select,input),body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-toggle:focus-visible,body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] .shell-feature-header button:focus-visible{outline-offset:-2px}
-}
+/* The phone dock controller keeps secondary controls in this disclosure. */
 
-/* R1: the same original controls occupy one measured row. The shell moves
-   lower-priority nodes into this disclosure before they can shrink or scroll. */
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row]{display:flex;flex-wrap:nowrap;align-items:center;gap:2px;height:48px;min-height:48px;max-height:48px;padding:0 4px;overflow:visible;touch-action:manipulation;box-sizing:border-box}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row]::after{display:none}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row]>:is(.symbol-selector-trigger,.workbench-symbol){flex:0 0 128px;width:128px;min-width:128px;max-width:128px;height:44px;min-height:44px;margin:0;padding:4px 8px;box-sizing:border-box}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row]>:is(.workbench-icon,.mobile-workbench-button){flex:0 0 44px;width:44px;min-width:44px;max-width:44px;height:44px;min-height:44px;padding:8px;box-sizing:border-box}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row] #atlas-mode-name{display:none}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row]>:is(#workbench-chart-type,#atlas-mode-menu,#workbench-chart-menu,#lab-svg,#atlas-display-options,.workspace-history-controls){display:flex}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row]>.shell-history-slot{display:none}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row] .workspace-history-controls{flex:none;gap:0;margin:0}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row] .workspace-history-controls>button{width:44px;min-width:44px;height:44px;min-height:44px;box-sizing:border-box}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row]>#workbench-frequency{display:flex;align-items:center;flex:none;min-width:0;width:auto;height:44px;margin:0;padding:0;border:0;box-sizing:border-box}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row] #workbench-frequency>.lab-segmented{display:flex;align-items:center;flex:none;flex-wrap:nowrap;gap:0;padding:0;border:0}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row] #workbench-frequency[data-shell-interval-buttons=false]>.lab-segmented{display:none}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row] #workbench-frequency [data-lab-frequency],body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row] .shell-interval-overflow [data-lab-frequency]{display:inline-flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;min-width:44px;max-width:44px;height:44px;min-height:44px;padding:4px 0;margin:0;font:12px var(--font);white-space:nowrap;overflow:visible;text-overflow:clip;box-sizing:border-box}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row] [hidden]{display:none!important}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row] #workbench-interval-select{display:block;flex:none;width:56px;min-width:56px;max-width:56px;height:44px;min-height:44px;padding:4px 0;margin:0;font-size:12px;box-sizing:border-box}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row]>.shell-instrument-slot{position:static;display:flex;align-items:center;flex:none;width:max-content;min-width:44px;max-width:none;height:44px;gap:2px;overflow:visible;touch-action:manipulation}
+
+/* Shared disclosure content retains full source text and native controls. */
 body[data-shell=chart] .shell-instrument-slot[data-mobile-disclosure=true]>.shell-feature-actions{display:flex;flex:none;flex-wrap:nowrap;align-items:center;width:max-content;max-width:none;gap:2px;white-space:nowrap}
 body[data-shell=chart] .shell-instrument-slot[data-mobile-disclosure=true]>.shell-feature-actions :is(.center-workspace-toolbar,.compact-toolbar-group,.compact-toolbar-tabs){height:44px;min-height:44px;max-height:none}
 body[data-shell=chart] .shell-instrument-slot[data-mobile-disclosure=true] .shell-feature-actions :is(button,select,input,summary){min-height:44px;max-height:none;min-width:44px;box-sizing:border-box}
@@ -291,8 +240,6 @@ body[data-shell=chart] .shell-feature-header strong{font-weight:600;overflow-wra
 body[data-shell=chart] .shell-feature-header button{min-width:44px;min-height:44px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text);font:12px var(--font);cursor:pointer}
 body[data-shell=chart] :is(.shell-interval-overflow,.shell-heading-actions){display:flex;flex-wrap:wrap;align-items:center;gap:4px;min-width:0;max-width:100%}
 body[data-shell=chart] .shell-interval-select{display:flex;align-items:center;gap:8px;font:12px var(--font);color:var(--muted)}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row] .shell-heading-actions>:is(.workbench-icon,.mobile-workbench-button){display:inline-flex;align-items:center;justify-content:center;flex:none;width:44px;min-width:44px;height:44px;min-height:44px;padding:8px;box-sizing:border-box}
-body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row] .shell-heading-actions>.workspace-history-controls{display:flex}
 body[data-shell=chart] .shell-feature-panel>.shell-feature-actions{display:flex;flex-wrap:wrap;align-items:center;gap:4px;min-width:0;width:100%;box-sizing:border-box;white-space:normal}
 body[data-shell=chart] .shell-feature-actions>button{min-width:44px;min-height:44px;box-sizing:border-box}
 body[data-shell=chart] .shell-feature-actions>.workbench-icon{display:inline-flex;align-items:center;justify-content:center;flex:none;width:auto;min-width:44px;height:44px;min-height:44px;padding:8px;border:0;border-radius:4px;box-sizing:border-box}
@@ -306,16 +253,8 @@ body[data-shell=chart] .shell-feature-panel>.shell-feature-actions .compact-tool
 body[data-shell=chart] .shell-feature-actions :is(button,select,input),body[data-shell=chart] .shell-feature-toggle:focus-visible,body[data-shell=chart] .shell-feature-header button:focus-visible{outline-offset:-2px}
 body[data-shell=chart] .shell-feature-panel[data-shell-measuring=true]{position:fixed;inset:0 auto auto 0;visibility:hidden;pointer-events:none;width:max-content;max-width:none;max-height:none}
 body[data-shell=chart] .shell-feature-panel[data-shell-measuring=true] .shell-feature-actions,body[data-shell=chart] .shell-feature-panel[data-shell-measuring=true] .center-workspace-toolbar{flex:none;flex-wrap:nowrap;width:max-content;max-width:none;white-space:nowrap}
-@media(min-width:621px){
-  body[data-shell=chart] .workspace.atlas-details-layout:has(.atlas-canvas-heading[data-mobile-heading=one-row])>#main{padding-top:52px}
-  body[data-shell=chart]:has(.atlas-canvas-heading[data-mobile-heading=one-row]) .workbench-rail{height:calc(100dvh - 52px);margin-top:52px}
-  body[data-shell=chart]:has(.atlas-canvas-heading[data-mobile-heading=one-row]) .chart-details-panel{height:calc(100% - 52px);margin-top:52px}
-  body[data-shell=chart] .workspace.native-chart-workspace:has(.atlas-canvas-heading[data-mobile-heading=one-row])>#main.native-chart-workbench{padding-top:52px!important}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row] .shell-heading-actions>.mobile-workbench-button{display:none}
-}
+
 @media(max-width:620px){
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row]{height:calc(48px + var(--mobile-top,0px));min-height:calc(48px + var(--mobile-top,0px));max-height:calc(48px + var(--mobile-top,0px));padding:var(--mobile-top,0px) 4px 0}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=one-row]>:is(.symbol-selector-trigger,.workbench-symbol){flex-basis:80px;width:80px;min-width:80px;max-width:80px;padding-inline:4px}
   body[data-shell=chart] .shell-feature-panel{left:4px;right:4px;width:auto}
 }
 
@@ -378,4 +317,49 @@ body[data-page=compare] .atlas-canvas-heading>.lab-toolbar .lab-toolbar-group{di
 @media(max-width:620px){
   body[data-shell=chart][data-page=compare] .workspace.atlas-details-layout>#main{padding-top:0}
   body[data-shell=chart][data-page=compare] .atlas-canvas-heading>.mobile-chart-home{position:static;display:flex!important;flex:none;align-items:center;justify-content:center;width:44px;min-width:44px;height:44px;min-height:44px;margin:0;padding:12px;gap:0;border:0;border-radius:0;background:transparent;font-size:0}
+}
+
+/* Responsive perimeter: one phone dock, original secondary controls in its
+   disclosure, original range/axis footer in the information sheet. */
+@media(max-width:620px){
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock]{display:flex;flex:none;flex-wrap:nowrap;align-items:center;order:100;position:relative;inset:auto;z-index:53;gap:0;width:100%;height:calc(48px + var(--mobile-bottom,0px));min-height:calc(48px + var(--mobile-bottom,0px));max-height:calc(48px + var(--mobile-bottom,0px));margin:0;padding:2px 4px calc(2px + var(--mobile-bottom,0px));border-top:1px solid var(--border);border-bottom:0;overflow:visible;box-sizing:border-box;touch-action:manipulation}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock]::after{display:none}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock]>:is(.symbol-selector-trigger,.workbench-symbol){flex:1 1 80px;width:auto;min-width:80px;max-width:none;height:44px;min-height:44px;margin:0;padding:4px;box-sizing:border-box}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock]>#workbench-frequency{flex:0 0 48px;width:48px;min-width:48px;height:44px;padding:0;margin:0;border:0}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock] #workbench-interval-select{display:block;width:48px;min-width:48px;max-width:48px;height:44px;min-height:44px;padding:0;font-size:16px;box-sizing:border-box}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock]>:is(.workbench-icon,.mobile-workbench-button){display:inline-flex;flex:0 0 44px;align-items:center;justify-content:center;width:44px;min-width:44px;max-width:44px;height:44px;min-height:44px;margin:0;padding:10px;box-sizing:border-box}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock]>.shell-instrument-slot{flex:0 0 44px;width:44px;min-width:44px;max-width:44px;height:44px;overflow:visible}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock] .shell-feature-toggle{font-size:0;border-radius:0}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock] .shell-feature-toggle::after{content:'⋯';font-size:24px}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock] .shell-feature-panel{position:fixed;inset:auto 0 calc(48px + var(--mobile-bottom,0px));width:100%;max-height:calc(100dvh - 64px - var(--mobile-top,0px) - var(--mobile-bottom,0px));border-radius:0;padding:8px 12px;box-shadow:none}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock] .shell-feature-header{top:-8px;padding-top:0}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock] .shell-feature-actions>[data-mobile-secondary]{display:flex;flex:none;align-items:center;justify-content:center;min-height:44px;min-width:44px;height:44px;margin:0;border-radius:0}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock] .workspace-history-controls>button{width:44px;min-width:44px;height:44px;min-height:44px}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock] .shell-feature-panel select{font-size:16px}
+  body[data-shell=chart] .workspace.atlas-details-layout>#main{padding-top:0}
+  body[data-shell=chart] .mobile-workbench-backdrop:not([hidden]){inset:0 0 calc(48px + var(--mobile-bottom,0px));z-index:49}
+  body[data-shell=chart] .atlas-sidebar[data-mobile-open=true],body[data-shell=chart] .workbench-rail[data-shell-region=right][data-mobile-open=true]{position:fixed;inset:auto 0 calc(48px + var(--mobile-bottom,0px));width:100%;max-width:100%;height:auto;max-height:calc(100dvh - 64px - var(--mobile-top,0px) - var(--mobile-bottom,0px));margin:0;border-radius:0;padding:8px 12px;z-index:52;overflow:auto;overscroll-behavior:contain;box-shadow:none}
+  body[data-shell=chart] .mobile-tray-heading{position:sticky;top:-8px;z-index:2;margin:0;background:var(--surface)}
+  body[data-shell=chart] .workbench-rail[data-mobile-open=true]>.atlas-nav{order:-2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+  body[data-shell=chart] .workbench-rail[data-mobile-open=true]>.mobile-tray-heading{order:-3}
+  body[data-shell=chart] .workbench-rail[data-mobile-open=true]>.workbench-bottom-bar{order:-1;display:flex;width:100%;height:auto;min-height:48px;max-height:none;padding:2px 0;border-block:1px solid var(--border);--chart-bottom-height:48px}
+  body[data-shell=chart] .workbench-rail .workbench-bottom-bar :is(button,select){flex-direction:row;min-width:44px;min-height:44px;height:44px;padding:4px;gap:2px;border-radius:0}
+  body[data-shell=chart] .workbench-rail .workbench-bottom-bar button::after{display:none}
+  body[data-shell=chart] .workbench-rail .workbench-bottom-bar button>span:last-child:not([data-icon]){display:inline}
+  body[data-shell=chart] .workbench-rail .workbench-bottom-scroll{height:44px}
+  body[data-shell=chart] .workbench-rail .workbench-bottom-bar select{font-size:16px}
+  body[data-shell=chart] .workbench-rail .workbench-bottom-bar :is(.workbench-axis,.workbench-range-controls){height:44px;max-height:44px}
+}
+/* Portrait tablet panels overlay rather than reducing the plot below a useful
+   research width. Landscape tablets keep the existing split-panel owner. */
+@media(min-width:621px) and (max-width:959px){
+  body[data-shell=chart] .workspace.atlas-details-layout[data-details-open=true]{grid-template-columns:minmax(0,1fr) 0 var(--rail-width,45px)}
+  body[data-shell=chart] .workspace.atlas-details-layout>.chart-details-panel:not([hidden]){position:fixed;top:52px;right:49px;bottom:0;width:min(360px,calc(100vw - 112px));height:calc(100dvh - 52px);max-height:calc(100dvh - 52px);margin:0;z-index:48;border-left:1px solid var(--border)}
+}
+@media(min-width:621px) and (max-width:1100px){
+  body[data-shell=chart] .workspace .chart-details-panel :is(.reader-heading,.reader-pagination) button{width:44px;min-width:44px;height:44px;min-height:44px}
+}
+@media(max-width:620px){
+  body[data-shell=chart][data-center-tool]:not([data-chart-controls]) .atlas-canvas-heading[data-mobile-heading=phone-dock]>:not(.center-workspace-toolbar):not(.center-data-actions):not(#mobile-details-toggle){display:none!important}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock]>.center-workspace-toolbar{flex:1 1 0;min-width:0;width:auto;max-width:100%;height:44px;min-height:44px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x pinch-zoom}
 }

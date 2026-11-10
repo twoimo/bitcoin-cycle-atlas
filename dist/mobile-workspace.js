@@ -58,9 +58,13 @@ export function mountMobileWorkspace({workspace,stage,plot,reader,closeReader}) 
   }
   rail.prepend(mobileActions);
   const detailsHeader=trayHeading(rail,'정보와 설정');
-  let active=null,opener=null;
+  // Move the original footer as one owned unit; never clone range/axis nodes.
+  const footer=stage.querySelector('.workbench-bottom-bar');
+  const footerMarker=footer?doc.createComment('desktop chart footer'):null;
+  if(footer)footer.before(footerMarker);
+  let active=null,opener=null,ownedModal=null,ownedReader=false;
   function close(restore=true){
-    const trigger=opener;active=null;opener=null;delete sidebar.dataset.mobileOpen;delete rail.dataset.mobileOpen;
+    const trigger=opener;active=null;opener=null;ownedModal=null;ownedReader=false;delete sidebar.dataset.mobileOpen;delete rail.dataset.mobileOpen;
     tools.setAttribute('aria-expanded','false');details.setAttribute('aria-expanded','false');backdrop.hidden=true;
     if(restore&&trigger?.isConnected&&media.matches)trigger.focus({preventScroll:true});
   }
@@ -68,7 +72,7 @@ export function mountMobileWorkspace({workspace,stage,plot,reader,closeReader}) 
     if(!media.matches)return;
     if(active===kind){close();return;}
     if(!reader.hidden)closeReader({restoreFocus:false});
-    close(false);active=kind;opener=trigger;
+    close(false);emit('atlas:mobile-sheet-open',{id:kind==='tools'?sidebar.id:rail.id});active=kind;opener=trigger;
     for(const action of mobileActions.children){
       const target=action.dataset.mobileTarget;
       if(target==='#workbench-undo'||target==='#workbench-redo')action.disabled=doc.querySelector(target)?.disabled??true;
@@ -82,8 +86,10 @@ export function mountMobileWorkspace({workspace,stage,plot,reader,closeReader}) 
     if(!active)return;
     // The top modal owns Tab/Escape even if an external opener omitted the
     // notification. Never restore a tray opener over the modal's focus.
+    if(ownedModal&&doc.getElementById(ownedModal)?.contains(event.target))return;
+    if(ownedReader&&reader.contains(event.target))return;
     if(event.target.closest?.('dialog[open]')){close(false);return;}
-    if(event.target.closest?.('.workbench-magnet-menu'))return;
+    if(event.target.closest?.('.workbench-magnet-menu')||event.target.closest?.('.workbench-bottom-menu'))return;
     if(event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();close();return;}
     if(event.key==='Tab'){
       const node=active==='tools'?sidebar:rail;
@@ -93,12 +99,21 @@ export function mountMobileWorkspace({workspace,stage,plot,reader,closeReader}) 
       event.preventDefault();items[next].focus({preventScroll:true});
     }
   };
-  const onPanel=event=>{if(event.detail?.open)close(false);};
-  const onModal=()=>close(false);
+  const fromFooter=()=>active==='details'&&footer?.parentElement===rail&&footer.contains(doc.activeElement);
+  const onPanel=event=>{if(!event.detail?.open){ownedReader=false;return;}if(fromFooter()){ownedReader=true;return;}close(false);};
+  const onModal=event=>{
+    if(active==='details'&&footer?.parentElement===rail&&event.detail?.id==='workbench-bottom-menu')return;
+    if(fromFooter()){ownedModal=event.detail?.id||null;return;}close(false);
+  };
+  const onModalClose=event=>{if(event.target.id===ownedModal)ownedModal=null;};
+  const onSheet=event=>{if(![sidebar.id,rail.id].includes(event.detail?.id))close(false);};
   const onCommand=event=>{if(active&&['tool','span','chart-type','frequency'].includes(event.detail?.action))close();};
   const onPage=event=>{if(active&&event.target.closest?.('[data-view]'))close(false);};
-  const sync=()=>{close(false);if(!media.matches)setFocus(false);workspace.dataset.mobile=String(media.matches);};
+  const sync=()=>{
+    close(false);if(!media.matches)setFocus(false);workspace.dataset.mobile=String(media.matches);
+    if(footer){if(media.matches)rail.append(footer);else footerMarker.after(footer);}
+  };
   const onState=event=>{const state=event.detail||{};for(const node of mobileActions.children){if(node.dataset.mobileTarget==='#workbench-scenario')node.hidden=Boolean(state.intraday);}const label=`${{crosshair:'십자선',pan:'이동',measure:'두 점 측정'}[state.tool]||'십자선'} · 자석 ${{off:'끄기',weak:'약하게',strong:'강하게'}[state.magnet]||'끄기'}`;if(toolStatus.textContent!==label)toolStatus.textContent=label;};
-  media.addEventListener('change',sync);doc.addEventListener('keydown',onKey,true);doc.addEventListener('atlas:panel-state',onPanel);doc.addEventListener('atlas:modal-open',onModal);doc.addEventListener('atlas:chart-command',onCommand);rail.addEventListener('click',onPage);doc.addEventListener('atlas:workbench-state',onState);sync();
-  return {destroy(){close(false);setFocus(false);media.removeEventListener('change',sync);doc.removeEventListener('keydown',onKey,true);doc.removeEventListener('atlas:panel-state',onPanel);doc.removeEventListener('atlas:modal-open',onModal);doc.removeEventListener('atlas:chart-command',onCommand);rail.removeEventListener('click',onPage);doc.removeEventListener('atlas:workbench-state',onState);tools.remove();details.remove();home.remove();mobileActions.remove();backdrop.remove();toolsHeader.remove();detailsHeader.remove();gestureHint.remove();restoreInfo.remove();}};
+  media.addEventListener('change',sync);doc.addEventListener('keydown',onKey,true);doc.addEventListener('atlas:panel-state',onPanel);doc.addEventListener('atlas:modal-open',onModal);doc.addEventListener('atlas:mobile-sheet-open',onSheet);doc.addEventListener('close',onModalClose,true);doc.addEventListener('atlas:chart-command',onCommand);rail.addEventListener('click',onPage);doc.addEventListener('atlas:workbench-state',onState);sync();
+  return {destroy(){close(false);setFocus(false);if(footer){footerMarker.replaceWith(footer);}delete workspace.dataset.mobile;media.removeEventListener('change',sync);doc.removeEventListener('keydown',onKey,true);doc.removeEventListener('atlas:panel-state',onPanel);doc.removeEventListener('atlas:modal-open',onModal);doc.removeEventListener('atlas:mobile-sheet-open',onSheet);doc.removeEventListener('close',onModalClose,true);doc.removeEventListener('atlas:chart-command',onCommand);rail.removeEventListener('click',onPage);doc.removeEventListener('atlas:workbench-state',onState);tools.remove();details.remove();home.remove();mobileActions.remove();backdrop.remove();toolsHeader.remove();detailsHeader.remove();gestureHint.remove();restoreInfo.remove();}};
 }

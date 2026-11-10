@@ -19,7 +19,9 @@ function slot(node, region, index) {
   set(node, 'data-shell-owner', region);
 }
 function ordered(parent, nodes) {
-  const present = nodes.filter(Boolean);
+  // Phone secondary controls retain their top-slot identity inside the
+  // heading's disclosure. The heading controller restores them on widening.
+  const present = nodes.filter(node=>node&&!node.hasAttribute('data-mobile-secondary'));
   // Move only when needed: moving a focused control unnecessarily loses focus
   // in some browsers and moving portal hosts can disrupt their current owner.
   const current = [...parent.children].filter(node => present.includes(node));
@@ -62,7 +64,7 @@ export function refreshShellSlots(document, {symbol} = {}) {
   const currentSymbol = symbol || instance?.symbol || document.documentElement.dataset.symbol || 'BTCUSD';
   const $ = selector => document.querySelector(selector);
   set(heading, 'data-shell-region', 'top');
-  set(heading, 'aria-label', `${currentSymbol} 차트 상단 도구`);
+  set(heading, 'aria-label', `${currentSymbol} 차트 조작 도구`);
   let feature = heading.querySelector('[data-shell-key="instrument"]');
   if (!feature) {
     feature = document.createElement('div');

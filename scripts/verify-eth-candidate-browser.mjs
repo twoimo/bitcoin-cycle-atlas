@@ -640,9 +640,15 @@ async function ethCase(cdp,width,receipt,expected,archive){
   assert.ok(receipt.dialog.text.includes('현재 상태')&&receipt.dialog.text.includes('계수의 추정 불확실성'),'New model evidence must describe state and omitted uncertainty');
   await screenshot(cdp,'eth-'+width+'-evidence.png',receipt);
   if(width===320||width===1440){
-    const nativeKey=async(key,code,num)=>{for(const type of ['keyDown','keyUp'])await cdp.send('Input.dispatchKeyEvent',{type,key,code,windowsVirtualKeyCode:num,nativeVirtualKeyCode:num});};
+    const nativeKey=async(key,code,num)=>{const native=process.platform==='darwin'?({ArrowDown:125,ArrowUp:126,Enter:36,End:119,Home:115})[code]??0:num;for(const type of ['keyDown','keyUp'])await cdp.send('Input.dispatchKeyEvent',{type,key,code,windowsVirtualKeyCode:num,nativeVirtualKeyCode:native,...(type==='keyDown'&&key==='Enter'?{text:'\r',unmodifiedText:'\r'}:{})});await settled(cdp);};
+    const selectModel=async value=>{
+      const move=await evaluate(cdp,value=>{const node=document.querySelector('#eth-model'),options=[...node.options];return {from:node.selectedIndex,to:options.findIndex(option=>option.value===value&&!option.disabled)};},value);
+      assert.ok(move.to>=0,'The requested model must be a real enabled option');
+      for(let i=0;i<Math.abs(move.to-move.from);i++)await nativeKey(move.to>move.from?'ArrowDown':'ArrowUp',move.to>move.from?'ArrowDown':'ArrowUp',move.to>move.from?40:38);
+      assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-model').value),value,'Native arrow input must select the model');
+    };
     await evaluate(cdp,()=>{document.querySelector('#eth-model').scrollIntoView({block:'center'});document.querySelector('#eth-model').focus();});
-    await nativeKey('End','End',35);await nativeKey('Enter','Enter',13);await settled(cdp);
+    await selectModel('valuation');await nativeKey('Enter','Enter',13);await settled(cdp);
     assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-model').value),'valuation');
     assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-chart').dataset.forecastModel),'valuation');
     assert.equal(await evaluate(cdp,()=>document.activeElement.id),'eth-model','Native model selection must retain keyboard focus');
@@ -668,7 +674,7 @@ async function ethCase(cdp,width,receipt,expected,archive){
     await screenshot(cdp,'eth-'+width+'-pooled-chart.png',receipt);
     await nativeForecast(cdp,'[data-eth-action="forecast"]');
     await evaluate(cdp,()=>{document.querySelector('#eth-model').scrollIntoView({block:'center'});document.querySelector('#eth-model').focus();});
-    await nativeKey('Home','Home',36);await nativeKey('Enter','Enter',13);await settled(cdp);
+    await selectModel('adaptive');await nativeKey('Enter','Enter',13);await settled(cdp);
     assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-model').value),'adaptive');
     assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-chart').dataset.forecastModel),'adaptive');
     receipt.modelSwitch={nativeKeyboard:true,legacyAvailable:true,pooledAvailable:true,pooled,restoredAdaptive:true,observedPrice:await evaluate(cdp,()=>document.querySelector('#eth-price').textContent)};
@@ -680,14 +686,14 @@ async function ethCase(cdp,width,receipt,expected,archive){
 
 async function verifyInfoDataLinks(cdp,symbol){
   const eth=symbol==='ETHUSD',dialogId=eth?'eth-data-dialog':'equity-detail-dialog';
-  const disclosed=await evaluate(cdp,()=>document.querySelector('.atlas-canvas-heading')?.dataset.mobileHeading==='two-row');
+  const disclosed=await evaluate(cdp,()=>document.querySelector('.atlas-canvas-heading')?.dataset.mobileHeading==='phone-dock');
   let gesture;
   if(disclosed){
     if(await evaluate(cdp,()=>document.querySelector('#atlas-shell-features-panel').hidden))await click(cdp,'#atlas-shell-features-toggle');
     gesture=await evaluate(cdp,()=>{const bar=document.querySelector('.eth-topbar'),panel=document.querySelector('#atlas-shell-features-panel');return {
       kind:'native-feature-disclosure',scrollLeft:bar.scrollLeft,scrollWidth:bar.scrollWidth,clientWidth:bar.clientWidth,height:bar.getBoundingClientRect().height,
       open:!panel.hidden,expanded:document.querySelector('#atlas-shell-features-toggle').getAttribute('aria-expanded'),rootWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth};});
-    assert.equal(gesture.open,true);assert.equal(gesture.expanded,'true');assert.equal(gesture.height,92);
+    assert.equal(gesture.open,true);assert.equal(gesture.expanded,'true');assert.equal(gesture.height,48);
     assert.ok(gesture.scrollWidth<=gesture.clientWidth,'Narrow top controls must fit without horizontal scrolling');
   }else{
   const gestureStart=await evaluate(cdp,()=>{

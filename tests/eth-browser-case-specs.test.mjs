@@ -28,12 +28,19 @@ test('two process lanes form a disjoint complete partition without changing any 
   assert.equal(standard.length,46);assert.equal(replay.length,7);
   assert.deepEqual(standard,all.filter(spec=>!spec.chartReplay));assert.deepEqual(replay,all.filter(spec=>spec.chartReplay));
   assert.deepEqual(all.filter(spec=>[...standard,...replay].some(row=>JSON.stringify(row)===JSON.stringify(spec))),all);
-  for(const scope of ethBrowserCaseScopes.filter(scope=>scope!=='non-chart-replay')){
+  for(const scope of ethBrowserCaseScopes.filter(scope=>!['non-chart-replay','native'].includes(scope))){
     const previous=all.filter(spec=>scope==='all'||scope==='replay'&&spec.replay||scope==='chart-replay'&&spec.chartReplay||scope==='center-data'&&spec.surface==='center-data'
       ||scope==='data'&&spec.page==='data'||scope.startsWith('workspace')&&(spec.page===scope||spec.page.startsWith(scope+'-')));
     assert.deepEqual(selectEthBrowserCaseSpecs(scope),previous,scope+' changed its prior case inventory/order');
   }
   assert.throws(()=>selectEthBrowserCaseSpecs('partial-fast-pass'),/Unknown browser case scope/);
+});
+
+test('native scope retains all 15 existing price-controller cases without changing their inputs',()=>{
+  const all=createEthBrowserCaseSpecs(),selected=selectEthBrowserCaseSpecs('native');
+  assert.equal(selected.length,15);
+  assert.deepEqual(selected,all.filter(spec=>['eth','bmnr','mstr'].includes(spec.page)));
+  for(const width of [320,390,768,1024,1440])assert.deepEqual(selected.filter(spec=>spec.width===width).map(spec=>spec.page),['eth','bmnr','mstr']);
 });
 
 test('the actual runner preserves and emits each case specification after result fields replace its flags',()=>{

@@ -677,7 +677,7 @@ body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
 }
 /* Touch hardware and compact windows keep the original 44px interaction
    contract without clipping controls inside the measured desktop header. */
-@media (min-width: 621px) and (pointer: coarse), (min-width: 621px) and (max-width: 760px) {
+@media (min-width: 621px) and (pointer: coarse), (min-width: 621px) and (max-width: 1100px) {
   body[data-shell=chart] .workspace.atlas-details-layout > #main { padding-top: 52px; }
   body[data-shell=chart] .atlas-canvas-heading { height: 48px; min-height: 48px; max-height: 48px; }
   body[data-shell=chart] .atlas-sidebar .atlas-brand { height: 48px; min-height: 48px; }

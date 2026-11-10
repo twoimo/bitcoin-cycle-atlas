@@ -84,9 +84,10 @@ test('the data heading keeps its dark opaque sticky surface', () => {
   assert.ok(channels.every(value => value < 90), `--surface must stay dark, got ${surface[1]}`);
 });
 
-test('the 390px two-row chart toolbar contract is preserved', () => {
-  assert.match(shell, /grid-template-rows:44px 44px/);
-  assert.match(shell, /grid-template-columns:minmax\(80px,1fr\) 56px repeat\(4,44px\)/);
+test('the requested phone perimeter is one bottom dock with 44px controls', () => {
+  assert.match(shell, /\[data-mobile-heading=phone-dock\]\{[^}]*order:100[^}]*height:calc\(48px/);
+  assert.match(shell, /\[data-mobile-heading=phone-dock\]>:is\(\.workbench-icon,\.mobile-workbench-button\)\{[^}]*min-width:44px[^}]*min-height:44px/);
+  assert.doesNotMatch(shell, /\[data-mobile-heading=(two-row|one-row)\]/);
 });
 
 // The panel surfaces added to this scope: relay reader, data filters, chart

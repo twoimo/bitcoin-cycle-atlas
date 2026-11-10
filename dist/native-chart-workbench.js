@@ -116,7 +116,41 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
   const reader=make('aside','chart-details-panel native-chart-reader');reader.id='chart-reader';reader.hidden=true;reader.setAttribute('aria-labelledby','chart-reader-title');
   const readerHeading=make('div','reader-heading'),readerTitle=make('h2');readerTitle.id='chart-reader-title';readerTitle.tabIndex=-1;const readerClose=button('close','상세 패널 닫기');readerClose.onclick=()=>closeReader();readerHeading.append(readerTitle,readerClose);
   const body=make('div','reader-body');body.id='chart-reader-body';reader.append(readerHeading,body);workspace.append(reader);
-  function closeReader({restoreFocus=true}={}){reader.hidden=true;readerKind=null;workspace.dataset.detailsOpen='false';emit('atlas:panel-state',{open:false});if(restoreFocus&&readerOpener?.isConnected)readerOpener.focus({preventScroll:true});readerOpener=null;}
+  // 621-959px overlays this reader over the plot (atlas-shell.css). Only the
+  // covered plot becomes inert while the overlay owns the screen; the rail keeps
+  // its own controls. Split-panel (desktop) behaviour is unchanged.
+  const readerOverlay=typeof matchMedia==='function'?matchMedia('(max-width:959px)'):null;
+  let plotCoverState=null;
+  function holdPlot(){
+    if(plotCoverState||!app)return;
+    plotCoverState={inert:Boolean(app.inert),aria:app.getAttribute('aria-hidden')};
+    app.inert=true;app.setAttribute('aria-hidden','true');
+  }
+  function releasePlot(){
+    const saved=plotCoverState;plotCoverState=null;
+    if(!saved||!app)return;
+    app.inert=saved.inert;
+    if(saved.aria==null)app.removeAttribute('aria-hidden');else app.setAttribute('aria-hidden',saved.aria);
+  }
+  function syncReaderOverlay(){
+    const covers=!reader.hidden&&Boolean(readerOverlay?.matches);
+    if(covers)holdPlot();else releasePlot();
+    reader.dataset.overlay=String(covers);
+  }
+  if(readerOverlay)listen(readerOverlay,'change',syncReaderOverlay);
+  // The overlay owns the keyboard while it covers the plot: Tab cycles the
+  // reader and the rail (both stay real controls), Escape returns to the plot.
+  listen(doc,'keydown',event=>{
+    if(reader.hidden||!readerOverlay?.matches)return;
+    if(event.key==='Escape'){if(event.defaultPrevented||event.target.closest?.('dialog[open]'))return;event.preventDefault();closeReader();return;}
+    if(event.key!=='Tab')return;
+    const visible=node=>!node.hidden&&!node.closest('[hidden]')&&(typeof node.getClientRects!=='function'||node.getClientRects().length>0);
+    const items=[...reader.querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),a[href],[tabindex="0"]'),...workspace.querySelectorAll('.workbench-rail button:not(:disabled)')].filter(visible);
+    if(!items.length)return;const first=items[0],last=items[items.length-1];
+    if(event.shiftKey&&(doc.activeElement===first||doc.activeElement===readerTitle)){event.preventDefault();last.focus({preventScroll:true});}
+    else if(!event.shiftKey&&doc.activeElement===last){event.preventDefault();first.focus({preventScroll:true});}
+  });
+  function closeReader({restoreFocus=true}={}){reader.hidden=true;readerKind=null;workspace.dataset.detailsOpen='false';syncReaderOverlay();emit('atlas:panel-state',{open:false});if(restoreFocus&&readerOpener?.isConnected)readerOpener.focus({preventScroll:true});readerOpener=null;}
   function checkbox(label,key){const row=make('label','native-chart-setting'),input=make('input');input.type='checkbox';input.dataset.nativeSetting=key;input.checked=Boolean(state[key]);input.onchange=()=>command('toggle',key);row.append(input,doc.createTextNode(label));return row;}
   function renderReader(){
     body.replaceChildren();
@@ -142,7 +176,7 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
     if(!active())return;
     if(kind==='math'||kind==='update'){actions.source?.();return;}if(kind==='scenarios'){actions.forecast?.();return;}if(kind==='events'){actions.history?.();return;}
     if(!reader.hidden&&readerKind===kind){closeReader();return;}
-    readerKind=kind;readerOpener=opener;readerTitle.textContent=`${symbol} · ${{settings:'차트 설정',layers:'지표',selection:'선택 데이터',guide:'사용법',search:'명령 검색'}[kind]||kind}`;renderReader();reader.hidden=false;workspace.dataset.detailsOpen='true';emit('atlas:panel-state',{open:true,kind});readerTitle.focus({preventScroll:true});update();
+    readerKind=kind;readerOpener=opener;readerTitle.textContent=`${symbol} · ${{settings:'차트 설정',layers:'지표',selection:'선택 데이터',guide:'사용법',search:'명령 검색'}[kind]||kind}`;renderReader();reader.hidden=false;workspace.dataset.detailsOpen='true';syncReaderOverlay();emit('atlas:panel-state',{open:true,kind});readerTitle.focus({preventScroll:true});update();
   }
 
   const ranges=make('div','workbench-ranges');ranges.setAttribute('role','group');ranges.setAttribute('aria-label','차트 표시 기간');
@@ -151,7 +185,10 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
   const dateButton=button('calendar',`${timeZone} 날짜·기간 이동 · Alt+G`,'workbench-go-date','date'),rangeLabel=make('span');rangeLabel.id='workbench-range-label';
   const axis=make('div','workbench-axis'),scale=make('button','','로그');scale.type='button';scale.id='workbench-scale';scale.onclick=()=>command('scale');
   const auto=make('button','workbench-auto','자동');auto.type='button';auto.id='workbench-auto-scale';auto.onclick=()=>command('auto-scale');const fit=button('fit','기본 범위로 · 0 / Alt+R','workbench-fit','fit');axis.append(scale,auto,fit);
-  const status=make('div','workbench-status'),zone=make('span','workbench-zone',timeZone),updateButton=make('button','workbench-update');updateButton.type='button';updateButton.id='atlas-update-status';updateButton.onclick=()=>actions.source?.();if(oldStatus)updateButton.append(oldStatus);status.append(zone,updateButton);
+  const status=make('div','workbench-status'),zone=make('span','workbench-zone',timeZone),updateButton=make('button','workbench-update');updateButton.type='button';updateButton.id='atlas-update-status';updateButton.onclick=()=>actions.source?.();
+  // The price controller still writes its original, app-scoped status hook.
+  // Only its presentation lives in the footer, which the phone sheet portals.
+  const statusLabel=make('span','native-status-label');statusLabel.setAttribute('role','status');statusLabel.setAttribute('aria-live','polite');updateButton.append(statusLabel);status.append(zone,updateButton);
   const bottom=mountChartBottomBar({stage:app,ranges,dateButton,rangeLabel,axis,status,fitButton:fit,updateButton,onCommand:(action,value)=>command(action,value),onUpdate:()=>actions.source?.()});
   const history=button('history',`${symbol} 역사 사건`,'history-journal-toggle','history');bottom.eventSlot.append(history);
   const menuZone=doc.querySelector('#workbench-bottom-menu .bottom-menu-context p:last-child');if(menuZone)menuZone.textContent=`날짜·봉 시각 · ${timeZone}`;
@@ -213,6 +250,8 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
     clear.disabled=!state.measurement;undo.disabled=!historyState.canUndo;redo.disabled=!historyState.canRedo;save.disabled=!ready;dateButton.disabled=!ready;type.disabled=!ready;
     scale.textContent=state.scale==='log'?'로그':'선형';scale.setAttribute('aria-pressed',String(state.scale==='log'));auto.textContent=state.priceDomain?'수동':'자동';auto.setAttribute('aria-pressed',String(!state.priceDomain));auto.setAttribute('aria-label',`${symbol} 가격축 자동 맞춤 ${state.priceDomain?'꺼짐':'켜짐'}`);
     const range=state.range,intraday=isIntradayInterval(state.frequency);rangeLabel.textContent=range?`${stamp(range.start,intraday)} ~ ${stamp(range.end,intraday)}`:'';rangeLabel.title=`${symbol} · ${timeZone} · ${rangeLabel.textContent}`;
+    statusLabel.textContent=oldStatus?.textContent||'';statusLabel.title=oldStatus?.title||'';
+    if(oldStatus?.hasAttribute('aria-label'))statusLabel.setAttribute('aria-label',oldStatus.getAttribute('aria-label'));else statusLabel.removeAttribute('aria-label');
     updateButton.title=oldStatus?.title||`${symbol} 자료 출처`;for(const node of ranges.querySelectorAll('[data-chart-span]'))node.setAttribute('aria-pressed',String(spanMap[node.dataset.chartSpan]===state.span&&!state.rangeTouched));
     bottom.update({mode:'price',intraday,frequency:state.frequency,window:Object.keys(spanMap).find(key=>spanMap[key]===state.span),customRange:state.rangeTouched,navigationAvailable:ready});
     for(const node of [indicators,settings,search,...details.querySelectorAll('[data-reader]')]){const kind=node===indicators?'layers':node===settings?'settings':node===search?'search':node.dataset.reader;node.setAttribute('aria-expanded',String(!reader.hidden&&readerKind===kind));}
@@ -242,5 +281,5 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
   return {update,command,inspect(detail){inspection=detail;if(active()&&!reader.hidden&&readerKind==='selection')renderReader();},
     beginGesture(){if(active())uiHistory.begin('차트 이동');},endGesture(){return uiHistory.commit();},
     measure(value){uiHistory.run('두 지점 측정',()=>{state.measurement=value;});update();},
-    destroy(){if(destroyed)return;destroyed=true;for(const cleanup of owned)cleanup();legend.destroy();mobile.destroy();bottom.destroy();releaseExport();dateDialog.node.remove();exportDialog.node.remove();reader.remove();left.remove();rail.remove();}};
+    destroy(){if(destroyed)return;destroyed=true;for(const cleanup of owned)cleanup();releasePlot();legend.destroy();mobile.destroy();bottom.destroy();releaseExport();dateDialog.node.remove();exportDialog.node.remove();reader.remove();left.remove();rail.remove();}};
 }

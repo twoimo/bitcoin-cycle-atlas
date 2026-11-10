@@ -1005,11 +1005,21 @@ export async function verifyWorkspaceSurface(api) {
     receipt.workspace.indicatorSurface.transitions.push({input:'keyboard',...keyboardState});
   }
   await screenshot(cdp,page+'-'+width+'x'+height+'-indicator-surface.png',receipt);
+  // The same footer now lives in the phone information sheet. Reach it with
+  // the native trigger; keep every menu, keyboard and chart assertion below.
+  if(width<=620){
+    await click(cdp,'#mobile-details-toggle');
+    assert.equal(await evaluate(cdp,()=>document.querySelector('#mobile-details-toggle').getAttribute('aria-expanded')),'true');
+  }
   await click(cdp,'#workbench-bottom-more');
   await inspect('#workbench-bottom-menu','bottom-menu');
   await key('End','End',35);await focused('#workbench-bottom-menu');
   await key('Escape','Escape',27);
   assert.equal(await evaluate(cdp,()=>document.querySelector('#workbench-bottom-menu').hidden),true);
+  if(width<=620){
+    await key('Escape','Escape',27);
+    assert.equal(await evaluate(cdp,()=>document.querySelector('#mobile-details-toggle').getAttribute('aria-expanded')),'false');
+  }
   if(page==='workspace-btc'&&width===320&&receipt.touch)await verifyPriceLegendScrollOwnership(api,{touch:true,label:'touch-320x900'});
   if(page==='workspace-btc'&&width===1440){
     receipt.workspace.reportedQaViewports=[];

@@ -172,12 +172,15 @@ export function initViewportWorkspace(icon) {
   reader.innerHTML='<div class="reader-heading"><h2 id="chart-reader-title" tabindex="-1"></h2><button type="button" aria-label="상세 패널 닫기" title="상세 패널 닫기">'+icon('close')+'</button></div><div id="chart-detail-actions" class="chart-detail-actions" role="group" aria-label="선택한 날짜 이동" hidden></div><div id="chart-reader-body"></div>';
   workspace.append(reader);
   const body=$('#chart-reader-body'),readerPager=pager(reader,body);
-  const overlay=matchMedia('(max-width:900px)');
+  // 621-959px portrait/compact tablets overlay the reader (atlas-shell.css),
+  // so the split-only width handle must not stay live above 900px.
+  const overlay=matchMedia('(max-width:959px)');
   function syncOverlay(){
     const covers=!reader.hidden&&overlay.matches;
     if(overlay.matches)readerResize.cancel();
     $('#main').inert=covers;$('.atlas-sidebar').inert=covers;
     reader.dataset.overlay=String(covers);
+    const handle=reader.querySelector(':scope > .reader-resize');if(handle)handle.hidden=overlay.matches;
     if(covers&&!reader.contains(document.activeElement)&&!document.activeElement?.closest('.workbench-rail'))$('#chart-reader-title').focus({preventScroll:true});
   }
   overlay.addEventListener('change',syncOverlay);
@@ -189,6 +192,7 @@ export function initViewportWorkspace(icon) {
   }
   window.addEventListener('resize',()=>{if(!reader.hidden&&!overlay.matches)sizeReader(parseFloat(workspace.style.getPropertyValue('--detail-width'))||320);});
   const readerResize=mountReaderResize({handle:resize,getWidth:()=>reader.getBoundingClientRect().width,setWidth:sizeReader,isEnabled:()=>!reader.hidden&&!overlay.matches});
+  resize.hidden=overlay.matches;
 
   const title=$('#chart-reader-title'),actions=$('#chart-detail-actions');
   const controlStore=document.createElement('div');controlStore.id='chart-control-store';controlStore.hidden=true;stage.append(controlStore);

@@ -81,3 +81,20 @@ test('native date selection preserves the weekly grid and source bounds without 
   const saved=nativeChartSnapshot(state);state.range.start+=86400;state.measurement.startPrice=999;
   assert.equal(saved.range.start,range.start);assert.equal(saved.measurement.startPrice,123);assert.equal('prices'in saved,false);assert.equal('financialModel'in saved,false);assert.equal('controller'in saved,false);
 });
+
+for(const symbol of ['ETHUSD','MSTR','BMNR'])test(`${symbol} preserves the price controller status hook when its original footer is portalled`,t=>{
+  const f=fixture(t,symbol),{document,app,adapter,state,series}=f;
+  const sourceStatus=app.querySelector('#eth-status'),footer=document.querySelector('.workbench-bottom-bar');
+  const controls=[...footer.querySelectorAll('button,select')],original=structuredClone(series);
+  assert.ok(sourceStatus,'the existing app-scoped render hook must remain available');
+  document.querySelector('.workbench-rail').append(footer);
+  assert.equal(app.querySelector('#eth-status'),sourceStatus,'moving the footer cannot move the price controller hook outside its app');
+  sourceStatus.textContent='완료 봉 · 2026-10-23';sourceStatus.title='Original source clock';sourceStatus.setAttribute('aria-label','Original source status');
+  assert.doesNotThrow(()=>adapter.update());
+  const label=footer.querySelector('.native-status-label');
+  assert.equal(label.textContent,sourceStatus.textContent);assert.equal(label.title,sourceStatus.title);assert.equal(label.getAttribute('aria-label'),sourceStatus.getAttribute('aria-label'));
+  adapter.command('scale');assert.equal(state.scale,'linear');
+  app.append(footer);adapter.update();
+  assert.deepEqual([...footer.querySelectorAll('button,select')],controls,'desktop restoration retains the original controls');
+  assert.deepEqual(series,original,'presentation never changes source observations or clocks');
+});

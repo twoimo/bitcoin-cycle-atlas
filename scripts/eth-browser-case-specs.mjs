@@ -20,13 +20,13 @@ export function createEthBrowserCaseSpecs(){
   return caseSpecs.map(spec=>({...spec}));
 }
 
-export const ethBrowserCaseScopes=Object.freeze(['all','replay','chart-replay','non-chart-replay','data','center-data','workspace','workspace-consolidated','workspace-btc','workspace-evidence','workspace-preview','workspace-legacy']);
+export const ethBrowserCaseScopes=Object.freeze(['all','native','replay','chart-replay','non-chart-replay','data','center-data','workspace','workspace-consolidated','workspace-btc','workspace-evidence','workspace-preview','workspace-legacy']);
 
 // A lane only partitions the original inventory. Order, options and each
 // case's native interaction sequence remain owned by their existing verifier.
 export function selectEthBrowserCaseSpecs(scope='all'){
   if(!ethBrowserCaseScopes.includes(scope))throw new Error('Unknown browser case scope');
-  return createEthBrowserCaseSpecs().filter(spec=>scope==='all'||scope==='non-chart-replay'&&!spec.chartReplay
+  return createEthBrowserCaseSpecs().filter(spec=>scope==='all'||scope==='native'&&['eth','mstr','bmnr'].includes(spec.page)||scope==='non-chart-replay'&&!spec.chartReplay
     ||scope==='replay'&&spec.replay||scope==='chart-replay'&&spec.chartReplay||scope==='center-data'&&spec.surface==='center-data'
     ||scope==='data'&&spec.page==='data'||scope.startsWith('workspace')&&(spec.page===scope||spec.page.startsWith(scope+'-')));
 }

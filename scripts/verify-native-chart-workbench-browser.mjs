@@ -5,8 +5,13 @@ import {verifyChartZoomBrowser} from './verify-chart-zoom-browser.mjs';
  * changes below use real pointer/keyboard input; evaluation only reads DOM or
  * the same-origin published source archive. No mock controller is installed. */
 export async function verifyNativeChartWorkbench(api) {
-  const {cdp,receipt,evaluate,until,settled,click,bounds,screenshot}=api;
+  const {cdp,receipt,evaluate,until,settled,click:rawClick,bounds,screenshot}=api;
   const {width,height}=receipt,phone=width<=620;
+  async function click(context,selector){
+    if(phone&&await evaluate(context,s=>Boolean(document.querySelector(s)?.closest('.workbench-bottom-bar'))&&document.querySelector('#mobile-details-toggle').getAttribute('aria-expanded')!=='true',selector))await rawClick(context,'#mobile-details-toggle');
+    if(await evaluate(context,s=>Boolean(document.querySelector(s)?.closest('.shell-feature-panel[hidden]')),selector))await rawClick(context,'#atlas-shell-features-toggle');
+    await rawClick(context,selector);
+  }
   const symbol=await evaluate(cdp,()=>document.body.dataset.market);
   assert.ok(['ETHUSD','MSTR','BMNR'].includes(symbol),'Native parity verification requires an actual native instrument');
   const eth=symbol==='ETHUSD',svg=eth?'#eth-chart':'#equity-chart',prefix=eth?'eth':'equity',product=eth?'ETH-USD':symbol;
@@ -33,7 +38,7 @@ export async function verifyNativeChartWorkbench(api) {
     assert.equal(await evaluate(cdp,s=>document.querySelector(s).value,selector),value,'Native selection did not reach '+value);
   }
   async function action(selector,mobileTarget) {
-    if(phone&&mobileTarget){await click(cdp,'#mobile-details-toggle');await click(cdp,`[data-mobile-target="${mobileTarget}"]`);}
+    if(phone&&mobileTarget){if(await evaluate(cdp,()=>document.querySelector('#mobile-details-toggle').getAttribute('aria-expanded')!=='true'))await click(cdp,'#mobile-details-toggle');await click(cdp,`[data-mobile-target="${mobileTarget}"]`);}
     else await click(cdp,selector);
   }
   async function tool(selector) {
@@ -63,17 +68,19 @@ export async function verifyNativeChartWorkbench(api) {
   assert.deepEqual(record.shell.intervalOptions,eth?['1m','5m','15m','30m','1h','4h','daily','weekly']:['daily','weekly']);
   assert.ok(Math.max(record.shell.rootWidth,record.shell.bodyWidth)<=width+1,'Native perimeter causes page overflow');
   record.geometry={};
-  for(const [name,selector]of [['top','.atlas-canvas-heading'],['plot','.atlas-plot'],['bottom','.workbench-bottom-bar']]){const box=await bounds(cdp,selector);inside(box,name);record.geometry[name]={...box,text:undefined};}
+  for(const [name,selector]of [['top','.atlas-canvas-heading'],['plot','.atlas-plot'],...(!phone?[['bottom','.workbench-bottom-bar']]:[])]){const box=await bounds(cdp,selector);inside(box,name);record.geometry[name]={...box,text:undefined};}
   assert.ok(record.geometry.plot.height>=height*.75,'Native plot must use the full-height workspace');
-  assert.ok(record.geometry.plot.top>=record.geometry.top.bottom-1&&record.geometry.plot.bottom<=record.geometry.bottom.top+1,'Native controls overlap the price canvas');
+  if(phone)assert.ok(record.geometry.plot.bottom<=record.geometry.top.top+1&&Math.abs(record.geometry.top.bottom-height)<=1,'The single phone dock overlaps the canvas or escapes its bottom edge');
+  else assert.ok(record.geometry.plot.top>=record.geometry.top.bottom-1&&record.geometry.plot.bottom<=record.geometry.bottom.top+1,'Native controls overlap the price canvas');
   if(!phone){
     for(const [name,selector,expected]of [['left','.atlas-sidebar',52],['right','.workbench-rail',45]]){const box=await bounds(cdp,selector);inside(box,name);assert.ok(Math.abs(box.width-expected)<1,'Native '+name+' rail diverged from BTC width');record.geometry[name]={...box,text:undefined};}
-    assert.equal(record.geometry.top.height,record.shell.coarse?48:38);
+    assert.equal(record.geometry.top.height,record.shell.coarse||width<=1100?48:38,'Compact windows retain 44px targets inside the 48px header');
     assert.ok(record.geometry.plot.left>=record.geometry.left.right&&record.geometry.plot.right<=record.geometry.right.left,'Canvas overlaps side rails');
   }else{
-    assert.equal(record.geometry.top.height,width<=390?92:48,'Narrow phones retain two complete 44px control rows');
+    assert.equal(record.geometry.top.height,48,'Phones retain one complete 48px control row');
     for(const [trigger,selector]of [['#mobile-tools-toggle','.atlas-sidebar'],['#mobile-details-toggle','.workbench-rail']]){
       await click(cdp,trigger);inside(await bounds(cdp,selector),selector+' tray');
+      if(trigger==='#mobile-details-toggle'){const footer=await bounds(cdp,'.workbench-bottom-bar');inside(footer,'original footer in information sheet');record.geometry.bottomInSheet={...footer,text:undefined};}
       await click(cdp,selector+' .mobile-tray-heading button');
       assert.equal(await evaluate(cdp,s=>document.querySelector(s).hasAttribute('data-mobile-open'),selector),false);
     }
@@ -84,6 +91,7 @@ export async function verifyNativeChartWorkbench(api) {
 
   // A six-month window keeps each real volume bar individually inspectable.
   await choose('#workbench-interval-select','daily');
+  if(phone)await click(cdp,'#mobile-details-toggle');
   const rangeSelect=await evaluate(cdp,()=>document.querySelector('#workbench-range-select').getClientRects().length>0);
   if(rangeSelect)await choose('#workbench-range-select','near');else await click(cdp,'[data-chart-span="near"]');
   await action('#atlas-display-options','#atlas-display-options');
