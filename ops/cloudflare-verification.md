@@ -261,14 +261,13 @@ mean it reports is the actual period plus whatever per-tick work the renderer
 did not absorb.
 
 That makes the earlier133–377 ms samples explainable rather than noisy:
-133 ms ≈ 100 ms + 33 ms and 377 ms ≈ 100 ms + 277 ms, i.e. one overrun per tick
-with the model command co-resident on a2vCPU runner. The bound cannot be met
-while another CPU-bound process shares the box, and widening it would accept a
-real 10× playback regression. The overlap was therefore removed
-(`cloudflareParallelGroups` is empty and the cadence phase runs alone), the
-budget is unchanged, and reducing per-tick paint cost remains the only
-legitimate way to widen the margin. A cadence failure is reportable as a real
-playback result, not a timing artifact.
+133 ms ≈ 100 ms + 33 ms and 377 ms ≈ 100 ms + 277 ms, i.e. one overrun per tick.
+Those samples were observed before the gates were serialised; whether another
+CPU-bound process was co-resident during that specific run is not established by
+the receipt, and the 2026-11-10 failure at a mean of150 ms occurred with the
+cadence phase already running alone. The bound is unchanged, and reducing
+per-tick paint cost remains the only legitimate way to widen the margin. A
+cadence failure is reportable as a real playback result, not a timing artifact.
 
 ## Actual build prerequisites
 

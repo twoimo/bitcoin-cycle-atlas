@@ -1,40 +1,59 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {assertConsolidatedChartAllocation} from '../scripts/verify-consolidated-workspace-browser.mjs';
+import {assertConsolidatedChartAllocation,assertSimulationDetailsRoundTrip} from '../scripts/verify-consolidated-workspace-browser.mjs';
 import {createEthBrowserCaseSpecs,selectEthBrowserCaseSpecs} from '../scripts/eth-browser-case-specs.mjs';
 
 const rect=(left,top,width,height)=>({left,right:left+width,top,bottom:top+height,width,height});
 const measured=(box,extra={})=>({rect:box,content:{...box},visible:true,marginTop:0,marginBottom:0,...extra});
-const fields=['holdings','quantity','average-cost','current-price','pnl','next-trigger','updated-at'];
+const criteriaRows=['criteria','win-rate','current','buy','sell','strong','neutral'];
+const hudFields=['holdings','quantity','average-cost','current-price','pnl','next-trigger','updated-at'];
 
 // Saved native f12 dimensions, used only as oracle boundary fixtures. These
 // tests do not substitute for rerunning the unchanged native browser cases.
-function allocation({width=390,height=708,hudHeight=196.78125,symbol='TQQQ'}={}){
-  const hud=measured(rect(0,0,width,hudHeight));
-  const body=measured(rect(0,hudHeight+16,width,height-hudHeight-16));
+// cd53cad places the position HUD in the details dialog and paints the trading
+// criteria inside the chart canvas, so the chart tab has one in-flow body.
+function allocation({width=390,height=708,statusHeight=0,symbol='TQQQ'}={}){
+  const rows=[];
+  if(statusHeight)rows.push({kind:'status',...measured(rect(0,0,width,statusHeight))});
+  const bodyTop=rows.reduce((sum,row)=>sum+row.rect.height,0)+16*rows.length;
+  const body=measured(rect(0,bodyTop,width,height-bodyTop));
   const canvas=measured({...body.rect}),svg=measured({...body.rect});
+  rows.push({kind:'body',...structuredClone(body)});
+  const criteriaTop=canvas.rect.top+24,criteriaHeight=Math.min(120,canvas.rect.height-48),rowHeight=(criteriaHeight-8)/criteriaRows.length;
+  const criteria={...measured(rect(canvas.rect.left+8,criteriaTop,width-16,criteriaHeight)),symbol,label:symbol+' 매매 기준 상세 · 현재 미충족',hasPopup:'dialog',expanded:'false',
+    fields:criteriaRows.map((key,index)=>({key,text:key,...measured(rect(canvas.rect.left+12,criteriaTop+4+index*rowHeight,width-24,rowHeight-2))}))};
   return {svg:{width,height:svg.rect.height,visible:true},childHeight:height,allocation:{
     frame:{source:'https://example.test/bitcoin-cycle-atlas/market-lab/app/?embedded=1',documentUrl:'https://example.test/bitcoin-cycle-atlas/market-lab/app/?embedded=1',parentUrl:'https://example.test/bitcoin-cycle-atlas/market-lab/charts/?symbol=TQQQ',rect:rect(0,92,width,height)},
-    viewport:{width,height},owners:{activeWindow:true,svgInActiveFrame:true,canvasOwnsSvg:true,bodyOwnsCanvas:true,hudSharesWorkbench:true},
-    svg,canvas,body,workbench:measured(rect(0,0,width,height)),flow:{display:'flex',direction:'column',gap:16,children:[{kind:'hud',...structuredClone(hud)},{kind:'body',...structuredClone(body)}]},
-    hud:{...hud,label:symbol+' 분할 매매 평단가',fields:fields.map((key,index)=>({key,text:key,...measured(rect(8,50+index*15,width-16,13))}))},
+    viewport:{width,height},owners:{activeWindow:true,svgInActiveFrame:true,canvasOwnsSvg:true,bodyOwnsCanvas:true,criteriaSharesCanvas:true},
+    svg,canvas,body,workbench:measured(rect(0,0,width,height)),flow:{display:'flex',direction:'column',gap:16,children:rows},
+    criteria,
   }};
 }
 
-test('WP6 mobile SVG fills the measured remainder although it is below 75% of the full iframe',()=>{
-  for(const dimensions of [{width:390,height:708,hudHeight:196.78125},{width:320,height:604,hudHeight:246.875}]){
+function detailsOpen(symbol='TQQQ',{fields=hudFields}={}){
+  return {dialog:{...measured(rect(0,0,600,700)),open:true,name:'simulation',label:symbol+' 매매 기준 · 분할 매매 성과'},
+    hud:{...measured(rect(12,60,576,320)),label:symbol+' 분할 매매 평단가',
+      fields:fields.map((key,index)=>({key,text:key,...measured(rect(16,70+index*40,560,30))}))},
+    criteriaExpanded:'true'};
+}
+
+test('the SVG threshold is measured against its real canvas, not the whole iframe',()=>{
+  for(const dimensions of [{width:390,height:708,statusHeight:196.78125},{width:320,height:604,statusHeight:246.875}]){
     const result=allocation(dimensions);
-    assert.ok(result.svg.height<result.childHeight*.75,'The old denominator rejects this recorded layout');
+    assert.ok(result.svg.height<result.childHeight*.75,'The old whole-iframe denominator rejects this layout');
     assert.doesNotThrow(()=>assertConsolidatedChartAllocation(result,'TQQQ'));
   }
 });
 
-test('each RSI instrument requires its own full seven-field HUD; removing it cannot fall back to the legacy gate',()=>{
+test('each RSI instrument requires its own in-chart criteria; removing it cannot fall back to the legacy gate',()=>{
   for(const symbol of ['TQQQ','SOXL','233740']){
     const result=allocation({symbol});
     assert.doesNotThrow(()=>assertConsolidatedChartAllocation(result,symbol));
-    result.allocation.hud=null;
-    assert.throws(()=>assertConsolidatedChartAllocation(result,symbol),/actual WP6 HUD and chart allocation must exist/);
+    result.allocation.criteria=null;
+    assert.throws(()=>assertConsolidatedChartAllocation(result,symbol),/actual in-chart trading criteria and chart allocation must exist/);
+    result.allocation.criteria=allocation({symbol}).allocation.criteria;
+    result.allocation.criteria.symbol=symbol==='SOXL'?'TQQQ':'SOXL';
+    assert.throws(()=>assertConsolidatedChartAllocation(result,symbol),/criteria overlay retains its selected instrument owner/);
   }
 });
 
@@ -46,7 +65,7 @@ test('non-HUD instruments retain the original 75% child-viewport threshold',()=>
   }
 });
 
-test('a SVG below 75% of the real canvas fails even when the entire HUD is present',()=>{
+test('a SVG below 75% of the real canvas fails even when the criteria overlay is present',()=>{
   const result=allocation();
   result.svg.height=result.allocation.canvas.content.height*.74;
   result.allocation.svg=measured(rect(0,result.allocation.canvas.rect.top,390,result.svg.height));
@@ -56,7 +75,7 @@ test('a SVG below 75% of the real canvas fails even when the entire HUD is prese
 test('shrinking the body, canvas and SVG together cannot hide unused remaining height',()=>{
   const result=allocation(),a=result.allocation;
   for(const key of ['body','canvas','svg'])a[key]=measured(rect(0,a[key].rect.top,390,a[key].rect.height-50));
-  a.flow.children[1]={kind:'body',...structuredClone(a.body)};result.svg.height=a.svg.rect.height;
+  a.flow.children[a.flow.children.length-1]={kind:'body',...structuredClone(a.body)};result.svg.height=a.svg.rect.height;
   assert.throws(()=>assertConsolidatedChartAllocation(result,'TQQQ'),/fills all remaining height/);
 });
 
@@ -69,15 +88,59 @@ test('a correctly sized SVG outside its canvas and a blank margin inside its bod
   assert.throws(()=>assertConsolidatedChartAllocation(blank,'TQQQ'),/canvas fills its allocated body/);
 });
 
-test('HUD overlap, unpainted or missing fields, and a wrong instrument owner remain failures',()=>{
-  const overlapping=allocation();overlapping.allocation.hud.rect.bottom+=30;overlapping.allocation.hud.rect.height+=30;
-  assert.throws(()=>assertConsolidatedChartAllocation(overlapping,'TQQQ'),/HUD and chart are contained without overlap/);
-  const hidden=allocation();hidden.allocation.hud.fields[6].visible=false;
-  assert.throws(()=>assertConsolidatedChartAllocation(hidden,'TQQQ'),/HUD field remains visible and contained: updated-at/);
-  const missing=allocation();missing.allocation.hud.fields.pop();
-  assert.throws(()=>assertConsolidatedChartAllocation(missing,'TQQQ'),/all seven HUD fields/);
-  const owner=allocation();owner.allocation.hud.label='SOXL 분할 매매 평단가';
-  assert.throws(()=>assertConsolidatedChartAllocation(owner,'TQQQ'),/selected instrument owner/);
+test('criteria overlay that is unpainted, outside its canvas or missing a row remains a failure',()=>{
+  const unpainted=allocation();unpainted.allocation.criteria.visible=false;
+  assert.throws(()=>assertConsolidatedChartAllocation(unpainted,'TQQQ'),/criteria overlay is painted/);
+  const escaping=allocation();escaping.allocation.criteria.rect.left=-6;escaping.allocation.criteria.rect.right-=6;
+  assert.throws(()=>assertConsolidatedChartAllocation(escaping,'TQQQ'),/criteria overlay stays inside the chart canvas/);
+  const owner=allocation();owner.allocation.owners.criteriaSharesCanvas=false;
+  assert.throws(()=>assertConsolidatedChartAllocation(owner,'TQQQ'),/active-frame owners/);
+  const missingRow=allocation();missingRow.allocation.criteria.fields.pop();
+  assert.throws(()=>assertConsolidatedChartAllocation(missingRow,'TQQQ'),/every trading-criteria row/);
+  const hiddenRow=allocation();hiddenRow.allocation.criteria.fields[2].visible=false;
+  assert.throws(()=>assertConsolidatedChartAllocation(hiddenRow,'TQQQ'),/criteria row remains visible and contained: current/);
+  const noPopup=allocation();noPopup.allocation.criteria.hasPopup='false';
+  assert.throws(()=>assertConsolidatedChartAllocation(noPopup,'TQQQ'),/declares its details dialog/);
+  const extraRow=allocation();extraRow.allocation.flow.children.splice(0,0,{kind:'criteria',...measured(rect(0,0,390,120))});
+  assert.throws(()=>assertConsolidatedChartAllocation(extraRow,'TQQQ'),/must not claim an in-flow row/);
+});
+
+test('the details dialog must own the same seven HUD fields for the selected instrument',()=>{
+  const before=allocation(),after=allocation();
+  const roundTrip=(opened,symbol='TQQQ')=>assertSimulationDetailsRoundTrip({symbol,before,opened,after});
+  assert.doesNotThrow(()=>roundTrip(detailsOpen()));
+  const closed=detailsOpen();closed.dialog.open=false;
+  assert.throws(()=>roundTrip(closed),/details dialog must be open/);
+  const wrongView=detailsOpen();wrongView.dialog.name='backtest';
+  assert.throws(()=>roundTrip(wrongView),/identifies the simulation view/);
+  const noHud=detailsOpen();noHud.hud=null;
+  assert.throws(()=>roundTrip(noHud),/position HUD must exist inside the opened details/);
+  const owner=detailsOpen('SOXL');
+  assert.throws(()=>roundTrip(owner),/HUD retains its selected instrument owner/);
+  const missing=detailsOpen('TQQQ',{fields:hudFields.slice(0,6)});
+  assert.throws(()=>roundTrip(missing),/all seven HUD fields remain present/);
+  const blank=detailsOpen();blank.hud.fields[0].text='';
+  assert.throws(()=>roundTrip(blank),/HUD field remains visible and contained: holdings/);
+  const outside=detailsOpen();outside.hud.rect.top=800;outside.hud.rect.bottom=1120;
+  assert.throws(()=>roundTrip(outside),/HUD stays inside the details dialog content/);
+  const notExpanded=detailsOpen();notExpanded.criteriaExpanded='false';
+  assert.throws(()=>roundTrip(notExpanded),/criteria control reports its expanded details/);
+});
+
+test('closing the details must restore the exact chart height it had before opening',()=>{
+  const before=allocation(),opened=detailsOpen();
+  for(const grow of [24,-24]){
+    const after=allocation();
+    for(const key of ['body','canvas','svg']){
+      after.allocation[key]=measured(rect(0,after.allocation[key].rect.top,390,after.allocation[key].rect.height+grow));
+      after.allocation[key].rect.bottom=after.allocation[key].rect.top+after.allocation[key].rect.height;
+    }
+    after.svg.height=after.allocation.svg.rect.height;
+    assert.throws(()=>assertSimulationDetailsRoundTrip({symbol:'TQQQ',before,opened,after}),/closing details restores the/);
+  }
+  const stillOpen=allocation();
+  assert.throws(()=>assertSimulationDetailsRoundTrip({symbol:'TQQQ',before,opened,after:{...stillOpen,allocation:{...stillOpen.allocation,criteria:{...stillOpen.allocation.criteria,expanded:'true'}}}}),
+    /returns to its collapsed state/);
 });
 
 test('same-application SPA query and hash updates preserve valid active-frame ownership',()=>{

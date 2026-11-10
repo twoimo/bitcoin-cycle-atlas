@@ -94,13 +94,18 @@ export function assertConsolidatedToolbarOwnership(ownership,label) {
   }
 }
 
-// WP6 adds a non-shrinking HUD above the flex chart body. Read the actual
-// active iframe and its CSS allocation; the SVG no longer owns the HUD's pixels.
+// After cd53cad the chart tab owns a single in-flow body and draws its trading
+// criteria inside the chart canvas; the position HUD lives in the details dialog.
+// Read that actual ownership, not a former sibling row above the body.
+const layoutTolerance=1;
+const validRect=r=>r&&['left','right','top','bottom','width','height'].every(k=>Number.isFinite(r[k]))&&r.width>0&&r.height>0;
+const insideRect=(r,owner)=>validRect(r)&&validRect(owner)&&r.left>=owner.left-layoutTolerance&&r.right<=owner.right+layoutTolerance&&r.top>=owner.top-layoutTolerance&&r.bottom<=owner.bottom+layoutTolerance;
+
 export function readConsolidatedChartAllocation() {
   const frame=document.querySelector('.atlas-center-frame:not([hidden])'),doc=frame?.contentDocument;
   const svg=doc?.querySelector('.rsi-chart-canvas svg'),canvas=svg?.closest('.rsi-chart-canvas');
   const workbench=canvas?.closest('.rsi-workbench'),body=canvas?.closest('.rsi-workbench-body');
-  const hud=workbench?.querySelector(':scope > .rsi-simulation-hud');
+  const criteria=canvas?.querySelector(':scope > .rsi-trading-criteria');
   const rect=node=>{if(!node)return null;const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
   const pixels=value=>Number.parseFloat(value)||0;
   const measured=node=>{
@@ -113,55 +118,110 @@ export function readConsolidatedChartAllocation() {
   };
   const style=workbench&&doc.defaultView.getComputedStyle(workbench);
   return {frame:{source:frame?.src,documentUrl:doc?.URL,parentUrl:document.URL,rect:rect(frame)},viewport:{width:doc?.defaultView.innerWidth,height:doc?.defaultView.innerHeight},
-    owners:{activeWindow:doc?.defaultView.frameElement===frame,svgInActiveFrame:svg?.ownerDocument===doc,canvasOwnsSvg:svg?.parentElement===canvas,bodyOwnsCanvas:canvas?.parentElement===body,hudSharesWorkbench:hud?.parentElement===workbench},
+    owners:{activeWindow:doc?.defaultView.frameElement===frame,svgInActiveFrame:svg?.ownerDocument===doc,canvasOwnsSvg:svg?.parentElement===canvas,bodyOwnsCanvas:canvas?.parentElement===body,criteriaSharesCanvas:criteria?.parentElement===canvas},
     svg:measured(svg),canvas:measured(canvas),body:measured(body),workbench:measured(workbench),
     flow:{display:style?.display,direction:style?.flexDirection,gap:pixels(style?.rowGap),children:[...workbench?.children||[]].filter(node=>{
       const s=doc.defaultView.getComputedStyle(node);return s.display!=='none'&&!['absolute','fixed'].includes(s.position)&&node.getClientRects().length;
-    }).map(node=>({kind:node===body?'body':node===hud?'hud':node.matches('.rsi-workbench-status')?'status':'unexpected',...measured(node)}))},
-    hud:hud?{...measured(hud),label:hud.getAttribute('aria-label'),fields:[...hud.querySelectorAll('[data-rsi-hud]')].map(node=>({key:node.dataset.rsiHud,text:node.textContent.trim(),...measured(node)}))}:null};
+    }).map(node=>({kind:node===body?'body':node.classList?.contains('rsi-trading-criteria')?'criteria':node.matches('.rsi-workbench-status')?'status':'unexpected',...measured(node)}))},
+    criteria:criteria?{...measured(criteria),symbol:criteria.dataset.rsiCriteria??null,label:criteria.getAttribute('aria-label'),
+      hasPopup:criteria.getAttribute('aria-haspopup'),expanded:criteria.getAttribute('aria-expanded'),
+      fields:[...criteria.querySelectorAll('[data-criteria-field]')].map(node=>({key:node.dataset.criteriaField,text:node.textContent.trim(),...measured(node)}))}:null};
 }
 
 export function assertConsolidatedChartAllocation(result,symbol) {
   const label=symbol+': chart fills its allocated work area';
   if(!['TQQQ','SOXL','233740'].includes(symbol)){
-    // These instruments have no WP6 HUD: preserve the original viewport gate.
+    // These instruments have no trading-criteria overlay: preserve the original viewport gate.
     assert.ok(result.svg.visible&&result.svg.height>=result.childHeight*.75,label);
     return;
   }
   const a=result.allocation,tolerance=1;
-  const valid=r=>r&&['left','right','top','bottom','width','height'].every(k=>Number.isFinite(r[k]))&&r.width>0&&r.height>0;
-  const inside=(r,owner)=>valid(r)&&valid(owner)&&r.left>=owner.left-tolerance&&r.right<=owner.right+tolerance&&r.top>=owner.top-tolerance&&r.bottom<=owner.bottom+tolerance;
+  const valid=validRect;
+  const inside=insideRect;
   const same=(r,owner)=>inside(r,owner)&&['left','right','top','bottom'].every(k=>Math.abs(r[k]-owner[k])<=tolerance);
-  assert.ok(a?.hud&&a.workbench&&a.body&&a.canvas&&a.svg,symbol+': actual WP6 HUD and chart allocation must exist');
+  assert.ok(a?.criteria&&a.workbench&&a.body&&a.canvas&&a.svg,symbol+': actual in-chart trading criteria and chart allocation must exist');
   const sourceUrl=new URL(a.frame.source),documentUrl=new URL(a.frame.documentUrl),parentUrl=new URL(a.frame.parentUrl);
   assert.ok(documentUrl.origin===sourceUrl.origin&&sourceUrl.origin===parentUrl.origin&&documentUrl.pathname===sourceUrl.pathname&&documentUrl.pathname.startsWith(consolidatedPagesBase),symbol+': allocation retains the active iframe source application');
-  assert.ok(['activeWindow','svgInActiveFrame','canvasOwnsSvg','bodyOwnsCanvas','hudSharesWorkbench'].every(key=>a.owners[key]===true),symbol+': HUD, body, canvas and SVG retain their active-frame owners');
+  assert.ok(['activeWindow','svgInActiveFrame','canvasOwnsSvg','bodyOwnsCanvas','criteriaSharesCanvas'].every(key=>a.owners[key]===true),symbol+': criteria, body, canvas and SVG retain their active-frame owners');
   assert.ok(Math.abs(a.frame.rect.width-a.viewport.width)<=tolerance&&Math.abs(a.frame.rect.height-a.viewport.height)<=tolerance,symbol+': active iframe maps to its child viewport 1:1');
   const viewport={left:0,top:0,right:a.viewport.width,bottom:a.viewport.height,width:a.viewport.width,height:a.viewport.height};
   assert.ok(a.workbench.visible&&same(a.workbench.rect,viewport),symbol+': workbench fills the active child viewport');
-  assert.equal(a.flow.display,'flex',symbol+': HUD and chart use the actual flex allocation');
-  assert.equal(a.flow.direction,'column',symbol+': HUD precedes the chart vertically');
+  assert.equal(a.flow.display,'flex',symbol+': the chart body uses the actual flex allocation');
+  assert.equal(a.flow.direction,'column',symbol+': the chart body stacks in its real direction');
   assert.ok(Number.isFinite(a.flow.gap)&&a.flow.gap>=0,symbol+': declared row gap is finite');
   const rows=a.flow.children,index=rows.findIndex(row=>row.kind==='body');
   assert.equal(rows.filter(row=>row.kind==='body').length,1,symbol+': one allocated chart body');
-  assert.equal(rows.filter(row=>row.kind==='hud').length,1,symbol+': one in-flow simulation HUD');
-  assert.ok(rows.every(row=>['hud','body','status'].includes(row.kind)),symbol+': no unexplained in-flow spacer consumes chart height');
-  assert.ok(rows.findIndex(row=>row.kind==='hud')<index,symbol+': HUD precedes its allocated chart body');
+  // The criteria overlay is painted inside the canvas, so it must not claim an
+  // in-flow row. Any additional row would be the blank space this gate rejects.
+  assert.equal(rows.filter(row=>row.kind==='criteria').length,0,symbol+': in-chart criteria must not claim an in-flow row');
+  assert.ok(rows.every(row=>['body','status'].includes(row.kind)),symbol+': no unexplained in-flow spacer consumes chart height');
   for(const row of rows)assert.ok(row.visible&&inside(row.rect,a.workbench.content)&&Number.isFinite(row.marginTop)&&Number.isFinite(row.marginBottom),symbol+': visible flow rows stay inside the workbench');
   const extent=row=>row.rect.height+row.marginTop+row.marginBottom;
   const top=a.workbench.content.top+rows.slice(0,index).reduce((sum,row)=>sum+extent(row),0)+a.flow.gap*index+rows[index].marginTop;
   const bottom=a.workbench.content.bottom-rows.slice(index+1).reduce((sum,row)=>sum+extent(row),0)-a.flow.gap*(rows.length-index-1)-rows[index].marginBottom;
   const remainingHeight=bottom-top;
   assert.ok(remainingHeight>0&&Math.abs(a.body.rect.top-top)<=tolerance&&Math.abs(a.body.rect.bottom-bottom)<=tolerance,
-    symbol+': chart body fills all remaining height after actual HUD, status, margins and gaps: '+JSON.stringify({top,bottom,remainingHeight,body:a.body.rect}));
+    symbol+': chart body fills all remaining height after status, margins and gaps: '+JSON.stringify({top,bottom,remainingHeight,body:a.body.rect}));
   assert.ok(a.body.visible&&a.canvas.visible&&same(a.canvas.rect,a.body.content),symbol+': chart canvas fills its allocated body without blank space');
   assert.ok(result.svg.visible&&a.svg.visible&&result.svg.height>=a.canvas.content.height*.75,label);
   assert.ok(same(a.svg.rect,a.canvas.content),symbol+': SVG stays contained in and fills the actual canvas');
   assert.ok(Math.abs(result.svg.height-a.svg.rect.height)<=tolerance&&Math.abs(result.svg.width-a.svg.rect.width)<=tolerance,symbol+': price-axis and allocation receipts measure the same SVG');
-  assert.ok(a.hud.visible&&inside(a.hud.rect,a.workbench.content)&&a.hud.rect.bottom<=a.canvas.rect.top+tolerance,symbol+': HUD and chart are contained without overlap');
-  assert.equal(a.hud.label,symbol+' 분할 매매 평단가',symbol+': HUD retains its selected instrument owner');
-  assert.deepEqual(a.hud.fields.map(field=>field.key).sort(),['holdings','quantity','average-cost','current-price','pnl','next-trigger','updated-at'].sort(),symbol+': all seven HUD fields remain present');
-  for(const field of a.hud.fields)assert.ok(field.text&&field.visible&&inside(field.rect,a.hud.rect),symbol+': HUD field remains visible and contained: '+field.key);
+  // cd53cad ownership: the trading criteria is a real overlay child of the chart
+  // canvas, painted for this instrument and never escaping the plot it covers.
+  assert.equal(a.criteria.symbol,symbol,symbol+': criteria overlay retains its selected instrument owner');
+  assert.equal(a.criteria.hasPopup,'dialog',symbol+': criteria overlay declares its details dialog');
+  assert.ok(a.criteria.visible&&valid(a.criteria.rect)&&a.criteria.rect.width>0&&a.criteria.rect.height>0,symbol+': criteria overlay is painted');
+  assert.ok(inside(a.criteria.rect,a.canvas.content),symbol+': criteria overlay stays inside the chart canvas it covers');
+  assert.deepEqual(a.criteria.fields.map(field=>field.key).sort(),['buy','criteria','current','neutral','sell','strong','win-rate'].sort(),
+    symbol+': every trading-criteria row remains present');
+  for(const field of a.criteria.fields)assert.ok(field.text&&field.visible&&inside(field.rect,a.criteria.rect),symbol+': criteria row remains visible and contained: '+field.key);
+}
+
+// Read the details dialog and the position HUD it now owns, whichever document
+// the hosted toolbar portal placed it in.
+export function readSimulationDetailsState() {
+  const frame=document.querySelector('.atlas-center-frame:not([hidden])'),doc=frame?.contentDocument;
+  const owners=[doc,document].filter(Boolean);
+  const dialog=owners.map(owner=>owner.querySelector('dialog.rsi-detail-dialog[open]')).find(Boolean)||null;
+  const hud=dialog?.querySelector('.rsi-simulation-hud')||null;
+  const criteria=(doc||document).querySelector('.rsi-trading-criteria');
+  const rect=node=>{if(!node)return null;const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
+  const pixels=value=>Number.parseFloat(value)||0;
+  const measured=node=>{
+    if(!node)return null;
+    const r=rect(node),style=node.ownerDocument.defaultView.getComputedStyle(node);
+    const content={left:r.left+pixels(style.borderLeftWidth)+pixels(style.paddingLeft),right:r.right-pixels(style.borderRightWidth)-pixels(style.paddingRight),
+      top:r.top+pixels(style.borderTopWidth)+pixels(style.paddingTop),bottom:r.bottom-pixels(style.borderBottomWidth)-pixels(style.paddingBottom)};
+    return {rect:r,content:{...content,width:content.right-content.left,height:content.bottom-content.top},
+      visible:node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})};
+  };
+  return {dialog:dialog?{...measured(dialog),open:Boolean(dialog.open),name:dialog.dataset.rsiDialog??null,label:dialog.getAttribute('aria-label')}:null,
+    hud:hud?{...measured(hud),label:hud.getAttribute('aria-label'),
+      fields:[...hud.querySelectorAll('[data-rsi-hud]')].map(node=>({key:node.dataset.rsiHud,text:node.textContent.trim(),...measured(node)}))}:null,
+    criteriaExpanded:criteria?.getAttribute('aria-expanded')??null};
+}
+
+// The details dialog is the confirmed cd53cad home of the position HUD. Closing
+// it must return the chart to the exact height it had before the dialog opened.
+export function assertSimulationDetailsRoundTrip({symbol,before,opened,after}) {
+  const seven=['holdings','quantity','average-cost','current-price','pnl','next-trigger','updated-at'],inside=insideRect;
+  const dialog=opened?.dialog;
+  assert.ok(dialog?.open,symbol+': details dialog must be open');
+  assert.equal(dialog.name,'simulation',symbol+': details dialog identifies the simulation view');
+  assert.ok(dialog.visible,symbol+': details dialog is painted');
+  assert.equal(opened.criteriaExpanded,'true',symbol+': criteria control reports its expanded details');
+  const hud=opened?.hud;
+  assert.ok(hud&&hud.visible,symbol+': position HUD must exist inside the opened details');
+  assert.equal(hud.label,symbol+' 분할 매매 평단가',symbol+': HUD retains its selected instrument owner');
+  assert.deepEqual(hud.fields.map(field=>field.key).sort(),[...seven].sort(),symbol+': all seven HUD fields remain present');
+  assert.ok(inside(hud.rect,dialog.content),symbol+': HUD stays inside the details dialog content');
+  for(const field of hud.fields)assert.ok(field.text&&field.visible&&inside(field.rect,hud.rect),symbol+': HUD field remains visible and contained: '+field.key);
+  const closed=after?.allocation;
+  assert.equal(closed?.criteria?.expanded,'false',symbol+': criteria control returns to its collapsed state');
+  assert.ok(closed?.criteria?.visible&&inside(closed.criteria.rect,closed.canvas.content),symbol+': closed details restore the in-chart criteria overlay');
+  for(const key of ['body','canvas','svg'])
+    assert.ok(before?.allocation?.[key]&&after?.allocation?.[key]&&Math.abs(before.allocation[key].rect.height-after.allocation[key].rect.height)<=1,
+      symbol+': closing details restores the '+key+' height ('+before?.allocation?.[key]?.rect?.height+' vs '+after?.allocation?.[key]?.rect?.height+')');
 }
 
 // Real static sources, native keyboard/pointer input, and the actual parent and
@@ -381,6 +441,38 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     await until(() => evaluate(cdp, symbol => document.body.dataset.chartControls==='ready'&&document.querySelector('#workbench-range-label')?.title.startsWith(symbol+' /'),symbol),'acknowledged controls for '+symbol);
     assert.equal(await evaluate(child,()=>Boolean(document.querySelector('.chart-workspace-toolbar')?.checkVisibility())),false,'Embedded chart cannot duplicate the instrument search row');
   }
+  // The confirmed cd53cad details path: the position HUD is reached from the
+  // in-chart criteria overlay with real pointer and keyboard input, and closing
+  // it must return the chart to its previous height.
+  async function simulationDetailsContract(symbol){
+    const criteria='.rsi-trading-criteria',canvas='.rsi-chart-canvas svg';
+    async function keyboardFocus(selector){
+      for(let attempt=0;attempt<16;attempt++){
+        await key('Tab','Tab',9);await settled(child);
+        if(await evaluate(child,selector=>document.activeElement?.matches?.(selector)===true,selector))return;
+      }
+      assert.fail(symbol+': native Tab navigation never reached '+selector);
+    }
+    for(const input of ['pointer','keyboard']){
+      const before=await evaluate(cdp,readConsolidatedChartAllocation);
+      if(input==='pointer')await pointer(child,criteria);
+      else{await pointer(child,canvas);await keyboardFocus(criteria);await key('Enter','Enter',13);}
+      await settled(child);
+      const opened=await until(async()=>{const state=await evaluate(cdp,readSimulationDetailsState);return state?.dialog?.open&&state.hud?state:null;},symbol+': '+input+' opens the simulation details');
+      assert.equal(await evaluate(cdp,()=>document.querySelector('.atlas-center-frame:not([hidden])')?.contentDocument?.querySelector('.rsi-trading-criteria')?.getAttribute('aria-expanded')),'true',symbol+': '+input+' opens the criteria details');
+      await snap(symbol.toLowerCase()+'-simulation-'+input);
+      await key('Escape','Escape',27);await settled(child);
+      await until(async()=>{const state=await evaluate(cdp,readSimulationDetailsState);return state?.dialog===null;},symbol+': '+input+' closes the simulation details');
+      const after=await evaluate(cdp,readConsolidatedChartAllocation);
+      (evidence.simulationDetails??=[]).push({symbol,input,
+        dialog:{name:opened.dialog.name,label:opened.dialog.label,rect:opened.dialog.rect},
+        hud:{label:opened.hud.label,fields:opened.hud.fields.map(field=>({key:field.key,text:field.text}))},
+        restored:{before:{body:before.allocation?.body?.rect.height,canvas:before.allocation?.canvas?.rect.height,svg:before.allocation?.svg?.rect.height},
+          after:{body:after.allocation?.body?.rect.height,canvas:after.allocation?.canvas?.rect.height,svg:after.allocation?.svg?.rect.height}}});
+      assertSimulationDetailsRoundTrip({symbol,before,opened,after});
+    }
+  }
+
   async function chartContract(symbol,unit,frequencies){
     await until(()=>evaluate(cdp,symbol=>document.body.dataset.chartControls==='ready'&&document.querySelector('#workbench-range-label')?.title.startsWith(symbol+' /'),symbol),'current price perimeter '+symbol);
     const result=await evaluate(cdp,()=>{
@@ -421,6 +513,7 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     assert.ok(result.range.includes(symbol+' / '+unit+' /'),symbol+': original price unit');
     assert.deepEqual(result.frequencies,frequencies,symbol+': only observed source frequencies');
     assertConsolidatedChartAllocation(result,symbol);
+    if(['TQQQ','SOXL','233740'].includes(symbol))await simulationDetailsContract(symbol);
     assert.ok(Math.abs(result.svg.width-result.svg.viewWidth)<=1&&Math.abs(result.svg.height-result.svg.viewHeight)<=1,symbol+': pixel-sized chart labels');
     assert.equal(result.units.length,1,symbol+': one visible price-axis unit');
     const axisUnit=result.units[0],unitBox=axisUnit.box;
