@@ -50,13 +50,15 @@ export function createPriceAxisLayout({svg,width,left=8,minRight=64,fontSize=11,
   // measurements. Keep it lazy so every native chart render (including the
   // per-day replay redraw) never pays for a font probe it does not consume.
   const axis={right,inset,edge,labelWidth,fontSize,badgeFontSize,measure:metrics.measure,
+    // A literal getter keeps the published shape typed for the React fitter,
+    // while native renders never read it and never pay for the probe.
+    get metricKey(){
+      const measured=metrics.measure(probe,fontSize),badgeMeasured=badgeFontSize===fontSize?measuredSample:metrics.measure(probe,badgeFontSize);
+      return JSON.stringify([font,fontSize,badgeFontSize,measured,badgeMeasured]);
+    },
     attributes(label,options){return Object.entries(textAttributes(label,options)).map(([name,value])=>`${name}="${axisEscape(value)}"`).join(' ');},
     fitNode(node,options={}){if(!node)return;for(const [name,value] of Object.entries(textAttributes(node.textContent,options)))node.setAttribute(name,value);node.setAttribute('font-size',options.badge?badgeFontSize:fontSize);},
   };
-  Object.defineProperty(axis,'metricKey',{enumerable:true,get(){
-    const measured=metrics.measure(probe,fontSize),badgeMeasured=badgeFontSize===fontSize?measuredSample:metrics.measure(probe,badgeFontSize);
-    return JSON.stringify([font,fontSize,badgeFontSize,measured,badgeMeasured]);
-  }});
   return axis;
 }
 
