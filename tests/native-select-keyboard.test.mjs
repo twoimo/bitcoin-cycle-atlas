@@ -2,6 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { inNativeSelectPopupMode, selectNativeOptionByKeyboard, nativeSelectKeyEvent, readNativeSelectTarget, nativeSelectLayoutLock } from '../scripts/native-select-keyboard.mjs';
 
+// These assertions describe the macOS desktop path, so the platform is pinned
+// here instead of following whatever host runs the suite. Calls that check the
+// Linux branch still pass their own platform and win through the spread.
+const darwinSelect = options => selectNativeOptionByKeyboard({ platform: 'darwin', ...options });
+const darwinPopup = options => inNativeSelectPopupMode({ platform: 'darwin', ...options });
+
 const layout = { innerWidth: 1440, clientWidth: 1440, scrollWidth: 1440, bodyWidth: 1440, devicePixelRatio: 1, coarsePointer: false,
   heading: null, plot: [83, 56, 1335, 779], select: [123.59, 496, 448, 35], selectValue: 'adaptive' };
 
@@ -27,7 +33,7 @@ const twoSteps = { from: 0, to: 2, fromPosition: 0, toPosition: 2, selected: 'ad
 
 test('desktop macOS uses internal popup mode, keeps the layout lock and restores the case emulation', async () => {
   const h = harness({ targets: [twoSteps], layouts: [layout, layout, layout], observed: [{ value: 'valuation', index: 2, focused: true }] });
-  const receipt = await selectNativeOptionByKeyboard({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'valuation', viewport: desktop });
+  const receipt = await darwinSelect({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'valuation', viewport: desktop });
   assert.deepEqual(h.metrics().map(call => call.params), [
     { width: 1440, height: 900, deviceScaleFactor: 1, mobile: true },
     { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false },
@@ -44,7 +50,7 @@ test('desktop macOS uses internal popup mode, keeps the layout lock and restores
 
 test('receipts record the popup backend and every emulation transition', async () => {
   const h = harness({ targets: [twoSteps], layouts: [layout, layout, layout], observed: [{ value: 'valuation', index: 2, focused: true }] });
-  const receipt = await selectNativeOptionByKeyboard({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'valuation', viewport: desktop });
+  const receipt = await darwinSelect({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'valuation', viewport: desktop });
   assert.deepEqual(receipt.popupMenu, { before: 'external-appkit', during: 'internal', after: 'external-appkit' });
   assert.deepEqual(receipt.transitions, [
     { step: 'enable-internal-popup', mobile: true, width: 1440, height: 900, deviceScaleFactor: 1 },
@@ -52,7 +58,7 @@ test('receipts record the popup backend and every emulation transition', async (
   ]);
   assert.equal(receipt.noOp, false);
   const linux = harness({ platform: 'linux', targets: [twoSteps], observed: [{ value: 'valuation', index: 2, focused: true }] });
-  const linuxReceipt = await selectNativeOptionByKeyboard({ cdp: linux.cdp, evaluate: linux.evaluate, settled: linux.settled, selector: '#eth-model', value: 'valuation', viewport: desktop, platform: 'linux' });
+  const linuxReceipt = await darwinSelect({ cdp: linux.cdp, evaluate: linux.evaluate, settled: linux.settled, selector: '#eth-model', value: 'valuation', viewport: desktop, platform: 'linux' });
   assert.deepEqual(linuxReceipt.popupMenu, { before: 'internal', during: 'internal', after: 'internal' });
   assert.deepEqual(linuxReceipt.transitions, []);
 });
@@ -60,7 +66,7 @@ test('receipts record the popup backend and every emulation transition', async (
 test('a no-op selection dispatches no keys, keeps focus and still restores the viewport', async () => {
   const h = harness({ targets: [{ from: 1, to: 1, fromPosition: 1, toPosition: 1, selected: 'pooled', disabled: false, options: 3, reachable: 3 }],
     layouts: [layout, layout, layout], observed: [{ value: 'pooled', index: 1, focused: true }] });
-  const receipt = await selectNativeOptionByKeyboard({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'pooled', viewport: desktop });
+  const receipt = await darwinSelect({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'pooled', viewport: desktop });
   assert.deepEqual(receipt.keys, []);
   assert.equal(receipt.noOp, true);
   assert.equal(h.keys().length, 0);
@@ -71,7 +77,7 @@ test('a no-op selection dispatches no keys, keeps focus and still restores the v
 
 test('only trusted key and emulation commands are sent: no value assignment, no synthetic events', async () => {
   const h = harness({ targets: [twoSteps], layouts: [layout, layout, layout], observed: [{ value: 'valuation', index: 2, focused: true }] });
-  await selectNativeOptionByKeyboard({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'valuation', viewport: desktop });
+  await darwinSelect({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'valuation', viewport: desktop });
   assert.deepEqual([...new Set(h.sends.map(call => call.method))], ['Emulation.setDeviceMetricsOverride', 'Input.dispatchKeyEvent']);
   for (const read of h.reads) {
     assert.ok(!/\.value\s*=(?!=)/.test(read.source), 'reader must never assign a value: ' + read.name);
@@ -83,7 +89,7 @@ test('only trusted key and emulation commands are sent: no value assignment, no 
 test('a layout change during the switch fails closed before any keystroke', async () => {
   const narrower = { ...layout, innerWidth: 980, clientWidth: 980, scrollWidth: 980, bodyWidth: 980, plot: [83, 56, 875, 779] };
   const h = harness({ targets: [twoSteps], layouts: [layout, narrower] });
-  await assert.rejects(selectNativeOptionByKeyboard({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'valuation', viewport: desktop }),
+  await assert.rejects(darwinSelect({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'valuation', viewport: desktop }),
     /changed the tested desktop layout/);
   assert.deepEqual(h.metrics().map(call => call.params.mobile), [true, false]);
   assert.equal(h.keys().length, 0, 'the rejected switch must not dispatch keys');
@@ -92,14 +98,14 @@ test('a layout change during the switch fails closed before any keystroke', asyn
 test('an unrestorable viewport is reported instead of silently keeping internal popup mode', async () => {
   const narrower = { ...layout, innerWidth: 1000, clientWidth: 1000, scrollWidth: 1000, bodyWidth: 1000 };
   const h = harness({ targets: [twoSteps], layouts: [layout, layout, narrower], observed: [{ value: 'valuation', index: 2, focused: true }] });
-  await assert.rejects(selectNativeOptionByKeyboard({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'valuation', viewport: desktop }),
+  await assert.rejects(darwinSelect({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'valuation', viewport: desktop }),
     /not restored to the tested desktop viewport/);
   assert.deepEqual(h.metrics().map(call => call.params.mobile), [true, false]);
 });
 
 test('linux targets keep their emulation and use the standard virtual key codes', async () => {
   const h = harness({ platform: 'linux', targets: [twoSteps], observed: [{ value: 'valuation', index: 2, focused: true }] });
-  const receipt = await selectNativeOptionByKeyboard({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'valuation', viewport: desktop, platform: 'linux' });
+  const receipt = await darwinSelect({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'valuation', viewport: desktop, platform: 'linux' });
   assert.equal(h.metrics().length, 0);
   assert.equal(receipt.internalPopupMode, false);
   assert.equal(h.keys()[0].params.nativeVirtualKeyCode, 40);
@@ -108,7 +114,7 @@ test('linux targets keep their emulation and use the standard virtual key codes'
 
 test('mobile-emulated cases are untouched', async () => {
   const h = harness({ targets: [twoSteps], observed: [{ value: 'valuation', index: 2, focused: true }] });
-  const receipt = await selectNativeOptionByKeyboard({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'valuation', viewport: { width: 320, height: 900, mobile: true } });
+  const receipt = await darwinSelect({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'valuation', viewport: { width: 320, height: 900, mobile: true } });
   assert.equal(h.metrics().length, 0);
   assert.equal(receipt.emulated, 'mobile');
   assert.equal(h.keys().length, 4);
@@ -116,7 +122,7 @@ test('mobile-emulated cases are untouched', async () => {
 
 test('an unreachable option is rejected without touching the browser', async () => {
   const h = harness({ targets: [{ ...twoSteps, to: -1, toPosition: -1 }] });
-  await assert.rejects(selectNativeOptionByKeyboard({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'missing', viewport: desktop }),
+  await assert.rejects(darwinSelect({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'missing', viewport: desktop }),
     /not a reachable native option/);
   assert.equal(h.sends.length, 0);
 });
@@ -124,7 +130,7 @@ test('an unreachable option is rejected without touching the browser', async () 
 test('a disabled or hidden current option is reset with Home before the arrows', async () => {
   const h = harness({ targets: [{ from: 0, to: 1, fromPosition: -1, toPosition: 1, selected: '', disabled: false, options: 3, reachable: 2 }],
     layouts: [layout, layout, layout], observed: [{ value: 'b', index: 1, focused: true }] });
-  const receipt = await selectNativeOptionByKeyboard({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#s', value: 'b', viewport: desktop });
+  const receipt = await darwinSelect({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#s', value: 'b', viewport: desktop });
   assert.deepEqual(receipt.keys, ['Home', 'ArrowDown']);
   assert.equal(receipt.homeReset, true);
   assert.equal(h.keys()[0].params.nativeVirtualKeyCode, 115);
@@ -133,7 +139,7 @@ test('a disabled or hidden current option is reset with Home before the arrows',
 test('arrow direction follows the reachable position, not the raw index', async () => {
   const h = harness({ targets: [{ from: 4, to: 1, fromPosition: 2, toPosition: 0, selected: 'e', disabled: false, options: 5, reachable: 3 }],
     layouts: [layout, layout, layout], observed: [{ value: 'b', index: 1, focused: true }] });
-  const receipt = await selectNativeOptionByKeyboard({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#s', value: 'b', viewport: desktop });
+  const receipt = await darwinSelect({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#s', value: 'b', viewport: desktop });
   assert.equal(receipt.key, 'ArrowUp');
   assert.deepEqual(receipt.keys, ['ArrowUp', 'ArrowUp']);
   assert.equal(h.keys()[0].params.nativeVirtualKeyCode, 126);
@@ -141,7 +147,7 @@ test('arrow direction follows the reachable position, not the raw index', async 
 
 test('focus loss inside the interaction is rejected', async () => {
   const h = harness({ targets: [twoSteps], layouts: [layout, layout], focus: { focused: false, disabled: false } });
-  await assert.rejects(selectNativeOptionByKeyboard({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'valuation', viewport: desktop }),
+  await assert.rejects(darwinSelect({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#eth-model', value: 'valuation', viewport: desktop }),
     /did not accept keyboard focus/);
   assert.deepEqual(h.metrics().map(call => call.params.mobile), [true, false]);
   assert.equal(h.keys().length, 0);
@@ -150,7 +156,7 @@ test('focus loss inside the interaction is rejected', async () => {
 test('the primitive runs the harness sequence unchanged when no override is needed', async () => {
   const h = harness();
   let ran = 0;
-  const receipt = await inNativeSelectPopupMode({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#s', viewport: { width: 320, height: 900, mobile: true }, run: async () => { ran++; return { steps: 1 }; } });
+  const receipt = await darwinPopup({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#s', viewport: { width: 320, height: 900, mobile: true }, run: async () => { ran++; return { steps: 1 }; } });
   assert.equal(ran, 1);
   assert.equal(h.sends.length, 0);
   assert.equal(receipt.internalPopupMode, false);
@@ -159,7 +165,7 @@ test('the primitive runs the harness sequence unchanged when no override is need
 
 test('the primitive restores the case viewport even when the sequence throws', async () => {
   const h = harness({ layouts: [layout, layout, layout] });
-  await assert.rejects(inNativeSelectPopupMode({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#s', viewport: desktop, run: async () => { throw new Error('sequence failed'); } }),
+  await assert.rejects(darwinPopup({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#s', viewport: desktop, run: async () => { throw new Error('sequence failed'); } }),
     /sequence failed/);
   assert.deepEqual(h.metrics().map(call => call.params.mobile), [true, false]);
 });
@@ -208,7 +214,7 @@ for (const failure of ['override', 'readiness', 'geometry']) {
       return h.evaluate(...args);
     };
     const settled = async () => { if (++waits === 1 && failure === 'readiness') throw new Error('injected readiness'); };
-    await assert.rejects(inNativeSelectPopupMode({ cdp: h.cdp, evaluate, settled, selector: '#s', viewport: desktop,
+    await assert.rejects(darwinPopup({ cdp: h.cdp, evaluate, settled, selector: '#s', viewport: desktop,
       run: async () => { ran = true; } }), new RegExp('injected ' + failure));
     assert.equal(ran, false);
     assert.deepEqual(h.metrics().map(call => call.params.mobile), [true, false]);
@@ -222,7 +228,7 @@ test('a failing keystroke run still reads the restored layout and keeps the firs
     if (args[1].name === 'readNativeSelectLayout') layoutReads++;
     return h.evaluate(...args);
   };
-  const error = await inNativeSelectPopupMode({ cdp: h.cdp, evaluate, settled: h.settled, selector: '#s', viewport: desktop,
+  const error = await darwinPopup({ cdp: h.cdp, evaluate, settled: h.settled, selector: '#s', viewport: desktop,
     run: async () => { throw new Error('injected keystroke'); } }).then(() => null, failure => failure);
   assert.equal(error?.message, 'injected keystroke');
   assert.equal(layoutReads, 3, 'the restoration read must still run after a failing sequence');
@@ -232,7 +238,7 @@ test('a failing keystroke run still reads the restored layout and keeps the firs
 
 test('a failed restoration is reported next to the original error instead of replacing it', async () => {
   const h = harness({ layouts: [layout, layout, { ...layout, innerWidth: 900, clientWidth: 900, scrollWidth: 900, bodyWidth: 900 }] });
-  const error = await inNativeSelectPopupMode({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#s', viewport: desktop,
+  const error = await darwinPopup({ cdp: h.cdp, evaluate: h.evaluate, settled: h.settled, selector: '#s', viewport: desktop,
     run: async () => { throw new Error('injected keystroke'); } }).then(() => null, failure => failure);
   assert.equal(error?.message, 'injected keystroke');
   assert.match(error?.restoreError ?? '', /not restored|injected/);

@@ -118,6 +118,20 @@ reader(차트 상세 패널)의 설정·날짜·명령 조작부는 620px 이하
 
 남은 항목: D04(960px compare CSS/JS), D08(Linux fixture), D09의 3항목(scrollTop 직접 대입·ancestor hit·왕복 반올림), D02 데이터 owner 준비 상태 설계, 320/390 첫 진입 간헐 실패의 진단 계측, WP-A 미디어, macOS 외부 AppKit·Safari·실기기, 원격 CI·배포.
 
+## 2026-11-11 후속 6 — D08 플랫폼 고정, D04 충돌 기록
+
+**D08 (Linux에서 native-select 13건 실패) — 수정.** 테스트가 macOS 데스크톱 경로를 검사하면서 플랫폼을 호스트 기본값(`process.platform`)에 맡기고 있었다. 리눅스에서는 Darwin 분기를 건너뛰는데 단언은 Darwin 전환·키코드를 기대해 실패한다. 테스트 파일에서 호출을 `platform:'darwin'`으로 고정하는 래퍼(`darwinSelect`·`darwinPopup`)로 통일했다. 리눅스 분기를 검사하는 두 호출은 자기 `platform:'linux'`를 그대로 넘겨 스프레드에서 우선한다. macOS에서 22/22 통과. 리눅스 실행은 이 환경에서 하지 않았으므로 리눅스 실패 0을 직접 관측한 것은 아니다.
+
+**D04 (960px compare의 CSS/JS 모드 불일치) — 수정 시도 후 철회, 충돌 기록.** 실측으로 확인한 상태는 이랬다. compare에서 reader를 열면 959px 이하에서는 `overlay=true`로 차트를 inert 처리하고, 960px 이상에서는 `position:fixed`로 차트 위 316px를 덮으면서 `overlay=false`(키보드 트랩·inert 없음)였다. 덮인 영역이 탭 가능한 채로 남는 결함이다.
+
+시도한 수정은 compare의 960px 이상 그리드를 `minmax(0,1fr) 0 var(--rail)`에서 `minmax(0,1fr) var(--detail-width,320px) var(--rail)`로 바꿔 열 폭을 실제로 예약하는 것이었다. 측정 결과 960·1024·1200·1440·1920에서 겹침이 316px에서 0px로 사라지고 닫기 버튼도 유지됐다.
+
+그러나 `verify-workspace-browser`의 기존 계약이 "reader를 열어도 문서·워크스페이스 폭이 변하지 않아야 한다"(`Opening reader changed document or chart workspace width`)를 요구해 정면으로 충돌했고, 53-case 스위트가 해당 legacy 워크스페이스에서 실패했다. 두 계약 중 하나를 임의로 뒤집지 않기 위해 CSS를 되돌렸다. 남은 선택지는 (a) 폭 불변 계약을 유지하고 960px 이상에서 키보드 트랩만 추가(차트는 덮인 채 탭 가능), (b) 폭 예약으로 겹침을 없애고 기존 폭 불변 계약을 새 계약으로 교체(차트가 좁아짐). 제품 결정이 필요하다.
+
+이번 후보 최종 확인(커밋 `d729bab` + D08 테스트 수정): 53-case 53/53 통과, compare PASSED, 전체 `npm test` `complete:true` 3,360개 중 3,355 통과·실패 0·제외 5, typecheck·static·Pages build/verify 통과.
+
+남은 항목: D04(위 두 선택지 중 결정), D09의 3항목(scrollTop 직접 대입·ancestor hit·왕복 반올림), D02 데이터 owner 준비 상태 설계, 320/390 첫 진입 간헐 실패의 진단 계측, WP-A 미디어, macOS 외부 AppKit·Safari·실기기, 원격 CI·배포.
+
 ## 목표와 경계
 
 - 관측 데이터·모형·출처·불변 기록을 보존하면서 화면의 불필요한 장식과 중복을 줄인다.
