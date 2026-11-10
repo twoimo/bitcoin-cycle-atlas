@@ -89,17 +89,18 @@ export function checkPublicationMetadata(manifest) {
 // The public artifact is read exactly once. Path containment and regular-file
 // identity are metadata-only checks; the single inventory pass both hashes every
 // public file and proves the published set has no extra, missing or duplicate
-// member. Reading each file a second time for the checksum loop cannot observe
-// anything the inventory has not already rejected.
+// member. This assumes an immutable staged artifact, as the packager provides in
+// build/cloudflare-assets; it is not a proof that concurrent filesystem writes
+// during the pass would be observed.
+// An absent member (ENOENT) is left to the inventory comparison below so it is
+// reported as a changed public directory; every other filesystem error
+// (EACCES, EIO, ELOOP) still fails closed here.
 export async function checkPublication(manifest,{directory=dist}={}) {
   checkPublicationMetadata(manifest);
   const base=await realpath(directory);
   for (const file of manifest.files) {
     const path=resolve(directory,file.path);
-    // A member that no longer exists is reported by the inventory comparison
-    // below; only an entry that is present can leave the artifact or be
-    // something other than a regular file.
-    const stats=await lstat(path).catch(()=>null);
+    const stats=await lstat(path).catch(error=>{if(error?.code==='ENOENT')return null;throw error;});
     if (!stats) continue;
     if (!stats.isFile()) throw new Error(`Not a regular public file: ${file.path}`);
     const physical=await realpath(path);

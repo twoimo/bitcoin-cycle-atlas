@@ -160,5 +160,4 @@ test('concurrently parsed modules still reject a syntax error and report it dete
   await app.html('a-broken.js','export const broken = ;');
   await app.html('z-broken.js','export const broken = ;');
   await assert.rejects(app.verify('export const ready=true;'),error=>/SyntaxError/.test(error.stderr)&&/a-broken\.js/.test(error.stderr)&&!/z-broken\.js/.test(error.stderr));
-  await rm(path.join('dist','a-broken.js'),{force:true});
 });

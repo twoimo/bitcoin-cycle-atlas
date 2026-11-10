@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { mkdtemp, writeFile, mkdir, rm, symlink } from 'node:fs/promises';
+import { mkdtemp, writeFile, mkdir, rm, symlink, chmod } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
@@ -54,6 +54,17 @@ test('a missing, extra, hidden, replaced or aliased public member is rejected wi
   await assert.rejects(checkPublication(record,{directory}),/Published file checksum mismatch: index\.html/);
   await writeFile(join(directory,'index.html'),'original');
   assert.equal(await checkPublication(record,{directory}),2);
+});
+
+test('a filesystem error other than a missing member fails closed instead of being skipped',async t=>{
+  if(process.getuid?.()===0)return t.skip('Permission controls do not restrict the root user');
+  const directory=await mkdtemp(join(tmpdir(),'atlas-publication-eacces-'));t.after(()=>rm(directory,{recursive:true,force:true}));
+  await mkdir(join(directory,'locked'));await writeFile(join(directory,'locked','index.html'),'x');
+  const record=manifest([{path:'locked/index.html',bytes:1,sha256:hash('x')}]);
+  assert.equal(await checkPublication(record,{directory}),1);
+  await chmod(join(directory,'locked'),0o000);
+  try { await assert.rejects(checkPublication(record,{directory}),error=>error.code==='EACCES'); }
+  finally { await chmod(join(directory,'locked'),0o755); }
 });
 
 test('a recomputed metadata checksum cannot conceal an inconsistent preparation state',()=>{

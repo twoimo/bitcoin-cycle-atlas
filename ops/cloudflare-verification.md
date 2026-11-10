@@ -212,21 +212,23 @@ container resource measurements determine whether it fits the free limit.
 Each gate is a distinct obligation, not a distinct amount of work. Duplicated
 work inside a gate is pure cost: it cannot fail without the gate failing, and it
 cannot pass something the gate's other checks already reject. Three kinds of
-duplication were measured on2026-11-10 and only the ones with a proven
-replacement were changed.
+duplication were reviewed on2026-11-10; only the ones with a proven replacement
+were changed.
 
 | Work | Before | After | Why the replacement is equivalent |
 | --- | --- | --- | --- |
-| Public artifact identity (`checkPublication`) | every public file read and hashed twice: once per manifest row, then again by the directory inventory | one inventory pass hashes each file once; manifest rows are matched against it, and path containment plus regular-file identity stay as metadata-only checks before it | the first pass only proved byte identity and directory membership, both of which the single inventory proves; the added missing-file and non-regular-file controls are in `tests/publication-manifest.test.mjs` |
+| Public artifact identity (`checkPublication`) | every public file read and hashed twice: once per manifest row, then again by the directory inventory | one inventory pass hashes each file once; manifest rows are matched against it, and path containment plus regular-file identity stay as metadata-only checks before it | for an immutable staged artifact the first pass only proved byte identity and directory membership, both of which the single inventory proves; missing-file, non-regular-file and filesystem-error controls are in `tests/publication-manifest.test.mjs` |
 | Publication preparation inventory | the same directory scanned and hashed three times | scanned once, then one confirmation scan; the two must be byte-identical or preparation stops | the second and third scans could only ever return the first scan's digest, because they read the same unchanged directory; the equality is now asserted instead of implied |
-| Static syntax checks (`verify-static.mjs`) | one `node --check` process per JavaScript file, strictly sequential | the same commands with bounded parallelism, first failure in sorted path order rethrown | every file still runs the identical parser command; only the wait between independent processes is removed, and the reported failure stays deterministic |
+| Static syntax checks (`verify-static.mjs`) | one `node --check` process per JavaScript file, strictly sequential | the same commands with a fixed bound of four parallel processes, first failure in sorted path order rethrown | every file still runs the identical parser command; only the wait between independent processes is removed, and the reported failure stays deterministic |
 
-Measured on the committed `dist` artifact (964 files, 211 ES modules, 76 MiB):
-`verify-static` 8.4 s to 0.8 s, publication preparation 0.9 s to 0.8 s,
-`build-publication --check` 0.4 s to 0.3 s on a warm page cache. The artifact
-identity pass is O(total bytes), so its saving grows with artifact size, while
-the syntax saving is O(files) parser processes and is bounded by the file
-count, not by test count. Both are invariant to how many tests the suite holds.
+Single-run observations on the committed `dist` artifact (964 files, 211 ES
+modules, 76 MiB, warm page cache, one local machine): `verify-static` completed
+in 8.4 s before the change and 0.8 s after it, publication preparation in 0.9 s
+and 0.8 s, `build-publication --check` in 0.4 s and 0.3 s. These are separate
+observations, not a paired measurement: no interleaved A/B on one host has been
+run for them, so they do not establish an official speed-up factor. Structurally
+the artifact identity pass is O(total bytes) per artifact and the syntax check is
+O(files) parser processes, both independent of the number of tests.
 
 Deliberate duplication that was **not** removed, because removing it would
 change a contract rather than repeat work:

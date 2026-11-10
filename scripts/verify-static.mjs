@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import { readdir, readFile, lstat } from 'node:fs/promises';
-import { availableParallelism } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFile } from 'node:child_process';
@@ -39,7 +38,9 @@ async function checkSyntax(files) {
       catch (error) { failures.push({ file, error }); }
     }
   };
-  const concurrency = Math.max(1, Math.min(availableParallelism(), scripts.length));
+  // A small fixed bound keeps the extra load predictable on a shared host; the
+  // parser commands are short-lived and the pool is bounded by the file count.
+  const concurrency = Math.max(1, Math.min(4, scripts.length));
   await Promise.all(Array.from({ length: concurrency }, worker));
   if (failures.length) {
     failures.sort((left, right) => left.file < right.file ? -1 : left.file > right.file ? 1 : 0);
