@@ -580,7 +580,8 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     // Preserve actual allocation and glyph bounds even if either assertion fails.
     (evidence.chartAllocation??=[]).push({symbol,...result.allocation});
     (evidence.priceAxisGeometry??=[]).push({symbol,svg:result.svg,plot:result.plot,units:result.units,markers:result.markers});
-    const observationDisclosure=await evaluate(cdp,()=>document.querySelector('.atlas-canvas-heading')?.dataset.mobileHeading==='two-row');
+    const observationOwnership=await evaluate(cdp,readConsolidatedToolbarOwnership);
+    const observationDisclosure=consolidatedToolbarUsesDisclosure(observationOwnership,symbol);
     if(observationDisclosure&&await evaluate(cdp,()=>document.querySelector('#atlas-shell-features-panel')?.hidden))await pointer(cdp,'#atlas-shell-features-toggle');
     result.observation=await evaluate(cdp,readConsolidatedObservationGeometry,unit);
     // Keep the original ranges in a failed receipt too, including the unit's
