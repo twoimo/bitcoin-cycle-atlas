@@ -58,6 +58,29 @@ Pro가 지적한 나머지는 미수정으로 남긴다. D03 reader를 연 채 �
 
 아직 닫히지 않은 것: 위 D03~D09, WP-A 미디어·청취·동기화·PDF·Linux 원자 게시, macOS 외부 AppKit 메뉴·Safari·실기기, 원격 CI·배포. `mediaPrepared:false`와 출시 보류를 유지한다.
 
+## 2026-11-11 후속 2 — Pro 2차 검토 반영
+
+같은 스레드의 2차 검토(15분 18초)는 고정 SHA `7892df9`를 읽고 D01 PASS, D02 PARTIAL, 사이드바/레일 전환의 새 결함(N01·N02) 지적, 하네스 판정(① PASS, ② PARTIAL, ③ 검사 범위 축소)을 제시했다. 지적은 전부 소스에서 다시 확인한 뒤 처리했다.
+
+| 항목 | 판정 | 근거 |
+|---|---|---|
+| N01 (P1) 차트에서 처음 대시보드로 올 때 내비가 숨은 차트 레일 소유로 남음 | 수정 | `navHome`을 대시보드 host로 쓰던 것이 원인이었다. 대시보드 host는 실제 `.atlas-sidebar`로 고정하고 `navHome`은 차트 복귀용으로만 남겼다. |
+| N02 (P2) 761–1100px fine pointer에서 사이드바 내비 32px | 수정·실측 | `atlas-shell.css`의 1100px 규칙을 사이드바·레일 양쪽에 적용하고 브랜드 버튼도 44px로 올렸다. 실측: 1100/1024에서 199×44, 900/768/641에서 51×44, 640/390에서는 레일 44×44, 1440 데스크톱은 기존 32px 행 유지. |
+| 하네스 ③ 검사 범위 축소 | 수정 | Phase D 조작부 수집이 `.atlas-canvas-heading`·`.workbench-rail`·`.workbench-bottom-bar`만 봐서 사이드바로 옮겨간 내비가 빠졌다. 현재 내비 소유 host를 수집 대상에 넣었고, 그 결과 768/1024의 브랜드 36px가 실제로 걸려 CSS를 고쳐야 했다. 검사가 약해진 게 아니라 이전에 비어 있던 범위였다. |
+| D06·D09 emulation 전 native client 검사 | 구현 | 독립 44-case·compare 러너에 `--window-size=2048,1600`과 첫 emulation 전 `verifyHeadlessWindowEnvelope`를 넣었다. compare 실측 영수증: window 2048×1600, client 2048×1513, 요청 1920×1080. |
+| D07 select 실패 후 복원 readback | 구현 | 복원과 readback을 모든 결과에서 실행하고, 복원 실패는 원래 오류를 덮지 않고 `restoreError`로 붙인다. 회귀 테스트 2건 추가, 해당 파일 22/22 통과. |
+| D02 준비된 자료 잠금 해제 | 철회 | 제안대로 `.atlas-plot` 존재를 준비 상태로 쓰면 안 된다는 Pro 판단이 맞았다. 실측으로도 데이터가 로드된 `?page=data`에서 옮겨진 하단 버튼이 어떤 시트도 열지 않아(모든 dialog 닫힘), 잠금을 풀면 죽은 조작이 노출된다. 잠금과 이유 문구를 그대로 둔다. |
+
+이번 후보 커밋 `f21a3b6f282ffc007fa0ffc29cfda3caacfa54f2`에서 실행한 결과:
+
+- 전체 사이트 53-case 네이티브 브라우저 스위트 **53/53 passed, failures 0**.
+- compare 셸 실브라우저 **PASSED**(사이드바 소유권·44px·왕복·source 잠금 복원 포함).
+- `npm run typecheck`, `npm run verify:static`, `npm run build:pages`, `npm run verify:pages` 통과.
+- 전체 `npm test`: `ATLAS_TEST_TOTAL {"complete":true,"tests":3360,"pass":3355,"fail":0,"skipped":5,"batches":2}`.
+- 반응형 44-case는 BTCUSD 11/11 통과. ETHUSD 10/11, MSTR 11/11, BMNR 10/11로, 실패는 모두 첫 화면(320×568, 때로 390×844)의 간헐적 boot error(`dataset.boot='error'`)였다. 같은 현상이 `dist`를 되돌린 기준 상태에서도 재현되므로 이번 변경의 회귀로 보지 않지만, 첫 페인트 실패율이 무시할 수준이 아니어서 미해결 결함으로 별도 기록한다.
+
+남은 항목: N01/N02 외의 D03(reader Back), D04(960px compare CSS/JS), D05(reader 내부 44px), D08(Linux native-select fixture), D02의 데이터 owner 준비 상태 설계, 위 boot error 간헐화, WP-A 미디어·청취·PDF·Linux 게시, macOS 외부 AppKit 메뉴·Safari·실기기, 원격 CI·배포. `mediaPrepared:false`와 출시 보류를 유지한다.
+
 ## 목표와 경계
 
 - 관측 데이터·모형·출처·불변 기록을 보존하면서 화면의 불필요한 장식과 중복을 줄인다.
