@@ -16,7 +16,7 @@
 | C03 | replay 유한 검증 갱신 | coordinator SHA-256 4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca에 대해 16/16 및 10,000 playback traces·259 selection traces·11개 negative controls를 기록했다. 실제 브라우저 또는 무한 정형 증명은 아니다. 다른 수명주기 변경 시 해당 검사를 다시 수행한다. |
 | A01/A02 / WP-A | 부분 준비·미디어 gate 유지 | 오디오 15세션·16파일만 준비. mediaPrepared:false. 직접 청취·동기화 10지점, PDF 547페이지, 전체 미디어·Linux 원자 게시 검수가 남는다. 원본 자산은 존재한다. |
 | G02/R01/R02 | 출시 보류 | 작업 브랜치 인계 push만 승인됐다. main 직접 push·merge·force push·배포·PR 상태 변경은 하지 않는다. PR #98 open/draft는 마지막 관측이며 필요 시 실시간 재확인한다. |
-| F01 | 인계·예약 설정 중 | ChatGPT Browser Pro에 요청사항·체크리스트 정합성 및 잔여 증거 검토를 먼저 맡긴다. Pro 응답·실제 파일 변경·로컬 실행·원격 수락을 분리한다. 기존 예비 루틴 재사용을 우선하고 네 번째 루틴은 만들지 않는다. |
+| F01 | Pro 시작 확인, 예약 [blocked] | 인계 963abdaeaf2b7818ed09af0dca883665c43c7a41의 원격 SHA 일치를 확인했다. [Pro 전용 스레드](https://chatgpt.com/c/6af34824-c838-83e8-8a29-674f636a56df)는 GPT-6/Pro 5단계에서 1회 전송 후 생각 중·중지와 저장된 URL을 확인했다. 응답 완료·로컬 구현 완료가 아니다. 기존 예비 bhaQzbDtGEjUGS9a 갱신은 Routine not found로 차단됐으며 원래 paused 상태와 다른 루틴을 보존했다. 새 루틴은 만들지 않았다. |
 
 ### 남은 작업과 닫는 조건
 
