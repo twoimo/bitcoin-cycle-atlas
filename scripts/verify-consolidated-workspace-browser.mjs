@@ -191,6 +191,7 @@ export function readSimulationDetailsState() {
   const owners=[doc,document].filter(Boolean);
   const dialog=owners.map(owner=>owner.querySelector('dialog.rsi-detail-dialog[open]')).find(Boolean)||null;
   const hud=dialog?.querySelector('.rsi-simulation-hud')||null;
+  const body=dialog?.querySelector('.rsi-detail-body')||null;
   const criteria=(doc||document).querySelector('.rsi-trading-criteria');
   const criteriaDetails=dialog?.querySelector('.rsi-criteria-details'),criteriaList=criteriaDetails?.querySelector('dl');
   const rect=node=>{if(!node)return null;const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
@@ -203,8 +204,13 @@ export function readSimulationDetailsState() {
     return {rect:r,content:{...content,width:content.right-content.left,height:content.bottom-content.top},
       visible:node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})};
   };
+  // Overflow clips at the scrollport padding box, not the inner content box.
+  // Keep both measurements and also intersect with the owning visual viewport.
+  const scrollport=()=>{if(!body)return null;const r=body.getBoundingClientRect(),d=dialog.getBoundingClientRect(),win=body.ownerDocument.defaultView;
+    const left=Math.max(0,d.left,r.left+body.clientLeft),top=Math.max(0,d.top,r.top+body.clientTop),right=Math.min(win.innerWidth,d.right,r.left+body.clientLeft+body.clientWidth),bottom=Math.min(win.innerHeight,d.bottom,r.top+body.clientTop+body.clientHeight);
+    return {left,top,right,bottom,width:Math.max(0,right-left),height:Math.max(0,bottom-top)};};
   return {owner:dialog?.ownerDocument===document?'parent':'child',
-    dialog:dialog?{...measured(dialog),body:measured(dialog.querySelector('.rsi-detail-body')),open:Boolean(dialog.open),name:dialog.dataset.rsiDialog??null,label:dialog.getAttribute('aria-label')}:null,
+    dialog:dialog?{...measured(dialog),body:measured(body),scrollport:scrollport(),open:Boolean(dialog.open),name:dialog.dataset.rsiDialog??null,label:dialog.getAttribute('aria-label')}:null,
     criteria:criteriaList?{...measured(criteriaList),label:criteriaDetails.getAttribute('aria-label'),fields:[...criteriaList.querySelectorAll('[data-criteria-detail]')].map(node=>({key:node.dataset.criteriaDetail,text:node.textContent.trim(),...measured(node)}))}:null,
     hud:hud?{...measured(hud),label:hud.getAttribute('aria-label'),
       fields:[...hud.querySelectorAll('[data-rsi-hud]')].map(node=>({key:node.dataset.rsiHud,text:node.textContent.trim(),...measured(node)}))}:null,
@@ -224,7 +230,7 @@ export function assertSimulationDetailsRoundTrip({symbol,before,opened,after}) {
   assert.ok(hud&&hud.visible,symbol+': position HUD must exist inside the opened details');
   assert.equal(hud.label,symbol+' 분할 매매 평단가',symbol+': HUD retains its selected instrument owner');
   assert.deepEqual(hud.fields.map(field=>field.key).sort(),[...seven].sort(),symbol+': all seven HUD fields remain present');
-  assert.ok(inside(hud.rect,dialog.body?.content),symbol+': HUD stays inside the details dialog content');
+  assert.ok(inside(hud.rect,dialog.scrollport),symbol+': HUD stays inside the details dialog scrollport: '+JSON.stringify({hud:hud.rect,scrollport:dialog.scrollport}));
   assert.equal(opened.criteria?.label,symbol+' 매매 기준과 전체 기간 결과',symbol+': detailed criteria retains its selected instrument owner');
   assert.deepEqual(opened.criteria.fields.map(field=>field.key).sort(),['buy','criteria','current','neutral','sell','strong','win-rate'].sort(),symbol+': all seven detailed criteria fields remain present');
   assert.ok(opened.criteria.visible&&inside(opened.criteria.rect,opened.criteriaViewport),symbol+': detailed criteria were scrolled into the visible dialog body');
@@ -308,6 +314,7 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
       }, selector);
       assert.ok(movement, 'No native scroll can reveal ' + selector + ': ' + JSON.stringify(target));
       const point = await parentPoint(context, movement);
+      await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', ...point });
       await cdp.send('Input.dispatchMouseEvent', { type: 'mouseWheel', ...point, deltaX: movement.deltaX, deltaY: movement.deltaY });
       await settled(context);
     }
@@ -477,7 +484,7 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
       await reveal(dialogContext,'dialog.rsi-detail-dialog[open] .rsi-criteria-details dl');
       const criteriaState=await evaluate(cdp,readSimulationDetailsState);
       await reveal(dialogContext,'dialog.rsi-detail-dialog[open] .rsi-simulation-hud');
-      opened={...await evaluate(cdp,readSimulationDetailsState),criteria:criteriaState.criteria,criteriaViewport:criteriaState.dialog.body.content};
+      opened={...await evaluate(cdp,readSimulationDetailsState),criteria:criteriaState.criteria,criteriaViewport:criteriaState.dialog.scrollport};
       assert.equal(await evaluate(cdp,()=>document.querySelector('.atlas-center-frame:not([hidden])')?.contentDocument?.querySelector('.rsi-trading-criteria')?.getAttribute('aria-expanded')),'true',symbol+': '+input+' opens the criteria details');
       await snap(symbol.toLowerCase()+'-simulation-'+input);
       await key('Escape','Escape',27);await settled(child);

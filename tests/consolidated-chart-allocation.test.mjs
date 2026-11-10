@@ -31,7 +31,7 @@ function allocation({width=390,height=708,statusHeight=0,symbol='TQQQ'}={}){
 }
 
 function detailsOpen(symbol='TQQQ',{fields=hudFields}={}){
-  return {dialog:{...measured(rect(0,0,600,700)),body:measured(rect(4,40,592,656)),open:true,name:'simulation',label:symbol+' 매매 기준 · 분할 매매 성과'},
+  return {dialog:{...measured(rect(0,0,600,700)),body:measured(rect(4,40,592,656)),scrollport:rect(4,40,592,656),open:true,name:'simulation',label:symbol+' 매매 기준 · 분할 매매 성과'},
     hud:{...measured(rect(12,60,576,320)),label:symbol+' 분할 매매 평단가',
       fields:fields.map((key,index)=>({key,text:key,...measured(rect(16,70+index*40,560,30))}))},
     criteria:{...measured(rect(12,60,576,240)),label:symbol+' 매매 기준과 전체 기간 결과',fields:criteriaRows.map((key,index)=>({key,text:key,...measured(rect(16,64+index*30,560,24))}))},criteriaViewport:rect(4,40,592,656),
@@ -123,7 +123,7 @@ test('the details dialog must own the same seven HUD fields for the selected ins
   const blank=detailsOpen();blank.hud.fields[0].text='';
   assert.throws(()=>roundTrip(blank),/HUD field remains visible and contained: holdings/);
   const outside=detailsOpen();outside.hud.rect.top=800;outside.hud.rect.bottom=1120;
-  assert.throws(()=>roundTrip(outside),/HUD stays inside the details dialog content/);
+  assert.throws(()=>roundTrip(outside),/HUD stays inside the details dialog scrollport/);
   const notExpanded=detailsOpen();notExpanded.criteriaExpanded='false';
   assert.throws(()=>roundTrip(notExpanded),/criteria control reports its expanded details/);
 });
@@ -183,4 +183,11 @@ test('collapsed criteria preserves its reachable chip and still requires all sev
   assert.throws(()=>assertSimulationDetailsRoundTrip({symbol:'TQQQ',before:result,opened,after:result}),/all seven detailed criteria fields/);
   const clipped=detailsOpen();clipped.criteriaViewport=rect(4,600,592,50);
   assert.throws(()=>assertSimulationDetailsRoundTrip({symbol:'TQQQ',before:result,opened:clipped,after:result}),/scrolled into the visible dialog body/);
+});
+
+test('scrolling into padding is still visible but the actual scrollport cannot be escaped',()=>{
+  const result=allocation(),opened=detailsOpen();opened.dialog.body.content=rect(4,40,592,300);
+  const roundTrip=()=>assertSimulationDetailsRoundTrip({symbol:'TQQQ',before:result,opened,after:result});
+  assert.doesNotThrow(roundTrip);
+  opened.dialog.scrollport=rect(4,40,592,300);assert.throws(roundTrip,/HUD stays inside the details dialog scrollport/);
 });
