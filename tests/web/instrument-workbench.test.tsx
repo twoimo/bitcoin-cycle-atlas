@@ -226,6 +226,13 @@ test('standalone RSI criteria summaries own keyboard input while the chart short
       assert.equal(quoteDate(),before,`${key} must not change the underlying selection`);
       assert.equal(fixture.document.querySelector('.rsi-chart-canvas')?.getAttribute('data-tool'),'crosshair');
     }
+    const scrollBody=dialog.querySelector('.rsi-detail-body') as HTMLElement;
+    scrollBody.scrollTop=360;await fixture.click('[data-rsi-dialog-close]');assert.equal(dialog.hasAttribute('open'),false);
+    await fixture.click('[data-rsi-criteria]');assert(dialog.hasAttribute('open'));
+    assert.equal(scrollBody.scrollTop,0,'a reopened dialog restarts at its own top instead of keeping a stale offset');
+    scrollBody.scrollTop=240;await fixture.click('[data-rsi-view="backtest"]');
+    assert.equal(dialog.getAttribute('data-rsi-dialog'),'backtest','the open dialog switches to the requested tab');
+    assert.equal(scrollBody.scrollTop,0,'a dialog that changes tab restarts at its own top');
     await fixture.click('[data-rsi-dialog-close]');assert.equal(dialog.hasAttribute('open'),false);
     await fixture.key('.rsi-chart-canvas>svg','ArrowLeft');assert.notEqual(quoteDate(),before,'normal chart navigation resumes');
   }finally{await fixture.cleanup();}

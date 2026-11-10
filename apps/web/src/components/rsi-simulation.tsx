@@ -77,6 +77,14 @@ export function RsiDetailDialog({open,title,name,onClose,children}:{open:boolean
       if(!node.open){const active=node.ownerDocument.activeElement;opener.current=(active?.tagName==='IFRAME'?document.activeElement:active) as HTMLElement|null;node.showModal();}
     }else if(node.open)node.close();
   },[open,owner.canInteract,owner.target]);
+  // The dialog keeps one scroll container, so a reopened or retabbed dialog would
+  // otherwise return mid-content with its heading and first block above the clip.
+  useEffect(()=>{
+    if(!open)return;
+    const reset=()=>{const body=dialog.current?.querySelector<HTMLElement>('.rsi-detail-body');if(body)body.scrollTop=0;};
+    reset();const frame=typeof requestAnimationFrame==='function'?requestAnimationFrame(reset):null;
+    return()=>{if(frame!==null&&typeof cancelAnimationFrame==='function')cancelAnimationFrame(frame);};
+  },[open,name]);
   useEffect(()=>{
     const changed=scope.current.epoch!==owner.epoch||scope.current.target!==owner.target;
     scope.current={epoch:owner.epoch,target:owner.target};
