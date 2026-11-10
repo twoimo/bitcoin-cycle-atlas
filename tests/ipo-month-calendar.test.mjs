@@ -67,7 +67,7 @@ test('compact IPO controls keep one-line header rows and source notes available'
   const html=readFileSync(new URL('../dist/index.html',import.meta.url),'utf8');
   const css=readFileSync(new URL('../dist/ipo-view.css',import.meta.url),'utf8');
   const view=html.slice(html.indexOf('<section id="ipo-view"'),html.indexOf('<footer class="footer"'));
-  assert.ok(view.includes('<div class="ipo-heading-title"><button class="ipo-back" type="button" data-view="outlook" aria-label="통합 차트로 돌아가기">←</button><h1>공모주 캘린더</h1></div>'));
+  assert.ok(view.includes('<div class="ipo-heading-title"><button class="ipo-back" type="button" data-view="outlook" aria-label="통합 차트로 돌아가기">←</button><h2>공모주 캘린더</h2></div>'));
   assert.ok(view.includes('<div class="ipo-toolbar">'));
   assert.ok(view.includes('<details class="ipo-source-disclosure"><summary>출처</summary>'));
   assert.ok(view.includes('<caption>수요예측·청약 일정 <span class="ipo-count" aria-live="polite"></span></caption>'));

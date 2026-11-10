@@ -488,7 +488,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
     root.dataset.relayMode = reading ? 'reading' : currentKind === 'articles' ? 'articles' : 'default';
     root.innerHTML = `
       <aside class="relay-rooms" aria-label="릴레이 채널">
-        <header class="relay-rooms-head"><h1>채널</h1><span class="relay-rooms-total">${rooms().length}</span></header>
+        <header class="relay-rooms-head"><h2>채널</h2><span class="relay-rooms-total">${rooms().length}</span></header>
         ${rooms().length ? `<ul class="relay-room-list">${roomList()}</ul>` : `<p class="relay-empty" role="status">${loading ? '불러오는 중…' : esc(error || '자료 없음')}</p>`}
         <footer class="relay-rooms-foot">${generatedTime ? `<span>15분마다 갱신</span><time>${esc(generatedTime)}</time>` : '<span>RelayDeck</span>'}</footer>
       </aside>

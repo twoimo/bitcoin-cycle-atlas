@@ -32,7 +32,7 @@ body[data-page="relay"]{overflow:hidden}
   background:var(--relay-sidebar);
 }
 .relay-rooms-head{display:flex;align-items:center;justify-content:space-between;gap:10px;height:60px;padding:0 20px;border-bottom:1px solid var(--relay-rule-soft)}
-.relay-rooms-head h1{margin:0;font-size:13px;font-weight:650;letter-spacing:.01em;color:var(--relay-ink)}
+.relay-rooms-head h2{margin:0;font-size:13px;font-weight:650;letter-spacing:.01em;color:var(--relay-ink)}
 .relay-rooms-total{min-width:22px;padding:1px 7px;border:1px solid var(--relay-rule);border-radius:2px;color:var(--relay-ink-3);font-size:11px;line-height:16px;text-align:center;font-variant-numeric:tabular-nums}
 .relay-room-list{list-style:none;margin:0;padding:8px 10px;overflow:auto;min-height:0;display:grid;align-content:start;gap:2px;scrollbar-width:thin;scrollbar-color:#2b3848 transparent}
 .relay-room-item{

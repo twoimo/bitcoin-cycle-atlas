@@ -95,6 +95,9 @@ body[data-sidebar=compact][data-shell=dashboard] .atlas-sidebar :is(.atlas-brand
   body[data-shell=chart] .atlas-canvas-heading{position:relative;inset:auto;width:100%;max-width:none;height:calc(48px + var(--mobile-top));min-height:calc(48px + var(--mobile-top));padding:var(--mobile-top) 8px 0;gap:1px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:none;touch-action:pan-x pinch-zoom;flex:none;z-index:46;background:var(--bg);border-bottom:1px solid var(--border)}
   body[data-shell=chart] .atlas-canvas-heading>:is(#workbench-replay,.workspace-history-controls){display:none}
   body[data-shell=chart] .atlas-canvas-heading>button{min-height:44px;flex-shrink:0}
+  /* Touch floor for the chart card toolbar: the reset control keeps its role and
+     label, and the phone dock already reserves 44px targets. */
+  body[data-shell=chart] .chart-toolbar .chart-options .icon-button{width:44px;min-width:44px;height:44px}
   body[data-shell=chart] .atlas-canvas-heading .workbench-symbol{max-width:92px;min-width:80px;flex:0 0 auto}
   body[data-shell=chart] .atlas-canvas-heading>:is(#workbench-chart-type,#atlas-mode-menu,#mobile-tools-toggle,#mobile-details-toggle){width:44px;min-width:44px;max-width:44px;height:44px;min-height:44px;flex:none}
   body[data-shell=chart] .atlas-canvas-heading #atlas-cycle-options>summary{height:44px;min-height:44px}

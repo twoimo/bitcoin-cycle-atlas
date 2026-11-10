@@ -10,11 +10,12 @@ test('IPO header is compact and keeps source in a native disclosure', () => {
   assert.ok(ipoView, 'IPO view section exists');
   const header = ipoView.match(/<header class="ipo-heading">([\s\S]*?)<\/header>/)?.[1];
   assert.ok(header, 'IPO header exists');
-  assert.match(header, /<h1>공모주 캘린더<\/h1>/);
+  assert.match(header, /<h2>공모주 캘린더<\/h2>/);
+  assert.doesNotMatch(header, /<h1/, 'the IPO module must not add a second page-level H1');
   assert.match(header, /class="ipo-back"[^>]*aria-label="통합 차트로 돌아가기">←<\/button>/);
   assert.doesNotMatch(header, /ipo-eyebrow|수요예측과 청약 일정/);
   assert.match(header, /<details class="ipo-source-disclosure"><summary>출처<\/summary><div class="ipo-source-panel" tabindex="0" role="region" aria-label="출처와 일정 안내"><div class="ipo-source" id="ipo-source" role="status"><\/div>/);
-  assert.match(css, /\.ipo-heading h1\s*\{[^}]*font-size:\s*17px/);
+  assert.match(css, /\.ipo-heading h2\s*\{[^}]*font-size:\s*17px/);
   assert.match(css, /#ipo-view\s*:focus-visible\s*\{\s*outline:\s*2px solid var\(--accent\)/);
   assert.match(css, /\.ipo-source-disclosure summary\s*\{[^}]*min-height:\s*44px/);
   assert.match(css, /\.ipo-back\s*\{[^}]*min-width:\s*44px/);

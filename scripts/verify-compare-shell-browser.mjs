@@ -136,6 +136,8 @@ const readState = () => {
     heading: heading ? { ...box(heading), dock: heading.dataset.mobileHeading || null } : null,
     docWidth: document.documentElement.scrollWidth, winWidth: innerWidth,
     overflow: Math.max(0, (document.documentElement.scrollWidth || 0) - innerWidth),
+    docHeight: document.documentElement.scrollHeight, bodyHeight: document.body?.scrollHeight || 0,
+    dockInViewport: (() => { const n = document.querySelector('.atlas-canvas-heading'); if (!n) return null; const r = n.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight + 1; })(),
     coveredCount: coveredControls.length, coveredSample: coveredControls.slice(0, 4).map(c => c.name),
     coveredNote: 'advisory center hit-test only; not a clipping proof',
     tinyCount: tiny.length, tinySample: tiny.slice(0, 6), interactiveCount: interactive.length,
@@ -290,6 +292,17 @@ const main = async () => {
         };
       }, sel);
       info.clickReceipt = clickReceipt; info.reveal = reveal;
+      info.diag = await evaluate(cdp, () => {
+        const rect = n => { if (!n) return null; const r = n.getBoundingClientRect(); return [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)]; };
+        const heads = [...document.querySelectorAll('.atlas-canvas-heading')].map(n => ({ rect: rect(n), dock: n.dataset.mobileHeading || null, parent: n.parentElement?.className || n.parentElement?.tagName, buttons: n.querySelectorAll('button').length }));
+        const toggle = document.querySelector('#mobile-details-toggle');
+        const details = document.querySelector('#mobile-chart-details');
+        const navs = [...document.querySelectorAll('#mobile-chart-details [data-view], .atlas-nav [data-view]')].map(n => ({ view: n.dataset.view, rect: rect(n), visible: n.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }) }));
+        const before = { scrollY, docH: document.documentElement.scrollHeight, bodyH: document.body.scrollHeight, innerH: innerHeight, bodyOverflow: getComputedStyle(document.body).overflow, htmlOverflow: getComputedStyle(document.documentElement).overflow };
+        window.scrollTo(0, 400);
+        const afterScroll = { scrollY, toggleRect: rect(document.querySelector('#mobile-details-toggle')) };
+        return { before, afterScroll, heads, detailsToggle: toggle ? { rect: rect(toggle), visible: toggle.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }), label: toggle.getAttribute('aria-label') } : null, details: details ? { rect: rect(details), open: details.dataset.mobileOpen || null } : null, navs: navs.slice(0, 8), bodyShell: document.body.dataset.shell, page: document.body.dataset.page };
+      });
       info.headingChildren = await evaluate(cdp, () => [...(document.querySelector('.atlas-canvas-heading')?.children || [])].map(n => ({ tag: n.tagName, id: n.id || null, aria: n.getAttribute('aria-label'), controls: n.getAttribute('aria-controls'), expanded: n.getAttribute('aria-expanded'), cls: String(n.className || '').slice(0, 26), rect: (() => { const r = n.getBoundingClientRect(); return [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)]; })() })));
       info.sidebarState = await evaluate(cdp, () => { const sb = document.querySelector('.atlas-sidebar'); return sb ? { open: sb.dataset.mobileOpen || null, inert: sb.hasAttribute('inert'), ariaHidden: sb.getAttribute('aria-hidden'), rect: (() => { const r = sb.getBoundingClientRect(); return [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)]; })() } : null; });
       await writeFile(resolve(OUT, 'probe.json'), JSON.stringify(info, null, 2) + '\n');
@@ -339,7 +352,8 @@ const main = async () => {
         regions: state.regions, present: state.present, overflow: state.overflow,
         rows: state.compare.rows, structureRows: state.compare.structureRows, unitPressed: state.compare.unitPressed,
         tiny: state.tinyCount, tinySample: state.tinySample, interactive: state.interactiveCount,
-        covered: state.coveredCount, coveredSample: state.coveredSample, errors: [...errors],
+        covered: state.coveredCount, coveredSample: state.coveredSample,
+        docHeight: state.docHeight, bodyHeight: state.bodyHeight, dockInViewport: state.dockInViewport, errors: [...errors],
       });
       const where = `width ${w}x${h}`;
       if (bootState !== 'ready') fail(where, 'boot ' + bootState);
@@ -383,15 +397,38 @@ const main = async () => {
         const r = n.getBoundingClientRect(); const cs = getComputedStyle(n);
         return r.width > 1 && r.height > 1 && cs.display !== 'none' && cs.visibility !== 'hidden' && !n.closest('[inert]');
       });
+      // The accepted phone route opens the info tray (#mobile-details-toggle) and
+      // uses the real navigation inside #mobile-chart-details; the sidebar stays
+      // hidden on phones by design.
       if (!(await navReady())) {
-        const drawerSelector = (await evaluate(cdp, () => Boolean(document.querySelector('[aria-controls="mobile-chart-tools"]')))) ? '[aria-controls="mobile-chart-tools"]' : '.atlas-sidebar-toggle';
-        openedDrawer = await domClick(drawerSelector);
-        await sleep(900);
+        const traySelector = '#mobile-details-toggle';
+        const tray = await evaluate(cdp, sel => {
+          const n = document.querySelector(sel);
+          if (!n) return null;
+          const r = n.getBoundingClientRect();
+          return { painted: r.width > 1 && r.height > 1, w: Math.round(r.width), h: Math.round(r.height) };
+        }, traySelector);
+        if (tray?.painted) {
+          openedDrawer = { trigger: traySelector, receipt: await domClick(traySelector), size: tray };
+          await sleep(1000);
+        }
       }
-      const navReadyNow = await navReady();
-      const navClick = navReadyNow ? await domClick('.atlas-nav button[data-view="outlook"]') : { ok: false, reason: 'nav button not reachable' };
+      const navSelector = (await evaluate(cdp, () => document.querySelector('#mobile-chart-details [data-view="outlook"]') ? '#mobile-chart-details [data-view="outlook"]' : '.atlas-nav button[data-view="outlook"]'));
+      const navReadyNow = await navReady() || Boolean(await evaluate(cdp, () => {
+        const n = document.querySelector('#mobile-chart-details [data-view="outlook"]');
+        return n ? n.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }) : false;
+      }));
+      const navClick = navReadyNow ? await domClick(navSelector) : { ok: false, reason: 'nav button not reachable' };
       const navBox = { text: '가격 차트' };
-      if (!navClick.ok) report.findings.push(`input ${label}: canonical price-chart nav unreachable (${JSON.stringify(navClick)}); phone return path unverified, not a pass`);
+      if (!navClick.ok) {
+        const dock = await evaluate(cdp, () => {
+          const n = document.querySelector('.atlas-canvas-heading');
+          const t = document.querySelector('#mobile-details-toggle');
+          const r = n?.getBoundingClientRect(); const tr = t?.getBoundingClientRect();
+          return { dockTop: r ? Math.round(r.top) : null, dockBottom: r ? Math.round(r.bottom) : null, innerHeight, docHeight: document.documentElement.scrollHeight, toggleVisible: Boolean(t && t.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })) };
+        });
+        report.findings.push(`input ${label}: canonical price-chart nav unreachable (${JSON.stringify(navClick)}); dock=${JSON.stringify(dock)}; phone return path unverified, not a pass`);
+      }
       else {
         await sleep(1000);
         const afterNav = await evaluate(cdp, readState);
@@ -432,6 +469,10 @@ const main = async () => {
         if (!/compare-unit=rebased/.test(afterBack.search)) fail(where, 'back lost compare-unit context: ' + afterBack.search);
         if (!afterBack.compare.visible) fail(where, 'compare view not restored after back');
         if (!backIdentity.compareSame || !backIdentity.chartSame) fail(where, 'nodes not preserved after return');
+        if (w <= 620) {
+          if (afterNav.heading?.dock !== 'phone-dock') fail(where, 'returned phone heading lost the dock: ' + (afterNav.heading?.dock ?? 'none'));
+          if (afterBack.heading?.dock !== 'phone-dock') fail(where, 'restored compare dock missing on phone');
+        }
       }
 
       // Compare's own controls. The nested price card keeps its unit control
@@ -508,7 +549,7 @@ const main = async () => {
   console.log(JSON.stringify({
     status: report.status, chrome: report.chrome, testedHead: report.testedHead,
     inventory: report.inventory.map(r => ({ route: r.route, boot: r.bootState, present: r.present, regions: r.regions, h1: r.headings, compare: r.compare.visible, rows: r.compare.rows, err: r.errors.length })),
-    widths: report.widths.map(r => ({ vp: r.viewport, overflow: r.overflow, rows: r.rows, tiny: r.tiny, covered: r.covered, dock: r.dock, top: r.regions.top, left: r.regions.left, right: r.regions.right, bottom: r.regions.bottom })),
+    widths: report.widths.map(r => ({ vp: r.viewport, overflow: r.overflow, rows: r.rows, tiny: r.tiny, dock: r.dock, docH: r.docHeight, dockInView: r.dockInViewport, top: r.regions.top, left: r.regions.left, right: r.regions.right, bottom: r.regions.bottom })),
     interactions: report.interactions, failures: report.failures, findings: report.findings, explicit1920: report.assertions.explicit1920,
   }, null, 1));
   process.exit(report.status === 'PASSED' ? 0 : 1);
