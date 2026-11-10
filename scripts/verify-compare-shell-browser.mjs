@@ -224,26 +224,51 @@ const main = async () => {
     };
 
 
-    const revealInOwners = async selector => evaluate(cdp, sel => {
+    // Reach the control with real wheel input inside its scroll owners instead of
+    // assigning scrollTop. A synthetic assignment proves layout, not that a user
+    // can scroll the control into reach; the wheel deltas are recorded as evidence.
+    const scrollOwners = async selector => evaluate(cdp, sel => {
       const n = document.querySelector(sel);
-      if (!n) return { found: false };
-      const scrolled = [];
+      if (!n) return { found: false, owners: [] };
+      const owners = [];
       let x = n.parentElement;
       while (x && x !== document.documentElement) {
         const cs = getComputedStyle(x);
-        const scrollable = /(auto|scroll)/.test(cs.overflowY) && x.scrollHeight > x.clientHeight + 4;
-        if (scrollable) {
-          const nr = n.getBoundingClientRect(), xr = x.getBoundingClientRect();
-          const delta = (nr.top - xr.top) + x.scrollTop - (x.clientHeight / 2);
-          const before = x.scrollTop;
-          x.scrollTop = Math.max(0, delta);
-          scrolled.push({ tag: x.tagName, id: x.id || null, cls: String(x.className || '').slice(0, 30), before: Math.round(before), after: Math.round(x.scrollTop) });
+        if (/(auto|scroll)/.test(cs.overflowY) && x.scrollHeight > x.clientHeight + 4) {
+          const r = x.getBoundingClientRect();
+          owners.push({ index: owners.length, tag: x.tagName, id: x.id || null,
+            point: [Math.round(r.left + r.width / 2), Math.round(Math.max(r.top, 0) + Math.min(r.height, innerHeight) / 2)],
+            scrollTop: Math.round(x.scrollTop), maxScroll: Math.round(x.scrollHeight - x.clientHeight) });
         }
         x = x.parentElement;
       }
       const r = n.getBoundingClientRect();
-      return { found: true, scrolled, rect: [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)], inViewport: r.top >= 0 && r.left >= 0 && r.bottom <= innerHeight && r.right <= innerWidth };
+      return { found: true, owners, rect: [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)],
+        inViewport: r.top >= 0 && r.left >= 0 && r.bottom <= innerHeight && r.right <= innerWidth };
     }, selector);
+    const revealInOwners = async selector => {
+      const discovered = await scrollOwners(selector);
+      const wheel = [];
+      for (let attempt = 0; attempt < 24 && discovered.owners.length; attempt++) {
+        const state = await scrollOwners(selector);
+        if (!state.found) return { found: false, wheel };
+        if (state.inViewport) return { found: true, wheel, rect: state.rect, owners: state.owners };
+        const owner = state.owners[0];
+        const target = await evaluate(cdp, sel => {
+          const n = document.querySelector(sel);
+          const r = n.getBoundingClientRect();
+          return { top: r.top, bottom: r.bottom, vh: innerHeight };
+        }, selector);
+        const delta = target.top < 0 ? Math.max(-480, target.top - 40) : Math.min(480, target.bottom - target.vh + 40);
+        if (!delta) return { found: true, wheel, rect: state.rect, owners: state.owners };
+        for (const type of ['mouseMoved', 'mouseWheel'])
+          await cdp.send('Input.dispatchMouseEvent', { type, x: owner.point[0], y: owner.point[1], deltaX: 0, deltaY: type === 'mouseWheel' ? delta : 0 }).catch(() => { });
+        await sleep(160);
+        wheel.push({ owner: owner.id || owner.tag, deltaY: Math.round(delta) });
+      }
+      const final = await scrollOwners(selector);
+      return { found: final.found, wheel, rect: final.rect, owners: final.owners, reached: Boolean(final.inViewport) };
+    };
 
     const domClick = async selector => {
       await revealInOwners(selector);
@@ -259,7 +284,9 @@ const main = async () => {
       const x = (q[0] + q[2] + q[4] + q[6]) / 4, y = (q[1] + q[3] + q[5] + q[7]) / 4;
       const hit = await evaluate(cdp, (x, y, sel) => {
         const n = document.elementFromPoint(x, y), t = document.querySelector(sel);
-        return { tag: n?.tagName || null, id: n?.id || null, inside: Boolean(t && n && (n === t || t.contains(n) || n.contains(t))) };
+        // The hit must be the control or a descendant of it. Accepting an ancestor
+        // let a covered control pass because the wrapper received the click.
+        return { tag: n?.tagName || null, id: n?.id || null, inside: Boolean(t && n && (n === t || t.contains(n))) };
       }, x, y, selector);
       if (!hit || !hit.inside) return { ok: false, reason: 'unreachable point', x: Math.round(x), y: Math.round(y), hit };
       for (const type of ['mousePressed', 'mouseReleased']) await cdp.send('Input.dispatchMouseEvent', { type, x, y, button: 'left', clickCount: 1 });
