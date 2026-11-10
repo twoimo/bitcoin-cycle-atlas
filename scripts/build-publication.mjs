@@ -86,18 +86,32 @@ export function checkPublicationMetadata(manifest) {
   if (sha(stable(manifest.files))!==manifest.contentDigest) throw new Error('Publication inventory checksum mismatch');
   return manifest.files.length;
 }
+// The public artifact is read exactly once. Path containment and regular-file
+// identity are metadata-only checks; the single inventory pass both hashes every
+// public file and proves the published set has no extra, missing or duplicate
+// member. Reading each file a second time for the checksum loop cannot observe
+// anything the inventory has not already rejected.
 export async function checkPublication(manifest,{directory=dist}={}) {
   checkPublicationMetadata(manifest);
   const base=await realpath(directory);
   for (const file of manifest.files) {
     const path=resolve(directory,file.path);
+    // A member that no longer exists is reported by the inventory comparison
+    // below; only an entry that is present can leave the artifact or be
+    // something other than a regular file.
+    const stats=await lstat(path).catch(()=>null);
+    if (!stats) continue;
+    if (!stats.isFile()) throw new Error(`Not a regular public file: ${file.path}`);
     const physical=await realpath(path);
     if (!physical.startsWith(base+sep)) throw new Error(`Public path leaves its artifact: ${file.path}`);
-    if (!(await lstat(path)).isFile()) throw new Error(`Not a regular public file: ${file.path}`);
-    const data=await readFile(path);
-    if (data.byteLength!==file.bytes || sha(data)!==file.sha256) throw new Error(`Published file checksum mismatch: ${file.path}`);
   }
-  if (stable(await inventory(directory))!==stable(manifest.files)) throw new Error('Public directory changed after publication preparation');
+  const actual=await inventory(directory), byPath=new Map(actual.map(row=>[row.path,row]));
+  for (const file of manifest.files) {
+    const row=byPath.get(file.path);
+    if (!row) throw new Error(`Public directory changed after publication preparation: missing ${file.path}`);
+    if (row.bytes!==file.bytes || row.sha256!==file.sha256) throw new Error(`Published file checksum mismatch: ${file.path}`);
+  }
+  if (stable(actual)!==stable(manifest.files)) throw new Error('Public directory changed after publication preparation');
   return manifest.files.length;
 }
 export async function verifyServedPublication({baseUrl,expectedManifest,expectedSource,fetchImpl=fetch}) {
@@ -152,8 +166,13 @@ async function main() {
   const files=await inventory(directory), contentDigest=sha(stable(files));
   let state=createPublication({sourceCommit,digest:contentDigest});
   const data=await assetInventory(now,outcomes,directory);
-  state=validatePublication(state,{checkedDigest:sha(stable(await inventory(directory))),valid:true});
-  state=preparePublication(state,{currentCommit:gitHead(),currentDigest:sha(stable(await inventory(directory)))});
+  // One confirmation scan replaces two further rescans of the same bytes. It
+  // proves the public artifact did not change while its metadata was derived,
+  // and the digest it yields is the only one both lifecycle steps may use.
+  const confirmed=await inventory(directory), confirmedDigest=sha(stable(confirmed));
+  if (stable(confirmed)!==stable(files) || confirmedDigest!==contentDigest) throw new Error('Public directory changed while the publication was prepared');
+  state=validatePublication(state,{checkedDigest:confirmedDigest,valid:true});
+  state=preparePublication(state,{currentCommit:gitHead(),currentDigest:confirmedDigest});
   if (state.phase!=='ready') throw new Error(`Publication is ${state.phase}: ${state.reason}`);
   const body={schemaVersion:1,kind:'atlas-publication',sourceCommit,sourceTree:{status:dirty?'modified-preview':'clean',scope:sourcePaths.join(', ')},eventCommit:provenance.eventCommit,
     checkedOutCommit:process.env.ATLAS_CHECKOUT_SHA || sourceCommit,generatedAt:now,

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { readdir, readFile, lstat } from 'node:fs/promises';
+import { availableParallelism } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFile } from 'node:child_process';
@@ -23,6 +24,30 @@ async function walk(dir) {
 }
 await walk(dist);
 let checkedReferences = 0;
+// Every JavaScript file is still parsed by the same `node --check` command, but
+// independent parser processes no longer wait on each other. Failures are
+// collected and the lexicographically first one is rethrown, so the reported
+// failure stays deterministic instead of depending on scheduler order.
+async function checkSyntax(files) {
+  const scripts = files.filter(file => ['.js', '.mjs'].includes(path.extname(file))).sort();
+  const failures = [];
+  let next = 0;
+  const worker = async () => {
+    while (next < scripts.length) {
+      const file = scripts[next++];
+      try { await run(process.execPath, ['--check', file]); }
+      catch (error) { failures.push({ file, error }); }
+    }
+  };
+  const concurrency = Math.max(1, Math.min(availableParallelism(), scripts.length));
+  await Promise.all(Array.from({ length: concurrency }, worker));
+  if (failures.length) {
+    failures.sort((left, right) => left.file < right.file ? -1 : left.file > right.file ? 1 : 0);
+    throw failures[0].error;
+  }
+  return scripts.length;
+}
+const checkedScripts = await checkSyntax(files);
 async function checkReference(specifier, source, { module = false } = {}) {
   if (!specifier || /^(?:[a-z][a-z0-9+.-]*:|\/\/|#|\?)/i.test(specifier)) return;
   assert(!specifier.startsWith('/'), `Root-absolute resource breaks project Pages: ${source}: ${specifier}`);
@@ -50,7 +75,6 @@ for (const file of files) {
   const source = await readFile(file, 'utf8');
   if (ext === '.json') JSON.parse(source);
   if (ext === '.js' || ext === '.mjs') {
-    await run(process.execPath, ['--check', file]);
     // This project's ES modules use literal relative imports. Dynamic computed
     // URLs (for the optional public data refresh) are deliberately not guessed.
     for (const specifier of javascriptModuleSpecifiers(source)) {
@@ -106,4 +130,4 @@ if (args.length) {
   assert(baseStyle && /^:root\s*\{/.test(baseStyle.replace(/\/\*[\s\S]*?\*\//g, '').trimStart()),
     'Standalone base CSS is malformed before :root; check font import removal');
 }
-console.log(JSON.stringify({ status: 'ok', files: files.length, checkedReferences, basePath: base.pathname, standalone: args[1] ?? null }));
+console.log(JSON.stringify({ status: 'ok', files: files.length, checkedScripts, checkedReferences, basePath: base.pathname, standalone: args[1] ?? null }));

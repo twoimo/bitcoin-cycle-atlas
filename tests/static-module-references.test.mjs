@@ -151,3 +151,14 @@ test('Pages directory index links resolve at the project root while missing dire
   await app.html('nested/route/index.html','<a href="../../../">Escape</a>');
   await assert.rejects(app.verify('export const ready=true;'),error=>/Resource escapes Pages base path/.test(error.stderr));
 });
+
+test('concurrently parsed modules still reject a syntax error and report it deterministically',async t=>{
+  const app=await fixture(t);
+  await app.verify('export const ready=true;');
+  // Two independent parser processes may finish in either order; the reported
+  // failure must remain the first one in sorted path order, not a race winner.
+  await app.html('a-broken.js','export const broken = ;');
+  await app.html('z-broken.js','export const broken = ;');
+  await assert.rejects(app.verify('export const ready=true;'),error=>/SyntaxError/.test(error.stderr)&&/a-broken\.js/.test(error.stderr)&&!/z-broken\.js/.test(error.stderr));
+  await rm(path.join('dist','a-broken.js'),{force:true});
+});

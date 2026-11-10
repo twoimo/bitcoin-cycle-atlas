@@ -207,6 +207,67 @@ rejects incomplete, duplicated, mixed or corrupt chunks. The execution-plan
 hash includes the overlap and browser-lane strategy; actual Build timing and
 container resource measurements determine whether it fits the free limit.
 
+## Verification cost model
+
+Each gate is a distinct obligation, not a distinct amount of work. Duplicated
+work inside a gate is pure cost: it cannot fail without the gate failing, and it
+cannot pass something the gate's other checks already reject. Three kinds of
+duplication were measured on2026-11-10 and only the ones with a proven
+replacement were changed.
+
+| Work | Before | After | Why the replacement is equivalent |
+| --- | --- | --- | --- |
+| Public artifact identity (`checkPublication`) | every public file read and hashed twice: once per manifest row, then again by the directory inventory | one inventory pass hashes each file once; manifest rows are matched against it, and path containment plus regular-file identity stay as metadata-only checks before it | the first pass only proved byte identity and directory membership, both of which the single inventory proves; the added missing-file and non-regular-file controls are in `tests/publication-manifest.test.mjs` |
+| Publication preparation inventory | the same directory scanned and hashed three times | scanned once, then one confirmation scan; the two must be byte-identical or preparation stops | the second and third scans could only ever return the first scan's digest, because they read the same unchanged directory; the equality is now asserted instead of implied |
+| Static syntax checks (`verify-static.mjs`) | one `node --check` process per JavaScript file, strictly sequential | the same commands with bounded parallelism, first failure in sorted path order rethrown | every file still runs the identical parser command; only the wait between independent processes is removed, and the reported failure stays deterministic |
+
+Measured on the committed `dist` artifact (964 files, 211 ES modules, 76 MiB):
+`verify-static` 8.4 s to 0.8 s, publication preparation 0.9 s to 0.8 s,
+`build-publication --check` 0.4 s to 0.3 s on a warm page cache. The artifact
+identity pass is O(total bytes), so its saving grows with artifact size, while
+the syntax saving is O(files) parser processes and is bounded by the file
+count, not by test count. Both are invariant to how many tests the suite holds.
+
+Deliberate duplication that was **not** removed, because removing it would
+change a contract rather than repeat work:
+
+- Each stage runs its own `npm ci` and runtime bootstrap. They are separate
+  Builds with separate receipts; a shared install would be a new cross-Build
+  dependency, not a deduplication.
+- The static scan runs once per stage (`static` in the model stage,
+  `standalone-check` in the browser stage). Collapsing it needs a cross-stage
+  artifact receipt; the model stage cannot see the browser stage's `dist`.
+- The React app is compiled twice in the browser stage: `build-pages --check`
+  builds it with `--base ./` to compare against `dist/market-lab`, and
+  `build:web` builds it with the config's `/market-lab/` base. Sharing one
+  compile would mean verifying a bundle emitted for the other base, and gate
+  identities and order are part of the committed plan hash.
+- `publication-check` re-reads the manifest that `publication` just wrote. That
+  is a read-after-write check of the persisted bytes, not a repeat of the
+  in-memory validation.
+
+### Cadence gate on a shared runner
+
+The isolated cadence phase measures a real end-to-end property: how fast visible
+daily bars advance during 10× playback, with a 100 ms period and the unchanged
+85–130 ms mean bound. The controller that drives it
+(`dist/chart-replay-state.js`) schedules on a deadline: it keeps
+`deadline + period` while a tick lands inside the next period, and falls back to
+`tickAt + period` once a tick overruns by a whole period. The harness
+timestamps the observed `data-replay-cursor` changes with the page clock, so the
+mean it reports is the actual period plus whatever per-tick work the renderer
+did not absorb.
+
+That makes the earlier133–377 ms samples explainable rather than noisy:
+133 ms ≈ 100 ms + 33 ms and 377 ms ≈ 100 ms + 277 ms, i.e. one overrun per tick
+with the model command co-resident on a2vCPU runner. The bound cannot be met
+while another CPU-bound process shares the box, and widening it would accept a
+real 10× playback regression. The overlap was therefore removed
+(`cloudflareParallelGroups` is empty and the cadence phase runs alone), the
+budget is unchanged, and reducing per-tick paint cost remains the only
+legitimate way to widen the margin. A cadence failure is reportable as a real
+playback result, not a timing artifact.
+
 ## Actual build prerequisites
 
 The documented Workers Builds image is Ubuntu24.04 x86_64. The preinstalled

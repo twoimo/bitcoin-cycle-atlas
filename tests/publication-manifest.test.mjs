@@ -33,6 +33,29 @@ test('publication checks the actual served-file bytes, not only its self-consist
   await assert.rejects(checkPublication(record,{directory}),/Published file checksum mismatch/);
 });
 
+test('a missing, extra, hidden, replaced or aliased public member is rejected without a second byte pass',async t=>{
+  const directory=await mkdtemp(join(tmpdir(),'atlas-publication-single-pass-'));t.after(()=>rm(directory,{recursive:true,force:true}));
+  await writeFile(join(directory,'index.html'),'original');
+  await mkdir(join(directory,'data'));await writeFile(join(directory,'data','btc.json'),'[1]');
+  // The inventory emits depth-first name order; the manifest must keep it.
+  const record=manifest([{path:'data/btc.json',bytes:3,sha256:hash('[1]')},{path:'index.html',bytes:8,sha256:hash('original')}]);
+  assert.equal(await checkPublication(record,{directory}),2);
+  // A deleted member is reported as a changed public directory, not as an
+  // unhandled filesystem error from a per-file read.
+  await rm(join(directory,'data','btc.json'));
+  await assert.rejects(checkPublication(record,{directory}),/Public directory changed after publication preparation: missing data\/btc\.json/);
+  // A directory at a manifest path is still distinguished from a changed file.
+  await mkdir(join(directory,'data','btc.json'));
+  await assert.rejects(checkPublication(record,{directory}),/Not a regular public file: data\/btc\.json/);
+  await rm(join(directory,'data','btc.json'),{recursive:true});
+  await writeFile(join(directory,'data','btc.json'),'[1]');
+  // A same-length replacement still violates the recorded identity.
+  await writeFile(join(directory,'index.html'),'replace!');
+  await assert.rejects(checkPublication(record,{directory}),/Published file checksum mismatch: index\.html/);
+  await writeFile(join(directory,'index.html'),'original');
+  assert.equal(await checkPublication(record,{directory}),2);
+});
+
 test('a recomputed metadata checksum cannot conceal an inconsistent preparation state',()=>{
   const {manifestSha256,...record}=manifest([{path:'index.html',bytes:1,sha256:hash('x')}]);
   assert.throws(()=>checkPublicationMetadata(seal({...record,state:{...record.state,phase:'confirmed'}})),/Publication state/);
