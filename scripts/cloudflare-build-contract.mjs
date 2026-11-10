@@ -22,11 +22,12 @@ export const cloudflareBuildGates=Object.freeze([
   {id:'standalone-check',command:'node',args:['scripts/verify-static.mjs','--standalone','build/Bitcoin_Cycles_Comparison.html']},
 ].map(gate=>Object.freeze(gate)));
 
-// Only these adjacent, separately logged gates overlap. All preparation and
-// artifact-writing gates remain sequential; receipt order stays declarative.
-export const cloudflareParallelGroups=Object.freeze([
-  Object.freeze(['native-browser','model-tests']),
-]);
+// Every gate runs sequentially. The native-browser lane contains a wall-clock
+// cadence sample (10x replay, 100ms budget). Running it beside the CPU-heavy
+// model-tests process on a shared build runner distorted that measurement
+// (133-377ms observed while the same build renders in ~20ms frames locally),
+// so the overlap is removed rather than the timing budget being relaxed.
+export const cloudflareParallelGroups=Object.freeze([]);
 export const cloudflareBrowserExecution=Object.freeze({
   maximumProcesses:2,perLaneConcurrency:1,isolatedFastCadence:fastCadencePolicy,
   lanes:Object.freeze([

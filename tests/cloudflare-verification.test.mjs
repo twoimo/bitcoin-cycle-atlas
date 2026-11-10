@@ -38,7 +38,7 @@ test('Cloudflare deployment receipt rejects partial, stale, failed and inspect-o
     value=>value.gates[0].logSha256=null,value=>value.browser.caseCount--,value=>value.browser.scope='workspace-consolidated',
     value=>value.browser.sourceCommit='f'.repeat(40),value=>value.browser.sourceIntegrity=false,
     value=>value.runtime.node='v24.22.1',value=>value.completedAt='2026-11-06T00:00:00.000Z',
-    value=>value.executionGroups=[],value=>value.executionGroups[0].gateIds=['native-browser'],value=>value.executionGroups[0].resources={},
+    value=>value.executionGroups=[{gateIds:['native-browser'],durationMs:1,startedAt:'2026-11-07T00:00:01.000Z',completedAt:'2026-11-07T00:00:01.001Z',resources:{available:false}}],value=>value.executionGroups=[{gateIds:['native-browser','model-tests'],durationMs:1,startedAt:'2026-11-07T00:00:01.000Z',completedAt:'2026-11-07T00:00:01.001Z',resources:{available:false}}],
     value=>value.modelPriority=null,value=>value.modelPriority.requestedNice=10,value=>value.modelPriority.actualNice=10,value=>value.modelPriority.commandNice=10,value=>value.modelPriority.parentNice=10,
     value=>value.modelPriority.args=['test','--','--test-concurrency=1'],value=>value.browser.processPriority.nice=10,
     value=>value.fastCadence.status='failed',value=>value.fastCadence=null,value=>value.modelLaunchedAt='2026-11-07T00:00:02.000Z',
@@ -61,7 +61,9 @@ test('the migrated build retains ordinary model, numerical, formal, PostgreSQL a
     assert.ok(commands.has('run verify:'+name),'Missing actual verification command '+name);
   assert.ok(commands.has('test -- --test-concurrency=2'));
   assert.deepEqual(cloudflareBuildGates.filter(gate=>gate.nice!==undefined).map(gate=>[gate.id,gate.nice]),[['model-tests',0]]);
-  assert.deepEqual(cloudflareParallelGroups,[['native-browser','model-tests']]);
+  // The cadence sample inside native-browser measures wall-clock replay timing;
+  // it now runs alone so CPU-heavy model-tests cannot distort that measurement.
+  assert.deepEqual(cloudflareParallelGroups,[]);
   assert.equal(cloudflareBrowserExecution.maximumProcesses,2);assert.equal(cloudflareBrowserExecution.perLaneConcurrency,1);
   assert.deepEqual(cloudflareBrowserExecution.lanes.map(lane=>lane.scope),['non-chart-replay','chart-replay']);
   assert.equal(cloudflareBrowserExecution.lanes.reduce((count,lane)=>count+lane.caseCount,0),cloudflareBrowserCaseCount);
