@@ -175,7 +175,12 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
       const shell = document.getElementById('atlas-boot-shell');
       const status = document.getElementById('atlas-boot-status');
       const error = document.getElementById('atlas-boot-error');
-      let timeout = window.setTimeout(fail, 20000);
+      const clock = () => (typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now());
+      const startedAt = clock();
+      let phase = 'boot';
+      for (const name of ['atlas:page-ready', 'atlas:dataset', 'atlas:center-restored'])
+        document.addEventListener(name, () => { phase = name; });
+      let timeout = window.setTimeout(() => fail('timeout'), 20000);
       function detach() {
         window.clearTimeout(timeout);
         timeout = null;
@@ -195,8 +200,20 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
         shell.hidden = true;
         detach();
       }
-      function fail() {
+      function fail(cause) {
         if (root.dataset.boot !== 'loading') return;
+        // Record the first failure before the surface changes. Without this the
+        // flaky first paint only ever reported "boot=error" with no cause.
+        try {
+          const detail = cause instanceof Error
+            ? { kind: 'error', message: String(cause.message || '').slice(0, 200) }
+            : cause && typeof cause === 'object'
+              ? { kind: cause.type || 'event', reason: String(cause.reason?.message ?? cause.reason ?? '').slice(0, 200),
+                  target: cause.target?.tagName || null, url: String(cause.target?.src || cause.target?.href || '').slice(0, 200) }
+              : { kind: String(cause ?? 'unknown') };
+          root.dataset.bootFailure = JSON.stringify({ phase, elapsedMs: Math.round(clock() - startedAt),
+            route: (location.pathname + location.search).slice(0, 160), ...detail }).slice(0, 900);
+        } catch { /* Diagnostics must never change the boot outcome. */ }
         root.dataset.boot = 'error';
         status.setAttribute('aria-busy', 'false');
         status.hidden = true;

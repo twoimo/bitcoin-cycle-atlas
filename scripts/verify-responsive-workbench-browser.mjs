@@ -281,7 +281,12 @@ async function waitForReady(){
     Boolean(document.querySelector('.atlas-canvas-heading'))&&
     Boolean(document.querySelector('.workbench-bottom-bar'))&&
     Boolean(document.querySelector('.workbench-rail'))),'shell perimeter');
-  assert.notEqual(ready,'error','Chart initialization failed: '+JSON.stringify(currentRuntimeErrors));
+  if(ready==='error'){
+    // The boot shell records its first failure cause; surface it instead of only
+    // reporting the console array that is often empty on this path.
+    const bootFailure=await evaluate(cdp,()=>document.documentElement.dataset.bootFailure||null).catch(()=>null);
+    assert.fail('Chart initialization failed: '+JSON.stringify(currentRuntimeErrors)+' bootFailure='+String(bootFailure));
+  }
   await settled(cdp);
 }
 

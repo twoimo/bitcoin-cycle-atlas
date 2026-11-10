@@ -143,6 +143,25 @@ compare 셸 검증에서 두 가지가 실제 입력을 증명하지 못했다.
 
 남은 항목: D04(폭 불변 계약과 겹침 제거 중 선택), D02 데이터 owner 준비 상태 설계, D09의 남은 왕복 반올림 범위, 320/390 첫 진입 간헐 실패의 진단 계측, WP-A 미디어, macOS 외부 AppKit·Safari·실기기, 원격 CI·배포.
 
+## 2026-11-11 후속 8 — 첫 페인트 실패의 원인 확정: 검사용 정적 서버
+
+320/390 첫 진입에서 간헐적으로 `dataset.boot='error'`가 되던 현상의 원인을 계측으로 확정했다.
+
+부트 셸에 첫 실패 원인 기록을 추가했다. `fail()`이 최초 전이 직전에 `phase`, `elapsedMs`, `route`, 실패 종류(이벤트/오류/타임아웃), 대상 요소·URL을 `documentElement.dataset.bootFailure`에 한 번만 남기고, 진단이 부트 결과를 바꾸지 않도록 예외를 삼킨다. 계측은 `performance`가 없는 vm 테스트 컨텍스트에서도 동작하도록 `Date.now()` 폴백을 둔다(이 보완 전 전체 회귀에서 74건이 `performance is not defined`로 실패했고, 원인을 고쳐 다시 0 실패로 돌렸다). 44-case 러너도 실패 시 이 기록을 메시지에 포함한다.
+
+계측으로 잡힌 실제 원인은 두 가지였다.
+
+- `TypeError: Failed to fetch dynamically imported module: …/app.js?v=1.37.8` (elapsed 62ms, phase boot)
+- 초기 스타일시트 실패로 즉시 `fail` (elapsed 0ms, kind unknown → early style failure 경로)
+
+둘 다 앱 로직이 아니라 검사에 쓰던 Python `http.server`가 동시에 나가는 41개 스타일시트·모듈 요청을 흘린 결과였다. 같은 `dist`를 Node 정적 서버(연결 유지·명시적 MIME)로 바꾸자 44-case가 종목별로 전부 통과했다: BTCUSD 11/11(2회 연속), ETHUSD 11/11, MSTR 11/11, BMNR 11/11 = **44/44**, `exit 0`.
+
+정정: 이전에 "320/390 첫 진입의 간헐적 boot error가 미해결 제품 결함"으로 기록한 판단은 **철회**한다. 제품 결함이 아니라 검사 환경(정적 서버) 문제였다. 앱 쪽에서 남는 개선은 진단 기록을 남기는 것까지이며, 그 계측은 이번에 들어갔다.
+
+최종 확인: 44-case 44/44, 53-case 53/53, compare PASSED, 전체 `npm test` `complete:true` 3,360개 중 3,355 통과·실패 0·제외 5, typecheck·static·Pages build/verify 통과.
+
+남은 항목: D04(폭 불변 계약과 겹침 제거 중 제품 결정), D02 데이터 owner 준비 상태 설계, WP-A 미디어·청취·PDF·Linux 게시, macOS 외부 AppKit·Safari·실기기, 원격 CI·배포.
+
 ## 목표와 경계
 
 - 관측 데이터·모형·출처·불변 기록을 보존하면서 화면의 불필요한 장식과 중복을 줄인다.
