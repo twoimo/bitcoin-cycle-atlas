@@ -163,7 +163,19 @@ const dailyDataController = initDailyDataView({
 // The compare route uses the price chart's four perimeter regions. Only its
 // center is replaced: the existing section is moved into the plot, never
 // rebuilt, so its rendered values, sources and handlers stay with their owner.
-let compareHome = null, compareHomeNext = null;
+let compareHome = null, compareHomeNext = null, compareToolbarHome = null, compareToolbarNext = null;
+// The route's own toolbar is the only control set that acts on the compare
+// chart, so it moves into the shell's single top row instead of duplicating a
+// second toolbar row. The real element moves, keeping its ids, handlers and
+// data owners; it returns to its original slot when another page is shown.
+function hostCompareToolbar(active) {
+  const toolbar = document.querySelector('#compare-view .lab-toolbar');
+  const heading = document.querySelector('.atlas-canvas-heading');
+  if (!toolbar || !heading) return;
+  if (!compareToolbarHome) { compareToolbarHome = toolbar.parentElement; compareToolbarNext = toolbar.nextElementSibling; }
+  if (active) { if (toolbar.parentElement !== heading) heading.append(toolbar); }
+  else if (toolbar.parentElement !== compareToolbarHome) { compareToolbarHome.insertBefore(toolbar, compareToolbarNext); }
+}
 function hostCompareCenter(active) {
   const section = document.querySelector('#compare-view');
   if (!section) return;
@@ -171,6 +183,7 @@ function hostCompareCenter(active) {
   const plot = document.querySelector('.atlas-plot');
   if (active) { if (plot && section.parentElement !== plot) plot.append(section); }
   else if (section.parentElement !== compareHome) { compareHome.insertBefore(section, compareHomeNext); }
+  hostCompareToolbar(active);
 }
 function syncPage() {
   document.body.dataset.page=state.view; if(state.view!=='market'){const slot=document.getElementById('market-header-slot'); if(slot){slot.hidden=true; slot.replaceChildren();}}

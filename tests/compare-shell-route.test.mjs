@@ -56,3 +56,30 @@ test('the compare center hides price content without touching its own markup', (
   assert.match(html, /id="structure-chart"/, 'the comparison chart stays in the document');
   assert.match(html, /id="structure-scope"/, 'its settings stay in the document');
 });
+
+test('the compare route moves its real toolbar into the single top row', () => {
+  assert.match(app, /function hostCompareToolbar\(active\)/);
+  assert.match(app, /const toolbar = document\.querySelector\('#compare-view \.lab-toolbar'\)/, 'the real element is the one moved');
+  assert.match(app, /if \(toolbar\.parentElement !== heading\) heading\.append\(toolbar\)/, 'it moves into the shell heading');
+  assert.match(app, /compareToolbarHome\.insertBefore\(toolbar, compareToolbarNext\)/, 'and returns to its original slot');
+  assert.match(app, /hostCompareToolbar\(active\);/, 'both host and toolbar follow the same enter/exit path');
+  const hostBlock = app.slice(app.indexOf('function hostCompareToolbar'), app.indexOf('function hostCompareCenter'));
+  assert.doesNotMatch(hostBlock, /cloneNode|innerHTML|outerHTML/, 'the toolbar is moved, never rebuilt or mirrored');
+  assert.equal((html.match(/class="lab-toolbar"/g) || []).length, 1, 'the compare view keeps exactly one toolbar in markup');
+  for (const control of ['id="structure-scope"', 'data-structure-frequency="daily"', 'data-structure-frequency="weekly"', 'id="structure-threshold"', 'id="structure-json"']) {
+    assert.ok(html.includes(control), `the real control ${control} stays in the document`);
+  }
+});
+
+test('price-only controls leave the compare top row instead of staying inert', () => {
+  const block = css.slice(css.indexOf('/* Compare owns the top row'));
+  assert.match(block, /body\[data-page=compare\] \.atlas-canvas-heading>:not\(\.lab-toolbar\)\{display:none!important\}/, 'no visible chart-only control remains');
+  assert.match(block, /flex-wrap:nowrap/, 'the row stays one scrollable line');
+  assert.match(block, /overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x pinch-zoom/, 'native horizontal access survives');
+  assert.match(block, /@media\(max-width:760px\),\(pointer:coarse\)\{\n  body\[data-page=compare\] \.atlas-canvas-heading>\.lab-toolbar :is\(button,select\)\{min-height:44px\}/, 'moved controls keep the touch floor');
+  assert.match(block, /@media\(max-width:390px\)\{[\s\S]*?body\[data-page=compare\] \.atlas-canvas-heading\{display:flex!important/, 'phones keep one row instead of the chart two-row grid');
+  // The chart controls stay in the document so returning to the price chart restores them.
+  for (const id of ['#workbench-frequency', '#workbench-chart-type', '#atlas-mode-menu', '#workbench-workspace']) {
+    assert.ok(!app.includes(`remove('${id}')`), `${id} is never destroyed`);
+  }
+});

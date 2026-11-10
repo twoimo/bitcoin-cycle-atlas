@@ -360,3 +360,15 @@ body[data-shell=chart][data-page=compare] .workbench-tools{display:flex}
   body[data-page=compare] #compare-view :is(button,select){min-height:44px}
   body[data-page=compare] #compare-view :is(.anchor-tab,[data-mode],[data-unit],[data-scale]){min-width:44px}
 }
+/* Compare owns the top row: its real toolbar is moved into the shell heading,
+   and the price-only controls leave the row instead of staying visible with no
+   effect. Nothing is cloned, so ids, handlers and data owners are the originals. */
+body[data-page=compare] .atlas-canvas-heading>:not(.lab-toolbar){display:none!important}
+body[data-page=compare] .atlas-canvas-heading>.lab-toolbar{display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-start;gap:8px;flex:1 1 auto;min-width:0;height:100%;margin:0;padding:0;background:none;border:0;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x pinch-zoom;scrollbar-width:none}
+body[data-page=compare] .atlas-canvas-heading>.lab-toolbar .lab-toolbar-group{display:flex;flex-wrap:nowrap;align-items:center;gap:8px;min-width:0;flex:none}
+@media(max-width:390px){
+  body[data-page=compare] .atlas-canvas-heading{display:flex!important;grid-template-rows:none;grid-template-columns:none;height:calc(48px + var(--mobile-top,0px))!important;min-height:calc(48px + var(--mobile-top,0px))!important;max-height:calc(48px + var(--mobile-top,0px))!important;padding:var(--mobile-top,0px) 4px 0}
+}
+@media(max-width:760px),(pointer:coarse){
+  body[data-page=compare] .atlas-canvas-heading>.lab-toolbar :is(button,select){min-height:44px}
+}
