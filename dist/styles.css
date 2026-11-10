@@ -959,8 +959,10 @@ body :is(#outlook-view,#compare-view,#chart-reader,#forecast-journal) small{
 }
 body #compare-view input{border:1px solid var(--control-border)}
 body #compare-view :is(button,select,input:not([type="range"])){min-height:var(--control-min-size)}
-@media(max-width:620px),(pointer:coarse){
-  body #compare-view :is(button,select,input:not([type="range"])){min-height:var(--control-touch-size)}
+@media(max-width:1100px),(pointer:coarse){
+  /* The original compare controls move into the shared heading. Keep their
+     touch target contract after reparenting, including fine-pointer tablets. */
+  body[data-page=compare] :is(#compare-view,.atlas-canvas-heading) :is(button,select,input:not([type="range"]),summary){min-width:var(--control-touch-size);min-height:var(--control-touch-size)}
 }
 
 body .footer button{min-height:var(--control-min-size)}
