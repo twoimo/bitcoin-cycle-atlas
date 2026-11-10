@@ -71,6 +71,19 @@ test('no decorative gradients, blur or large shadows enter the shell', () => {
   }
 });
 
+test('the data heading keeps its dark opaque sticky surface', () => {
+  // scripts/verify-eth-candidate-browser.mjs requires a dark opaque
+  // background on .daily-heading; the compaction must not make it transparent.
+  const heading = rule(shell, 'body[data-shell=dashboard] #data-view .daily-heading');
+  assert.doesNotMatch(heading, /background:(?:transparent|none)/, 'the data heading may not become transparent');
+  assert.match(heading, /background:var\(--surface\)/, 'the heading paints the canvas surface token');
+  const tokens = readFileSync(new URL('../dist/editorial-system.css', import.meta.url), 'utf8');
+  const surface = tokens.match(/--surface:\s*#([0-9a-fA-F]{6})/);
+  assert.ok(surface, '--surface stays an explicit hex token');
+  const channels = surface[1].match(/../g).map(pair => parseInt(pair, 16));
+  assert.ok(channels.every(value => value < 90), `--surface must stay dark, got ${surface[1]}`);
+});
+
 test('the 390px two-row chart toolbar contract is preserved', () => {
   assert.match(shell, /grid-template-rows:44px 44px/);
   assert.match(shell, /grid-template-columns:minmax\(80px,1fr\) 56px repeat\(4,44px\)/);
