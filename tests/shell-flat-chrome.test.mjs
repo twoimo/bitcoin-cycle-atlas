@@ -126,3 +126,11 @@ test('the data filter row keeps native horizontal access for clipped controls', 
   assert.match(row, /touch-action:pan-x pinch-zoom/);
   assert.match(rule(scoped.daily, '#data-view .asset-filters > *'), /scroll-snap-align:start/);
 });
+
+test('dashboard return and navigation keep 44px targets on wide coarse-pointer screens', () => {
+  const block = shell.match(/@media\(max-width:760px\),\(pointer:coarse\)\{\s*(body\[data-shell=dashboard\] \.atlas-sidebar :is\(\.atlas-brand,\.atlas-nav a,\.atlas-nav button\)\{[^}]+\})/);
+  assert.ok(block, 'touch navigation sizing must not depend only on a narrow viewport');
+  assert.match(block[1], /min-height:44px/);
+  assert.match(block[1], /height:44px/);
+  assert.match(block[1], /flex-shrink:0/);
+});
