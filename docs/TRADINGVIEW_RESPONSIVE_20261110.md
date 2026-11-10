@@ -234,3 +234,10 @@ UI 실조작과 빌드 및 기존 출시 gate는 각각 판정한다. 남은 실
   재시도하지 않는다. 실패는 즉시 원인과 함께 보고한다.
 - 3회 연속 실패, 또는 계약(44px/포커스/URL/비교/iframe) 손실이 확인되면 중단하고
   확인된 상태와 원인을 기록한다.
+
+
+## 12. 2026-11-11 통합·Pro 인계
+
+현재 제품 소스는 c6b34b984b2919b7dc691f023ea4ee800c468d49이며 §10의 이전 반응형 44/44는 그 당시 후보 증거다. compare reader 고정/원래 차트 문서 폭, 1100px 이하 44px 터치, dashboard 네 면·원래 nav/footer 이동과 차트 복귀 복원, replay 정보 시트 inert 보존, TQQQ 대화상자 재개방 스크롤 초기화를 통합했다.
+
+headless native client를 emulation 전에 검증하는 helper와 consolidated disclosure 관측 수정도 통합했다. 별도 진단 트리의 BTC 3/3·consolidated 3/3을 최종 후보의 전체 53-case 또는 WP6 통과로 소급하지 않는다. native-select Blink 내부 팝업 입력은 외부 macOS AppKit 메뉴 검증이 아니다. 최종 통합 후보에서 typecheck/static/Pages build/verify 및 관련 focused 30/30을 확인했으며, 전체 브라우저와 전체 회귀는 Pro 인계 후 남은 작업이다. 정확한 수용·출시 보류는 [현재 체크리스트](LAUNCH_CHECKLIST_20261110.md)를 따른다.

@@ -1,6 +1,6 @@
 ---
-name: verify-replay-state
-description: Verify replay start confirmation, manual date rejection, async session ownership, single-use timers, fixed forecasts, explicit rewind and destruction during pending saves in Bitcoin Cycle Atlas. Use when changing chart-replay.js inputs, settings or teardown, chart-replay-state.js lifecycle, replay save/restore callbacks, or their verification fixtures and diagrams.
+name: "verify-replay-state"
+description: "Verify replay start confirmation, manual date rejection, async session ownership, single-use timers, fixed forecasts, explicit rewind and destruction during pending saves in Bitcoin Cycle Atlas. Use when changing chart-replay.js inputs, settings or teardown, chart-replay-state.js lifecycle, replay save/restore callbacks, or their verification fixtures and diagrams."
 ---
 
 # Verify replay lifecycle and start confirmation
@@ -14,12 +14,12 @@ Preserve this promise: **settings cannot choose an unconfirmed replay start, and
 - Execute actual JavaScript using `tests/chart-replay-state.test.mjs` and `tests/chart-replay-ui.test.mjs`; the latter substitutes deterministic DOM, source, forecast and renderer modules. Do not present those doubles as actual forecast or native browser checks.
 - Reviewed manual-date follow-up baseline: `aca73b74a5128a5466488a0c701e86f5e854af46`, on 2026-11-06. Retain the previous destruction baseline `4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc` and original audit baseline `94a1b1dda9eb359de70747043808340da369d087` as historical identities. The current baseline predates the date fix; identify the patched implementation by its hashes, not by the baseline alone.
 - Reviewed controller SHA-256: `063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908`.
-- Reviewed coordinator SHA-256: `5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90`. The v1.31.3 release follow-up updates only its import query versions and reruns the same bounded verification; the manual-date behavior and fixtures are unchanged.
+- Bounded-verified coordinator SHA-256: `4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca` (mobile information-sheet ownership follow-up, implementation commit `758f2d4`). The earlier v1.31.3 hash `5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90` remains historical. The follow-up changes surrounding inert ownership, not playback/selection transitions; native screen acceptance remains a separate gate.
 - Keep the authoritative current file identities and results in `docs/replay-state/verification.json`. Read `docs/replay-state/README.md` and `statechart.mmd` for correspondence, bounds and known counterexamples.
 
 ## Run the verification
 
-Use Node 24 or newer; the current local runtime is v24.22.1. Run from the repository root:
+Use Node 24 or newer; the latest bounded receipt ran on Node v26.13.0. Historical pinned runtime receipts remain separate. Run from the repository root:
 
 ```sh
 node verification/replay-state/verify.mjs docs/replay-state/verification.json
@@ -44,7 +44,7 @@ The runner creates isolated temporary copies; never edit production files to run
 5. Preserve the exact engine session identity and fixed forecast through playback. Keep origin, first hidden bar, visible cursor and forecast input date distinct. Never rescore the current orange path as the 2026-10-21 issuance.
 6. Reproduce each new counterexample in an actual-source behavior test. Update the statechart only after checking the implementation. Explicitly retain terminal Play as a no-op; rewind requires seek. The main diagram omits the save substate and repeated terminal-destroy edges; keep that limit explicit.
 7. Run the command above after changes and inspect original, each mutation and restored results. Run the broader replay tests and native browser gate when DOM or chart behavior changes; bounded fixture success cannot replace them. For manual input changes, use actual native date spinbuttons for upper/lower bounds with button and Enter, and compare the visible frame, capture digest and saved bytes before and after rejection.
-8. Update source hashes, fixture correspondence, diagram and receipt together. Move a reviewed synchronization commit forward only after verifying the committed code at that SHA; never claim an uncommitted patch belongs to its baseline. Persist this project-local skill with the repository Git change, and validate it with skill-creator `quick_validate.py`. Keep dated follow-up evidence in `docs/deep-audit-2026-11-05` without rewriting November 4 results as if they covered later code.
+8. Update source hashes, fixture correspondence, diagram and receipt together. Move a reviewed synchronization commit forward only after verifying the committed code at that SHA; never claim an uncommitted patch belongs to its baseline. Persist this project-local skill with the repository Git change, and validate it with the current host's installed skill-creator validator (Aside: `node /Users/twoimo/.aside/u/0/skills/builtin/skill-creator/scripts/validate-frontmatter.mjs .agents/skills/verify-replay-state/SKILL.md`), not a missing historical `quick_validate.py`. Keep dated follow-up evidence in `docs/deep-audit-2026-11-05` without rewriting November 4 results as if they covered later code.
 
 Use pstack `maintain-formal-verification-skill` to assess drift after changes that did not recheck these paths. If a future version uses TLA+, read every result through pstack `statechart`; do not copy its machine-specific runner into this skill.
 

@@ -8,9 +8,15 @@ The 2026-11-06 follow-up rejects invalid manually entered dates before observed-
 
 This verification executes the actual JavaScript controller and coordinator. It combines exhaustive bounded command traces with focused asynchronous races and isolated mutations of the real source. It is not a TLA+ run or an unbounded mathematical proof. The project-local `verify-replay-state` skill provides the repeatable workflow requested through pstack's `create-formal-verification-skill`.
 
+## 2026-11-11 mobile information-sheet ownership follow-up
+
+Implementation `758f2d4` keeps the original BTC period controls reachable after the responsive footer moves into the phone information sheet. `blockSurrounding` blocks unrelated rail children rather than the entire rail, preserves the sheet opener/close/footer, and deduplicates owners before recording their prior `inert` values. A focused actual-coordinator fixture checks phone entry, desktop-to-phone/footer restoration, blocked navigation and preservation of pre-existing inertness. It is a deterministic DOM fixture, not a native-input result.
+
+The controller, the 20-arrow statechart and the finite playback/selection alphabets are unchanged. The updated receipt binds coordinator SHA-256 `4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca`: 16/16 controller cases, 10,000 playback traces, 259 selection traces, all 11 expected real-source negative controls detected, and restored originals passing. Browser evidence and remaining release conditions are tracked separately in the current [quality checklist](../LAUNCH_CHECKLIST_20261110.md).
+
 ## Reproduce
 
-Use Node 24 or newer from the repository root. The current local follow-up used **Node v24.22.2**; earlier run receipts retain their original runtime versions.
+Use Node 24 or newer from the repository root. The latest local follow-up used **Node v26.13.0**; earlier run receipts retain their original runtime versions.
 
 ```sh
 node verification/replay-state/verify.mjs docs/replay-state/verification.json
