@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "source": "RelayDeck",
-  "generated_at": "2026-11-10T19:45:30+09:00",
+  "generated_at": "2026-11-10T20:00:59+09:00",
   "rooms": [
     {
       "id": "telegram",
@@ -757,7 +757,15 @@
           "id": "2437",
           "at": "2026-11-10T17:31:15+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2437.jpg",
+              "width": 750,
+              "height": 612,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2438",
@@ -769,7 +777,15 @@
           "id": "2439",
           "at": "2026-11-10T17:33:11+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2439.jpg",
+              "width": 638,
+              "height": 406,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2440",
@@ -781,7 +797,15 @@
           "id": "2441",
           "at": "2026-11-10T17:33:55+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2441.jpg",
+              "width": 649,
+              "height": 496,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2442",
@@ -793,7 +817,15 @@
           "id": "2443",
           "at": "2026-11-10T18:14:20+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2443.jpg",
+              "width": 1280,
+              "height": 547,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2444",
@@ -823,7 +855,15 @@
           "id": "2448",
           "at": "2026-11-10T18:37:14+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2448.jpg",
+              "width": 912,
+              "height": 1021,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2449",
