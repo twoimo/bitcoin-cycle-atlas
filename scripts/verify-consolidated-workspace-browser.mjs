@@ -329,7 +329,8 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     await settled(context);
   }
   async function key(key, code, number, modifiers = 0) {
-    for (const type of ['keyDown', 'keyUp']) await cdp.send('Input.dispatchKeyEvent', { type, key, code, windowsVirtualKeyCode: number, nativeVirtualKeyCode: number, modifiers });
+    for (const type of ['keyDown', 'keyUp']) await cdp.send('Input.dispatchKeyEvent', { type, key, code, windowsVirtualKeyCode: number, nativeVirtualKeyCode: number, modifiers,
+      ...(type==='keyDown'&&key==='Enter'&&!modifiers?{text:'\r',unmodifiedText:'\r'}:{}) });
   }
   async function type(context, selector, text) {
     await pointer(context, selector); await key('a', 'KeyA', 65, 2);
