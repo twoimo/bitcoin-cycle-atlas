@@ -301,7 +301,9 @@ const main = async () => {
         const before = { scrollY, docH: document.documentElement.scrollHeight, bodyH: document.body.scrollHeight, innerH: innerHeight, bodyOverflow: getComputedStyle(document.body).overflow, htmlOverflow: getComputedStyle(document.documentElement).overflow };
         window.scrollTo(0, 400);
         const afterScroll = { scrollY, toggleRect: rect(document.querySelector('#mobile-details-toggle')) };
-        return { before, afterScroll, heads, detailsToggle: toggle ? { rect: rect(toggle), visible: toggle.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }), label: toggle.getAttribute('aria-label') } : null, details: details ? { rect: rect(details), open: details.dataset.mobileOpen || null } : null, navs: navs.slice(0, 8), bodyShell: document.body.dataset.shell, page: document.body.dataset.page };
+        const home = document.querySelector('#mobile-chart-home');
+        const homeInfo = home ? { rect: rect(home), visible: home.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }), label: home.getAttribute('aria-label'), parent: home.parentElement?.className || home.parentElement?.tagName, inHeading: Boolean(home.closest('.atlas-canvas-heading')), disabled: Boolean(home.disabled) } : null;
+        return { homeInfo, before, afterScroll, heads, detailsToggle: toggle ? { rect: rect(toggle), visible: toggle.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }), label: toggle.getAttribute('aria-label') } : null, details: details ? { rect: rect(details), open: details.dataset.mobileOpen || null } : null, navs: navs.slice(0, 8), bodyShell: document.body.dataset.shell, page: document.body.dataset.page };
       });
       info.headingChildren = await evaluate(cdp, () => [...(document.querySelector('.atlas-canvas-heading')?.children || [])].map(n => ({ tag: n.tagName, id: n.id || null, aria: n.getAttribute('aria-label'), controls: n.getAttribute('aria-controls'), expanded: n.getAttribute('aria-expanded'), cls: String(n.className || '').slice(0, 26), rect: (() => { const r = n.getBoundingClientRect(); return [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)]; })() })));
       info.sidebarState = await evaluate(cdp, () => { const sb = document.querySelector('.atlas-sidebar'); return sb ? { open: sb.dataset.mobileOpen || null, inert: sb.hasAttribute('inert'), ariaHidden: sb.getAttribute('aria-hidden'), rect: (() => { const r = sb.getBoundingClientRect(); return [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)]; })() } : null; });
@@ -321,8 +323,9 @@ const main = async () => {
       if (bootState !== 'ready') fail(where, 'boot ' + bootState);
       const chartClass = !['evidence', 'data', 'ipo', 'relay'].includes(item.route);
       entry.chartShell = chartClass;
-      if (chartClass) for (const key of ['top', 'left', 'right', 'bottom']) if (!state.present[key]) fail(where, `missing shell region ${key}`);
-      else {
+      if (chartClass) {
+        for (const key of ['top', 'left', 'right', 'bottom']) if (!state.present[key]) fail(where, `missing shell region ${key}`);
+      } else {
         const missing = ['top', 'left', 'right', 'bottom'].filter(key => !state.present[key]);
         if (missing.length) report.findings.push(`${where}: non-chart route without ${missing.join('/')} perimeter (chart shell is chart-class only)`);
       }
@@ -374,7 +377,7 @@ const main = async () => {
     }
 
     // Phase C: real user input at 390 and 1440
-    for (const [w, h] of [[390, 844], [1440, 900]]) {
+    for (const [w, h] of [[390, 844], [456, 900], [620, 900], [1440, 900]]) {
       const label = `${w}x${h}`;
       await goto('index.html?page=compare&legacy=1&compare-unit=rebased', w, h);
       await evaluate(cdp, () => {
@@ -390,36 +393,44 @@ const main = async () => {
         return true;
       });
       const before = await evaluate(cdp, readState);
-      let openedDrawer = null;
-      const navReady = () => evaluate(cdp, () => {
-        const n = document.querySelector('.atlas-nav button[data-view="outlook"]');
-        if (!n) return false;
-        const r = n.getBoundingClientRect(); const cs = getComputedStyle(n);
-        return r.width > 1 && r.height > 1 && cs.display !== 'none' && cs.visibility !== 'hidden' && !n.closest('[inert]');
+      // Phone returns with the compare-owned home control that the shell moves
+      // into the heading (atlas-shell.css: chart + data-page=compare -> 44x44).
+      // Desktop has no home control and uses the real navigation instead.
+      const homeState = () => evaluate(cdp, () => {
+        const n = document.querySelector('#mobile-chart-home');
+        if (!n) return null;
+        const r = n.getBoundingClientRect();
+        return {
+          w: Math.round(r.width), h: Math.round(r.height), top: Math.round(r.top), bottom: Math.round(r.bottom),
+          painted: n.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }),
+          inHeading: Boolean(n.closest('.atlas-canvas-heading')), label: n.getAttribute('aria-label'), disabled: Boolean(n.disabled),
+        };
       });
-      // The accepted phone route opens the info tray (#mobile-details-toggle) and
-      // uses the real navigation inside #mobile-chart-details; the sidebar stays
-      // hidden on phones by design.
-      if (!(await navReady())) {
-        const traySelector = '#mobile-details-toggle';
-        const tray = await evaluate(cdp, sel => {
-          const n = document.querySelector(sel);
-          if (!n) return null;
-          const r = n.getBoundingClientRect();
-          return { painted: r.width > 1 && r.height > 1, w: Math.round(r.width), h: Math.round(r.height) };
-        }, traySelector);
-        if (tray?.painted) {
-          openedDrawer = { trigger: traySelector, receipt: await domClick(traySelector), size: tray };
-          await sleep(1000);
+      let openedDrawer = null;
+      let returnControl = null;
+      const home = await homeState();
+      if (home?.painted) returnControl = { selector: '#mobile-chart-home', kind: 'home', state: home };
+      else {
+        const navReady = () => evaluate(cdp, () => {
+          const n = document.querySelector('.atlas-nav button[data-view="outlook"]');
+          if (!n) return false;
+          const r = n.getBoundingClientRect(); const cs = getComputedStyle(n);
+          return r.width > 1 && r.height > 1 && cs.display !== 'none' && cs.visibility !== 'hidden' && !n.closest('[inert]');
+        });
+        if (!(await navReady())) {
+          const traySelector = '#mobile-details-toggle';
+          const tray = await evaluate(cdp, sel => {
+            const n = document.querySelector(sel);
+            if (!n) return null;
+            const r = n.getBoundingClientRect();
+            return { painted: n.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }), w: Math.round(r.width), h: Math.round(r.height) };
+          }, traySelector);
+          if (tray?.painted) { openedDrawer = { trigger: traySelector, receipt: await domClick(traySelector) }; await sleep(1000); }
         }
+        returnControl = { selector: '.atlas-nav button[data-view="outlook"]', kind: 'nav', state: null };
       }
-      const navSelector = (await evaluate(cdp, () => document.querySelector('#mobile-chart-details [data-view="outlook"]') ? '#mobile-chart-details [data-view="outlook"]' : '.atlas-nav button[data-view="outlook"]'));
-      const navReadyNow = await navReady() || Boolean(await evaluate(cdp, () => {
-        const n = document.querySelector('#mobile-chart-details [data-view="outlook"]');
-        return n ? n.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }) : false;
-      }));
-      const navClick = navReadyNow ? await domClick(navSelector) : { ok: false, reason: 'nav button not reachable' };
-      const navBox = { text: '가격 차트' };
+      const navClick = await domClick(returnControl.selector);
+      const navBox = { text: returnControl.kind === 'home' ? (home?.label || '통합 차트로 돌아가기') : '가격 차트' };
       if (!navClick.ok) {
         const dock = await evaluate(cdp, () => {
           const n = document.querySelector('.atlas-canvas-heading');
@@ -453,14 +464,18 @@ const main = async () => {
           return { compareSame: m.compare === now.compare, chartSame: m.chart === now.chart, compareVisible: now.compare ? !now.compare.hidden : false };
         });
         report.interactions[label] = {
-          openedDrawer, navClick, nav: navBox.text,
+          openedDrawer, returnControl, navClick, nav: navBox.text,
           before: { search: before.search, page: before.page, compareVisible: before.compare.visible },
           afterNav: { search: afterNav.search, page: afterNav.page, compareVisible: afterNav.compare.visible, headings: afterNav.headings },
           nodeIdentityAfterNav: identity,
           afterBack: { search: afterBack.search, page: afterBack.page, compareVisible: afterBack.compare.visible, unitPressed: afterBack.compare.unitPressed, headings: afterBack.headings },
           nodeIdentityAfterBack: backIdentity,
         };
-        const where = `input ${label} nav`;
+        const where = `input ${label} ${returnControl.kind}`;
+        if (w <= 620) {
+          if (returnControl.kind !== 'home') fail(where, 'phone return used ' + returnControl.kind + ' instead of the compare home control');
+          else if (!home.inHeading || home.w < 44 || home.h < 44) fail(where, 'home control geometry/owner wrong: ' + JSON.stringify(home));
+        }
         if (afterNav.page !== 'outlook') fail(where, 'canonical page not reached: body data-page=' + afterNav.page + ' ' + afterNav.search);
         if (!/compare-unit=rebased/.test(afterNav.search)) fail(where, 'context params lost on canonical page: ' + afterNav.search);
         if (afterNav.compare.visible) fail(where, 'compare view still visible on canonical page');
@@ -524,7 +539,7 @@ const main = async () => {
       if (errors.length) fail(where, 'console/runtime errors: ' + errors.slice(0, 2).join(' | '));
     }
 
-    for (const [w, h] of [[1280, 800], [1920, 1080]]) {
+    for (const [w, h] of [[390, 844], [1280, 800], [1920, 1080]]) {
       await goto('index.html?page=compare&legacy=1&compare-unit=rebased', w, h);
       const shot = await cdp.send('Page.captureScreenshot', { format: 'png', fromSurface: true }).catch(() => null);
       if (shot?.data) await writeFile(resolve(OUT, `compare-${w}x${h}.png`), Buffer.from(shot.data, 'base64'));
