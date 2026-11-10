@@ -3,6 +3,28 @@ import { readFile } from 'node:fs/promises';
 import { readNativeInteractiveTarget } from './verify-workspace-browser.mjs';
 import { verifyChartZoomBrowser } from './verify-chart-zoom-browser.mjs';
 
+// Only an explicit pre-dispatch bounds rejection permits another native path.
+// Timeouts and all other failures stay unknown/failed and are never replayed.
+export async function dispatchNativeScroll(cdp, {point, deltaX=0, deltaY=0}, onPulse=async()=>{}) {
+  if (![point?.x,point?.y,deltaX,deltaY].every(Number.isFinite)||point.x<0||point.y<0) throw new Error('Invalid native scroll geometry');
+  try {
+    await cdp.send('Input.synthesizeScrollGesture',{...point,xDistance:-deltaX,yDistance:-deltaY,gestureSourceType:'mouse',preventFling:true});
+    return {via:'gesture',pulses:1};
+  } catch (error) {
+    const prefix='Input.synthesizeScrollGesture: ';let rejection;
+    if(error.message?.startsWith(prefix)){try{rejection=JSON.parse(error.message.slice(prefix.length));}catch{}}
+    if(rejection?.code!==-32602||rejection?.message!=='Position out of bounds')throw error;
+  }
+  await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',...point});
+  let x=deltaX,y=deltaY,pulses=0;
+  while(pulses<8&&(Math.abs(x)>.001||Math.abs(y)>.001)) {
+    const dx=Math.sign(x)*Math.min(40,Math.abs(x)),dy=Math.sign(y)*Math.min(40,Math.abs(y));
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',...point,deltaX:dx,deltaY:dy,pointerType:'mouse'});
+    x-=dx;y-=dy;pulses++;await onPulse();
+  }
+  return {via:'wheel-after-bounds-rejection',pulses,remainingX:x,remainingY:y};
+}
+
 // Match scripts/build-pages.mjs and the public GitHub Pages project root.
 export const consolidatedPagesBase = '/bitcoin-cycle-atlas/';
 export const consolidatedWorkspaceCases = [320, 390, 1440].map(width => ({
@@ -317,9 +339,8 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
       await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', ...point });
       // Finish this real mouse gesture before switching between iframe and
       // modal scroll owners; an unfinished wheel sequence can remain latched.
-      try{await cdp.send('Input.synthesizeScrollGesture', { ...point, xDistance: -movement.deltaX, yDistance: -movement.deltaY, gestureSourceType: 'mouse', preventFling: true });}
-      catch(error){const viewport=await evaluate(cdp,()=>({width:innerWidth,height:innerHeight,visibility:document.visibilityState}));throw new Error('Native scroll gesture rejected: '+JSON.stringify({selector,point,movement,viewport})+'; '+error.message);}
-      evidence.inputs.push({kind:'native-scroll',selector,frame:context===cdp?'parent':childId,point,deltaX:movement.deltaX,deltaY:movement.deltaY});
+      const transport=await dispatchNativeScroll(cdp,{point,deltaX:movement.deltaX,deltaY:movement.deltaY},()=>settled(context));
+      evidence.inputs.push({kind:'native-scroll',selector,frame:context===cdp?'parent':childId,point,deltaX:movement.deltaX,deltaY:movement.deltaY,...transport});
       await settled(context);
     }
     throw new Error('Required action remains clipped: ' + selector + ': ' + JSON.stringify(lastTarget));
