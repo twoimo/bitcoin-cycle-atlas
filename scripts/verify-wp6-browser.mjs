@@ -12,6 +12,7 @@ import { readChartReplayFloatingGeometry } from './verify-chart-replay-browser.m
 import { readNativeInteractiveTarget } from './verify-workspace-browser.mjs';
 import { readChartQa,readAnnotationHoverTargets } from './verify-chart-qa-metrics.mjs';
 import { inNativeSelectPopupMode } from './native-select-keyboard.mjs';
+import {headlessWindowArgument,verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
 
 const root=resolve(fileURLToPath(new URL('..',import.meta.url)));
 const argv=process.argv.slice(2),arg=(key,fallback)=>{const i=argv.indexOf(key);return i<0?fallback:argv[i+1];};
@@ -145,7 +146,8 @@ async function runCase(spec,debugBase){
     cdp=await Cdp.connect(target.webSocketDebuggerUrl);receipt.contextId=contextId;
     cdp.on('Runtime.exceptionThrown',event=>receipt.runtimeErrors.push(event.exceptionDetails));
     cdp.on('Network.responseReceived',event=>{if(event.response.status>=400)receipt.resourceErrors.push({url:event.response.url,status:event.response.status});});
-    await cdp.send('Page.enable');await cdp.send('Runtime.enable');await cdp.send('Network.enable');await cdp.send('Network.setCacheDisabled',{cacheDisabled:true});
+    await cdp.send('Page.enable');await cdp.send('Runtime.enable');await cdp.send('Network.enable');
+      receipt.nativeWindowEnvelope=await verifyHeadlessWindowEnvelope(cdp,{width,height});await cdp.send('Network.setCacheDisabled',{cacheDisabled:true});
     await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
     await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:width<=768,maxTouchPoints:5});
     receipt.url=origin+(symbol==='TQQQ'?'/market-lab/charts/?symbol=TQQQ':'/?symbol='+symbol+'&granularity=daily&type=line');
@@ -205,7 +207,8 @@ async function runChartQaCase(spec,debugBase){
     cdp.on('Network.requestWillBeSent',event=>{if(/^https?:/.test(event.request?.url||'')){requests.set(event.requestId,{url:event.request.url,type:event.type});networkChanged=Date.now();}});
     for(const eventName of ['Network.loadingFinished','Network.loadingFailed'])cdp.on(eventName,event=>{requests.delete(event.requestId);networkChanged=Date.now();});
     cdp.on('Runtime.exceptionThrown',event=>receipt.runtimeErrors.push(event.exceptionDetails));
-    await cdp.send('Page.enable');await cdp.send('Runtime.enable');await cdp.send('Network.enable');await cdp.send('Network.setCacheDisabled',{cacheDisabled:true});
+    await cdp.send('Page.enable');await cdp.send('Runtime.enable');await cdp.send('Network.enable');
+      receipt.nativeWindowEnvelope=await verifyHeadlessWindowEnvelope(cdp,{width,height});await cdp.send('Network.setCacheDisabled',{cacheDisabled:true});
     await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
     await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:width<=768,maxTouchPoints:5});
     receipt.url=origin+(symbol==='COMPARE'?'/?page=compare&legacy=1':'/?symbol=BTCUSD&granularity=daily&type=line');
@@ -272,7 +275,7 @@ try{
   const binary=process.env.ATLAS_BROWSER_PATH;assert.ok(binary,'ATLAS_BROWSER_PATH is required; no browser case may be reported as passed without Chrome');
   report.browserBinary=binary;report.koreanFonts=execFileSync('fc-list',[':lang=ko'],{encoding:'utf8'}).trim().split('\n').slice(0,8);assert.ok(report.koreanFonts[0],'Korean fonts are unavailable');
   profile=await mkdtemp(resolve(tmpdir(),'atlas-wp6-browser-'));
-  chrome=spawn(binary,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-background-networking','--disable-component-update','--disable-sync','--no-first-run','--no-default-browser-check','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe']});
+  chrome=spawn(binary,['--headless=new',headlessWindowArgument,'--no-sandbox','--disable-dev-shm-usage','--disable-background-networking','--disable-component-update','--disable-sync','--no-first-run','--no-default-browser-check','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe']});
   let spawnError;chrome.on('error',error=>{spawnError=error;});chrome.stderr.on('data',bytes=>{stderr=(stderr+bytes.toString()).slice(-12000);});
   const active=await until(async()=>{if(spawnError)throw spawnError;if(chrome.exitCode!==null||chrome.signalCode!==null)throw new Error('Chrome launch failed ('+(chrome.exitCode??chrome.signalCode)+'): '+stderr);try{return(await readFile(resolve(profile,'DevToolsActivePort'),'utf8')).trim().split('\n');}catch{return null;}},'Chrome inspector',20000);
   const debugBase='http://127.0.0.1:'+active[0];browser=await Cdp.connect('ws://127.0.0.1:'+active[0]+active[1]);report.browser=await browser.send('Browser.getVersion');

@@ -10,6 +10,7 @@ import {consolidatedPagesBase,verifyConsolidatedWorkspaceSurface} from './verify
 import {createEthBrowserCaseSpecs,ethBrowserCaseScopes,selectEthBrowserCaseSpecs} from './eth-browser-case-specs.mjs';
 import {readBrowserSourceIdentity} from './browser-source-identity.mjs';
 import {selectNativeOptionByKeyboard} from './native-select-keyboard.mjs';
+import {headlessWindowArgument,verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
 import {classifyProjectBrowserResource,verifyProjectGeneratedImages} from './browser-project-resource-policy.mjs';
 import {mountUiReviewCase,uiContractBrowserCases,verifyUiContractSurface,verifyUiShellSurface} from './verify-ui-contract-browser.mjs';
 import {verifyNativeChartWorkbench} from './verify-native-chart-workbench-browser.mjs';
@@ -895,7 +896,7 @@ async function main(){
   await new Promise((accept,reject)=>{server.once('error',reject);server.listen(0,'127.0.0.1',accept);});
   base='http://127.0.0.1:'+server.address().port;
   profile=await mkdtemp(resolve(tmpdir(),'atlas-eth-browser-'+(lane?lane+'-':'')));
-  chrome=spawn(binary,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-background-networking','--disable-component-update','--disable-sync','--no-first-run','--no-default-browser-check','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe']});
+  chrome=spawn(binary,['--headless=new',headlessWindowArgument,'--no-sandbox','--disable-dev-shm-usage','--disable-background-networking','--disable-component-update','--disable-sync','--no-first-run','--no-default-browser-check','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe']});
   report.browserProcess={pid:chrome.pid,profile};
   let spawnError=null;chrome.once('error',error=>{spawnError=error;});
   chrome.stderr.on('data',chunk=>{chromeStderr=(chromeStderr+chunk.toString()).slice(-16000);});
@@ -1081,6 +1082,7 @@ async function main(){
         return true;
       };
       await cdp.send('Page.enable');await cdp.send('Runtime.enable');await cdp.send('Network.enable');
+      receipt.nativeWindowEnvelope=await verifyHeadlessWindowEnvelope(cdp,{width,height});
       await cdp.send('Network.setBlockedURLs',{urls:['https://*']});
       await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:touch});
       await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:touch,maxTouchPoints:1});
@@ -1128,11 +1130,11 @@ async function main(){
       if(browserContextId)try{await browser.send('Target.disposeBrowserContext',{browserContextId});}catch(error){report.failures.push({page,width,cleanupError:errorText(error)});}
     }
   }
-  assert.equal(report.cases.length,selectedCases.length);assert.equal(report.failures.length,0,'Real browser verification failed; inspect report.json and screenshots');
   const changedSources=[];
   for(const [path,expected] of Object.entries(report.sourceHashes))if(hash(await readFile(resolve(root,path)))!==expected)changedSources.push(path);
   report.sourceIntegrity={checkedFiles:Object.keys(report.sourceHashes).length,changedSources,unchangedDuringRun:changedSources.length===0};
   assert.deepEqual(changedSources,[],'Browser evidence cannot bind sources that changed during the run');
+  assert.equal(report.cases.length,selectedCases.length);assert.equal(report.failures.length,0,'Real browser verification failed; inspect report.json and screenshots');
   report.status='passed';
 }
 try{await main();}catch(error){report.status='failed';report.error=errorText(error);process.exitCode=1;}
