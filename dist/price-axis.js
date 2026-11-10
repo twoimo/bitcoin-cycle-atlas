@@ -1,22 +1,16 @@
 const axisEscape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-// Glyph advances depend on the loaded face, the letter spacing and the SVG
-// user units (viewBox). Cache across drawings, and bump the epoch whenever the
-// document finishes loading a font so a fallback measurement cannot survive.
-// Numeric labels repeat the same ten glyphs. Once each glyph advance is known
-// for a font and size, a new price string composes its width from those cached
-// advances instead of forcing an SVG layout flush for every label. One real
-// sample per (size, length) calibrates the composition against the browser.
-// Caches live per document: another iframe or a second SVG must not inherit
-// these advances, and a font load clears the document's cache outright.
+// Cache exact browser measurements, never sums of approximate glyph advances.
+// A Document is the font-loading boundary. Keep both cache size and lifetime
+// bounded, and invalidate existing hover fitters as well as future drawings.
 const axisDocumentCaches=new WeakMap();
-const axisLooseCache={glyphs:new Map(),chars:new Map(),ratios:new Map(),rawOnly:new Set(),epoch:0};
+const newAxisCache=()=>({widths:new Map(),epoch:0});
 function axisCacheFor(doc){
-  if(!doc)return axisLooseCache;
+  if(!doc)return newAxisCache();
   let entry=axisDocumentCaches.get(doc);
   if(!entry){
-    entry={glyphs:new Map(),chars:new Map(),ratios:new Map(),rawOnly:new Set(),epoch:0};
-    axisDocumentCaches.set(doc,entry);
-    try{doc.fonts?.addEventListener?.('loadingdone',()=>{entry.epoch+=1;entry.glyphs.clear();entry.chars.clear();entry.ratios.clear();entry.rawOnly.clear();});}catch{}
+    entry=newAxisCache();axisDocumentCaches.set(doc,entry);
+    const invalidate=()=>{entry.epoch+=1;entry.widths.clear();};
+    try{doc.fonts?.addEventListener?.('loadingdone',invalidate);doc.fonts?.addEventListener?.('loadingerror',invalidate);}catch{}
   }
   return entry;
 }
@@ -30,71 +24,33 @@ function priceAxisTextMetrics(svg){
   const doc=svg?.ownerDocument,view=doc?.defaultView;
   let inherited=null;try{inherited=view?.getComputedStyle?.(svg);}catch{}
   const font={family:inherited?.fontFamily||'Arial,"Noto Sans KR",sans-serif',weight:inherited?.fontWeight||'400',style:inherited?.fontStyle||'normal',spacing:Number.parseFloat(inherited?.letterSpacing)||0};
-  const cache=new Map(),viewBox=svg?.getAttribute?.('viewBox')||'';
+  const viewBox=svg?.getAttribute?.('viewBox')||'',store=axisCacheFor(doc);
+  const local=new Map();let localEpoch=store.epoch,sampleValue='';
+  const typeKey=JSON.stringify([font.family,font.weight,font.style,font.spacing,viewBox]);
   let probe=null;
   try{if(doc?.createElementNS&&svg?.appendChild){probe=doc.createElementNS('http://www.w3.org/2000/svg','text');for(const [name,value] of Object.entries({'font-family':font.family,'font-weight':font.weight,'font-style':font.style,'font-variant-numeric':'tabular-nums','letter-spacing':font.spacing,x:0,y:0,visibility:'hidden','pointer-events':'none','aria-hidden':'true'}))probe.setAttribute(name,value);}}catch{}
-  const store=axisCacheFor(doc);
-  const typeKey=`${font.family}|${font.weight}|${font.style}|${font.spacing}|${viewBox}`;
-  let cachePrefix=`${typeKey}|${store.epoch}`;
-  function probeMeasure(text,size){
-    text=String(text);const key=`${size}:${text}`;if(cache.has(key))return cache.get(key);
-    let width=0;
+  function syncEpoch(){if(localEpoch!==store.epoch){local.clear();localEpoch=store.epoch;}}
+  function raw(text,size){
+    text=String(text);syncEpoch();let width=0;
     if(probe){
       try{probe.setAttribute('font-size',size);probe.textContent=text;svg.appendChild(probe);const advance=probe.getComputedTextLength?.(),box=probe.getBBox?.();width=Math.max(Number.isFinite(advance)?advance:0,box&&Number.isFinite(box.width)?box.x+box.width:0)-Math.min(0,box?.x||0);}catch{}
       finally{try{if(probe.parentNode)probe.parentNode.removeChild(probe);}catch{}}
     }
-    if(!(width>0)&&text){
-      width=[...text].reduce((sum,char)=>sum+(/[., ]/.test(char)?.34:/[-+]/.test(char)?.55:char==='%'?.9:.68)*size,0)+Math.max(0,text.length-1)*font.spacing;
-    }
-    width=Math.max(0,width);if(cache.size>256)cache.clear();cache.set(key,width);return width;
-  }
-  function direct(text,size){
-    text=String(text);const key=`${size}:${text}`;if(cache.has(key))return cache.get(key);
-    const shared=`${cachePrefix}|${key}`;if(store.glyphs.has(shared)){const width=store.glyphs.get(shared);cache.set(key,width);return width;}
-    let width=0;
-    if(probe){
-      try{probe.setAttribute('font-size',size);probe.textContent=text;svg.appendChild(probe);const advance=probe.getComputedTextLength?.(),box=probe.getBBox?.();width=Math.max(Number.isFinite(advance)?advance:0,box&&Number.isFinite(box.width)?box.x+box.width:0)-Math.min(0,box?.x||0);}catch{}
-      finally{try{if(probe.parentNode)probe.parentNode.removeChild(probe);}catch{}}
-    }
-    if(!(width>0)&&text){
-      // Conservatively bound numeric text where layout APIs are unavailable.
-      width=[...text].reduce((sum,char)=>sum+(/[., ]/.test(char)?.34:/[-+]/.test(char)?.55:char==='%'?.9:.68)*size,0)+Math.max(0,text.length-1)*font.spacing;
-    }
-    width=Math.max(0,width);if(cache.size>256)cache.clear();cache.set(key,width);
-    if(store.glyphs.size>2048)store.glyphs.clear();store.glyphs.set(shared,width);return width;
-  }
-  const numeric=/^[$%+\-\d.,\s]+$/;
-  function charWidth(character,size){
-    const key=`${cachePrefix}|${size}|${character}`;
-    const cached=store.chars.get(key);if(cached!==undefined)return cached;
-    const width=direct(character,size);if(store.chars.size>1024)store.chars.clear();store.chars.set(key,width);return width;
-  }
-  function compose(text,size){
-    const characters=[...String(text)];
-    return characters.reduce((sum,character)=>sum+charWidth(character,size),0)+Math.max(0,characters.length-1)*font.spacing;
-  }
-  function calibration(size,length){
-    const ratioKey=`${cachePrefix}|${size}:${length}`,stored=store.ratios.get(ratioKey);if(stored)return stored;
-    // Two real samples bracket the glyph mix: plain digits and a currency form
-    // with separators. Composition is used only while both stay within 5% of
-    // the browser's own advance; otherwise this font measures raw.
-    const zeros='0'.repeat(length),currency='$'+'0'.repeat(Math.max(1,length-1));
-    let reliable=true,ratio=1;
-    for(const sample of [zeros,currency]){
-      const measured=direct(sample,size),composedSample=compose(sample,size);if(!(composedSample>0))continue;
-      const value=measured/composedSample;ratio=Math.max(ratio,value);if(value<0.95||value>1.05)reliable=false;
-    }
-    const entry={ratio,reliable};if(store.ratios.size>512)store.ratios.clear();store.ratios.set(ratioKey,entry);return entry;
+    // Detached renderers have no glyph API. This existing conservative fallback
+    // is not used as a calibration sample or a claimed browser measurement.
+    if(!(width>0)&&text)width=[...text].reduce((sum,char)=>sum+(/[., ]/.test(char)?.34:/[-+]/.test(char)?.55:char==='%'?.9:.68)*size,0)+Math.max(0,text.length-1)*font.spacing;
+    return Math.max(0,width);
   }
   function measure(text,size){
-    text=String(text);const key=`${size}:${text}`;if(cache.has(key))return cache.get(key);
-    if(!text||!numeric.test(text)||store.rawOnly.has(`${cachePrefix}|${size}`))return direct(text,size);
-    const composed=compose(text,size),{ratio,reliable}=calibration(size,Math.min(32,[...text].length));
-    if(!reliable){store.rawOnly.add(`${cachePrefix}|${size}`);return direct(text,size);}
-    const width=Math.max(0,composed*ratio);if(cache.size>256)cache.clear();cache.set(key,width);
-    if(store.glyphs.size>2048)store.glyphs.clear();store.glyphs.set(`${cachePrefix}|${key}`,width);return width;
+    text=String(text);syncEpoch();const key=JSON.stringify([size,text]);
+    if(local.has(key))return local.get(key);
+    const shared=JSON.stringify([typeKey,store.epoch,sampleValue,size,text]);
+    const width=store.widths.has(shared)?store.widths.get(shared):raw(text,size);
+    if(local.size>=256)local.clear();local.set(key,width);
+    if(!store.widths.has(shared)){if(store.widths.size>=2048)store.widths.clear();store.widths.set(shared,width);}
+    return width;
   }
-  return {font,measure,raw:probeMeasure,setSample(value){cachePrefix=`${typeKey}|${store.epoch}|${value}`;}};
+  return {font,measure,raw,setSample(value){sampleValue=value;local.clear();}};
 }
 
 /** A fixed gutter gives the recovered width to the price plot. Actual glyph
@@ -105,8 +61,8 @@ export function createPriceAxisLayout({svg,width,left=8,minRight=64,fontSize=11,
   const right=Math.min(minRight,Math.max(1,width-left-48));
   const labelWidth=Math.max(1,right-inset-edge),{font}=metrics;
   // One real sample per layout is the font-change detector: its advance is part
-  // of every cached label width below, so a newly loaded face cannot reuse a
-  // stale composition while unchanged frames keep their cached glyphs.
+  // of every cached label width below. Font events also invalidate existing
+  // layout instances so a live hover does not retain stale measurements.
   const sampleAdvance=metrics.raw('$-0123456789.,%',fontSize);metrics.setSample(sampleAdvance);
   // Font face loading can change glyph advances without changing the computed
   // family name or this fixed gutter. React must refresh its measured fitter.
@@ -116,14 +72,14 @@ export function createPriceAxisLayout({svg,width,left=8,minRight=64,fontSize=11,
     const length=Math.min(labelWidth,Math.max(.01,metrics.measure(label,badge?badgeFontSize:fontSize)));
     return {...common,'data-price-axis-label':kind,textLength:Number(length.toFixed(3))};
   }
-  // Only React asks for this identity, and reading it forces two glyph
-  // measurements. Keep it lazy so every native chart render (including the
-  // per-day replay redraw) never pays for a font probe it does not consume.
+  // Render identity is an immutable snapshot, distinct from live hover fitting.
+  // React compares the previous layout with a newly measured one on font load.
+  // Updating both identities in place would incorrectly skip that rerender.
+  const badgeSampleAdvance=badgeFontSize===fontSize?sampleAdvance:metrics.raw(probe,badgeFontSize);
   const axis={right,inset,edge,labelWidth,fontSize,badgeFontSize,measure:metrics.measure,
-    // A literal getter keeps the published shape typed for the React fitter,
-    // while native renders never read it and never pay for the probe.
+    // Keep the published literal getter shape for the React fitter.
     get metricKey(){
-      const measured=sampleAdvance,badgeMeasured=badgeFontSize===fontSize?measured:metrics.raw(probe,badgeFontSize);
+      const measured=sampleAdvance,badgeMeasured=badgeSampleAdvance;
       return JSON.stringify([font,fontSize,badgeFontSize,measured,badgeMeasured]);
     },
     attributes(label,options){return Object.entries(textAttributes(label,options)).map(([name,value])=>`${name}="${axisEscape(value)}"`).join(' ');},
