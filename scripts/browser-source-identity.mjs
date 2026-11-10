@@ -11,6 +11,7 @@ export const uiReviewVerifierFiles=Object.freeze([
   'scripts/verify-eth-candidate-browser.mjs',
   'scripts/verify-ui-contract-browser.mjs',
   'scripts/browser-source-identity.mjs',
+  'scripts/browser-paint-readiness.mjs',
   'scripts/btc-offline-refresh-policy.mjs',
   'scripts/chart-replay-profile.mjs',
 ]);
