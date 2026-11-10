@@ -317,7 +317,8 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
       await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', ...point });
       // Finish this real mouse gesture before switching between iframe and
       // modal scroll owners; an unfinished wheel sequence can remain latched.
-      await cdp.send('Input.synthesizeScrollGesture', { ...point, xDistance: -movement.deltaX, yDistance: -movement.deltaY, gestureSourceType: 'mouse', preventFling: true });
+      try{await cdp.send('Input.synthesizeScrollGesture', { ...point, xDistance: -movement.deltaX, yDistance: -movement.deltaY, gestureSourceType: 'mouse', preventFling: true });}
+      catch(error){const viewport=await evaluate(cdp,()=>({width:innerWidth,height:innerHeight,visibility:document.visibilityState}));throw new Error('Native scroll gesture rejected: '+JSON.stringify({selector,point,movement,viewport})+'; '+error.message);}
       evidence.inputs.push({kind:'native-scroll',selector,frame:context===cdp?'parent':childId,point,deltaX:movement.deltaX,deltaY:movement.deltaY});
       await settled(context);
     }
@@ -336,7 +337,11 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
       ...(type==='keyDown'&&key==='Enter'&&!modifiers?{text:'\r',unmodifiedText:'\r'}:{}) });
   }
   async function type(context, selector, text) {
-    await pointer(context, selector); await key('a', 'KeyA', 65, process.platform==='darwin'?4:2);
+    await pointer(context, selector);
+    // CDP does not traverse AppKit's Cmd+A menu translation on macOS. Use its
+    // documented native editing command (as Chromium automation libraries do),
+    // then require actual selection and the real input event's resulting value.
+    for(const type of ['rawKeyDown','keyUp'])await cdp.send('Input.dispatchKeyEvent',{type,key:'a',code:'KeyA',windowsVirtualKeyCode:65,modifiers:process.platform==='darwin'?4:2,...(type==='rawKeyDown'?{commands:['selectAll']}:{})});
     const selected=await evaluate(context,selector=>{const node=document.querySelector(selector);return {length:node.value.length,start:node.selectionStart,end:node.selectionEnd};},selector);
     assert.ok(selected.start===0&&selected.end===selected.length,'Native select-all must replace, not append, the existing text: '+selector);
     await cdp.send('Input.insertText', { text }); await settled(context);
