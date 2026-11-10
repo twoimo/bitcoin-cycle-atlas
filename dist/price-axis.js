@@ -1,4 +1,20 @@
 const axisEscape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+// Glyph advances depend on the loaded face, the letter spacing and the SVG
+// user units (viewBox). Cache across drawings, and bump the epoch whenever the
+// document finishes loading a font so a fallback measurement cannot survive.
+const axisGlyphWidths=new Map(),axisFontEpochs=new WeakMap();
+// Numeric labels repeat the same ten glyphs. Once each glyph advance is known
+// for a font and size, a new price string composes its width from those cached
+// advances instead of forcing an SVG layout flush for every label. One real
+// sample per (size, length) calibrates the composition against the browser.
+const axisCharWidths=new Map(),axisCompositionRatios=new Map();
+function axisFontEpoch(doc,view){
+  const owner=doc||view;if(!owner)return 0;
+  let entry=axisFontEpochs.get(owner);
+  if(!entry){entry={epoch:0};axisFontEpochs.set(owner,entry);
+    try{owner.fonts?.addEventListener?.('loadingdone',()=>{entry.epoch+=1;});}catch{}}
+  return entry.epoch;
+}
 const axisNumberFormats=new Map();
 const axisNumber=(value,digits)=>{if(!axisNumberFormats.has(digits))axisNumberFormats.set(digits,new Intl.NumberFormat('en-US',{maximumFractionDigits:digits}));return axisNumberFormats.get(digits).format(value);};
 
@@ -9,10 +25,25 @@ function priceAxisTextMetrics(svg){
   const doc=svg?.ownerDocument,view=doc?.defaultView;
   let inherited=null;try{inherited=view?.getComputedStyle?.(svg);}catch{}
   const font={family:inherited?.fontFamily||'Arial,"Noto Sans KR",sans-serif',weight:inherited?.fontWeight||'400',style:inherited?.fontStyle||'normal',spacing:Number.parseFloat(inherited?.letterSpacing)||0};
-  const cache=new Map();let probe=null;
+  const cache=new Map(),viewBox=svg?.getAttribute?.('viewBox')||'';
+  let probe=null;
   try{if(doc?.createElementNS&&svg?.appendChild){probe=doc.createElementNS('http://www.w3.org/2000/svg','text');for(const [name,value] of Object.entries({'font-family':font.family,'font-weight':font.weight,'font-style':font.style,'font-variant-numeric':'tabular-nums','letter-spacing':font.spacing,x:0,y:0,visibility:'hidden','pointer-events':'none','aria-hidden':'true'}))probe.setAttribute(name,value);}}catch{}
-  function measure(text,size){
+  let cachePrefix=`${font.family}|${font.weight}|${font.style}|${font.spacing}|${viewBox}|${axisFontEpoch(doc,view)}`;
+  function probeMeasure(text,size){
     text=String(text);const key=`${size}:${text}`;if(cache.has(key))return cache.get(key);
+    let width=0;
+    if(probe){
+      try{probe.setAttribute('font-size',size);probe.textContent=text;svg.appendChild(probe);const advance=probe.getComputedTextLength?.(),box=probe.getBBox?.();width=Math.max(Number.isFinite(advance)?advance:0,box&&Number.isFinite(box.width)?box.x+box.width:0)-Math.min(0,box?.x||0);}catch{}
+      finally{try{if(probe.parentNode)probe.parentNode.removeChild(probe);}catch{}}
+    }
+    if(!(width>0)&&text){
+      width=[...text].reduce((sum,char)=>sum+(/[., ]/.test(char)?.34:/[-+]/.test(char)?.55:char==='%'?.9:.68)*size,0)+Math.max(0,text.length-1)*font.spacing;
+    }
+    width=Math.max(0,width);if(cache.size>256)cache.clear();cache.set(key,width);return width;
+  }
+  function direct(text,size){
+    text=String(text);const key=`${size}:${text}`;if(cache.has(key))return cache.get(key);
+    const shared=`${cachePrefix}|${key}`;if(axisGlyphWidths.has(shared)){const width=axisGlyphWidths.get(shared);cache.set(key,width);return width;}
     let width=0;
     if(probe){
       try{probe.setAttribute('font-size',size);probe.textContent=text;svg.appendChild(probe);const advance=probe.getComputedTextLength?.(),box=probe.getBBox?.();width=Math.max(Number.isFinite(advance)?advance:0,box&&Number.isFinite(box.width)?box.x+box.width:0)-Math.min(0,box?.x||0);}catch{}
@@ -22,9 +53,34 @@ function priceAxisTextMetrics(svg){
       // Conservatively bound numeric text where layout APIs are unavailable.
       width=[...text].reduce((sum,char)=>sum+(/[., ]/.test(char)?.34:/[-+]/.test(char)?.55:char==='%'?.9:.68)*size,0)+Math.max(0,text.length-1)*font.spacing;
     }
-    width=Math.max(0,width);if(cache.size>256)cache.clear();cache.set(key,width);return width;
+    width=Math.max(0,width);if(cache.size>256)cache.clear();cache.set(key,width);
+    if(axisGlyphWidths.size>2048)axisGlyphWidths.clear();axisGlyphWidths.set(shared,width);return width;
   }
-  return {font,measure};
+  const numeric=/^[$%+\-\d.,\s]+$/;
+  function charWidth(character,size){
+    const key=`${cachePrefix}|${size}|${character}`;
+    const cached=axisCharWidths.get(key);if(cached!==undefined)return cached;
+    const width=direct(character,size);if(axisCharWidths.size>1024)axisCharWidths.clear();axisCharWidths.set(key,width);return width;
+  }
+  function compose(text,size){
+    const characters=[...String(text)];
+    return characters.reduce((sum,character)=>sum+charWidth(character,size),0)+Math.max(0,characters.length-1)*font.spacing;
+  }
+  function measure(text,size){
+    text=String(text);const key=`${size}:${text}`;if(cache.has(key))return cache.get(key);
+    if(!text||!numeric.test(text))return direct(text,size);
+    const composed=compose(text,size);
+    const ratioKey=`${cachePrefix}|${size}:${Math.min(32,[...text].length)}`;
+    let ratio=axisCompositionRatios.get(ratioKey);
+    if(ratio===undefined){
+      const sample='0'.repeat(Math.min(32,[...text].length)),measured=direct(sample,size),composedSample=compose(sample,size);
+      ratio=composedSample>0?measured/composedSample:1;
+      if(axisCompositionRatios.size>512)axisCompositionRatios.clear();axisCompositionRatios.set(ratioKey,ratio);
+    }
+    const width=Math.max(0,composed*ratio);if(cache.size>256)cache.clear();cache.set(key,width);
+    if(axisGlyphWidths.size>2048)axisGlyphWidths.clear();axisGlyphWidths.set(`${cachePrefix}|${key}`,width);return width;
+  }
+  return {font,measure,raw:probeMeasure,setSample(value){cachePrefix=`${font.family}|${font.weight}|${font.style}|${font.spacing}|${viewBox}|${axisFontEpoch(doc,view)}|${value}`;}};
 }
 
 /** A fixed gutter gives the recovered width to the price plot. Actual glyph
@@ -34,13 +90,13 @@ export function createPriceAxisLayout({svg,width,left=8,minRight=64,fontSize=11,
   const metrics=priceAxisTextMetrics(svg),inset=4,edge=6;
   const right=Math.min(minRight,Math.max(1,width-left-48));
   const labelWidth=Math.max(1,right-inset-edge),{font}=metrics;
+  // One real sample per layout is the font-change detector: its advance is part
+  // of every cached label width below, so a newly loaded face cannot reuse a
+  // stale composition while unchanged frames keep their cached glyphs.
+  const sampleAdvance=metrics.raw('$-0123456789.,%',fontSize);metrics.setSample(sampleAdvance);
   // Font face loading can change glyph advances without changing the computed
   // family name or this fixed gutter. React must refresh its measured fitter.
   const probe='$-0123456789.,%';
-  // One real glyph check per layout keeps font-load detection honest; its result
-  // stays in this instance's measurement cache, so the lazy identity below does
-  // not force another SVG layout.
-  const measuredSample=metrics.measure(probe,fontSize);
   const common={'font-family':font.family,'font-weight':font.weight,'font-style':font.style,'font-variant-numeric':'tabular-nums','letter-spacing':font.spacing,lengthAdjust:'spacingAndGlyphs'};
   function textAttributes(label,{badge=false,kind=badge?'badge':'tick'}={}){
     const length=Math.min(labelWidth,Math.max(.01,metrics.measure(label,badge?badgeFontSize:fontSize)));
@@ -53,7 +109,7 @@ export function createPriceAxisLayout({svg,width,left=8,minRight=64,fontSize=11,
     // A literal getter keeps the published shape typed for the React fitter,
     // while native renders never read it and never pay for the probe.
     get metricKey(){
-      const measured=metrics.measure(probe,fontSize),badgeMeasured=badgeFontSize===fontSize?measuredSample:metrics.measure(probe,badgeFontSize);
+      const measured=sampleAdvance,badgeMeasured=badgeFontSize===fontSize?measured:metrics.raw(probe,badgeFontSize);
       return JSON.stringify([font,fontSize,badgeFontSize,measured,badgeMeasured]);
     },
     attributes(label,options){return Object.entries(textAttributes(label,options)).map(([name,value])=>`${name}="${axisEscape(value)}"`).join(' ');},

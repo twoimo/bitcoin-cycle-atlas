@@ -42,13 +42,19 @@ function plotBounds(svg) {
   return outer;
 }
 
-function paintedBox(node, svg, view, bounds) {
+function paintedBox(node, svg, view, bounds, styleCache) {
   // A hidden SVG preview still has a nonzero bounding rect. Check computed
   // visibility on the text itself, where SVG visibility inheritance resolves.
-  const style = view.getComputedStyle(node);
+  const computed = target => {
+    if (!styleCache) return view.getComputedStyle(target);
+    let style = styleCache.get(target);
+    if (!style) { style = view.getComputedStyle(target); styleCache.set(target, style); }
+    return style;
+  };
+  const style = computed(node);
   if (style.display === 'none' || style.visibility !== 'visible' || Number(style.opacity) === 0) return null;
   for (let parent = node.parentElement; parent; parent = parent.parentElement) {
-    const parentStyle = view.getComputedStyle(parent);
+    const parentStyle = computed(parent);
     if (parent.hidden || parentStyle.display === 'none' || Number(parentStyle.opacity) === 0) return null;
     if (parent === svg) break;
   }
@@ -57,7 +63,7 @@ function paintedBox(node, svg, view, bounds) {
     ? intersectBox({x: rect.left, y: rect.top, width: rect.width, height: rect.height}, bounds) : null;
 }
 
-function labelCandidates(svg, view, bounds, priorities) {
+function labelCandidates(svg, view, bounds, priorities, styleCache) {
   const result = [], focused = svg.ownerDocument?.activeElement?.closest?.(groupSelector);
   for (const group of svg.querySelectorAll(groupSelector)) {
     const kind = group.hasAttribute('data-history-event') ? 'history' : group.hasAttribute('data-cycle-interval') ? 'period' : 'milestone';
@@ -66,7 +72,7 @@ function labelCandidates(svg, view, bounds, priorities) {
     const priority = (group === focused ? 10000 : group.matches?.(':hover') ? 9000 : classHas(group, 'is-active') ? 8000 : classHas(group, 'is-related') ? 7000 : 0)
       + (kind === 'history' ? 400 + importance * 20 : kind === 'milestone' ? 300 : 200);
     const add = (text, preview) => {
-      const box = paintedBox(text, svg, view, bounds);
+      const box = paintedBox(text, svg, view, bounds, styleCache);
       if (!box) return;
       // Event/landmark backgrounds and their leader strokes yield with text.
       // Period geometry always remains, including its original-date hit line.
@@ -79,12 +85,12 @@ function labelCandidates(svg, view, bounds, priorities) {
   return result;
 }
 
-function fixedLabelBoxes(svg, view, bounds) {
+function fixedLabelBoxes(svg, view, bounds, styleCache) {
   // These labels have their own owners and source semantics. Reserve their
   // actual paint rather than changing a clock, model explanation or drawing.
   return Array.from(svg.querySelectorAll('[data-cycle-clock] > text,[data-next-turn] > text,.forecast-event-label,[data-forecast-evidence] > text,.research-annotation text'))
     .filter(node => node.textContent.trim() !== 'i')
-    .map(node => paintedBox(node, svg, view, bounds)).filter(Boolean);
+    .map(node => paintedBox(node, svg, view, bounds, styleCache)).filter(Boolean);
 }
 
 /** Install once per completed drawing; the next drawing retires this owner. */
@@ -113,8 +119,12 @@ export function createChartAnnotationLayout(svg, {isCurrent = () => true, eventP
     const bounds = plotBounds(svg);
     if (!bounds) return null;
     restore();
-    const candidates = labelCandidates(svg, view, bounds, eventPriorities);
-    const result = selectAnnotationLabels(candidates, {obstacles: fixedLabelBoxes(svg, view, bounds)});
+    // One computed-style read per node per pass: labels share long ancestor
+    // chains (svg > layer > group > text), so memoising removes the O(labels x
+    // depth) style resolution without changing what is painted.
+    const styleCache = new Map();
+    const candidates = labelCandidates(svg, view, bounds, eventPriorities, styleCache);
+    const result = selectAnnotationLabels(candidates, {obstacles: fixedLabelBoxes(svg, view, bounds, styleCache)});
     for (const item of result.hidden) item.paint.forEach(hide);
     const count = kind => result.accepted.filter(item => item.kind === kind && !item.preview).length;
     svg.dataset.annotationLayout = 'measured';
@@ -152,7 +162,10 @@ export function createChartAnnotationLayout(svg, {isCurrent = () => true, eventP
   controllers.set(svg, controller);
   for (const type of ['pointerover', 'pointerout', 'focusin', 'focusout']) listen(svg, type);
   listen(svg.ownerDocument?.fonts, 'loadingdone');
-  svg.ownerDocument?.fonts?.ready?.then(schedule, () => {});
+  // A loaded font set cannot change this pass's glyph bounds. Waiting on the
+  // same ready promise every drawing queued an extra measurement frame even
+  // when nothing could move, so only unresolved loads schedule the refresh.
+  if (svg.ownerDocument?.fonts?.status !== 'loaded') svg.ownerDocument?.fonts?.ready?.then(schedule, () => {});
   refresh();
   return controller;
 }
