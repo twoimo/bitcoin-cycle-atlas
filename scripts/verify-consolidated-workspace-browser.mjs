@@ -315,7 +315,10 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
       assert.ok(movement, 'No native scroll can reveal ' + selector + ': ' + JSON.stringify(target));
       const point = await parentPoint(context, movement);
       await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', ...point });
-      await cdp.send('Input.dispatchMouseEvent', { type: 'mouseWheel', ...point, deltaX: movement.deltaX, deltaY: movement.deltaY });
+      // Finish this real mouse gesture before switching between iframe and
+      // modal scroll owners; an unfinished wheel sequence can remain latched.
+      await cdp.send('Input.synthesizeScrollGesture', { ...point, xDistance: -movement.deltaX, yDistance: -movement.deltaY, gestureSourceType: 'mouse', preventFling: true });
+      evidence.inputs.push({kind:'native-scroll',selector,frame:context===cdp?'parent':childId,point,deltaX:movement.deltaX,deltaY:movement.deltaY});
       await settled(context);
     }
     throw new Error('Required action remains clipped: ' + selector + ': ' + JSON.stringify(lastTarget));
@@ -333,8 +336,11 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
       ...(type==='keyDown'&&key==='Enter'&&!modifiers?{text:'\r',unmodifiedText:'\r'}:{}) });
   }
   async function type(context, selector, text) {
-    await pointer(context, selector); await key('a', 'KeyA', 65, 2);
+    await pointer(context, selector); await key('a', 'KeyA', 65, process.platform==='darwin'?4:2);
+    const selected=await evaluate(context,selector=>{const node=document.querySelector(selector);return {length:node.value.length,start:node.selectionStart,end:node.selectionEnd};},selector);
+    assert.ok(selected.start===0&&selected.end===selected.length,'Native select-all must replace, not append, the existing text: '+selector);
     await cdp.send('Input.insertText', { text }); await settled(context);
+    await until(()=>evaluate(context,(selector,text)=>document.querySelector(selector)?.value===text,selector,text),'native text replacement: '+selector);
   }
   async function select(context, selector, value) {
     const options = await evaluate(context, selector => [...document.querySelector(selector).options].map(option => option.value), selector);
