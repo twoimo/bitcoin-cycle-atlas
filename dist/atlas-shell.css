@@ -338,3 +338,25 @@ body[data-embedded=true] .atlas-page-intro{display:none}
   .atlas-dashboard-header:has(.atlas-shell-controls:not(:empty)) .atlas-shell-copy>.atlas-shell-heading{position:static;width:auto;height:auto;clip-path:none;overflow:visible}
   .atlas-dashboard-header>.atlas-shell-controls,body[data-shell=dashboard] .atlas-dashboard-header>#market-header-slot.atlas-shell-controls{max-width:44px;min-width:44px}
 }
+
+/* The compare route renders inside the price chart frame: the four perimeter
+   regions stay and only the center is replaced. Price-chart content yields to
+   the section that owns this route; its values, sources, settings and event
+   handlers are untouched, and it returns to #main when another page is shown. */
+body[data-page=compare] #outlook-view>.lab-heading,
+body[data-page=compare] #outlook-view>.atlas-under-chart,
+body[data-page=compare] #outlook-view>.lab-details,
+body[data-page=compare] #outlook-view>#atlas-model-info,
+body[data-page=compare] #lab-chart-stage>.lab-chart-meta,
+body[data-page=compare] #lab-chart-stage>.atlas-inspector,
+body[data-page=compare] #lab-chart-stage>#atlas-event-rail,
+body[data-page=compare] .atlas-plot>:not(#compare-view){display:none!important}
+body[data-page=compare] .atlas-plot>#compare-view{position:absolute;inset:0;overflow:auto;overscroll-behavior:contain;padding:16px 20px 24px;background:var(--bg)}
+/* The tool rail belongs to the chart shell, not to the price view alone. */
+body[data-shell=chart][data-page=compare] .workbench-tools{display:flex}
+/* Compare keeps its own controls inside the chart frame, so they inherit the
+   same touch floor the rest of the shell uses on narrow or coarse pointers. */
+@media(max-width:760px),(pointer:coarse){
+  body[data-page=compare] #compare-view :is(button,select){min-height:44px}
+  body[data-page=compare] #compare-view :is(.anchor-tab,[data-mode],[data-unit],[data-scale]){min-width:44px}
+}

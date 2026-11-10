@@ -135,7 +135,9 @@ export function initAtlasShell() {
   toggle.addEventListener('click', () => { compact = !compact; preference(); writeShellPreference(storage, compact); });
   function sync() {
     const page = document.body.dataset.page || 'outlook';
-    const chart = page === 'outlook';
+    // The compare route renders inside the price chart's frame, so it keeps the
+    // same four perimeter regions instead of the dashboard composition.
+    const chart = page === 'outlook' || page === 'compare';
     document.body.dataset.shell = chart ? 'chart' : 'dashboard';
     header.hidden = chart; group.hidden = chart;
     pageDescription.sync();

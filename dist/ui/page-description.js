@@ -32,7 +32,8 @@ export function mountPageDescription(document, {header, heading} = {}) {
   function sync() {
     if (destroyed) return;
     const page = document.body.dataset.page || 'outlook';
-    const chart = page === 'outlook';
+    // compare renders inside the price chart frame and owns the same single H1.
+    const chart = page === 'outlook' || page === 'compare';
     const info = atlasPageDescription(chart ? document.body.dataset.centerTool || page : page);
     if (heading.textContent !== info.title) heading.textContent = info.title;
     if (description.textContent !== info.description) description.textContent = info.description;

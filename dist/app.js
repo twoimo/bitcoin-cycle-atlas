@@ -67,7 +67,7 @@ const state = {
   horizon: ['365','730','1461','current','all'].includes(params.get('range')) ? params.get('range') : '1461',
   cursor: /^\d{1,5}$/.test(params.get('day') || '') ? Number(params.get('day')) : null,
   hidden: new Set((params.get('hide') || '').split(',').filter(Boolean)),
-  view: params.get('page')==='compare'&&!params.has('legacy')?'outlook':['outlook','compare','evidence','data','ipo','market','relay'].includes(params.get('page')) ? params.get('page') : 'outlook', dataset: null, comparison: null, chart: null,
+  view: ['outlook','compare','evidence','data','ipo','market','relay'].includes(params.get('page')) ? params.get('page') : 'outlook', dataset: null, comparison: null, chart: null,
   timing: null, timingDataset: null, timingBaseline: ['previous','recent2','all3'].includes(params.get('baseline')) ? params.get('baseline') : 'recent2',
   analysisView: ['forecast','peak','timing'].includes(params.get('analysis')) ? params.get('analysis') : 'forecast',
   peakThreshold: ['0.9','0.93','0.94','0.95','0.98'].includes(params.get('zone')) ? Number(params.get('zone')) : .95,
@@ -121,6 +121,7 @@ function ensureWorkspace() {
     if (state.dataset) outlookController.setDataset(state.dataset);
     outlookController.show(state.view === 'outlook');
     outlookController.showCompare(state.view === 'compare');
+    hostCompareCenter(state.view === 'compare');
     if (state.view === 'compare') render();
     return outlookController;
   }).catch(error => { workspacePromise = null; console.error('Workspace initialization failed', error); if (['outlook','compare'].includes(state.view)) document.dispatchEvent(new CustomEvent('atlas:boot-error')); });
@@ -159,11 +160,25 @@ const dailyDataController = initDailyDataView({
     embeddedData: () => document.getElementById('embedded-asset-comparison-data')?.textContent ?? null,
   }),
 });
+// The compare route uses the price chart's four perimeter regions. Only its
+// center is replaced: the existing section is moved into the plot, never
+// rebuilt, so its rendered values, sources and handlers stay with their owner.
+let compareHome = null, compareHomeNext = null;
+function hostCompareCenter(active) {
+  const section = document.querySelector('#compare-view');
+  if (!section) return;
+  if (!compareHome) { compareHome = document.querySelector('#main'); compareHomeNext = section.nextElementSibling; }
+  const plot = document.querySelector('.atlas-plot');
+  if (active) { if (plot && section.parentElement !== plot) plot.append(section); }
+  else if (section.parentElement !== compareHome) { compareHome.insertBefore(section, compareHomeNext); }
+}
 function syncPage() {
   document.body.dataset.page=state.view; if(state.view!=='market'){const slot=document.getElementById('market-header-slot'); if(slot){slot.hidden=true; slot.replaceChildren();}}
   btcRefreshStatus.update({page:['ipo','market'].includes(state.view)?'data':state.view});
-  document.title = state.view === 'market' ? '세 축 연구실 · Bitcoin Cycle Atlas' : state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : state.view === 'ipo' ? '공모주 캘린더 · Bitcoin Cycle Atlas' : state.view === 'relay' ? '릴레이 콘텐츠 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
-  for (const view of ['outlook','compare','evidence','data','ipo','market','relay']) document.querySelector(`#${view}-view`).hidden=state.view!==view;
+  document.title = state.view === 'compare' ? '사이클 비교 · Bitcoin Cycle Atlas' : state.view === 'market' ? '세 축 연구실 · Bitcoin Cycle Atlas' : state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : state.view === 'ipo' ? '공모주 캘린더 · Bitcoin Cycle Atlas' : state.view === 'relay' ? '릴레이 콘텐츠 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
+  const compareFrame = state.view === 'compare';
+  for (const view of ['outlook','compare','evidence','data','ipo','market','relay']) document.querySelector(`#${view}-view`).hidden = view === 'outlook' ? state.view !== 'outlook' && !compareFrame : state.view !== view;
+  hostCompareCenter(compareFrame);
   $$('[data-view]').forEach(n=>{const active=n.dataset.view===state.view;n.classList.toggle('active',active);if(active)n.setAttribute('aria-current','page');else n.removeAttribute('aria-current');});
   evidenceModule?.showEvidenceView(state.view==='evidence');
   outlookController?.show(state.view==='outlook');
