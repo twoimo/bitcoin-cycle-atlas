@@ -12,6 +12,7 @@ const shell = await readFile(new URL('../dist/atlas-shell.js', import.meta.url),
 const description = await readFile(new URL('../dist/ui/page-description.js', import.meta.url), 'utf8');
 const css = await readFile(new URL('../dist/atlas-shell.css', import.meta.url), 'utf8');
 const html = await readFile(new URL('../dist/index.html', import.meta.url), 'utf8');
+const host = await readFile(new URL('../dist/compare-shell-host.js', import.meta.url), 'utf8');
 
 const initialStateSource = app.slice(app.indexOf('const params = new URLSearchParams(location.search);'), app.indexOf('let toastTimer;'));
 const viewFor = (search) => {
@@ -28,13 +29,13 @@ test('page=compare resolves to the compare view with and without the legacy alia
 });
 
 test('the compare route keeps the price frame and replaces only its center', () => {
-  assert.match(app, /function hostCompareCenter\(active\)/);
-  assert.match(app, /const plot = document\.querySelector\('\.atlas-plot'\)/);
-  assert.match(app, /if \(plot && section\.parentElement !== plot\) plot\.append\(section\)/, 'the section moves into the center');
-  assert.match(app, /compareHome\.insertBefore\(section, compareHomeNext\)/, 'and returns to #main for other pages');
-  assert.match(app, /const compareFrame = state\.view === 'compare'/, 'the frame stays mounted for compare');
+  assert.match(app, /import \{ createCompareShellHost \} from '\.\/compare-shell-host\.js/, 'the hosting logic has one owned module');
+  assert.match(app, /function hostCompareCenter\(active\) \{ compareShell\.setActive\(active\); \}/);
+  assert.match(app, /const compareFrame = state\.view === 'compare' && document\.body\.dataset\.embedded !== 'true'/, 'the frame stays mounted for compare but not in an embedded child');
   assert.match(app, /view === 'outlook' \? state\.view !== 'outlook' && !compareFrame : state\.view !== view/);
   assert.match(app, /hostCompareCenter\(state\.view === 'compare'\)/, 'the async workspace re-hosts the section');
+  assert.match(host, /if \(plot && section\.parentElement !== plot\) plot\.append\(section\)/, 'the section moves into the center');
+  assert.match(host, /sectionHome\.insertBefore\(section, sectionNext\)/, 'and returns to its own slot');
 });
 
 test('compare owns the chart shell and the single page heading', () => {
@@ -57,18 +58,28 @@ test('the compare center hides price content without touching its own markup', (
   assert.match(html, /id="structure-scope"/, 'its settings stay in the document');
 });
 
-test('the compare route moves its real toolbar into the single top row', () => {
-  assert.match(app, /function hostCompareToolbar\(active\)/);
-  assert.match(app, /const toolbar = document\.querySelector\('#compare-view \.lab-toolbar'\)/, 'the real element is the one moved');
-  assert.match(app, /if \(toolbar\.parentElement !== heading\) heading\.append\(toolbar\)/, 'it moves into the shell heading');
-  assert.match(app, /compareToolbarHome\.insertBefore\(toolbar, compareToolbarNext\)/, 'and returns to its original slot');
-  assert.match(app, /hostCompareToolbar\(active\);/, 'both host and toolbar follow the same enter/exit path');
-  const hostBlock = app.slice(app.indexOf('function hostCompareToolbar'), app.indexOf('function hostCompareCenter'));
-  assert.doesNotMatch(hostBlock, /cloneNode|innerHTML|outerHTML/, 'the toolbar is moved, never rebuilt or mirrored');
+test('the compare toolbar is cached, moved and restored as the same node', () => {
+  // The node is resolved once: re-querying '#compare-view .lab-toolbar' after
+  // the move returns null and leaves the toolbar inside the shell heading.
+  assert.match(host, /if \(section\) return true;\n    section = document\.querySelector\('#compare-view'\);/);
+  assert.match(host, /toolbar = section\.querySelector\('\.lab-toolbar'\)/, 'the real element is the one moved');
+  const setActive = host.slice(host.indexOf('function setActive'), host.indexOf('return {'));
+  assert.doesNotMatch(setActive, /querySelector\('#compare-view \.lab-toolbar'\)/, 'activation never re-queries a moved node');
+  assert.match(host, /if \(toolbar && heading && toolbar\.parentElement !== heading\) heading\.append\(toolbar\)/, 'it moves into the shell heading');
+  assert.match(host, /toolbarHome\.insertBefore\(toolbar, toolbarNext\)/, 'and returns to its original slot');
+  assert.doesNotMatch(host, /cloneNode|outerHTML/, 'the toolbar is moved, never rebuilt or mirrored');
   assert.equal((html.match(/class="lab-toolbar"/g) || []).length, 1, 'the compare view keeps exactly one toolbar in markup');
   for (const control of ['id="structure-scope"', 'data-structure-frequency="daily"', 'data-structure-frequency="weekly"', 'id="structure-threshold"', 'id="structure-json"']) {
     assert.ok(html.includes(control), `the real control ${control} stays in the document`);
   }
+});
+
+test('price-only frame controls are locked with a reason and released by their own prior state', () => {
+  assert.match(host, /const PRICE_CONTROL_SELECTOR = '\.workbench-tools button, \.workbench-bottom-bar :is\(button,select\):not\(#atlas-update-status\)'/);
+  assert.match(host, /if \(!priorDisabled\.has\(control\)\) priorDisabled\.set\(control, control\.disabled === true\)/, 'the prior disabled state is remembered');
+  assert.match(host, /control\.disabled = wasDisabled;/, 'and restored individually');
+  assert.match(host, /data-disabled-reason', DISABLED_REASON/, 'the reason is exposed to the rail tooltip');
+  assert.match(host, /document\.body\?\.dataset\.embedded === 'true'\) return;/, 'an embedded child is never locked or nested');
 });
 
 test('price-only controls leave the compare top row instead of staying inert', () => {

@@ -2,6 +2,7 @@ import { atlasResourcePath } from './site-paths.js';
 import { buildComparison, getAnchors, getPointAtDay, comparisonToCsv, validateDataset, utcDay } from './cycle-engine.js?v=1.29.0';
 import { fetchLatestDataset } from "./data-source.js?v=1.29.0";
 import { inspectPublishedDataset, shouldCheckPublishedSnapshot } from "./published-data.js?v=1.29.0";
+import { createCompareShellHost } from './compare-shell-host.js?v=1.37.8';
 import { mountBtcRefreshStatus } from "./btc-refresh-status.js?v=1.29.0";
 import { analyzeCycleTiming } from './cycle-timing.js?v=1.29.0';
 import { renderTimingView } from './timing-view.js?v=1.29.0';
@@ -82,6 +83,7 @@ function persistUrl() {
   // Only rewrite parameters owned by this page/comparison controller. The
   // atlas owns its current unit, viewport, indicators and analysis settings.
   const p = new URLSearchParams(location.search);
+  const previousPage = p.get('page');
   for (const [key, value] of [
     ['page', state.view !== 'outlook' ? state.view : null],
     ['mode', state.mode !== 'halving' ? state.mode : null],
@@ -96,7 +98,15 @@ function persistUrl() {
     ['future', state.forecastView !== 'macro' ? state.forecastView : null],
     ['scenario', state.forecastScenario !== 'bottom-holds' ? state.forecastScenario : null],
   ]) value === null ? p.delete(key) : p.set(key, value);
-  try { history.replaceState(null, '', `${location.pathname}${p.size ? `?${p}` : ''}`); } catch {}
+  const next = `${location.pathname}${p.size ? `?${p}` : ''}`;
+  // A destination change is a real step, so the browser's back/forward moves
+  // between views instead of rewriting the current entry. Parameter edits stay
+  // in place. Environments without pushState keep the previous behaviour.
+  const destinationChanged = (previousPage ?? null) !== (p.get('page') ?? null);
+  try {
+    if (destinationChanged && typeof history.pushState === 'function') history.pushState(null, '', next);
+    else history.replaceState(null, '', next);
+  } catch { try { history.replaceState(null, '', next); } catch {} }
 }
 document.documentElement.dataset.theme = 'dark';
 let initialPageRendered = false;
@@ -163,33 +173,16 @@ const dailyDataController = initDailyDataView({
 // The compare route uses the price chart's four perimeter regions. Only its
 // center is replaced: the existing section is moved into the plot, never
 // rebuilt, so its rendered values, sources and handlers stay with their owner.
-let compareHome = null, compareHomeNext = null, compareToolbarHome = null, compareToolbarNext = null;
-// The route's own toolbar is the only control set that acts on the compare
-// chart, so it moves into the shell's single top row instead of duplicating a
-// second toolbar row. The real element moves, keeping its ids, handlers and
-// data owners; it returns to its original slot when another page is shown.
-function hostCompareToolbar(active) {
-  const toolbar = document.querySelector('#compare-view .lab-toolbar');
-  const heading = document.querySelector('.atlas-canvas-heading');
-  if (!toolbar || !heading) return;
-  if (!compareToolbarHome) { compareToolbarHome = toolbar.parentElement; compareToolbarNext = toolbar.nextElementSibling; }
-  if (active) { if (toolbar.parentElement !== heading) heading.append(toolbar); }
-  else if (toolbar.parentElement !== compareToolbarHome) { compareToolbarHome.insertBefore(toolbar, compareToolbarNext); }
-}
-function hostCompareCenter(active) {
-  const section = document.querySelector('#compare-view');
-  if (!section) return;
-  if (!compareHome) { compareHome = document.querySelector('#main'); compareHomeNext = section.nextElementSibling; }
-  const plot = document.querySelector('.atlas-plot');
-  if (active) { if (plot && section.parentElement !== plot) plot.append(section); }
-  else if (section.parentElement !== compareHome) { compareHome.insertBefore(section, compareHomeNext); }
-  hostCompareToolbar(active);
-}
+// The compare route owns the frame's centre and top row; the host keeps the
+// moved nodes and their original positions, so repeated view switches restore
+// them exactly. Price-only frame controls are disabled with a stated reason.
+const compareShell = createCompareShellHost({ document });
+function hostCompareCenter(active) { compareShell.setActive(active); }
 function syncPage() {
   document.body.dataset.page=state.view; if(state.view!=='market'){const slot=document.getElementById('market-header-slot'); if(slot){slot.hidden=true; slot.replaceChildren();}}
   btcRefreshStatus.update({page:['ipo','market'].includes(state.view)?'data':state.view});
   document.title = state.view === 'compare' ? '사이클 비교 · Bitcoin Cycle Atlas' : state.view === 'market' ? '세 축 연구실 · Bitcoin Cycle Atlas' : state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : state.view === 'ipo' ? '공모주 캘린더 · Bitcoin Cycle Atlas' : state.view === 'relay' ? '릴레이 콘텐츠 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
-  const compareFrame = state.view === 'compare';
+  const compareFrame = state.view === 'compare' && document.body.dataset.embedded !== 'true';
   for (const view of ['outlook','compare','evidence','data','ipo','market','relay']) document.querySelector(`#${view}-view`).hidden = view === 'outlook' ? state.view !== 'outlook' && !compareFrame : state.view !== view;
   hostCompareCenter(compareFrame);
   $$('[data-view]').forEach(n=>{const active=n.dataset.view===state.view;n.classList.toggle('active',active);if(active)n.setAttribute('aria-current','page');else n.removeAttribute('aria-current');});
@@ -204,6 +197,20 @@ function syncPage() {
 }
 syncPage();
 if (state.view === 'data') renderData();
+
+// Back/forward must leave the rendered destination and the URL in agreement.
+window.addEventListener('popstate', () => {
+  const query = new URLSearchParams(location.search);
+  const requested = query.get('page');
+  const view = ['outlook','compare','evidence','data','ipo','market','relay'].includes(requested) ? requested : 'outlook';
+  if (view === state.view) return;
+  state.view = view;
+  if (!['data','ipo','market','relay'].includes(view)) void ensureDataset();
+  syncPage();
+  if (view === 'compare') requestAnimationFrame(() => render());
+  else if (view === 'data') renderData();
+  persistUrl();
+});
 
 function render(recalculate = true) {
   if (!state.dataset) return;
