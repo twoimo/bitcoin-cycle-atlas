@@ -74,8 +74,9 @@ export function assertConsolidatedObservationGeometry(result,symbol,unit) {
   }
 }
 
-// The two-row perimeter survives a center-workspace switch. Only an active
-// chart toolbar owns the disclosure; market/data toolbars occupy row two directly.
+// Preserve toolbar ownership across center-workspace switches. Phone charts
+// expose their original controls through the single bottom dock's disclosure;
+// direct market/data controls remain inside their own visible heading.
 export function readConsolidatedToolbarOwnership() {
   const frame=document.querySelector('.atlas-center-frame:not([hidden])'),header=document.querySelector('.atlas-canvas-heading');
   const host=frame&&document.getElementById(frame.dataset.toolbarId),panel=document.querySelector('#atlas-shell-features-panel');
@@ -85,7 +86,7 @@ export function readConsolidatedToolbarOwnership() {
     }
     return {rect:{top:r.top,bottom:r.bottom,height:r.height},display:getComputedStyle(node).display,displayNoneOwner,
       visible:node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),hidden:Boolean(node.closest('[hidden]')),inert:Boolean(node.closest('[inert]')),disabled:Boolean(node.disabled)};};
-  return {twoRow:header?.dataset.mobileHeading==='two-row',chartControls:document.body.dataset.chartControls||null,
+  return {twoRow:header?.dataset.mobileHeading==='two-row',phoneDock:header?.dataset.mobileHeading==='phone-dock',chartControls:document.body.dataset.chartControls||null,
     center:document.body.dataset.centerTool||null,activeHost:frame?.dataset.toolbarId||null,hostId:host?.id||null,
     hostInPanel:Boolean(host?.closest('.shell-feature-panel')),hostInHeader:host?.parentElement===header,
     header:read(header),host:read(host),panel:read(panel),feature:read(header?.querySelector('.shell-instrument-slot')),
@@ -94,10 +95,10 @@ export function readConsolidatedToolbarOwnership() {
 
 export function consolidatedToolbarUsesDisclosure(ownership,label='workspace') {
   assert.ok(ownership.activeHost&&ownership.hostId===ownership.activeHost&&ownership.host,label+': current iframe retains its actual toolbar owner');
-  if(ownership.twoRow){
+  if(ownership.twoRow||ownership.phoneDock){
     assert.equal(ownership.hostInPanel,Boolean(ownership.chartControls),label+': only the active chart toolbar belongs to the feature disclosure');
   }
-  return ownership.twoRow&&ownership.hostInPanel;
+  return Boolean((ownership.twoRow||ownership.phoneDock)&&ownership.hostInPanel);
 }
 
 export function assertConsolidatedToolbarOwnership(ownership,label) {
@@ -106,9 +107,13 @@ export function assertConsolidatedToolbarOwnership(ownership,label) {
   if(disclosure){
     assert.ok(ownership.panel?.visible&&!ownership.panel.hidden&&!ownership.panel.inert,label+': active chart disclosure is open and interactive');
     assert.ok(ownership.toggle?.visible&&!ownership.toggle.inert&&!ownership.toggle.disabled,label+': active chart disclosure retains its reachable trigger');
-  }else if(ownership.twoRow){
+  }else if(ownership.twoRow||ownership.phoneDock){
     assert.ok(ownership.hostInHeader,label+': nonchart toolbar remains a direct header child');
-    assert.ok(Math.abs(host.rect.height-44)<=1&&host.rect.top>=ownership.header.rect.top+44-1&&host.rect.bottom<=ownership.header.rect.bottom+1,
+    if(ownership.phoneDock){
+      assert.ok(Math.abs(ownership.header.rect.height-48)<=1,label+': phone dock remains one 48px row');
+      assert.ok(Math.abs(host.rect.height-44)<=1&&host.rect.top>=ownership.header.rect.top-1&&host.rect.bottom<=ownership.header.rect.bottom+1,
+        label+': nonchart controls remain inside the single bottom dock');
+    }else assert.ok(Math.abs(host.rect.height-44)<=1&&host.rect.top>=ownership.header.rect.top+44-1&&host.rect.bottom<=ownership.header.rect.bottom+1,
       label+': nonchart toolbar occupies the second 44px row');
     assert.ok(ownership.panel?.hidden&&!ownership.panel.visible,label+': retained chart disclosure stays closed in a nonchart center');
     assert.ok(ownership.feature&&!ownership.feature.visible&&(ownership.feature.inert||ownership.feature.hidden||ownership.feature.displayNoneOwner?.display==='none'),label+': previous chart feature controls remain hidden and protected');
@@ -119,6 +124,14 @@ export function assertConsolidatedToolbarOwnership(ownership,label) {
 // After cd53cad the chart tab owns a single in-flow body and draws its trading
 // criteria inside the chart canvas; the position HUD lives in the details dialog.
 // Read that actual ownership, not a former sibling row above the body.
+export function assertConsolidatedCanvasClearance(result,label='workspace') {
+  for(const box of [result.frame,result.header])
+    assert.ok(box&&['top','bottom','height'].every(key=>Number.isFinite(box[key]))&&box.height>0&&box.bottom>box.top,label+': measurable toolbar and canvas required');
+  if(result.headingLayout==='phone-dock')
+    assert.ok(result.frame.bottom<=result.header.top+1,label+': bottom toolbar cannot cover the data canvas');
+  else assert.ok(result.frame.top>=result.header.bottom-1,label+': top toolbar cannot cover the data canvas');
+}
+
 const layoutTolerance=1;
 const validRect=r=>r&&['left','right','top','bottom','width','height'].every(k=>Number.isFinite(r[k]))&&r.width>0&&r.height>0;
 const insideRect=(r,owner)=>validRect(r)&&validRect(owner)&&r.left>=owner.left-layoutTolerance&&r.right<=owner.right+layoutTolerance&&r.top>=owner.top-layoutTolerance&&r.bottom<=owner.bottom+layoutTolerance;
@@ -412,7 +425,7 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     result.toolbarOwnership=await evaluate(cdp,readConsolidatedToolbarOwnership);
     assert.equal(result.toolbarOwnership.activeHost,ownership.activeHost,label+': state inspection retains the same iframe toolbar');
     assertConsolidatedToolbarOwnership(result.toolbarOwnership,label);
-    assert.ok(result.frame.top>=result.header.bottom-1,label+': toolbar cannot cover the data canvas');
+    assertConsolidatedCanvasClearance(result,label);
     assert.ok(result.scrollbars.every(owner=>owner.bar==='none'),label+': scrollbars remain visibly enabled: '+JSON.stringify(result.scrollbars));
     evidence.states.push({ label, ...result });
     if(narrowDisclosure)await pointer(cdp,'[data-shell-feature-close]');

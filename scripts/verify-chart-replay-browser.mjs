@@ -375,7 +375,21 @@ export async function verifyChartReplaySurface(api) {
     }
     throw new Error('Replay popover scrolling did not expose ' + selector);
   }
+  async function revealOriginalFooter(selector) {
+    const disclosure=await evaluate(cdp,selector=>{
+      const node=document.querySelector(selector),tray=node?.closest('#mobile-chart-details');
+      if(!tray||!node.closest('.workbench-bottom-bar'))return null;
+      const trigger=document.querySelector('#mobile-details-toggle');
+      return {expanded:trigger?.getAttribute('aria-expanded')==='true',triggerVisible:Boolean(trigger?.checkVisibility()),footerVisible:node.checkVisibility()};
+    },selector);
+    if(!disclosure||disclosure.expanded)return false;
+    assert.ok(disclosure.triggerVisible,'Original footer needs its visible information-sheet trigger');
+    await nativeClick(cdp,'#mobile-details-toggle');
+    assert.equal(await evaluate(cdp,()=>document.querySelector('#mobile-details-toggle').getAttribute('aria-expanded')), 'true','Native input must open the original footer information sheet');
+    return true;
+  }
   async function click(connection, selector) {
+    await revealOriginalFooter(selector);
     if(selector==='#workbench-replay'&&width<=620&&await evaluate(cdp,()=>{
       const target=document.querySelector('#workbench-replay'),toggle=document.querySelector('#mobile-details-toggle'),box=target?.getBoundingClientRect();
       return Boolean(toggle&&box&&(!box.width||!box.height));
@@ -1043,6 +1057,8 @@ export async function verifyChartReplaySurface(api) {
     await until(() => evaluate(cdp, value => document.querySelector('#workbench-interval-' + value)?.getAttribute('aria-pressed') === 'true' && document.querySelector('#workbench-interval-select')?.value === value, value), 'original interval remains ' + value);
   }
   async function assertToolbars(frequency, label) {
+    const openedFooter=await revealOriginalFooter('#workbench-range-select');
+    try {
     const observed = await evaluate(cdp, frequency => {
       const usable = node => Boolean(node && node.getClientRects().length && !node.disabled && !node.closest('[inert]'));
       const buttons = [...document.querySelectorAll('#workbench-frequency [data-lab-frequency]')];
@@ -1065,8 +1081,14 @@ export async function verifyChartReplaySurface(api) {
       assert.deepEqual(observed.enabledIntervalOptions, observed.intervalOptions, 'Desktop replay changed the original 1m–1W native choices');
       assert.deepEqual(observed.accessibleSpans, ['focus', 'near', 'all', 'history'], 'Desktop replay hid the original period buttons');
     }
-    evidence.lifecycle.push({ label, ...observed });
+    evidence.lifecycle.push({ label, ...observed, footerViaInformationSheet:openedFooter });
     return observed;
+    } finally {
+      if(openedFooter&&await evaluate(cdp,()=>document.querySelector('#mobile-details-toggle').getAttribute('aria-expanded')==='true')){
+        await nativeClick(cdp,'#mobile-details-toggle');
+        assert.equal(await evaluate(cdp,()=>document.querySelector('#mobile-details-toggle').getAttribute('aria-expanded')),'false','Toolbar inspection must restore the closed information sheet');
+      }
+    }
   }
   async function snapshot(label, capture = false) {
     const value = await evaluate(cdp, ({ chartSelector, panel }) => {

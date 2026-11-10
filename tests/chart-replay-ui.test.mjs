@@ -54,9 +54,10 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
       }return controls.get(key);}
       if(selector==='[value="candles"]'){this.candleOption??=new Element('option');return this.candleOption;}
       const attribute=selector.match(/^\[([^=\]]+)\]$/)?.[1];
-      return this.children.find(child=>attribute&&Object.hasOwn(child.attributes,attribute))??this.children.map(child=>child.querySelector(selector)).find(Boolean)??null;
+      return this.children.find(child=>child.matches(selector)||attribute&&Object.hasOwn(child.attributes,attribute))??this.children.map(child=>child.querySelector(selector)).find(Boolean)??null;
     }
-    querySelectorAll(){return [];}
+    matches(selector){return selector.split(',').some(part=>part.startsWith('.')?(this.className??'').split(/\s+/).includes(part.slice(1)):part.startsWith('#')&&this.id===part.slice(1));}
+    querySelectorAll(selector){return this.children.flatMap(child=>[...(child.matches(selector)?[child]:[]),...child.querySelectorAll(selector)]);}
     closest(selector){return selector.includes(this.tag)&&['input','select','textarea'].includes(this.tag)?this:null;}
     addEventListener(type,callback){const list=this.listeners.get(type)??[];list.push(callback);this.listeners.set(type,list);}
     removeEventListener(type,callback){this.listeners.set(type,(this.listeners.get(type)??[]).filter(fn=>fn!==callback));}
@@ -79,6 +80,9 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
   const svg=new Element('svg'),plot=new Element('div'),toolbar=new Element('nav');plot.append(svg);
   const frequencyControl=new Element('fieldset'),typeControl=new Element('fieldset'),liveControl=new Element('button');
   frequencyControl.id='workbench-frequency';typeControl.id='workbench-chart-type';liveControl.id='unowned-live-setting';toolbar.append(frequencyControl,typeControl,liveControl);
+  const infoOpener=new Element('button'),infoRail=new Element('aside'),infoHeading=new Element('header'),infoFooter=new Element('footer'),infoNavigation=new Element('nav'),infoAxis=new Element('div');
+  infoOpener.id='mobile-details-toggle';infoRail.className='workbench-rail';infoHeading.className='mobile-tray-heading';infoFooter.className='workbench-bottom-bar';infoNavigation.className='atlas-nav workbench-tools';infoAxis.className='workbench-axis';
+  toolbar.append(infoOpener);infoFooter.append(infoAxis);infoRail.append(infoHeading,infoFooter,infoNavigation);doc.append(toolbar,plot,infoRail);
   function makeSession(options,factory){
     builds.push(options);factories.push(factory);
     const asOf=options.asOf??options.record?.asOf??options.baseline?.forecast.asOf;
@@ -145,7 +149,7 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
   const panel=plot.children.find(node=>node.className==='chart-replay-controls');
   for(const match of panel.innerHTML.matchAll(/data-cr="([^"]+)"/g))panel.querySelector('[data-cr="'+match[1]+'"]');
   return {mounted,svg,plot,toolbar,doc,win,controls,builds,factories,draws,timers,controllers,atlasContexts,chartCalls,displayCalls,frameEvents,writes,capabilityCalls,
-    trigger,panel,transport:transportNode,bar:barNode,frequencyControl,typeControl,liveControl,axis,navigationGeometry:view.namespace.replayNavigationGeometry,
+    trigger,panel,transport:transportNode,bar:barNode,frequencyControl,typeControl,liveControl,infoOpener,infoRail,infoHeading,infoFooter,infoNavigation,infoAxis,axis,navigationGeometry:view.namespace.replayNavigationGeometry,
     saved:()=>JSON.parse(saved.get(storageKey)??'null'),restores:()=>restores,
     savedText:()=>saved.get(storageKey)??null,
     notice:()=>plot.children.find(node=>node.className==='chart-replay-notice'),
@@ -736,6 +740,29 @@ const interactionCases=[
     assert.equal(h.controls.get('details').getAttribute('aria-expanded'),'false');assert.equal(h.doc.activeElement,h.controls.get('select-menu'));
     h.controls.get('select-menu').click();h.doc.dispatchEvent({type:'pointerdown',target:h.svg});assert.equal(h.controls.get('select-panel').hidden,true);
     assert.equal(h.controllers[0].getState().session,session);assert.equal(h.svg.dataset.replayOutputHash,hash);assert.equal(h.builds.length,builds);assert.equal(h.writes.length,0);h.mounted.destroy();
+  }},
+  {name:'mobile information sheet keeps original replay periods reachable and restores unrelated inert state across resizing',async run(source){
+    for(const startsOnPhone of [true,false]){
+      const fixture=atlasFixture(),h=await harness(source,fixture.options);
+      if(!startsOnPhone)h.doc.append(h.infoFooter);
+      h.infoAxis.inert=true;
+      await h.mounted.open();
+      const reachable=node=>{for(let current=node;current;current=current.parentElement)if(current.inert)return false;return true;};
+      assert.equal(reachable(h.infoOpener),true,'the mobile information opener must remain operable');
+      assert.equal(reachable(h.infoHeading),true,'the information close action must remain operable');
+      assert.equal(reachable(h.infoFooter),true,'original period controls cannot inherit rail inertness');
+      assert.equal(h.infoNavigation.inert,true,'unrelated navigation remains blocked during replay');
+      assert.equal(h.infoAxis.inert,true,'the original axis block remains owned');
+      h.infoRail.append(h.infoFooter);
+      assert.equal(reachable(h.infoFooter),true,'moving the original footer into the phone rail preserves access');
+      h.doc.append(h.infoFooter);
+      assert.equal(reachable(h.infoFooter),true,'restoring the desktop footer preserves access');
+      assert.equal(h.writes.length,0);
+      h.mounted.destroy();
+      assert.equal(h.infoNavigation.inert,false,'overlapping discovery cannot replace the original inert value');
+      assert.equal(h.infoOpener.inert,false);assert.equal(h.infoRail.inert,false);
+      assert.equal(h.infoAxis.inert,true,'pre-existing inertness is restored, not cleared');
+    }
   }},
   {name:'weekly replay and all existing viewport periods route without rebuilding or changing the current orange forecast',async run(source){
     const fixture=atlasFixture({frequency:'weekly'}),ranges={focus:{start:dateAt(90),end:dateAt(700)},near:{start:dateAt(170),end:dateAt(350)},all:{start:dateAt(0),end:dateAt(900)},history:{start:dateAt(0),end:dateAt(184)}};

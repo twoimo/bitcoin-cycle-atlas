@@ -330,8 +330,13 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   }
   function blockSurrounding(on){
     if(on){
+      const rail=doc.querySelector('.workbench-rail');
       const nodes=[...toolbar.children,...doc.querySelectorAll('.workbench-tools,.workbench-rail,.workbench-axis,.workbench-status,.workbench-event-slot,#workbench-go-date,#workbench-bottom-more,.eth-tools,.eth-bottom,.eth-bottom-bar')];
-      for(const node of nodes){if(node===trigger||node.contains(panel)||atlasAvailable&&['workbench-frequency','workbench-chart-type'].includes(node.id))continue;ownedInert.set(node,node.inert);node.inert=true;}
+      // On phones the original period controls live in the rail's info sheet.
+      // Block its unrelated actions, not the sheet opener, close or footer.
+      // Keep the rail available across a desktop-to-phone resize as well.
+      const blocked=nodes.flatMap(node=>atlasAvailable&&node===rail?[...node.children].filter(child=>!child.matches('.workbench-bottom-bar,.mobile-tray-heading')):[node]);
+      for(const node of new Set(blocked)){if(node===trigger||node.contains(panel)||atlasAvailable&&['workbench-frequency','workbench-chart-type','mobile-details-toggle'].includes(node.id))continue;ownedInert.set(node,node.inert);node.inert=true;}
     }else{for(const [node,value]of ownedInert)node.inert=value;ownedInert.clear();}
   }
   function activate(){

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {assertConsolidatedToolbarOwnership,consolidatedToolbarUsesDisclosure} from '../scripts/verify-consolidated-workspace-browser.mjs';
+import {assertConsolidatedToolbarOwnership,consolidatedToolbarUsesDisclosure,assertConsolidatedCanvasClearance} from '../scripts/verify-consolidated-workspace-browser.mjs';
 
 const measured=(top,height,extra={})=>({rect:{top,bottom:top+height,height},display:'flex',displayNoneOwner:null,visible:true,hidden:false,inert:false,disabled:false,...extra});
 const hiddenFeature={tag:'DIV',id:null,className:'shell-instrument-slot',display:'none'};
@@ -82,4 +82,31 @@ test('desktop chart toolbars retain direct ownership without requiring a mobile 
   result.feature=null;result.panel=null;result.toggle=null;
   assert.equal(consolidatedToolbarUsesDisclosure(result,'tqqq'),false);
   assert.doesNotThrow(()=>assertConsolidatedToolbarOwnership(result,'tqqq'));
+});
+
+function phoneMarket(){
+  const result=market();result.twoRow=false;result.phoneDock=true;result.header=measured(852,48);result.host=measured(854,44);return result;
+}
+test('phone market controls use one bottom dock without enabling stale chart controls',()=>{
+  const result=phoneMarket();assert.equal(consolidatedToolbarUsesDisclosure(result,'us'),false);
+  assert.doesNotThrow(()=>assertConsolidatedToolbarOwnership(result,'us'));
+  const oversized=phoneMarket();oversized.header=measured(808,92);
+  assert.throws(()=>assertConsolidatedToolbarOwnership(oversized,'us'),/one 48px row/);
+  const escaped=phoneMarket();escaped.host=measured(830,44);
+  assert.throws(()=>assertConsolidatedToolbarOwnership(escaped,'us'),/inside the single bottom dock/);
+});
+test('phone chart original controls still require an open native disclosure',()=>{
+  const result=chart();result.twoRow=false;result.phoneDock=true;result.header=measured(852,48);
+  assert.equal(consolidatedToolbarUsesDisclosure(result,'tqqq'),true);
+  assert.throws(()=>assertConsolidatedToolbarOwnership(result,'tqqq'),/visible and interactive/);
+  const open=chart({open:true});open.twoRow=false;open.phoneDock=true;
+  assert.doesNotThrow(()=>assertConsolidatedToolbarOwnership(open,'tqqq'));
+});
+test('canvas cannot intersect either the bottom phone dock or the top desktop toolbar',()=>{
+  const phone={headingLayout:'phone-dock',header:{top:852,bottom:900,height:48},frame:{top:0,bottom:852,height:852}};
+  assert.doesNotThrow(()=>assertConsolidatedCanvasClearance(phone));
+  assert.throws(()=>assertConsolidatedCanvasClearance({...phone,frame:{top:0,bottom:860,height:860}}),/cannot cover/);
+  const desktop={headingLayout:null,header:{top:0,bottom:44,height:44},frame:{top:44,bottom:900,height:856}};
+  assert.doesNotThrow(()=>assertConsolidatedCanvasClearance(desktop));
+  assert.throws(()=>assertConsolidatedCanvasClearance({...desktop,frame:{top:40,bottom:900,height:860}}),/cannot cover/);
 });
