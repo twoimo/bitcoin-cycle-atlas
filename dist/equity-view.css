@@ -24,3 +24,11 @@ body[data-market="MSTR"],body[data-market="BMNR"]{margin:0;display:block;backgro
 .equity-forecast-unavailable{position:absolute;z-index:2;left:12px;right:88px;top:var(--equity-forecast-notice-top,88px);margin:0;color:var(--muted);font-size:11px;line-height:1.5;pointer-events:none;overflow-wrap:anywhere}
 .equity-forecast-unavailable span{display:block;font-variant-numeric:tabular-nums}
 .equity-forecast-unavailable[hidden]{display:none}
+/* Touch widths get a real 44px visibility target; the icon keeps its size. */
+@media(max-width:620px),(pointer:coarse){
+  .instrument-indicator-manager .indicator-row{min-height:44px}
+  .instrument-indicator-manager .indicator-row-action{width:44px;height:44px;padding:12px}
+}
+@media(max-width:620px),(pointer:coarse){
+  .instrument-indicator-manager .indicator-legend-toggle{width:44px;height:44px;min-width:44px;min-height:44px;padding:10px}
+}

@@ -142,3 +142,20 @@ body[data-shell=chart] .native-chart-workbench .workbench-update :is(#eth-status
 @media(max-height:420px){.eth-forecast-note{top:42px}}
 
 .eth-data-dialog p { font-size: var(--copy-size); line-height: var(--copy-leading); }
+
+/* Instrument indicator legend: the same top-left surface as the BTC chart,
+   stacked under the readout and the forecast keys. Collapsed by default on
+   narrow screens so the price plot keeps its first rows visible. */
+.instrument-indicator-manager{max-width:min(360px,calc(100% - 24px))}
+.instrument-indicator-manager[data-collapsed=true] .chart-indicator-list{display:none}
+.instrument-indicator-manager[data-collapsed=true]{min-height:0}
+.instrument-indicator-manager .indicator-row{min-height:22px}
+@media(max-width:620px){.instrument-indicator-manager{left:10px;max-width:calc(100% - 20px)}}
+/* Touch widths get a real 44px visibility target; the icon keeps its size. */
+@media(max-width:620px),(pointer:coarse){
+  .instrument-indicator-manager .indicator-row{min-height:44px}
+  .instrument-indicator-manager .indicator-row-action{width:44px;height:44px;padding:12px}
+}
+@media(max-width:620px),(pointer:coarse){
+  .instrument-indicator-manager .indicator-legend-toggle{width:44px;height:44px;min-width:44px;min-height:44px;padding:10px}
+}

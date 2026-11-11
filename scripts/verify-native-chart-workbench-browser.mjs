@@ -98,8 +98,12 @@ export async function verifyNativeChartWorkbench(api) {
   await until(()=>evaluate(cdp,()=>!document.querySelector('#chart-reader').hidden),'native chart settings');
   inside(await bounds(cdp,'#chart-reader'),'native settings');
   assert.ok((await bounds(cdp,'#chart-reader')).text.includes(symbol),'Settings belong to a stale symbol');
+  // Volume now starts visible on native ETH/equity charts, so the setting is
+  // exercised in both directions and the lane always ends with real bars.
+  const volumeBefore=await evaluate(cdp,s=>Boolean(document.querySelector(s+' .volume-bar')),svg);
   await click(cdp,'[data-native-setting="showVolume"]');
-  await until(()=>evaluate(cdp,s=>Boolean(document.querySelector(s+' .volume-bar')),svg),'source volume bars');
+  await until(()=>evaluate(cdp,([s,b])=>Boolean(document.querySelector(s+' .volume-bar'))!==b,[svg,volumeBefore]),'source volume bars toggled');
+  if(volumeBefore){await click(cdp,'[data-native-setting="showVolume"]');await until(()=>evaluate(cdp,s=>Boolean(document.querySelector(s+' .volume-bar')),svg),'source volume bars');}
   const volume=await state();record.states.push({action:'source-volume',...volume});
   assert.equal(volume.product,product);assert.equal(volume.volume.unit,eth?'ETH':'주');assert.equal(volume.volume.clock,eth?'UTC':'뉴욕 세션');
   assert.ok(volume.volume.count>0&&volume.volume.count<=volume.observed);assert.equal(volume.volume.projected,0);assert.doesNotMatch(volume.volume.title,/BTC/);

@@ -9,6 +9,7 @@ export function readEthView(params) {
 export function ethViewQuery(state) {
   const params = writeChartUrlState(new URLSearchParams({symbol:'ETHUSD'}), state);
   if (state.forecastVisible === false) params.set('forecast', 'off');
+  if (state.showVolume === false) params.set('vol', '0');
   if (['pooled','valuation'].includes(state.ethModel)) params.set('eth-model', state.ethModel);
   if (state.ethModel === 'valuation' && ['stress','bull'].includes(state.ethScenario)) params.set('eth-scenario', state.ethScenario);
   return params.toString();

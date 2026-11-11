@@ -122,6 +122,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     mountChartReplay: () => ({isActive:()=>false,open(){},exit(){},destroy(){}}),
     bindPreservedArchiveDownload() {}, // DOM download behavior is verified separately.
     mountEthereumHistory: options => { historyOptions = options; return { update() {}, setSettings() {}, open() {}, destroy() {} }; },
+    mountInstrumentIndicatorOverlay: () => ({ update() {}, destroy() {}, reserveHeight: () => 0, element: { hidden: true } }),
   };
   const source = await readFile(process.env.ETH_VIEW_SOURCE || new URL('../../dist/eth-view.js', import.meta.url), 'utf8');
   const transformed = source.replace(/^import\s*\{([^}]+)\}\s*from\s*['"][^'"]+['"];?\s*$/gm, (_, names) => `const {${names}} = __deps;`)

@@ -19,6 +19,7 @@ import { readEthView, ethViewQuery, ethHistoryRange } from './eth-view-state.js?
 import { readChartUrlState } from './ui/chart-url-state.js';
 import { ETHEREUM_EVENTS, ETHEREUM_EVENT_COLORS, getEthereumEvents } from './ethereum-events.js?v=1.29.0';
 import { mountEthereumHistory, readEthereumEventSettings, ethereumEventQuery, ethereumEventRange } from './ethereum-history.js?v=1.29.0';
+import { mountInstrumentIndicatorOverlay } from './instrument-indicator-overlay.js?v=1.36.1';
 
 const glyphs = {
   line:'<path d="m3 17 5-7 5 4 8-11"/>',
@@ -45,7 +46,7 @@ export async function initEthView() {
   document.body.dataset.market = 'ETHUSD';
   document.title = 'ETHUSD · Ethereum — Bitcoin Cycle Atlas';
   const params = new URLSearchParams(location.search);
-  const state = {...readEthView(params),ethModel:['pooled','valuation'].includes(params.get('eth-model'))?params.get('eth-model'):(!params.has('eth-model')&&params.has('eth-scenario'))?'valuation':'adaptive',forecastVisible:params.get('forecast')!=='off',ethScenario:['stress','base','bull'].includes(params.get('eth-scenario'))?params.get('eth-scenario'):'base',eventSettings:readEthereumEventSettings(params),selectedHistoryEvent:null,tool:'crosshair',range:null,rangeTouched:false,priceDomain:null,controller:null,selectedTime:null,measurement:null,magnet:'off',showVolume:false,invertScale:false,frame:null,loading:false,error:null,refreshError:null};
+  const state = {...readEthView(params),ethModel:['pooled','valuation'].includes(params.get('eth-model'))?params.get('eth-model'):(!params.has('eth-model')&&params.has('eth-scenario'))?'valuation':'adaptive',forecastVisible:params.get('forecast')!=='off',ethScenario:['stress','base','bull'].includes(params.get('eth-scenario'))?params.get('eth-scenario'):'base',eventSettings:readEthereumEventSettings(params),selectedHistoryEvent:null,tool:'crosshair',range:null,rangeTouched:false,priceDomain:null,controller:null,selectedTime:null,measurement:null,magnet:'off',showVolume:params.get('vol')!=='0',invertScale:false,frame:null,loading:false,error:null,refreshError:null};
   const urlView=readChartUrlState(params,{frequencies:[state.frequency]});
   Object.assign(state,{priceDomain:urlView.priceDomain,magnet:urlView.magnet,invertScale:urlView.invertScale});
   let pendingUrlRange=urlView.range;
@@ -112,6 +113,25 @@ export async function initEthView() {
   document.addEventListener('atlas:chart-replay-open',()=>{touch.cancel();navigation.cancelGesture();});
   const historyWorkbench = mountEthereumHistory({button:$('#eth-history-trigger'),initialSettings:state.eventSettings,
     onSettingsChange:settings=>{cancelInteraction();state.eventSettings=settings;persist();schedule();},onFocusEvent:focusHistoricalEvent});
+  const indicatorOverlay = mountInstrumentIndicatorOverlay({
+    plot,
+    anchor: () => { const note = $('#eth-forecast-note'); if (note && note.getClientRects().length) return note; const source = $('.eth-readout-source'); return source.getClientRects().length ? source : readout; },
+    context: () => `ETH-USD · ${chartInterval(state.frequency).label} · UTC`,
+    items: [
+      {id:'volume', label:'Vol', title:'거래량'},
+      {id:'history', label:'역사 사건', title:'역사 사건'},
+      {id:'forecast', label:'예측 범위', title:'예측 범위'},
+    ],
+    onGeometryChange: () => schedule(),
+    onToggle: (id, visible) => {
+      if (id === 'volume') state.showVolume = visible;
+      else if (id === 'history') { state.eventSettings = {...state.eventSettings, visible}; historyWorkbench.setSettings(state.eventSettings); }
+      else if (id === 'forecast') state.forecastVisible = visible;
+      persist(); schedule();
+      announce(id === 'volume' ? `거래량 ${visible ? '표시' : '숨김'}` : id === 'history' ? `역사 사건 ${visible ? '표시' : '숨김'}` : `예측 범위 ${visible ? '표시' : '숨김'}`);
+    },
+  });
+  const compactNumber = new Intl.NumberFormat('ko-KR', {notation:'compact', maximumFractionDigits:0});
 
   function persist(){
     // Frequency changes retain the visible dates before their next paint. Use
@@ -233,7 +253,7 @@ export async function initEthView() {
       const error=state.error||entry?.error;
       $('#eth-empty-message').textContent=error?'ETH-USD 가격 자료를 불러오지 못했습니다. 연결을 확인하고 다시 조회해 주세요.':'ETH-USD 가격 자료를 불러오고 있습니다.';
       $('#eth-empty button').hidden=!error;$('#eth-status').textContent=error?'조회 실패':'불러오는 중';
-      navigation.update();workbench?.update();if(error)revealReady();return;
+      indicatorOverlay.update([]);navigation.update();workbench?.update();if(error)revealReady();return;
     }
     const forecast=visibleForecast();
     $('#eth-forecast-note').hidden=!forecast;
@@ -258,11 +278,19 @@ export async function initEthView() {
     }
     // Keep readable semantic keys outside the price clip at every font/viewport size.
     const forecastNote=$('#eth-forecast-note'),noteBottom=forecastNote.offsetTop+forecastNote.offsetHeight;
-    const headerInset=Math.max(plot.clientHeight<300?(forecast?70:54):(forecast?100:76),
+    const headerInset=Math.max(indicatorOverlay.reserveHeight(),plot.clientHeight<300?(forecast?70:54):(forecast?100:76),
       forecast&&Number.isFinite(noteBottom)?Math.ceil(noteBottom+8):0);
     state.controller=drawIntradayChart({svg,series,range:state.range,chartType:state.chartType,scale:state.scale,priceDomain:state.priceDomain,invertScale:state.invertScale,showVolume:state.showVolume,tool:state.tool,magnet:state.magnet,measurement:state.measurement,onMeasurement:value=>workbench?.measure(value),onInspect:detail=>workbench?.inspect(detail),selectedTime:state.selectedTime,headerInset,forecast,onForecastEvidence:()=>openInfo('forecast'),historyStatus:entry?.historyStatus||'ready',onHover:showReadout,
       historicalEvents:getEthereumEvents({category:state.eventSettings.category}),showHistoricalEvents:state.eventSettings.visible,activeHistoricalEventId:state.selectedHistoryEvent,historicalEventColors:ETHEREUM_EVENT_COLORS,onHistoricalEvent:openHistoricalEvent});
     updateHistoryContext();
+    {
+      const lastCandle = series.candles.at(-1), volume = Number(lastCandle?.volume), eventCount = getEthereumEvents({category:state.eventSettings.category}).length;
+      indicatorOverlay.update([
+        {id:'volume', value:Number.isFinite(volume) ? `${compactNumber.format(volume)} ETH` : '자료 없음', visible:state.showVolume && Number.isFinite(volume), unavailable:!Number.isFinite(volume)},
+        {id:'history', value:`${eventCount}개 사건`, visible:state.eventSettings.visible},
+        {id:'forecast', value:forecast ? `${forecast.scenario.label} 조건` : '없음', visible:Boolean(forecast)},
+      ]);
+    }
     const status=intraday?marketStatusText(entry):`Coinbase ETH-USD · ${busy?'갱신 중':state.refreshError?'연결 실패 · 저장 자료':series.snapshot?'저장 자료':'완료 봉'} · ${stamp(series.lastDate)}${series.gapCount?` · 빈 봉 ${series.gapCount}개`:''}`;
     $('#eth-status').textContent=entry?.historyStatus==='loading'?'과거 봉 조회 중':state.refreshError||entry?.error?'연결 실패 · 저장 자료':`${series.snapshot?'저장 자료':'완료 봉'} · ${series.lastDate.slice(0,10)}`;
     $('#eth-status').title=status;$('#eth-status').setAttribute('aria-label',status);

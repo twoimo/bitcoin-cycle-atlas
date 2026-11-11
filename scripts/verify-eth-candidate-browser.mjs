@@ -658,6 +658,62 @@ async function verifyCompactReadout(cdp,width,receipt,kind){
   receipt.readout={kind,...value,expanded};
 }
 
+
+async function verifyInstrumentIndicatorLegend(cdp,width,receipt,kind){
+  const value=await evaluate(cdp,k=>{
+    const plot=document.querySelector('.atlas-plot');
+    const manager=document.querySelector('#chart-indicator-manager');
+    const svg=plot.querySelector(':scope > svg');
+    const readout=document.querySelector('.eth-readout'),source=document.querySelector('.eth-readout-source');
+    const rect=node=>{const b=node.getBoundingClientRect();return{left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height};};
+    const painted=node=>Boolean(node&&node.getClientRects().length&&getComputedStyle(node).visibility!=='hidden');
+    const box=node=>node?rect(node):null;
+    const rows=manager?[...manager.querySelectorAll('[data-indicator-row]')].map(row=>{
+      const button=row.querySelector('[data-indicator-action="visibility"]'),name=row.querySelector('.indicator-name');
+      const hit=button?document.elementFromPoint(button.getBoundingClientRect().left+button.getBoundingClientRect().width/2,button.getBoundingClientRect().top+button.getBoundingClientRect().height/2):null;
+      return {id:row.dataset.indicatorRow,visible:row.dataset.visible,label:name?.querySelector('.indicator-label')?.textContent||'',
+        value:name?.querySelector('.indicator-value')?.textContent||'',button:box(button),pressed:button?.getAttribute('aria-pressed'),
+        painted:Boolean(row.getClientRects().length),
+        reachable:Boolean(hit&&(hit===button||button.contains(hit)))};
+    }):[];
+    const plotTop=Number(svg.dataset.plotTop);
+    const fold=manager?.querySelector('#indicator-legend-toggle');
+    return {page:document.body.dataset.page||'',kind:k,plot:box(plot),manager:box(manager),painted:painted(manager),
+      collapsed:manager?.dataset.collapsed,fold:box(fold),foldExpanded:fold?.getAttribute('aria-expanded'),
+      readout:box(readout),source:box(source),rows,
+      volumePainted:Boolean(document.querySelector('#chart-indicator-manager')&&plot.querySelector('.volume-bars')),
+      volumeBars:plot.querySelectorAll('.volume-bars path, .volume-bars rect').length,
+      plotTop,plotTopY:box(svg).top+Number(svg.dataset.plotTop),plotBox:box(svg),scrollWidth:document.documentElement.scrollWidth,width:innerWidth};
+  },kind);
+  assert.ok(value.manager,'Missing instrument indicator legend: '+kind);
+  assert.ok(value.painted,'Instrument indicator legend is not painted: '+kind);
+  assert.ok(value.page==='outlook'||value.page==='', 'Indicator legend mounted on an unrelated route: '+value.page);
+  assert.ok(value.manager.left>=value.plot.left-1&&value.manager.right<=value.plot.right+1,'Legend escaped the plot horizontally: '+kind);
+  assert.ok(value.manager.top>=value.readout.top-1,'Legend overlaps the readout: '+kind);
+  assert.ok(value.manager.bottom<=value.plotTopY+1,'Legend overlaps the price plot: '+kind+' '+value.manager.bottom+'/'+value.plotTopY);
+  assert.ok(value.manager.width<=value.plot.width+1,'Legend is wider than the plot: '+kind);
+  assert.ok(value.scrollWidth<=value.width+1,'Indicator legend created horizontal overflow: '+kind);
+  assert.deepEqual(value.rows.map(row=>row.id),['volume','history','forecast'],'Legend lost one of the supported studies: '+kind);
+  if(value.collapsed==='true'){
+    // Narrow screens fold the legend so the price plot keeps its first rows.
+    assert.equal(value.foldExpanded,'false','Collapsed legend must announce aria-expanded=false: '+kind);
+    assert.ok(value.fold&&value.fold.width>=44&&value.fold.height>=44,'Folded legend toggle is below the 44px touch floor: '+kind+' '+JSON.stringify(value.fold));
+    for(const row of value.rows)assert.equal(row.painted,false,'Collapsed legend still paints its rows: '+kind+' '+row.id);
+    assert.ok(value.rows.every(row=>row.value&&row.label),'Collapsed legend lost its readouts: '+kind);
+  }else{
+    assert.equal(value.foldExpanded,'true','Expanded legend must announce aria-expanded=true: '+kind);
+    for(const row of value.rows){
+      assert.ok(row.label&&row.value,'Legend row has no readout: '+kind+' '+row.id);
+      const floor=width<=620?44:20;
+      assert.ok(row.button&&row.button.width>=floor&&row.button.height>=floor,'Legend visibility control is too small: '+kind+' '+row.id+' '+JSON.stringify(row.button));
+      assert.equal(row.pressed,row.visible,'Legend visibility state disagrees with aria-pressed: '+kind+' '+row.id);
+    }
+  }
+  assert.equal(value.rows[0].visible,'true','Volume must start visible: '+kind);
+  assert.ok(value.volumeBars>0&&value.volumePainted,'Volume study is enabled but not drawn: '+kind);
+  receipt.indicatorLegend=value;return value;
+}
+
 async function ethCase(cdp,width,receipt,expected,archive){
   await until(()=>evaluate(cdp,()=>{
     const s=document.querySelector('#eth-chart');return s&&Number(s.dataset.observedCandleCount)>0&&Number(s.dataset.forecastPointCount)>0;
@@ -743,6 +799,7 @@ async function ethCase(cdp,width,receipt,expected,archive){
   await journalCase(cdp,width,receipt,'ETHUSD',archive);
   assert.equal((await bounds(cdp,'#eth-data-dialog')).open,false);
   await verifyCompactReadout(cdp,width,receipt,'eth');
+  await verifyInstrumentIndicatorLegend(cdp,width,receipt,'eth');
 }
 
 async function verifyInfoDataLinks(cdp,symbol){
@@ -879,6 +936,7 @@ async function equityCase(cdp,width,receipt,symbol,archive){
   await journalCase(cdp,width,receipt,symbol,archive);
   assert.equal((await bounds(cdp,'#equity-detail-dialog')).open,false);
   await verifyCompactReadout(cdp,width,receipt,'equity');
+  await verifyInstrumentIndicatorLegend(cdp,width,receipt,'equity');
 }
 
 

@@ -164,6 +164,7 @@
     "dist/indicator-settings.js",
     "dist/indicator-state.js",
     "dist/indicator-workbench.js",
+    "dist/instrument-indicator-overlay.js",
     "dist/inspection-policy.js",
     "dist/intraday-chart.js",
     "dist/intraday-history.js",

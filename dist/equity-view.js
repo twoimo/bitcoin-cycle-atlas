@@ -1,4 +1,5 @@
 import { setLoadingSurface } from './loading-surfaces.js';
+import { mountInstrumentIndicatorOverlay } from './instrument-indicator-overlay.js?v=1.36.1';
 import { mountNativeChartApp, mountNativeChartWorkbench, nativeDateRange } from './native-chart-workbench.js?v=1.36.1';
 import { readChartUrlState, writeChartUrlState } from './ui/chart-url-state.js';
 import {bindPreservedArchiveDownload} from './preserved-archive-download.js?v=1.29.0';
@@ -34,7 +35,7 @@ export async function initEquityView({symbol}={}){
   document.body.dataset.market=symbol;document.title=`${symbol} · ${instrument.name} — Bitcoin Cycle Atlas`;
   const params=new URLSearchParams(location.search),valid=(key,values,fallback)=>values.includes(params.get(key))?params.get(key):fallback;
   const urlView=readChartUrlState(params,{spanAliases:['equity-span']});
-  const state={frequency:urlView.frequency,chartType:urlView.chartType,scale:urlView.scale,span:urlView.span,scenario:valid('treasury-scenario',['stress','base','bull'],'base'),capitalPolicy:valid('capital-policy',CAPITAL_POLICIES.map(item=>item.id),'cash-at-put'),exitDelayDays:['7','30','90'].includes(params.get('exit-days'))?Number(params.get('exit-days')):undefined,forecastVisible:params.get('forecast')!=='off',eventsVisible:params.get('events')!=='off',category:'all',selectedEvent:null,tool:'crosshair',range:null,rangeTouched:false,priceDomain:urlView.priceDomain,controller:null,selectedTime:null,selectedValuationDate:null,measurement:null,magnet:urlView.magnet,showVolume:false,invertScale:urlView.invertScale,frame:null,loading:false,error:null};
+  const state={frequency:urlView.frequency,chartType:urlView.chartType,scale:urlView.scale,span:urlView.span,scenario:valid('treasury-scenario',['stress','base','bull'],'base'),capitalPolicy:valid('capital-policy',CAPITAL_POLICIES.map(item=>item.id),'cash-at-put'),exitDelayDays:['7','30','90'].includes(params.get('exit-days'))?Number(params.get('exit-days')):undefined,forecastVisible:params.get('forecast')!=='off',eventsVisible:params.get('events')!=='off',category:'all',selectedEvent:null,tool:'crosshair',range:null,rangeTouched:false,priceDomain:urlView.priceDomain,controller:null,selectedTime:null,selectedValuationDate:null,measurement:null,magnet:urlView.magnet,showVolume:params.get('vol')!=='0',invertScale:urlView.invertScale,frame:null,loading:false,error:null};
   let pendingUrlRange=urlView.range;
   let workbench=null;
   const events=TREASURY_EVENTS.filter(event=>event.symbol===symbol);
@@ -69,7 +70,7 @@ export async function initEquityView({symbol}={}){
   const navigation=bindChartNavigation({element:plot,getRange:()=>svg.dataset.chartReplayActive==='true'||document.body.dataset.centerTool?null:withChartSpacing(state.range?{...state.range,allowEmpty:true}:null,{frequency:state.frequency,plotWidth:Number(svg.dataset.plotRight)-Number(svg.dataset.plotLeft)}),getTool:()=>state.tool,getPriceAxis:()=>state.controller?.getPriceScale?.(),getContext:context=>state.controller?.getSelection?.(context),onGestureStart:()=>{touch.cancelPending();workbench?.beginGesture();},onGestureEnd:()=>{if(workbench?.endGesture())persist();},onMenuOpen:()=>touch.cancel(),onRangeChange:range=>{state.range=range;state.rangeTouched=true;schedule();},onPriceRangeChange:domain=>{state.priceDomain=domain;schedule();},onPriceReset:()=>{state.priceDomain=null;schedule();},onReset:resetRange,onAnnounce:announce});
   document.addEventListener('atlas:chart-replay-open',()=>{touch.cancel();navigation.cancelGesture();});
   function cancelInteraction(){touch.cancel();navigation.cancelGesture();clearChartHover(svg);state.selectedTime=null;state.selectedValuationDate=null;}
-  function persist(){const query=writeChartUrlState(new URLSearchParams({symbol}),state);if(state.scenario!=='base')query.set('treasury-scenario',state.scenario);if(!state.forecastVisible)query.set('forecast','off');if(!state.eventsVisible)query.set('events','off');if(state.capitalPolicy!=='cash-at-put')query.set('capital-policy',state.capitalPolicy);if(state.exitDelayDays!==undefined)query.set('exit-days',String(state.exitDelayDays));try{history.replaceState(null,'',`${location.pathname}?${query}`);}catch{}}
+  function persist(){const query=writeChartUrlState(new URLSearchParams({symbol}),state);if(state.scenario!=='base')query.set('treasury-scenario',state.scenario);if(!state.forecastVisible)query.set('forecast','off');if(!state.eventsVisible)query.set('events','off');if(!state.showVolume)query.set('vol','0');if(state.capitalPolicy!=='cash-at-put')query.set('capital-policy',state.capitalPolicy);if(state.exitDelayDays!==undefined)query.set('exit-days',String(state.exitDelayDays));try{history.replaceState(null,'',`${location.pathname}?${query}`);}catch{}}
   function openDialog(title,markup){dialog.dataset.view='other';cancelInteraction();if(!dialog.open)dialogOpener=document.activeElement;document.dispatchEvent(new CustomEvent('atlas:modal-open',{detail:{id:dialog.id}}));dialog.querySelector('h2').textContent=title;dialog.querySelector('#equity-detail-content').innerHTML=markup;if(!dialog.open)dialog.showModal();dialog.scrollTop=0;}
   function sourceLinks(ids=[]){return `<div class="equity-source-links">${ids.map(id=>{const source=getResearchArticle(id)||TREASURY_SOURCES.find(item=>item.id===id);return source?`<button type="button" data-equity-source="${esc(id)}">${esc(source.title)} ↗</button>`:'';}).join('')}</div>`;}
   function showResearch(){
@@ -134,16 +135,43 @@ export async function initEquityView({symbol}={}){
   }
   function selectForecast(){forecast=forecastAvailability?.allowed?projection?.forecasts[state.scenario]??null:null;}
   function revealReady(){if(ready)return;ready=true;document.dispatchEvent(new CustomEvent('atlas:ready'));const article=params.get('article');if(article&&getResearchArticle(article))openResearchArticle(article,{opener:$('#equity-symbol'),view:params.get('article-view')});}
-  function render(){state.frame=null;if(suspended||svg.dataset.chartReplayActive==='true'||document.body.dataset.centerTool)return;const series=current();$('#equity-empty').hidden=Boolean(series);$('.eth-readout,.eth-readout-source').hidden=!series;$('#equity-empty-message').textContent=state.error?`${symbol} 저장 가격 자료를 불러오지 못했습니다. 다시 조회해 주세요.`:`${symbol} 가격 자료를 불러오고 있습니다.`;$('#equity-empty button').hidden=!state.error;setLoadingSurface($('#equity-empty'),!series&&!state.error,{kind:'chart',label:`${symbol} 가격 자료 로딩`});if(!series){svg.innerHTML='';state.controller=null;$('#equity-status').textContent=state.error?'조회 실패':'불러오는 중';workbench?.update();if(state.error)revealReady();return;}
+  const compactIndicatorNumber = new Intl.NumberFormat('ko-KR', {notation:'compact', maximumFractionDigits:0});
+  const equityIndicatorOverlay = mountInstrumentIndicatorOverlay({
+    plot,
+    anchor: () => { const notice = $('#equity-forecast-unavailable'); if (notice && notice.getClientRects().length) return notice; const source = $('.eth-readout-source'); return source.getClientRects().length ? source : $('#equity-readout'); },
+    context: () => `${symbol} · ${state.frequency==='daily'?'1D':'1W'} · 뉴욕 세션`,
+    items: [
+      {id:'volume', label:'Vol', title:'거래량'},
+      {id:'history', label:'역사 사건', title:'역사 사건'},
+      {id:'forecast', label:'예측 범위', title:'예측 범위'},
+    ],
+    onGeometryChange: () => schedule(),
+    onToggle: (id, visible) => {
+      if (id === 'volume') state.showVolume = visible;
+      else if (id === 'history') state.eventsVisible = visible;
+      else if (id === 'forecast') { state.forecastVisible = visible; if (!visible) { state.range = null; state.rangeTouched = false; } }
+      persist(); schedule();
+      announce(`${id==='volume'?'거래량':id==='history'?'역사 사건':'예측 범위'} ${visible?'표시':'숨김'}`);
+    },
+  });
+  function render(){state.frame=null;if(suspended||svg.dataset.chartReplayActive==='true'||document.body.dataset.centerTool)return;const series=current();$('#equity-empty').hidden=Boolean(series);$('.eth-readout,.eth-readout-source').hidden=!series;$('#equity-empty-message').textContent=state.error?`${symbol} 저장 가격 자료를 불러오지 못했습니다. 다시 조회해 주세요.`:`${symbol} 가격 자료를 불러오고 있습니다.`;$('#equity-empty button').hidden=!state.error;setLoadingSurface($('#equity-empty'),!series&&!state.error,{kind:'chart',label:`${symbol} 가격 자료 로딩`});if(!series){equityIndicatorOverlay.update([]);svg.innerHTML='';state.controller=null;$('#equity-status').textContent=state.error?'조회 실패':'불러오는 중';workbench?.update();if(state.error)revealReady();return;}
     $('#equity-scenario').value=state.scenario;$('#equity-readout-interval').textContent=state.frequency==='daily'?'1D':'1W';for(const item of $$('[data-equity-interval]'))item.setAttribute('aria-pressed',String(item.dataset.equityInterval===state.frequency));for(const item of $$('[data-equity-action]'))if(['line','candles','crosshair','pan'].includes(item.dataset.equityAction))item.setAttribute('aria-pressed',String(item.dataset.equityAction===state.tool||item.dataset.equityAction===state.chartType));for(const item of $$('[data-equity-span]'))item.setAttribute('aria-pressed',String(item.dataset.equitySpan===state.span));$('#equity-period-select').value=state.span;$('[data-equity-action="scale"]').textContent=state.scale==='log'?'로그':'선형';$('[data-equity-action="auto"]').setAttribute('aria-pressed',String(!state.priceDomain));$('[data-equity-action="forecast"]').setAttribute('aria-pressed',String(state.forecastVisible&&Boolean(forecast)));$('.equity-projected').hidden=!state.forecastVisible||!forecast;$('.equity-projected').textContent=state.chartType==='candles'?'▯ 모의 경로봉 · 근거 ○':'┄ 조건부 경로 · 근거 ○';$('.equity-projected').title=state.chartType==='candles'?EQUITY_FORECAST_BAR_NOTE:'세 경제 조건에서 선택한 한 개의 모의 경로입니다. 음영은 세 조건의 최소·최대이며 확률 구간이 아닙니다.';$('#equity-vintage').textContent=state.forecastVisible&&forecast?`재무 ${forecast.financialAsOf} · 과거 구조 가정`:'';$('#equity-vintage').title=forecast?.warnings?.[0]||'';
     const blocked=Boolean(forecastAvailability&&!forecastAvailability.allowed),notice=$('#equity-forecast-unavailable'),baseInset=plot.clientHeight<300?55:88;
     notice.hidden=!blocked;notice.querySelector('[data-forecast-message]').textContent=blocked?forecastAvailability.message:'';notice.querySelector('[data-forecast-sample]').textContent=blocked?forecastAvailability.sampleLabel:'';
     notice.style.setProperty('--equity-forecast-notice-top',`${baseInset}px`);$('#equity-scenario').disabled=blocked;$('#equity-scenario').title=blocked?forecastAvailability.message:'';
     plot.dataset.forecastTier=forecastAvailability?.tier||'';plot.dataset.forecastAllowed=String(Boolean(forecastAvailability?.allowed));plot.dataset.forecastObservations=String(forecastAvailability?.observations??0);
-    const headerInset=baseInset+(blocked?notice.clientHeight+8:0);
+    const headerInset=Math.max(equityIndicatorOverlay.reserveHeight(),baseInset+(blocked?notice.clientHeight+8:0));
     if(!state.range)state.range=equityHistoryRange(series,{span:state.span,forecastEnd:state.forecastVisible?forecast?.path.at(-1)?.date:null});
     if(pendingUrlRange&&state.range){state.range=nativeDateRange(state.range,{ok:true,range:pendingUrlRange})||state.range;state.rangeTouched=true;pendingUrlRange=null;}
     state.controller=drawIntradayChart({svg,series,range:state.range,chartType:state.chartType,scale:state.scale,priceDomain:state.priceDomain,invertScale:state.invertScale,showVolume:state.showVolume,tool:state.tool,magnet:state.magnet,measurement:state.measurement,onMeasurement:value=>workbench?.measure(value),onInspect:detail=>workbench?.inspect(detail),selectedTime:state.selectedTime,headerInset,onHover:readout,forecast:state.forecastVisible?forecast:null,onForecastEvidence:showForecast,historicalEvents:events.filter(item=>state.category==='all'||item.category===state.category),showHistoricalEvents:state.eventsVisible,activeHistoricalEventId:state.selectedEvent,historicalEventColors:COLORS,onHistoricalEvent:showEvent});
+    {
+      const lastCandle = series.candles.at(-1), volume = Number(lastCandle?.volume), activeEvents = events.filter(item=>state.category==='all'||item.category===state.category).length;
+      equityIndicatorOverlay.update([
+        {id:'volume', value:Number.isFinite(volume) ? compactIndicatorNumber.format(volume) : '자료 없음', visible:state.showVolume && Number.isFinite(volume), unavailable:!Number.isFinite(volume)},
+        {id:'history', value:`${activeEvents}개 사건`, visible:state.eventsVisible},
+        {id:'forecast', value:state.forecastVisible && forecast ? `${$('#equity-scenario').selectedOptions?.[0]?.textContent || '기본'} 조건` : '없음', visible:Boolean(state.forecastVisible && forecast)},
+      ]);
+    }
     $('#equity-status').textContent=`${daily.lastDate.slice(0,10)}${state.error?' · 가격 갱신 실패':blocked?' · 표본 부족 · T3':forecastError?' · 전망 입력 확인 필요':state.loading&&!projection?' · 코인 경로 계산 중':''}`;$('#equity-status').title=`Yahoo Finance · 마지막 저장 세션 ${daily.lastDate.slice(0,10)} · ${daily.retrievedAt} 수집`;plot.dataset.tool=state.tool;navigation.update();workbench?.update();revealReady();}
   function schedule(){if(!suspended&&state.frame===null)state.frame=requestAnimationFrame(render);}
   async function archive(name,signal){
