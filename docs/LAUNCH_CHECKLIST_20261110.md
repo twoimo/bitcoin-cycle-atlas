@@ -17,6 +17,7 @@
 | R6 WP-A 미디어 | 부분 — 자동화분 완료, 사람 검수 차단 | 2026-11-11 자동화 가능분 실측: PDF 290(final)+257(R17)=**547**(계약 `plannedPages:547` 일치, Poppler 26.10.0), 오디오 16/16 매니페스트 해시 일치·입력 2건 원본 해시 일치, Linux `renameat2(RENAME_NOREPLACE)` 원자 게시 4케이스 통과(Docker `python:3.12-slim`, `EEXIST` 확인). 영수증 `docs/conference/WP_A_AUTOMATED_MEDIA_20261111.md`·`docs/conference/evidence/media-20261111/`. 남은 차단: 직접 청취·동기화 10지점, 547장 WebP 렌더·시각 검수, 배포 패키지 자산 수·Range, R17 변형 결정(깔끔본 접두사 `baa2224e…` ≠ 실측 `3760cd72…`). `mediaPrepared:false` 유지. |
 | R7 native 외부·실기기 | 차단 | macOS 외부 AppKit 메뉴, Safari, 실제 iOS/Android 기기 검증은 자동화 대상이 아니다. Blink 내부 팝업 trusted 입력과 동일시하지 않는다. |
 | R8 문서 최종화 | 완료 `7bfd717` | 요청사항·반응형·체크리스트 세 문서를 최종 상태로 정리했다. `docs/requirements/REQ_WP_ABC_20261110.md` §12 최종 판정(WP-A 차단 유지·WP-B 부분·WP-C 완료, R1~R8 목록), `docs/TRADINGVIEW_RESPONSIVE_20261110.md` §14 최종 판정(계약별 6행·로컬 수치·남은 차단·클리핑 관찰 한계), 그리고 이 표와 아래 `## 체크리스트 종결 판정` 절이다. R6·R7만 차단으로 남기고, 원격 CI 0건을 통과로 쓰지 않으며, main push·merge·배포·PR 변경·유료 용량·계정/권한 변경은 수행하지 않았다. |
+| R9 WP-D 전 종목 좌상단 오버레이 | **요청 접수 — 미착수** | 사용자 요청(원문): "비트코인 좌상단에 나오는 것들 있잖아? 비트코인 말고 다른 종목들은 레이아웃 나눠서 나오는 것 같은데 비트코인처럼 오버레이될 수 있게 전부다 개선해줘." production `7896860`(1440×900) 실측: BTCUSD는 `.atlas-readout` 338×21 @(10,8) + 출처 행 230×19 @(10,32)의 **단일 행 오버레이**, ETHUSD는 `.eth-readout` **1,238×64** @(12,9), MSTR은 **1,233×64** @(12,9)의 3행 **전폭 블록**이다. 닫는 조건: 6 viewport × 대상 종목(BTCUSD·ETHUSD·MSTR·BMNR·TQQQ·SOXL·233740·부동산/테마)에서 오버레이가 플롯 내부·높이 ≤24px(≥768)·폭 ≤60%·전폭 띠 아님·겹침 0, 정보 보존(OHLC는 접힌 상세), 53-case·compare·WP6·chart-qa·반응형 44 재실행, before/after 스크린샷. 계약: 요청서 §13. |
 
 R1~R5가 전부 완료로 정리되어 R8 착수 조건을 충족했고, R8까지 이번 회차에 닫았다. 이 표의 완료 6행(R0~R5)과 R8이 이 자동화의 전 범위이고, 남은 것은 R6(WP-A 미디어·청취·PDF·Linux 원자 게시)와 R7(macOS 외부 AppKit 메뉴·Safari·실기기) 두 차단뿐이다. 원격 CI는 이 저장소에 존재하지 않으므로(GitHub Actions 아카이브·Workers Builds는 main watch) 어떤 판정도 '원격 CI 통과'를 근거로 쓰지 않았고 로컬 게이트 수치만 인용했다.
 
@@ -115,6 +116,20 @@ R8 종결 시 "미판정·미검증"으로 남긴 두 항목을 실제 입력으
 - `verifyServedPublication` **PASS**: index.html·site-entry.js·data/btc-daily.json·data/forecast-ledger/index.json 본문 해시 일치, servedCommit = servedDigest = `a827686…`
 - `/`, `/?symbol=ETHUSD`, `/?page=data` HTTP 200
 - 브라우저 stage 게이트: runtime-preflight·locked-dependencies·generated-pages·typecheck·panel-tests·service-build·postgres-service-tests·native-browser(53) 전부 PASS, publication/standalone PASS
+
+## 2026-11-11 추가 요청 — WP-D 전 종목 좌상단 오버레이
+
+원문: "비트코인 좌상단에 나오는 것들 있잖아? 비트코인 말고 다른 종목들은 레이아웃 나눠서 나오는 것 같은데 비트코인처럼 오버레이될 수 있게 전부다 개선해줘."
+
+요청 정본은 [요청서 §13](requirements/REQ_WP_ABC_20261110.md)이다. 이 절은 현재 실측과 닫는 조건만 기록하며, **아직 구현·배포 전**이다.
+
+| 종목 | 좌상단 요소 | 크기·위치(플롯 기준) | 판정 |
+|---|---|---|---|
+| BTCUSD | `.atlas-readout#lab-metrics` + `.workbench-market-info` | 338×21 @(10,8), 출처 230×19 @(10,32) | 단일 행 오버레이(기준) |
+| ETHUSD | `.eth-readout` | 1,238×64 @(12,9) | 3행 전폭 블록 — 개선 대상 |
+| MSTR | `.eth-readout` (+ 분리된 `.equity-legend`) | 1,233×64 @(12,9) | 3행 전폭 블록 — 개선 대상 |
+
+닫는 조건: 대상 종목 전부가 BTC와 같은 오버레이 구성(플롯 내부, 높이 ≤24px at ≥768, 폭 ≤60%, 오버레이 오른쪽 끝 `elementFromPoint`가 차트 SVG, 가격 축·마지막 가격 라벨·리플레이 바·범례 독과 겹침 0)이 되고, OHLC 등 기존 정보는 접힌 상세에서 도달 가능하며, 53-case·compare·WP6·chart-qa·반응형 44가 새 계약으로 다시 통과해야 한다. 검사 삭제·허용치 완화는 금지한다.
 
 ## 역사 기록 — Pro 인계 시점 작업판 (2026-11-11 01:30)
 
