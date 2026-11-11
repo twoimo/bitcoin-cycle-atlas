@@ -8,14 +8,20 @@
 export const CONTENT_SHELL_PAGES = Object.freeze(['evidence', 'data', 'ipo', 'relay', 'market']);
 
 // The source sheet is rendered from the price dataset, which these routes do
-// not load. The control keeps its node and its listener and is disabled with
-// the exact reason instead of opening an empty dialog.
+// not load. The control keeps its node and its listener; while the price owner
+// reports no comparison, the control is disabled with the exact reason instead
+// of opening an empty dialog, and it is re-enabled as soon as that owner
+// publishes readiness in this document.
 export const SOURCE_SHEET_REASON = '가격 자료가 없어 방법론 시트를 열 수 없습니다. 가격 차트에서 자료를 불러온 뒤 사용할 수 있습니다.';
+// The price owner publishes readiness on the body and in an event, so a shell
+// that is already mounted and one that mounts later read the same answer.
+export const SOURCE_READY_ATTRIBUTE = 'comparison';
+export const SOURCE_READY_EVENT = 'atlas:comparison';
 
 export function createContentShell({ document }) {
   let rail = null, bottom = null, nav = null, footer = null;
   let navHome = null, navNext = null, footerHome = null, footerNext = null;
-  let active = false, media = null;
+  let active = false, media = null, sourceListener = null;
   const lockedSources = new Map();
 
   function build() {
@@ -53,9 +59,12 @@ export function createContentShell({ document }) {
   }
 
   // These routes render the site footer, whose source control belongs to the
-  // price document. Measured on 2026-11-11: with the dataset loaded the moved
-  // control still opens no sheet, so it stays disabled with its reason instead
-  // of exposing a dead action.
+  // price document. The price owner publishes whether it can fill the sheet;
+  // the lock follows that answer for this document instance, not the route.
+  function sourcesReady() {
+    return document.body?.dataset?.[SOURCE_READY_ATTRIBUTE] === 'ready';
+  }
+
   function lockSources() {
     for (const control of document.querySelectorAll('.footer [data-method], .content-bottom-bar [data-method]')) {
       if (!lockedSources.has(control)) {
@@ -117,11 +126,12 @@ export function createContentShell({ document }) {
       if (footerHome === null) { footerHome = footer.parentElement; footerNext = footer.nextElementSibling; }
       if (footer.parentElement !== bottom) bottom.append(footer);
     }
-    lockSources();
+    if (sourcesReady()) unlockSources(); else lockSources();
   }
 
   function restore() {
     unlockSources();
+    if (sourceListener) { document.removeEventListener?.(SOURCE_READY_EVENT, sourceListener); sourceListener = null; }
     if (footer && footerHome && footer.parentElement !== footerHome) footerHome.insertBefore(footer, footerNext);
     if (nav && navHome && nav.parentElement !== navHome) navHome.insertBefore(nav, navNext);
     if (rail) unmount();
@@ -134,6 +144,10 @@ export function createContentShell({ document }) {
       if (!build()) return;
       place();
       active = true;
+      if (!sourceListener) {
+        sourceListener = () => { if (active) place(); };
+        document.addEventListener?.(SOURCE_READY_EVENT, sourceListener);
+      }
       if (!media) {
         media = document.defaultView?.matchMedia?.('(max-width: 640px)') || null;
         media?.addEventListener?.('change', () => { if (active) place(); });

@@ -641,33 +641,51 @@ const main = async () => {
         if (errors.length) fail(where, 'console/runtime errors: ' + errors.slice(0, 2).join(' | '));
       }
       // The bottom bar keeps the source information sheet as its real control.
-      // These routes do not load the price dataset, so the control stays on its
-      // original node with a feature-scoped disabled state and the exact reason
-      // instead of opening an empty dialog.
+      // Whether that control is usable is a property of the price owner, not the
+      // route: routes that load the price dataset publish readiness and keep the
+      // control live, and the other routes keep their original node with a
+      // feature-scoped disabled state and the exact reason instead of opening an
+      // empty sheet.
       await goto(url, 1440, 900);
       const opener = await evaluate(cdp, () => {
         const b = document.querySelector(".content-bottom-bar [data-method]");
         if (!b) return { found: false };
         return {
           found: true, sameNode: Boolean(b.closest(".workbench-bottom-bar")), label: (b.textContent || "").trim().slice(0, 40),
+          readiness: document.body.dataset.comparison || "unset",
           disabled: b.disabled === true, ariaDisabled: b.getAttribute("aria-disabled"),
           reason: b.getAttribute("data-disabled-reason"), description: b.getAttribute("aria-description"),
         };
       });
-      const sheetClick = opener.found ? await domClick(".content-bottom-bar [data-method]") : { ok: false, reason: "no source control in the bottom bar" };
-      await sleep(600);
+      const sourceReady = opener.found && opener.readiness === "ready";
+      const sheetClick = opener.found && !opener.disabled ? await domClick(".content-bottom-bar [data-method]") : null;
+      await sleep(700);
       const sheet = await evaluate(cdp, () => {
         const d = document.getElementById("method-dialog");
-        return { open: Boolean(d?.open) };
+        const reader = document.querySelector("#chart-reader");
+        return {
+          open: Boolean(d?.open), chars: (document.getElementById("method-content")?.textContent || "").length,
+          readerOpen: Boolean(reader && !reader.hidden), readerKind: reader?.dataset.kind || null,
+          readerChars: reader && !reader.hidden ? reader.textContent.length : 0,
+        };
       });
-      report.contentWidths.push({ route: name, infoSheet: { opener, click: sheetClick, dialog: sheet } });
+      report.contentWidths.push({ route: name, infoSheet: { opener, sourceReady, click: sheetClick, dialog: sheet } });
       if (!opener.found) fail(`content ${name} bottom-bar control`, "the source control left the bottom bar");
-      else {
-        if (!opener.disabled || opener.ariaDisabled !== "true") fail(`content ${name} bottom-bar control`, "source control is not exactly disabled: " + JSON.stringify(opener));
+      else if (sourceReady) {
+        if (opener.disabled || opener.ariaDisabled === "true") fail(`content ${name} bottom-bar control`, "a prepared price owner left its source control disabled: " + JSON.stringify(opener));
+        if (opener.reason) fail(`content ${name} bottom-bar control`, "a prepared price owner kept a disabled reason: " + JSON.stringify(opener));
+        if (!sheetClick?.ok) fail(`content ${name} bottom-bar control`, "the prepared source control is unreachable: " + JSON.stringify(sheetClick));
+        const shown = (sheet.readerOpen && sheet.readerKind === "method" && sheet.readerChars > 400)
+          || (sheet.open && sheet.chars > 400);
+        if (!shown) fail(`content ${name} bottom-bar control`, "a prepared source sheet did not open with real content: " + JSON.stringify(sheet));
+      } else {
+        if (opener.readiness !== "unset" && opener.readiness !== "unavailable") fail(`content ${name} bottom-bar control`, "unexpected readiness value: " + opener.readiness);
+        if (opener.disabled !== true || opener.ariaDisabled !== "true") fail(`content ${name} bottom-bar control`, "source control is not exactly disabled: " + JSON.stringify(opener));
         if (!opener.reason || opener.reason !== opener.description) fail(`content ${name} bottom-bar control`, "missing or unclear disabled reason: " + JSON.stringify(opener));
-        if (sheet.open) fail(`content ${name} bottom-bar control`, "an empty source sheet was shown for a route without price data");
+        if (sheet.open || sheet.readerOpen) fail(`content ${name} bottom-bar control`, "a source sheet was shown for a route without price data");
       }
       if (sheet.open) { await evaluate(cdp, () => document.getElementById("method-dialog")?.close()); await sleep(250); }
+      if (sheet.readerOpen) { await evaluate(cdp, () => document.dispatchEvent(new CustomEvent("atlas:close-detail"))); await sleep(250); }
     }
 
     // Phase E: leaving a content route must hand the chart frame back its own
@@ -705,6 +723,7 @@ const main = async () => {
             sidebarRendered: Boolean(document.querySelector(".atlas-sidebar")?.getClientRects().length),
             railCount: [...document.querySelectorAll(".workbench-rail")].filter(painted).length,
             bottomCount: [...document.querySelectorAll(".workbench-bottom-bar")].filter(painted).length,
+            sourceReadiness: document.body.dataset.comparison || "unset",
             sourceDisabled: source ? source.disabled === true : null,
             sourceReason: source?.getAttribute("data-disabled-reason") || null,
           };
@@ -738,8 +757,7 @@ const main = async () => {
         });
         await cdp.send("Runtime.evaluate", { expression: "history.back()", returnByValue: true });
         await sleep(1500);
-        const back = await evaluate(cdp, () => {
-          const marks = window.__wpcContent;
+        const back = await evaluate(cdp, () => {          const marks = window.__wpcContent;
           const rail = document.querySelector(".content-rail");
           const item = document.querySelector('.atlas-nav [data-atlas-page="outlook"]');
           let hit = null;
@@ -760,12 +778,30 @@ const main = async () => {
             railVisible: Boolean(rail) && !rail.hidden && Boolean(rail.getClientRects().length),
             sidebarRendered: Boolean(document.querySelector(".atlas-sidebar")?.getClientRects().length),
             navHit: hit,
+            sourceReadiness: document.body.dataset.comparison || "unset",
             sourceDisabled: source ? source.disabled === true : null,
             sourceReason: source?.getAttribute("data-disabled-reason") || null,
           };
         });
+        // The price owner published readiness when the chart loaded its data in
+        // this document, so the same control that was locked on entry must now be
+        // live and open the real sheet. The node, its host and its label are the
+        // ones the route mounted, not a replacement.
+        const backSourceClick = back.sourceDisabled === false && w > 620 ? await domClick(".content-bottom-bar [data-method]") : null;
+        await sleep(800);
+        const backSourceSheet = await evaluate(cdp, () => {
+          const reader = document.querySelector("#chart-reader");
+          const dialog = document.getElementById("method-dialog");
+          return {
+            readerOpen: Boolean(reader && !reader.hidden), readerKind: reader?.dataset.kind || null,
+            readerChars: reader && !reader.hidden ? reader.textContent.length : 0,
+            dialogOpen: Boolean(dialog?.open), chars: (document.getElementById("method-content")?.textContent || "").length,
+          };
+        });
+        if (backSourceSheet.readerOpen) { await evaluate(cdp, () => document.dispatchEvent(new CustomEvent("atlas:close-detail"))); await sleep(250); }
+        if (backSourceSheet.dialogOpen) { await evaluate(cdp, () => document.getElementById("method-dialog")?.close()); await sleep(250); }
         report.contentTrips = report.contentTrips || [];
-        report.contentTrips.push({ route: name, viewport: `${w}x${h}`, navClick, before, onChart, back });
+        report.contentTrips.push({ route: name, viewport: `${w}x${h}`, navClick, before, onChart, back, backSourceClick, backSourceSheet });
         const where = `trip ${name} ${w}x${h}`;
         const railOwnsNav = before.sidebarRendered === false;
         if (!before.bottomInDoc || before.bottomCount !== 1) fail(where, "content bottom region not owned once on entry: " + JSON.stringify(before));
@@ -775,7 +811,11 @@ const main = async () => {
           fail(where, "rendered dashboard sidebar must own the navigation without a painted rail: " + JSON.stringify(before));
         }
         if (!before.footerInBottom) fail(where, "footer not owned by the content bottom region: " + JSON.stringify(before));
-        if (before.sourceDisabled !== true || !before.sourceReason) fail(where, "source control not disabled with a reason: " + JSON.stringify(before));
+        if (before.sourceReadiness === "ready") {
+          if (before.sourceDisabled === true || before.sourceReason) fail(where, "a prepared price owner left the content source control locked: " + JSON.stringify(before));
+        } else if (before.sourceReadiness === "unset" || before.sourceReadiness === "unavailable") {
+          if (before.sourceDisabled !== true || !before.sourceReason) fail(where, "source control not disabled with a reason: " + JSON.stringify(before));
+        } else fail(where, "unexpected source readiness on entry: " + before.sourceReadiness);
         if (!navClick.ok) fail(where, "chart navigation unreachable from the content rail: " + JSON.stringify(navClick));
         if (onChart.page !== "outlook") fail(where, "navigation did not reach the price chart: " + onChart.page);
         if (onChart.contentRailPresent || onChart.contentBottomPresent) fail(where, "content regions survived the chart return");
@@ -798,7 +838,15 @@ const main = async () => {
         if (!back.footerInBottom) fail(where, "footer ownership not restored");
         if (!back.navHit?.inside) fail(where, "navigation is not hit-testable after the return: " + JSON.stringify(back.navHit));
         if (w <= 1100 && (back.navHit.w < 44 || back.navHit.h < 44)) fail(where, "rail navigation is not a 44px target after the return: " + JSON.stringify(back.navHit));
-        if (back.sourceDisabled !== true || !back.sourceReason) fail(where, "source control state not restored on the content route: " + JSON.stringify(back));
+        if (back.sourceReadiness !== "ready") fail(where, "the price owner did not publish readiness after loading in this document: " + JSON.stringify({ before: before.sourceReadiness, back: back.sourceReadiness }));
+        if (back.sourceDisabled !== false) fail(where, "source control state not restored on the content route: " + JSON.stringify(back));
+        if (back.sourceReason) fail(where, "source control kept a disabled reason after readiness: " + JSON.stringify(back));
+        if (w > 620) {
+          if (!backSourceClick?.ok) fail(where, "the prepared source control is unreachable after the return: " + JSON.stringify(backSourceClick));
+          const shown = (backSourceSheet.readerOpen && backSourceSheet.readerKind === "method" && backSourceSheet.readerChars > 400)
+            || (backSourceSheet.dialogOpen && backSourceSheet.chars > 400);
+          if (!shown) fail(where, "the prepared source sheet did not open with real content: " + JSON.stringify(backSourceSheet));
+        }
       }
     }
 
