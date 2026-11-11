@@ -385,7 +385,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
     }).join('');
     return `<article class="relay-reader">
       <header class="relay-reader-head">
-        <h1>${esc(title)}</h1>
+        <h2>${esc(title)}</h2>
         <div class="relay-reader-byline">
           <span class="relay-reader-avatar" aria-hidden="true">${GLYPH.book}</span>
           <div class="relay-reader-byline-copy">

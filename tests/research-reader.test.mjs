@@ -62,7 +62,8 @@ test('HTML rendering escapes source text in headings, metadata, verdicts and med
   assert.ok(!/<(?:img|script)\b/i.test(markup));
   assert.ok(markup.includes('&lt;img src=x onerror=&quot;alert(1)&quot;&gt;'));
   assert.ok(markup.includes('&amp;'));
-  assert.ok(markup.includes('<h1 id="research-reader-title">'),'the dialog must have its labelled heading');
+  assert.ok(markup.includes('<h2 id="research-reader-title">'),'the dialog must have its labelled section heading');
+  assert.doesNotMatch(markup, /<h1[\s>]/, 'the reader leaves the page H1 to the shell');
   assert.ok(markup.includes('aria-label="연구 글 닫기"'));
 });
 

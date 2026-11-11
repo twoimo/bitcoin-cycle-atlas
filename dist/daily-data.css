@@ -17,7 +17,7 @@
 /* Embedded boards own their action row inside the parent's chart perimeter. */
 body[data-embedded=true] #data-view .daily-heading { position: relative; inset: auto; width: 100%; max-width: none; height: auto; padding: 4px 8px; margin: 0; overflow-x: auto; overflow-y: hidden; background: var(--surface); border-bottom: 1px solid var(--asset-grid); }
 #data-view .daily-heading-title { display: flex; align-items: center; min-width: 0; }
-#data-view .daily-heading h1 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -.35px; line-height: 1.4; white-space: nowrap; }
+#data-view .daily-heading h2 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -.35px; line-height: 1.4; white-space: nowrap; }
 #data-view .daily-board-label { display: none; }
 #data-view .daily-back { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 32px; min-height: 32px; padding: 0; color: var(--asset-muted); background: transparent; border: 1px solid transparent; border-radius: 4px; }
 #data-view .daily-back:hover { color: var(--asset-ink); background: var(--surface-hover); }
@@ -189,7 +189,7 @@ body[data-embedded=true] #data-view .daily-heading { position: relative; inset: 
   #data-view .asset-reason-metrics dd { margin: 0; font-size: 16px; white-space: nowrap; }
 }
 @media (max-width: 380px) {
-  #data-view .daily-heading h1 { font-size: 14px; }
+  #data-view .daily-heading h2 { font-size: 14px; }
   #data-view .daily-heading { gap: 4px; padding-inline: 4px; }
   #data-view .daily-heading-actions { gap: 0; }
 }

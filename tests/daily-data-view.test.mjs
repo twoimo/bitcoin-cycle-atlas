@@ -47,7 +47,8 @@ test('opening the view creates exactly one grouped comparison table with all 20 
   assert.equal((ui.root.innerHTML.match(/<table\b/g) || []).length, 1);
   assert.equal((ui.root.innerHTML.match(/<col\b/g) || []).length, 10);
   assert.match(ui.root.innerHTML, /colspan="3" scope="colgroup"[^>]*>종목명/);
-  assert.match(ui.root.innerHTML, /<h1>자산 비교표/);
+  assert.match(ui.root.innerHTML, /<h2>자산 비교표<\/h2>/);
+  assert.doesNotMatch(ui.root.innerHTML, /<h1[\s>]/, 'the comparison content leaves the page H1 to the shell');
   assert.doesNotMatch(ui.root.innerHTML, /SMA|RSI|사이클 판단표|일별 원자료|cycle-scope/);
   const table = ui.node('data-body').innerHTML;
   assert.deepEqual(symbols(table), COMPARISON_SYMBOLS);

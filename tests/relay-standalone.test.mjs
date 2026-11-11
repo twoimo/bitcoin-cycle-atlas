@@ -80,6 +80,8 @@ test('the article reader interleaves images, joins soft wraps and drops invisibl
   assert.equal(root.querySelector('.relay-article-thumb img').getAttribute('src'),'data/relay/assets/a-1.jpg');
   root.querySelector('[data-article="a"]').dispatchEvent(new window.Event('click',{bubbles:true}));
   const body=root.querySelector('.relay-body');
+  assert.equal(root.querySelector('.relay-reader-head>h2').textContent,data.rooms[0].articles[0].title);
+  assert.equal(root.querySelectorAll('h1').length,0,'the article reader leaves the page H1 to the shell');
   assert.deepEqual([...body.children].map(node=>node.tagName),['P','FIGURE','H2','P','FIGURE','P']);
   assert.equal(body.children[0].textContent,'첫 문단입니다. 둘째 줄입니다.');
   assert.equal(body.querySelectorAll('br').length,0);

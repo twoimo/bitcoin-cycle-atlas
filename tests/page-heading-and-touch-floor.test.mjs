@@ -50,6 +50,9 @@ test('the relay channel list label is a section heading, not a second H1', () =>
 
 test('the page keeps exactly one shell heading owner and its visible titles', () => {
   assert.equal((pageDescription.match(/heading\.id = 'atlas-page-heading'/g) || []).length, 1, 'the shell owns exactly one page heading element');
+  assert.doesNotMatch(html, /<\/?h1[\s>]/, 'static content uses section headings and leaves the sole H1 to the shell');
+  assert.match(html, /<h2 id="outlook-heading">비트코인 통합 차트<\/h2>/);
+  assert.match(html, /<h2 id="chart-heading">[\s\S]*?<\/span><\/h2>/, 'the legacy chart section has a matching closing tag');
   assert.match(html, /공모주 캘린더/, 'the IPO title text is not hidden or deleted');
   assert.match(html, /aria-label="공모주 캘린더"/, 'the IPO region label is preserved');
 });

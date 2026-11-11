@@ -265,20 +265,28 @@ body[data-shell=chart] .shell-feature-panel[data-shell-measuring=true] .shell-fe
   body[data-shell=chart] .shell-feature-panel{left:4px;right:4px;width:auto}
 }
 
-/* Page context uses its own normal-flow block below the unchanged controls.
-   It never occupies the quote/legend plot or a child iframe's toolbar. */
+/* Page context reuses one described heading across chart and content routes.
+   Chart headings paint in existing chrome; only content headers own a row. */
 .atlas-page-intro,.atlas-shell-copy{min-width:0;box-sizing:border-box}
-.atlas-page-intro{display:flex;flex-direction:column;flex:none;gap:2px;width:100%;padding:4px 12px;border-bottom:1px solid var(--border-soft);background:var(--bg);color:var(--text)}
-.atlas-page-intro>.atlas-shell-heading{margin:0;font-size:12px;line-height:16px;letter-spacing:0;white-space:normal}
+.atlas-page-intro{position:fixed;display:block;height:14px;margin:0;padding:0;border:0;background:transparent;color:var(--text);pointer-events:none;z-index:61}
+.atlas-page-intro>.atlas-shell-heading{margin:0;font-size:12px;font-weight:500;line-height:14px;letter-spacing:0;white-space:nowrap;text-align:center}
 .atlas-page-description{margin:0;color:var(--muted);font:11px/14px var(--font);white-space:normal;word-break:normal;overflow-wrap:break-word}
-.atlas-page-intro>.atlas-page-description{color:var(--subtle)}
+.atlas-page-intro>.atlas-page-description{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+/* Keep the symbol's existing horizontal budget and full click target. The H1
+   captions it from a sibling, so controls and their DOM owners stay intact. */
+body[data-shell=chart] .atlas-canvas-heading:has(+ .atlas-page-intro[data-heading-placement=symbol]) .symbol-selector-trigger{box-sizing:border-box;padding-top:14px!important;padding-bottom:0!important}
+@media(min-width:1120px) and (pointer:fine),(min-width:1120px) and (pointer:none){
+  body[data-shell=chart] .atlas-canvas-heading:has(+ .atlas-page-intro[data-heading-placement=symbol]) .symbol-selector-trigger{height:36px;min-height:36px;padding-top:16px!important}
+}
+/* Compare already scrolls its controls horizontally. Its title stays beside
+   that scroll owner, after the original phone return button, in the same row. */
+body[data-page=compare] .atlas-canvas-heading:has(+ .atlas-page-intro[data-heading-placement=compare])>.lab-toolbar{margin-left:76px}
 .atlas-shell-copy{flex:1 1 auto;display:flex;flex-direction:row;align-items:baseline;gap:10px}
 .atlas-dashboard-header .atlas-page-description{flex:0 1 auto;min-width:0;color:var(--subtle);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .atlas-shell-copy>.atlas-shell-heading{position:static;width:auto;height:auto;margin:0;line-height:18px;clip-path:none;overflow:visible}
 .atlas-dashboard-header>.atlas-shell-controls,body[data-shell=dashboard] .atlas-dashboard-header>#market-header-slot.atlas-shell-controls{flex:0 1 auto;max-width:45%;min-width:0}
 body[data-embedded=true] .atlas-page-intro{display:none}
 @media(max-width:640px){
-  .atlas-page-intro{padding-inline:8px}
   .atlas-shell-copy{flex-direction:column;align-items:flex-start;gap:1px}
   .atlas-dashboard-header .atlas-page-description{display:none}
   .atlas-dashboard-header:has(.atlas-shell-controls:not(:empty)) .atlas-shell-copy>.atlas-shell-heading{position:static;width:auto;height:auto;clip-path:none;overflow:visible}
@@ -422,8 +430,3 @@ body[data-shell=dashboard] .workspace{padding-right:44px;padding-bottom:var(--co
 body[data-shell=dashboard] .atlas-sidebar-toggle{display:none}
 /* The chart frame and the content routes never show two copies of a region. */
 body[data-shell=chart] :is(.content-rail,.content-bottom-bar){display:none!important}
-
-/* The chart page owns its full height: the page intro (title + one-line
-   description) stays in the DOM for assistive technology and search, but no
-   longer renders as a layout row above the chart. */
-.atlas-page-intro{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}

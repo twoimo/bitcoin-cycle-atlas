@@ -101,3 +101,71 @@ test('an embedded child leaves page context to its parent and keeps existing con
   assert.equal(f.document.querySelector('[data-page-intro]'), null);
   assert.equal(f.heading.hasAttribute('aria-describedby'), false);
 });
+
+test('the same heading follows symbol and compare chrome without changing either control owner', () => {
+  const f = fixture();
+  try {
+    const {document, controller, heading, header} = f;
+    const toolbar = document.querySelector('.atlas-canvas-heading');
+    const symbol = document.getElementById('symbol');
+    symbol.classList.add('symbol-selector-trigger');
+    symbol.getBoundingClientRect = () => ({left:56, top:1, width:128, height:36});
+    toolbar.getBoundingClientRect = () => ({left:52, top:0, right:1440, width:1388, height:38});
+    const before = toolbar.outerHTML;
+    controller.sync();
+    const copy = heading.parentElement;
+    assert.equal(copy.dataset.headingPlacement, 'symbol');
+    assert.deepEqual([copy.style.left, copy.style.top, copy.style.width], ['60px','3px','120px']);
+    assert.equal(toolbar.outerHTML, before);
+    assert.equal(toolbar.nextElementSibling === copy, true);
+    const compare = document.createElement('div');
+    compare.className = 'lab-toolbar';
+    compare.getBoundingClientRect = () => ({left:132, top:0, width:1256, height:38});
+    toolbar.append(compare);
+    document.body.dataset.page = 'compare';
+    const compareBefore = toolbar.outerHTML;
+    controller.sync();
+    assert.equal(copy.dataset.headingPlacement, 'compare');
+    assert.deepEqual([copy.style.left, copy.style.top, copy.style.width], ['56px','12px','68px']);
+    assert.equal(toolbar.outerHTML, compareBefore);
+    assert.equal(document.querySelectorAll('h1').length, 1);
+    assert.equal(heading.textContent, '사이클 비교');
+    document.body.dataset.page = 'data';
+    controller.sync();
+    assert.equal(copy.parentElement === header, true);
+    assert.equal(copy.className, 'atlas-shell-copy');
+    assert.equal(copy.hasAttribute('style'), false, 'fixed coordinates cannot leak into the dashboard header');
+    assert.equal(copy.dataset.headingPlacement, undefined);
+  } finally {f.controller.destroy();}
+});
+
+test('late symbol attachment and replacement refresh caption coordinates on the same toolbar', async () => {
+  const f = fixture();
+  try {
+    const {document, window, controller, heading} = f;
+    const toolbar = document.querySelector('.atlas-canvas-heading');
+    const copy = heading.parentElement;
+    const symbol = document.createElement('button');
+    symbol.className = 'symbol-selector-trigger';
+    symbol.getBoundingClientRect = () => ({left:4, top:854, width:88, height:44});
+    toolbar.prepend(symbol);
+    await settle();
+    assert.deepEqual([copy.style.left, copy.style.top, copy.style.width], ['8px','856px','80px']);
+    const next = symbol.cloneNode();
+    next.getBoundingClientRect = () => ({left:56, top:2, width:128, height:44});
+    symbol.replaceWith(next);
+    await settle();
+    assert.deepEqual([copy.style.left, copy.style.top, copy.style.width], ['60px','4px','120px']);
+    next.getBoundingClientRect = () => ({left:-24, top:2, width:128, height:44});
+    toolbar.getBoundingClientRect = () => ({left:52, top:0, right:768, width:716, height:48});
+    document.dispatchEvent(new window.Event('scroll'));
+    assert.equal(copy.style.clipPath, 'inset(0 0px 0 72px)', 'caption must not paint over the left rail when its owner scrolls away');
+    let cancelled = null;
+    window.requestAnimationFrame = () => 19;
+    window.cancelAnimationFrame = id => { cancelled = id; };
+    window.dispatchEvent(new window.Event('resize'));
+    controller.destroy();
+    assert.equal(cancelled, 19);
+    assert.equal(document.querySelector('#atlas-page-heading'), null);
+  } finally {f.controller.destroy();}
+});

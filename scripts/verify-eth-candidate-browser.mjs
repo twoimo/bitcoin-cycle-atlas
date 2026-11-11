@@ -230,7 +230,7 @@ async function dataCase(cdp,width,receipt){
       // same node to the phone icon rail, so either host may own it.
       activeData:(document.querySelector('.atlas-sidebar [data-atlas-page="data"]')
         ||document.querySelector('.content-rail [data-atlas-page="data"]'))?.getAttribute('aria-current'),
-      legacy:[read(document.querySelector('.daily-heading .daily-back')),read(document.querySelector('.daily-heading h1'))]};
+      legacy:[read(document.querySelector('.daily-heading .daily-back')),read(document.querySelector('.daily-heading-title > h2'))]};
     return {width:innerWidth,scrollWidth:document.documentElement.scrollWidth,
       symbols:rows.map(r=>r.dataset.assetSymbol),btcName:rows[0].querySelector('.asset-name-label').textContent,judgments:rows.map(r=>r.querySelector('.asset-judgment')?.textContent),controls,navigation,headingHeight:document.querySelector('.daily-heading').getBoundingClientRect().height,headingBackground:getComputedStyle(document.querySelector('.daily-heading')).backgroundColor,
       bodyBackground:getComputedStyle(rows[0].querySelector('.asset-name')).backgroundColor,

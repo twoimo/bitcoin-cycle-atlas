@@ -399,7 +399,7 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border);
 }
-.research-article-heading > :is(.research-tags,h1,.research-deck) {
+.research-article-heading > :is(.research-tags,#research-reader-title,.research-deck) {
   grid-column: 1 / -1;
 }
 .research-tags {
@@ -419,7 +419,7 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   padding-right: 0;
   border-right: 0;
 }
-.research-article h1 {
+.research-article #research-reader-title {
   margin-bottom: 12px;
   font-size: 24px;
   line-height: 1.4;
@@ -872,7 +872,7 @@ body #ipo-view .ipo-table-shell {
   .research-meta a {
     margin-left: auto;
   }
-  .research-article h1 {
+  .research-article #research-reader-title {
     font-size: 22px;
     letter-spacing: normal;
   }
