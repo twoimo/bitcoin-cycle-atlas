@@ -137,7 +137,7 @@ export async function verifyEmbeddedDataSurface(api){
   const initialPage=await evaluate(cdp,readParent);
   assert.equal(initialPage.page,'outlook');assert.equal(initialPage.center,null);
   evidence.navigation=await evaluate(cdp,()=>[...document.querySelectorAll('.atlas-nav [data-atlas-page]')].map(item=>({id:item.dataset.atlasPage,label:item.getAttribute('aria-label'),href:item.getAttribute('href')})));
-  assert.deepEqual(evidence.navigation.map(item=>item.id),['outlook','market-us','evidence','data','ipo','relay'],'The sidebar must retain the five existing destinations followed by relay, with one price-chart destination');
+  assert.deepEqual(evidence.navigation.map(item=>item.id),['outlook','market-us','evidence','data','ipo','relay','conference'],'The sidebar must retain every existing destination followed by conference, with one price-chart destination');
   assert.equal(evidence.navigation.find(item=>item.id==='market-us').label,'시장 분석');
   assert.equal(evidence.navigation.find(item=>item.id==='outlook').label,'가격 차트');
   for(const [id,path] of [['market-us','/market-lab/']]){

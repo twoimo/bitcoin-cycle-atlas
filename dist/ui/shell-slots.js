@@ -6,7 +6,7 @@ export const SHELL_SLOT_KEYS = Object.freeze({
   top: ['symbol', 'interval', 'chart-type', 'indicators', 'instrument', 'history', 'workspace', 'chart-menu', 'export', 'settings'],
   bottom: ['range', 'date', 'events', 'readout', 'scale', 'auto-scale', 'fit', 'status'],
   left: ['crosshair', 'pan', 'measure', 'magnet', 'clear', 'zoom-in', 'zoom-out', 'pan-left', 'pan-right', 'reset', 'annotations'],
-  right: ['outlook', 'market-us', 'evidence', 'data', 'ipo', 'relay', 'selection', 'layers', 'method', 'records', 'help'],
+  right: ['outlook', 'market-us', 'evidence', 'data', 'ipo', 'relay', 'conference', 'selection', 'layers', 'method', 'records', 'help'],
 });
 
 const instances = new WeakMap();
@@ -121,13 +121,15 @@ export function refreshShellSlots(document, {symbol} = {}) {
     set(rail, 'aria-label', `${currentSymbol} 차트 정보와 자료`);
     const navigation = rail.querySelector('.atlas-nav');
     const links = navigation ? [...navigation.querySelectorAll('[data-atlas-page]')] : [];
-    // Service navigation has six entries maintained by atlas-navigation.js.
+    // Service navigation precedes chart details; derive the boundary so adding
+    // a destination cannot give it the first detail control's slot identity.
+    const serviceSlots = SHELL_SLOT_KEYS.right.indexOf('selection');
     links.forEach((node, index) => slot(node, 'right', index));
     const details = rail.querySelector('.workbench-detail-tools');
     const detailControls = details ? ['[data-reader="selection"]','[data-reader="layers"]','[data-reader="math"]','[data-reader="events"],#workbench-next-turn'].map(selector => details.querySelector(selector)) : [];
-    detailControls.forEach((node, index) => slot(node, 'right', index + 6));
+    detailControls.forEach((node, index) => slot(node, 'right', index + serviceSlots));
     if (details) ordered(details, detailControls);
-    slot(rail.querySelector('.workbench-help'), 'right', 10);
+    slot(rail.querySelector('.workbench-help'), 'right', SHELL_SLOT_KEYS.right.length - 1);
   }
   const workbench = $('.atlas-workbench,.native-chart-workbench');
   if (workbench) set(workbench, 'aria-label', `${currentSymbol} 가격 차트`);

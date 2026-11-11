@@ -5,7 +5,7 @@
 // the service navigation moves into a right icon rail instead of disappearing.
 // Nothing is cloned, so ids, listeners, dialogs and data owners stay with their
 // original element, and the chart frame keeps its own regions.
-export const CONTENT_SHELL_PAGES = Object.freeze(['evidence', 'data', 'ipo', 'relay', 'market']);
+export const CONTENT_SHELL_PAGES = Object.freeze(['evidence', 'data', 'ipo', 'relay', 'market', 'conference']);
 
 // The source sheet is rendered from the price dataset, which these routes do
 // not load. The control keeps its node and its listener; while the price owner

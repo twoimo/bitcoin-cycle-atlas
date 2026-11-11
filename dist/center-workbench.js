@@ -135,7 +135,7 @@ export function mountCenterWorkbench() {
   navigationObserver.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['disabled']});
   const closeTray=()=>document.querySelector('.mobile-workbench-button[aria-expanded="true"]')?.click();
   const navigateMessage=()=>({kind:'atlas:center-navigate',page:activePage.id,symbol:activeSymbol,epoch,...(activeRegion?{region:activeRegion}:{}),...(activeIntentSerial?{intentSerial:activeIntentSerial}:{})});
-  const centerHref=(page,symbol,region)=>page.tab?atlasSitePath(atlasPageHref(page,{symbol,region})):`${home}?page=outlook&center=${page.id}`;
+  const centerHref=(page,symbol,region)=>page.tab||page.id==='conference'?atlasSitePath(atlasPageHref(page,{symbol,region})):`${home}?page=outlook&center=${page.id}`;
   function syncPriceLink(){
     const href=lastChart?atlasSitePath(atlasPageHref('outlook',{symbol:lastChart.symbol})):originalUrl||atlasSitePath(atlasPageHref('outlook',{symbol:originalSymbol}));
     for(const item of document.querySelectorAll('a[data-atlas-page=outlook]'))item.href=href;
@@ -196,7 +196,9 @@ export function mountCenterWorkbench() {
     // mounted plot can also belong to a hidden outlook view. Navigate to the
     // shared shell instead of waiting for, or opening inside, an unavailable host.
     const outerView=document.body.dataset.page||new URLSearchParams(location.search).get('page');
-    if(['compare','evidence','data','ipo','market'].includes(outerView)) {
+    // Conference owns its media lifetime and full content viewport. Keeping it
+    // in a cached chart iframe would leave audio alive when that frame hides.
+    if(page.id==='conference'||['compare','evidence','data','ipo','market','conference'].includes(outerView)) {
       const url=centerHref(page,symbol,region);
       if(history)location.assign(url);else location.replace(url);
       return;

@@ -63,7 +63,7 @@ export async function verifyNativeChartWorkbench(api) {
   }));
   assert.deepEqual([record.shell.shell,record.shell.page,record.shell.centerTool],['chart','outlook',null]);
   assert.deepEqual([record.shell.headings,record.shell.left,record.shell.right,record.shell.bottom],[1,1,1,1],'The native symbol must retain one owner for each shared perimeter');
-  assert.deepEqual(record.shell.nav,['outlook','market-us','evidence','data','ipo','relay']);
+  assert.deepEqual(record.shell.nav,['outlook','market-us','evidence','data','ipo','relay','conference']);
   assert.deepEqual(record.shell.staleBtc,[]);assert.equal(record.shell.legacyVisible,false);
   assert.deepEqual(record.shell.intervalOptions,eth?['1m','5m','15m','30m','1h','4h','daily','weekly']:['daily','weekly']);
   assert.ok(Math.max(record.shell.rootWidth,record.shell.bodyWidth)<=width+1,'Native perimeter causes page overflow');

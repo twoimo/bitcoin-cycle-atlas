@@ -148,6 +148,7 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
   <link rel="stylesheet" href="./editorial-panels.css?v=1.35.0">
   <link rel="stylesheet" href="./editorial-ledgers.css?v=1.35.0">
   <link rel="stylesheet" href="./relay-room.css?v=1.37.8">
+  <link rel="stylesheet" href="./conference/player.css?v=1.0.0">
   <link rel="stylesheet" href="./ui/chart-legend.css?v=1.36.1">
   <link rel="stylesheet" href="./ui/quote-hud.css?v=1.36.1">
 </head>
@@ -245,6 +246,7 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
       <button data-view="ipo" title="공모주 캘린더"><span data-icon="calendar"></span><span>공모주 캘린더</span></button>
       <button data-view="market" title="세 축 연구실 · 엑박·삼플레·RSI"><span data-icon="chart"></span><span>세 축 연구실</span></button>
       <button data-view="relay" title="릴레이 콘텐츠 · 텔레그램·인생의 방·모바일한경"><span data-icon="relay"></span><span>릴레이 콘텐츠</span></button>
+      <button data-view="conference" title="컨퍼런스 복습"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4h18v13H3zM8 21l4-4 4 4M10 7l5 3-5 3V7Z"/></svg><span>컨퍼런스 복습</span></button>
     </nav>
     <div id="market-header-slot" hidden></div>
     <div class="atlas-side-foot"><strong>실제 가격과 미래 예시</strong><br><span id="sidebar-asof">관측: 2026.10.20 UTC</span><br><span id="sidebar-reference">계산 기준: 2026.10.22</span></div>
@@ -384,6 +386,7 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
       <section id="data-view" hidden aria-label="자산 비교표"><p role="status">자산 비교표를 준비하고 있습니다.</p></section>
       <section id="market-view" class="market-lab" aria-label="세 축 연구실" hidden><p role="status">연구 자료를 준비하고 있습니다.</p></section>
       <section id="relay-view" class="relay-room" aria-label="릴레이 콘텐츠" hidden></section>
+      <section id="conference-view" aria-label="컨퍼런스 복습 플레이어" hidden></section>
       <section id="ipo-view" aria-label="공모주 캘린더" hidden>
         <header class="ipo-heading">
           <div class="ipo-heading-title"><button class="ipo-back" type="button" data-view="outlook" aria-label="통합 차트로 돌아가기">←</button><h2>공모주 캘린더</h2></div>

@@ -7,6 +7,7 @@ export const ATLAS_PAGE_DESCRIPTIONS = Object.freeze({
   data: Object.freeze({id:'data', title:'자산 비교', description:'자산별 가격 변화와 판단을 한 표에서 비교합니다. 기준: 자산별 관측일.'}),
   ipo: Object.freeze({id:'ipo', title:'공모주', description:'수요예측·청약·상장 일정을 달력으로 봅니다. 기준: 한국 날짜.'}),
   relay: Object.freeze({id:'relay', title:'릴레이 콘텐츠', description:'수집한 글과 기사를 원문 시각 순으로 봅니다. 기준: 원문·수집 시각.'}),
+  conference: Object.freeze({id:'conference', title:'컨퍼런스 복습', description:'장표와 녹음 자막을 함께 봅니다. 기준: 행사 시작부터 경과한 시각 · 선택한 덱.'}),
   compare: Object.freeze({id:'compare', title:'사이클 비교', description:'반감일 이후 경과일을 기준으로 과거 사이클과 현재 사이클을 겹쳐 비교합니다. 기준: 일별 종가(UTC).'}),
 });
 

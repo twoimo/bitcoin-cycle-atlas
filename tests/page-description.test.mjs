@@ -15,8 +15,8 @@ function fixture({page='outlook', center, embedded=false, toolbar=true} = {}) {
   return {document, window, header, heading, controller};
 }
 
-test('the six destinations and saved comparison page describe their actual basis without a shared refresh promise', () => {
-  assert.deepEqual(atlasNavigationPages.map(page => atlasPageDescription(page).title), ['가격 차트','시장 분석','리서치','자산 비교','공모주','릴레이 콘텐츠']);
+test('the registered destinations and saved comparison page describe their actual basis without a shared refresh promise', () => {
+  assert.deepEqual(atlasNavigationPages.map(page => atlasPageDescription(page).title), ['가격 차트','시장 분석','리서치','자산 비교','공모주','릴레이 콘텐츠','컨퍼런스 복습']);
   for (const page of [...atlasNavigationPages, {id:'compare'}]) {
     const info = atlasPageDescription(page);
     assert.ok(info.description.length > 15);
@@ -38,7 +38,7 @@ test('one described h1 follows chart and dashboard destinations while original c
     const description = document.getElementById(heading.getAttribute('aria-describedby'));
     let clicks = 0;
     controls[0].addEventListener('click', () => clicks++);
-    for (const page of ['outlook','market-us','rsi','evidence','data','ipo','relay','housing']) {
+    for (const page of ['outlook','market-us','rsi','evidence','data','ipo','relay','housing','conference']) {
       document.body.dataset.centerTool = page;
       controller.sync();
       assert.equal(heading.textContent, atlasPageDescription(page).title);

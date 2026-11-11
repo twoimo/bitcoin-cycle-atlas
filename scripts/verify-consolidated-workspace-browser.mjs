@@ -589,7 +589,7 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     (evidence.observationGeometry??=[]).push({symbol,...result.observation});
     assertConsolidatedObservationGeometry(result.observation,symbol,unit);
     if(observationDisclosure)await pointer(cdp,'[data-shell-feature-close]');
-    assert.deepEqual(result.nav,['outlook','market-us','evidence','data','ipo','relay'],symbol+': one price destination');
+    assert.deepEqual(result.nav,['outlook','market-us','evidence','data','ipo','relay','conference'],symbol+': one price destination');
     assert.deepEqual(result.active,['outlook'],symbol+': price destination owns all charts');
     assert.ok(result.range.includes(symbol+' / '+unit+' /'),symbol+': original price unit');
     assert.deepEqual(result.frequencies,frequencies,symbol+': only observed source frequencies');

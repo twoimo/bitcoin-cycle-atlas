@@ -15,6 +15,7 @@ import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29
 // leave a new long-horizon page running the old three-year workbench.
 import { initDailyDataView } from './daily-data-view.js?v=1.32.1';
 import { initRelayRoomView } from './relay-room.js?v=1.37.8';
+import { createConferenceRoute } from './conference/route.js?v=1.0.0';
 import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.32.1';
 import { initIpoView } from './ipo-view.js?v=1.32.1';
 import { initMarketLabView } from './market-lab-view.js?v=1.31.3';
@@ -111,7 +112,7 @@ function persistUrl() {
 document.documentElement.dataset.theme = 'dark';
 let initialPageRendered = false;
 function finishInitialPage() {
-  if (document.documentElement.dataset.boot !== 'loading' || (!state.dataset && !['data','ipo','market','relay'].includes(state.view)) || !initialPageRendered) return;
+  if (document.documentElement.dataset.boot !== 'loading' || (!state.dataset && !['data','ipo','market','relay','conference'].includes(state.view)) || !initialPageRendered) return;
   document.removeEventListener('atlas:page-ready', onInitialPageReady);
   document.dispatchEvent(new CustomEvent('atlas:ready'));
 }
@@ -143,6 +144,11 @@ function ensureEvidence() {
   }).catch(error => { evidencePromise = null; console.error('Evidence initialization failed', error); if (state.view === 'evidence') document.dispatchEvent(new CustomEvent('atlas:boot-error')); });
   return evidencePromise;
 }
+const conferenceController = createConferenceRoute({
+  host: $('#conference-view'), timelineUrl: atlasResourcePath('conference/timeline.json'),
+  onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', {detail:{page:'conference'}})),
+  onError: error => { console.error('Conference initialization failed', error); document.dispatchEvent(new CustomEvent('atlas:boot-error')); },
+});
 const ipoController = initIpoView({
   root: $('#ipo-view'),
   now: () => new Date(),
@@ -180,10 +186,10 @@ const compareShell = createCompareShellHost({ document });
 function hostCompareCenter(active) { compareShell.setActive(active); }
 function syncPage() {
   document.body.dataset.page=state.view; if(state.view!=='market'){const slot=document.getElementById('market-header-slot'); if(slot){slot.hidden=true; slot.replaceChildren();}}
-  btcRefreshStatus.update({page:['ipo','market'].includes(state.view)?'data':state.view});
-  document.title = state.view === 'compare' ? '사이클 비교 · Bitcoin Cycle Atlas' : state.view === 'market' ? '세 축 연구실 · Bitcoin Cycle Atlas' : state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : state.view === 'ipo' ? '공모주 캘린더 · Bitcoin Cycle Atlas' : state.view === 'relay' ? '릴레이 콘텐츠 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
+  btcRefreshStatus.update({page:['ipo','market','conference'].includes(state.view)?'data':state.view});
+  document.title = state.view === 'compare' ? '사이클 비교 · Bitcoin Cycle Atlas' : state.view === 'market' ? '세 축 연구실 · Bitcoin Cycle Atlas' : state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : state.view === 'ipo' ? '공모주 캘린더 · Bitcoin Cycle Atlas' : state.view === 'relay' ? '릴레이 콘텐츠 · Bitcoin Cycle Atlas' : state.view === 'conference' ? '컨퍼런스 복습 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
   const compareFrame = state.view === 'compare' && document.body.dataset.embedded !== 'true';
-  for (const view of ['outlook','compare','evidence','data','ipo','market','relay']) document.querySelector(`#${view}-view`).hidden = view === 'outlook' ? state.view !== 'outlook' && !compareFrame : state.view !== view;
+  for (const view of ['outlook','compare','evidence','data','ipo','market','relay','conference']) document.querySelector(`#${view}-view`).hidden = view === 'outlook' ? state.view !== 'outlook' && !compareFrame : state.view !== view;
   hostCompareCenter(compareFrame);
   $$('[data-view]').forEach(n=>{const active=n.dataset.view===state.view;n.classList.toggle('active',active);if(active)n.setAttribute('aria-current','page');else n.removeAttribute('aria-current');});
   evidenceModule?.showEvidenceView(state.view==='evidence');
@@ -194,6 +200,7 @@ function syncPage() {
   if (state.view === 'ipo') void ipoController.render();
   if (state.view === 'market') void marketController.render();
   if (state.view === 'relay') relayController?.show(true);
+  void conferenceController.setActive(state.view === 'conference');
 }
 syncPage();
 if (state.view === 'data') renderData();
@@ -223,7 +230,7 @@ window.addEventListener('popstate', () => {
   state.peakThreshold = next.peakThreshold;
   state.forecastView = next.forecastView;
   state.forecastScenario = next.forecastScenario;
-  if (!['data','ipo','market','relay'].includes(state.view)) void ensureDataset();
+  if (!['data','ipo','market','relay','conference'].includes(state.view)) void ensureDataset();
   syncPage();
   if (state.view === 'compare') requestAnimationFrame(() => render());
   else if (state.view === 'data') renderData();
@@ -478,7 +485,7 @@ function renderData() {
 }
 $$('[data-view]').forEach(b => b.addEventListener('click', () => {
   state.view = b.dataset.view;
-  if (!['data','ipo','market','relay'].includes(state.view)) void ensureDataset();
+  if (!['data','ipo','market','relay','conference'].includes(state.view)) void ensureDataset();
   syncPage();
   closeExport();
   if(state.view==='compare') requestAnimationFrame(()=>render()); else if(state.view==='data') renderData();
@@ -601,4 +608,4 @@ async function init() {
 // Relay is ready without the price dataset (see finishInitialPage). Requesting
   // it here made a failed dataset fetch a fatal boot error on a page that never
   // shows prices; the history path already skips Relay for the same reason.
-  if (!['data','ipo','market','relay'].includes(state.view)) void ensureDataset();
+  if (!['data','ipo','market','relay','conference'].includes(state.view)) void ensureDataset();

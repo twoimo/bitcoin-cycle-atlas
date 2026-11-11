@@ -2,7 +2,7 @@
 // the same parser, so a Back/Forward restores exactly the fields this
 // controller owns and never the fields another owner keeps (center, unit,
 // viewport, indicators, and anything else it does not write).
-const VIEWS = Object.freeze(['outlook', 'compare', 'evidence', 'data', 'ipo', 'market', 'relay']);
+const VIEWS = Object.freeze(['outlook', 'compare', 'evidence', 'data', 'ipo', 'market', 'relay', 'conference']);
 const MODES = Object.freeze(['halving', 'bottom', 'top', 'breakout']);
 const HORIZONS = Object.freeze(['365', '730', '1461', 'current', 'all']);
 const BASELINES = Object.freeze(['previous', 'recent2', 'all3']);

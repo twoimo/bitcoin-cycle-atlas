@@ -13,6 +13,8 @@
     "verify:asset-comparison": "node scripts/refresh-asset-comparison.mjs --check && node scripts/verify-asset-comparison.mjs",
     "verify:cycle-table": "node scripts/verify-cycle-decision.mjs && node scripts/verify-cycle-table-integration.mjs",
     "verify:static": "node scripts/verify-static.mjs",
+    "verify:conference": "node scripts/verify-conference-timeline.mjs",
+    "verify:conference:browser": "node scripts/verify-conference-browser.mjs",
     "refresh:cycle": "node scripts/refresh-cycle-calibration.mjs",
     "refresh:eth": "node scripts/refresh-eth.mjs",
     "refresh:equities": "node scripts/refresh-equities.mjs",

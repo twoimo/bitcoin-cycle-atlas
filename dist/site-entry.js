@@ -16,7 +16,8 @@ if (chartEntry) {
   initPerformanceDiagnostics();
   mountJournalEntry();
   const requested = new URLSearchParams(location.search).get('symbol')?.toUpperCase();
-  const symbol = ['ETHUSD','MSTR','BMNR'].includes(requested) ? requested : 'BTCUSD';
+  const conference = new URLSearchParams(location.search).get('page') === 'conference';
+  const symbol = !conference && ['ETHUSD','MSTR','BMNR'].includes(requested) ? requested : 'BTCUSD';
   document.documentElement.dataset.symbol = symbol;
   const bootSymbol = document.querySelector('.atlas-boot-symbol');
   if (bootSymbol) bootSymbol.textContent = symbol;

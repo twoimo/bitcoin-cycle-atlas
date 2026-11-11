@@ -40,6 +40,7 @@ const routes = [
   ['data', 'index.html?page=data', 'page'],
   ['ipo', 'index.html?page=ipo', 'page'],
   ['relay', 'index.html?page=relay', 'page'],
+  ['conference', 'index.html?page=conference&t=3725&deck=r17-257', 'page'],
   ['compare+legacy', 'index.html?page=compare&legacy=1&compare-unit=rebased', 'compare'],
   ['compare+bare', 'index.html?page=compare', 'compare'],
   ['compare+legacy-unit-alias', 'index.html?page=compare&legacy=1&unit=indexed', 'compare'],
@@ -126,6 +127,7 @@ const readState = () => {
       bottom: exists('.workbench-bottom-bar'), pageHeading: exists('#atlas-page-heading'),
     },
     headings, duplicates,
+    conference: { state: document.querySelector('#conference-view .conference-player')?.dataset.state || null },
     compare: {
       exists: Boolean(compare), visible: compare ? painted(compare) : false, hidden: compare ? Boolean(compare.hidden) : null,
       parent: compare?.parentElement ? (compare.parentElement.id || compare.parentElement.className || compare.parentElement.tagName) : null,
@@ -200,10 +202,18 @@ const main = async () => {
     // Verified before the first emulation: the phone-to-1920 journey must fit in
     // the native client, not only in the emulated viewport.
     report.nativeWindowEnvelope = await verifyHeadlessWindowEnvelope(cdp, { width: 1920, height: 1080 });
-    let errors = [];
+    let errors = [], expectedMissingData = [], expectedTimelineUrl = null;
     cdp.on('Runtime.exceptionThrown', p => errors.push('EXC ' + String(p.exceptionDetails?.exception?.description || p.exceptionDetails?.text).slice(0, 200)));
     cdp.on('Runtime.consoleAPICalled', p => { if (p.type === 'error') errors.push('console ' + p.args.map(a => a.value ?? a.description ?? '').join(' ').slice(0, 200)); });
-    cdp.on('Log.entryAdded', p => { if (p.entry.level === 'error') errors.push('log ' + String(p.entry.text).slice(0, 200)); });
+    cdp.on('Log.entryAdded', p => {
+      if (p.entry.level !== 'error') return;
+      // A conference without registered assets deliberately requests its single
+      // timeline and renders an empty state on 404. Retain that exact receipt;
+      // every other failed resource and all runtime/console errors still fail.
+      if (expectedTimelineUrl && p.entry.url === expectedTimelineUrl && p.entry.source === 'network' && /\b404\b/.test(p.entry.text)) {
+        expectedMissingData.push({url:p.entry.url, text:p.entry.text, reason:'conference timeline absent'});
+      } else errors.push('log ' + String(p.entry.text).slice(0, 200));
+    });
 
     const setViewport = (w, h) => cdp.send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 1, mobile: w <= phoneMax });
     const boot = async () => {
@@ -215,7 +225,8 @@ const main = async () => {
       return 'timeout';
     };
     const goto = async (path, w, h) => {
-      await setViewport(w, h); errors = [];
+      await setViewport(w, h); errors = []; expectedMissingData = [];
+      expectedTimelineUrl = new URL(base + path).searchParams.get('page') === 'conference' ? new URL('conference/timeline.json', base).href : null;
       await cdp.send('Page.navigate', { url: base + path });
       const state = await boot();
       await evaluate(cdp, async () => { await document.fonts.ready; await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); });
@@ -348,7 +359,7 @@ const main = async () => {
     for (const item of routes) {
       const bootState = await goto(item.url, 1440, 900);
       const state = await evaluate(cdp, readState);
-      const entry = { route: item.route, url: item.url, ...state, bootState, errors: [...errors] };
+      const entry = { route: item.route, url: item.url, ...state, bootState, errors: [...errors], expectedMissingData:[...expectedMissingData] };
       report.inventory.push(entry);
       const where = 'inventory ' + item.route;
       if (bootState !== 'ready') fail(where, 'boot ' + bootState);
@@ -361,6 +372,7 @@ const main = async () => {
       if (state.headings.length !== 1) fail(where, `visible h1 count ${state.headings.length} (${state.headings.map(h => h.id || h.text).join(' | ')})`);
       if (state.duplicates.length) fail(where, 'duplicate ids: ' + state.duplicates.join(','));
       if (state.overflow > 1) fail(where, `horizontal overflow ${state.overflow}px`);
+      if (expectedMissingData.length && state.conference.state !== 'empty') fail(where, 'missing timeline did not render the conference empty state');
       if (errors.length) fail(where, 'console/runtime errors: ' + errors.slice(0, 2).join(' | '));
       if (item.kind === 'compare') {
         if (!state.compare.visible) fail(where, 'compare view not visible');
@@ -567,12 +579,13 @@ const main = async () => {
       if (errors.length) fail(where, 'console/runtime errors: ' + errors.slice(0, 2).join(' | '));
     }
 
-    // Phase D: the four content routes keep the shell's perimeter at every width.
+    // Phase D: content routes keep the shell's perimeter at every width.
     const contentRoutes = [
       ['evidence', 'index.html?page=evidence'],
       ['data', 'index.html?page=data'],
       ['ipo', 'index.html?page=ipo'],
       ['relay', 'index.html?page=relay'],
+      ['conference', 'index.html?page=conference&t=3725&deck=r17-257'],
     ];
     report.contentWidths = [];
     for (const [name, url] of contentRoutes) {
@@ -617,7 +630,7 @@ const main = async () => {
           route: name, viewport: `${w}x${h}`, klass: w <= phoneMax ? 'phone' : w <= tabletMax ? 'tablet' : 'desktop',
           boot: bootState, regions: state.regions, present: state.present, overflow: state.overflow,
           headings: state.headings.length, duplicates: state.duplicates,
-          ...shellTargets, errors: [...errors],
+          ...shellTargets, errors: [...errors], expectedMissingData:[...expectedMissingData], conference:state.conference,
         };
         report.contentWidths.push(entry);
         const where = `content ${name} ${w}x${h}`;
@@ -631,6 +644,7 @@ const main = async () => {
         if (w > phoneMax && state.regions.bottom !== 'visible') fail(where, 'bottom region ' + state.regions.bottom);
         if (w >= 960 && state.regions.left !== 'visible') fail(where, 'left region ' + state.regions.left);
         if (state.overflow > 1) fail(where, `horizontal overflow ${state.overflow}px`);
+        if (expectedMissingData.length && state.conference.state !== 'empty') fail(where, 'missing timeline did not render the conference empty state');
         if (state.headings.length !== 1) fail(where, 'visible h1 count ' + state.headings.length + ' (' + state.headings.map(h => h.id || h.text).join(' | ') + ')');
         if (state.duplicates.length) fail(where, 'duplicate ids ' + state.duplicates.join(','));
         if (shellTargets.sidebarRendered && !shellTargets.sidebarOwnsNav) fail(where, 'the rendered dashboard sidebar does not own the navigation');
