@@ -24,7 +24,7 @@ test('two explicit Builds retain every original command and all23 gates, repeati
   assert.deepEqual([...new Set([...cloudflareStageGateIds.model,...cloudflareStageGateIds.browser])].sort(),[...requiredCloudflareGateIds].sort());
   assert.deepEqual(cloudflareStageGateIds.model.filter(id=>cloudflareStageGateIds.browser.includes(id)),['runtime-preflight','locked-dependencies']);
   for(const stage of ['model','browser'])for(const gate of cloudflareStageGates(stage))assert.deepEqual(gate,cloudflareBuildGates.find(item=>item.id===gate.id));
-  assert.deepEqual(cloudflareStageGates('model').find(gate=>gate.id==='model-tests'),{id:'model-tests',command:'npm',args:['test','--','--test-concurrency=2'],nice:0});
+  assert.deepEqual(cloudflareStageGates('model').find(gate=>gate.id==='model-tests'),{id:'model-tests',command:'npm',args:['test','--','--test-concurrency=3'],nice:0});
   assert.equal(cloudflareStageGateIds.model.includes('native-browser'),false);assert.equal(cloudflareStageGateIds.browser.includes('model-tests'),false);
   assert.equal(cloudflareStagedPolicy.maximumExecutionMs,19*60*1000);assert.equal(cloudflareStagedPolicy.maximumComponentAgeMs,6*60*60*1000);
   assert.match(cloudflareStagedPlanSha256,/^[a-f0-9]{64}$/);assert.throws(()=>cloudflareStageGates('preflight'));

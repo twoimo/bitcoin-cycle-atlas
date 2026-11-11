@@ -26,9 +26,12 @@ the model component's actual completed-success provider check before launching
 Chrome. Do not rely on an account-wide concurrency or billing-plan assumption
 for this ordering.
 
-The model stage runs 13 gates: its own runtime and locked install, the unchanged
-complete `npm test -- --test-concurrency=2`, and the ten numerical/research/formal/
-replay gates. The browser stage runs 12 gates: its own seven preparation and
+The model stage runs 13 gates: its own runtime and locked install, the complete
+`npm test -- --test-concurrency=3`, and the ten numerical/research/formal/
+replay gates. The concurrency was raised from 2 on 2026-11-11 because the same
+3,373 tests varied between 16.4 and 17.4 minutes and pushed the following formal
+gate past the 19-minute verification budget. The test inventory, assertions and
+every threshold are unchanged. The browser stage runs 12 gates: its own seven preparation and
 service gates, all 53 native browser cases, and the four publication/standalone
 gates. The aggregate contains all 23 original required gate identities, with
 the two stages' original Build UUIDs and duplicated preparation recorded
@@ -184,8 +187,8 @@ log, and public report output is drained before final cleanup or process exit.
 
 After the isolated fast-cadence phase, the model-test command runs at normal
 Linux nice 0 alongside the outer runner and native-browser command. Its wrapper
-verifies the inherited value before and after spawning the unchanged
-`npm test -- --test-concurrency=2` command. The receipt binds the observed values
+verifies the inherited value before and after spawning the complete
+`npm test -- --test-concurrency=3` command (same test inventory as before). The receipt binds the observed values
 and process IDs to the managed command and its raw log; inability to apply or
 verify priority fails the gate. A qualifying receipt requires the unchanged
 100ms cadence to have passed before model launch. Replay tolerances and the

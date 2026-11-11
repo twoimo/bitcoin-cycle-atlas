@@ -39,7 +39,7 @@ export function modelComponentFixture(options={}){
   const value=header('model',options);value.gates=gates('model',value.startedAt);value.completedAt=at(value.gates.at(-1).completedAt,1);
   value.runtime=runtime('model',value.startedAt);
   value.modelPriority={schemaVersion:1,kind:'atlas-cloudflare-command-priority',status:'APPLIED',gateId:'model-tests',requestedNice:0,beforeNice:0,actualNice:0,
-    wrapperPid:102,parentPid:101,parentNice:0,commandPid:103,commandNice:0,command:'npm',args:['test','--','--test-concurrency=2']};
+    wrapperPid:102,parentPid:101,parentNice:0,commandPid:103,commandNice:0,command:'npm',args:['test','--','--test-concurrency=3']};
   value.modelManagedPid=102;value.modelLaunchedAt=at(value.gates.find(gate=>gate.id==='model-tests').startedAt,1);
   value.modelTests={complete:true,tests:3,pass:3,fail:0,skipped:0,batches:1};return value;
 }

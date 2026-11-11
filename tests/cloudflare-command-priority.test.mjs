@@ -65,7 +65,7 @@ test('applied priority cannot turn a signal-terminated model command into succes
 
 test('production priority receipt requires actual0, normal outer priority and the unchanged full model command',()=>{
   const value={schemaVersion:1,kind:'atlas-cloudflare-command-priority',status:'APPLIED',gateId:'model-tests',requestedNice:0,beforeNice:0,actualNice:0,
-    wrapperPid:102,parentPid:101,parentNice:0,commandPid:103,commandNice:0,command:'npm',args:['test','--','--test-concurrency=2']};
+    wrapperPid:102,parentPid:101,parentNice:0,commandPid:103,commandNice:0,command:'npm',args:['test','--','--test-concurrency=3']};
   assert.equal(assertModelPriorityReceipt(value),value);
   for(const patch of [{requestedNice:10},{requestedNice:19},{actualNice:10},{commandNice:10},{parentNice:10},{beforeNice:10},{wrapperPid:0},{command:'node'},
     {args:['test','--','--test-concurrency=1']},{gateId:'native-browser'},{status:'ASSUMED'}])assert.throws(()=>assertModelPriorityReceipt({...value,...patch}));

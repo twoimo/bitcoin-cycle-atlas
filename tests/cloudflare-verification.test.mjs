@@ -21,7 +21,7 @@ const receipt=()=>({schemaVersion:1,kind:'atlas-cloudflare-verification',status:
   gates:requiredCloudflareGateIds.map(id=>({id,status:'PASS',durationMs:1,logSha256:'c'.repeat(64)})),
   executionGroups:cloudflareParallelGroups.map(gateIds=>({gateIds,durationMs:1,startedAt:'2026-11-07T00:00:01.000Z',completedAt:'2026-11-07T00:00:01.001Z',resources:{available:false}})),
   modelPriority:{schemaVersion:1,kind:'atlas-cloudflare-command-priority',status:'APPLIED',gateId:'model-tests',requestedNice:0,beforeNice:0,actualNice:0,
-    wrapperPid:102,parentPid:101,parentNice:0,commandPid:103,commandNice:0,command:'npm',args:['test','--','--test-concurrency=2']},
+    wrapperPid:102,parentPid:101,parentNice:0,commandPid:103,commandNice:0,command:'npm',args:['test','--','--test-concurrency=3']},
   fastCadence:fastCadenceFixture({sourceCommit,sourceTree}).release,modelLaunchedAt:'2026-11-07T00:00:04.000Z',
   browser:{caseCount:cloudflareBrowserCaseCount,scope:'all',sourceCommit,sourceIntegrity:true,reportSha256:'d'.repeat(64),processPriority:{pid:104,nice:0},
     suiteRunId:fastCadenceFixture().context.suiteRunId,sourceInventorySha256:fastCadenceFixture().context.sourceInventorySha256}});
@@ -59,7 +59,7 @@ test('the migrated build retains ordinary model, numerical, formal, PostgreSQL a
   const commands=new Set(cloudflareBuildGates.filter(gate=>gate.command==='npm').map(gate=>gate.args.join(' ')));
   for(const name of ['pages','forecast','research','eth-events','treasury-paths','numerics','formal','cycle','performance','static','chart-replay','publication'])
     assert.ok(commands.has('run verify:'+name),'Missing actual verification command '+name);
-  assert.ok(commands.has('test -- --test-concurrency=2'));
+  assert.ok(commands.has('test -- --test-concurrency=3'));
   assert.deepEqual(cloudflareBuildGates.filter(gate=>gate.nice!==undefined).map(gate=>[gate.id,gate.nice]),[['model-tests',0]]);
   // The cadence sample inside native-browser measures wall-clock replay timing;
   // it now runs alone so CPU-heavy model-tests cannot distort that measurement.
