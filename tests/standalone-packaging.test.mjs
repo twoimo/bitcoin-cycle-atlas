@@ -129,7 +129,13 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   assert.equal(verification.modules, Object.keys(bundle.imports).length);
   assert.equal(verification.snapshots, 10); // Existing nine plus the exact relay source.
   assert.ok(verification.forecastRecords>=5,'all five initial economic scenarios have actual preserved outputs');
-  assert.equal(verification.stylesheets, 40); // Includes the common two-row quote HUD.
+  assert.equal(verification.stylesheets, 41); // Includes the conference player and the common two-row quote HUD.
+  for (const file of ['conference/route.js', 'conference/player.js', 'conference/timeline.js']) {
+    assert.ok(Object.hasOwn(bundle.imports, '@atlas/' + file), file + ' remains in the offline module graph');
+  }
+  const conferenceStyle = `<style>\n${await readFile(resolve(isolated.dist, 'conference/player.css'), 'utf8')}\n</style>`;
+  assert.equal(html.split(conferenceStyle).length - 1, 1, 'conference player styles are preserved exactly once');
+  await assert.rejects(verifyStandaloneArtifact(html.replace(conferenceStyle, ''), isolated.dist), /Missing or changed stylesheet: conference\/player\.css/);
   const monthlyStyle = `<style>\n${await readFile(resolve(root, 'dist/monthly-backtest.css'), 'utf8')}\n</style>`;
   assert.equal(html.split(monthlyStyle).length - 1, 1, 'monthly backtest styles are preserved exactly once');
   assert.match(html,/\.forecast-journal\s*\{/,'the archived forecast workspace retains its offline styles');
