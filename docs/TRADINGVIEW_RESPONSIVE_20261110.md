@@ -264,7 +264,7 @@ headless native client를 emulation 전에 검증하는 helper와 consolidated d
 
 ## 14. 최종 판정 — 2026-11-11 (R8)
 
-이 절이 이 문서의 현재 판정이다. §2의 TradingView 관측, §3의 기준선, §10의 `2d9d99f` 시점 수치, §12·§13의 통합·후속 기록은 각 시점의 영수증이며, 이 절의 판정을 소급해 바꾸지 않는다. 브랜치 `fix/tradingview-responsive-20261110`, 판정 시점 HEAD `11540d62659b207f32111759faa5673738ce6765`.
+이 절이 이 문서의 현재 판정이다. §2의 TradingView 관측, §3의 기준선, §10의 `2d9d99f` 시점 수치, §12·§13의 통합·후속 기록은 각 시점의 영수증이며, 이 절의 판정을 소급해 바꾸지 않는다. 브랜치 `fix/tradingview-responsive-20261110`, 판정 시점 HEAD `bbb1f3e909de43dacb5b2f0f0fbe71e7927bbf3e`, 배포된 제품 소스 `a8276861d200f421bd6a07cad85abfdd03694257`.
 
 ### 14.1 계약별 최종 상태
 
@@ -279,19 +279,19 @@ headless native client를 emulation 전에 검증하는 helper와 consolidated d
 
 ### 14.2 이 판정에 쓰인 로컬 검증 수치
 
-- 제품 바이트: `dist` 트리 `d61e0dbd32072f7436dc552a0a79f0afed880a50`(R4 커밋 `2be7da6`와 동일, R3·R4·R5·R8 동안 불변). 아래 브라우저 결과는 모두 이 바이트에 묶여 있다.
+- 제품 바이트: `dist` 트리 `5457057b0da9de1931c0a582a9bec96fc96d7168`(배포 소스 `a827686`). R3~R8 시점의 `d61e0dbd…` 영수증은 그 시점의 것이고, 2026-11-11 배포 수정(`content-shell`·`center-workbench`)으로 바뀌었다. 아래 R8 수치는 그 당시 바이트, 14.4·14.5는 새 바이트에 묶인다.
 - 53-case 네이티브 브라우저 스위트 **53/53 passed, failures 0**; compare 셸 실브라우저 **PASSED**(실패 0·findings 0, 320x740~1920x1080 9 viewport 전부 `overflow 0`).
 - WP6 여정 **30/30 PASS**(5종목 × 6 viewport, 실패 0, 스크린샷 48장), chart-qa **12/12 PASS**(annotation 0쌍, 축 0쌍, compare 헤딩 small controls 0).
 - 전체 `npm test` `ATLAS_TEST_TOTAL {"complete":true,"tests":3373,"pass":3368,"fail":0,"skipped":5}`(Docker Desktop 기동 후 frozen 배치 포함, 종료 후 원상 복구).
-- `npm run typecheck` 정상, `npm run verify:static` 967 files·214 scripts·992 references, `npm run build:pages`/`verify:pages` 12 files·9 routes.
-- 이 수치는 전부 **로컬 실행**이다. 이 저장소에는 실행되는 GitHub Actions가 없고(`ops/github-actions-archive/`, `ops/ci-migration.json`), Workers Builds는 main만 watch하므로 이 브랜치의 원격 CI 증거는 0건이다. 원격 CI 0건을 '통과'로 읽지 않는다.
+- `npm run typecheck` 정상, `npm run verify:static` 952 files·214 scripts·992 references(main 데이터 병합으로 relay 자산이 줄어든 뒤 값), `npm run build:pages`/`verify:pages` 12 files·9 routes.
+- 이 수치는 전부 **로컬 실행**이다. 이 저장소에는 실행되는 GitHub Actions가 없고(`ops/github-actions-archive/`, `ops/ci-migration.json`), Workers Builds는 main만 watch하므로 이 브랜치의 원격 CI 증거는 0건이다. 2026-11-11 사용자 요청으로 main에 fast-forward·배포했고, provider 빌드와 라이브 readback은 §14.5에 기록했다.
 
 ### 14.3 남은 차단·미검증 (이 문서 범위 밖)
 
 - macOS 외부 AppKit 메뉴, Safari, 실제 iOS/Android 기기: 미검증. Blink 내부 네이티브 select 팝업 입력을 외부 AppKit 메뉴 검증과 동일시하지 않는다.
 - 기준선에서도 동일하게 실패했던 320px 범례 native touch scroll과 1440px native 모델 선택 gate는 2026-11-11 후속 회차에서 실제 입력으로 통과했다(§14.4). 이력은 위 절에 그대로 보존한다.
-- WP-A `mediaPrepared:false`, 직접 청취·동기화 10지점, PDF 547페이지, Linux `renameat2` 원자 게시: 별도 보류.
-- 원격 CI·배포·main 병합: 이 브랜치에서 수행하지 않았고 승인도 없다.
+- WP-A: PDF **290+257=547**과 Linux `renameat2(RENAME_NOREPLACE)` 원자 게시 4케이스는 2026-11-11에 실측·통과했다(`docs/conference/WP_A_AUTOMATED_MEDIA_20261111.md`). `mediaPrepared:false`와 직접 청취·동기화 10지점, 547장 WebP 시각 검수, 배포 패키지 자산 수·Range는 보류다.
+- 원격 CI: 이 브랜치에는 없다. main 병합·배포: 2026-11-11 사용자 요청으로 수행했고 §14.5에 영수증이 있다.
 
 관찰 한계(당시): COMPARE 320/390 헤딩에서 `structure-threshold` 입력과 `structure-json`(46×44)이 스크롤 소유자 안에서 잘린 채 보고됐다. 이후 실측 결과 잘림이 아니라 가로 스크롤이었고(`.lab-toolbar` `scrollWidth 544 > clientWidth 268`, 320에서 `scrollLeft 0→276`, 390에서 `0→346`), `verify-compare-shell-browser.mjs`가 실제 휠 입력으로 도달성을 단언하는 계약으로 바뀌었다.
 
@@ -304,3 +304,13 @@ headless native client를 emulation 전에 검증하는 helper와 consolidated d
 **1440px ETH 모델 선택 — 통과(내부 팝업 모드, 레이아웃 불변).** `selectNativeOptionByKeyboard`가 `adaptive→valuation`(ArrowDown 2회), `valuation→pooled`(ArrowUp 1회), `pooled→adaptive`(ArrowUp 1회)를 실제 키 이벤트로 수행했다. 영수증: `internalPopupMode:true`, `popupMenu {before:'external-appkit', during:'internal', after:'external-appkit'}`, `layoutLocked:true`, `restored:true`, 각 전환의 `observed.value` 일치·포커스 유지, `#eth-chart.dataset.forecastModel`와 `?eth-model=` 쿼리가 함께 갱신됐다(값 대입·합성 이벤트 없음). native 레인 15/15 통과, 실패 0.
 
 한계는 그대로다. 이 키 입력은 **Blink 내부 팝업**에서 실행됐고 macOS 외부 AppKit 메뉴가 아니다(14.3 첫 불릿 유지). 헤드리스 Chrome은 외부 메뉴를 만들 수 없으므로, 데스크톱 실사용 메뉴 검증은 여전히 사람·실기기 몫이다.
+
+### 14.5 배포 — 2026-11-11
+
+사용자 요청으로 main에 fast-forward하고 production 배포를 완료했다. 배포 전 production은 2026-11-09 이후 갱신되지 않고 있었고(라이브 source `36e7db09`), browser stage의 `generated-pages`·`panel-tests`·Linux `eth` 320·모델 stage 19분 예산 초과를 차례로 고쳤다(상세 표는 [출시 체크리스트](LAUNCH_CHECKLIST_20261110.md) `## 배포` 절).
+
+- 배포 소스 `a8276861d200f421bd6a07cad85abfdd03694257`(dist tree `5457057b…`), Worker `bitcoin-cycle-atlas` `deployed_on 2026-11-11T08:33:45Z`
+- model 빌드 `af2fe1c9-2272-4cc4-a184-410045fba689` success(13분 47초, `--test-concurrency=3`), browser 빌드 `91adb41c-939e-4da6-8e47-393fb0024087` success
+- 라이브 `publication.json` manifest `4ee6b95f…`, contentDigest `73d42521…`, `verifyServedPublication` **PASS / phase confirmed**(4개 핵심 파일 본문 해시 일치, servedCommit = servedDigest = `a827686`)
+- `/`, `/?symbol=ETHUSD`, `/?page=data` HTTP 200
+- 이후 main은 자동 `data: relay bundle refresh` `366e988`로 전진했고, 같은 제품 코드에 새 릴레이 데이터를 실어 재배포한다.
