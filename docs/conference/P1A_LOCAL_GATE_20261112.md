@@ -42,3 +42,9 @@ Pro가 `fix/tradingview-responsive-20261110`에 올린 P1a 골격을 드라이�
 3. 실제 덱 좌표·페이지 매핑(P1b), R6 사람 검수, R7 실기기 검증은 이 기록의 범위가 아니다.
 
 이 문서는 P1a 구현의 완료를 선언하지 않는다. Linux 14/14와 macOS 4/14를 분리해 남기고, 어느 쪽도 배포·출시 승인으로 쓰지 않는다.
+
+## 두 macOS 실행의 내비게이션 케이스 불일치
+
+같은 하네스를 다른 회차가 한 번 더 돌린 기록(체크리스트의 P1a 행)은 통과 4건을 `missing-timeline`·`invalid-timeline`·`navigation-lifecycle`·`navigation-ETHUSD`로 적었다. 이 문서의 실행은 같은 4건 중 내비게이션만 `navigation-BTCUSD`가 통과하고 `navigation-ETHUSD`는 `play before leaving conference`로 실패했다.
+
+즉 `navigation-*` 두 케이스는 실행마다 통과/실패가 뒤바뀐다. 어느 한 회차의 통과를 계약으로 쓰지 않고, 덱 선택 하네스가 플랫폼 중립 경로로 바뀐 뒤 두 케이스를 함께 재측정해야 한다. 두 기록 모두 레이아웃 수치(9개 폭·오버플로 0·그려진 h1 1)는 동일하다.
