@@ -95,7 +95,7 @@
 | heading 2행/1행 그리드 | `dist/atlas-shell.css` (L228–335) | ≤390 `grid-template-columns:minmax(80px,1fr) 56px repeat(4,44px)`, `rows 44px 44px`, 총 92px; ≤620 one-row 48px |
 | 종목 기능 disclosure | `dist/ui/mobile-shell-heading.js` | `matchMedia('(max-width:390px)')`, `#atlas-shell-features-toggle` / `#atlas-shell-features-panel`, 원래 노드를 `.shell-feature-actions`로 이동, Escape/포커스 복귀 구현됨 |
 | 하단 footer | `dist/chart-bottom-bar.js` | `footer.workbench-bottom.workbench-bottom-bar` (기간 select, 날짜, 사건, 축, 상태) + `#workbench-bottom-more` popover |
-| 상세 패널 split | `dist/chart-details-panel.css` | `--detail-width:320px` split, 열림 시 `1fr 320px rail` |
+| 상세 패널 split | `dist/chart-details-panel.css` | `--detail-width:320px` split. 960px 이상은 가운데 열을 `minmax(0,1fr) var(--detail-width,320px) var(--rail-width)`로 예약해 차트를 덮지 않고, 959px 이하만 overlay |
 | 상단/좌우 레일·툴바 | `dist/atlas-shell.js`, `dist/atlas-shell.css` | 4면 perimeter, 44/45px rail |
 
 즉 제안 구현은 새 컴포넌트 추가가 아니라 **기존 소유 파일의 브레이크포인트·그리드
@@ -134,6 +134,18 @@
 
 하단 48px 단일 도크를 채택한다. 44px은 버튼·입력의 최소 터치 크기다.
 새 반응형 요청은 과거 390px 2행 배치를 대체하지만, 숫자·포커스·원래 노드·입력 검증 강도는 낮추지 않는다.
+
+### 4.5 측정 폭 허용 오차 (D09)
+
+리더를 열고 닫는 왕복의 폭 비교는 값의 출처가 다르므로 하나의 허용치를 쓰지 않는다.
+
+| 값 | 출처 | 왕복 계약 |
+|---|---|---|
+| `document.scrollWidth`, `body.clientWidth`, `body.scrollWidth` | 정수 레이아웃 폭 | **정확히 일치**해야 한다. 1px만 달라도 문서 리플로나 스크롤바 발생으로 보고 실패시킨다. |
+| `.workspace`, `#main` 폭 | `getBoundingClientRect()`의 소수 폭 | 왕복 반올림 허용 **1px**(`WIDTH_ROUNDING_TOLERANCE_PX`). 허용 범위 안의 차이는 영수증에 `kind:'rounding'`과 delta로 남기고, 1px을 넘으면 `kind:'regression'`으로 실패시킨다. |
+| 리더를 열 때의 차트 열 축소량 | 리더 폭(정수) 대비 소수 열 폭 | `READER_RESERVATION_TOLERANCE_PX=2`. 리더 rect와 열 rect 두 소수 상자를 빼므로 2px까지 허용하고, 그 이상이면 예약 실패다. |
+
+허용치는 상수로 고정했고 `tests/workspace-round-trip-widths.test.mjs`가 값(1·2)과 경계 동작(1.0 통과, 1.01 실패, 정수 키 변화 실패, `null`·숫자 아닌 값 실패, 숫자가 아닌 허용치 전달 실패)을 함께 검사한다. 허용치를 늘리려면 이 표와 그 테스트를 같이 바꿔야 한다. 브라우저 하네스는 `verifyLegacyMethodReader`에서 닫은 뒤 폭을 이 계약으로 비교하고 결과를 `workspace.legacy.methodReader.widthRoundTrips`에 남긴다.
 
 ## 5. 수용기준
 

@@ -546,6 +546,51 @@ function assertChartIdentity(state,base,label){
 }
 
 const readerOverlapArea=(a,b)=>a&&b?Math.max(0,Math.min(a.right,b.right)-Math.max(a.left,b.left))*Math.max(0,Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)):0;
+
+/**
+ * Round-trip width contract for the reader (D09).
+ *
+ * The compared widths do not share a source, so they cannot share one tolerance.
+ * `document.scrollWidth`, `body.clientWidth` and `body.scrollWidth` are integers:
+ * a change means the document reflowed or lost/gained a scrollbar, which is always
+ * a regression and is asserted exactly. `workspace` and `#main` are fractional
+ * layout widths taken from `getBoundingClientRect()`, so restoring the same layout
+ * can round each of them by up to one CSS pixel. A difference of at most
+ * WIDTH_ROUNDING_TOLERANCE_PX is layout rounding and is recorded in the receipt;
+ * anything larger is reported as a regression instead of being absorbed.
+ */
+export const WIDTH_ROUNDING_TOLERANCE_PX=1;
+export const ROUND_TRIP_INTEGER_WIDTHS=Object.freeze(['document','body','bodyScroll']);
+export const ROUND_TRIP_FRACTIONAL_WIDTHS=Object.freeze(['workspace','main']);
+/**
+ * Reserving the reader column moves two fractional boxes (the reader rect used for
+ * the subtraction and the chart column itself), so the reserve is compared with a
+ * two-pixel allowance while the document width stays exact.
+ */
+export const READER_RESERVATION_TOLERANCE_PX=2;
+export function compareRoundTripWidths(after,before,tolerance=WIDTH_ROUNDING_TOLERANCE_PX){
+  // A mis-typed allowance must fail loudly: `Math.abs(delta) > undefined` is false and
+  // would turn every comparison into a pass.
+  if(!Number.isFinite(tolerance)||tolerance<0)throw new TypeError('Round-trip width tolerance must be a non-negative number, received '+String(tolerance));
+  for(const key of ROUND_TRIP_INTEGER_WIDTHS)if(after[key]!==before[key])return{ok:false,kind:'regression',reason:'integer width changed',key,before:before[key],after:after[key],tolerance};
+  let key=null,delta=0;const beyond=[];
+  for(const name of ROUND_TRIP_FRACTIONAL_WIDTHS){
+    const a=after[name],b=before[name];
+    // Only a measured number is a measurement; null, NaN and numeric strings must not
+    // pass as a rounded difference.
+    if(typeof a!=='number'||typeof b!=='number'||!Number.isFinite(a)||!Number.isFinite(b))return{ok:false,kind:'regression',reason:'unmeasurable layout width',key:name,before:b??null,after:a??null,tolerance};
+    const move=Number((a-b).toFixed(4));
+    if(Math.abs(move)>tolerance)beyond.push({key:name,before:b,after:a,delta:move});
+    if(Math.abs(move)>Math.abs(delta)){key=name;delta=move;}
+  }
+  if(beyond.length)return{ok:false,kind:'regression',reason:'layout width moved beyond rounding',key,delta,tolerance,before:before[key],after:after[key],beyond};
+  return{ok:true,kind:delta===0?'exact':'rounding',key,delta,tolerance,before:key===null?null:before[key],after:key===null?null:after[key]};
+}
+export function assertRoundTripWidths(after,before,label){
+  const result=compareRoundTripWidths(after,before);
+  assert.ok(result.ok,label+' is a width regression, not layout rounding: '+JSON.stringify(result));
+  return result;
+}
 function assertReaderOccupancy(state,base,label){
   assert.equal(state.widths.document,base.widths.document,label+' changed the document width');
   assert.ok(state.reader,label+' left no visible reader to measure');
@@ -553,18 +598,18 @@ function assertReaderOccupancy(state,base,label){
   assert.ok(declared==='true'||declared==='false',label+' left the reader without a declared overlay mode');
   if(declared==='true'){
     assert.equal(state.mainInert,true,label+' overlaid the plot without making it inert');
-    assert.ok(Math.abs(state.widths.main-base.widths.main)<=2,label+' reflowed the chart column in overlay mode');
+    assert.ok(Math.abs(state.widths.main-base.widths.main)<=READER_RESERVATION_TOLERANCE_PX,label+' reflowed the chart column in overlay mode');
     return;
   }
   assert.equal(readerOverlapArea(state.reader,state.plot),0,label+' let the split reader cover the chart');
-  assert.ok(Math.abs((base.widths.main-state.widths.main)-state.reader.width)<=2,label+' did not reserve exactly the reader width: '+JSON.stringify({base:base.widths.main,opened:state.widths.main,reader:state.reader.width}));
+  assert.ok(Math.abs((base.widths.main-state.widths.main)-state.reader.width)<=READER_RESERVATION_TOLERANCE_PX,label+' did not reserve exactly the reader width: '+JSON.stringify({base:base.widths.main,opened:state.widths.main,reader:state.reader.width}));
   assert.equal(state.mainInert,false,label+' left the visible chart inert in split mode');
 }
 
 /** Long-document readers must retain native controls and the actual opener. */
 export async function verifyLegacyMethodReader(api){
   const {cdp,receipt,evaluate,until,settled,screenshot}=api;
-  const record={inputs:[],states:[]};receipt.workspace.legacy.methodReader=record;
+  const record={inputs:[],states:[],widthRoundTrips:[]};receipt.workspace.legacy.methodReader=record;
   const complete=t=>t.painted&&!t.disabled&&t.topmost&&t.box.width>0&&t.box.height>0&&
     t.box.left>=t.clip.left-1&&t.box.right<=t.clip.right+1&&t.box.top>=t.clip.top-1&&t.box.bottom<=t.clip.bottom+1;
   const pointer=async selector=>{
@@ -655,7 +700,7 @@ export async function verifyLegacyMethodReader(api){
     await until(()=>evaluate(cdp,()=>document.querySelector('#chart-reader').hidden&&document.activeElement===document.querySelector('#export-button')),'legacy reader returns focus to its visible menu trigger');
     const closed=await evaluate(cdp,readState),returned=await evaluate(cdp,readNativeInteractiveTarget,'#export-button');
     assert.ok(complete(returned),'Reader returned focus to an unreachable trigger');
-    assert.ok(Math.abs(closed.scrollTop-before.scrollTop)<=1,'Closing reader moved the long document');assert.deepEqual(closed.widths,before.widths,'Closing reader changed document or chart workspace width');assert.equal(closed.reader,null,'Closing reader left the reader visible');assert.equal(closed.mainInert,false,'Closing reader left the chart inert');assert.equal(closed.pathHash,before.pathHash,'Reader pagination/close changed chart paths');
+    assert.ok(Math.abs(closed.scrollTop-before.scrollTop)<=1,'Closing reader moved the long document');const widthTrip=assertRoundTripWidths(closed.widths,before.widths,'Closing the reader');record.widthRoundTrips.push({...widthTrip,action,before:before.widths,after:closed.widths});assert.equal(closed.reader,null,'Closing reader left the reader visible');assert.equal(closed.mainInert,false,'Closing reader left the chart inert');assert.equal(closed.pathHash,before.pathHash,'Reader pagination/close changed chart paths');
     record.states.push({action,opened,initialPage,nextPage,close,next,closed,returned});
   }
 }
