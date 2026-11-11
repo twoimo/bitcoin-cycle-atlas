@@ -643,14 +643,19 @@ async function verifyCompactReadout(cdp,width,receipt,kind){
   assert.ok(!value.hit.insideReadout,'A readout band covers the chart at '+width+': '+JSON.stringify(value.hit));
   assert.ok(value.pageWidth<=width+1,'Readout created horizontal overflow: '+kind);
   const selector=kind==='eth'?'#eth-ohlc-details > summary':'#equity-ohlc-details > summary',details=kind==='eth'?'#eth-ohlc-details':'#equity-ohlc-details';
-  await click(cdp,selector);
-  const opened=await evaluate(cdp,([k,d])=>{const det=document.querySelector(d),o=document.querySelector(k==='eth'?'#eth-ohlc':'#equity-ohlc');return{open:det.open,painted:Boolean(o.checkVisibility?.()),text:o.textContent.replace(/\s+/g,' ').trim()};},[kind,details]);
-  assert.equal(opened.open,true,'OHLC disclosure did not open: '+kind);
-  assert.equal(opened.painted,true,'OHLC values are not painted: '+kind);
-  for(const label of ['O','H','L','C'])assert.ok(opened.text.includes(label),'OHLC lost '+label+': '+opened.text);
-  await click(cdp,selector);
-  assert.equal(await evaluate(cdp,d=>document.querySelector(d).open,details),false,'OHLC did not collapse: '+kind);
-  receipt.readout={kind,...value,expanded:opened};
+  // The cadence lane measures 100ms replay frames beside this lane, so the two
+  // trusted clicks run at the representative phone and desktop widths only.
+  let expanded=null;
+  if(width===320||width===1440){
+    await click(cdp,selector);
+    expanded=await evaluate(cdp,([k,d])=>{const det=document.querySelector(d),o=document.querySelector(k==='eth'?'#eth-ohlc':'#equity-ohlc');return{open:det.open,painted:Boolean(o.checkVisibility?.()),text:o.textContent.replace(/\s+/g,' ').trim()};},[kind,details]);
+    assert.equal(expanded.open,true,'OHLC disclosure did not open: '+kind);
+    assert.equal(expanded.painted,true,'OHLC values are not painted: '+kind);
+    for(const label of ['O','H','L','C'])assert.ok(expanded.text.includes(label),'OHLC lost '+label+': '+expanded.text);
+    await click(cdp,selector);
+    assert.equal(await evaluate(cdp,d=>document.querySelector(d).open,details),false,'OHLC did not collapse: '+kind);
+  }
+  receipt.readout={kind,...value,expanded};
 }
 
 async function ethCase(cdp,width,receipt,expected,archive){
@@ -684,7 +689,6 @@ async function ethCase(cdp,width,receipt,expected,archive){
   assert.ok(legend.observedEntry.title.includes('실시간 현재가 표시는 아닙니다'),'Common ETH observed legend must not imply a live quote');
   for(const text of ['실제 가격','모형 중앙값','모형 예시 1개','음영: 모의 10–90%'])assert.ok((legend.expandedText||legend.text).includes(text),'Common ETH legend lost meaning '+text);
   dark(chart.background,'ETH plot');
-  await verifyCompactReadout(cdp,width,receipt,'eth');
   await screenshot(cdp,'eth-'+width+'-loaded.png',receipt);
   if(width===320)receipt.infoDataLinks=await verifyInfoDataLinks(cdp,'ETHUSD');
   await nativeForecast(cdp,'[data-eth-action="forecast"]');
@@ -738,6 +742,7 @@ async function ethCase(cdp,width,receipt,expected,archive){
   }
   await journalCase(cdp,width,receipt,'ETHUSD',archive);
   assert.equal((await bounds(cdp,'#eth-data-dialog')).open,false);
+  await verifyCompactReadout(cdp,width,receipt,'eth');
 }
 
 async function verifyInfoDataLinks(cdp,symbol){
@@ -847,7 +852,6 @@ async function equityCase(cdp,width,receipt,symbol,archive){
     assert.equal(Number(receipt.chart.dataset.forecastPointCount),0);assert.equal(receipt.chart.pathLength,0);assert.equal(receipt.chart.forecastGate.futureMarkers,0);
   }else assert.ok(receipt.chart.pathLength>0&&!/NaN|Infinity/.test(receipt.chart.pathData));
   dark(receipt.chart.background,symbol+' plot');
-  await verifyCompactReadout(cdp,width,receipt,'equity');
   await verifyNativeCommonLegend(cdp,width,receipt);
   await screenshot(cdp,label+'-'+width+'-loaded.png',receipt);
   if(width===320)receipt.infoDataLinks=await verifyInfoDataLinks(cdp,symbol);
@@ -874,6 +878,7 @@ async function equityCase(cdp,width,receipt,symbol,archive){
   await screenshot(cdp,label+'-'+width+'-clock.png',receipt);
   await journalCase(cdp,width,receipt,symbol,archive);
   assert.equal((await bounds(cdp,'#equity-detail-dialog')).open,false);
+  await verifyCompactReadout(cdp,width,receipt,'equity');
 }
 
 
