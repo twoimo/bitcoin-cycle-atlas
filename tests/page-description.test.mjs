@@ -5,12 +5,13 @@ import {atlasNavigationPages} from '../dist/atlas-navigation.js';
 import {atlasPageDescription, mountPageDescription} from '../dist/ui/page-description.js';
 
 const settle = () => new Promise(resolve => setImmediate(resolve));
-function fixture({page='outlook', center, embedded=false, toolbar=true} = {}) {
+function fixture({page='outlook', center, embedded=false, toolbar=true, beforeMount} = {}) {
   const {document, window} = parseHTML(`<html><body data-page="${page}"${center ? ` data-center-tool="${center}"` : ''}${embedded ? ' data-embedded="true"' : ''}>
     <header class="atlas-dashboard-header"><button id="sidebar-toggle">목록</button><h1 class="atlas-shell-heading"></h1></header>
     <div class="workspace"><main><section class="atlas-chart-stage">${toolbar ? '<header class="atlas-canvas-heading" style="height:48px"><button id="symbol" aria-label="TQQQ 종목 선택">삼플레</button><select id="interval" aria-label="TQQQ 가격 간격"><option value="daily">일봉</option></select></header>' : ''}<div class="atlas-plot"><svg aria-label="관측 가격"></svg></div></section></main></div></body></html>`);
   const header = document.querySelector('.atlas-dashboard-header');
   const heading = header.querySelector('h1');
+  beforeMount?.({document, window});
   const controller = mountPageDescription(document, {header, heading});
   return {document, window, header, heading, controller};
 }
@@ -25,6 +26,163 @@ test('the registered destinations and saved comparison page describe their actua
   assert.match(atlasPageDescription('compare').description, /반감일.*일별 종가\(UTC\)/);
   for (const page of ['rsi','housing','themes']) assert.equal(atlasPageDescription(page), atlasPageDescription('outlook'));
   for (const page of ['market-kr','scenario','cashflow']) assert.equal(atlasPageDescription(page), atlasPageDescription('market-us'));
+});
+
+// Linkedom has no layout observer or rendering loop. Deliver only notifications
+// from subscribed elements, then advance one explicit animation frame.
+function observedCompareFixture() {
+  const globals = Object.fromEntries(['ResizeObserver','requestAnimationFrame','cancelAnimationFrame'].map(name => [name, Object.getOwnPropertyDescriptor(globalThis, name)]));
+  const frames = new Map(), cancelled = [];
+  let nextFrame = 0, observer;
+  let anchorBox = {left:124, top:905.5, width:196, height:48};
+  let toolbarBox = {left:0, top:905, right:320, width:320, height:48};
+  const restoreGlobals = () => {
+    for (const [name, descriptor] of Object.entries(globals)) {
+      if (descriptor) Object.defineProperty(globalThis, name, descriptor);
+      else delete globalThis[name];
+    }
+  };
+  let f;
+  try {
+    f = fixture({page:'compare', beforeMount({document, window}) {
+      window.ResizeObserver = class {
+        constructor(callback) { this.callback = callback; this.targets = new Map(); observer = this; }
+        observe(target, options) { this.targets.set(target, options); }
+        disconnect() { this.targets.clear(); }
+        notify(target) {
+          if (!this.targets.has(target)) return false;
+          this.callback([{target}]);
+          return true;
+        }
+      };
+      window.requestAnimationFrame = callback => { const id = ++nextFrame; frames.set(id, callback); return id; };
+      window.cancelAnimationFrame = id => { cancelled.push(id); frames.delete(id); };
+      const toolbar = document.querySelector('.atlas-canvas-heading');
+      const anchor = document.createElement('div');
+      anchor.className = 'lab-toolbar';
+      anchor.getBoundingClientRect = () => anchorBox;
+      toolbar.getBoundingClientRect = () => toolbarBox;
+      toolbar.append(anchor);
+    }});
+  } catch (error) { restoreGlobals(); throw error; }
+  return {
+    ...f, observer, frames, cancelled,
+    moveAnchor(next) { anchorBox = {...anchorBox, ...next}; },
+    moveToolbar(next) { toolbarBox = {...toolbarBox, ...next}; },
+    flushFrame() {
+      const pending = [...frames.values()];
+      frames.clear();
+      for (const callback of pending) callback();
+    },
+    cleanup() { f.controller.destroy(); restoreGlobals(); },
+  };
+}
+
+test('ancestor-only size changes refresh a fixed compare heading after unchanged controls move', () => {
+  const f = observedCompareFixture();
+  try {
+    const {document, heading, observer, frames} = f;
+    const copy = heading.parentElement;
+    const toolbar = document.querySelector('.atlas-canvas-heading');
+    const anchor = toolbar.querySelector('.lab-toolbar');
+    const stage = document.querySelector('.atlas-chart-stage');
+    const workspace = document.querySelector('.workspace');
+    assert.deepEqual([copy.style.left, copy.style.top, copy.style.width], ['48px','922.5px','68px']);
+    f.moveAnchor({left:80, top:852});
+    f.moveToolbar({top:852});
+    observer.notify(stage);
+    observer.notify(workspace);
+    observer.notify(document.documentElement);
+    const scheduledFrames = frames.size;
+    assert.equal(copy.style.top, '922.5px', 'the pending frame has not painted yet');
+    f.flushFrame();
+    assert.deepEqual([copy.style.left, copy.style.top, copy.style.width], ['4px','869px','68px']);
+    assert.equal(scheduledFrames, 1, 'one layout batch schedules one frame');
+    assert.equal(frames.size, 0, 'placement does not start a polling loop');
+    for (const target of [anchor, toolbar, stage, workspace, document.body, document.documentElement]) {
+      assert.equal(observer.targets.get(target)?.box, 'border-box', `${target.className || target.tagName} must report changes to its layout box`);
+    }
+    assert.equal(observer.targets.has(copy), false, 'fixed paint must not become its own resize source');
+    assert.equal(toolbar.nextElementSibling, copy);
+    assert.equal(copy.closest('.atlas-canvas-heading'), null);
+    assert.equal(document.querySelectorAll('h1').length, 1);
+    assert.equal(heading.hidden, false);
+  } finally { f.cleanup(); }
+});
+
+test('the same toolbar follows a new scroll owner and drops its detached ancestor subscriptions', async () => {
+  const f = observedCompareFixture();
+  try {
+    const {document, heading, observer} = f;
+    const copy = heading.parentElement;
+    const workspace = document.querySelector('.workspace');
+    const stage = document.querySelector('.atlas-chart-stage');
+    const oldParent = stage.parentElement;
+    const toolbar = document.querySelector('.atlas-canvas-heading');
+    const nextParent = document.createElement('main');
+    nextParent.style.overflow = 'auto';
+    workspace.append(nextParent);
+    nextParent.append(stage);
+    oldParent.remove();
+    await settle();
+    assert.equal(observer.targets.has(oldParent), false, 'detached owner must stop retaining the heading observer');
+    assert.equal(observer.targets.has(nextParent), true, 'reparenting keeps the same controls but changes their scroll owner');
+    f.flushFrame();
+    f.moveAnchor({left:80, top:852});
+    f.moveToolbar({top:852});
+    assert.equal(observer.notify(nextParent), true);
+    f.flushFrame();
+    assert.equal(copy.style.top, '869px');
+    assert.equal(toolbar.nextElementSibling, copy);
+    assert.equal(document.getElementById('atlas-page-heading'), heading);
+    assert.equal(document.querySelectorAll('h1').length, 1);
+    const nextStage = document.createElement('section');
+    nextParent.append(nextStage);
+    nextStage.append(toolbar);
+    await settle();
+    assert.equal(toolbar.nextElementSibling, copy, 'moving only the toolbar must move the existing heading sibling too');
+    assert.equal(copy.parentElement, nextStage);
+    assert.equal(observer.targets.has(stage), false);
+    assert.equal(observer.targets.has(nextStage), true);
+    assert.equal(document.getElementById('atlas-page-heading'), heading);
+    assert.equal(document.querySelectorAll('h1').length, 1);
+  } finally { f.cleanup(); }
+});
+
+test('conference clears fixed placement and disposal rejects queued resize work', () => {
+  const f = observedCompareFixture();
+  try {
+    const {document, controller, heading, header, observer, frames} = f;
+    const copy = heading.parentElement;
+    observer.notify(document.querySelector('.workspace'));
+    document.body.dataset.page = 'conference';
+    controller.sync();
+    assert.equal(copy.parentElement, header);
+    assert.equal(copy.className, 'atlas-shell-copy');
+    assert.equal(copy.hidden, false);
+    assert.equal(copy.hasAttribute('style'), false);
+    assert.equal(copy.dataset.headingPlacement, undefined);
+    assert.equal(heading.textContent, '컨퍼런스 복습');
+    assert.equal(document.querySelectorAll('h1').length, 1);
+    assert.equal(observer.targets.size, 0);
+    f.flushFrame();
+    assert.equal(copy.hasAttribute('style'), false, 'an already queued chart frame must not repaint the conference header');
+    document.body.dataset.page = 'compare';
+    controller.sync();
+    observer.notify(document.querySelector('.workspace'));
+    assert.equal(frames.size, 1);
+    controller.sync();
+    assert.equal(frames.size, 1, 'immediate chart sync must retain the pending frame handle for disposal');
+    const [pendingId, lateFrame] = [...frames.entries()][0];
+    controller.destroy();
+    assert.equal(observer.targets.size, 0);
+    assert.equal(frames.size, 0);
+    assert.ok(f.cancelled.includes(pendingId));
+    observer.callback([]);
+    lateFrame();
+    assert.equal(frames.size, 0, 'a delivered resize notification cannot restart a disposed controller');
+    assert.equal(document.getElementById('atlas-page-heading'), null);
+  } finally { f.cleanup(); }
 });
 
 test('one described h1 follows chart and dashboard destinations while original controls retain their listeners and labels', () => {

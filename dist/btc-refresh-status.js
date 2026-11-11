@@ -31,6 +31,11 @@ export function mountBtcRefreshStatus({document:doc=globalThis.document,onRetry,
     const height=!notice.hidden&&page==='outlook'?Math.ceil(notice.getBoundingClientRect().height):0;
     const value=height+'px';
     if(doc.documentElement.style.getPropertyValue('--btc-refresh-height')!==value)doc.documentElement.style.setProperty('--btc-refresh-height',value);
+    // Compare shares the viewport with this notice, but its source footer stays
+    // in document flow. Keep its height separate from outlook's mobile overlays.
+    const compareHeight=!notice.hidden&&page==='compare'?Math.ceil(notice.getBoundingClientRect().height):0;
+    const compareValue=compareHeight+'px';
+    if(doc.documentElement.style.getPropertyValue('--btc-compare-notice-height')!==compareValue)doc.documentElement.style.setProperty('--btc-compare-notice-height',compareValue);
   }
   function paint(){
     if(destroyed)return;
@@ -57,6 +62,6 @@ export function mountBtcRefreshStatus({document:doc=globalThis.document,onRetry,
       if(Object.hasOwn(next,'page'))page=next.page;
       paint();
     },
-    destroy(){destroyed=true;observer?.disconnect();button.removeEventListener('click',retry);doc.documentElement.style.removeProperty('--btc-refresh-height');}
+    destroy(){destroyed=true;observer?.disconnect();button.removeEventListener('click',retry);doc.documentElement.style.removeProperty('--btc-refresh-height');doc.documentElement.style.removeProperty('--btc-compare-notice-height');}
   };
 }

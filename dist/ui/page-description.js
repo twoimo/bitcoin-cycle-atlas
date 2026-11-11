@@ -30,13 +30,13 @@ export function mountPageDescription(document, {header, heading} = {}) {
   copy.append(heading, description);
   header.append(copy);
   let destroyed = false, lastToolbar = null, lastAnchor = null, frame = null;
+  let resizeTargets = [];
   const view = document.defaultView;
   const Resize = view?.ResizeObserver || globalThis.ResizeObserver;
   const resize = Resize ? new Resize(schedulePlace) : null;
   // The H1 remains a sibling of the toolbar. Its paint follows existing chrome,
   // never the quote/legend/price axis and never a new row in the chart layout.
   function place() {
-    frame = null;
     if (destroyed || copy.className !== 'atlas-page-intro' || !lastAnchor) return;
     const box = lastAnchor.getBoundingClientRect?.();
     if (!box?.width || !box.height) return;
@@ -57,20 +57,29 @@ export function mountPageDescription(document, {header, heading} = {}) {
     }
   }
   function schedulePlace() {
-    if (destroyed || frame !== null) return;
-    if (view?.requestAnimationFrame) frame = view.requestAnimationFrame(place);
+    if (destroyed || frame !== null || copy.className !== 'atlas-page-intro' || !lastAnchor) return;
+    if (view?.requestAnimationFrame) frame = view.requestAnimationFrame(() => { frame = null; place(); });
     else place();
+  }
+  function observeLayout(toolbar, anchor) {
+    // A fixed caption can go stale when an ancestor resizes and moves the dock
+    // without resizing either control. Follow the live layout/scroll owners all
+    // the way through the stage and workspace to the viewport's document root.
+    const targets = [];
+    for (let node = anchor || toolbar; node; node = node.parentElement) targets.push(node);
+    if (toolbar && document.scrollingElement && !targets.includes(document.scrollingElement)) targets.push(document.scrollingElement);
+    if (targets.length === resizeTargets.length && targets.every((node, index) => node === resizeTargets[index])) return false;
+    resize?.disconnect();
+    resizeTargets = targets;
+    for (const node of targets) resize?.observe(node, {box:'border-box'});
+    return true;
   }
   function anchorTo(toolbar, comparison) {
     const anchor = toolbar?.querySelector(comparison ? '.lab-toolbar' : '.symbol-selector-trigger') || null;
     const placement = comparison ? 'compare' : 'symbol';
     if (copy.dataset.headingPlacement !== placement) copy.dataset.headingPlacement = placement;
-    if (anchor !== lastAnchor || toolbar !== lastToolbar) {
-      resize?.disconnect();
-      if (toolbar) resize?.observe(toolbar);
-      if (anchor) resize?.observe(anchor);
-      lastAnchor = anchor;
-    }
+    lastAnchor = anchor;
+    observeLayout(toolbar, anchor);
     place();
   }
   function sync() {
@@ -92,7 +101,7 @@ export function mountPageDescription(document, {header, heading} = {}) {
       copy.className = 'atlas-shell-copy';
       copy.hidden = chart;
       if (copy.parentElement !== header) header.append(copy);
-      resize?.disconnect();
+      observeLayout(null, null);
       lastAnchor = null;
       delete copy.dataset.headingPlacement;
       copy.removeAttribute('style');
@@ -100,8 +109,8 @@ export function mountPageDescription(document, {header, heading} = {}) {
     lastToolbar = toolbar;
   }
   // BTC construction and native ETH/equity replacement can finish after shell
-  // setup. Only toolbar insertion/removal matters here; quote/chart mutations
-  // must not rewrite the page header or disturb its current focus owners.
+  // setup. Toolbar/anchor replacement and reparenting matter here; quote/chart
+  // mutations must not rewrite the header or disturb its current focus owners.
   const workspace = document.querySelector('.workspace');
   const Observer = document.defaultView?.MutationObserver || globalThis.MutationObserver;
   // Replay rewrites chart internals on every frame. One deferred identity check
@@ -113,9 +122,11 @@ export function mountPageDescription(document, {header, heading} = {}) {
     queued = true;
     const check = () => {
       queued = false;
+      if (destroyed) return;
       const toolbar = document.querySelector('.atlas-canvas-heading');
       const anchor = toolbar?.querySelector(copy.dataset.headingPlacement === 'compare' ? '.lab-toolbar' : '.symbol-selector-trigger') || null;
-      if (toolbar !== lastToolbar || copy.className === 'atlas-page-intro' && anchor !== lastAnchor) sync();
+      if (toolbar !== lastToolbar || copy.className === 'atlas-page-intro' && (anchor !== lastAnchor || toolbar?.nextElementSibling !== copy)) sync();
+      else if (copy.className === 'atlas-page-intro' && observeLayout(toolbar, anchor)) schedulePlace();
     };
     const microtask = document.defaultView?.queueMicrotask || globalThis.queueMicrotask;
     if (microtask) microtask(check); else check();
@@ -128,6 +139,7 @@ export function mountPageDescription(document, {header, heading} = {}) {
     destroyed = true;
     observer?.disconnect();
     resize?.disconnect();
+    resizeTargets = [];
     if (frame !== null) view?.cancelAnimationFrame?.(frame);
     frame = null;
     view?.removeEventListener?.('resize', schedulePlace);

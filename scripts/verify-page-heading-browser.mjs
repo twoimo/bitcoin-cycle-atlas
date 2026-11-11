@@ -17,6 +17,12 @@ const bin = process.env.ATLAS_BROWSER_PATH || '/Applications/Google Chrome.app/C
 const prefix = '/bitcoin-cycle-atlas', delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 const instruments = ['BTCUSD', 'ETHUSD', 'MSTR', 'BMNR', 'compare'];
 const specs = [320, 768, 1440].flatMap(width => instruments.map(instrument => ({id:`${instrument}-${width}`, instrument, width, height:900})));
+// Preserve the original 15-case matrix as its own result. R12 also covers the
+// adjacent phone width and the dashboard-owned conference heading.
+const supplementalSpecs = [
+  ...instruments.map(instrument => ({id:`${instrument}-390`, instrument, width:390, height:900})),
+  ...[320, 390, 768, 1440].map(width => ({id:`conference-${width}`, instrument:'conference', width, height:900})),
+];
 
 class Cdp {
   constructor(ws) {
@@ -102,16 +108,22 @@ function inspectHeading() {
   const pseudo = toolbar && getComputedStyle(toolbar, '::after');
   if (pseudo && pseudo.display !== 'none' && pseudo.visibility !== 'hidden' && pseudo.content.replace(/^["']|["']$/g, '') === text) duplicates.push('toolbar::after');
   const descriptionId = heading?.getAttribute('aria-describedby'), description = descriptionId && document.getElementById(descriptionId);
+  const anchor = toolbar?.querySelector(copy?.dataset.headingPlacement === 'compare' ? '.lab-toolbar' : '.symbol-selector-trigger');
+  const anchorBox = rect(anchor), comparison = copy?.dataset.headingPlacement === 'compare';
+  const expected = anchorBox && {left:comparison ? anchorBox.left - 76 : anchorBox.left + 4, top:comparison ? anchorBox.top + (anchorBox.height - 14) / 2 : anchorBox.top + 2};
   return {
     title:text, h1Count:allHeadings.length, paintedH1Count:allHeadings.filter(painted).length, heading:headingBox, glyphs,
     headingInViewport:inBox(headingBox, viewport), glyphsInViewport:glyphs.length > 0 && glyphs.every(box => inBox(box, viewport)),
     headingInToolbar:inBox(headingBox, rect(toolbar)), glyphsInToolbar:glyphs.length > 0 && glyphs.every(box => inBox(box, rect(toolbar))),
-    painted:painted(heading), paintIssues:[...new Set(paintIssues)], color:style?.color, fontSize:style?.fontSize, lineHeight:style?.lineHeight,
+    painted:painted(heading), paintIssues:[...new Set(paintIssues)], color:style?.color, fontSize:style?.fontSize, lineHeight:style?.lineHeight, fontFamily:style?.fontFamily,
     describedBy:descriptionId, description:description?.textContent.trim() || '', descriptionCount:descriptionId ? document.querySelectorAll(`[id="${descriptionId}"]`).length : 0,
     followsToolbar:Boolean(toolbar && toolbar.nextElementSibling === copy), outsidePlot:Boolean(copy && !copy.closest('.atlas-plot')),
+    inDashboardHeader:Boolean(copy?.classList.contains('atlas-shell-copy') && copy.closest('.atlas-dashboard-header')),
+    placement:{anchor:anchorBox, expected, delta:expected && headingBox ? {left:headingBox.left - expected.left, top:headingBox.top - expected.top} : null},
+    layout:{workspace:rect(document.querySelector('.workspace')), stage:rect(document.querySelector('.atlas-chart-stage'))},
     overflow:Math.max(0, document.documentElement.scrollWidth - innerWidth), duplicateTitles:duplicates,
     overlayCollisions:overlays.filter(node => intersects(headingBox, rect(node)) || glyphs.some(box => intersects(box, rect(node)))).map(node => node.id || node.className),
-    symbolGlyphs, symbolCollision:glyphs.some(a => symbolGlyphs.some(b => intersects(a, b))),
+    symbolGlyphs, symbolGlyphsInToolbar:symbolGlyphs.every(box => inBox(box, rect(toolbar)) && inBox(box, viewport)), symbolCollision:glyphs.some(a => symbolGlyphs.some(b => intersects(a, b))),
     symbolButton:rect(symbolButton), symbolButtonStyle:buttonStyle && Object.fromEntries(['height','minHeight','maxHeight','paddingTop','paddingBottom','marginTop','marginBottom','fontSize','lineHeight'].map(key => [key, buttonStyle[key]])),
     pointer:Object.fromEntries(['fine','coarse','none'].map(value => [value, matchMedia(`(pointer:${value})`).matches])),
     geometry:{toolbar:rect(toolbar), plot:rect(plot), bottom:rect(document.querySelector('.workbench-bottom-bar')), readout:painted(readout) ? rect(readout) : null, source:painted(source) ? rect(source) : null},
@@ -120,16 +132,19 @@ function inspectHeading() {
 
 function validate(state, previous, expectedTitle) {
   const failures = [], check = (condition, message) => { if (!condition) failures.push(message); };
+  const conference = expectedTitle === '컨퍼런스 복습';
   check(state.h1Count === 1 && state.paintedH1Count === 1 && state.painted, `h1 total=${state.h1Count}, painted=${state.paintedH1Count}`);
   check(state.title === expectedTitle, `unexpected title ${state.title}`);
   check(state.describedBy === 'atlas-page-description' && state.descriptionCount === 1 && state.description.length > 15, 'description connection missing');
-  check(state.headingInViewport && state.glyphsInViewport && state.headingInToolbar && state.glyphsInToolbar, 'heading/glyphs outside visible toolbar');
+  check(state.headingInViewport && state.glyphsInViewport && (conference || state.headingInToolbar && state.glyphsInToolbar), conference ? 'heading/glyphs outside viewport' : 'heading/glyphs outside visible toolbar');
   check(state.paintIssues.length === 0, `heading paint: ${state.paintIssues.join('; ')}`);
   check(state.color !== 'transparent' && !/rgba\([^)]*,\s*0\)/.test(state.color || ''), 'transparent heading text');
-  check(state.followsToolbar && state.outsidePlot, 'heading lost sibling ownership');
+  check((conference ? state.inDashboardHeader : state.followsToolbar) && state.outsidePlot, 'heading lost shell ownership');
+  if (!conference) check(state.placement.delta && Math.abs(state.placement.delta.left) <= .01 && Math.abs(state.placement.delta.top) <= .01, `stale anchor coordinates: ${JSON.stringify(state.placement.delta)}`);
   check(state.overflow === 0, `horizontal overflow ${state.overflow}px`);
   check(state.duplicateTitles.length === 0, `duplicate titles: ${state.duplicateTitles.join(', ')}`);
   check(state.overlayCollisions.length === 0 && !state.symbolCollision, `text overlap: ${state.overlayCollisions.join(', ')} symbol=${state.symbolCollision}`);
+  check(state.symbolGlyphsInToolbar, 'symbol glyphs outside visible toolbar');
   if (previous) {
     check(state.description === previous.description, 'page description changed');
     for (const [name, current] of Object.entries(state.geometry)) {
@@ -141,8 +156,53 @@ function validate(state, previous, expectedTitle) {
   return failures;
 }
 
+async function settledHeading(cdp, label) {
+  let last = '', steady = 0, state;
+  await until(async () => {
+    state = await evaluate(cdp, inspectHeading);
+    const key = JSON.stringify([state.geometry, state.heading, state.placement, state.layout]);
+    steady = key === last ? steady + 1 : 0; last = key;
+    return steady >= 3;
+  }, label);
+  return state;
+}
+
+async function verifyAncestorResize(cdp, spec) {
+  const result = {id:`${spec.id}-ancestor-resize`, status:'failed', failures:[], before:await evaluate(cdp, inspectHeading)};
+  // Change a real layout/scroll owner after initial rendering, without a window
+  // resize, synthetic scroll event, or changing the toolbar/anchor dimensions.
+  const saved = await evaluate(cdp, () => {
+    const owner = document.querySelector('.atlas-chart-stage');
+    const original = {value:owner.style.getPropertyValue('max-height'), priority:owner.style.getPropertyPriority('max-height')};
+    owner.style.setProperty('max-height', `${owner.getBoundingClientRect().height - 72}px`, 'important');
+    return original;
+  });
+  try {
+    result.shifted = await settledHeading(cdp, `${result.id} shifted`);
+    for (const [label, before, after] of [
+      ['toolbar', result.before.geometry.toolbar, result.shifted.geometry.toolbar],
+      ['anchor', result.before.placement.anchor, result.shifted.placement.anchor],
+    ]) {
+      if (!before || !after) { result.failures.push(`${label} missing`); continue; }
+      for (const field of ['width','height']) if (Math.abs(before[field] - after[field]) > .01) result.failures.push(`${label}.${field} changed; invalid regression trigger`);
+      if (Math.abs(after.top - before.top + 72) > .01) result.failures.push(`${label} did not move up exactly 72px`);
+    }
+    result.failures.push(...validate(result.shifted, null, '사이클 비교').map(value => `shifted: ${value}`));
+  } finally {
+    await evaluate(cdp, original => {
+      const owner = document.querySelector('.atlas-chart-stage');
+      if (original.value) owner.style.setProperty('max-height', original.value, original.priority);
+      else owner.style.removeProperty('max-height');
+    }, saved);
+    result.restored = await settledHeading(cdp, `${result.id} restored`);
+    result.failures.push(...validate(result.restored, result.before, '사이클 비교').map(value => `restored: ${value}`));
+  }
+  result.status = result.failures.length ? 'failed' : 'passed';
+  return result;
+}
+
 await mkdir(out, {recursive:true});
-const report = {schemaVersion:1, kind:'atlas-page-heading-browser', qualifiesFullVerification:false, recordedAt:new Date().toISOString(), testedHead:null, sourceFiles:{}, chrome:null, baseline:baselinePath, cases:[], failures:[]};
+const report = {schemaVersion:2, kind:'atlas-page-heading-browser', qualifiesFullVerification:false, recordedAt:new Date().toISOString(), testedHead:null, sourceFiles:{}, chrome:null, baseline:baselinePath, cases:[], supplementalCases:[], layoutShiftCases:[], failures:[]};
 let server, chrome, profile, browser, cdp;
 try {
   report.testedHead = execFileSync('git', ['rev-parse','HEAD'], {cwd:root, encoding:'utf8'}).trim();
@@ -151,6 +211,7 @@ try {
     'dist/daily-data-view.js', 'dist/daily-data.css',
     'dist/research-reader.js', 'dist/research-reader.css', 'dist/editorial-ledgers.css',
     'dist/relay-room.js', 'dist/relay-room.css', 'scripts/verify-page-heading-browser.mjs',
+    'dist/conference/route.js', 'dist/conference/player.js', 'dist/conference/player.css',
   ]) report.sourceFiles[path] = createHash('sha256').update(await readFile(resolve(root, path))).digest('hex');
   const mime = {'.html':'text/html;charset=utf-8','.js':'text/javascript','.json':'application/json','.css':'text/css','.svg':'image/svg+xml','.png':'image/png','.woff2':'font/woff2'};
   server = createServer(async (request, response) => {
@@ -183,15 +244,17 @@ try {
   await cdp.send('Page.enable'); await cdp.send('Runtime.enable');
   report.nativeWindowEnvelope = await verifyHeadlessWindowEnvelope(cdp, {width:1440,height:900});
   let errors = []; cdp.listeners.set('Runtime.exceptionThrown', event => errors.push(event.exceptionDetails?.exception?.description || event.exceptionDetails?.text || 'runtime exception'));
-  for (const spec of specs) {
-    const result = {...spec, status:'failed', failures:[]}; report.cases.push(result); errors = [];
+  for (const spec of [...specs, ...supplementalSpecs]) {
+    const supplemental = supplementalSpecs.includes(spec);
+    const result = {...spec, status:'failed', failures:[]}; (supplemental ? report.supplementalCases : report.cases).push(result); errors = [];
     try {
       await cdp.send('Emulation.setDeviceMetricsOverride', {width:spec.width,height:spec.height,deviceScaleFactor:1,mobile:spec.width <= 620});
-      await cdp.send('Page.navigate', {url:base + (spec.instrument === 'compare' ? '?page=compare&legacy=1&compare-unit=rebased' : `?symbol=${spec.instrument}`)});
+      await cdp.send('Page.navigate', {url:base + (spec.instrument === 'conference' ? '?page=conference' : spec.instrument === 'compare' ? '?page=compare&legacy=1&compare-unit=rebased' : `?symbol=${spec.instrument}`)});
       await until(() => evaluate(cdp, instrument => {
         const boot = document.documentElement?.dataset.boot;
         if (boot === 'error') throw new Error('boot error');
         if (boot !== 'ready') return false;
+        if (instrument === 'conference') return document.body?.dataset.page === 'conference' && document.querySelector('.conference-player')?.dataset.state === 'empty';
         if (instrument === 'compare') return document.body?.dataset.page === 'compare' && document.querySelectorAll('#structure-periods tr').length > 0;
         if (document.documentElement.dataset.symbol !== instrument || document.body?.dataset.page !== 'outlook') return false;
         const svg = document.querySelector(instrument === 'ETHUSD' ? '#eth-chart' : instrument === 'BTCUSD' ? '#lab-chart' : '#equity-chart');
@@ -199,16 +262,20 @@ try {
       }, spec.instrument), `${spec.id} ready data`);
       await evaluate(cdp, async () => { await document.fonts.ready; await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))); });
       // Match a stable rendered frame, including native source/readout placement.
-      let last = '', steady = 0;
-      await until(async () => { const value = await evaluate(cdp, inspectHeading); const key = JSON.stringify(value.geometry); steady = key === last ? steady + 1 : 0; last = key; return steady >= 3; }, `${spec.id} geometry settled`);
-      result.state = await evaluate(cdp, inspectHeading);
+      result.state = await settledHeading(cdp, `${spec.id} geometry settled`);
       const before = baseline?.cases.find(item => item.id === spec.id)?.state;
-      if (baseline && !before) result.failures.push('missing baseline case');
-      result.failures.push(...validate(result.state, before, spec.instrument === 'compare' ? '사이클 비교' : '가격 차트'), ...errors.map(error => `runtime: ${error}`));
+      if (baseline && !before && !supplemental) result.failures.push('missing baseline case');
+      result.failures.push(...validate(result.state, before, spec.instrument === 'conference' ? '컨퍼런스 복습' : spec.instrument === 'compare' ? '사이클 비교' : '가격 차트'), ...errors.map(error => `runtime: ${error}`));
       const shot = await cdp.send('Page.captureScreenshot', {format:'png',fromSurface:true,captureBeyondViewport:false});
       const bytes = Buffer.from(shot.data, 'base64'); result.screenshot = {file:`${spec.id}.png`,sha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length};
       await writeFile(resolve(out, result.screenshot.file), bytes);
       result.status = result.failures.length ? 'failed' : 'passed';
+      if (spec.instrument === 'compare' && spec.width <= 390) {
+        const shifted = await verifyAncestorResize(cdp, spec);
+        report.layoutShiftCases.push(shifted);
+        report.failures.push(...shifted.failures.map(message => `${shifted.id}: ${message}`));
+        console.log(JSON.stringify({id:shifted.id,status:shifted.status,failures:shifted.failures}));
+      }
     } catch (error) { result.failures.push(error.stack || String(error)); }
     report.failures.push(...result.failures.map(message => `${spec.id}: ${message}`));
     console.log(JSON.stringify({id:result.id,status:result.status,failures:result.failures}));
@@ -218,8 +285,9 @@ finally {
   cdp?.ws.close(); browser?.ws.close(); chrome?.kill('SIGKILL');
   if (server) await new Promise(resolve => server.close(resolve));
   if (profile) await rm(profile, {recursive:true,force:true}).catch(() => {});
-  report.status = report.cases.length === specs.length && report.failures.length === 0 ? 'passed' : 'failed';
+  report.status = report.cases.length === specs.length && report.supplementalCases.length === supplementalSpecs.length && report.layoutShiftCases.length === 2 && report.failures.length === 0 ? 'passed' : 'failed';
+  report.counts = Object.fromEntries(['cases','supplementalCases','layoutShiftCases'].map(key => [key, {total:report[key].length,passed:report[key].filter(item => item.status === 'passed').length}]));
   await writeFile(resolve(out, 'report.json'), JSON.stringify(report, null, 2) + '\n');
-  console.log(JSON.stringify({status:report.status,cases:report.cases.length,passed:report.cases.filter(item => item.status === 'passed').length,failures:report.failures.length,out}));
+  console.log(JSON.stringify({status:report.status,cases:report.cases.length,passed:report.counts.cases.passed,supplemental:report.counts.supplementalCases,layoutShifts:report.counts.layoutShiftCases,failures:report.failures.length,out}));
   if (report.status !== 'passed') process.exitCode = 1;
 }
