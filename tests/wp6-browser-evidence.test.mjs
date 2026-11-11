@@ -65,6 +65,23 @@ test('WP6 readiness tolerates the empty document during native navigation',()=>{
   assert.equal(result.boot,null);assert.equal(result.chart,null);assert.equal(result.rootWidth,0);assert.equal(result.bodyWidth,0);
 });
 
+test('WP6 reads the chart trading criteria rows and dialog flag instead of a chart-corner win badge',()=>{
+  const rectangle={left:10,right:610,top:20,bottom:420,width:600,height:400};
+  let doc,criteria,rows;
+  const node=(props={})=>({ownerDocument:doc,dataset:{},hidden:false,textContent:'',scrollWidth:100,clientWidth:100,getClientRects:()=>[rectangle],getBoundingClientRect:()=>rectangle,closest:()=>null,querySelector:()=>null,querySelectorAll:()=>[],getAttribute:()=>null,...props});
+  doc={documentElement:{dataset:{boot:'ready'},scrollWidth:1440},body:{scrollWidth:1440},defaultView:{getComputedStyle:()=>({visibility:'visible'})},title:'Actual chart',
+    querySelector:()=>null,querySelectorAll:selector=>selector==='.rsi-trading-criteria'?[criteria]:[]};
+  rows=['criteria','win-rate'].map(key=>node({dataset:{criteriaField:key},textContent:key}));
+  criteria=node({dataset:{criteriaState:'unmet',criteriaBand:'neutral',criteriaCollapsed:'false',criteriaPlacement:'below',criteriaThrough:'2026-10-30'},textContent:'매매 기준 전체 승률 72.7% · n=66',
+    getAttribute:name=>name==='aria-label'?'TQQQ 매매 기준 상세 · 현재 미충족':name==='aria-expanded'?'false':null,
+    querySelectorAll:selector=>selector==='[data-criteria-field]'?rows:[]});
+  const result=observe(doc);
+  assert.equal(result.criteria.state,'unmet');assert.equal(result.criteria.collapsed,'false');assert.equal(result.criteria.through,'2026-10-30');
+  assert.equal(result.criteria.expanded,'false');assert.equal(result.criteria.fields.map(row=>row.key).join(','),'criteria,win-rate');
+  assert.ok(result.criteria.fields.every(row=>row.painted));assert.match(result.criteria.text,/승률.*n\s*=\s*\d+/);
+  assert.equal(result.badge,null);assert.equal(result.hud,null);
+});
+
 test('WP6 probes the painted iframe chart and its legend instead of the retained hidden BTC surface',()=>{
   const rectangle={left:10,right:610,top:20,bottom:420,width:600,height:400};
   let frame,outerPlot,innerPlot,retained,active,dock,legend;

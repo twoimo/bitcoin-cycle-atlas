@@ -44,6 +44,15 @@ async function publication(){try{const response=await fetch(origin+'/publication
 async function candidateSource(){const response=await fetch(origin+'/__wp6-candidate-source.json',{cache:'no-store',signal:AbortSignal.timeout(20000)});assert.equal(response.status,200);const bytes=Buffer.from(await response.arrayBuffer()),identity=JSON.parse(bytes);assert.equal(identity.kind,'atlas-wp6-candidate-source');assert.equal(identity.productionDeployment,false);assert.equal(identity.verifiedTrackedDistClean,true);assert.match(identity.sourceCommit,/^[a-f0-9]{40}$/);assert.match(identity.sourceTree,/^[a-f0-9]{40}$/);assert.match(identity.distTreeSha256,/^[a-f0-9]{64}$/);assert.equal(identity.sourceCommit,expectedSource);return {...identity,sha256:hash(bytes),checkedAt:new Date().toISOString()};}
 async function screenshot(cdp,name,receipt,clip=null){const capture=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false,...(clip?{clip}:{})}),bytes=Buffer.from(capture.data,'base64');await writeFile(resolve(out,name),bytes);receipt.screenshots.push({file:name,bytes:bytes.length,sha256:hash(bytes),...(clip?{clip}:{})});}
 
+function readRsiDetail(){
+  const frame=[...document.querySelectorAll('.atlas-center-frame')].find(f=>f.getClientRects().length),docs=[document,...(frame?.contentDocument?[frame.contentDocument]:[])];
+  const dialog=docs.flatMap(doc=>[...doc.querySelectorAll('dialog[data-rsi-dialog="simulation"][open]')]).find(node=>node.open);
+  if(!dialog)return null;
+  const all=selector=>[...dialog.querySelectorAll(selector)];
+  return {title:dialog.querySelector('h2')?.textContent.trim()||'',text:dialog.textContent.trim(),hud:Boolean(dialog.querySelector('.rsi-simulation-hud')),
+    hudFields:all('[data-rsi-hud]').map(node=>node.dataset.rsiHud),criteriaDetails:all('[data-criteria-detail]').map(node=>node.dataset.criteriaDetail),
+    badge:dialog.querySelector('[data-rsi-win-badge]')?.textContent.trim()||'',close:Boolean(dialog.querySelector('[data-rsi-dialog-close]'))};
+}
 function readWp6(){
   const frame=[...document.querySelectorAll('.atlas-center-frame')].find(f=>f.getClientRects().length),child=frame?.contentDocument;
   const painted=n=>Boolean(n&&!n.hidden&&!n.closest('[hidden],[inert],[aria-hidden="true"]')&&n.getClientRects().length&&n.ownerDocument.defaultView.getComputedStyle(n).visibility!=='hidden');
@@ -52,13 +61,14 @@ function readWp6(){
   const plot=document.querySelector('.atlas-plot'),svg=find('#lab-chart,#eth-chart,#equity-chart,.rsi-chart-canvas > svg');
   const chartOwner=svg?.closest('.atlas-plot'),dock=chartOwner?.querySelector('.chart-legend-dock'),legend=dock?.querySelector('.lab-legend'),badge=find('[data-rsi-win-badge]'),hud=find('.rsi-simulation-hud');
   const controls=[...document.querySelectorAll('.chart-replay-controls [data-cr]')].filter(n=>['play','next','speed','live','transport-more','update-interval'].includes(n.dataset.cr)).map(n=>{const owner=n.closest('.chart-replay-actions'),r=box(n),o=box(owner);return {name:n.dataset.cr,rect:r,disabled:n.disabled,owner:owner?'bar':'menu',inOwner:Boolean(r?.painted&&(!o||r.left>=o.left-1&&r.right<=o.right+1)),label:n.getAttribute('aria-label'),text:n.textContent.trim(),value:n.value};});
-  const notice=document.querySelector('#equity-forecast-unavailable');
+  const notice=document.querySelector('#equity-forecast-unavailable'),criteria=find('.rsi-trading-criteria');
   return {url:location.href,width:innerWidth,height:innerHeight,boot:document.documentElement?.dataset.boot??null,symbol:plot?.dataset.chartSymbol,rootWidth:document.documentElement?.scrollWidth??0,bodyWidth:document.body?.scrollWidth??0,
     title:document.title,plot:box(plot),chart:svg?{rect:box(svg),id:svg.id,owner:box(chartOwner),embedded:svg.ownerDocument!==document,dataset:{...svg.dataset},paths:svg.querySelectorAll('path[d]').length,observedCount:Math.max(Number(svg.dataset.observedCandleCount||0),Number(svg.dataset.observedLineCount||0)),rsiCandles:svg.querySelectorAll('[data-candle]').length,description:svg.querySelector('desc')?.textContent}:null,
     frame:frame?{url:frame.src,status:frame.dataset.centerStatus,loaded:frame.dataset.centerLoaded,rect:box(frame)}:null,
     legend:dock?{rect:box(dock),mode:dock.dataset.legendMode,sourceRect:box(legend),text:legend?.textContent.trim(),priceWidth:Number(svg?.dataset.plotRight)-Number(svg?.dataset.plotLeft),items:[...legend?.querySelectorAll('.chart-legend-entry')||[]].map(n=>({text:n.textContent.trim(),rect:box(n)})),chip:box(dock.querySelector('.chart-legend-open'))}:null,
     inlineLegend:[...document.querySelectorAll('#eth-forecast-note,.equity-legend')].map(n=>({text:n.textContent.trim(),rect:box(n)})),
     badge:badge?{text:badge.textContent.trim(),rect:box(badge),dataset:{...badge.dataset}}:null,
+    criteria:criteria?{text:criteria.textContent.trim(),rect:box(criteria),state:criteria.dataset.criteriaState,band:criteria.dataset.criteriaBand,collapsed:criteria.dataset.criteriaCollapsed,placement:criteria.dataset.criteriaPlacement,through:criteria.dataset.criteriaThrough,aria:criteria.getAttribute('aria-label'),expanded:criteria.getAttribute('aria-expanded'),fields:[...criteria.querySelectorAll('[data-criteria-field]')].map(node=>({key:node.dataset.criteriaField,painted:painted(node),rect:box(node)}))}:null,
     hud:hud?{text:hud.textContent.trim(),rect:box(hud),fields:[...hud.querySelectorAll('[data-rsi-hud]')].map(n=>({key:n.dataset.rsiHud,text:n.textContent.trim(),rect:box(n)})),ongoing:hud.querySelector('[data-rsi-ongoing]')?.textContent.trim()}:null,
     forecastGate:{tier:plot?.dataset.forecastTier,allowed:plot?.dataset.forecastAllowed,observations:plot?.dataset.forecastObservations,notice:notice?{text:notice.textContent.trim(),rect:box(notice)}:null,paths:svg?.querySelectorAll('.equity-forecast-line,.replay-forecast-path').length,labels:[...svg?.querySelectorAll('.equity-forecast-evidence text')||[]].map(n=>n.textContent.trim())},
     replay:{active:svg?.dataset.chartReplayActive,bar:box(document.querySelector('.chart-replay-bar')),actions:box(document.querySelector('.chart-replay-actions')),controls,cursor:svg?.dataset.replayCursor,mode:svg?.dataset.replayMode},
@@ -162,15 +172,37 @@ async function runCase(spec,debugBase){
       assert.match(receipt.initial.forecastGate.notice.text,/표본 부족으로 미래 경로를 제공하지 않습니다/);assert.match(receipt.initial.forecastGate.notice.text,/관측 \d+거래일/);
     }
     if(symbol==='TQQQ'&&phase!=='before'){
-      assert.match(receipt.initial.badge?.text||'',/승률.*n\s*=\s*\d+/);
-      if(width<=390)assert.ok(receipt.initial.badge.rect.height>=44,'Mobile win badge must retain a 44px native hit target');
-      assert.deepEqual(receipt.initial.hud?.fields.map(x=>x.key).sort(),['holdings','quantity','average-cost','current-price','pnl','next-trigger','updated-at'].sort());
-      await click(cdp,'[data-rsi-win-badge]');await until(()=>evaluate(cdp,()=>Boolean(document.querySelector('[data-rsi-dialog="simulation"][open]'))),'statistics modal');
-      receipt.simulationDialog=await evaluate(cdp,readWp6);
+      // The chart corner reports the compact trading criteria; the position HUD
+      // and retained win rate live in the criteria detail dialog it opens.
+      const criteria=receipt.initial.criteria;
+      assert.ok(criteria?.rect?.painted,'Chart trading criteria is not painted');
+      assert.match(criteria.aria||'',new RegExp('^'+symbol+' 매매 기준 상세 · 현재 (충족|미충족|대기)$'),'Trading criteria accessible name changed: '+(criteria.aria||'missing'));
+      assert.ok(['met','unmet','waiting'].includes(criteria.state),'Trading criteria reports an undocumented judgement: '+criteria.state);
+      assert.match(criteria.through||'',/^\d{4}-\d{2}-\d{2}$/,'Trading criteria is not bound to a confirmed daily close: '+(criteria.through||'missing'));
+      assert.equal(criteria.expanded,'false','Chart criteria reports an already-open detail dialog');
+      receipt.criteriaInitial={aria:criteria.aria,state:criteria.state,band:criteria.band,collapsed:criteria.collapsed,placement:criteria.placement,through:criteria.through,text:criteria.text};
+      if(criteria.collapsed==='true'){
+        assert.ok(criteria.rect.height>=44,'Collapsed trading criteria lost its 44px native hit target ('+criteria.rect.height+'px)');
+        assert.match(criteria.text,/매매 기준/,'Collapsed trading criteria lost its label');
+        assert.deepEqual(criteria.fields,[],'Collapsed trading criteria should not paint expanded rows');
+      }else{
+        assert.deepEqual(criteria.fields.map(row=>row.key),['criteria','win-rate','current','buy','sell','strong','neutral'],'Trading criteria rows changed');
+        for(const row of criteria.fields)assert.ok(row.painted,'Trading criteria row is not painted: '+row.key);
+        assert.match(criteria.text,/승률.*n\s*=\s*\d+/,'Trading criteria does not report the retained win rate: '+criteria.text);
+      }
+      await click(cdp,'.rsi-trading-criteria');await until(()=>evaluate(cdp,readRsiDetail),'statistics modal');
+      receipt.simulationDialog=await evaluate(cdp,readWp6);receipt.criteriaDetail=await evaluate(cdp,readRsiDetail);
+      assert.equal(receipt.criteriaDetail.hud,true,'Criteria dialog lost the position HUD');
+      assert.deepEqual(receipt.criteriaDetail.hudFields.sort(),['holdings','quantity','average-cost','current-price','pnl','next-trigger','updated-at'].sort(),'Position HUD fields changed');
+      assert.deepEqual(receipt.criteriaDetail.criteriaDetails,['criteria','win-rate','current','buy','sell','strong','neutral'],'Criteria detail rows changed');
+      assert.match(receipt.criteriaDetail.badge,/승률.*n\s*=\s*\d+/,'Criteria dialog lost the retained win rate: '+receipt.criteriaDetail.badge);
+      assert.equal(receipt.simulationDialog.criteria?.expanded,'true','Criteria does not report its open dialog');
       for(const text of ['PF','기대값','보유','낙폭','bp','기간','체결'])assert.ok(receipt.simulationDialog.dialogs.some(d=>d.text.includes(text)),'Statistics modal missing '+text);
       assert.ok((await locate(cdp,'[data-rsi-dialog="simulation"] [data-rsi-dialog-close]'))?.visible,'Statistics close is clipped');
       await screenshot(cdp,id+'-statistics.png',receipt);await click(cdp,'[data-rsi-dialog="simulation"] [data-rsi-dialog-close]');
-      assert.ok((await evaluate(cdp,readWp6)).chart?.rect.painted,'Chart unmounted while closing statistics');
+      const closed=await evaluate(cdp,readWp6);
+      assert.ok(closed.chart?.rect.painted,'Chart unmounted while closing statistics');
+      assert.equal(closed.criteria?.expanded,'false','Criteria still reports an open dialog after closing');
     }
     if(symbol==='BTCUSD'){
       await openReplay(cdp,width,receipt);receipt.replay=await evaluate(cdp,readWp6);receipt.replayGeometry=await evaluate(cdp,readChartReplayFloatingGeometry,{chartSelector:'#lab-chart',panel:'.chart-replay-controls'});
