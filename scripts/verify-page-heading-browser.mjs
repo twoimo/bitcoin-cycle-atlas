@@ -111,6 +111,7 @@ function inspectHeading() {
   const anchor = toolbar?.querySelector(copy?.dataset.headingPlacement === 'compare' ? '.lab-toolbar' : '.symbol-selector-trigger');
   const anchorBox = rect(anchor), comparison = copy?.dataset.headingPlacement === 'compare';
   const expected = anchorBox && {left:comparison ? anchorBox.left - 76 : anchorBox.left + 4, top:comparison ? anchorBox.top + (anchorBox.height - 14) / 2 : anchorBox.top + 2};
+  const notice = document.getElementById('btc-refresh-notice');
   return {
     title:text, h1Count:allHeadings.length, paintedH1Count:allHeadings.filter(painted).length, heading:headingBox, glyphs,
     headingInViewport:inBox(headingBox, viewport), glyphsInViewport:glyphs.length > 0 && glyphs.every(box => inBox(box, viewport)),
@@ -121,6 +122,8 @@ function inspectHeading() {
     inDashboardHeader:Boolean(copy?.classList.contains('atlas-shell-copy') && copy.closest('.atlas-dashboard-header')),
     placement:{anchor:anchorBox, expected, delta:expected && headingBox ? {left:headingBox.left - expected.left, top:headingBox.top - expected.top} : null},
     layout:{workspace:rect(document.querySelector('.workspace')), stage:rect(document.querySelector('.atlas-chart-stage'))},
+    btcRefreshNotice:notice ? {state:notice.dataset.state || null, hidden:notice.hidden, busy:notice.getAttribute('aria-busy') === 'true',
+      rect:rect(notice), compareReservedHeight:document.documentElement.style.getPropertyValue('--btc-compare-notice-height')} : null,
     overflow:Math.max(0, document.documentElement.scrollWidth - innerWidth), duplicateTitles:duplicates,
     overlayCollisions:overlays.filter(node => intersects(headingBox, rect(node)) || glyphs.some(box => intersects(box, rect(node)))).map(node => node.id || node.className),
     symbolGlyphs, symbolGlyphsInToolbar:symbolGlyphs.every(box => inBox(box, rect(toolbar)) && inBox(box, viewport)), symbolCollision:glyphs.some(a => symbolGlyphs.some(b => intersects(a, b))),
@@ -156,11 +159,16 @@ function validate(state, previous, expectedTitle) {
   return failures;
 }
 
-async function settledHeading(cdp, label) {
+async function settledHeading(cdp, label, {waitForBtcRefresh = false} = {}) {
   let last = '', steady = 0, state;
   await until(async () => {
     state = await evaluate(cdp, inspectHeading);
-    const key = JSON.stringify([state.geometry, state.heading, state.placement, state.layout]);
+    // The provider request can leave the notice stationary for seconds before
+    // completing. Geometry alone must not qualify that transient baseline.
+    if (waitForBtcRefresh && (state.btcRefreshNotice?.busy || state.btcRefreshNotice?.state === 'refreshing')) {
+      last = ''; steady = 0; return false;
+    }
+    const key = JSON.stringify([state.geometry, state.heading, state.placement, state.layout, state.btcRefreshNotice]);
     steady = key === last ? steady + 1 : 0; last = key;
     return steady >= 3;
   }, label);
@@ -168,35 +176,41 @@ async function settledHeading(cdp, label) {
 }
 
 async function verifyAncestorResize(cdp, spec) {
-  const result = {id:`${spec.id}-ancestor-resize`, status:'failed', failures:[], before:await evaluate(cdp, inspectHeading)};
-  // Change a real layout/scroll owner after initial rendering, without a window
-  // resize, synthetic scroll event, or changing the toolbar/anchor dimensions.
-  const saved = await evaluate(cdp, () => {
-    const owner = document.querySelector('.atlas-chart-stage');
-    const original = {value:owner.style.getPropertyValue('max-height'), priority:owner.style.getPropertyPriority('max-height')};
-    owner.style.setProperty('max-height', `${owner.getBoundingClientRect().height - 72}px`, 'important');
-    return original;
-  });
+  const result = {id:`${spec.id}-ancestor-resize`, status:'failed', failures:[]};
   try {
-    result.shifted = await settledHeading(cdp, `${result.id} shifted`);
-    for (const [label, before, after] of [
-      ['toolbar', result.before.geometry.toolbar, result.shifted.geometry.toolbar],
-      ['anchor', result.before.placement.anchor, result.shifted.placement.anchor],
-    ]) {
-      if (!before || !after) { result.failures.push(`${label} missing`); continue; }
-      for (const field of ['width','height']) if (Math.abs(before[field] - after[field]) > .01) result.failures.push(`${label}.${field} changed; invalid regression trigger`);
-      if (Math.abs(after.top - before.top + 72) > .01) result.failures.push(`${label} did not move up exactly 72px`);
-    }
-    result.failures.push(...validate(result.shifted, null, '사이클 비교').map(value => `shifted: ${value}`));
-  } finally {
-    await evaluate(cdp, original => {
+    // Compare readiness precedes the asynchronous BTC refresh. Wait for its
+    // terminal notice state and stable geometry before measuring the 72px move.
+    result.before = await settledHeading(cdp, `${result.id} before`, {waitForBtcRefresh:true});
+    // Change a real layout/scroll owner after initial rendering, without a window
+    // resize, synthetic scroll event, or changing the toolbar/anchor dimensions.
+    const saved = await evaluate(cdp, () => {
       const owner = document.querySelector('.atlas-chart-stage');
-      if (original.value) owner.style.setProperty('max-height', original.value, original.priority);
-      else owner.style.removeProperty('max-height');
-    }, saved);
-    result.restored = await settledHeading(cdp, `${result.id} restored`);
-    result.failures.push(...validate(result.restored, result.before, '사이클 비교').map(value => `restored: ${value}`));
-  }
+      const original = {value:owner.style.getPropertyValue('max-height'), priority:owner.style.getPropertyPriority('max-height')};
+      owner.style.setProperty('max-height', `${owner.getBoundingClientRect().height - 72}px`, 'important');
+      return original;
+    });
+    try {
+      result.shifted = await settledHeading(cdp, `${result.id} shifted`);
+      for (const [label, before, after] of [
+        ['toolbar', result.before.geometry.toolbar, result.shifted.geometry.toolbar],
+        ['anchor', result.before.placement.anchor, result.shifted.placement.anchor],
+      ]) {
+        if (!before || !after) { result.failures.push(`${label} missing`); continue; }
+        for (const field of ['width','height']) if (Math.abs(before[field] - after[field]) > .01) result.failures.push(`${label}.${field} changed; invalid regression trigger`);
+        if (Math.abs(after.top - before.top + 72) > .01) result.failures.push(`${label} did not move up exactly 72px`);
+      }
+      result.failures.push(...validate(result.shifted, null, '사이클 비교').map(value => `shifted: ${value}`));
+    } catch (error) { result.failures.push(error.stack || String(error)); }
+    finally {
+      await evaluate(cdp, original => {
+        const owner = document.querySelector('.atlas-chart-stage');
+        if (original.value) owner.style.setProperty('max-height', original.value, original.priority);
+        else owner.style.removeProperty('max-height');
+      }, saved);
+      result.restored = await settledHeading(cdp, `${result.id} restored`);
+      result.failures.push(...validate(result.restored, result.before, '사이클 비교').map(value => `restored: ${value}`));
+    }
+  } catch (error) { result.failures.push(error.stack || String(error)); }
   result.status = result.failures.length ? 'failed' : 'passed';
   return result;
 }
@@ -207,7 +221,7 @@ let server, chrome, profile, browser, cdp;
 try {
   report.testedHead = execFileSync('git', ['rev-parse','HEAD'], {cwd:root, encoding:'utf8'}).trim();
   for (const path of [
-    'dist/atlas-shell.css', 'dist/ui/page-description.js', 'dist/index.html',
+    'dist/atlas-shell.css', 'dist/ui/page-description.js', 'dist/index.html', 'dist/app.js', 'dist/btc-refresh-status.js',
     'dist/daily-data-view.js', 'dist/daily-data.css',
     'dist/research-reader.js', 'dist/research-reader.css', 'dist/editorial-ledgers.css',
     'dist/relay-room.js', 'dist/relay-room.css', 'scripts/verify-page-heading-browser.mjs',
@@ -276,7 +290,7 @@ try {
         report.failures.push(...shifted.failures.map(message => `${shifted.id}: ${message}`));
         console.log(JSON.stringify({id:shifted.id,status:shifted.status,failures:shifted.failures}));
       }
-    } catch (error) { result.failures.push(error.stack || String(error)); }
+    } catch (error) { result.status = 'failed'; result.failures.push(error.stack || String(error)); }
     report.failures.push(...result.failures.map(message => `${spec.id}: ${message}`));
     console.log(JSON.stringify({id:result.id,status:result.status,failures:result.failures}));
   }

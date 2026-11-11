@@ -10,6 +10,7 @@ import {tmpdir} from 'node:os';
 import {resolve, relative, sep, extname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {headlessWindowArgument, verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
+import {selectNativeOptionByKeyboard} from './native-select-keyboard.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url)), dist = resolve(root, 'dist');
 const args = process.argv.slice(2), option = (key, fallback) => args.includes(key) ? args[args.indexOf(key) + 1] : fallback;
@@ -35,7 +36,7 @@ const report = {schemaVersion:1, kind:'conference-p1a-real-browser', scope:onlyL
   cases:[],failures:[],screenshots:[],status:'failed'};
 
 async function sources() {
-  const files = execFileSync('git',['ls-files','--cached','--others','--exclude-standard','--','dist','scripts/verify-conference-browser.mjs','scripts/headless-browser-window.mjs','tests/fixtures/conference'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean);
+  const files = execFileSync('git',['ls-files','--cached','--others','--exclude-standard','--','dist','scripts/verify-conference-browser.mjs','scripts/headless-browser-window.mjs','scripts/native-select-keyboard.mjs','tests/fixtures/conference'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean);
   return Object.fromEntries(await Promise.all([...new Set(files)].sort().map(async file => {
     try { return [file,sha(await readFile(resolve(root,file)))]; }
     catch (error) { if(error.code==='ENOENT')return [file,null];throw error; }
@@ -62,6 +63,7 @@ async function evaluate(cdp, fn, ...values) {
   return response.result.value;
 }
 async function until(read,label,timeout=30000){const deadline=Date.now()+timeout;let last;while(Date.now()<deadline){try{last=await read();if(last)return last;}catch(error){if(!/Execution context was destroyed|Cannot find context/.test(error.message))throw error;}await delay(80);}throw new Error('Timed out: '+label+'; last='+JSON.stringify(last));}
+async function settled(cdp){await evaluate(cdp,async()=>{await document.fonts.ready;await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));});}
 function inspect() {
   const root=document.querySelector('.conference-player');
   const rect=node=>{if(!node)return null;const r=node.getBoundingClientRect();return {left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height};};
@@ -87,7 +89,7 @@ function navigationState() {
   const documents=[],unavailableFrames=[];
   function visit(doc,visible,depth) {
     documents.push({url:doc.location.href,page:doc.body?.dataset.page,centerTool:doc.body?.dataset.centerTool,
-      boot:doc.documentElement.dataset.boot,visible,depth,players:doc.querySelectorAll('.conference-player').length,
+      boot:doc.documentElement?.dataset.boot,visible,depth,players:doc.querySelectorAll('.conference-player').length,
       audio:doc.querySelectorAll('.conference-audio').length});
     for(const frame of doc.querySelectorAll('iframe')) {
       if(!frame.contentDocument){unavailableFrames.push(frame.src);continue;}
@@ -99,10 +101,26 @@ function navigationState() {
     overflow:Math.max(document.documentElement.scrollWidth,document.body?.scrollWidth||0)-innerWidth};
 }
 async function click(cdp,selector) {
-  const box=await evaluate(cdp,selector=>{const node=[...document.querySelectorAll(selector)].find(node=>!node.closest('[hidden]')&&node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})&&node.getBoundingClientRect().width>0);if(!node)throw Error('Missing visible '+selector);node.scrollIntoView({block:'nearest',inline:'nearest'});const r=node.getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2,disabled:node.disabled};},selector);
+  const locate=async block=>{
+    await evaluate(cdp,(selector,block)=>{const node=[...document.querySelectorAll(selector)].find(node=>!node.closest('[hidden]')&&node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})&&node.getBoundingClientRect().width>0);if(!node)throw Error('Missing visible '+selector);node.scrollIntoView({block,inline:'nearest'});},selector,block);
+    await settled(cdp);
+    return evaluate(cdp,(selector,alignment)=>{const node=[...document.querySelectorAll(selector)].find(node=>!node.closest('[hidden]')&&node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})&&node.getBoundingClientRect().width>0);if(!node)throw Error('Missing visible '+selector);const r=node.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,hit=document.elementFromPoint(x,y);return {x,y,disabled:node.disabled,alignment,hitTarget:Boolean(hit&&node.contains(hit)),hit:hit?{tag:hit.tagName,id:hit.id,className:hit.getAttribute('class')}:null,fixedHeader:Boolean(hit?.closest('.atlas-dashboard-header')&&getComputedStyle(hit.closest('.atlas-dashboard-header')).position==='fixed'),scrollY};},selector,block);
+  };
+  let box=await locate('nearest');
+  // Native select focus may scroll the document. Nearest alignment considers
+  // the viewport, but cannot account for the fixed outer header covering it.
+  if(!box.hitTarget)box=await locate('center');
+  if(!box.hitTarget&&box.fixedHeader&&box.scrollY>0){
+    const nativeScroll={from:box.scrollY,deltaY:-box.scrollY};
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',x:box.x,y:box.y,deltaX:0,deltaY:nativeScroll.deltaY});
+    await until(()=>evaluate(cdp,()=>scrollY===0),'native document scroll before '+selector);
+    box=await locate('nearest');box.nativeScroll={...nativeScroll,to:box.scrollY};
+  }
   assert.equal(Boolean(box.disabled),false,'Disabled control '+selector);
+  assert.ok(box.hitTarget,'Native click target is covered: '+selector+' '+JSON.stringify(box));
   await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',x:box.x,y:box.y,button:'left',clickCount:1});
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',x:box.x,y:box.y,button:'left',clickCount:1});await delay(35);
+  return box;
 }
 async function key(cdp,name,{shift=false,control=false}={}) {
   const keyCodes={ArrowLeft:37,ArrowRight:39,ArrowUp:38,ArrowDown:40,Home:36,End:35,Tab:9,Enter:13,Escape:27,' ':32,'[':219,']':221};
@@ -113,7 +131,33 @@ async function key(cdp,name,{shift=false,control=false}={}) {
 async function focus(cdp,selector){await evaluate(cdp,selector=>{const node=document.querySelector(selector);if(!node)throw Error('Missing '+selector);node.focus({preventScroll:true});},selector);}
 async function blur(cdp){await evaluate(cdp,()=>document.activeElement?.blur());}
 async function type(cdp,selector,text){await focus(cdp,selector);await key(cdp,'a',{control:true});await cdp.send('Input.insertText',{text});await delay(35);}
-async function select(cdp,selector,value){const index=await evaluate(cdp,(selector,value)=>[...document.querySelector(selector).options].findIndex(option=>option.value===value),selector,String(value));assert.ok(index>=0,'Missing native option '+value);await focus(cdp,selector);await key(cdp,'Home');for(let i=0;i<index;i++)await key(cdp,'ArrowDown');await key(cdp,'Enter');await until(()=>evaluate(cdp,(selector,value)=>document.querySelector(selector).value===value,selector,String(value)),'native selection '+value);}
+async function select(cdp,selector,value,entry){
+  // Touch emulation is independent: createPage uses desktop device metrics at
+  // every width, so the helper must restore mobile:false on macOS too.
+  const viewport={width:entry.width,height:entry.height,mobile:false};
+  const receipt={selector,value:String(value),viewport};(entry.nativeSelections??=[]).push(receipt);
+  await evaluate(cdp,selector=>{
+    const events=[],types=['keydown','keyup','input','change'];
+    const observe=event=>{const targetMatches=event.target?.matches?.(selector)||false;if(targetMatches||event.type==='keydown'||event.type==='keyup')events.push({type:event.type,key:event.key??null,isTrusted:event.isTrusted,targetMatches,value:targetMatches?event.target.value:null});};
+    for(const type of types)document.addEventListener(type,observe,true);
+    window.__conferenceSelectAudit={events,stop(){for(const type of types)document.removeEventListener(type,observe,true);}};
+  },selector);
+  let selectionError=null;
+  try{
+    Object.assign(receipt,await selectNativeOptionByKeyboard({cdp,evaluate,context:cdp,settled,selector,value:String(value),viewport}));
+    await until(()=>evaluate(cdp,(selector,value)=>document.querySelector(selector)?.value===value,selector,String(value)),'native selection '+value);
+  }catch(error){
+    selectionError=error;throw error;
+  }finally{
+    try{receipt.events=await evaluate(cdp,()=>{const audit=window.__conferenceSelectAudit;audit.stop();delete window.__conferenceSelectAudit;return audit.events;});}
+    catch(error){if(!selectionError)throw error;receipt.auditError=String(error.stack||error);}
+  }
+  assert.ok(receipt.events.every(event=>event.isTrusted),'Every native select event is trusted');
+  for(const type of ['keydown','keyup'])assert.deepEqual(receipt.events.filter(event=>event.type===type).map(event=>event.key),receipt.keys,'Native select '+type+' sequence');
+  assert.ok(receipt.events.filter(event=>event.type==='keydown').every(event=>event.targetMatches),'Native select owns each keydown');
+  if(!receipt.noOp)for(const type of ['input','change'])assert.ok(receipt.events.some(event=>event.type===type&&event.targetMatches),'Native select produces trusted '+type);
+  return receipt;
+}
 async function screenshot(cdp,id){const bytes=Buffer.from((await cdp.send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false})).data,'base64');assert.equal(bytes.subarray(0,8).toString('hex'),'89504e470d0a1a0a');const file=id+'.png';await writeFile(resolve(out,file),bytes);const receipt={file,bytes:bytes.length,sha256:sha(bytes)};report.screenshots.push(receipt);return receipt;}
 function assertLayout(state,viewport){
   assert.equal(state.horizontalOverflow,0,'Horizontal page overflow');assert.equal(state.h1Count,1,'One DOM H1');assert.equal(state.paintedH1,1,'One painted H1');
@@ -138,7 +182,33 @@ const audioFiles=new Map(fixture.audio.map(clip=>['/conference/'+clip.file,wav(c
 const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.woff2':'font/woff2','.ico':'image/x-icon'};
 let mode='fixture',server,child,browserCdp,profile,stderr='',origin,debugOrigin;
 async function createPage(viewport){const context=await browserCdp.send('Target.createBrowserContext');const target=await browserCdp.send('Target.createTarget',{url:'about:blank',browserContextId:context.browserContextId});const info=await until(async()=>{const entries=await(await fetch(debugOrigin+'/json/list')).json();return entries.find(item=>item.id===target.targetId);},'new page target');const cdp=await Cdp.connect(info.webSocketDebuggerUrl);await cdp.send('Page.enable');await cdp.send('Runtime.enable');await cdp.send('Network.enable');const nativeWindow=await verifyHeadlessWindowEnvelope(cdp,viewport);await cdp.send('Emulation.setDeviceMetricsOverride',{width:viewport.width,height:viewport.height,deviceScaleFactor:1,mobile:false});await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:viewport.width<=1023,maxTouchPoints:1});return {cdp,nativeWindow,dispose:async()=>{cdp.close();await browserCdp.send('Target.disposeBrowserContext',{browserContextId:context.browserContextId});}};}
-async function navigate(cdp,query,state='ready'){await cdp.send('Page.navigate',{url:origin+'/bitcoin-cycle-atlas/?page=conference&'+query});await until(()=>evaluate(cdp,state=>document.querySelector('.conference-player')?.dataset.state===state,state),'conference '+state);await until(()=>evaluate(cdp,()=>document.readyState==='complete'&&document.fonts.status==='loaded'),'document and fonts before measurement');if(state==='ready')await until(()=>evaluate(cdp,()=>{const audio=document.querySelector('.conference-audio');return audio?.readyState>=1&&document.querySelector('.conference-slide-image')?.naturalWidth>0;}),'real media metadata/image');await delay(100);}
+async function conferenceReady(cdp,state='ready'){
+  await until(()=>evaluate(cdp,state=>document.querySelector('.conference-player')?.dataset.state===state,state),'conference '+state);
+  await until(()=>evaluate(cdp,()=>document.readyState==='complete'&&document.fonts.status==='loaded'),'document and fonts before measurement');
+  if(state==='ready')await until(()=>evaluate(cdp,()=>{const audio=document.querySelector('.conference-audio');return audio?.readyState>=1&&document.querySelector('.conference-slide-image')?.naturalWidth>0;}),'real media metadata/image');
+  await settled(cdp);
+  let previous='',steady=0,receipt;
+  await until(async()=>{
+    receipt=await evaluate(cdp,()=>{const play=document.querySelector('.conference-player [data-action=play]'),box=play?.getBoundingClientRect(),hit=box&&document.elementFromPoint(box.left+box.width/2,box.top+box.height/2);return {documentState:document.readyState,fonts:document.fonts.status,imageReady:Boolean(document.querySelector('.conference-slide-image')?.naturalWidth),audioReadyState:document.querySelector('.conference-audio')?.readyState,play:box?{left:box.left,top:box.top,width:box.width,height:box.height}:null,playHit:Boolean(play&&hit&&play.contains(hit))};});
+    const key=JSON.stringify(receipt.play);steady=key===previous?steady+1:0;previous=key;
+    return receipt.documentState==='complete'&&receipt.fonts==='loaded'&&(state!=='ready'||receipt.imageReady&&receipt.audioReadyState>=1)&&receipt.playHit&&steady>=2;
+  },'stable conference play target');
+  receipt.stableSamples=steady+1;
+  return receipt;
+}
+async function navigate(cdp,query,state='ready'){await cdp.send('Page.navigate',{url:origin+'/bitcoin-cycle-atlas/?page=conference&'+query});return conferenceReady(cdp,state);}
+async function playBeforeLeaving(cdp,entry,label){
+  await evaluate(cdp,()=>{
+    const play=document.querySelector('.conference-player [data-action=play]');
+    const record=event=>{window.__conferencePlayClick={isTrusted:event.isTrusted,targetMatches:play.contains(event.target),documentState:document.readyState,fonts:document.fonts.status};};
+    play.addEventListener('click',record,{once:true,capture:true});
+  });
+  await click(cdp,'[data-action=play]');
+  entry.playClick=await evaluate(cdp,()=>{const receipt=window.__conferencePlayClick;delete window.__conferencePlayClick;return receipt;});
+  assert.equal(entry.playClick?.isTrusted,true,'Native play click is trusted');assert.equal(entry.playClick.targetMatches,true,'Native play click reaches the play button');
+  await until(()=>evaluate(cdp,()=>document.querySelector('.conference-player').dataset.playing==='true'&&!document.querySelector('.conference-audio').paused),label);
+  entry.playing=await evaluate(cdp,inspect);
+}
 async function stateTime(cdp){return evaluate(cdp,()=>Number(document.querySelector('.conference-player').dataset.time));}
 async function pageSettings(cdp,width,open){if(width<=767){const current=await evaluate(cdp,()=>document.querySelector('[data-action=settings]').getAttribute('aria-expanded')==='true');if(current!==open)await click(cdp,'[data-action=settings]');}}
 async function captionFocusReceipt(cdp) {
@@ -153,10 +223,10 @@ async function coreInteractions(cdp,entry,viewport){
   await until(()=>evaluate(cdp,()=>document.querySelector('.conference-player').dataset.playing==='false'&&document.querySelector('audio').paused),'native pause');
   let time=await stateTime(cdp);await click(cdp,'[data-action=forward]');assert.ok(Math.abs(await stateTime(cdp)-time-10)<.1,'+10seconds');
   time=await stateTime(cdp);await click(cdp,'[data-action=backward]');assert.ok(Math.abs(await stateTime(cdp)-time+10)<.1,'-10seconds');
-  await pageSettings(cdp,viewport.width,true);time=await stateTime(cdp);await select(cdp,'[data-role=deck]','final-290');assert.ok(Math.abs(await stateTime(cdp)-time)<.1,'Deck preserves event time');await select(cdp,'[data-role=deck]','r17-257');
+  await pageSettings(cdp,viewport.width,true);time=await stateTime(cdp);await select(cdp,'[data-role=deck]','final-290',entry);assert.ok(Math.abs(await stateTime(cdp)-time)<.1,'Deck preserves event time');await select(cdp,'[data-role=deck]','r17-257',entry);
   for(const action of ['follow','auto']){const before=await evaluate(cdp,action=>document.querySelector('.conference-player').dataset[action],action);await click(cdp,'[data-action='+action+']');assert.notEqual(await evaluate(cdp,action=>document.querySelector('.conference-player').dataset[action],action),before);await click(cdp,'[data-action='+action+']');assert.equal(await evaluate(cdp,action=>document.querySelector('.conference-player').dataset[action],action),before);}
-  for(const rate of [.75,1,1.25,1.5,2]){await select(cdp,'[data-role=rate]',rate);assert.equal(await evaluate(cdp,()=>document.querySelector('audio').playbackRate),rate);}
-  await select(cdp,'[data-role=rate]',1);await pageSettings(cdp,viewport.width,false);
+  for(const rate of [.75,1,1.25,1.5,2]){await select(cdp,'[data-role=rate]',rate,entry);assert.equal(await evaluate(cdp,()=>document.querySelector('audio').playbackRate),rate);}
+  await select(cdp,'[data-role=rate]',1,entry);await pageSettings(cdp,viewport.width,false);
   await click(cdp,'.conference-caption');await until(()=>evaluate(cdp,()=>document.querySelector('.conference-transcript').open),'transcript open');
   const panel=(await evaluate(cdp,inspect)).panel;assert.equal(panel.mode,viewport.width>=1024?'dock':'sheet');if(viewport.width<1024)assert.equal(panel.modal,true);
   assert.ok(panel.rect.left>=-.5&&panel.rect.right<=viewport.width+.5&&panel.rect.bottom<=viewport.height+.5,'Transcript in viewport');
@@ -165,7 +235,7 @@ async function coreInteractions(cdp,entry,viewport){
   time=await stateTime(cdp);const deck=await evaluate(cdp,()=>document.querySelector('.conference-player').dataset.deck);await key(cdp,'f');await key(cdp,'d');await key(cdp,'ArrowLeft');assert.ok(Math.abs(await stateTime(cdp)-time)<.1,'Editable keys do not seek');assert.equal(await evaluate(cdp,()=>document.querySelector('.conference-player').dataset.deck),deck,'Editable D does not switch decks');
   await type(cdp,'[data-role=transcript-search]','3725초');await click(cdp,'.conference-transcript-row:not([hidden])');assert.ok(Math.abs(await stateTime(cdp)-3725)<.1,'Transcript row seeks');
   entry.transcript=await evaluate(cdp,inspect);assertLayout(entry.transcript,viewport);entry.transcriptScreenshot=await screenshot(cdp,entry.id+'-transcript');
-  await click(cdp,'[data-action=close-transcript]');assert.equal(await evaluate(cdp,()=>document.activeElement?.classList.contains('conference-caption')),true,'Transcript restores opener focus');
+  entry.transcriptCloseClick=await click(cdp,'[data-action=close-transcript]');assert.equal(await evaluate(cdp,()=>document.activeElement?.classList.contains('conference-caption')),true,'Transcript restores opener focus');
   if(viewport.width<=767){
     await pageSettings(cdp,viewport.width,true);await click(cdp,'.conference-transcript-toggle');
     await until(()=>evaluate(cdp,()=>document.querySelector('.conference-transcript').open&&document.querySelector('.conference-options').hidden),'mobile settings opener becomes hidden');
@@ -211,9 +281,9 @@ async function timelineInteractions(cdp,entry){
   await blur(cdp);await click(cdp,'[data-action=next-slide]');assert.equal(await stateTime(cdp),18);await click(cdp,'[data-action=previous-slide]');assert.equal(await stateTime(cdp),0);
   await click(cdp,'.conference-caption');await until(()=>evaluate(cdp,()=>document.querySelector('.conference-transcript').open),'transcript for complete fixture traversal');
   entry.syntheticTraversal={talks:[],decks:[]};
-  for(const talk of fixture.talks){await select(cdp,'[data-role=talk-select]',talk.id);assert.equal(await stateTime(cdp),talk.t0);entry.syntheticTraversal.talks.push(talk.id);}
+  for(const talk of fixture.talks){await select(cdp,'[data-role=talk-select]',talk.id,entry);assert.equal(await stateTime(cdp),talk.t0);entry.syntheticTraversal.talks.push(talk.id);}
   await click(cdp,'[data-action=close-transcript]');
-  for(const deck of fixture.decks){await select(cdp,'[data-role=deck]',deck.id);await click(cdp,'.conference-caption');let lastPage=null;const visited=[];
+  for(const deck of fixture.decks){await select(cdp,'[data-role=deck]',deck.id,entry);await click(cdp,'.conference-caption');let lastPage=null;const visited=[];
     for(const [index,segment] of fixture.segments.entries()){await click(cdp,'.conference-transcript-row[data-segment="'+index+'"]');assert.equal(await stateTime(cdp),segment.t0);const current=await evaluate(cdp,inspect);if(Number.isInteger(segment.page?.[deck.id]))lastPage=segment.page[deck.id];assert.equal(current.state.page,lastPage===null?'':String(lastPage));assert.equal(current.captionText,segment.text);assert.equal(await evaluate(cdp,()=>document.querySelectorAll('.conference-transcript-row[aria-current=true]').length),1);visited.push(index);}
     entry.syntheticTraversal.decks.push({deck:deck.id,visitedSegments:visited.length,lastTime:await stateTime(cdp)});await click(cdp,'[data-action=close-transcript]');
   }
@@ -281,10 +351,12 @@ try{
       await until(()=>evaluate(cdp,()=>document.documentElement.dataset.boot==='ready'&&[...document.querySelectorAll('[data-atlas-page=conference]')].some(node=>node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})&&node.getBoundingClientRect().width>1)),'hydrated navigation from '+symbol);
       await click(cdp,'[data-atlas-page=conference]');
       await until(()=>evaluate(cdp,()=>document.body?.dataset.page==='conference'&&document.querySelector('.conference-player')?.dataset.state==='ready'),'canonical conference entry from '+symbol);
-      await until(()=>evaluate(cdp,()=>document.querySelector('audio')?.readyState>=1),'conference audio metadata');
+      // Match direct entry readiness before this post-load navigation lifecycle case.
+      // The separate early-load/pageshow playback defect is not repaired here.
+      entry.conferenceReadiness=await conferenceReady(cdp);
       entry.conference=await evaluate(cdp,inspect);assert.equal(new URL(entry.conference.url).searchParams.get('page'),'conference');assert.equal(new URL(entry.conference.url).searchParams.has('center'),false,'Conference cannot live in a cached center iframe');
       assert.equal(await evaluate(cdp,()=>document.querySelectorAll('.conference-player').length),1);
-      await click(cdp,'[data-action=play]');await until(()=>evaluate(cdp,()=>document.querySelector('.conference-player').dataset.playing==='true'),'play before leaving conference');
+      await playBeforeLeaving(cdp,entry,'play before leaving conference');
       const destination=symbol==='BTCUSD'?'evidence':'data';await click(cdp,'[data-atlas-page='+destination+']');
       await until(async()=>{const tree=await evaluate(cdp,navigationState);return tree.root.boot==='ready'&&tree.unavailableFrames.length===0&&tree.players===0&&tree.audio===0&&tree.documents.some(item=>item.visible&&item.page===destination&&item.boot==='ready')&&(tree.root.page===destination||tree.root.centerTool===destination);},'leave conference for '+destination);
       entry.destination=await evaluate(cdp,navigationState);
