@@ -656,7 +656,6 @@ async function ethCase(cdp,width,receipt,expected,archive){
   assert.ok(receipt.dialog.text.includes('현재 상태')&&receipt.dialog.text.includes('계수의 추정 불확실성'),'New model evidence must describe state and omitted uncertainty');
   await screenshot(cdp,'eth-'+width+'-evidence.png',receipt);
   if(width===320||width===1440){
-    const nativeKey=async(key,code,num)=>{const native=process.platform==='darwin'?({ArrowDown:125,ArrowUp:126,Enter:36,End:119,Home:115})[code]??0:num;for(const type of ['keyDown','keyUp'])await cdp.send('Input.dispatchKeyEvent',{type,key,code,windowsVirtualKeyCode:num,nativeVirtualKeyCode:native,...(type==='keyDown'&&key==='Enter'?{text:'\r',unmodifiedText:'\r'}:{})});await settled(cdp);};
     const selectModel=async value=>{
       // Native keystrokes only: the helper never assigns .value or fabricates change events.
       const selected=await selectNativeOptionByKeyboard({cdp,evaluate,settled,selector:'#eth-model',value,viewport:{width,height:receipt.height??height,mobile:width<=390}});
@@ -664,7 +663,7 @@ async function ethCase(cdp,width,receipt,expected,archive){
       assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-model').value),value,'Native arrow input must select the model');
     };
     await evaluate(cdp,()=>{document.querySelector('#eth-model').scrollIntoView({block:'center'});document.querySelector('#eth-model').focus();});
-    await selectModel('valuation');await nativeKey('Enter','Enter',13);await settled(cdp);
+    await selectModel('valuation');await settled(cdp);
     assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-model').value),'valuation');
     assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-chart').dataset.forecastModel),'valuation');
     assert.equal(await evaluate(cdp,()=>document.activeElement.id),'eth-model','Native model selection must retain keyboard focus');
@@ -672,7 +671,7 @@ async function ethCase(cdp,width,receipt,expected,archive){
     await screenshot(cdp,'eth-'+width+'-legacy-model.png',receipt);
     // Same relative step (valuation -> pooled is one ArrowUp), routed through the
     // shared native helper so the keystroke runs where Blink handles closed selects.
-    await selectModel('pooled');await nativeKey('Enter','Enter',13);await settled(cdp);
+    await selectModel('pooled');await settled(cdp);
     const pooled=await evaluate(cdp,()=>({
       selected:document.querySelector('#eth-model').value,focus:document.activeElement.id,
       model:document.querySelector('#eth-chart').dataset.forecastModel,
@@ -692,7 +691,7 @@ async function ethCase(cdp,width,receipt,expected,archive){
     await screenshot(cdp,'eth-'+width+'-pooled-chart.png',receipt);
     await nativeForecast(cdp,'[data-eth-action="forecast"]');
     await evaluate(cdp,()=>{document.querySelector('#eth-model').scrollIntoView({block:'center'});document.querySelector('#eth-model').focus();});
-    await selectModel('adaptive');await nativeKey('Enter','Enter',13);await settled(cdp);
+    await selectModel('adaptive');await settled(cdp);
     assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-model').value),'adaptive');
     assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-chart').dataset.forecastModel),'adaptive');
     receipt.modelSwitch={nativeKeyboard:true,legacyAvailable:true,pooledAvailable:true,pooled,restoredAdaptive:true,observedPrice:await evaluate(cdp,()=>document.querySelector('#eth-price').textContent)};
