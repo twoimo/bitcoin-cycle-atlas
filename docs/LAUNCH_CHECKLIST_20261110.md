@@ -50,6 +50,14 @@ R1~R5가 전부 완료로 정리되어 R8 착수 조건을 충족했고, R8까�
 6. 검사 삭제·허용치 완화·합성 값 대입으로 통과시키지 않는다. 실패는 원인을 고쳐 다시 돌린다.
 7. main push·merge·force push·배포·PR 변경·유료 용량·계정/권한 변경은 금지다. 커밋과 브랜치 push만 한다.
 
+## 미검증 관찰 해소 — COMPARE 320/390 구조 툴바 (2026-11-11)
+
+R4에서 "관찰 한계"로만 남겼던 COMPARE 320/390 헤딩의 `structure-threshold`·`structure-json` 잘림은 **잘림이 아니라 가로 스크롤**이었다. 실측: `.lab-toolbar`가 `overflow-x:auto`이고 `scrollWidth 544 > clientWidth 268`(320px), 390px에서도 동일한 구조이며, 두 컨트롤은 초기 위치(x=324/546, 390px에서 394/686)에서 뷰포트 밖이지만 툴바를 가로로 스크롤하면 도달한다.
+
+그래서 `scripts/verify-compare-shell-browser.mjs`에 실제 휠 입력으로 확인하는 단언을 추가했다. 320·390에서 툴바 중앙에 `Input.dispatchMouseEvent` 휠을 보내 `scrollLeft`가 실제로 증가하는지, 그 뒤 `#structure-threshold`와 `#structure-json`이 뷰포트 안에 들어오고 `elementFromPoint`로 그 노드(또는 자손)가 잡히는지 확인하고 영수증에 남긴다. 영수증 값: 320에서 scrollLeft 0→276, 390에서 0→346, 두 폭 모두 `inViewport:true`·`hit:true`. 이 단언 추가 후 compare 셸 검증 **PASSED**(실패 0).
+
+이 항목은 이제 "미검증 관찰"이 아니라 하네스가 지키는 계약이다. 제품 CSS는 바꾸지 않았다(스크롤로 도달 가능하므로 결함 아님).
+
 ## 역사 기록 — Pro 인계 시점 작업판 (2026-11-11 01:30)
 
 

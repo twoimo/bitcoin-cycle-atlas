@@ -688,6 +688,49 @@ const main = async () => {
       if (sheet.readerOpen) { await evaluate(cdp, () => document.dispatchEvent(new CustomEvent("atlas:close-detail"))); await sleep(250); }
     }
 
+    // The compare structure toolbar scrolls horizontally on phones. Its threshold
+    // select and JSON export were observed painted past the viewport edge, so the
+    // reachability is asserted with real wheel input instead of left unverified.
+    for (const [w, h] of [[320, 844], [390, 844]]) {
+      const where = `compare structure toolbar ${w}x${h}`;
+      await goto('index.html?page=compare&legacy=1&compare-unit=rebased', w, h);
+      const measure = () => evaluate(cdp, () => {
+        const bar = document.querySelector('.lab-toolbar');
+        const read = selector => {
+          const node = document.querySelector(selector);
+          if (!node) return null;
+          const r = node.getBoundingClientRect();
+          const cx = Math.min(Math.max(r.left + r.width / 2, 1), innerWidth - 1);
+          const cy = Math.min(Math.max(r.top + r.height / 2, 1), innerHeight - 1);
+          const hit = document.elementFromPoint(cx, cy);
+          return { left: Math.round(r.left), right: Math.round(r.right), width: Math.round(r.width),
+            inViewport: r.left >= 0 && r.right <= innerWidth && r.top >= 0 && r.bottom <= innerHeight,
+            hit: Boolean(hit && (hit === node || node.contains(hit))) };
+        };
+        const barRect = bar?.getBoundingClientRect();
+        return { scrollWidth: bar?.scrollWidth ?? 0, clientWidth: bar?.clientWidth ?? 0,
+          scrollLeft: Math.round(bar?.scrollLeft ?? 0), viewport: innerWidth,
+          point: barRect ? { x: Math.round(barRect.left + barRect.width / 2), y: Math.round(barRect.top + barRect.height / 2) } : null,
+          threshold: read('#structure-threshold'), json: read('#structure-json') };
+      });
+      const initial = await measure();
+      if (!initial.threshold || !initial.json) fail(where, 'structure toolbar controls are missing: ' + JSON.stringify(initial));
+      else if (!(initial.scrollWidth > initial.clientWidth + 4)) fail(where, 'toolbar reports no horizontal overflow: ' + JSON.stringify(initial));
+      else if (!initial.point) fail(where, 'toolbar has no measurable box');
+      else {
+        await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: initial.point.x, y: initial.point.y });
+        await cdp.send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: initial.point.x, y: initial.point.y,
+          deltaX: initial.scrollWidth - initial.clientWidth + 24, deltaY: 0 });
+        await sleep(450);
+        const scrolled = await measure();
+        if (!(scrolled.scrollLeft > initial.scrollLeft)) fail(where, 'wheel did not scroll the toolbar: ' + JSON.stringify({ initial, scrolled }));
+        for (const key of ['threshold', 'json'])
+          if (!scrolled[key]?.inViewport || !scrolled[key].hit) fail(where, key + ' is not reachable after scrolling: ' + JSON.stringify(scrolled[key]));
+        report.structureToolbar = report.structureToolbar || [];
+        report.structureToolbar.push({ viewport: `${w}x${h}`, initial, scrolled });
+      }
+    }
+
     // Phase E: leaving a content route must hand the chart frame back its own
     // regions, and coming back must restore the same content nodes.
     for (const [name, url] of [["evidence", "index.html?page=evidence"], ["relay", "index.html?page=relay"]]) {
