@@ -18,6 +18,7 @@
 | R7 native 외부·실기기 | 차단 | macOS 외부 AppKit 메뉴, Safari, 실제 iOS/Android 기기 검증은 자동화 대상이 아니다. Blink 내부 팝업 trusted 입력과 동일시하지 않는다. |
 | R8 문서 최종화 | 완료 `7bfd717` | 요청사항·반응형·체크리스트 세 문서를 최종 상태로 정리했다. `docs/requirements/REQ_WP_ABC_20261110.md` §12 최종 판정(WP-A 차단 유지·WP-B 부분·WP-C 완료, R1~R8 목록), `docs/TRADINGVIEW_RESPONSIVE_20261110.md` §14 최종 판정(계약별 6행·로컬 수치·남은 차단·클리핑 관찰 한계), 그리고 이 표와 아래 `## 체크리스트 종결 판정` 절이다. R6·R7만 차단으로 남기고, 원격 CI 0건을 통과로 쓰지 않으며, main push·merge·배포·PR 변경·유료 용량·계정/권한 변경은 수행하지 않았다. |
 | R9 WP-D 전 종목 좌상단 오버레이 | **완료** (2026-11-11) | BTC 기준 단일 행 오버레이로 통일했다. ETHUSD·MSTR·BMNR의 `.eth-readout`을 1행(간격 · 관측 종가 · 가격 · 전봉 변화 · 기준일)으로 바꾸고 출처는 별도 `.eth-readout-source` 행으로 분리했으며, OHLC는 `details` 접힘(기본 닫힘, 펼치면 O/H/L/C)으로 옮겼다. 실측(플롯 폭 대비): 1440 ETH 319×23(23.9%)·MSTR 306×23(22.9%)·BMNR 296×23(22.2%), 768 44.6~48.1%, 320 줄바꿈 40px·가로 오버플로 0, readout 오른쪽 바깥 히트는 차트 SVG. 검증: native 15/15(신규 `verifyCompactReadout`), 반응형 44/44, WP6 30/30, chart-qa 12/12, panel 138/138, compare PASSED, `npm test` `complete:true` 3,373/3,368/0/5, typecheck·static(958 files·214 scripts·992 references). 계약: 요청서 §13, 반응형 §4.6. |
+| R10 차트 UI 마감 (인트로 행 제거·보조지표 범례) | **진행** | 차트 페이지의 인트로 행을 레이아웃에서 빼고(`6dea9b3`), ETH·MSTR·BMNR에 BTC식 보조지표 범례(Vol·역사 사건·예측 범위, 토글 URL 유지)를 붙였으며(`f94a35f`), 621~1119px에서 툴바 실제 높이 48px를 예약했다(`d36766e`). ETH 후보 하네스 53/53 통과(sourceCommit `d36766e`), `npm test` `complete:true` 3,373/3,368/0/5. **남은 것**: 인트로 행 제거로 차트 페이지 h1이 1×1로 숨어 compare 셸 계약(보이는 h1 정확히 1개)이 실패한다. Pro가 h1 배치를 설계 중이며, 해결 후 compare·반응형 44·WP6 30·chart-qa 12를 다시 돌리고 main 병합·배포해야 한다. |
 
 
 
