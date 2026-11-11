@@ -1,0 +1,41 @@
+{
+  "schema": "atlas.r12-macos-receipt/1",
+  "recordedAt": "2026-11-11T22:30:18.277Z",
+  "head": "a6bf961b3e62af45e57b6b74662158626cfa7fa2",
+  "chrome": "Chrome/157.0.8103.79",
+  "node": "v26.5.0",
+  "mode": "contract-only (no baseline)",
+  "counts": {
+    "cases": {
+      "total": 15,
+      "passed": 15
+    },
+    "supplementalCases": {
+      "total": 9,
+      "passed": 9
+    },
+    "layoutShiftCases": {
+      "total": 2,
+      "passed": 1
+    }
+  },
+  "layoutShiftFailures": [
+    {
+      "id": "compare-320-ancestor-resize",
+      "failures": [
+        "restored: plot.top 53 -> 0",
+        "restored: plot.height 799 -> 852"
+      ]
+    }
+  ],
+  "files": {
+    "contract-report.json.gz": {
+      "bytes": 7209,
+      "sha256": "105af0cf2adfa9c701c7abb556803dc53b39b98a2f666eae7481724aa05c2977"
+    },
+    "contract-report.json": {
+      "bytes": 119257,
+      "sha256": "29b5be71a64cdb935f140199e86296e4b2192893c8e8d390d29a0da2f54c98a4"
+    }
+  }
+}
