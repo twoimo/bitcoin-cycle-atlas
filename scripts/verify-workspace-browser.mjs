@@ -515,6 +515,52 @@ async function verifyPriceLegendScrollOwnership(api,{touch,label}){
   record.completed=true;
 }
 
+/**
+ * The reader has two declared shapes and the browser must honour the one it declares.
+ * Split mode (overlay=false) reserves its own column, so the chart keeps every pixel
+ * it had minus exactly the reader width; overlay mode (overlay=true) may cover the
+ * chart only because the covered plot is made inert. Both keep the document width.
+ */
+/**
+ * A reserved reader column narrows the chart, so the renderer legitimately re-projects
+ * it horizontally: same paths, same point counts, same plotted y values, narrower x.
+ * Overlay mode does not change the layout, so there the path bytes must be identical.
+ * Closing the reader must always restore the original bytes exactly.
+ */
+function assertChartIdentity(state,base,label){
+  assert.equal(state.pathCount,base.pathCount,label+' changed the number of chart paths');
+  if(state.reader?.overlay!=='false'){
+    assert.equal(state.pathHash,base.pathHash,label+' changed chart paths');
+    return;
+  }
+  let narrowed=0;
+  state.pathProfile.forEach((path,index)=>{
+    const before=base.pathProfile[index];
+    assert.equal(path.nums,before.nums,label+' dropped plotted points from chart path '+index);
+    assert.deepEqual(path.y,before.y,label+' changed the plotted values of chart path '+index);
+    // Nothing may overflow the narrower column; decorative icon paths keep their size.
+    assert.ok(path.x[1]<=before.x[1]+0.01,label+' let chart path '+index+' overflow the narrower column');
+    if(path.x[1]<before.x[1]-1)narrowed++;
+  });
+  assert.ok(narrowed>0,label+' did not re-project the plotted series into the narrower column');
+}
+
+const readerOverlapArea=(a,b)=>a&&b?Math.max(0,Math.min(a.right,b.right)-Math.max(a.left,b.left))*Math.max(0,Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)):0;
+function assertReaderOccupancy(state,base,label){
+  assert.equal(state.widths.document,base.widths.document,label+' changed the document width');
+  assert.ok(state.reader,label+' left no visible reader to measure');
+  const declared=state.reader.overlay;
+  assert.ok(declared==='true'||declared==='false',label+' left the reader without a declared overlay mode');
+  if(declared==='true'){
+    assert.equal(state.mainInert,true,label+' overlaid the plot without making it inert');
+    assert.ok(Math.abs(state.widths.main-base.widths.main)<=2,label+' reflowed the chart column in overlay mode');
+    return;
+  }
+  assert.equal(readerOverlapArea(state.reader,state.plot),0,label+' let the split reader cover the chart');
+  assert.ok(Math.abs((base.widths.main-state.widths.main)-state.reader.width)<=2,label+' did not reserve exactly the reader width: '+JSON.stringify({base:base.widths.main,opened:state.widths.main,reader:state.reader.width}));
+  assert.equal(state.mainInert,false,label+' left the visible chart inert in split mode');
+}
+
 /** Long-document readers must retain native controls and the actual opener. */
 export async function verifyLegacyMethodReader(api){
   const {cdp,receipt,evaluate,until,settled,screenshot}=api;
@@ -548,16 +594,27 @@ export async function verifyLegacyMethodReader(api){
     throw new Error('Native body wheel did not reveal '+selector);
   };
   const readState=async()=>{
-    const paths=[...document.querySelectorAll('#structure-chart path[d],#legacy-comparison svg path[d]')].map(el=>el.getAttribute('d')).join('\n');
+    const pathD=[...document.querySelectorAll('#structure-chart path[d],#legacy-comparison svg path[d]')].map(el=>el.getAttribute('d'));
+    // The chart re-projects horizontally when its column narrows. Keep the plotted
+    // values comparable across that reflow: point counts and y extents per path.
+    const pathProfile=pathD.map(d=>{const nums=(d||'').match(/-?\d+(?:\.\d+)?/g)||[];let xMin=Infinity,xMax=-Infinity,yMin=Infinity,yMax=-Infinity;
+      for(let i=0;i+1<nums.length;i+=2){const x=+nums[i],y=+nums[i+1];if(x<xMin)xMin=x;if(x>xMax)xMax=x;if(y<yMin)yMin=y;if(y>yMax)yMax=y;}
+      const round=value=>Number.isFinite(value)?Math.round(value*100)/100:null;
+      return{nums:nums.length,x:[round(xMin),round(xMax)],y:[round(yMin),round(yMax)]};});
+    const paths=pathD.join('\n');
     const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(paths));
     const svgs=[];
     for(const svg of document.querySelectorAll('#structure-chart,#legacy-comparison svg')){
       const p=[...svg.querySelectorAll('path[d]')].map(el=>el.getAttribute('d')).join('\n'),hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(p)),box=svg.getBoundingClientRect();
       svgs.push({id:svg.id||svg.parentElement?.getAttribute('data-icon')||svg.getAttribute('class'),viewBox:svg.getAttribute('viewBox'),width:box.width,height:box.height,pathCount:svg.querySelectorAll('path[d]').length,hash:[...new Uint8Array(hash)].map(n=>n.toString(16).padStart(2,'0')).join('')});
     }
+    const rectOf=node=>{if(!node)return null;const b=node.getBoundingClientRect();return{left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height};};
+    const readerNode=document.querySelector('#chart-reader'),plotNode=document.querySelector('.atlas-plot')||document.querySelector('#structure-chart');
     return {scrollTop:document.body.scrollTop,scrollHeight:document.body.scrollHeight,clientHeight:document.body.clientHeight,
       widths:{document:document.documentElement.scrollWidth,body:document.body.clientWidth,bodyScroll:document.body.scrollWidth,workspace:document.querySelector('.workspace').getBoundingClientRect().width,main:document.querySelector('#main').getBoundingClientRect().width},
-      pathHash:[...new Uint8Array(digest)].map(n=>n.toString(16).padStart(2,'0')).join(''),pathCount:document.querySelectorAll('#structure-chart path[d],#legacy-comparison svg path[d]').length,
+      reader:readerNode&&!readerNode.hidden?{...rectOf(readerNode),overlay:readerNode.dataset.overlay??null,position:getComputedStyle(readerNode).position}:null,
+      plot:rectOf(plotNode),mainInert:Boolean(document.querySelector('#main')?.inert),
+      pathHash:[...new Uint8Array(digest)].map(n=>n.toString(16).padStart(2,'0')).join(''),pathCount:pathProfile.length,pathProfile,
       focused:document.activeElement?.id||null,readerHidden:document.querySelector('#chart-reader').hidden,menuHidden:document.querySelector('#export-menu').hidden,
       readerPosition:getComputedStyle(document.querySelector('#chart-reader')).position,svgs};
   };
@@ -578,7 +635,7 @@ export async function verifyLegacyMethodReader(api){
       return {shell:document.body.dataset.shell,page:document.body.dataset.page,ancestors};
     });
     assert.ok(complete(close)&&complete(next),'Scrolled reader close/pager is outside its viewport: '+JSON.stringify({close,next}));
-    const opened=await evaluate(cdp,readState);record.latestOpened=opened;assert.ok(Math.abs(opened.scrollTop-before.scrollTop)<=1,'Opening reader moved the long document');assert.deepEqual(opened.widths,before.widths,'Opening reader changed document or chart workspace width');assert.equal(opened.pathHash,before.pathHash,'Opening reader changed chart paths');
+    const opened=await evaluate(cdp,readState);record.latestOpened=opened;assert.ok(Math.abs(opened.scrollTop-before.scrollTop)<=1,'Opening reader moved the long document');assertReaderOccupancy(opened,before,'Opening the reader');assertChartIdentity(opened,before,'Opening the reader');
     const initialPage=await evaluate(cdp,()=>document.querySelector('#chart-reader .reader-pagination span').textContent);
     await pointer('#chart-reader [aria-label="다음 설명 페이지"]');
     const nextPage=await evaluate(cdp,()=>document.querySelector('#chart-reader .reader-pagination span').textContent);assert.notEqual(nextPage,initialPage,'Real method pagination did not advance');
@@ -598,7 +655,7 @@ export async function verifyLegacyMethodReader(api){
     await until(()=>evaluate(cdp,()=>document.querySelector('#chart-reader').hidden&&document.activeElement===document.querySelector('#export-button')),'legacy reader returns focus to its visible menu trigger');
     const closed=await evaluate(cdp,readState),returned=await evaluate(cdp,readNativeInteractiveTarget,'#export-button');
     assert.ok(complete(returned),'Reader returned focus to an unreachable trigger');
-    assert.ok(Math.abs(closed.scrollTop-before.scrollTop)<=1,'Closing reader moved the long document');assert.deepEqual(closed.widths,before.widths,'Closing reader changed document or chart workspace width');assert.equal(closed.pathHash,before.pathHash,'Reader pagination/close changed chart paths');
+    assert.ok(Math.abs(closed.scrollTop-before.scrollTop)<=1,'Closing reader moved the long document');assert.deepEqual(closed.widths,before.widths,'Closing reader changed document or chart workspace width');assert.equal(closed.reader,null,'Closing reader left the reader visible');assert.equal(closed.mainInert,false,'Closing reader left the chart inert');assert.equal(closed.pathHash,before.pathHash,'Reader pagination/close changed chart paths');
     record.states.push({action,opened,initialPage,nextPage,close,next,closed,returned});
   }
 }

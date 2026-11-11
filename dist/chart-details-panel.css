@@ -330,9 +330,10 @@ body[data-shell=dashboard] .workspace.atlas-details-layout[data-details-open]{
 
 /* The compare document can scroll beyond its bounded workspace. A sticky
    reader is then clamped by the workspace's bottom and loses its close action.
-   Preserve the existing column width and shared header inset, but anchor this
-   document's reader to the viewport instead of the scrolling grid. */
+   Anchor this document's reader to the viewport instead of the scrolling grid,
+   but keep the column reserved so the reader never covers the chart it
+   describes: the plot column gives up exactly the reader's own width. */
 @media(min-width:960px){
-  body[data-shell=chart][data-page=compare] .workspace.atlas-details-layout[data-details-open=true]{grid-template-columns:minmax(0,1fr) 0 var(--rail-width)}
+  body[data-shell=chart][data-page=compare] .workspace.atlas-details-layout[data-details-open=true]{grid-template-columns:minmax(0,1fr) var(--detail-width,320px) var(--rail-width)}
   body[data-shell=chart][data-page=compare] .workspace.atlas-details-layout>.chart-details-panel{position:fixed;top:0;right:var(--rail-width);width:var(--detail-width,320px)}
 }
