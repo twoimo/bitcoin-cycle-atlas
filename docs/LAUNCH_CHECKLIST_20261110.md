@@ -104,7 +104,17 @@ R8 종결 시 "미판정·미검증"으로 남긴 두 항목을 실제 입력으
 
 검증(로컬, 이 tree): panel-tests 138/138, compare shell PASSED(failures 0), **53-case 53/53**(실패 0, `sourceIntegrity` 158 files·changed 0), `npm test` `complete:true` 3,373/3,368/실패 0/제외 5, typecheck, static(952 files·214 scripts·992 references), Pages verify(12 files·9 routes). WP6·chart-qa 영수증은 이전 제품 바이트에 묶여 있으므로 이 tree에 적용하지 않는다.
 
-배포: 수정 커밋을 브랜치에 push한 뒤 main에 fast-forward push했고, Cloudflare `bitcoin-cycle-atlas` 빌드가 `verify:cloudflare --stage=browser`와 `build:cloudflare`를 거쳐 `deploy:cloudflare`를 수행한다. 빌드·deployment 결과와 라이브 readback은 아래에 추가한다.
+배포 실행 중 두 가지를 더 고쳤다. (1) browser stage의 `eth` 320이 Linux에서 실패했다. 직전 `Enter` 입력이 Blink select 팝업을 열어 다음 화살표가 값이 아니라 팝업 하이라이트를 움직였다. 화살표만으로 값이 커밋되므로 선택 후 `Enter`를 제거했고, macOS native 레인 15/15로 재확인했다. (2) model stage가 19분 검증 예산을 1분 초과해 `formal`이 예산 초과로 실패했다(3,373건이 16.4~17.4분로 흔들림). 테스트 집합·임계값은 그대로 두고 `--test-concurrency`만 2→3으로 올려 13분 47초로 예산 안에 넣었다(`ops/cloudflare-verification.md`).
+
+최종 배포 영수증(2026-11-11 17:33 KST):
+
+- main `a8276861d200f421bd6a07cad85abfdd03694257` (로컬=원격)
+- model stage 빌드 `af2fe1c9-2272-4cc4-a184-410045fba689` success(13분 47초), browser stage 빌드 `91adb41c-939e-4da6-8e47-393fb0024087` success
+- Worker `bitcoin-cycle-atlas` `deployed_on` 2026-11-11T08:33:45Z
+- 라이브 `publication.json`: sourceCommit `a827686…`, manifestSha256 `4ee6b95f…`, contentDigest `73d42521…`, phase `confirmed`
+- `verifyServedPublication` **PASS**: index.html·site-entry.js·data/btc-daily.json·data/forecast-ledger/index.json 본문 해시 일치, servedCommit = servedDigest = `a827686…`
+- `/`, `/?symbol=ETHUSD`, `/?page=data` HTTP 200
+- 브라우저 stage 게이트: runtime-preflight·locked-dependencies·generated-pages·typecheck·panel-tests·service-build·postgres-service-tests·native-browser(53) 전부 PASS, publication/standalone PASS
 
 ## 역사 기록 — Pro 인계 시점 작업판 (2026-11-11 01:30)
 
