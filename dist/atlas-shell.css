@@ -422,3 +422,8 @@ body[data-shell=dashboard] .workspace{padding-right:44px;padding-bottom:var(--co
 body[data-shell=dashboard] .atlas-sidebar-toggle{display:none}
 /* The chart frame and the content routes never show two copies of a region. */
 body[data-shell=chart] :is(.content-rail,.content-bottom-bar){display:none!important}
+
+/* The chart page owns its full height: the page intro (title + one-line
+   description) stays in the DOM for assistive technology and search, but no
+   longer renders as a layout row above the chart. */
+.atlas-page-intro{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
