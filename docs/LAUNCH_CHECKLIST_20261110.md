@@ -71,6 +71,8 @@ R8 종결 시 "미판정·미검증"으로 남긴 두 항목을 실제 입력으
 
 이번 회차 로컬 게이트: chart-replay 레인 7/7, native 레인 15/15, `npm run typecheck`, `verify:static`(967 files·214 scripts·992 references), `build:pages`·`verify:pages`(12 files·9 routes) 통과. `npm test`는 호스트 배치 3,332건 중 3,327 통과·실패 0·제외 5로 돌았지만, 고정 frozen 배치 이미지 `node@sha256:e7add2a490bb17d97d485b8641bd88455fff7839ade0f5eba493c3508124d413`(Node 24.22.2 linux/x64)이 Docker Hub에서 **404**이고 로컬 사본은 플랫폼 메타데이터가 빈 손상 상태라 `complete:false`다. frozen 41건은 이번 회차에 실행되지 않았으며 통과로 세지 않는다. 전체 3,373건의 이전 `complete:true` 영수증은 제품 바이트 `d61e0dbd…`에 묶인 이력으로만 유지한다.
 
+이번 회차 커밋: `9dd6332af27ef96453caa58ef96f4bde63ed08b6`(하네스+문서), 원격 `fix/tradingview-responsive-20261110` push 확인.
+
 ## WP-A 자동화분 실측 — 2026-11-11 (R6 부분)
 
 사람이 필요한 부분은 그대로 두고, 자동화할 수 있는 것만 실행했다. 전체 영수증은 `docs/conference/WP_A_AUTOMATED_MEDIA_20261111.md`와 `docs/conference/evidence/media-20261111/`에 있다.
