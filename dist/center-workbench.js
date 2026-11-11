@@ -289,10 +289,13 @@ export function mountCenterWorkbench() {
     event.preventDefault();event.stopImmediatePropagation();
     // A dashboard route has no chart host to open into, so its navigation must
     // reach the shared shell by URL. Without this the click is swallowed and the
-    // page never changes.
+    // page never changes. A chart page still owns this click: its host may mount
+    // after the handler, so the click waits there instead of racing a document
+    // navigation. The destination comes from the shared href builder so the
+    // market lab root stays `/market-lab/` rather than a tab subpath.
     if(!document.querySelector('.atlas-plot')){
       const outerView=document.body.dataset.page||new URLSearchParams(location.search).get('page');
-      if(outerView&&outerView!==page.id){location.assign(atlasSitePath(page.href));return;}
+      if(outerView&&outerView!=='outlook'&&outerView!==page.id){location.assign(centerHref(page,activeSymbol,activeRegion));return;}
     }
     const selected=page.id==='market-us'?lastMarket:page;
     open(selected,isWorkspaceChart(page)&&lastChart?.page.id===page.id?lastChart.symbol:activeSymbol,{region:isWorkspaceChart(page)?lastChart?.region:undefined});

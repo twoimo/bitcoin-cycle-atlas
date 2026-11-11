@@ -91,6 +91,21 @@ R8 종결 시 "미판정·미검증"으로 남긴 두 항목을 실제 입력으
 
 `docs/requirements/WP_B_OPEN_DECISIONS_20261111.md`에 8건을 "결정 질문·현재 문서 위치·선택지"로 정리했다. **결정은 하지 않았다.** 각 항목은 사용자 선택 전까지 미결정이며, 구현·유료 용량·배포 승인을 뜻하지 않는다. D1 저장소·비용, D2 임베딩·재임베딩, D3 보존·삭제권, D4 3열 권한 범위, D5 에이전트 수 상한, D6 종합 모델 등급, D7 소수 의견 라벨, D8 출처별 분량이다.
 
+## 배포 — 2026-11-11 (main → Cloudflare Workers Builds)
+
+사용자 요청에 따라 `fix/tradingview-responsive-20261110`을 main에 fast-forward하고 production 배포를 진행했다. 배포 전 점검에서 **production이 2026-11-09 이후 갱신되지 않고 있었다**: 라이브 `publication.json`의 `sourceCommit`은 `36e7db09…`(2026-11-09 19:07 KST)였고, `bitcoin-cycle-atlas` Worker의 `deployed_on`도 2026-11-09T10:34Z였다. 원인은 browser stage의 `generated-pages`·`panel-tests` 실패였다.
+
+| 결함 | 원인 | 수정 |
+|---|---|---|
+| Cloudflare `generated-pages` 실패 | 11-10 시점 커밋의 `dist/market-lab` 산출물이 web 소스보다 오래되어 해시가 달랐다. `f21a3b6`이 재생성해 현재 tree에서는 로컬(Node 26)과 Node 24.22.2 양쪽에서 `verify:pages`가 통과한다 | 추가 수정 없음(재생성 커밋이 해결) |
+| `panel-tests` 예외 | `content-shell.js`의 `sidebarOwnsNav()`가 레이아웃 없는 DOM에서 `getClientRects`를 호출해 throw | 함수가 없으면 `hidden`이 아닌 사이드바를 소유자로 판정 |
+| `panel-tests` 무한 재진입 | `mount()`와 `place()`가 `hidden`을 번갈아 써 MutationObserver가 `sync()`를 계속 재호출 | 가시성 소유자를 `place()`로 단일화하고 같은 값 쓰기 제거 |
+| 대시보드 클릭 즉시 이동 | 즉시 이동 분기가 `outlook`까지 삼키고 `page.href`(`/market-lab/us/`)를 사용 | `outlook`은 차트 호스트에 위임하고 공유 `centerHref`(`/market-lab/`) 사용 |
+
+검증(로컬, 이 tree): panel-tests 138/138, compare shell PASSED(failures 0), **53-case 53/53**(실패 0, `sourceIntegrity` 158 files·changed 0), `npm test` `complete:true` 3,373/3,368/실패 0/제외 5, typecheck, static(952 files·214 scripts·992 references), Pages verify(12 files·9 routes). WP6·chart-qa 영수증은 이전 제품 바이트에 묶여 있으므로 이 tree에 적용하지 않는다.
+
+배포: 수정 커밋을 브랜치에 push한 뒤 main에 fast-forward push했고, Cloudflare `bitcoin-cycle-atlas` 빌드가 `verify:cloudflare --stage=browser`와 `build:cloudflare`를 거쳐 `deploy:cloudflare`를 수행한다. 빌드·deployment 결과와 라이브 readback은 아래에 추가한다.
+
 ## 역사 기록 — Pro 인계 시점 작업판 (2026-11-11 01:30)
 
 

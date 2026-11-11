@@ -50,11 +50,12 @@ export function createContentShell({ document }) {
     const workspace = document.querySelector('.workspace');
     if (!workspace) return;
     if (rail.parentElement !== workspace) workspace.append(rail, bottom);
-    rail.hidden = false; bottom.hidden = false;
+    // Visibility belongs to place() alone. Writing `hidden` here as well made
+    // the two functions alternate the value, and the shell's mutation observer
+    // re-entered sync() on every write.
   }
 
   function unmount() {
-    rail.hidden = true; bottom.hidden = true;
     rail.remove(); bottom.remove();
   }
 
@@ -104,6 +105,9 @@ export function createContentShell({ document }) {
     if (!sidebar) return false;
     const style = sidebar.ownerDocument?.defaultView?.getComputedStyle?.(sidebar);
     if (style && style.display === 'none') return false;
+    // Layout-less DOMs (tests, server rendering) carry no getClientRects; a
+    // connected sidebar that is not display:none is still the authored owner.
+    if (typeof sidebar.getClientRects !== 'function') return !sidebar.hidden;
     return sidebar.getClientRects().length > 0;
   }
 
@@ -120,12 +124,15 @@ export function createContentShell({ document }) {
         if (host === rail) rail.prepend(nav); else host.append(nav);
       }
     }
-    rail.hidden = !nav || nav.parentElement !== rail;
+    const hideRail = !nav || nav.parentElement !== rail;
+    if (rail.hidden !== hideRail) rail.hidden = hideRail;
     footer = footer || document.querySelector('#main > .footer') || document.querySelector('.footer');
     if (footer) {
       if (footerHome === null) { footerHome = footer.parentElement; footerNext = footer.nextElementSibling; }
       if (footer.parentElement !== bottom) bottom.append(footer);
     }
+    const hideBottom = !footer || footer.parentElement !== bottom;
+    if (bottom.hidden !== hideBottom) bottom.hidden = hideBottom;
     if (sourcesReady()) unlockSources(); else lockSources();
   }
 
