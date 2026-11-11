@@ -73,7 +73,7 @@ export async function initEthView() {
     </header>
     <section class="atlas-plot eth-plot" aria-label="이더리움 실제 가격과 조건부 미래 경로">
       <svg id="eth-chart" role="group" tabindex="0" aria-label="ETH-USD 실선·캔들은 실제 관측, 파란 점선은 조건 기준선, 금색 점선은 무작위 예시 1개이며 확률이 아닙니다. 음영은 세 조건의 예시 범위입니다. 드래그로 이동, 휠이나 두 손가락으로 확대·축소하고 방향키로 값을 확인하세요."></svg>
-      <div class="eth-readout"><div class="eth-readout-heading"><strong>Ethereum / USD</strong><span id="eth-readout-interval"></span><span class="eth-venue">COINBASE</span></div><div class="eth-readout-value"><strong id="eth-price">—</strong><span id="eth-change"></span><span id="eth-kind"></span><time id="eth-bar-time"></time></div><div id="eth-ohlc" class="eth-ohlc"></div></div>
+      <div class="eth-readout" id="eth-readout"><div class="eth-readout-line"><strong class="eth-readout-name">Ethereum / USD</strong><span id="eth-readout-interval"></span><span id="eth-kind"></span><strong id="eth-price">—</strong><span id="eth-change"></span><time id="eth-bar-time"></time><details class="eth-ohlc-details" id="eth-ohlc-details"><summary aria-label="OHLC 값 보기">OHLC</summary><div id="eth-ohlc" class="eth-ohlc"></div></details></div></div><div class="eth-readout-source"><span class="eth-venue">COINBASE</span><span class="eth-source-suffix">일봉 · UTC</span></div>
       <div id="eth-forecast-note" class="eth-forecast-note" hidden><span class="eth-observed-key">— 실제 관측</span><span class="eth-baseline-key">·· 조건 기준선</span><span class="eth-envelope-key">음영: 세 조건 범위</span><span class="eth-sample-key">┄ 무작위 예시 1개 · 확률 아님</span></div>
       <div id="eth-empty" class="eth-empty" role="status"><p id="eth-empty-message">ETH-USD 가격 자료를 불러오고 있습니다.</p><button type="button" data-eth-action="refresh" hidden>다시 조회</button></div>
       <button type="button" id="eth-touch-hint" class="chart-touch-tracking-hint" hidden>값 추적 중 · 탭하여 종료</button>
@@ -184,7 +184,7 @@ export async function initEthView() {
     cancelInteraction();++navigationRevision;state.range=null;state.priceDomain=null;persist();renderForecastInfo();if(event.target.id==='eth-model')info.querySelector('#eth-model')?.focus();schedule();
   });
   function showReadout(row){
-    $('#eth-kind').textContent=row.kind==='forecast'?(state.ethModel!=='valuation'?'모형 예시':'무작위 예시'):'';
+    $('#eth-kind').textContent=row.kind==='forecast'?(state.ethModel!=='valuation'?'모형 예시':'무작위 예시'):row.kind==='unavailable'?'':'관측 종가';
     if(row.kind==='forecast'){
       $('#eth-price').textContent=`$${number(row.price)}`;$('#eth-change').textContent='';
       $('#eth-bar-time').textContent=(row.date||'').slice(0,10);$('#eth-bar-time').dateTime=row.date||'';
@@ -214,7 +214,7 @@ export async function initEthView() {
     state.frame=null;if(suspended||svg.dataset.chartReplayActive==='true'||document.body.dataset.centerTool)return;
     const series=currentSeries(),intraday=isIntradayInterval(state.frequency),entry=intraday?market.get(state.frequency):null;
     $('#eth-interval').value=state.frequency;
-    $('#eth-readout-interval').textContent=`· ${chartInterval(state.frequency).label}`;
+    $('#eth-readout-interval').textContent=chartInterval(state.frequency).label;
     for(const button of $$('[data-eth-interval]')){const active=button.dataset.ethInterval===state.frequency;button.setAttribute('aria-pressed',String(active));button.tabIndex=active?0:-1;}
     for(const button of $$('[data-eth-action]')){const action=button.dataset.ethAction;if(['line','candles','crosshair','pan'].includes(action))button.setAttribute('aria-pressed',String(action===state.chartType||action===state.tool));}
     const scale=$('[data-eth-action="scale"]');scale.textContent=state.scale==='log'?'로그':'선형';scale.setAttribute('aria-pressed',String(state.scale==='log'));
@@ -225,7 +225,7 @@ export async function initEthView() {
     const busy=state.loading||entry?.status==='loading';
     $('[data-eth-action="refresh"]').disabled=busy;plot.setAttribute('aria-busy',String(busy));
     $('#eth-empty').hidden=Boolean(series);
-    readout.hidden=!series;
+    readout.hidden=!series;$('.eth-readout-source').hidden=!series;
     setLoadingSurface($('#eth-empty'),!series&&!(state.error||entry?.error),{kind:'chart',label:'ETH-USD 가격 자료 로딩'});
     if(!series){
       svg.innerHTML='';state.controller=null;state.range=null;

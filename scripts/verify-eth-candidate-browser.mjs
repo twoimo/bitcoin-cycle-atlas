@@ -615,6 +615,44 @@ async function verifyNativeCommonLegend(cdp,width,receipt){
   receipt.commonLegend=state;return state;
 }
 
+async function verifyCompactReadout(cdp,width,receipt,kind){
+  const value=await evaluate(cdp,k=>{
+    const plot=document.querySelector('.atlas-plot');
+    const readout=document.querySelector('.eth-readout');
+    const source=document.querySelector('.eth-readout-source');
+    const details=document.querySelector(k==='eth'?'#eth-ohlc-details':'#equity-ohlc-details');
+    const ohlc=document.querySelector(k==='eth'?'#eth-ohlc':'#equity-ohlc');
+    const summary=details.querySelector('summary');
+    const rect=node=>{const b=node.getBoundingClientRect();return{left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height};};
+    const r=rect(readout),p=rect(plot),s=rect(summary),src=rect(source);
+    const hit=document.elementFromPoint(Math.min(r.right+10,p.right-1),r.top+r.height/2);
+    return {readout:r,plot:p,summary:s,source:{...src,offsetTop:src.top-p.top},open:details.open,
+      ohlcPainted:Boolean(ohlc.checkVisibility?.()),ohlcText:ohlc.textContent.replace(/\s+/g,' ').trim(),
+      hit:{tag:hit?.tagName??null,id:hit?.id||null,insideReadout:Boolean(hit&&readout.contains(hit))},
+      pageWidth:document.documentElement.scrollWidth};
+  },kind);
+  assert.ok(value.readout.left>=value.plot.left-1&&value.readout.right<=value.plot.right+1,'Readout escaped the plot: '+kind);
+  assert.ok(value.readout.top>=value.plot.top-1,'Readout escaped the plot top: '+kind);
+  assert.ok(value.readout.width<=value.plot.width+1,'Readout is wider than the plot: '+kind);
+  if(width>=768){assert.ok(value.readout.height<=24,'Readout is not a one-line overlay at '+width+': '+value.readout.height);assert.ok(value.readout.width<=value.plot.width*.62+1,'Readout is a band at '+width+': '+value.readout.width+'/'+value.plot.width);}
+  else assert.ok(value.readout.height<=44,'Readout took more than two lines at '+width+': '+value.readout.height);
+  assert.ok(value.summary.right<=value.readout.right+1&&value.summary.left>=value.readout.left-1,'OHLC toggle is clipped: '+kind);
+  assert.ok(value.source.offsetTop>=value.readout.top-value.plot.top+value.readout.height-1,'Source line overlaps the readout: '+kind);
+  assert.equal(value.open,false,'OHLC must start collapsed: '+kind);
+  assert.equal(value.ohlcPainted,false,'Collapsed OHLC is still painted: '+kind);
+  assert.ok(!value.hit.insideReadout,'A readout band covers the chart at '+width+': '+JSON.stringify(value.hit));
+  assert.ok(value.pageWidth<=width+1,'Readout created horizontal overflow: '+kind);
+  const selector=kind==='eth'?'#eth-ohlc-details > summary':'#equity-ohlc-details > summary',details=kind==='eth'?'#eth-ohlc-details':'#equity-ohlc-details';
+  await click(cdp,selector);
+  const opened=await evaluate(cdp,([k,d])=>{const det=document.querySelector(d),o=document.querySelector(k==='eth'?'#eth-ohlc':'#equity-ohlc');return{open:det.open,painted:Boolean(o.checkVisibility?.()),text:o.textContent.replace(/\s+/g,' ').trim()};},[kind,details]);
+  assert.equal(opened.open,true,'OHLC disclosure did not open: '+kind);
+  assert.equal(opened.painted,true,'OHLC values are not painted: '+kind);
+  for(const label of ['O','H','L','C'])assert.ok(opened.text.includes(label),'OHLC lost '+label+': '+opened.text);
+  await click(cdp,selector);
+  assert.equal(await evaluate(cdp,d=>document.querySelector(d).open,details),false,'OHLC did not collapse: '+kind);
+  receipt.readout={kind,...value,expanded:opened};
+}
+
 async function ethCase(cdp,width,receipt,expected,archive){
   await until(()=>evaluate(cdp,()=>{
     const s=document.querySelector('#eth-chart');return s&&Number(s.dataset.observedCandleCount)>0&&Number(s.dataset.forecastPointCount)>0;
@@ -636,7 +674,7 @@ async function ethCase(cdp,width,receipt,expected,archive){
   assert.equal(chart.dataset.product,'ETH-USD');assert.equal(chart.dataset.chartType,'line');
   assert.ok(Number(chart.dataset.observedCandleCount)>0);assert.ok(Number(chart.dataset.forecastPointCount)>0);assert.equal(Number(chart.dataset.forecastCandleCount),0);
   for(const key of ['observed','future','baseline']){assert.ok(chart[key]&&chart[key].length>0,'Missing real SVG '+key+' path');assert.ok(!/NaN|Infinity/.test(chart[key].d),'Invalid SVG coordinates');}
-  assert.equal(chart.future.dash,'7 5');assert.equal(chart.baseline.dash,'2 4');assert.equal(chart.price,expected.price);assert.equal(chart.date,expected.date);assert.equal(chart.kind,'');
+  assert.equal(chart.future.dash,'7 5');assert.equal(chart.baseline.dash,'2 4');assert.equal(chart.price,expected.price);assert.equal(chart.date,expected.date);assert.equal(chart.kind,'관측 종가','The compact readout must label the observed bar');
   assert.equal(chart.note.hidden,false);assert.equal(chart.dataset.forecastModel,'adaptive');assert.ok(chart.note.text.includes('적중률 미보정'));
   for(const text of ['실제 관측','모형 중앙값','모형 예시 1개','음영: 모의 10–90%'])assert.ok(chart.note.text.includes(text),'Missing forecast semantic label '+text);
   const legend=await verifyNativeCommonLegend(cdp,width,receipt);
@@ -646,6 +684,7 @@ async function ethCase(cdp,width,receipt,expected,archive){
   assert.ok(legend.observedEntry.title.includes('실시간 현재가 표시는 아닙니다'),'Common ETH observed legend must not imply a live quote');
   for(const text of ['실제 가격','모형 중앙값','모형 예시 1개','음영: 모의 10–90%'])assert.ok((legend.expandedText||legend.text).includes(text),'Common ETH legend lost meaning '+text);
   dark(chart.background,'ETH plot');
+  await verifyCompactReadout(cdp,width,receipt,'eth');
   await screenshot(cdp,'eth-'+width+'-loaded.png',receipt);
   if(width===320)receipt.infoDataLinks=await verifyInfoDataLinks(cdp,'ETHUSD');
   await nativeForecast(cdp,'[data-eth-action="forecast"]');
@@ -808,6 +847,7 @@ async function equityCase(cdp,width,receipt,symbol,archive){
     assert.equal(Number(receipt.chart.dataset.forecastPointCount),0);assert.equal(receipt.chart.pathLength,0);assert.equal(receipt.chart.forecastGate.futureMarkers,0);
   }else assert.ok(receipt.chart.pathLength>0&&!/NaN|Infinity/.test(receipt.chart.pathData));
   dark(receipt.chart.background,symbol+' plot');
+  await verifyCompactReadout(cdp,width,receipt,'equity');
   await verifyNativeCommonLegend(cdp,width,receipt);
   await screenshot(cdp,label+'-'+width+'-loaded.png',receipt);
   if(width===320)receipt.infoDataLinks=await verifyInfoDataLinks(cdp,symbol);

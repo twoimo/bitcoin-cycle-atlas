@@ -147,6 +147,21 @@
 
 허용치는 상수로 고정했고 `tests/workspace-round-trip-widths.test.mjs`가 값(1·2)과 경계 동작(1.0 통과, 1.01 실패, 정수 키 변화 실패, `null`·숫자 아닌 값 실패, 숫자가 아닌 허용치 전달 실패)을 함께 검사한다. 허용치를 늘리려면 이 표와 그 테스트를 같이 바꿔야 한다. 브라우저 하네스는 `verifyLegacyMethodReader`에서 닫은 뒤 폭을 이 계약으로 비교하고 결과를 `workspace.legacy.methodReader.widthRoundTrips`에 남긴다.
 
+### 4.6 좌상단 정보 오버레이 (WP-D, 2026-11-11)
+
+BTCUSD·ETHUSD·MSTR·BMNR 차트의 좌상단 정보는 같은 오버레이 구성이다. BTC는 `.atlas-readout`(1행) + `.workbench-market-info`(출처), 나머지는 `.eth-readout`(1행) + `.eth-readout-source`(출처)를 쓴다.
+
+| 요소 | 계약 |
+|---|---|
+| readout | 내용 폭. ≥768에서 높이 ≤24px, 플롯 폭의 62% 이하. ≤620에서는 1~2행 줄바꿈 허용, 높이 ≤44px |
+| 값 | 간격 · 관측/모형 구분 · 현재가 · 전봉 변화 · 기준일. 관측 봉은 `관측 종가`로 표기 |
+| 출처 행 | readout 아래 별도 절대 배치(거래소·조정·기준). readout과 겹치지 않는다 |
+| OHLC | `details` 접힘. 기본 닫힘(페인트 0), 펼치면 O/H/L/C 값이 보이고 다시 접힌다. 토글 히트 영역은 44px 상당이지만 레이아웃 높이는 늘리지 않는다 |
+| 히트 | readout 오른쪽 바깥 `elementFromPoint`는 차트 SVG를 반환한다(전폭 띠 아님) |
+| 폭 | 가로 오버플로 0 |
+
+검증은 `scripts/verify-eth-candidate-browser.mjs`의 `verifyCompactReadout`이 ETH·MSTR·BMNR 각 viewport에서 수행한다.
+
 ## 5. 수용기준
 
 폭: **320 / 390 / 456 / 620 / 768 / 1024 / 1440**. 짧은 높이: **390×430**,
