@@ -1,0 +1,1395 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "4cc98d8195707ab69e534236bf2ed7fa22819327",
+  "sourceTree": "0e79b0fa76d7e50f8187fc9944dec10493438cc1",
+  "publishedSourceCommit": "a6bf961b3e62af45e57b6b74662158626cfa7fa2",
+  "publishedTree": "0e79b0fa76d7e50f8187fc9944dec10493438cc1",
+  "files": [
+    {
+      "path": "acceptance-after-wp6-retry.json",
+      "bytes": 1388,
+      "sha256": "c8ca98a9bc9291c3c3bd463e5690c4fe45ae8db9fbf8a102651f2540a90654ae",
+      "generated": true
+    },
+    {
+      "path": "baseline/ancestor-before-intermediate-report.json.gz",
+      "bytes": 7159,
+      "sha256": "41571e38220bf97b1d37e4e3f039a1e47cb7d819082fc7dd22d16fa085eec732",
+      "source": "build/r12/ancestor-before/report.json",
+      "rawBytes": 115080,
+      "rawSha256": "d1a522e6eecb1b0244d0f788df32e693198b62c4fa4449046428ac9a662f1ce8",
+      "compression": "gzip"
+    },
+    {
+      "path": "baseline/ancestor-before-intermediate-run.log.gz",
+      "bytes": 445,
+      "sha256": "2b41271bfe963b40b86596d2deb2118cf4d6541ed917aeb8a0254316dc262575",
+      "source": "build/r12/ancestor-before.log",
+      "rawBytes": 2161,
+      "rawSha256": "256077cbd54f1a49150d16fecc3b4ae2be2bb0bf42a426c8fcaf104ef8b342eb",
+      "compression": "gzip"
+    },
+    {
+      "path": "baseline/ce8df92-heading-report.json.gz",
+      "bytes": 4450,
+      "sha256": "a00db9dbfe0231907df98180dd201d1c44acbd0ff84ae6205b0333f579f92800",
+      "source": "build/r12/heading-before/report.json",
+      "rawBytes": 51258,
+      "rawSha256": "049eab660ddcdf12e4b20548d25a50bc9d90d4315ca9b3c7b0b8a9801aa470bc",
+      "compression": "gzip"
+    },
+    {
+      "path": "baseline/ce8df92-heading-run.log.gz",
+      "bytes": 297,
+      "sha256": "f215e16bcc3e719c3de5051cf6af569fd2b0c95d5c50a0d739167178c56decda",
+      "source": "build/r12/heading-before.log",
+      "rawBytes": 1069,
+      "rawSha256": "967af42b8e36c4dc59ed32c61b91eb7ce6089605c50845aed6a3db051c185d58",
+      "compression": "gzip"
+    },
+    {
+      "path": "baseline/heading-candidate-intermediate-report.json.gz",
+      "bytes": 6961,
+      "sha256": "d5e26e73c55ae91f1456fd98a18a0fe08088348e50dff7a61f50f6d59ca554ca",
+      "source": "build/r12/heading-candidate/report.json",
+      "rawBytes": 113685,
+      "rawSha256": "a3e0a2153281478ab7fdba2c6b28e2920a4fb4e48f2530bc1dd382824cc93b52",
+      "compression": "gzip"
+    },
+    {
+      "path": "baseline/heading-candidate-intermediate-run.log.gz",
+      "bytes": 364,
+      "sha256": "88813be2be4b4f1ffd1bb32f57dfb205bb899a80542a15e29bfc24ac900fdbfd",
+      "source": "build/r12/heading-candidate.log",
+      "rawBytes": 1728,
+      "rawSha256": "72b2afd24fb4b9f7a2eefb3623967e5b5088d23f6c66921b0c12e6f8d0a5b1ef",
+      "compression": "gzip"
+    },
+    {
+      "path": "controlled-notice-ab-initial-footer-rounding/baseline-1440-failed.png",
+      "bytes": 110738,
+      "sha256": "173cc57491dac28661d532e3f76fa02cb5a984dec6afec6159fb05743435b064",
+      "source": "build/r12-final/controlled-notice-ab-initial-footer-rounding/baseline-1440-failed.png",
+      "rawBytes": 110738,
+      "rawSha256": "173cc57491dac28661d532e3f76fa02cb5a984dec6afec6159fb05743435b064",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab-initial-footer-rounding/baseline-1440-footer-end.png",
+      "bytes": 113322,
+      "sha256": "5305f38a1dc54a105790591d874c0a44c8be31f13a515a3842176e6c44b6dbaf",
+      "source": "build/r12-final/controlled-notice-ab-initial-footer-rounding/baseline-1440-footer-end.png",
+      "rawBytes": 113322,
+      "rawSha256": "5305f38a1dc54a105790591d874c0a44c8be31f13a515a3842176e6c44b6dbaf",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab-initial-footer-rounding/baseline-320-failed.png",
+      "bytes": 55057,
+      "sha256": "4f61154e9e96badf179d5524adb5a07f8443b22c81ba510068cd2cf4c9160480",
+      "source": "build/r12-final/controlled-notice-ab-initial-footer-rounding/baseline-320-failed.png",
+      "rawBytes": 55057,
+      "rawSha256": "4f61154e9e96badf179d5524adb5a07f8443b22c81ba510068cd2cf4c9160480",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab-initial-footer-rounding/baseline-320-footer-end.png",
+      "bytes": 53865,
+      "sha256": "11080da3000826b6c1f616195a6cb0e27b5dbc260c4917fd582bb6f65d90e166",
+      "source": "build/r12-final/controlled-notice-ab-initial-footer-rounding/baseline-320-footer-end.png",
+      "rawBytes": 53865,
+      "rawSha256": "11080da3000826b6c1f616195a6cb0e27b5dbc260c4917fd582bb6f65d90e166",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab-initial-footer-rounding/baseline-390-failed.png",
+      "bytes": 61544,
+      "sha256": "e01a8f9180656efe24552865c9041d887fba8ab221947f441309134c728c423a",
+      "source": "build/r12-final/controlled-notice-ab-initial-footer-rounding/baseline-390-failed.png",
+      "rawBytes": 61544,
+      "rawSha256": "e01a8f9180656efe24552865c9041d887fba8ab221947f441309134c728c423a",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab-initial-footer-rounding/baseline-390-footer-end.png",
+      "bytes": 57907,
+      "sha256": "a6b8f1c8ff300560209e9c3f67fa61a3388329cd22ef0d1772fb84137ce194a2",
+      "source": "build/r12-final/controlled-notice-ab-initial-footer-rounding/baseline-390-footer-end.png",
+      "rawBytes": 57907,
+      "rawSha256": "a6b8f1c8ff300560209e9c3f67fa61a3388329cd22ef0d1772fb84137ce194a2",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab-initial-footer-rounding/candidate-1440-failed.png",
+      "bytes": 114104,
+      "sha256": "9bcdfe8af170ea09d0cf370ab55f8eecf4a1f006cd604ddf83c42a82d6fa9860",
+      "source": "build/r12-final/controlled-notice-ab-initial-footer-rounding/candidate-1440-failed.png",
+      "rawBytes": 114104,
+      "rawSha256": "9bcdfe8af170ea09d0cf370ab55f8eecf4a1f006cd604ddf83c42a82d6fa9860",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab-initial-footer-rounding/candidate-1440-footer-end.png",
+      "bytes": 113322,
+      "sha256": "5305f38a1dc54a105790591d874c0a44c8be31f13a515a3842176e6c44b6dbaf",
+      "source": "build/r12-final/controlled-notice-ab-initial-footer-rounding/candidate-1440-footer-end.png",
+      "rawBytes": 113322,
+      "rawSha256": "5305f38a1dc54a105790591d874c0a44c8be31f13a515a3842176e6c44b6dbaf",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab-initial-footer-rounding/candidate-320-failed.png",
+      "bytes": 55888,
+      "sha256": "fb5a0fe38cf7b6a42b6e2e742775649851af2f4300ae4ca4218cbc2c34889962",
+      "source": "build/r12-final/controlled-notice-ab-initial-footer-rounding/candidate-320-failed.png",
+      "rawBytes": 55888,
+      "rawSha256": "fb5a0fe38cf7b6a42b6e2e742775649851af2f4300ae4ca4218cbc2c34889962",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab-initial-footer-rounding/candidate-320-footer-end.png",
+      "bytes": 53863,
+      "sha256": "84fdeec919584440b56b1dc81ce2a7926c8519bef0972c182b61f8716d505bb1",
+      "source": "build/r12-final/controlled-notice-ab-initial-footer-rounding/candidate-320-footer-end.png",
+      "rawBytes": 53863,
+      "rawSha256": "84fdeec919584440b56b1dc81ce2a7926c8519bef0972c182b61f8716d505bb1",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab-initial-footer-rounding/candidate-390-failed.png",
+      "bytes": 62233,
+      "sha256": "062b28accd908fd37f78067fb7717b92abae3d8a26eb57adb7e4033c810d5dd0",
+      "source": "build/r12-final/controlled-notice-ab-initial-footer-rounding/candidate-390-failed.png",
+      "rawBytes": 62233,
+      "rawSha256": "062b28accd908fd37f78067fb7717b92abae3d8a26eb57adb7e4033c810d5dd0",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab-initial-footer-rounding/candidate-390-footer-end.png",
+      "bytes": 57907,
+      "sha256": "a6b8f1c8ff300560209e9c3f67fa61a3388329cd22ef0d1772fb84137ce194a2",
+      "source": "build/r12-final/controlled-notice-ab-initial-footer-rounding/candidate-390-footer-end.png",
+      "rawBytes": 57907,
+      "rawSha256": "a6b8f1c8ff300560209e9c3f67fa61a3388329cd22ef0d1772fb84137ce194a2",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab-initial-footer-rounding/report.json.gz",
+      "bytes": 7384,
+      "sha256": "814b41862b31bd4702afe44442c2e9af094600ec7dda1af7539acd6751df69ac",
+      "source": "build/r12-final/controlled-notice-ab-initial-footer-rounding/report.json",
+      "rawBytes": 157919,
+      "rawSha256": "fcc37d50a4695dc915749f94b404c5db69d43362bcd5366f708117c02f2bf290",
+      "compression": "gzip"
+    },
+    {
+      "path": "controlled-notice-ab/baseline-1440-failed.png",
+      "bytes": 110738,
+      "sha256": "173cc57491dac28661d532e3f76fa02cb5a984dec6afec6159fb05743435b064",
+      "source": "build/r12-final/controlled-notice-ab/baseline-1440-failed.png",
+      "rawBytes": 110738,
+      "rawSha256": "173cc57491dac28661d532e3f76fa02cb5a984dec6afec6159fb05743435b064",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab/baseline-1440-footer-end.png",
+      "bytes": 113322,
+      "sha256": "5305f38a1dc54a105790591d874c0a44c8be31f13a515a3842176e6c44b6dbaf",
+      "source": "build/r12-final/controlled-notice-ab/baseline-1440-footer-end.png",
+      "rawBytes": 113322,
+      "rawSha256": "5305f38a1dc54a105790591d874c0a44c8be31f13a515a3842176e6c44b6dbaf",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab/baseline-320-failed.png",
+      "bytes": 55057,
+      "sha256": "4f61154e9e96badf179d5524adb5a07f8443b22c81ba510068cd2cf4c9160480",
+      "source": "build/r12-final/controlled-notice-ab/baseline-320-failed.png",
+      "rawBytes": 55057,
+      "rawSha256": "4f61154e9e96badf179d5524adb5a07f8443b22c81ba510068cd2cf4c9160480",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab/baseline-320-footer-end.png",
+      "bytes": 53865,
+      "sha256": "11080da3000826b6c1f616195a6cb0e27b5dbc260c4917fd582bb6f65d90e166",
+      "source": "build/r12-final/controlled-notice-ab/baseline-320-footer-end.png",
+      "rawBytes": 53865,
+      "rawSha256": "11080da3000826b6c1f616195a6cb0e27b5dbc260c4917fd582bb6f65d90e166",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab/baseline-390-failed.png",
+      "bytes": 61544,
+      "sha256": "e01a8f9180656efe24552865c9041d887fba8ab221947f441309134c728c423a",
+      "source": "build/r12-final/controlled-notice-ab/baseline-390-failed.png",
+      "rawBytes": 61544,
+      "rawSha256": "e01a8f9180656efe24552865c9041d887fba8ab221947f441309134c728c423a",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab/baseline-390-footer-end.png",
+      "bytes": 57907,
+      "sha256": "a6b8f1c8ff300560209e9c3f67fa61a3388329cd22ef0d1772fb84137ce194a2",
+      "source": "build/r12-final/controlled-notice-ab/baseline-390-footer-end.png",
+      "rawBytes": 57907,
+      "rawSha256": "a6b8f1c8ff300560209e9c3f67fa61a3388329cd22ef0d1772fb84137ce194a2",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab/candidate-1440-failed.png",
+      "bytes": 114104,
+      "sha256": "9bcdfe8af170ea09d0cf370ab55f8eecf4a1f006cd604ddf83c42a82d6fa9860",
+      "source": "build/r12-final/controlled-notice-ab/candidate-1440-failed.png",
+      "rawBytes": 114104,
+      "rawSha256": "9bcdfe8af170ea09d0cf370ab55f8eecf4a1f006cd604ddf83c42a82d6fa9860",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab/candidate-1440-footer-end.png",
+      "bytes": 113322,
+      "sha256": "5305f38a1dc54a105790591d874c0a44c8be31f13a515a3842176e6c44b6dbaf",
+      "source": "build/r12-final/controlled-notice-ab/candidate-1440-footer-end.png",
+      "rawBytes": 113322,
+      "rawSha256": "5305f38a1dc54a105790591d874c0a44c8be31f13a515a3842176e6c44b6dbaf",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab/candidate-320-failed.png",
+      "bytes": 55888,
+      "sha256": "fb5a0fe38cf7b6a42b6e2e742775649851af2f4300ae4ca4218cbc2c34889962",
+      "source": "build/r12-final/controlled-notice-ab/candidate-320-failed.png",
+      "rawBytes": 55888,
+      "rawSha256": "fb5a0fe38cf7b6a42b6e2e742775649851af2f4300ae4ca4218cbc2c34889962",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab/candidate-320-footer-end.png",
+      "bytes": 53863,
+      "sha256": "84fdeec919584440b56b1dc81ce2a7926c8519bef0972c182b61f8716d505bb1",
+      "source": "build/r12-final/controlled-notice-ab/candidate-320-footer-end.png",
+      "rawBytes": 53863,
+      "rawSha256": "84fdeec919584440b56b1dc81ce2a7926c8519bef0972c182b61f8716d505bb1",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab/candidate-390-failed.png",
+      "bytes": 62233,
+      "sha256": "062b28accd908fd37f78067fb7717b92abae3d8a26eb57adb7e4033c810d5dd0",
+      "source": "build/r12-final/controlled-notice-ab/candidate-390-failed.png",
+      "rawBytes": 62233,
+      "rawSha256": "062b28accd908fd37f78067fb7717b92abae3d8a26eb57adb7e4033c810d5dd0",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab/candidate-390-footer-end.png",
+      "bytes": 57907,
+      "sha256": "a6b8f1c8ff300560209e9c3f67fa61a3388329cd22ef0d1772fb84137ce194a2",
+      "source": "build/r12-final/controlled-notice-ab/candidate-390-footer-end.png",
+      "rawBytes": 57907,
+      "rawSha256": "a6b8f1c8ff300560209e9c3f67fa61a3388329cd22ef0d1772fb84137ce194a2",
+      "compression": null
+    },
+    {
+      "path": "controlled-notice-ab/report.json.gz",
+      "bytes": 7922,
+      "sha256": "254cb2094a83e1d4b0121cb3bb1c956c44c5582fd7078943fb46a26fee8a5ad1",
+      "source": "build/r12-final/controlled-notice-ab/report.json",
+      "rawBytes": 171323,
+      "rawSha256": "3b9a16af03778e834448a579a799309f81d41d976e8aba3525b2e20dbdc4db99",
+      "compression": "gzip"
+    },
+    {
+      "path": "diagnostics/stage72-trigger-report.json.gz",
+      "bytes": 14638,
+      "sha256": "867a24df9572b7051f90a335ac512255cdc61a954cc8f0b2ff354169bd48a62f",
+      "source": "../r12-diagnostic/trigger-report.json",
+      "rawBytes": 381489,
+      "rawSha256": "fbbd48505ed33856981c0b44d801bd0462db2e9564097842aad2780392decfa7",
+      "compression": "gzip"
+    },
+    {
+      "path": "download-inventory.json",
+      "bytes": 32818,
+      "sha256": "cd24e86e4359b58a14a1381df05c4d693577619df54d54d9440404b4b2e8832b",
+      "generated": true
+    },
+    {
+      "path": "executions/browser-regressions.json.gz",
+      "bytes": 2164,
+      "sha256": "1bf5034224cd98a0dc1a4616f4bd391ac53c502f9ad756453796a0414355d8d3",
+      "source": "build/r12-regressions/execution-summary.json",
+      "rawBytes": 10874,
+      "rawSha256": "355c7afc0a6db6beb52bf215d7011a5b62f329c19485cead931dfae2debd4c06",
+      "compression": "gzip"
+    },
+    {
+      "path": "executions/browser-regressions.log.gz",
+      "bytes": 1643,
+      "sha256": "34ebedf8e7d31061ed55ced2eea9ba4b7b787b8c418f6f54d76aed6603da0040",
+      "source": "build/r12-final/browser-regressions.log",
+      "rawBytes": 7581,
+      "rawSha256": "6744ae5fe88ba75cb1c129dc37b724724d33fcd4efdd86781fa6ee7676cf3fdb",
+      "compression": "gzip"
+    },
+    {
+      "path": "executions/full-run.json.gz",
+      "bytes": 2696,
+      "sha256": "3719503e0981f7d0174ab80e2561d9d2faf8819e3188235113816a85dd0cc731",
+      "source": "build/r12-final/executions.json",
+      "rawBytes": 11158,
+      "rawSha256": "50aa410a273e7a1cf6e0c117c787fcfca99a1543d110a4ef8558a7124e779f7c",
+      "compression": "gzip"
+    },
+    {
+      "path": "executions/heading-1.log.gz",
+      "bytes": 329,
+      "sha256": "f8a57c21ddce3ee31619020329ddaa770ab8335402777fff9701956e1695ee56",
+      "source": "build/r12-final/heading-1.log",
+      "rawBytes": 1615,
+      "rawSha256": "bc0eb200473e6697d266258fed964f452d0fbf3830deecda0e74f37c92d68a88",
+      "compression": "gzip"
+    },
+    {
+      "path": "executions/heading-2.log.gz",
+      "bytes": 331,
+      "sha256": "6654fe2932dd7484a7edd2e49b89c01245549fc7df3e8885fc415d42038dfff2",
+      "source": "build/r12-final/heading-2.log",
+      "rawBytes": 1619,
+      "rawSha256": "c275260c31f1bdd4b2a8b532b6fd321f13ea4adc46ea8eab0ba2ec33b5968e0f",
+      "compression": "gzip"
+    },
+    {
+      "path": "executions/native-53.log.gz",
+      "bytes": 626080,
+      "sha256": "c03ea7016ce680796f1330e4bd05ab7c6f306a6dbd0b0af3608c866fb7f0356a",
+      "source": "build/r12-regressions/native-53.log",
+      "rawBytes": 933802,
+      "rawSha256": "f3048c2f60b71bc481f3da2cce602909ceafb3499ab0597ea41c937cdaa7272f",
+      "compression": "gzip"
+    },
+    {
+      "path": "executions/npm-test.log.gz",
+      "bytes": 161420,
+      "sha256": "54c1436d196db66a2a0652bed96d30f55ef3d55a71f86313506a764d7b5f01e9",
+      "source": "build/r12-final/npm-test.log",
+      "rawBytes": 823710,
+      "rawSha256": "aa02cacb0cacd18aa8f271bb66c29aff30c06eaf05140d29d1ff36a5cbbb438f",
+      "compression": "gzip"
+    },
+    {
+      "path": "executions/r10.log.gz",
+      "bytes": 1986,
+      "sha256": "1a75846c61083db4f2a086702491e627c46cf25b9d8f3251280e04d529717a60",
+      "source": "build/r12-regressions/r10.log",
+      "rawBytes": 15817,
+      "rawSha256": "0886885e5b2d00e0f759db4c92a06a868bd0e438234e8a1c5076aad6482147da",
+      "compression": "gzip"
+    },
+    {
+      "path": "executions/typecheck.log.gz",
+      "bytes": 177,
+      "sha256": "a95ebcc5f1db99c84a3f43345fbcf93b4473f810010f5b3a4ebcb9b1277cd743",
+      "source": "build/r12-final/typecheck.log",
+      "rawBytes": 206,
+      "rawSha256": "d9185066952b9395d37541b6167aa9e7b4bb93fd4f5a9ec49f0afba63fa3697d",
+      "compression": "gzip"
+    },
+    {
+      "path": "executions/verify-static.log.gz",
+      "bytes": 263,
+      "sha256": "3f271d0c995d3cf1d6c06209597b5cf3d222d10df6c391f33e9b61ca860449e4",
+      "source": "build/r12-final/verify-static.log",
+      "rawBytes": 355,
+      "rawSha256": "4ee077551bb899ebeb523001498864168a287c753b59b69c8de22f58fd7c4917",
+      "compression": "gzip"
+    },
+    {
+      "path": "heading/first-report.json.gz",
+      "bytes": 7088,
+      "sha256": "9809bc2d0411540f9ef7455550ff3c42af42d8b1915bc7ba8c9e4eb3d91a7d20",
+      "source": "build/page-heading-browser/report.json",
+      "rawBytes": 119177,
+      "rawSha256": "56b00a122e6f33fa47d9278f6a222490d3f5c62c4f2f3867ffef3b72ba3474fb",
+      "compression": "gzip"
+    },
+    {
+      "path": "heading/repeat-report.json.gz",
+      "bytes": 7086,
+      "sha256": "37bbfd1a26c77812ae1e8beed646959bc351fbd63af72a6e5206063b5db70662",
+      "source": "build/r12-final/heading-repeat/report.json",
+      "rawBytes": 119177,
+      "rawSha256": "b5a23caeb631f8f1d57fcbe9e996d6f8bda04e5ab3d2ee060fd3bc24b18ca5e7",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/browser-regressions.log.gz",
+      "bytes": 466,
+      "sha256": "324ff922a74a225a99df2af7bab83cbc5651083134ec49d7e93e2b1b4d76c2e8",
+      "source": "build/r12-interrupted-d398/browser-regressions.log",
+      "rawBytes": 663,
+      "rawSha256": "c01b4cc2d8bb8418004aee8e0c52839f01c0fd2b97f36fbe433abbe60d96fc96",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/executions.json.gz",
+      "bytes": 1050,
+      "sha256": "a72dc0b10c0021b213facec24b635be68d9c22a493c78231d316144787537392",
+      "source": "build/r12-interrupted-d398/executions.json",
+      "rawBytes": 2632,
+      "rawSha256": "05c9e8a4dc927aae6b0d164dd8ec9027c72a885a757d525bc4e229c2704a5dde",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/heading-1.log.gz",
+      "bytes": 329,
+      "sha256": "f8a57c21ddce3ee31619020329ddaa770ab8335402777fff9701956e1695ee56",
+      "source": "build/r12-interrupted-d398/heading-1.log",
+      "rawBytes": 1615,
+      "rawSha256": "bc0eb200473e6697d266258fed964f452d0fbf3830deecda0e74f37c92d68a88",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/heading/report.json.gz",
+      "bytes": 7086,
+      "sha256": "743ca9f47546306a81515622ed00c2adc7bcf5711c6062397cf80ff87422d594",
+      "source": "build/r12-interrupted-d398/heading/report.json",
+      "rawBytes": 119177,
+      "rawSha256": "3645bd4f3c2c4b0e734dd540e394f0331b74fa151487d46913ea1435005f9f47",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/interruption.json.gz",
+      "bytes": 556,
+      "sha256": "966ab2d8354eeabafc0b6e1adc54ab87ec6e25c2d24bb255c181b3e59c9e6605",
+      "source": "build/r12-interrupted-d398/interruption.json",
+      "rawBytes": 2222,
+      "rawSha256": "6c7582e8e55c4ec7c8a81728cc3b13d3bd43a8e5103f71f825ecab9245271ef3",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/execution-summary.json.gz",
+      "bytes": 1061,
+      "sha256": "9473e8b92c87b2ab2a3d3a459cdd958fbaa5872fd3b6ac72c3f1468460a7e284",
+      "source": "build/r12-interrupted-d398/regressions/execution-summary.json",
+      "rawBytes": 2187,
+      "rawSha256": "99cbf7cb69406b10396bda4db91dd3abfb53413fd3059e91a22ffd862cd3fc05",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53.log.gz",
+      "bytes": 225497,
+      "sha256": "1ec90785ca5bebd049366ad0459b6c9f9e93f2845541f108c3641f2addde128b",
+      "source": "build/r12-interrupted-d398/regressions/native-53.log",
+      "rawBytes": 332351,
+      "rawSha256": "3e873952e7c93fa88c0cb89ff9e7b2978b2c0939d314b0503f6d20a35c3fd3d7",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/chart-replay/report.json.gz",
+      "bytes": 156429,
+      "sha256": "4bcdc7414189adbaba89358470005f3dfb4f2ef8c857ea1b11f8447a9bf4b7db",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/chart-replay/report.json",
+      "rawBytes": 3746000,
+      "rawSha256": "1b0e3af9aa28a0b2e637257379ff6d79392414ff96efce778aae7c433b15f283",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/chart-replay/stderr.log.gz",
+      "bytes": 20,
+      "sha256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/chart-replay/stderr.log",
+      "rawBytes": 0,
+      "rawSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/chart-replay/stdout.log.gz",
+      "bytes": 1146,
+      "sha256": "d764d6a3df0a0f6d02ff03f66b578af81fbc91229f05d442b0522bd871f37242",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/chart-replay/stdout.log",
+      "rawBytes": 3033,
+      "rawSha256": "9f9cae1c4cec1385cdccd79dd5ff9a3fceb62c936ae3015d096ade89f73a50ad",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/chart-replay/zero-fixture.json.gz",
+      "bytes": 3933,
+      "sha256": "d8b27d284050ba5b8d039d74f81ff2d8cd72f1ebbd83b0c64edd388b62303c54",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/chart-replay/zero-fixture.json",
+      "rawBytes": 35829,
+      "rawSha256": "5137d4d76d3f426b82c652c3aebdc48b915a0925a149e84766f2a3162cc1ee5a",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/historical-end-9QiVqF/atlas-replay-BTCUSD-2026-11-06.json.gz",
+      "bytes": 25495,
+      "sha256": "4b511b3d11824569e67078868adda771c1b82973b10aaae22764647c9dffc89f",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/historical-end-9QiVqF/atlas-replay-BTCUSD-2026-11-06.json",
+      "rawBytes": 265240,
+      "rawSha256": "39f74ed1513879811397343f241022497448574b2988781419a08d8c6e775de5",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/historical-one-bar-eIhhst/atlas-replay-BTCUSD-2026-05-11.json.gz",
+      "bytes": 9203,
+      "sha256": "eb44441bc19b5f67f594cd14f5884f06d201ed33d60628a982306f4812651880",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/historical-one-bar-eIhhst/atlas-replay-BTCUSD-2026-05-11.json",
+      "rawBytes": 77692,
+      "rawSha256": "c604426b3e41627bec379cff8622f2f8799e2072a69af7fb50bf84a53568115f",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-latest-MNTXvu/atlas-replay-BTCUSD-2026-11-11.json.gz",
+      "bytes": 21811,
+      "sha256": "70fe66c4354c38c3c1b20f3685ba8f3ac64ba9c8d9010e4c858a979b590e79d4",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-latest-MNTXvu/atlas-replay-BTCUSD-2026-11-11.json",
+      "rawBytes": 103286,
+      "rawSha256": "e9a3b5d994ea23e6abc49bc117ee0ade092008a6bcb52fcdd487d66e7f6bd4f0",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-next-7F7I3W/atlas-replay-BTCUSD-2026-10-26.json.gz",
+      "bytes": 20729,
+      "sha256": "2d6c5c5e41aa3718931ccc2cfa5c1176636be98f6adc444aeda12a81a21e91f1",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-next-7F7I3W/atlas-replay-BTCUSD-2026-10-26.json",
+      "rawBytes": 91844,
+      "rawSha256": "87fdb45cba169a091616707e3d8d905adf3a26cea20e329ec25a8926bb5c10b9",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-origin-NCLsnU/atlas-replay-BTCUSD-2026-10-25.json.gz",
+      "bytes": 20235,
+      "sha256": "9f83d14f656621475786a564d644e2dd19c2d19ced5188492a7879e9703aeb22",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-origin-NCLsnU/atlas-replay-BTCUSD-2026-10-25.json",
+      "rawBytes": 90598,
+      "rawSha256": "daf7cbdb57dfc2f62b0c76d7b5572b155904d604217bbc90c201a4a8ad7be999",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/historical-end-8JHChp/atlas-replay-BTCUSD-2026-11-06.json.gz",
+      "bytes": 25495,
+      "sha256": "29fdb181f3e76ecb161b1d5a9b8953bdcc0550b299a450058fc991df00d4b3ff",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/historical-end-8JHChp/atlas-replay-BTCUSD-2026-11-06.json",
+      "rawBytes": 265240,
+      "rawSha256": "4370c7d90fc30824151aab35a0f83ecdd880fd75cef4307b6c4e7d7ae0e753be",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/historical-one-bar-1ipiEL/atlas-replay-BTCUSD-2026-05-11.json.gz",
+      "bytes": 9203,
+      "sha256": "e707f1e694c94089398b2ffff30e6398ab2908e33026a24a69f52182267cfa46",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/historical-one-bar-1ipiEL/atlas-replay-BTCUSD-2026-05-11.json",
+      "rawBytes": 77692,
+      "rawSha256": "b65a862d945689e67e87761964c7d0746a3d9db27ab4cb990feeab9a6c0b248b",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-latest-B8Zjrz/atlas-replay-BTCUSD-2026-11-11.json.gz",
+      "bytes": 21811,
+      "sha256": "6ca96f1279f2051d9b5eaa2476ecba96bfa864ccc97b5965b9a42467e57f0b0f",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-latest-B8Zjrz/atlas-replay-BTCUSD-2026-11-11.json",
+      "rawBytes": 103286,
+      "rawSha256": "4423897a9ef81c734de4d9d4fecb9c99c34cc1df5857598a7a281bf989bda82d",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-next-60CbzU/atlas-replay-BTCUSD-2026-10-26.json.gz",
+      "bytes": 20729,
+      "sha256": "2d6c5c5e41aa3718931ccc2cfa5c1176636be98f6adc444aeda12a81a21e91f1",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-next-60CbzU/atlas-replay-BTCUSD-2026-10-26.json",
+      "rawBytes": 91844,
+      "rawSha256": "87fdb45cba169a091616707e3d8d905adf3a26cea20e329ec25a8926bb5c10b9",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-origin-jqLSbx/atlas-replay-BTCUSD-2026-10-25.json.gz",
+      "bytes": 20235,
+      "sha256": "9f83d14f656621475786a564d644e2dd19c2d19ced5188492a7879e9703aeb22",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-origin-jqLSbx/atlas-replay-BTCUSD-2026-10-25.json",
+      "rawBytes": 90598,
+      "rawSha256": "daf7cbdb57dfc2f62b0c76d7b5572b155904d604217bbc90c201a4a8ad7be999",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/historical-end-WTlbgE/atlas-replay-ETHUSD-2026-10-27.json.gz",
+      "bytes": 40188,
+      "sha256": "41efb471d8c2caa707d122ed6e85d5babf4a96fbe8c76e03a6933a5c6f032739",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/historical-end-WTlbgE/atlas-replay-ETHUSD-2026-10-27.json",
+      "rawBytes": 293810,
+      "rawSha256": "7fff807fdeec1ef7c3a3ee1f0ab6562f915bb395f8c70710bf5b7ccd6e439090",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/historical-one-bar-2tJe3p/atlas-replay-ETHUSD-2026-05-01.json.gz",
+      "bytes": 21187,
+      "sha256": "7330cff304d21f86ef576bf1d2ccc2e2b8854e25a0d1fd64340081c8a67e919b",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/historical-one-bar-2tJe3p/atlas-replay-ETHUSD-2026-05-01.json",
+      "rawBytes": 109274,
+      "rawSha256": "f4af121e2c2c19b1c1896f9ffaa12cbd0c1a6c4d2479cdece1b3a0128798ce72",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-latest-fnbllm/atlas-replay-ETHUSD-2026-11-11.json.gz",
+      "bytes": 16545,
+      "sha256": "64f7a16810e9cb6a096b218d091b440dcc4cefa369cc40baed64d4a1d3c15034",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-latest-fnbllm/atlas-replay-ETHUSD-2026-11-11.json",
+      "rawBytes": 92223,
+      "rawSha256": "bbe173596e20aae4579eda9a5900b0c9ec4ab7726f0e93f7bde2b23815978c84",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-next-PCvTjK/atlas-replay-ETHUSD-2026-10-26.json.gz",
+      "bytes": 16343,
+      "sha256": "c9706642513f6642d099d086c79e688bcfda8636151bf30e0f893fe44ac8f8f4",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-next-PCvTjK/atlas-replay-ETHUSD-2026-10-26.json",
+      "rawBytes": 91286,
+      "rawSha256": "205306f3961776d84b24967aee774e7e4ebbbca78ce08523b24c87910bbbcdee",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-origin-ZzJFqm/atlas-replay-ETHUSD-2026-10-25.json.gz",
+      "bytes": 15936,
+      "sha256": "20af76e92ba898b6ceb6d80faf3b799b2d13c4c8916c08004017a7fe638699db",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-origin-ZzJFqm/atlas-replay-ETHUSD-2026-10-25.json",
+      "rawBytes": 90071,
+      "rawSha256": "b5d7218b2b7d19385966cc965d5153ef5b204bf96989a52767eaaca5f67a44c9",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/strict-before-issuance-M7fpNM/atlas-replay-ETHUSD-2026-10-25.json.gz",
+      "bytes": 1414,
+      "sha256": "e0115492f303ac6380232a9561045c9fc395f5df6f1efa8a989766c16e8c79e9",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/strict-before-issuance-M7fpNM/atlas-replay-ETHUSD-2026-10-25.json",
+      "rawBytes": 4322,
+      "rawSha256": "1205df3e95ef25a0c573c897afc036dc43b3ffa4055abef425e1f0d5aa1200ed",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/strict-current-kVwnqU/atlas-replay-ETHUSD-2026-10-28.json.gz",
+      "bytes": 16526,
+      "sha256": "197a91a1dd3776c59995571fe180c82a3dfcbe6236292cce6e1c1d1a277f68ad",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/strict-current-kVwnqU/atlas-replay-ETHUSD-2026-10-28.json",
+      "rawBytes": 92207,
+      "rawSha256": "d3cfef1699a0ef3c93d7f88e15bb84b1596f7d50ba859aec8f489abdf7594152",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/historical-end-Vj8jTS/atlas-replay-ETHUSD-2026-10-27.json.gz",
+      "bytes": 40189,
+      "sha256": "65721f2f8aeb16d0584d76a5be56b2a2fdd9a9a5e89a3cbb11403499913893f6",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/historical-end-Vj8jTS/atlas-replay-ETHUSD-2026-10-27.json",
+      "rawBytes": 293810,
+      "rawSha256": "da8b6d55f32c1436dc369d7baea8d4fb9beb5d9dabb2d52cff558f47a6c3bbd3",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/historical-one-bar-3eyhBy/atlas-replay-ETHUSD-2026-05-01.json.gz",
+      "bytes": 21187,
+      "sha256": "7eb213a45e94e0744a5038434be718f56b4c11c41288bbaee573e28ccd6f89ca",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/historical-one-bar-3eyhBy/atlas-replay-ETHUSD-2026-05-01.json",
+      "rawBytes": 109274,
+      "rawSha256": "f32ae94988b8405c2058184bab067512f6de94f95fb418081bc60fe0763ad1a7",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-latest-RzrZMm/atlas-replay-ETHUSD-2026-11-11.json.gz",
+      "bytes": 16547,
+      "sha256": "988991edf41e530c4045bfedc3c5b4ddb364dca779ce5980c841b4783805ea90",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-latest-RzrZMm/atlas-replay-ETHUSD-2026-11-11.json",
+      "rawBytes": 92223,
+      "rawSha256": "95b18e75e2f30f8ad61edb8855987f934498af5e28f7d09ea34dd0f073f7de6b",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-next-doK9a4/atlas-replay-ETHUSD-2026-10-26.json.gz",
+      "bytes": 16343,
+      "sha256": "c9706642513f6642d099d086c79e688bcfda8636151bf30e0f893fe44ac8f8f4",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-next-doK9a4/atlas-replay-ETHUSD-2026-10-26.json",
+      "rawBytes": 91286,
+      "rawSha256": "205306f3961776d84b24967aee774e7e4ebbbca78ce08523b24c87910bbbcdee",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-origin-e5KDPX/atlas-replay-ETHUSD-2026-10-25.json.gz",
+      "bytes": 15936,
+      "sha256": "20af76e92ba898b6ceb6d80faf3b799b2d13c4c8916c08004017a7fe638699db",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-origin-e5KDPX/atlas-replay-ETHUSD-2026-10-25.json",
+      "rawBytes": 90071,
+      "rawSha256": "b5d7218b2b7d19385966cc965d5153ef5b204bf96989a52767eaaca5f67a44c9",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/strict-before-issuance-zKrqv5/atlas-replay-ETHUSD-2026-10-25.json.gz",
+      "bytes": 1414,
+      "sha256": "e0115492f303ac6380232a9561045c9fc395f5df6f1efa8a989766c16e8c79e9",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/strict-before-issuance-zKrqv5/atlas-replay-ETHUSD-2026-10-25.json",
+      "rawBytes": 4322,
+      "rawSha256": "1205df3e95ef25a0c573c897afc036dc43b3ffa4055abef425e1f0d5aa1200ed",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/strict-current-lrP6Wj/atlas-replay-ETHUSD-2026-10-28.json.gz",
+      "bytes": 16526,
+      "sha256": "197a91a1dd3776c59995571fe180c82a3dfcbe6236292cce6e1c1d1a277f68ad",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/strict-current-lrP6Wj/atlas-replay-ETHUSD-2026-10-28.json",
+      "rawBytes": 92207,
+      "rawSha256": "d3cfef1699a0ef3c93d7f88e15bb84b1596f7d50ba859aec8f489abdf7594152",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/stderr.log.gz",
+      "bytes": 20,
+      "sha256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/stderr.log",
+      "rawBytes": 0,
+      "rawSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/stdout.log.gz",
+      "bytes": 224005,
+      "sha256": "336b56a05a2429b36409563d7935a583302354765d7586e36fcad70d03bdab3a",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/stdout.log",
+      "rawBytes": 326310,
+      "rawSha256": "0b257325b94a4e32bb653d9a3d66050025cda9a8e5a604312555d2e031750b51",
+      "compression": "gzip"
+    },
+    {
+      "path": "interrupted-d398/regressions/native-53/lanes/non-chart-replay/zero-fixture.json.gz",
+      "bytes": 3933,
+      "sha256": "d8b27d284050ba5b8d039d74f81ff2d8cd72f1ebbd83b0c64edd388b62303c54",
+      "source": "build/r12-interrupted-d398/regressions/native-53/lanes/non-chart-replay/zero-fixture.json",
+      "rawBytes": 35829,
+      "rawSha256": "5137d4d76d3f426b82c652c3aebdc48b915a0925a149e84766f2a3162cc1ee5a",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/chart-replay/report.json.gz",
+      "bytes": 156371,
+      "sha256": "7217be9cd2849a704a6efdbad35da5213e8f2c3a68ffc1973c822822e0c1721a",
+      "source": "build/r12-regressions/native-53/lanes/chart-replay/report.json",
+      "rawBytes": 3746292,
+      "rawSha256": "e3eb368fbab0d061a6967fc80802df4cf2fa2b1dcabe073683f553a850399704",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/chart-replay/stderr.log.gz",
+      "bytes": 20,
+      "sha256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec",
+      "source": "build/r12-regressions/native-53/lanes/chart-replay/stderr.log",
+      "rawBytes": 0,
+      "rawSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/chart-replay/stdout.log.gz",
+      "bytes": 1188,
+      "sha256": "36fd252002875ba6384e65c8eb90771a6edc5db504aab833b5712b30cdc5ce0f",
+      "source": "build/r12-regressions/native-53/lanes/chart-replay/stdout.log",
+      "rawBytes": 3151,
+      "rawSha256": "2ba1c095ff0c5a9d09b9fb0264d8ce503ce9f5a1b992dbef9689c74b8be3777c",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/chart-replay/zero-fixture.json.gz",
+      "bytes": 3932,
+      "sha256": "5be45bb305612ed0ab12bc6ae080686fe56a467fa8ea003a468fd84c8dc3cd23",
+      "source": "build/r12-regressions/native-53/lanes/chart-replay/zero-fixture.json",
+      "rawBytes": 35829,
+      "rawSha256": "004479da02f51e364fb004f785d0fa2055243d9bc67b31be31a907fc7354cd6e",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/historical-end-NahgKc/atlas-replay-BTCUSD-2026-11-06.json.gz",
+      "bytes": 25495,
+      "sha256": "0f54910e203516858fb9d10ae9e762509a2ac1517b4b42c3ca8a0e79411c1e23",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/historical-end-NahgKc/atlas-replay-BTCUSD-2026-11-06.json",
+      "rawBytes": 265240,
+      "rawSha256": "44b379d535724fe943ed072f3ccb0451cad5f63f02f3c7f1f950765822dc36ff",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/historical-one-bar-bjyjMP/atlas-replay-BTCUSD-2026-05-11.json.gz",
+      "bytes": 9203,
+      "sha256": "3b53f2a357528d1cbec5095dc6ba359e1bfb9c6211f108cfb40affe134e42526",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/historical-one-bar-bjyjMP/atlas-replay-BTCUSD-2026-05-11.json",
+      "rawBytes": 77692,
+      "rawSha256": "0ec49d433d796dea950dd797ee87e7b418264e83c6401c7dd02c8a1e048f97f4",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-latest-3iAUlr/atlas-replay-BTCUSD-2026-11-11.json.gz",
+      "bytes": 21811,
+      "sha256": "b6d83eceb80c1e7e544dc9ac21b904946241ee16b6d53fd7b9517d7a4d9f193b",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-latest-3iAUlr/atlas-replay-BTCUSD-2026-11-11.json",
+      "rawBytes": 103286,
+      "rawSha256": "65a96a217be0177a4d7bc79c0163984e9980ee66c1373bb834a9f68e340eabbb",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-next-dv2pRj/atlas-replay-BTCUSD-2026-10-26.json.gz",
+      "bytes": 20729,
+      "sha256": "2d6c5c5e41aa3718931ccc2cfa5c1176636be98f6adc444aeda12a81a21e91f1",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-next-dv2pRj/atlas-replay-BTCUSD-2026-10-26.json",
+      "rawBytes": 91844,
+      "rawSha256": "87fdb45cba169a091616707e3d8d905adf3a26cea20e329ec25a8926bb5c10b9",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-origin-8CaknN/atlas-replay-BTCUSD-2026-10-25.json.gz",
+      "bytes": 20235,
+      "sha256": "9f83d14f656621475786a564d644e2dd19c2d19ced5188492a7879e9703aeb22",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-origin-8CaknN/atlas-replay-BTCUSD-2026-10-25.json",
+      "rawBytes": 90598,
+      "rawSha256": "daf7cbdb57dfc2f62b0c76d7b5572b155904d604217bbc90c201a4a8ad7be999",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/historical-end-tqTDnS/atlas-replay-BTCUSD-2026-11-06.json.gz",
+      "bytes": 25495,
+      "sha256": "d33d5f4075e3ac9edcc6547957b447b9ea7b8316241b749072efaef18ec360ba",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/historical-end-tqTDnS/atlas-replay-BTCUSD-2026-11-06.json",
+      "rawBytes": 265240,
+      "rawSha256": "036320c472aebed49c0f40ed9aadfb6ddd6a758f8118900e18c7aafd7124efb8",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/historical-one-bar-X5WTTM/atlas-replay-BTCUSD-2026-05-11.json.gz",
+      "bytes": 9203,
+      "sha256": "279340c8779fba047a9f66b7bf9e1d1e3e63f92ce0630d77806e0ac882d97c5e",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/historical-one-bar-X5WTTM/atlas-replay-BTCUSD-2026-05-11.json",
+      "rawBytes": 77692,
+      "rawSha256": "e35de3effd89a8befc2dcb062c5f0fabf80c50b6771e0912d191a3d62412d279",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-latest-4jb14s/atlas-replay-BTCUSD-2026-11-11.json.gz",
+      "bytes": 21811,
+      "sha256": "37e4d18e9d35a4c67980a2c694e557d70c3ed3ff079c3c79de6b318a0449fe91",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-latest-4jb14s/atlas-replay-BTCUSD-2026-11-11.json",
+      "rawBytes": 103286,
+      "rawSha256": "b8475de7478480a8d51de137e0bb652be24fb86dd4c5a307aa9f6f2430b22723",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-next-wMBVfg/atlas-replay-BTCUSD-2026-10-26.json.gz",
+      "bytes": 20729,
+      "sha256": "2d6c5c5e41aa3718931ccc2cfa5c1176636be98f6adc444aeda12a81a21e91f1",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-next-wMBVfg/atlas-replay-BTCUSD-2026-10-26.json",
+      "rawBytes": 91844,
+      "rawSha256": "87fdb45cba169a091616707e3d8d905adf3a26cea20e329ec25a8926bb5c10b9",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-origin-rnvLYo/atlas-replay-BTCUSD-2026-10-25.json.gz",
+      "bytes": 20235,
+      "sha256": "9f83d14f656621475786a564d644e2dd19c2d19ced5188492a7879e9703aeb22",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-origin-rnvLYo/atlas-replay-BTCUSD-2026-10-25.json",
+      "rawBytes": 90598,
+      "rawSha256": "daf7cbdb57dfc2f62b0c76d7b5572b155904d604217bbc90c201a4a8ad7be999",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/historical-end-oMmCul/atlas-replay-ETHUSD-2026-10-27.json.gz",
+      "bytes": 40188,
+      "sha256": "de81d054e1ce9df5971f0d38a70cb414fad42ecf0300d11ed603cd8dace60195",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/historical-end-oMmCul/atlas-replay-ETHUSD-2026-10-27.json",
+      "rawBytes": 293810,
+      "rawSha256": "2407450f75ec72aab953df0117e2f023475c9d02d38c898636f79893ac82a79a",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/historical-one-bar-b26k3p/atlas-replay-ETHUSD-2026-05-01.json.gz",
+      "bytes": 21186,
+      "sha256": "eac9f6355710765d747dd25240602b5a6d45efd27233116b99aa48574ea9a8bb",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/historical-one-bar-b26k3p/atlas-replay-ETHUSD-2026-05-01.json",
+      "rawBytes": 109274,
+      "rawSha256": "f72853faf8ac852f00cf86cd201ef7a5fab1f9efef8d221f36ac7a27972cae4f",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-latest-R5cLb7/atlas-replay-ETHUSD-2026-11-11.json.gz",
+      "bytes": 16546,
+      "sha256": "5b769790fff819e05240e23644a7d156fa81cdd3444df870673a073e098abe90",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-latest-R5cLb7/atlas-replay-ETHUSD-2026-11-11.json",
+      "rawBytes": 92223,
+      "rawSha256": "de1858b0471a8db251cad4305249633d53bf04c453d3236d961b710283621d2b",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-next-ALhcqU/atlas-replay-ETHUSD-2026-10-26.json.gz",
+      "bytes": 16343,
+      "sha256": "c9706642513f6642d099d086c79e688bcfda8636151bf30e0f893fe44ac8f8f4",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-next-ALhcqU/atlas-replay-ETHUSD-2026-10-26.json",
+      "rawBytes": 91286,
+      "rawSha256": "205306f3961776d84b24967aee774e7e4ebbbca78ce08523b24c87910bbbcdee",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-origin-dZtSvF/atlas-replay-ETHUSD-2026-10-25.json.gz",
+      "bytes": 15936,
+      "sha256": "20af76e92ba898b6ceb6d80faf3b799b2d13c4c8916c08004017a7fe638699db",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-origin-dZtSvF/atlas-replay-ETHUSD-2026-10-25.json",
+      "rawBytes": 90071,
+      "rawSha256": "b5d7218b2b7d19385966cc965d5153ef5b204bf96989a52767eaaca5f67a44c9",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/strict-before-issuance-qBnG3E/atlas-replay-ETHUSD-2026-10-25.json.gz",
+      "bytes": 1414,
+      "sha256": "e0115492f303ac6380232a9561045c9fc395f5df6f1efa8a989766c16e8c79e9",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/strict-before-issuance-qBnG3E/atlas-replay-ETHUSD-2026-10-25.json",
+      "rawBytes": 4322,
+      "rawSha256": "1205df3e95ef25a0c573c897afc036dc43b3ffa4055abef425e1f0d5aa1200ed",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/strict-current-o9KIRe/atlas-replay-ETHUSD-2026-10-28.json.gz",
+      "bytes": 16526,
+      "sha256": "197a91a1dd3776c59995571fe180c82a3dfcbe6236292cce6e1c1d1a277f68ad",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/strict-current-o9KIRe/atlas-replay-ETHUSD-2026-10-28.json",
+      "rawBytes": 92207,
+      "rawSha256": "d3cfef1699a0ef3c93d7f88e15bb84b1596f7d50ba859aec8f489abdf7594152",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/historical-end-8YS7T1/atlas-replay-ETHUSD-2026-10-27.json.gz",
+      "bytes": 40188,
+      "sha256": "83427d5060f2a9bfcba4234b0ce218a7439e9de01a548ee87e9e793d850060d6",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/historical-end-8YS7T1/atlas-replay-ETHUSD-2026-10-27.json",
+      "rawBytes": 293810,
+      "rawSha256": "c45108ccee09508670b3c37450b8870482cf626b3e2fed294a476ff2fcec42b8",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/historical-one-bar-i6VgJx/atlas-replay-ETHUSD-2026-05-01.json.gz",
+      "bytes": 21186,
+      "sha256": "20cfa316bfb90ca50131cf05161b452e54e253c0bf1e32c5eae67993d3b149ab",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/historical-one-bar-i6VgJx/atlas-replay-ETHUSD-2026-05-01.json",
+      "rawBytes": 109274,
+      "rawSha256": "bfef8b78c66bfd31ad9ba2f27bc77b69b6f40ee8e282e0b15b7041261c6a8c6a",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-latest-zzgYJo/atlas-replay-ETHUSD-2026-11-11.json.gz",
+      "bytes": 16547,
+      "sha256": "6d9a8d842d6f4aec79c891ad7df06af6a34ed0525f479d9ffa1fcb9324e280cd",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-latest-zzgYJo/atlas-replay-ETHUSD-2026-11-11.json",
+      "rawBytes": 92223,
+      "rawSha256": "527e9db22056eb6d03715dbe1747f2fc472834ce085b7eb8369e4c37e959eddf",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-next-JywKs4/atlas-replay-ETHUSD-2026-10-26.json.gz",
+      "bytes": 16343,
+      "sha256": "c9706642513f6642d099d086c79e688bcfda8636151bf30e0f893fe44ac8f8f4",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-next-JywKs4/atlas-replay-ETHUSD-2026-10-26.json",
+      "rawBytes": 91286,
+      "rawSha256": "205306f3961776d84b24967aee774e7e4ebbbca78ce08523b24c87910bbbcdee",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-origin-LqHMIQ/atlas-replay-ETHUSD-2026-10-25.json.gz",
+      "bytes": 15936,
+      "sha256": "20af76e92ba898b6ceb6d80faf3b799b2d13c4c8916c08004017a7fe638699db",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-origin-LqHMIQ/atlas-replay-ETHUSD-2026-10-25.json",
+      "rawBytes": 90071,
+      "rawSha256": "b5d7218b2b7d19385966cc965d5153ef5b204bf96989a52767eaaca5f67a44c9",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/strict-before-issuance-5MMP5Q/atlas-replay-ETHUSD-2026-10-25.json.gz",
+      "bytes": 1414,
+      "sha256": "e0115492f303ac6380232a9561045c9fc395f5df6f1efa8a989766c16e8c79e9",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/strict-before-issuance-5MMP5Q/atlas-replay-ETHUSD-2026-10-25.json",
+      "rawBytes": 4322,
+      "rawSha256": "1205df3e95ef25a0c573c897afc036dc43b3ffa4055abef425e1f0d5aa1200ed",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/strict-current-qUbMtb/atlas-replay-ETHUSD-2026-10-28.json.gz",
+      "bytes": 16526,
+      "sha256": "197a91a1dd3776c59995571fe180c82a3dfcbe6236292cce6e1c1d1a277f68ad",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/strict-current-qUbMtb/atlas-replay-ETHUSD-2026-10-28.json",
+      "rawBytes": 92207,
+      "rawSha256": "d3cfef1699a0ef3c93d7f88e15bb84b1596f7d50ba859aec8f489abdf7594152",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/report.json.gz",
+      "bytes": 489303,
+      "sha256": "ee9c8d555d35251921bf603f45529c6139cf25d62f22d4a043215a800f25d4b0",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/report.json",
+      "rawBytes": 5603937,
+      "rawSha256": "bb0767b6e5280e81884fd0bec1067c4534299031dfdbcfcb1a3655f4a86d84cc",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/stderr.log.gz",
+      "bytes": 20,
+      "sha256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/stderr.log",
+      "rawBytes": 0,
+      "rawSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/stdout.log.gz",
+      "bytes": 601,
+      "sha256": "0e364869d4e388967660066ca2c96899dfd5b225f0c066c88af6088662f98823",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/stdout.log",
+      "rawBytes": 4179,
+      "rawSha256": "0641ec47ecfba8db0cfa2a05b0ca3a2e1e81cb8e39a1c77aa7f962f39af24a02",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/lanes/non-chart-replay/zero-fixture.json.gz",
+      "bytes": 3932,
+      "sha256": "5be45bb305612ed0ab12bc6ae080686fe56a467fa8ea003a468fd84c8dc3cd23",
+      "source": "build/r12-regressions/native-53/lanes/non-chart-replay/zero-fixture.json",
+      "rawBytes": 35829,
+      "rawSha256": "004479da02f51e364fb004f785d0fa2055243d9bc67b31be31a907fc7354cd6e",
+      "compression": "gzip"
+    },
+    {
+      "path": "native-53/report.json.gz",
+      "bytes": 636530,
+      "sha256": "80fd0afba636900a986f73b0315b64b608b644c68564f0e477c2f497a5808101",
+      "source": "build/r12-regressions/native-53/report.json",
+      "rawBytes": 9341319,
+      "rawSha256": "5109d23d1393ac40c2cd7987bab2ef423fae91ccdec18f7d2ad246ee0dab7e9e",
+      "compression": "gzip"
+    },
+    {
+      "path": "r10/chart-qa/report.json.gz",
+      "bytes": 72523,
+      "sha256": "a47638f93786872955100cb770f54868a8be246c2b942b1df7e2f02e9a31fdd3",
+      "source": "build/r12-regressions/r10/chart-qa/report.json",
+      "rawBytes": 706378,
+      "rawSha256": "8bfce0e788dc60e8df5523c2e8c48b26a3f2b600b383e417d903747464cf8940",
+      "compression": "gzip"
+    },
+    {
+      "path": "r10/chart-qa/run.log.gz",
+      "bytes": 293,
+      "sha256": "5daca652c78aabbee46a243ce893b37299991e3966d997d10b9939625f95efc9",
+      "source": "build/r12-regressions/r10/chart-qa/run.log",
+      "rawBytes": 894,
+      "rawSha256": "dd1f279c19dfcce12cb12db571bb0799e740e6020df158a27837bffe47ca1856",
+      "compression": "gzip"
+    },
+    {
+      "path": "r10/responsive-BMNR/report.json.gz",
+      "bytes": 11716,
+      "sha256": "1b281bf68a6fb5918e87e7b26c21d43ade38be93924ae5bbd9ba77541c0d2198",
+      "source": "build/r12-regressions/r10/responsive-BMNR/report.json",
+      "rawBytes": 204892,
+      "rawSha256": "9d4f780678399718ddcd2a412bbb3b69cb21173eb4c7d714ac2cdf43279a6c63",
+      "compression": "gzip"
+    },
+    {
+      "path": "r10/responsive-BMNR/run.log.gz",
+      "bytes": 497,
+      "sha256": "332f90ad3e1147dc02c7131f8d224b02031ca86550b786962f1d1a7aa77b19aa",
+      "source": "build/r12-regressions/r10/responsive-BMNR/run.log",
+      "rawBytes": 2256,
+      "rawSha256": "83cb1310adb84f1dd354cf09f1660fd6689c10aa665bfca05057a192ecc37299",
+      "compression": "gzip"
+    },
+    {
+      "path": "r10/responsive-BTCUSD/report.json.gz",
+      "bytes": 14297,
+      "sha256": "a28b5d51aa889a7732901686d5c2f5c28efdc09c3a5439ad95bdef54c5fbc6fe",
+      "source": "build/r12-regressions/r10/responsive-BTCUSD/report.json",
+      "rawBytes": 259117,
+      "rawSha256": "d3fd2f08c5df409dbc9cbd5d7eeb2906991bc15f97b1c5ab4b0673a2572eea19",
+      "compression": "gzip"
+    },
+    {
+      "path": "r10/responsive-BTCUSD/run.log.gz",
+      "bytes": 499,
+      "sha256": "5d2481f252640b505f63bb1f8826bca782acf8cd63d05fc120115cd47bb43607",
+      "source": "build/r12-regressions/r10/responsive-BTCUSD/run.log",
+      "rawBytes": 2260,
+      "rawSha256": "c4620c274da85d4df58c7f688cbccb07b45d8e1bf3901fa958e404803ec4989c",
+      "compression": "gzip"
+    },
+    {
+      "path": "r10/responsive-ETHUSD/report.json.gz",
+      "bytes": 11987,
+      "sha256": "9d2fdbd42b8facc5d6473ecd1a1ee0e59f6fccbeeafacdd6ddf1b5403e975f25",
+      "source": "build/r12-regressions/r10/responsive-ETHUSD/report.json",
+      "rawBytes": 223261,
+      "rawSha256": "c32de87a938103d45a4ad9abd33173c4f794fbe4d88c41819882083bc9170c86",
+      "compression": "gzip"
+    },
+    {
+      "path": "r10/responsive-ETHUSD/run.log.gz",
+      "bytes": 499,
+      "sha256": "ab38acf57274c7adb3c044a2e5141e852804c5be7012d5481425035ea0375341",
+      "source": "build/r12-regressions/r10/responsive-ETHUSD/run.log",
+      "rawBytes": 2260,
+      "rawSha256": "ff3f367cb0b59dc911e0302f9d1fcbdcac72dcd130aa4288081c3ac993e50974",
+      "compression": "gzip"
+    },
+    {
+      "path": "r10/responsive-MSTR/report.json.gz",
+      "bytes": 11700,
+      "sha256": "328bb066a366222dd190173b082f7a2dbbdf514d23808e1b4acaea92e69c1deb",
+      "source": "build/r12-regressions/r10/responsive-MSTR/report.json",
+      "rawBytes": 204630,
+      "rawSha256": "4067545a5e18c88180798a187f221f46bcc711b1fe6a9851ddd3dd8e6d22be81",
+      "compression": "gzip"
+    },
+    {
+      "path": "r10/responsive-MSTR/run.log.gz",
+      "bytes": 497,
+      "sha256": "5279d495925b2363d508f0bd809d4b80488958851f07b9ee7be98913c82b3d4a",
+      "source": "build/r12-regressions/r10/responsive-MSTR/run.log",
+      "rawBytes": 2256,
+      "rawSha256": "67922876faba18cb68d77d74da1b467d1bff35dd4c229ba554cc7f8d5423b754",
+      "compression": "gzip"
+    },
+    {
+      "path": "r10/summary.json.gz",
+      "bytes": 1272,
+      "sha256": "2d3cc1b70d246fb6844e3ebd445019348b3b47c08476ca90bb364505513174c1",
+      "source": "build/r12-regressions/r10/summary.json",
+      "rawBytes": 5094,
+      "rawSha256": "cf048b991035f2779c9c0c258486da212e06386c736e91a19d94eea09cf996e0",
+      "compression": "gzip"
+    },
+    {
+      "path": "r10/wp6/btcusd-1920x1080-failure.png",
+      "bytes": 297334,
+      "sha256": "083fee3c1c12c14dffcb272a2eb0365f8153513f0ee2bf1bc80d2d522ec4a56b",
+      "source": "build/r12-regressions/r10/wp6/btcusd-1920x1080-failure.png",
+      "rawBytes": 297334,
+      "rawSha256": "083fee3c1c12c14dffcb272a2eb0365f8153513f0ee2bf1bc80d2d522ec4a56b",
+      "compression": null
+    },
+    {
+      "path": "r10/wp6/report.json.gz",
+      "bytes": 99205,
+      "sha256": "1f445ce9bf7be4058eebdee14404a906d3592fadf18fe99e4c89058e6b467d92",
+      "source": "build/r12-regressions/r10/wp6/report.json",
+      "rawBytes": 1530747,
+      "rawSha256": "66567830c2b88136268c49902e4ff232ff51c282bb822c7f7db961149f2c457e",
+      "compression": "gzip"
+    },
+    {
+      "path": "r10/wp6/run.log.gz",
+      "bytes": 405,
+      "sha256": "2868e227e10948fda3c2e99321e7f7a37255ff2ad701d83b98de8827b5eb4182",
+      "source": "build/r12-regressions/r10/wp6/run.log",
+      "rawBytes": 1917,
+      "rawSha256": "98a8256697b276ccd43ea640978eb30928dcd9eab9261d16ea903f11ff207d70",
+      "compression": "gzip"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2657,
+      "sha256": "0b0596ebad22effeba87be9e7dea7869f16599dca77b3eb2d559793401234d3e",
+      "generated": true
+    },
+    {
+      "path": "runners/run-r12-all.mjs",
+      "bytes": 4176,
+      "sha256": "9a69cf2a7919e20e9e5bcca6587e99488d5cf02c223c408755d16ea77e4e1de3",
+      "source": "../run-r12-all.mjs",
+      "rawBytes": 4176,
+      "rawSha256": "9a69cf2a7919e20e9e5bcca6587e99488d5cf02c223c408755d16ea77e4e1de3",
+      "compression": null
+    },
+    {
+      "path": "runners/run-r12-regressions.mjs",
+      "bytes": 7452,
+      "sha256": "37d3ec79b9e74fd7b82136d3b0d066efa315fb2ed7cff6895938274f353640b9",
+      "source": "../run-r12-regressions.mjs",
+      "rawBytes": 7452,
+      "rawSha256": "37d3ec79b9e74fd7b82136d3b0d066efa315fb2ed7cff6895938274f353640b9",
+      "compression": null
+    },
+    {
+      "path": "runners/run-r12-wp6-retry.mjs",
+      "bytes": 13919,
+      "sha256": "76f25e49324dea15c04bf7e4a9a3ed50cb09dbdd4339517afef3fef137ae1912",
+      "source": "../run-r12-wp6-retry.mjs",
+      "rawBytes": 13919,
+      "rawSha256": "76f25e49324dea15c04bf7e4a9a3ed50cb09dbdd4339517afef3fef137ae1912",
+      "compression": null
+    },
+    {
+      "path": "runners/verify-controlled-notice-ab.mjs",
+      "bytes": 27353,
+      "sha256": "98cca1aa73372b478a75dce991c9449886c4da8acaa1a0a40c02bda1ba937686",
+      "source": "../r12-diagnostic/verify-controlled-notice-ab.mjs",
+      "rawBytes": 27353,
+      "rawSha256": "98cca1aa73372b478a75dce991c9449886c4da8acaa1a0a40c02bda1ba937686",
+      "compression": null
+    },
+    {
+      "path": "runtime/nss-cleanup-receipt.json.gz",
+      "bytes": 871,
+      "sha256": "dd2f4c4decd3035a8e3902baa2a045a55598a7d2a3bc3ca4c5c71a5e7db26129",
+      "source": "../browser-r12-runtime/nss-cleanup-receipt.json",
+      "rawBytes": 1740,
+      "rawSha256": "eefbd71f7d86aede664b9445492d85631cfd1d7f27118f543c1b6e3cdb313aa6",
+      "compression": "gzip"
+    },
+    {
+      "path": "runtime/nss-trust-receipt.json.gz",
+      "bytes": 759,
+      "sha256": "88f17797c5c1fd4df5934e13dd46de74f7e61594640da465162ca0f92970b77c",
+      "source": "../browser-r12-runtime/nss-trust-receipt.json",
+      "rawBytes": 1577,
+      "rawSha256": "86abbf7c22184b3d6707276ab4004577b2ce64643a357058e603b869ea68c21c",
+      "compression": "gzip"
+    },
+    {
+      "path": "screenshot-inventory.json",
+      "bytes": 246368,
+      "sha256": "7d09d40ea029c9091399f370b66745a8998afba5b892e4e14c0c80108ca22b8f",
+      "generated": true
+    },
+    {
+      "path": "screenshots/compare-320.png",
+      "bytes": 54120,
+      "sha256": "394d39b358f248bf18306fe3e6dadc934a1a82ba0680fea02747187d2733d607",
+      "source": "build/page-heading-browser/compare-320.png",
+      "rawBytes": 54120,
+      "rawSha256": "394d39b358f248bf18306fe3e6dadc934a1a82ba0680fea02747187d2733d607",
+      "compression": null
+    },
+    {
+      "path": "screenshots/compare-390.png",
+      "bytes": 60488,
+      "sha256": "52993a0eb8eea4f3c73f0cb281b0cc86d7e2c932b5124da604e58653f4fc5917",
+      "source": "build/page-heading-browser/compare-390.png",
+      "rawBytes": 60488,
+      "rawSha256": "52993a0eb8eea4f3c73f0cb281b0cc86d7e2c932b5124da604e58653f4fc5917",
+      "compression": null
+    },
+    {
+      "path": "screenshots/conference-1440.png",
+      "bytes": 48151,
+      "sha256": "0276fe21622a8bb7cf742caa0a250c1bdfaaec09be70b59bc471f4eca86085e7",
+      "source": "build/page-heading-browser/conference-1440.png",
+      "rawBytes": 48151,
+      "rawSha256": "0276fe21622a8bb7cf742caa0a250c1bdfaaec09be70b59bc471f4eca86085e7",
+      "compression": null
+    },
+    {
+      "path": "screenshots/conference-320.png",
+      "bytes": 23305,
+      "sha256": "40bfa1585bde6ec6ef5d146ceab38f9512b58aac8879ddf30406eaa0ceeff854",
+      "source": "build/page-heading-browser/conference-320.png",
+      "rawBytes": 23305,
+      "rawSha256": "40bfa1585bde6ec6ef5d146ceab38f9512b58aac8879ddf30406eaa0ceeff854",
+      "compression": null
+    },
+    {
+      "path": "source-publication.json",
+      "bytes": 1146,
+      "sha256": "d172888961725b3f4d94dc7b9bec46b2f0f9b5e976b1cf2faaf8045fe44cb6d4",
+      "source": "build/r12-final/source-publication.json",
+      "rawBytes": 1146,
+      "rawSha256": "d172888961725b3f4d94dc7b9bec46b2f0f9b5e976b1cf2faaf8045fe44cb6d4",
+      "compression": null
+    },
+    {
+      "path": "summary.json",
+      "bytes": 49072,
+      "sha256": "5c52de03d46551ebbd8c10e44b24ed92674f6b4d02e00ab7eeea04f7db497b5f",
+      "generated": true
+    },
+    {
+      "path": "tested-source-bundle-verification.json",
+      "bytes": 377,
+      "sha256": "e98657c33c595727f9ebc7fc47c19aebd0c753155b53d4a5e8b143db2b1fbeca",
+      "generated": true
+    },
+    {
+      "path": "tested-source.bundle",
+      "bytes": 9692,
+      "sha256": "466a21727fbdf665e8ce0776d2f3490d3d3b49aeed868c36b1b05ba75aa1fbc8",
+      "source": "build/r12-final/tested-source.bundle",
+      "rawBytes": 9692,
+      "rawSha256": "466a21727fbdf665e8ce0776d2f3490d3d3b49aeed868c36b1b05ba75aa1fbc8",
+      "compression": null
+    },
+    {
+      "path": "wp6-retry/btcusd-1920x1080-chart.png",
+      "bytes": 299209,
+      "sha256": "c5653513c78014169a5f2205aba69983f3f47059f8a28df7595a0b97ea205dd0",
+      "source": "build/r12-final/wp6-retry/btcusd-1920x1080-chart.png",
+      "rawBytes": 299209,
+      "rawSha256": "c5653513c78014169a5f2205aba69983f3f47059f8a28df7595a0b97ea205dd0",
+      "compression": null
+    },
+    {
+      "path": "wp6-retry/btcusd-1920x1080-replay.png",
+      "bytes": 164613,
+      "sha256": "13305df26914e59d21258d7092be6beb5ce1f2e32049fefc38087b4001a1a760",
+      "source": "build/r12-final/wp6-retry/btcusd-1920x1080-replay.png",
+      "rawBytes": 164613,
+      "rawSha256": "13305df26914e59d21258d7092be6beb5ce1f2e32049fefc38087b4001a1a760",
+      "compression": null
+    },
+    {
+      "path": "wp6-retry/report.json.gz",
+      "bytes": 105574,
+      "sha256": "16290848c53f0deae25ff47dbc593931026eff64df647f9b1d6d411fffd28d0a",
+      "source": "build/r12-final/wp6-retry/report.json",
+      "rawBytes": 1611841,
+      "rawSha256": "ccca14e0bf39d975d9995503567bbb1314053873c871011bdb92895eefc4ec98",
+      "compression": "gzip"
+    },
+    {
+      "path": "wp6-retry/run.log.gz",
+      "bytes": 356,
+      "sha256": "1bd0fb30f55792783e5bc6e40fc393874ea8cd6329123b5594d80d58e0c12695",
+      "source": "build/r12-final/wp6-retry/run.log",
+      "rawBytes": 1866,
+      "rawSha256": "b2ebf92d26566f1caf115c669d6fed3e0c38b9a2596a3196666e35c384f6c1cc",
+      "compression": "gzip"
+    },
+    {
+      "path": "wp6-retry/runner.log.gz",
+      "bytes": 1134,
+      "sha256": "3f878b5b2b7985d3fe579b9a05f77aaac885dbc063a19916aec963a2441b958f",
+      "source": "build/r12-final/wp6-retry-runner.log",
+      "rawBytes": 3826,
+      "rawSha256": "f33e487c7a9630343d29284042a5e70c201af10c88bc23446b429634b97b459b",
+      "compression": "gzip"
+    },
+    {
+      "path": "wp6-retry/screenshots-validation.json.gz",
+      "bytes": 2352,
+      "sha256": "6a5d699134ae89d19a554f0b5ef857cf1e16dd67c2283fe335746e9c8046bacf",
+      "source": "build/r12-final/wp6-retry/screenshots-validation.json",
+      "rawBytes": 10698,
+      "rawSha256": "c6939dc0c9cb7a4d5f307f28a7db570700ed3f9842114197ef9d32163074465a",
+      "compression": "gzip"
+    },
+    {
+      "path": "wp6-retry/summary.json.gz",
+      "bytes": 1645,
+      "sha256": "112d5c621abf7f59a08ed5d6db8b22c6760eff32586de6f4b2deb54550e8dc45",
+      "source": "build/r12-final/wp6-retry/summary.json",
+      "rawBytes": 4616,
+      "rawSha256": "868b230704a2926f413d0b37ead83ff78e308d4cfac44ecb8507d71d6e1c2d11",
+      "compression": "gzip"
+    },
+    {
+      "path": "wp6-retry/summary.sha256.json.gz",
+      "bytes": 128,
+      "sha256": "6b834a5581bb3d7dd3834c4e4543df93442836549f35abc21d97c69e137fea82",
+      "source": "build/r12-final/wp6-retry/summary.sha256.json",
+      "rawBytes": 126,
+      "rawSha256": "56b8b5b8d8b28efce99188d639ebff2a42e6f927eb543c6294f3603bb296b850",
+      "compression": "gzip"
+    }
+  ]
+}

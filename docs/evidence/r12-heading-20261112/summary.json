@@ -1,0 +1,1756 @@
+{
+  "schemaVersion": 1,
+  "kind": "r12-heading-verification-evidence",
+  "packagedAt": "2026-11-11T22:31:34.268Z",
+  "sourceCommit": "4cc98d8195707ab69e534236bf2ed7fa22819327",
+  "sourceTree": "0e79b0fa76d7e50f8187fc9944dec10493438cc1",
+  "baselineCommit": "ce8df9262b13a657823752408481f742f7a31701",
+  "sourcePublication": {
+    "kind": "r12-source-publication",
+    "repository": "twoimo/bitcoin-cycle-atlas",
+    "branch": "fix/tradingview-responsive-20261110",
+    "method": "GitHub connector Git data API; non-force update with expected previous SHA",
+    "testedLocalCommit": "4cc98d8195707ab69e534236bf2ed7fa22819327",
+    "testedTree": "0e79b0fa76d7e50f8187fc9944dec10493438cc1",
+    "publishedSourceCommit": "a6bf961b3e62af45e57b6b74662158626cfa7fa2",
+    "publishedTree": "0e79b0fa76d7e50f8187fc9944dec10493438cc1",
+    "identicalCompleteTree": true,
+    "parent": "dcbc0ffaf9a70b5b8806c022913d30138ebed112",
+    "mainObserved": "a02425d3283343e80f9a0ad39a0456c09350919b",
+    "sourceCommitUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/commit/a6bf961b3e62af45e57b6b74662158626cfa7fa2",
+    "note": "Local HTTPS git push had no credentials. GitHub commit author/time metadata differ; complete source tree and raw validation receipts are unchanged. The final local tested commit 4cc98d8195707ab69e534236bf2ed7fa22819327 is retained in tested-source.bundle; historical diagnostic commits d39870f and 2666175 are represented by their original reports and hashes, not this bundle."
+  },
+  "testedSourceBundle": {
+    "command": [
+      "git",
+      "bundle",
+      "verify",
+      "tested-source.bundle"
+    ],
+    "exitCode": 0,
+    "heads": "4cc98d8195707ab69e534236bf2ed7fa22819327 HEAD",
+    "stdout": "The bundle contains this ref:\n4cc98d8195707ab69e534236bf2ed7fa22819327 HEAD\nThe bundle requires this ref:\ndcbc0ffaf9a70b5b8806c022913d30138ebed112 \nThe bundle uses this hash algorithm: sha1\n"
+  },
+  "acceptedVerification": {
+    "status": "passed-after-complete-wp6-retry",
+    "sourceCommit": "4cc98d8195707ab69e534236bf2ed7fa22819327",
+    "publishedSourceCommit": "a6bf961b3e62af45e57b6b74662158626cfa7fa2",
+    "sourceTree": "0e79b0fa76d7e50f8187fc9944dec10493438cc1",
+    "initialSequenceStatus": "failed",
+    "initialR10Status": "failed",
+    "initialWp6": {
+      "status": "FAIL",
+      "counts": {
+        "total": 30,
+        "passed": 29,
+        "failed": 1
+      },
+      "failureId": "btcusd-1920x1080",
+      "error": "Error: CDP timeout: Runtime.evaluate\n    at Timeout._onTimeout (file:///workspace/scratch/15a50edfd7d0/bitcoin-cycle-atlas/scripts/verify-wp6-browser.mjs:38:143)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+    },
+    "acceptedWp6": {
+      "report": "wp6-retry/report.json.gz",
+      "status": "PASS",
+      "counts": {
+        "total": 30,
+        "passed": 30,
+        "failed": 0
+      },
+      "source": "One independent complete 30-case retry; no cases merged from the first run"
+    },
+    "otherGates": "Both heading matrices and ancestor regressions, native 53, responsive 44, chart-qa 12, npm, typecheck and static checks passed in the original final sequence",
+    "sourceAndHarnessUnchanged": true,
+    "deadlinesUnchanged": true,
+    "scope": "Linux executions in this package only; external Mac script status remains failed and is recorded separately"
+  },
+  "wp6Retry": {
+    "status": "passed",
+    "counts": {
+      "total": 30,
+      "passed": 30,
+      "failed": 0
+    },
+    "startedAt": "2026-11-11T22:19:11.369Z",
+    "finishedAt": "2026-11-11T22:26:51.331Z",
+    "durationMs": 459962,
+    "gates": [
+      {
+        "id": "wp6",
+        "expectedCases": 30,
+        "startedAt": "2026-11-11T22:19:12.102Z",
+        "status": "passed",
+        "command": [
+          "/workspace/scratch/55a6bfaf803b/conference-tools/node-v24.22.2-linux-x64/bin/node",
+          "scripts/verify-wp6-browser.mjs",
+          "--suite",
+          "wp6",
+          "--phase",
+          "candidate",
+          "--origin",
+          "http://127.0.0.1:39533",
+          "--expected-source",
+          "4cc98d8195707ab69e534236bf2ed7fa22819327",
+          "--out",
+          "/workspace/scratch/15a50edfd7d0/bitcoin-cycle-atlas/build/r12-final/wp6-retry"
+        ],
+        "exit": {
+          "code": 0,
+          "signal": null
+        },
+        "timedOut": false,
+        "spawnError": null,
+        "report": {
+          "file": "report.json",
+          "bytes": 1611841,
+          "sha256": "ccca14e0bf39d975d9995503567bbb1314053873c871011bdb92895eefc4ec98"
+        },
+        "actualCases": 30,
+        "nativeStatus": "PASS",
+        "failures": [],
+        "counts": {
+          "executed": 30,
+          "passed": 30,
+          "failed": 0
+        },
+        "screenshotValidation": {
+          "file": "screenshots-validation.json",
+          "bytes": 10698,
+          "sha256": "c6939dc0c9cb7a4d5f307f28a7db570700ed3f9842114197ef9d32163074465a",
+          "verified": 45
+        },
+        "verifiedScreenshots": 45,
+        "finishedAt": "2026-11-11T22:26:51.021Z",
+        "log": {
+          "file": "run.log",
+          "bytes": 1866,
+          "sha256": "b2ebf92d26566f1caf115c669d6fed3e0c38b9a2596a3196666e35c384f6c1cc"
+        }
+      }
+    ],
+    "sourceBefore": {
+      "schemaVersion": 1,
+      "kind": "atlas-wp6-candidate-source",
+      "productionDeployment": false,
+      "verifiedTrackedDistClean": true,
+      "sourceCommit": "4cc98d8195707ab69e534236bf2ed7fa22819327",
+      "sourceTree": "0e79b0fa76d7e50f8187fc9944dec10493438cc1",
+      "distTreeSha256": "2658b82d1b46ac3ee6284d3c5694ce8db513bb149594372aab55a75f6fe4f546"
+    },
+    "sourceAfter": {
+      "schemaVersion": 1,
+      "kind": "atlas-wp6-candidate-source",
+      "productionDeployment": false,
+      "verifiedTrackedDistClean": true,
+      "sourceCommit": "4cc98d8195707ab69e534236bf2ed7fa22819327",
+      "sourceTree": "0e79b0fa76d7e50f8187fc9944dec10493438cc1",
+      "distTreeSha256": "2658b82d1b46ac3ee6284d3c5694ce8db513bb149594372aab55a75f6fe4f546"
+    },
+    "harnessBefore": {
+      "scripts/verify-responsive-workbench-browser.mjs": "63efc03c19f76bfdb40d665d117f21366375b46828bdb7c98973e0345165b4f5",
+      "scripts/verify-wp6-browser.mjs": "0ce6b6a5b0c2122d8b6ad16dd768d41efddbbd8041c4f7ebee611b90d39471a2",
+      "scripts/verify-wp6-cloudflare.mjs": "6c15c7985928ec14a95628e4b56b7605bba70f96f1c5015dc1176381efc71be9",
+      "scripts/verify-chart-qa-metrics.mjs": "23627b9fcc4acfb6aba2a10b3501312d0d75ddb690d1885676f29522c7536174"
+    },
+    "harnessAfter": {
+      "scripts/verify-responsive-workbench-browser.mjs": "63efc03c19f76bfdb40d665d117f21366375b46828bdb7c98973e0345165b4f5",
+      "scripts/verify-wp6-browser.mjs": "0ce6b6a5b0c2122d8b6ad16dd768d41efddbbd8041c4f7ebee611b90d39471a2",
+      "scripts/verify-wp6-cloudflare.mjs": "6c15c7985928ec14a95628e4b56b7605bba70f96f1c5015dc1176381efc71be9",
+      "scripts/verify-chart-qa-metrics.mjs": "23627b9fcc4acfb6aba2a10b3501312d0d75ddb690d1885676f29522c7536174"
+    },
+    "deadlines": {
+      "wrapperMs": 1680000,
+      "childMs": 660000
+    }
+  },
+  "executionStatus": "failed",
+  "environment": {
+    "node": "v24.22.2",
+    "platform": "linux",
+    "arch": "x64",
+    "browser": "/workspace/scratch/55a6bfaf803b/conference-tools/chrome-with-proxy",
+    "requestedDockerPath": "/Applications/Docker.app/Contents/Resources/bin",
+    "frozenRuntime": "native canonical Node 24.22.2 linux/x64"
+  },
+  "sourceHashes": {
+    "dist/ui/page-description.js": "f9407527f597fe42c863bc1b2a4334d9cd36fb84067552b7f3a1099f864fe70c",
+    "dist/atlas-shell.css": "0c8f41d4dc9cfef5b8f770a5407dfd7b4111148d0de890fb32d63a8765fa82b8",
+    "scripts/verify-page-heading-browser.mjs": "bece62fb4278e7578234eb3caac59dfee3a3097aba05bba1f2215fc173ebd603",
+    "tests/page-description.test.mjs": "0cbab47d6bfb9c56b2eb337b1cfc603a7ab3473df031de4139019805109585fc",
+    "dist/btc-refresh-status.js": "90bf073c462c7c97a995ee15cd9157f1c908535fa27f8ae7785576a546100e70",
+    "tests/ethereum-btc-refresh-status.test.mjs": "852b048d048a52f9e3ec0f46958a5fb457bfa5ef73be84bd635f1b452bb170a8"
+  },
+  "headingFirst": {
+    "status": "passed",
+    "cases": {
+      "total": 15,
+      "passed": 15,
+      "failed": 0
+    },
+    "supplementalCases": {
+      "total": 9,
+      "passed": 9,
+      "failed": 0
+    },
+    "layoutShiftCases": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0
+    },
+    "failures": []
+  },
+  "headingRepeat": {
+    "status": "passed",
+    "cases": {
+      "total": 15,
+      "passed": 15,
+      "failed": 0
+    },
+    "supplementalCases": {
+      "total": 9,
+      "passed": 9,
+      "failed": 0
+    },
+    "layoutShiftCases": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0
+    },
+    "failures": []
+  },
+  "native53": {
+    "status": "passed",
+    "counts": {
+      "total": 53,
+      "passed": 53,
+      "failed": 0
+    },
+    "failures": [],
+    "error": null
+  },
+  "r10": {
+    "status": "failed",
+    "gates": [
+      {
+        "id": "responsive-BTCUSD",
+        "status": "passed",
+        "expectedCases": 11,
+        "actualCases": 11,
+        "verifiedScreenshots": 25,
+        "failures": [],
+        "error": null
+      },
+      {
+        "id": "responsive-ETHUSD",
+        "status": "passed",
+        "expectedCases": 11,
+        "actualCases": 11,
+        "verifiedScreenshots": 25,
+        "failures": [],
+        "error": null
+      },
+      {
+        "id": "responsive-MSTR",
+        "status": "passed",
+        "expectedCases": 11,
+        "actualCases": 11,
+        "verifiedScreenshots": 25,
+        "failures": [],
+        "error": null
+      },
+      {
+        "id": "responsive-BMNR",
+        "status": "passed",
+        "expectedCases": 11,
+        "actualCases": 11,
+        "verifiedScreenshots": 25,
+        "failures": [],
+        "error": null
+      },
+      {
+        "id": "wp6",
+        "status": "failed",
+        "expectedCases": 30,
+        "actualCases": 30,
+        "failures": [
+          {
+            "id": "btcusd-1920x1080",
+            "error": "Error: CDP timeout: Runtime.evaluate\n    at Timeout._onTimeout (file:///workspace/scratch/15a50edfd7d0/bitcoin-cycle-atlas/scripts/verify-wp6-browser.mjs:38:143)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+          }
+        ],
+        "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n\n    at runJob (file:///workspace/scratch/15a50edfd7d0/bitcoin-cycle-atlas/docs/evidence/chart-h1-20261112/r10-browser-gates.mjs:80:75)\n    at async file:///workspace/scratch/15a50edfd7d0/bitcoin-cycle-atlas/docs/evidence/chart-h1-20261112/r10-browser-gates.mjs:128:86"
+      },
+      {
+        "id": "chart-qa",
+        "status": "passed",
+        "expectedCases": 12,
+        "actualCases": 12,
+        "verifiedScreenshots": 18,
+        "failures": [],
+        "error": null
+      }
+    ]
+  },
+  "npm": {
+    "complete": true,
+    "tests": 3428,
+    "pass": 3428,
+    "fail": 0,
+    "skipped": 0,
+    "batches": 1
+  },
+  "baseline": {
+    "status": "failed",
+    "counts": {
+      "total": 15,
+      "passed": 10,
+      "failed": 5
+    },
+    "failures": [
+      "compare-320: heading/glyphs outside visible toolbar",
+      "BTCUSD-1440: text overlap:  symbol=true",
+      "ETHUSD-1440: text overlap:  symbol=true",
+      "MSTR-1440: text overlap:  symbol=true",
+      "BMNR-1440: text overlap:  symbol=true"
+    ]
+  },
+  "interruptedD398": {
+    "sourceCommit": "d39870f082dd1a7a6642e1da3b9b050357122482",
+    "completion": "interrupted",
+    "exitCode": 130,
+    "completedCases": 51,
+    "passed": 48,
+    "failed": 3,
+    "expectedCases": 53,
+    "reason": "The trial compare grid removed the source-footer document scroll. Preserve normal flow and reserve the notice height instead. Existing 53-case harness remains unchanged.",
+    "remainingGatesExecuted": false,
+    "failures": [
+      {
+        "page": "workspace-legacy",
+        "width": 320,
+        "height": 900,
+        "status": "failed",
+        "error": "AssertionError [ERR_ASSERTION]: Legacy document content is unexpectedly clipped\n    at verifyWorkspaceSurface (file:///workspace/scratch/15a50edfd7d0/bitcoin-cycle-atlas/scripts/verify-workspace-browser.mjs:862:12)\n    at async main (file:///workspace/scratch/15a50edfd7d0/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:1220:9)\n    at async file:///workspace/scratch/15a50edfd7d0/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:1256:5"
+      },
+      {
+        "page": "workspace-legacy",
+        "width": 1440,
+        "height": 900,
+        "status": "failed",
+        "error": "AssertionError [ERR_ASSERTION]: Legacy document content is unexpectedly clipped\n    at verifyWorkspaceSurface (file:///workspace/scratch/15a50edfd7d0/bitcoin-cycle-atlas/scripts/verify-workspace-browser.mjs:862:12)\n    at async main (file:///workspace/scratch/15a50edfd7d0/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:1220:9)\n    at async file:///workspace/scratch/15a50edfd7d0/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:1256:5"
+      },
+      {
+        "page": "workspace-legacy",
+        "width": 375,
+        "height": 900,
+        "status": "failed",
+        "error": "AssertionError [ERR_ASSERTION]: Legacy document content is unexpectedly clipped\n    at verifyWorkspaceSurface (file:///workspace/scratch/15a50edfd7d0/bitcoin-cycle-atlas/scripts/verify-workspace-browser.mjs:862:12)\n    at async main (file:///workspace/scratch/15a50edfd7d0/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:1220:9)\n    at async file:///workspace/scratch/15a50edfd7d0/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:1256:5"
+      }
+    ],
+    "heading": {
+      "status": "passed",
+      "counts": {
+        "total": 15,
+        "passed": 15,
+        "failed": 0
+      }
+    },
+    "interpretation": "Interrupted partial run; its 51 observed cases are not a completed 53-case result. R10 and npm were not executed in this run."
+  },
+  "controlledAB": {
+    "status": "passed",
+    "counts": {
+      "cases": 6,
+      "passed": 6,
+      "stageCases": 4,
+      "stagePassed": 4
+    },
+    "fixture": {
+      "phase": "failed",
+      "page": "compare",
+      "asOf": "2026-11-10",
+      "now": "2026-11-12T00:00:00.000Z"
+    },
+    "scope": "Controlled failure state through the actual mountBtcRefreshStatus component; not evidence of a real provider outage. Independent owned browser/server; no deployment or product/stored-data changes.",
+    "comparisons": [
+      {
+        "width": 320,
+        "fontIdentityEqual": true,
+        "baselineStageBottom": 953,
+        "candidateStageBottom": 900,
+        "baselineNoticeHeight": 53,
+        "candidateNoticeHeight": 53,
+        "baselineBodyScrollHeight": 1099,
+        "candidateBodyScrollHeight": 1046,
+        "footerHeightPreserved": true,
+        "footerTopDifference": 53
+      },
+      {
+        "width": 390,
+        "fontIdentityEqual": true,
+        "baselineStageBottom": 953,
+        "candidateStageBottom": 900,
+        "baselineNoticeHeight": 53,
+        "candidateNoticeHeight": 53,
+        "baselineBodyScrollHeight": 1099,
+        "candidateBodyScrollHeight": 1046,
+        "footerHeightPreserved": true,
+        "footerTopDifference": 53
+      },
+      {
+        "width": 1440,
+        "fontIdentityEqual": true,
+        "baselineStageBottom": 945,
+        "candidateStageBottom": 900,
+        "baselineNoticeHeight": 45,
+        "candidateNoticeHeight": 45,
+        "baselineBodyScrollHeight": 1054,
+        "candidateBodyScrollHeight": 1009,
+        "footerHeightPreserved": true,
+        "footerTopDifference": 45
+      }
+    ],
+    "failures": [],
+    "sourceIdentities": [
+      {
+        "id": "baseline",
+        "sourceCommit": "ce8df9262b13a657823752408481f742f7a31701",
+        "before": {
+          "head": "ce8df9262b13a657823752408481f742f7a31701",
+          "tree": "5b680e63daf778cc64f78ab26f1243af10e5e3d1",
+          "expectedHead": "ce8df9262b13a657823752408481f742f7a31701",
+          "expectedTree": "5b680e63daf778cc64f78ab26f1243af10e5e3d1",
+          "files": {
+            "dist/ui/page-description.js": "327d76ec5e7dd06225e1ff1d9296970657e30f14f00038a87f0ce7d39f6632fc",
+            "dist/atlas-shell.css": "e37f7080b78644ccca7591be3d5d8796faf1e84147be872d00029218e3d061f4",
+            "dist/btc-refresh-status.js": "806ca5d59e4a9194bc9c2759c60821da154173a65944328a24010307808b2036",
+            "dist/index.html": "3c389f1abc0e9183e1c7dc5badae69301bba0ecdbf8675fbc9cbabae8c5fb979",
+            "dist/viewport.css": "3d7073ed61bbe380dae52e8d998d8ab6f24208f734a22c17017ca0b010a09c83",
+            "dist/styles.css": "da82c60ef93b7e0bee81bb882c5e572a21ad58c2ca7a785facc4921fde538bd5",
+            "dist/editorial-system.css": "482221d393972d025c5ca8f79100e6431f0a2b216514e9e1534614631f4a0668"
+          },
+          "productDiff": "",
+          "productStatus": ""
+        },
+        "after": {
+          "head": "ce8df9262b13a657823752408481f742f7a31701",
+          "tree": "5b680e63daf778cc64f78ab26f1243af10e5e3d1",
+          "expectedHead": "ce8df9262b13a657823752408481f742f7a31701",
+          "expectedTree": "5b680e63daf778cc64f78ab26f1243af10e5e3d1",
+          "files": {
+            "dist/ui/page-description.js": "327d76ec5e7dd06225e1ff1d9296970657e30f14f00038a87f0ce7d39f6632fc",
+            "dist/atlas-shell.css": "e37f7080b78644ccca7591be3d5d8796faf1e84147be872d00029218e3d061f4",
+            "dist/btc-refresh-status.js": "806ca5d59e4a9194bc9c2759c60821da154173a65944328a24010307808b2036",
+            "dist/index.html": "3c389f1abc0e9183e1c7dc5badae69301bba0ecdbf8675fbc9cbabae8c5fb979",
+            "dist/viewport.css": "3d7073ed61bbe380dae52e8d998d8ab6f24208f734a22c17017ca0b010a09c83",
+            "dist/styles.css": "da82c60ef93b7e0bee81bb882c5e572a21ad58c2ca7a785facc4921fde538bd5",
+            "dist/editorial-system.css": "482221d393972d025c5ca8f79100e6431f0a2b216514e9e1534614631f4a0668"
+          },
+          "productDiff": "",
+          "productStatus": ""
+        },
+        "unchanged": true
+      },
+      {
+        "id": "candidate",
+        "sourceCommit": "4cc98d8195707ab69e534236bf2ed7fa22819327",
+        "before": {
+          "head": "4cc98d8195707ab69e534236bf2ed7fa22819327",
+          "tree": "0e79b0fa76d7e50f8187fc9944dec10493438cc1",
+          "expectedHead": "4cc98d8195707ab69e534236bf2ed7fa22819327",
+          "expectedTree": "0e79b0fa76d7e50f8187fc9944dec10493438cc1",
+          "files": {
+            "dist/ui/page-description.js": "f9407527f597fe42c863bc1b2a4334d9cd36fb84067552b7f3a1099f864fe70c",
+            "dist/atlas-shell.css": "0c8f41d4dc9cfef5b8f770a5407dfd7b4111148d0de890fb32d63a8765fa82b8",
+            "dist/btc-refresh-status.js": "90bf073c462c7c97a995ee15cd9157f1c908535fa27f8ae7785576a546100e70",
+            "dist/index.html": "3c389f1abc0e9183e1c7dc5badae69301bba0ecdbf8675fbc9cbabae8c5fb979",
+            "dist/viewport.css": "3d7073ed61bbe380dae52e8d998d8ab6f24208f734a22c17017ca0b010a09c83",
+            "dist/styles.css": "da82c60ef93b7e0bee81bb882c5e572a21ad58c2ca7a785facc4921fde538bd5",
+            "dist/editorial-system.css": "482221d393972d025c5ca8f79100e6431f0a2b216514e9e1534614631f4a0668"
+          },
+          "productDiff": "",
+          "productStatus": ""
+        },
+        "after": {
+          "head": "4cc98d8195707ab69e534236bf2ed7fa22819327",
+          "tree": "0e79b0fa76d7e50f8187fc9944dec10493438cc1",
+          "expectedHead": "4cc98d8195707ab69e534236bf2ed7fa22819327",
+          "expectedTree": "0e79b0fa76d7e50f8187fc9944dec10493438cc1",
+          "files": {
+            "dist/ui/page-description.js": "f9407527f597fe42c863bc1b2a4334d9cd36fb84067552b7f3a1099f864fe70c",
+            "dist/atlas-shell.css": "0c8f41d4dc9cfef5b8f770a5407dfd7b4111148d0de890fb32d63a8765fa82b8",
+            "dist/btc-refresh-status.js": "90bf073c462c7c97a995ee15cd9157f1c908535fa27f8ae7785576a546100e70",
+            "dist/index.html": "3c389f1abc0e9183e1c7dc5badae69301bba0ecdbf8675fbc9cbabae8c5fb979",
+            "dist/viewport.css": "3d7073ed61bbe380dae52e8d998d8ab6f24208f734a22c17017ca0b010a09c83",
+            "dist/styles.css": "da82c60ef93b7e0bee81bb882c5e572a21ad58c2ca7a785facc4921fde538bd5",
+            "dist/editorial-system.css": "482221d393972d025c5ca8f79100e6431f0a2b216514e9e1534614631f4a0668"
+          },
+          "productDiff": "",
+          "productStatus": ""
+        },
+        "unchanged": true
+      }
+    ]
+  },
+  "controlledABInitialFooterRounding": {
+    "status": "failed",
+    "counts": {
+      "cases": 6,
+      "passed": 2,
+      "stageCases": 4,
+      "stagePassed": 4
+    },
+    "candidateSourceCommit": "266617575758146a31d54ed64974802ee7c45af7",
+    "failures": [
+      "baseline-320: original source footer was not reachable at the document scroll end",
+      "baseline-390: original source footer was not reachable at the document scroll end",
+      "candidate-320: original source footer was not reachable at the document scroll end",
+      "candidate-390: original source footer was not reachable at the document scroll end"
+    ],
+    "helperSha256AtCapture": "fbaf82b8af8e800cf7600b2400dd7320dce08fab6d3ba048c46640c84b894e1e",
+    "helperSnapshotRetained": false,
+    "footerReadbacks": [
+      {
+        "id": "baseline-320",
+        "status": "failed",
+        "bodyTop": 146,
+        "bodyMaximum": 146,
+        "footer": {
+          "left": 0,
+          "top": 782,
+          "right": 320,
+          "bottom": 900.046875,
+          "width": 320,
+          "height": 118.046875
+        },
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "visible": true
+      },
+      {
+        "id": "baseline-390",
+        "status": "failed",
+        "bodyTop": 146,
+        "bodyMaximum": 146,
+        "footer": {
+          "left": 0,
+          "top": 782,
+          "right": 390,
+          "bottom": 900.046875,
+          "width": 390,
+          "height": 118.046875
+        },
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "visible": true
+      },
+      {
+        "id": "baseline-1440",
+        "status": "passed",
+        "bodyTop": 109,
+        "bodyMaximum": 109,
+        "footer": {
+          "left": 56,
+          "top": 823,
+          "right": 1391,
+          "bottom": 900,
+          "width": 1335,
+          "height": 77
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "visible": true
+      },
+      {
+        "id": "candidate-320",
+        "status": "failed",
+        "bodyTop": 146,
+        "bodyMaximum": 146,
+        "footer": {
+          "left": 0,
+          "top": 782,
+          "right": 320,
+          "bottom": 900.046875,
+          "width": 320,
+          "height": 118.046875
+        },
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "visible": true
+      },
+      {
+        "id": "candidate-390",
+        "status": "failed",
+        "bodyTop": 146,
+        "bodyMaximum": 146,
+        "footer": {
+          "left": 0,
+          "top": 782,
+          "right": 390,
+          "bottom": 900.046875,
+          "width": 390,
+          "height": 118.046875
+        },
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "visible": true
+      },
+      {
+        "id": "candidate-1440",
+        "status": "passed",
+        "bodyTop": 109,
+        "bodyMaximum": 109,
+        "footer": {
+          "left": 56,
+          "top": 823,
+          "right": 1391,
+          "bottom": 900,
+          "width": 1335,
+          "height": 77
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "visible": true
+      }
+    ],
+    "interpretation": "Original diagnostic failure is retained. Phone footer border-box bottoms were 900.046875px on both baseline and candidate. Only the runtime diagnostic was corrected to inspect content bounds; product source bytes remained unchanged."
+  },
+  "rebaseProductEquivalence": {
+    "before": "266617575758146a31d54ed64974802ee7c45af7",
+    "after": "4cc98d8195707ab69e534236bf2ed7fa22819327",
+    "files": [
+      {
+        "path": "dist/ui/page-description.js",
+        "sha256": "f9407527f597fe42c863bc1b2a4334d9cd36fb84067552b7f3a1099f864fe70c"
+      },
+      {
+        "path": "dist/atlas-shell.css",
+        "sha256": "0c8f41d4dc9cfef5b8f770a5407dfd7b4111148d0de890fb32d63a8765fa82b8"
+      },
+      {
+        "path": "dist/btc-refresh-status.js",
+        "sha256": "90bf073c462c7c97a995ee15cd9157f1c908535fa27f8ae7785576a546100e70"
+      },
+      {
+        "path": "dist/index.html",
+        "sha256": "3c389f1abc0e9183e1c7dc5badae69301bba0ecdbf8675fbc9cbabae8c5fb979"
+      },
+      {
+        "path": "dist/viewport.css",
+        "sha256": "3d7073ed61bbe380dae52e8d998d8ab6f24208f734a22c17017ca0b010a09c83"
+      },
+      {
+        "path": "dist/styles.css",
+        "sha256": "da82c60ef93b7e0bee81bb882c5e572a21ad58c2ca7a785facc4921fde538bd5"
+      },
+      {
+        "path": "dist/editorial-system.css",
+        "sha256": "482221d393972d025c5ca8f79100e6431f0a2b216514e9e1534614631f4a0668"
+      }
+    ],
+    "allEqual": true
+  },
+  "geometry": [
+    {
+      "id": "BTCUSD-320",
+      "status": "passed",
+      "heading": {
+        "left": 8,
+        "top": 856.5,
+        "right": 88,
+        "bottom": 870.5,
+        "width": 80,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 24.4375,
+          "top": 854.5,
+          "right": 71.5625,
+          "bottom": 871.5,
+          "width": 47.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 0,
+        "top": 852,
+        "right": 320,
+        "bottom": 900,
+        "width": 320,
+        "height": 48
+      },
+      "plot": {
+        "left": 0,
+        "top": 0,
+        "right": 320,
+        "bottom": 852,
+        "width": 320,
+        "height": 852
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "ETHUSD-320",
+      "status": "passed",
+      "heading": {
+        "left": 8,
+        "top": 856.5,
+        "right": 88,
+        "bottom": 870.5,
+        "width": 80,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 24.4375,
+          "top": 854.5,
+          "right": 71.5625,
+          "bottom": 871.5,
+          "width": 47.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 0,
+        "top": 852,
+        "right": 320,
+        "bottom": 900,
+        "width": 320,
+        "height": 48
+      },
+      "plot": {
+        "left": 0,
+        "top": 0,
+        "right": 320,
+        "bottom": 852,
+        "width": 320,
+        "height": 852
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "MSTR-320",
+      "status": "passed",
+      "heading": {
+        "left": 8,
+        "top": 856.5,
+        "right": 88,
+        "bottom": 870.5,
+        "width": 80,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 24.4375,
+          "top": 854.5,
+          "right": 71.5625,
+          "bottom": 871.5,
+          "width": 47.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 0,
+        "top": 852,
+        "right": 320,
+        "bottom": 900,
+        "width": 320,
+        "height": 48
+      },
+      "plot": {
+        "left": 0,
+        "top": 0,
+        "right": 320,
+        "bottom": 852,
+        "width": 320,
+        "height": 852
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "BMNR-320",
+      "status": "passed",
+      "heading": {
+        "left": 8,
+        "top": 856.5,
+        "right": 88,
+        "bottom": 870.5,
+        "width": 80,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 24.4375,
+          "top": 854.5,
+          "right": 71.5625,
+          "bottom": 871.5,
+          "width": 47.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 0,
+        "top": 852,
+        "right": 320,
+        "bottom": 900,
+        "width": 320,
+        "height": 48
+      },
+      "plot": {
+        "left": 0,
+        "top": 0,
+        "right": 320,
+        "bottom": 852,
+        "width": 320,
+        "height": 852
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "compare-320",
+      "status": "passed",
+      "heading": {
+        "left": 48,
+        "top": 869.5,
+        "right": 116,
+        "bottom": 883.5,
+        "width": 68,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 52.9375,
+          "top": 867.5,
+          "right": 111.0625,
+          "bottom": 884.5,
+          "width": 58.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 0,
+        "top": 852,
+        "right": 320,
+        "bottom": 900,
+        "width": 320,
+        "height": 48
+      },
+      "plot": {
+        "left": 0,
+        "top": 0,
+        "right": 320,
+        "bottom": 852,
+        "width": 320,
+        "height": 852
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "BTCUSD-768",
+      "status": "passed",
+      "heading": {
+        "left": 60,
+        "top": 4,
+        "right": 152.8125,
+        "bottom": 18,
+        "width": 92.8125,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 82.84375,
+          "top": 2,
+          "right": 129.96875,
+          "bottom": 19,
+          "width": 47.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 52,
+        "top": 0,
+        "right": 768,
+        "bottom": 48,
+        "width": 716,
+        "height": 48
+      },
+      "plot": {
+        "left": 56,
+        "top": 52,
+        "right": 719,
+        "bottom": 852,
+        "width": 663,
+        "height": 800
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "ETHUSD-768",
+      "status": "passed",
+      "heading": {
+        "left": 60,
+        "top": 4,
+        "right": 153.328125,
+        "bottom": 18,
+        "width": 93.328125,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 83.09375,
+          "top": 2,
+          "right": 130.21875,
+          "bottom": 19,
+          "width": 47.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 52,
+        "top": 0,
+        "right": 768,
+        "bottom": 48,
+        "width": 716,
+        "height": 48
+      },
+      "plot": {
+        "left": 56,
+        "top": 48,
+        "right": 719,
+        "bottom": 852,
+        "width": 663,
+        "height": 804
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "MSTR-768",
+      "status": "passed",
+      "heading": {
+        "left": 60,
+        "top": 4,
+        "right": 136.265625,
+        "bottom": 18,
+        "width": 76.265625,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 74.5625,
+          "top": 2,
+          "right": 121.6875,
+          "bottom": 19,
+          "width": 47.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 52,
+        "top": 0,
+        "right": 768,
+        "bottom": 48,
+        "width": 716,
+        "height": 48
+      },
+      "plot": {
+        "left": 56,
+        "top": 48,
+        "right": 719,
+        "bottom": 852,
+        "width": 663,
+        "height": 804
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "BMNR-768",
+      "status": "passed",
+      "heading": {
+        "left": 60,
+        "top": 4,
+        "right": 141.234375,
+        "bottom": 18,
+        "width": 81.234375,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 77.046875,
+          "top": 2,
+          "right": 124.171875,
+          "bottom": 19,
+          "width": 47.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 52,
+        "top": 0,
+        "right": 768,
+        "bottom": 48,
+        "width": 716,
+        "height": 48
+      },
+      "plot": {
+        "left": 56,
+        "top": 48,
+        "right": 719,
+        "bottom": 852,
+        "width": 663,
+        "height": 804
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "compare-768",
+      "status": "passed",
+      "heading": {
+        "left": 56,
+        "top": 17,
+        "right": 124,
+        "bottom": 31,
+        "width": 68,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 60.9375,
+          "top": 15,
+          "right": 119.0625,
+          "bottom": 32,
+          "width": 58.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 52,
+        "top": 0,
+        "right": 768,
+        "bottom": 48,
+        "width": 716,
+        "height": 48
+      },
+      "plot": {
+        "left": 56,
+        "top": 52,
+        "right": 719,
+        "bottom": 852,
+        "width": 663,
+        "height": 800
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "BTCUSD-1440",
+      "status": "passed",
+      "heading": {
+        "left": 60,
+        "top": 3,
+        "right": 180,
+        "bottom": 17,
+        "width": 120,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 96.4375,
+          "top": 1,
+          "right": 143.5625,
+          "bottom": 18,
+          "width": 47.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 52,
+        "top": 0,
+        "right": 1440,
+        "bottom": 38,
+        "width": 1388,
+        "height": 38
+      },
+      "plot": {
+        "left": 56,
+        "top": 42,
+        "right": 1391,
+        "bottom": 862,
+        "width": 1335,
+        "height": 820
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "ETHUSD-1440",
+      "status": "passed",
+      "heading": {
+        "left": 60,
+        "top": 3,
+        "right": 180,
+        "bottom": 17,
+        "width": 120,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 96.4375,
+          "top": 1,
+          "right": 143.5625,
+          "bottom": 18,
+          "width": 47.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 52,
+        "top": 0,
+        "right": 1440,
+        "bottom": 38,
+        "width": 1388,
+        "height": 38
+      },
+      "plot": {
+        "left": 56,
+        "top": 42,
+        "right": 1391,
+        "bottom": 862,
+        "width": 1335,
+        "height": 820
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "MSTR-1440",
+      "status": "passed",
+      "heading": {
+        "left": 60,
+        "top": 3,
+        "right": 180,
+        "bottom": 17,
+        "width": 120,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 96.4375,
+          "top": 1,
+          "right": 143.5625,
+          "bottom": 18,
+          "width": 47.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 52,
+        "top": 0,
+        "right": 1440,
+        "bottom": 38,
+        "width": 1388,
+        "height": 38
+      },
+      "plot": {
+        "left": 56,
+        "top": 42,
+        "right": 1391,
+        "bottom": 862,
+        "width": 1335,
+        "height": 820
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "BMNR-1440",
+      "status": "passed",
+      "heading": {
+        "left": 60,
+        "top": 3,
+        "right": 180,
+        "bottom": 17,
+        "width": 120,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 96.4375,
+          "top": 1,
+          "right": 143.5625,
+          "bottom": 18,
+          "width": 47.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 52,
+        "top": 0,
+        "right": 1440,
+        "bottom": 38,
+        "width": 1388,
+        "height": 38
+      },
+      "plot": {
+        "left": 56,
+        "top": 42,
+        "right": 1391,
+        "bottom": 862,
+        "width": 1335,
+        "height": 820
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "compare-1440",
+      "status": "passed",
+      "heading": {
+        "left": 56,
+        "top": 12,
+        "right": 124,
+        "bottom": 26,
+        "width": 68,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 60.9375,
+          "top": 10,
+          "right": 119.0625,
+          "bottom": 27,
+          "width": 58.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 52,
+        "top": 0,
+        "right": 1440,
+        "bottom": 38,
+        "width": 1388,
+        "height": 38
+      },
+      "plot": {
+        "left": 56,
+        "top": 42,
+        "right": 1391,
+        "bottom": 862,
+        "width": 1335,
+        "height": 820
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "BTCUSD-390",
+      "status": "passed",
+      "heading": {
+        "left": 8,
+        "top": 856.5,
+        "right": 158,
+        "bottom": 870.5,
+        "width": 150,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 59.4375,
+          "top": 854.5,
+          "right": 106.5625,
+          "bottom": 871.5,
+          "width": 47.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 0,
+        "top": 852,
+        "right": 390,
+        "bottom": 900,
+        "width": 390,
+        "height": 48
+      },
+      "plot": {
+        "left": 0,
+        "top": 0,
+        "right": 390,
+        "bottom": 852,
+        "width": 390,
+        "height": 852
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "ETHUSD-390",
+      "status": "passed",
+      "heading": {
+        "left": 8,
+        "top": 856.5,
+        "right": 158,
+        "bottom": 870.5,
+        "width": 150,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 59.4375,
+          "top": 854.5,
+          "right": 106.5625,
+          "bottom": 871.5,
+          "width": 47.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 0,
+        "top": 852,
+        "right": 390,
+        "bottom": 900,
+        "width": 390,
+        "height": 48
+      },
+      "plot": {
+        "left": 0,
+        "top": 0,
+        "right": 390,
+        "bottom": 852,
+        "width": 390,
+        "height": 852
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "MSTR-390",
+      "status": "passed",
+      "heading": {
+        "left": 8,
+        "top": 856.5,
+        "right": 158,
+        "bottom": 870.5,
+        "width": 150,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 59.4375,
+          "top": 854.5,
+          "right": 106.5625,
+          "bottom": 871.5,
+          "width": 47.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 0,
+        "top": 852,
+        "right": 390,
+        "bottom": 900,
+        "width": 390,
+        "height": 48
+      },
+      "plot": {
+        "left": 0,
+        "top": 0,
+        "right": 390,
+        "bottom": 852,
+        "width": 390,
+        "height": 852
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "BMNR-390",
+      "status": "passed",
+      "heading": {
+        "left": 8,
+        "top": 856.5,
+        "right": 158,
+        "bottom": 870.5,
+        "width": 150,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 59.4375,
+          "top": 854.5,
+          "right": 106.5625,
+          "bottom": 871.5,
+          "width": 47.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 0,
+        "top": 852,
+        "right": 390,
+        "bottom": 900,
+        "width": 390,
+        "height": 48
+      },
+      "plot": {
+        "left": 0,
+        "top": 0,
+        "right": 390,
+        "bottom": 852,
+        "width": 390,
+        "height": 852
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "compare-390",
+      "status": "passed",
+      "heading": {
+        "left": 48,
+        "top": 869.5,
+        "right": 116,
+        "bottom": 883.5,
+        "width": 68,
+        "height": 14
+      },
+      "glyphs": [
+        {
+          "left": 52.9375,
+          "top": 867.5,
+          "right": 111.0625,
+          "bottom": 884.5,
+          "width": 58.125,
+          "height": 17
+        }
+      ],
+      "toolbar": {
+        "left": 0,
+        "top": 852,
+        "right": 390,
+        "bottom": 900,
+        "width": 390,
+        "height": 48
+      },
+      "plot": {
+        "left": 0,
+        "top": 0,
+        "right": 390,
+        "bottom": 852,
+        "width": 390,
+        "height": 852
+      },
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": true,
+      "overflow": 0
+    },
+    {
+      "id": "conference-320",
+      "status": "passed",
+      "heading": {
+        "left": 8,
+        "top": 16.5,
+        "right": 95.90625,
+        "bottom": 34.5,
+        "width": 87.90625,
+        "height": 18
+      },
+      "glyphs": [
+        {
+          "left": 8,
+          "top": 15.5,
+          "right": 95.90625,
+          "bottom": 35.5,
+          "width": 87.90625,
+          "height": 20
+        }
+      ],
+      "toolbar": {
+        "left": 0,
+        "top": 0,
+        "right": 320,
+        "bottom": 52,
+        "width": 320,
+        "height": 52
+      },
+      "plot": null,
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": false,
+      "overflow": 0
+    },
+    {
+      "id": "conference-390",
+      "status": "passed",
+      "heading": {
+        "left": 8,
+        "top": 16.5,
+        "right": 95.90625,
+        "bottom": 34.5,
+        "width": 87.90625,
+        "height": 18
+      },
+      "glyphs": [
+        {
+          "left": 8,
+          "top": 15.5,
+          "right": 95.90625,
+          "bottom": 35.5,
+          "width": 87.90625,
+          "height": 20
+        }
+      ],
+      "toolbar": {
+        "left": 0,
+        "top": 0,
+        "right": 390,
+        "bottom": 52,
+        "width": 390,
+        "height": 52
+      },
+      "plot": null,
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": false,
+      "overflow": 0
+    },
+    {
+      "id": "conference-768",
+      "status": "passed",
+      "heading": {
+        "left": 80,
+        "top": 14.5,
+        "right": 155.390625,
+        "bottom": 32.5,
+        "width": 75.390625,
+        "height": 18
+      },
+      "glyphs": [
+        {
+          "left": 80,
+          "top": 14.5,
+          "right": 155.390625,
+          "bottom": 32.5,
+          "width": 75.390625,
+          "height": 18
+        }
+      ],
+      "toolbar": {
+        "left": 68,
+        "top": 0,
+        "right": 768,
+        "bottom": 48,
+        "width": 700,
+        "height": 48
+      },
+      "plot": null,
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": false,
+      "overflow": 0
+    },
+    {
+      "id": "conference-1440",
+      "status": "passed",
+      "heading": {
+        "left": 228,
+        "top": 14.5,
+        "right": 303.390625,
+        "bottom": 32.5,
+        "width": 75.390625,
+        "height": 18
+      },
+      "glyphs": [
+        {
+          "left": 228,
+          "top": 14.5,
+          "right": 303.390625,
+          "bottom": 32.5,
+          "width": 75.390625,
+          "height": 18
+        }
+      ],
+      "toolbar": {
+        "left": 216,
+        "top": 0,
+        "right": 1440,
+        "bottom": 48,
+        "width": 1224,
+        "height": 48
+      },
+      "plot": null,
+      "h1Count": 1,
+      "paintedH1Count": 1,
+      "headingInViewport": true,
+      "glyphsInViewport": true,
+      "followsToolbar": false,
+      "overflow": 0
+    }
+  ],
+  "screenshots": {
+    "verified": 761,
+    "retained": 31,
+    "headingRepresentatives": 4,
+    "controlledAB": 12,
+    "controlledABInitial": 12,
+    "initialWp6Failures": 1,
+    "wp6RetryRepresentatives": 2,
+    "inventory": "screenshot-inventory.json"
+  },
+  "repeatedModelDownloads": {
+    "retained": false,
+    "count": 96,
+    "inventory": "download-inventory.json",
+    "reason": "Raw browser reports and logs preserve their validation; repeated numerical exports are represented by original byte hashes."
+  },
+  "diagnostic": {
+    "raw": "diagnostics/stage72-trigger-report.json.gz",
+    "recordedSourcePath": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/dist",
+    "sourceHashesAtCaptureAvailable": false,
+    "helperSnapshotRetained": false,
+    "interpretation": "Historical read-only baseline diagnostic; preserve all trigger attempts, including the workspace change that did not move the toolbar. It is separate from committed-source final results. The later mutable probe helper is omitted because it is not capture-pinned."
+  },
+  "notes": [
+    "Raw reports and logs are compressed without changing their content.",
+    "The source commit identifies tested product and harness bytes; a later evidence-only commit is not relabeled as tested.",
+    "Intermediate baseline/candidate reports retain their original source hashes, statuses and failures.",
+    "The retained controlled A/B helper reproduces the final A/B only; the initial failed helper snapshot is not retained.",
+    "No macOS or Safari execution is claimed by this Linux evidence."
+  ],
+  "externalMacOSReceipt": {
+    "source": "Separate macOS receipt committed during this task; not executed by this Linux session",
+    "commitWithReceipt": "d6f06c6",
+    "preservedRemoteHead": "b23cd23b69406ca96483f1fc840ef17d7d05304d",
+    "path": "docs/evidence/chart-h1-20261112/r12-macos/contract-report.json.gz",
+    "bytes": 7209,
+    "sha256": "105af0cf2adfa9c701c7abb556803dc53b39b98a2f666eae7481724aa05c2977",
+    "testedHead": "a6bf961b3e62af45e57b6b74662158626cfa7fa2",
+    "chrome": "Chrome/157.0.8103.79",
+    "baseline": null,
+    "status": "failed",
+    "counts": {
+      "cases": {
+        "total": 15,
+        "passed": 15
+      },
+      "supplementalCases": {
+        "total": 9,
+        "passed": 9
+      },
+      "layoutShiftCases": {
+        "total": 2,
+        "passed": 1
+      }
+    },
+    "failures": [
+      "compare-320-ancestor-resize: restored: plot.top 53 -> 0",
+      "compare-320-ancestor-resize: restored: plot.height 799 -> 852"
+    ],
+    "sourceFileHashesMatch": true,
+    "remaining": "Mac full script remains failed because compare320 restoration sees a notice-related53px plot change; tracked in existing R13 docs. All h1 before/shifted/restored contracts pass."
+  }
+}

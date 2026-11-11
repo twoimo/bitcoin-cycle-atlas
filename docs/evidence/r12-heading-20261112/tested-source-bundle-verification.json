@@ -1,0 +1,11 @@
+{
+  "command": [
+    "git",
+    "bundle",
+    "verify",
+    "tested-source.bundle"
+  ],
+  "exitCode": 0,
+  "heads": "4cc98d8195707ab69e534236bf2ed7fa22819327 HEAD",
+  "stdout": "The bundle contains this ref:\n4cc98d8195707ab69e534236bf2ed7fa22819327 HEAD\nThe bundle requires this ref:\ndcbc0ffaf9a70b5b8806c022913d30138ebed112 \nThe bundle uses this hash algorithm: sha1\n"
+}

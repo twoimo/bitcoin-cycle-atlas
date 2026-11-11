@@ -1,0 +1,32 @@
+{
+  "status": "passed-after-complete-wp6-retry",
+  "sourceCommit": "4cc98d8195707ab69e534236bf2ed7fa22819327",
+  "publishedSourceCommit": "a6bf961b3e62af45e57b6b74662158626cfa7fa2",
+  "sourceTree": "0e79b0fa76d7e50f8187fc9944dec10493438cc1",
+  "initialSequenceStatus": "failed",
+  "initialR10Status": "failed",
+  "initialWp6": {
+    "status": "FAIL",
+    "counts": {
+      "total": 30,
+      "passed": 29,
+      "failed": 1
+    },
+    "failureId": "btcusd-1920x1080",
+    "error": "Error: CDP timeout: Runtime.evaluate\n    at Timeout._onTimeout (file:///workspace/scratch/15a50edfd7d0/bitcoin-cycle-atlas/scripts/verify-wp6-browser.mjs:38:143)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+  },
+  "acceptedWp6": {
+    "report": "wp6-retry/report.json.gz",
+    "status": "PASS",
+    "counts": {
+      "total": 30,
+      "passed": 30,
+      "failed": 0
+    },
+    "source": "One independent complete 30-case retry; no cases merged from the first run"
+  },
+  "otherGates": "Both heading matrices and ancestor regressions, native 53, responsive 44, chart-qa 12, npm, typecheck and static checks passed in the original final sequence",
+  "sourceAndHarnessUnchanged": true,
+  "deadlinesUnchanged": true,
+  "scope": "Linux executions in this package only; external Mac script status remains failed and is recorded separately"
+}

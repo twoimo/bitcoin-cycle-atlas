@@ -1,0 +1,15 @@
+{
+  "kind": "r12-source-publication",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "branch": "fix/tradingview-responsive-20261110",
+  "method": "GitHub connector Git data API; non-force update with expected previous SHA",
+  "testedLocalCommit": "4cc98d8195707ab69e534236bf2ed7fa22819327",
+  "testedTree": "0e79b0fa76d7e50f8187fc9944dec10493438cc1",
+  "publishedSourceCommit": "a6bf961b3e62af45e57b6b74662158626cfa7fa2",
+  "publishedTree": "0e79b0fa76d7e50f8187fc9944dec10493438cc1",
+  "identicalCompleteTree": true,
+  "parent": "dcbc0ffaf9a70b5b8806c022913d30138ebed112",
+  "mainObserved": "a02425d3283343e80f9a0ad39a0456c09350919b",
+  "sourceCommitUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/commit/a6bf961b3e62af45e57b6b74662158626cfa7fa2",
+  "note": "Local HTTPS git push had no credentials. GitHub commit author/time metadata differ; complete source tree and raw validation receipts are unchanged. The final local tested commit 4cc98d8195707ab69e534236bf2ed7fa22819327 is retained in tested-source.bundle; historical diagnostic commits d39870f and 2666175 are represented by their original reports and hashes, not this bundle."
+}
