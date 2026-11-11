@@ -1,0 +1,36 @@
+{
+  "recordedAt": "2026-11-11T17:54:41.125Z",
+  "unitAndMatrixCommit": "f673f5d7b2440d0c8f40a7f03bef4751a33a97a2",
+  "browserSuiteCommit": "15ff9e368a7ad450405446cf9d037c095d99766f",
+  "unitAndMatrixTree": "fd3205b20516b622586634f968e546e4f196b5c8",
+  "browserSuiteTree": "fd3205b20516b622586634f968e546e4f196b5c8",
+  "wholeTrackedTreeEqual": true,
+  "workingTreeClean": true,
+  "unit": {
+    "complete": true,
+    "tests": 3375,
+    "pass": 3375,
+    "fail": 0,
+    "skipped": 0,
+    "batches": 1,
+    "log": {
+      "file": "unit-unprivileged.log",
+      "bytes": 810437,
+      "sha256": "006f22a3e17425920c9cc6779062d7403ff3e77b08465739e2cf01be5423f697"
+    },
+    "runtime": {
+      "node": "v24.22.2",
+      "execPath": "/vercel/atlas-tools/node-v24.22.2-linux-x64/bin/node",
+      "uid": 1000,
+      "gid": 1000,
+      "caps": [
+        "CapInh:\t0000000000000000",
+        "CapPrm:\t0000000000000000",
+        "CapEff:\t0000000000000000",
+        "CapBnd:\t0000000000000000",
+        "CapAmb:\t0000000000000000",
+        "NoNewPrivs:\t1"
+      ]
+    }
+  }
+}

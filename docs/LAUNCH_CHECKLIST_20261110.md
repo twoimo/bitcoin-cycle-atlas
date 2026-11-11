@@ -1,8 +1,8 @@
 # Atlas 서비스 품질·출시 체크리스트
 
-시작 기준은 2026-11-10의 `38b9e66`이다. 브랜치 `fix/tradingview-responsive-20261110`, **배포된 제품 소스는 `09334064befc060f305520a61cfe6b695fb21930`**(`dist` tree `21fcea541ac1f203c21721897df93015c96e8b76`)이며 2026-11-11 22:55 KST production에 배포·검증됐다(WP-D 포함). 이 문서와 Pages 재생성 산출물을 포함하는 인계 커밋은 브랜치의 Git identity로 확인한다. 아래 현재 작업판은 2026-11-11 KST 갱신이며, 이전 리비전의 검증 결과를 새 후보 전체 통과로 읽지 않는다.
+시작 기준은 2026-11-10의 `38b9e66`이다. 브랜치 `fix/tradingview-responsive-20261110`, **배포된 제품 소스는 `09334064befc060f305520a61cfe6b695fb21930`**(`dist` tree `21fcea541ac1f203c21721897df93015c96e8b76`)이며 2026-11-11 22:55 KST production에 배포·검증됐다(WP-D 포함). 이 문서와 Pages 재생성 산출물을 포함하는 인계 커밋은 브랜치의 Git identity로 확인한다. 아래 현재 작업판의 R10은 2026-11-12 KST에 갱신했으며, 이전 리비전의 검증 결과를 새 후보 전체 통과로 읽지 않는다.
 
-## 현재 작업판 — 자동 진행 (2026-11-11 기준)
+## 현재 작업판 — 자동 진행 (R10: 2026-11-12 갱신)
 
 이 표가 이 저장소의 단일 진행 원장이다. 아래 `## 2026-11-11 후속 2~8` 절과 `## 역사 기록` 절은 각 시점의 영수증이며, 현재 판정은 이 표를 따른다. 브랜치 `fix/tradingview-responsive-20261110`, 기준 커밋 `09334064befc060f305520a61cfe6b695fb21930`(WP-D 배포 영수증 포함). main은 자동 `data: relay bundle refresh`로 계속 전진할 수 있고, 각 빌드가 같은 제품 코드에 새 릴레이 데이터를 실어 재배포한다.
 
@@ -18,6 +18,7 @@
 | R7 native 외부·실기기 | 차단 | macOS 외부 AppKit 메뉴, Safari, 실제 iOS/Android 기기 검증은 자동화 대상이 아니다. Blink 내부 팝업 trusted 입력과 동일시하지 않는다. |
 | R8 문서 최종화 | 완료 `7bfd717` | 요청사항·반응형·체크리스트 세 문서를 최종 상태로 정리했다. `docs/requirements/REQ_WP_ABC_20261110.md` §12 최종 판정(WP-A 차단 유지·WP-B 부분·WP-C 완료, R1~R8 목록), `docs/TRADINGVIEW_RESPONSIVE_20261110.md` §14 최종 판정(계약별 6행·로컬 수치·남은 차단·클리핑 관찰 한계), 그리고 이 표와 아래 `## 체크리스트 종결 판정` 절이다. R6·R7만 차단으로 남기고, 원격 CI 0건을 통과로 쓰지 않으며, main push·merge·배포·PR 변경·유료 용량·계정/권한 변경은 수행하지 않았다. |
 | R9 WP-D 전 종목 좌상단 오버레이 | **완료** (2026-11-11) | BTC 기준 단일 행 오버레이로 통일했다. ETHUSD·MSTR·BMNR의 `.eth-readout`을 1행(간격 · 관측 종가 · 가격 · 전봉 변화 · 기준일)으로 바꾸고 출처는 별도 `.eth-readout-source` 행으로 분리했으며, OHLC는 `details` 접힘(기본 닫힘, 펼치면 O/H/L/C)으로 옮겼다. 실측(플롯 폭 대비): 1440 ETH 319×23(23.9%)·MSTR 306×23(22.9%)·BMNR 296×23(22.2%), 768 44.6~48.1%, 320 줄바꿈 40px·가로 오버플로 0, readout 오른쪽 바깥 히트는 차트 SVG. 검증: native 15/15(신규 `verifyCompactReadout`), 반응형 44/44, WP6 30/30, chart-qa 12/12, panel 138/138, compare PASSED, `npm test` `complete:true` 3,373/3,368/0/5, typecheck·static(958 files·214 scripts·992 references). 계약: 요청서 §13, 반응형 §4.6. |
+| R10 차트 UI 마감 (인트로 행 제거·보조지표 범례) | **구현·자동검증 완료 / 미배포** `15ff9e3` | `6dea9b3`의 인트로 행 제거·`f94a35f`의 보조지표 범례·`d36766e`의 48px 툴바 예약을 유지했다. h1을 툴바 다음 형제에 둔 채 기존 조작 영역 위에 보이도록 고정 배치하고, 콘텐츠 제목을 h2로 정리해 전체 DOM h1도 1개로 맞췄다. 320/768/1440 × BTC·ETH·MSTR·BMNR·compare 15/15: h1 높이 14px, overflow 0, 기준선 geometry 276개 최대 차이 0px. 기존 53/53(WP-D 포함), compare PASSED, 반응형 44/44, WP6 30/30, chart-qa 12/12, panel 138/138, `npm test` 3,375/3,375·실패 0·skip 0·`complete:true`. TypeScript·static·Pages build/verify·web build 통과. [원본 증거·구현 설명](CHART_H1_20261112.md). **남은 것**: R7 실제 iOS Safari 확인. 이번 요청에 따라 main 병합·푸시와 배포는 수행하지 않았다. |
 
 
 
@@ -49,7 +50,7 @@ R1~R5가 전부 완료로 정리되어 R8 착수 조건을 충족했고, R8까�
 
 ## 2026-11-12 우선순위 재정리
 
-- **P0** 최종 자산 잠금(WP-A A-0)과 차트 마감(h1 계약 → compare·반응형·WP6·chart-qa → main 배포). 최종 PDF/PPTX는 `yyOkfU0FkYzNPO8f` 세션이 계속 갱신 중이므로, 해시·페이지 수가 적힌 `deck-lock` 전에는 WP-A 타임라인을 시작하지 않는다.
+- **P0** 최종 자산 잠금(WP-A A-0)과 차트 마감. 차트 h1 구현·compare·반응형·WP6·chart-qa 자동 검증은 R10에서 완료했으며 main 병합·배포는 보류한다. 최종 PDF/PPTX는 `yyOkfU0FkYzNPO8f` 세션이 계속 갱신 중이므로, 해시·페이지 수가 적힌 `deck-lock` 전에는 WP-A 타임라인을 시작하지 않는다.
 - **P1** 컨퍼런스 복습 페이지(WP-A) — 자산 잠금 후 즉시 착수.
 - **P2** 리브랜딩·스카우트 표면 — 저장소/도메인 이름, README, 케이스 스터디. P1 데모가 동작한 뒤 진행한다.
 - **P3** 릴레이 RAG, **P4** 인증·비공개, **P5** 시즌 테마.

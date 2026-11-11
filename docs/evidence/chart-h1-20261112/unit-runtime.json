@@ -1,0 +1,14 @@
+{
+  "node": "v24.22.2",
+  "execPath": "/vercel/atlas-tools/node-v24.22.2-linux-x64/bin/node",
+  "uid": 1000,
+  "gid": 1000,
+  "caps": [
+    "CapInh:\t0000000000000000",
+    "CapPrm:\t0000000000000000",
+    "CapEff:\t0000000000000000",
+    "CapBnd:\t0000000000000000",
+    "CapAmb:\t0000000000000000",
+    "NoNewPrivs:\t1"
+  ]
+}

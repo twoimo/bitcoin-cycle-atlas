@@ -1,0 +1,56 @@
+{
+  "recordedAt": "2026-11-11T17:40:59.755Z",
+  "sourceCommit": "f673f5d7b2440d0c8f40a7f03bef4751a33a97a2",
+  "sourceTree": "fd3205b20516b622586634f968e546e4f196b5c8",
+  "node": "v24.22.2",
+  "platform": "linux",
+  "arch": "x64",
+  "uid": 1000,
+  "gid": 1000,
+  "browser": "Google Chrome for Testing 157.0.8103.38",
+  "before": [
+    "CapInh:\t000001ffffffffff",
+    "CapPrm:\t000001ffffffffff",
+    "CapEff:\t000001ffffffffff",
+    "CapBnd:\t000001ffffffffff",
+    "CapAmb:\t000001ffffffffff",
+    "NoNewPrivs:\t0"
+  ],
+  "dropCommand": [
+    "setpriv",
+    "--bounding-set=-all",
+    "--inh-caps=-all",
+    "--ambient-caps=-all",
+    "--no-new-privs"
+  ],
+  "after": {
+    "node": "v24.22.2",
+    "execPath": "/vercel/atlas-tools/node-v24.22.2-linux-x64/bin/node",
+    "uid": 1000,
+    "gid": 1000,
+    "status": [
+      "CapInh:\t0000000000000000",
+      "CapPrm:\t0000000000000000",
+      "CapEff:\t0000000000000000",
+      "CapBnd:\t0000000000000000",
+      "CapAmb:\t0000000000000000",
+      "NoNewPrivs:\t1"
+    ]
+  },
+  "firstUnit": {
+    "tests": 3375,
+    "pass": 3374,
+    "fail": 1,
+    "skipped": 0,
+    "batches": 1,
+    "failedTest": "tests/publication-manifest.test.mjs:59"
+  },
+  "focusedRerun": {
+    "file": "tests/publication-manifest.test.mjs",
+    "tests": 10,
+    "pass": 10,
+    "fail": 0,
+    "skipped": 0
+  },
+  "execPath": "/vercel/atlas-tools/node-v24.22.2-linux-x64/bin/node"
+}

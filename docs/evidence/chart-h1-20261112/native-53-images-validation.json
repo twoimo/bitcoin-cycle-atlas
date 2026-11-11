@@ -1,0 +1,17 @@
+{
+  "kind": "native-browser-screenshot-integrity",
+  "recordedAt": "2026-11-11T18:18:38.119602+00:00",
+  "sourceCommit": "15ff9e368a7ad450405446cf9d037c095d99766f",
+  "reportOriginalSha256": "d902a00dab2321f408d8e4f5ec2a07f876eac0e0433ad7ca33952e3522f058b6",
+  "checkerSha256": "b390e3da49c0a0aaf4f55f397c0e540c9b20fee28825d00160aff393b5b8d02e",
+  "checkedScreenshots": 482,
+  "uniqueScreenshotFiles": 482,
+  "checks": [
+    "file exists",
+    "byte length",
+    "SHA-256",
+    "PNG signature"
+  ],
+  "failed": [],
+  "status": "passed"
+}

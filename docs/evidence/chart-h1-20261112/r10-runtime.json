@@ -1,0 +1,9 @@
+{
+  "capturedAt": "2026-11-11T18:19:16.185836+00:00",
+  "node": "v24.22.2",
+  "chrome": "Google Chrome for Testing 157.0.8103.38",
+  "source": "15ff9e368a7ad450405446cf9d037c095d99766f",
+  "workingTreeClean": true,
+  "runnerSha256": "75581644438d0cb061fd2e28c11eba9a6066956b06a533d0a5371ffd0dcf2e50",
+  "invocation": "PATH=/vercel/atlas-tools/node-v24.22.2-linux-x64/bin:$PATH ATLAS_BROWSER_PATH=/vercel/atlas-tools/chrome-linux64/chrome node /tmp/r10-browser-gates.mjs /vercel/bitcoin-cycle-atlas 15ff9e368a7ad450405446cf9d037c095d99766f build/r10-browser-gates"
+}
