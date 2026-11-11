@@ -1,0 +1,116 @@
+{
+  "kind": "conference-p1a-local-browser-runtime",
+  "createdAt": "2026-11-11T19:16:20.476707+00:00",
+  "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "execution": "Existing local workspace; no remote capacity or service created",
+  "runtime": "Node v24.22.2 Linux x64; Chrome for Testing headless-shell157.0.8103.38",
+  "sandboxEnabled": true,
+  "certificateValidationEnabled": true,
+  "existingWorkspaceHttpProxy": true,
+  "setup": {
+    "node-runtime-download.json": {
+      "kind": "official-node-runtime",
+      "version": "v24.22.2",
+      "url": "https://nodejs.org/dist/v24.22.2/node-v24.22.2-linux-x64.tar.xz",
+      "sha256": "48cc0e21e048790e54c0cf5749c2725005313d652651c40b7a21feb9697aaf75",
+      "matchesOfficialSHASUMS256": true,
+      "bytes": 32039312,
+      "recordedAt": "2026-11-11T18:50:21.535450+00:00"
+    },
+    "headless-shell-download.json": {
+      "kind": "official-chrome-headless-shell",
+      "version": "157.0.8103.38",
+      "manifestUrl": "https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json",
+      "downloadUrl": "https://storage.googleapis.com/chrome-for-testing-public/157.0.8103.38/linux64/chrome-headless-shell-linux64.zip",
+      "sha256": "deafffa74660b34853a4119c361fd427ac8c9fcb62db51ddb8a797cd83a4ba2d",
+      "bytes": 128168542,
+      "recordedAt": "2026-11-11T18:50:26.871024+00:00"
+    },
+    "browser-launcher-receipt.json": {
+      "launcher": "/workspace/scratch/55a6bfaf803b/conference-tools/chrome-with-proxy",
+      "sha256": "a80450b5fb18bb3de07cda1f3041237577d1634b6fe5520bbff95e205f45293a",
+      "existingProxyEnvironment": "HTTPS_PROXY or https_proxy",
+      "localhostBypass": true,
+      "systemCAParity": "browser-proxy-trust-receipt.json",
+      "sandboxEnabled": true,
+      "omittedLegacyFlags": [
+        "--no-sandbox",
+        "--disable-setuid-sandbox"
+      ],
+      "refusesCertificateOrOriginBypass": true,
+      "productOrGateSourceModifiedByLauncher": false
+    },
+    "browser-proxy-trust-receipt.json": {
+      "time": "2026-11-11T19:08:25.213299+00:00",
+      "database": "/home/agent/.local/share/pki/nssdb",
+      "databasePreviouslyEmpty": true,
+      "systemTrustVerification": "/usr/local/share/ca-certificates/nebula-dns.crt: OK",
+      "fingerprint": "sha256 Fingerprint=C7:1B:4D:1E:9D:77:75:C5:38:C6:88:AB:10:CE:A9:CE:41:7D:73:12:E8:98:38:F9:D1:5F:F7:32:56:CD:7F:C3",
+      "importedFingerprintMatches": true,
+      "nickname": "atlas-conference-workspace-proxy-ca",
+      "sourceCertificate": "/usr/local/share/ca-certificates/nebula-dns.crt",
+      "certificateIgnoreFlags": false,
+      "cleanupRequired": true,
+      "source": "https://chromium.googlesource.com/chromium/src/+/main/docs/linux/cert_management.md"
+    }
+  },
+  "cleanup": {
+    "status": "completed",
+    "recordedAt": "2026-11-11T20:14:42.771806+00:00",
+    "certificateRemoved": true,
+    "databaseRemoved": true,
+    "temporaryCertificateNickname": "atlas-conference-workspace-proxy-ca",
+    "temporaryDatabase": "/home/agent/.local/share/pki/nssdb",
+    "certificatePresentBefore": true,
+    "certificateAbsentAfter": true,
+    "certificatesBefore": 1,
+    "certificatesAfter": 0,
+    "removedDatabaseFiles": [
+      "cert9.db",
+      "key4.db",
+      "pkcs11.txt"
+    ],
+    "unrelatedCertificateCountPreserved": 0,
+    "unrecognizedDatabaseFilesPreserved": [],
+    "remainingOwnedHeadlessShellProcesses": [],
+    "providedSystemCaFileUnchanged": true,
+    "providedSystemCaFileSha256": "ab6933a81e6f0d142e6d5f58ed465589d899a523c2752055761af11d4ee38f2b",
+    "permissionOrAccountChanges": false
+  },
+  "scopeExclusions": [
+    "physical devices",
+    "iOS Safari",
+    "macOS AppKit",
+    "real deck/page mapping",
+    "real audio sync",
+    "one-hour playback",
+    "deployment"
+  ],
+  "sourceTree": "7ce03ecfccd2b953c50d4f0efd10afa45b97a790",
+  "historical53SourceCommit": "180c55df48242ae8afe83f8b80ada457d552d2a7",
+  "completedOwnedBrowserGates": {
+    "focusedConference": {
+      "passed": 14,
+      "cases": 14,
+      "verifiedPngs": 24,
+      "sourceHashesUnchanged": 968
+    },
+    "responsive": {
+      "passed": 44,
+      "cases": 44,
+      "verifiedPngs": 100
+    },
+    "wp6": {
+      "passed": 30,
+      "cases": 30,
+      "verifiedPngs": 45
+    },
+    "chartQa": {
+      "passed": 12,
+      "cases": 12,
+      "verifiedPngs": 18
+    },
+    "r10DurationMs": 671449
+  },
+  "setupSourceCommit": "180c55df48242ae8afe83f8b80ada457d552d2a7"
+}

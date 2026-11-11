@@ -1,0 +1,10 @@
+{
+  "checkedAt": "2026-11-11T20:01:04.605Z",
+  "base": "http://127.0.0.1:34571/bitcoin-cycle-atlas/",
+  "remainingOwnedBrowserOrHarnessProcesses": [],
+  "serverProbe": {
+    "listening": false,
+    "code": "ECONNREFUSED"
+  },
+  "passed": true
+}

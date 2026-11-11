@@ -1,0 +1,59 @@
+{
+  "startedAt": "2026-11-11T19:56:31.922Z",
+  "endedAt": "2026-11-11T19:59:49.408Z",
+  "durationMs": 197486,
+  "cwd": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas",
+  "command": [
+    "/workspace/scratch/55a6bfaf803b/conference-tools/node-v24.22.2-linux-x64/bin/node",
+    "scripts/verify-compare-shell-browser.mjs",
+    "--out",
+    "build/conference-p1a/compare"
+  ],
+  "nodeVersion": "v24.22.2",
+  "browserPath": "/workspace/scratch/55a6bfaf803b/conference-tools/chrome-with-proxy",
+  "before": {
+    "head": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+    "tree": "7ce03ecfccd2b953c50d4f0efd10afa45b97a790",
+    "trackedStatus": ""
+  },
+  "after": {
+    "head": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+    "tree": "7ce03ecfccd2b953c50d4f0efd10afa45b97a790",
+    "trackedStatus": ""
+  },
+  "exitCode": 0,
+  "signal": null,
+  "spawnError": null,
+  "sourceUnchanged": true,
+  "report": {
+    "path": "compare-shell-verify.json",
+    "bytes": 129073,
+    "sha256": "d4d48e72332078cc0fcce41f03c014f95a095acbd77471ecf672540320e3d214"
+  },
+  "log": {
+    "path": "run.log",
+    "bytes": 21832,
+    "sha256": "3fd502362af90b0911ebfc3d9baf076edb4cabd499c91a95c9a7277b873f84e7"
+  },
+  "pngValidation": {
+    "path": "png-validation.json",
+    "bytes": 856,
+    "sha256": "0f62f3c29a530e6c8f89a31cbe035ca00988f3cebfb6051a7459b863d145391a"
+  },
+  "reportStatus": "PASSED",
+  "testedHead": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "counts": {
+    "inventory": 16,
+    "compareViewports": 9,
+    "contentViewportCases": 30,
+    "contentWidthRecords": 35,
+    "interactionGroups": 4,
+    "structureToolbarCases": 2,
+    "contentRoundTrips": 4,
+    "failures": 0,
+    "findings": 0,
+    "screenshots": 3
+  },
+  "failures": [],
+  "findings": []
+}

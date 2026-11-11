@@ -1,0 +1,17 @@
+{
+  "name": "build-pages-final",
+  "command": [
+    "npm",
+    "run",
+    "build:pages"
+  ],
+  "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "sourceTree": "7ce03ecfccd2b953c50d4f0efd10afa45b97a790",
+  "startedAt": "2026-11-11T19:40:31.049649+00:00",
+  "exitCode": 0,
+  "durationSec": 1.848,
+  "finishedAt": "2026-11-11T19:40:32.893404+00:00",
+  "headAfter": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "trackedDiffAfter": "",
+  "logSha256": "5a90b160b9a4b405ce2f937636f42bcbbae25c6468f9d57197894e8c12a29ea5"
+}

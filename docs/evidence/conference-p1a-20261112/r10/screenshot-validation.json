@@ -1,0 +1,1163 @@
+{
+  "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "count": 163,
+  "failures": 0,
+  "screenshots": [
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-320x568-feature-panel-open.png",
+      "bytes": 52265,
+      "sha256": "b2a994705d4b5307a4d6047185be652eff362156572eddea2a6db1b3d7529db9",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-320x568-footer-sheet-open.png",
+      "bytes": 23038,
+      "sha256": "ccb93e37c025ddbad35da07d87e56a60ab1092fd65f9846efad43cf775c81a6a",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-320x568-layout.png",
+      "bytes": 69507,
+      "sha256": "7dda72d78276a59770ea9ebbd078edf732f8f515ab1b5fbf825827d5f903652b",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-390x844-feature-panel-open.png",
+      "bytes": 90996,
+      "sha256": "7c3b6fd4614a558459e315f719099239f89632b0f873b7f283f360059437def8",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-390x844-footer-sheet-open.png",
+      "bytes": 37973,
+      "sha256": "fdd8e34f9bc487d40b1f86211613af70740dcf7486eeb2ef20cdab80dbdeec25",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-390x844-layout.png",
+      "bytes": 100735,
+      "sha256": "b5a81f7edcb837d0782ca3af3d585185b5f849e3ffd7bcdbccf932a76de24f2b",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-456x800-feature-panel-open.png",
+      "bytes": 95156,
+      "sha256": "7a66c05e0392128d5539c1193151f7df130e8c85d36c87f70566cc2e94e402dd",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-456x800-footer-sheet-open.png",
+      "bytes": 35715,
+      "sha256": "6a618846efcbbccfcfcf3f4aa0b493664ef4b3f04659f70707437ef404f8f42e",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-456x800-layout.png",
+      "bytes": 106478,
+      "sha256": "eab27f28b6ac051f0114c6d93794e04927e7d312f6b47d77ba3f0509038f8c66",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-620x900-feature-panel-open.png",
+      "bytes": 139029,
+      "sha256": "7c1890deefc81e62e1e9e90e6ae129cdad898bc7adeb63025612368788e65955",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-620x900-footer-sheet-open.png",
+      "bytes": 49473,
+      "sha256": "8b9cf1e104da1e93fb15c04d39a9c081b9c5f297b4ccf55b806af7826bf42c9b",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-620x900-layout.png",
+      "bytes": 142507,
+      "sha256": "26704f1e1cbd19c8ecdd2286d5b6353ebdaad74fe38ba15755f40270887ca068",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "tablet-768x1024-tablet-details-open.png",
+      "bytes": 127282,
+      "sha256": "104f7a2f0582f53a3f2da70c520d55e334df65c239b30d693c7666fa93c94b45",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "tablet-768x1024-layout.png",
+      "bytes": 181869,
+      "sha256": "f2c3e9ad332901bc3b4c9cc21088c22c4ab3b907c9e2aa085f48615a217f1fe4",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "desktop-1024x768-layout.png",
+      "bytes": 196100,
+      "sha256": "fb80231f665c8b0e52fe9d9b94332a44f1f9110a45006d930bea11142173962b",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "desktop-1440x900-layout.png",
+      "bytes": 249751,
+      "sha256": "f8cb2eefde56a985c412da6fbb8050aee92b18721ed0471b420d749341e5403c",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-320x430-short-feature-panel-open.png",
+      "bytes": 32503,
+      "sha256": "675b5fa9952a16fdd4b2c2e2de02a622a5f3e1e63e45d0675cf5806cf657714a",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-320x430-short-footer-sheet-open.png",
+      "bytes": 17913,
+      "sha256": "eed88efe936a1d1104b55dcccc06d9013bf65dd90e2aea489e7a9ac5f949e1a4",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-320x430-short-layout.png",
+      "bytes": 56587,
+      "sha256": "9a3af75a4e8eba159f2b1e6ce81dea1793617d4b8cd8abc46f037f0fbdf75277",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-390x430-short-feature-panel-open.png",
+      "bytes": 51028,
+      "sha256": "48a6665ee0a7b4a07d65f5b1d4f45318386cb20e9961056700a99186cd40c99f",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-390x430-short-footer-sheet-open.png",
+      "bytes": 18660,
+      "sha256": "bb99b2cfcb6d64d7266829ba8b75cf1b2cd25839274d34dcd37ea5e9b22abac0",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "phone-390x430-short-layout.png",
+      "bytes": 66812,
+      "sha256": "e2f4f703354a92b83d3f8f63e9a06c1e45faf3dc52e06a6cccb88892a2c3993c",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "tablet-900x430-short-tablet-details-open.png",
+      "bytes": 89376,
+      "sha256": "a5eec1e1213fc9ffe48cfa5986c00e458ff7c49443c53c01245eaf90e2447723",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "tablet-900x430-short-layout.png",
+      "bytes": 107563,
+      "sha256": "48cd627dceed47985d8fecaecb569db73e1615fccf11c6366f316184c11d1a46",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BTCUSD",
+      "file": "identity-phone-desktop-phone-restored.png",
+      "bytes": 100960,
+      "sha256": "acfdec3f16a3ced3a2aaae0b8da388734b6566cd9c11e38f55166cfbeeef9f76",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-320x568-feature-panel-open.png",
+      "bytes": 38683,
+      "sha256": "bd49799ae7c748e79649304d8308432bb2c4cf4965dc3bc40567ace1dbbad464",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-320x568-footer-sheet-open.png",
+      "bytes": 22197,
+      "sha256": "2ea331ea368db53823e95c7fbfafdda9cb415859d08bb4b32fdc2b4e36e6ce92",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-320x568-layout.png",
+      "bytes": 43388,
+      "sha256": "c2d452d4b2a904f0a1ab2f073f3514ac45ec358371ed48c2118d9d4a25ceede8",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-390x844-feature-panel-open.png",
+      "bytes": 61728,
+      "sha256": "e2c6524520fea9466d9b84f90cf92a24125500904bc1b1aac92de336187e6bba",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-390x844-footer-sheet-open.png",
+      "bytes": 35124,
+      "sha256": "028d567dd0076b8bc504fe754dc58195982c0c6e86709bb23f0b0a47581f6de1",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-390x844-layout.png",
+      "bytes": 65645,
+      "sha256": "a377fe401402494260f554c70aa590bda915c2324fb8aeb40981a6b06bb35dc0",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-456x800-feature-panel-open.png",
+      "bytes": 64198,
+      "sha256": "01597eb091ef2f7946dee86984cfa34005580fb7ca1ad36d53910eb43afed19c",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-456x800-footer-sheet-open.png",
+      "bytes": 32277,
+      "sha256": "1608041a24a4025f99989e0e71359dab991f14670d3f1231752e9a039fce04fc",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-456x800-layout.png",
+      "bytes": 68912,
+      "sha256": "4d15b9322895d8ec2ecc9b5a16d7b6972a74269ee726c9b5a79e21c57bc26917",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-620x900-feature-panel-open.png",
+      "bytes": 82893,
+      "sha256": "04e7aca1746f6288a65c2075dbe5fc235c89a78c0affafd44f8f489aebf13f3a",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-620x900-footer-sheet-open.png",
+      "bytes": 39742,
+      "sha256": "827546a9e6421ff6f0df0c7397cd648c4b69ab9f5eea9cdccc36516f21379feb",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-620x900-layout.png",
+      "bytes": 90899,
+      "sha256": "1c394c340583aef74c63125b421988171f22fae2df2b0ad1a9443e2d243f2f29",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "tablet-768x1024-tablet-details-open.png",
+      "bytes": 92371,
+      "sha256": "668bba6dc24a201afe5d70a414744b74709c19307363d50a8c5085e7922f5635",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "tablet-768x1024-layout.png",
+      "bytes": 116500,
+      "sha256": "872d16a1b2f19011d944435bc7e4172e386a18778560cd008f65040a00c02179",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "desktop-1024x768-layout.png",
+      "bytes": 119310,
+      "sha256": "9ad8a24e165e9c133fbc1870ae197ec7f30838de17355ede72f31e83e804e8de",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "desktop-1440x900-layout.png",
+      "bytes": 157516,
+      "sha256": "04be2a469b04f6caecdce8b515f55655200518eb4a29bcfd7e9ba5e22c73a24e",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-320x430-short-feature-panel-open.png",
+      "bytes": 31721,
+      "sha256": "ffb73b4c6dd0eff382d031b97d7f502d2f6d87d37c1483ac16d3960d57b1a61b",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-320x430-short-footer-sheet-open.png",
+      "bytes": 16589,
+      "sha256": "874523272a42660ab5c95e67373650f0a48ebf4e9665ebe7c26e3fe4054e5760",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-320x430-short-layout.png",
+      "bytes": 36646,
+      "sha256": "06a6b3c2c8502e3a410c976b33ceaeb75cea990a11ae1c5419ed9d17bd98eebd",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-390x430-short-feature-panel-open.png",
+      "bytes": 33828,
+      "sha256": "4cda59aac3e2c1ef580747a065dabaf81ab7ffc5abdef6ed3e860f29e5bf7c74",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-390x430-short-footer-sheet-open.png",
+      "bytes": 17015,
+      "sha256": "859287a7d3abbeaa43062bec64f838db0cc4a492a0372943be56f20932ddeaec",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "phone-390x430-short-layout.png",
+      "bytes": 39674,
+      "sha256": "63d36dd6bdc44dec75ce1ec42ea4dbb27654e42d4e2142f244b90b093f712996",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "tablet-900x430-short-tablet-details-open.png",
+      "bytes": 67189,
+      "sha256": "d42ddc3d24377f94724b21904a20601746e2b1f32715445e879ccffe659218d6",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "tablet-900x430-short-layout.png",
+      "bytes": 65656,
+      "sha256": "80aebc52b6121f2333c127526adf1b1371cbf2175db742f213f222cb9805e875",
+      "validated": true
+    },
+    {
+      "gate": "responsive-ETHUSD",
+      "file": "identity-phone-desktop-phone-restored.png",
+      "bytes": 65492,
+      "sha256": "f7eaa74cb556c0c55cdc2df587ecb060857a9933119bea89bf009d5f433ce4fc",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-320x568-feature-panel-open.png",
+      "bytes": 28874,
+      "sha256": "b9701606a8160af25869552f2b165119380116f0d478a4ad3696f0f8d5f650ca",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-320x568-footer-sheet-open.png",
+      "bytes": 22028,
+      "sha256": "9e887a147dbb8046531fb52ebd27729cced37ad069eb1d15fc5c124c2459c9b6",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-320x568-layout.png",
+      "bytes": 39367,
+      "sha256": "2a7b7a2df4ef40c995451b0b765b59b19d51710c9283f2a6ba6f3c28eb40e8c5",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-390x844-feature-panel-open.png",
+      "bytes": 64304,
+      "sha256": "d9b10160cf554007737dc05e6e17c1f61540339fcf2bdd837a12f069064178bc",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-390x844-footer-sheet-open.png",
+      "bytes": 35073,
+      "sha256": "d094eccaa4231edf2246b0359398bb03db67a6ec104a74288f5422188e6d9028",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-390x844-layout.png",
+      "bytes": 65618,
+      "sha256": "4a0820a758e9e4d6634c1c2bb668efc71e3f140b2c998f42d857da3133991ce1",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-456x800-feature-panel-open.png",
+      "bytes": 65456,
+      "sha256": "ca822565490196974dc8d91645582c42755fc0724983e46135e1c084ee84a75c",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-456x800-footer-sheet-open.png",
+      "bytes": 32309,
+      "sha256": "d22dabc8f2ad81bfc8ce4bdaf1dd5f01ff9db1cbef3f26226e877abbd081f501",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-456x800-layout.png",
+      "bytes": 67360,
+      "sha256": "ea6586fd92aba338e7e98f96b46466db5b4d7804770abf7823f4cf39977e1e87",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-620x900-feature-panel-open.png",
+      "bytes": 84839,
+      "sha256": "9a5016cb02c83808d62f668d36cd763788010dcfb0a3df3277792fda018ae0a9",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-620x900-footer-sheet-open.png",
+      "bytes": 40619,
+      "sha256": "6cb356eb398c1c7131bca67e5184072d63d4349103d31d1c36ae4526c79946a2",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-620x900-layout.png",
+      "bytes": 89370,
+      "sha256": "833c4b6c4e8fb1df2b356bde83163b9e926f518479edb3e62e23029ee414cf72",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "tablet-768x1024-tablet-details-open.png",
+      "bytes": 83566,
+      "sha256": "400e7f735c2ae078fe0bc2c76b26904e833370013cd348d89739ea0b43c6deb6",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "tablet-768x1024-layout.png",
+      "bytes": 114537,
+      "sha256": "26a5a039c3d5d2ca17930f669cc661380f1581b95eab2a97a1132c55caec62cb",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "desktop-1024x768-layout.png",
+      "bytes": 118475,
+      "sha256": "eaf0ce1e247a45e90c312025f5ae8f60e79a7c2741cb7f755aa62835b2385450",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "desktop-1440x900-layout.png",
+      "bytes": 154357,
+      "sha256": "9e0e4e8c16f9aa906a071599b3e369f889860f18762b0a143c7b4af601ec8c84",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-320x430-short-feature-panel-open.png",
+      "bytes": 20971,
+      "sha256": "3e19c10dabbc0810ee66dd1ee047e646f970e6ec1062578f24b81c6467c64385",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-320x430-short-footer-sheet-open.png",
+      "bytes": 16418,
+      "sha256": "96c8a4c410017e4c8f0901a6ccdc7322d94ba55e43ba1c86863d69ad6b01ccf0",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-320x430-short-layout.png",
+      "bytes": 33214,
+      "sha256": "819624ac483e91707962a209cb1bde8b214f3012b9f580b67d01e01783e10162",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-390x430-short-feature-panel-open.png",
+      "bytes": 30893,
+      "sha256": "8ef6aa2b8f889ffeff1e6ad359e1489fdf09bfb6237ff8e1558022628fe70a9f",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-390x430-short-footer-sheet-open.png",
+      "bytes": 17068,
+      "sha256": "a76b0a9b4be58aa49f86c2d835246f2bc0e870225e51795f849a3f4cb016d709",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "phone-390x430-short-layout.png",
+      "bytes": 35482,
+      "sha256": "5543ad8bdab63f6c6e359b75d2c4d7e92754e844b49e470b629953e6fefcf587",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "tablet-900x430-short-tablet-details-open.png",
+      "bytes": 62023,
+      "sha256": "3e0980a965bebf007314b171b510c1cb190c94311083436780a0b5be0d181b11",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "tablet-900x430-short-layout.png",
+      "bytes": 63463,
+      "sha256": "b4a8993a26c112eedf30869648c8e616ff86a03121d4ac538f581d35c0a39b5d",
+      "validated": true
+    },
+    {
+      "gate": "responsive-MSTR",
+      "file": "identity-phone-desktop-phone-restored.png",
+      "bytes": 65484,
+      "sha256": "597e99b3b013098f4ab0487d6fc3a01f09bd1807682fb1700a6d92c7b7f17f41",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-320x568-feature-panel-open.png",
+      "bytes": 32234,
+      "sha256": "d2cc6d7b24dbad3178b7ac8a23a3e00a9585b5802b8c8810009e318319ec6b58",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-320x568-footer-sheet-open.png",
+      "bytes": 21900,
+      "sha256": "6b53b32201b0cfacd8e2d4a3d8404d93d6f13c728e713b2b262b2fd8faea62b4",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-320x568-layout.png",
+      "bytes": 39832,
+      "sha256": "8925257c30002cd48def8c1dd60de56e406aa4e6a32cfb2ef9b4c1e434fc436c",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-390x844-feature-panel-open.png",
+      "bytes": 56538,
+      "sha256": "7f356d36057503bf0ab16e20f02ad47fbd326a65af6c325aeeb7828559a9d128",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-390x844-footer-sheet-open.png",
+      "bytes": 34756,
+      "sha256": "f3fa8260637cc35f35b51c501c31429806cc3112edef05dd2e22a15c37b860d2",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-390x844-layout.png",
+      "bytes": 59311,
+      "sha256": "a838883eb1768d91ec0fbb5e70dfca29957ba21ed5ca8a17209ab95d74684fdc",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-456x800-feature-panel-open.png",
+      "bytes": 56550,
+      "sha256": "82408041ea1939a7dfba71d95b4d8873832606d68f8581f7cae72a32aab60a08",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-456x800-footer-sheet-open.png",
+      "bytes": 32180,
+      "sha256": "4ef423d38e37115017cf0d344fad441767a3c32a1165d23ca1b4708e213727a6",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-456x800-layout.png",
+      "bytes": 60228,
+      "sha256": "5421db8e78c138c0612346bd15a6ba1af7446559112b3b57afc4291c324d8d34",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-620x900-feature-panel-open.png",
+      "bytes": 69500,
+      "sha256": "19b175ade55e15f263a86a99ceccbd46f3a6a1becf4520adce6048b9ab7b7e36",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-620x900-footer-sheet-open.png",
+      "bytes": 40076,
+      "sha256": "091e97949c24fa98d569f2685e5e0df31ffdf23425017fa01f11bee720f3d8d9",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-620x900-layout.png",
+      "bytes": 75339,
+      "sha256": "9bb05a4abe49dfe6176c2e52ca284aabd8141710524801603ba599e094186f8c",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "tablet-768x1024-tablet-details-open.png",
+      "bytes": 81192,
+      "sha256": "f04abe2e4dc680ed2400223ac486d9b592d896142348eda77a7ba028fdf0b389",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "tablet-768x1024-layout.png",
+      "bytes": 97318,
+      "sha256": "da2c82b052c52b0dfc2cf0fcbd8ac29227437fc28f66813efd9de8523a20c8cb",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "desktop-1024x768-layout.png",
+      "bytes": 104684,
+      "sha256": "973c549be4faa0a2020336cbd7b82864cb587edc394c984dcbbf5624688ead5b",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "desktop-1440x900-layout.png",
+      "bytes": 134925,
+      "sha256": "d307bc7c3db699dafaf8f0c17a9332e3f06ae1b78602686d5bdbb1fb06b8e95e",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-320x430-short-feature-panel-open.png",
+      "bytes": 21938,
+      "sha256": "8a8dbd0632132b1311dee38b6e644934c5102d71e3217e49b38effc9b4f8e632",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-320x430-short-footer-sheet-open.png",
+      "bytes": 16283,
+      "sha256": "6c74c60410bcd9635cdeb92f7c7a419efd7f824ea3fb3783c02447ca104ce80c",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-320x430-short-layout.png",
+      "bytes": 33837,
+      "sha256": "7ff184e88d234b3b381eeda614a18a0e25bf05bfb1c2b64c80082e3c867f2817",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-390x430-short-feature-panel-open.png",
+      "bytes": 30467,
+      "sha256": "61b824524d4425e045191507f8ef0001b822eab38205ed43f561a2fd94498aa4",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-390x430-short-footer-sheet-open.png",
+      "bytes": 16931,
+      "sha256": "7c5c21cf1b1bb5b692274d8dd7cc50ebf88050968d054ac9bb794686b8144ead",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "phone-390x430-short-layout.png",
+      "bytes": 36440,
+      "sha256": "7eb96c6388a90285c6a4115a98bdddd0b212dae459b213ec8724731aa29474c1",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "tablet-900x430-short-tablet-details-open.png",
+      "bytes": 61809,
+      "sha256": "207336ed978999aca6e0d666b35b72d867290772e382e659a37c527b9ad2c8e5",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "tablet-900x430-short-layout.png",
+      "bytes": 61735,
+      "sha256": "1b97a97a2db694579abfb36c256ce962d2923fb2bd1b4f86e82e3458e3edcd00",
+      "validated": true
+    },
+    {
+      "gate": "responsive-BMNR",
+      "file": "identity-phone-desktop-phone-restored.png",
+      "bytes": 59311,
+      "sha256": "c1573123cb9eefb44f4562a6a2040079f5bd7e2c418be275e94e3facc05d67ae",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "btcusd-390x844-chart.png",
+      "bytes": 101904,
+      "sha256": "6eea5f9dbb2996c066478d63c9c4f21713cbe223223feb2e1bd8eed4ba948364",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "btcusd-390x844-replay.png",
+      "bytes": 52861,
+      "sha256": "653b67ff6fa73dc87ae6e2b5eba98cf5187c1f09e82029cc4e57abf222d9247c",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "btcusd-390x844-replay-menu.png",
+      "bytes": 40885,
+      "sha256": "ca5f6c462155a1d692929b3cb13362cdd5f7354588eeb201b0be089affcbe204",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "ethusd-390x844-chart.png",
+      "bytes": 66211,
+      "sha256": "26c2a1932124ac571bbd0ab4b8576dcf6cc0e09c335d6549af5b96a279628cfa",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "mstr-390x844-chart.png",
+      "bytes": 65889,
+      "sha256": "500c473c02f6b124016db3763d62b4857f040dcd45a2a2a03175ce5aa9136d8e",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "bmnr-390x844-chart.png",
+      "bytes": 59131,
+      "sha256": "6689006a58307bd469a81fc0f1fe7e8e1d1d09783b7c8585d6006bf99741dea8",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "tqqq-390x844-chart.png",
+      "bytes": 88020,
+      "sha256": "11f931d09d2d2e2f077d1502f87580326af68ae6c5abc6ece4014ef67780d9eb",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "tqqq-390x844-statistics.png",
+      "bytes": 56771,
+      "sha256": "90ba0867f8a727347ba93d1d720463a48dcfc143a711d9dac613a75eebb92ce6",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "btcusd-320x740-chart.png",
+      "bytes": 77217,
+      "sha256": "3e9839192f0ef457ee556ed01e7a659d41aee906684e8adee86f976f20bf1146",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "btcusd-320x740-replay.png",
+      "bytes": 40701,
+      "sha256": "06c76f5dc7c551310767ec2d9a1bc5b95857313fa7fe67951c8f5e9a4db1ffd4",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "btcusd-320x740-replay-menu.png",
+      "bytes": 32828,
+      "sha256": "f92ae61240af6bf1c4d282329338475c1212a59c6eda2dba3cc867cc77b2ec48",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "ethusd-320x740-chart.png",
+      "bytes": 56973,
+      "sha256": "a1ca8d071d9fdf4bb405bfc1bca234dde9864c3da2905f1367f4416c74c6d0c0",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "mstr-320x740-chart.png",
+      "bytes": 55207,
+      "sha256": "8ff76bd9166112f2bfc5dea5d61d841bed4a7e26ff46a4a324f978876e98b574",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "bmnr-320x740-chart.png",
+      "bytes": 45922,
+      "sha256": "e53409c655874706681aaaf6d0f97c6262ee4f847683b7683328b235cbcb1737",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "tqqq-320x740-chart.png",
+      "bytes": 69510,
+      "sha256": "72c5138a0e3e24f4961772f4d8ca81487a05e1cde083c44fc641e2827bb72675",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "tqqq-320x740-statistics.png",
+      "bytes": 48496,
+      "sha256": "17ced6ada67b9cfdfdf3b4585cb8f7aea0e441e6b530b2afa7f7c5276c7c8abd",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "btcusd-768x1024-chart.png",
+      "bytes": 181949,
+      "sha256": "2b5fb37585b65e49b44db6b9ec900958f52114e5e4de583484c309c8a41cf0fa",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "btcusd-768x1024-replay.png",
+      "bytes": 100974,
+      "sha256": "4abfff79cdf70d6d96d07db81a6043a2b121ea3d4374f6ce480c84037d63f0f1",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "btcusd-768x1024-replay-menu.png",
+      "bytes": 109462,
+      "sha256": "9354f672cb2e26306d51646fa7be1a94f4a4c149f2d1fa3935a95a8d9312ae28",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "ethusd-768x1024-chart.png",
+      "bytes": 117558,
+      "sha256": "446898bfec541ce9a2ec11f33e2ea43ca07ebf45c594cb28fd494787c4071737",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "mstr-768x1024-chart.png",
+      "bytes": 115187,
+      "sha256": "e43a6443845aa52cb742f954afe3b852987521ab119c478f01ad1ca2289a19d3",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "bmnr-768x1024-chart.png",
+      "bytes": 97391,
+      "sha256": "930103426680b16d020c6b92e6f52e49a6e20de5e00c1aa6b78f23aead79e6a3",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "tqqq-768x1024-chart.png",
+      "bytes": 150478,
+      "sha256": "bae82ae85dbccab7f7f01c5eb6bb04e13d5c97f933753d526d8b54c4ca1b84fe",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "tqqq-768x1024-statistics.png",
+      "bytes": 83663,
+      "sha256": "f06cef4d9f693b16209a19159b23ee4c50409f5fc4fb36eb3f1f7a98a6eb6d3f",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "btcusd-1024x768-chart.png",
+      "bytes": 192159,
+      "sha256": "9af7011319faaab456389898a6d2eee0081cea43ffa86a0c8703d198ff4e6149",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "btcusd-1024x768-replay.png",
+      "bytes": 103519,
+      "sha256": "789dac013eca36c5d5d7a5cd01140dcf05924877cb5be54cf4ed832ef92738c5",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "ethusd-1024x768-chart.png",
+      "bytes": 119859,
+      "sha256": "53320e67ace164d3914a6fa0e90c22b7d3d199cb198d2a4891634f2cd4fce628",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "mstr-1024x768-chart.png",
+      "bytes": 118757,
+      "sha256": "d525f49cbadb6bb7e6ac95fddc20ab5b8567808c4bad8d54cc6e76960c39f73a",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "bmnr-1024x768-chart.png",
+      "bytes": 105106,
+      "sha256": "61307ddfc486ac1cfee91f78431044aeb3fc12d56fefac0bc88805cb60207c6f",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "tqqq-1024x768-chart.png",
+      "bytes": 158751,
+      "sha256": "7800e458446114dd25dc6698a386a172e0693ed0febaaaffdf4a11252e29a6a4",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "tqqq-1024x768-statistics.png",
+      "bytes": 74866,
+      "sha256": "63928f9270513c5c2134f6b3dca88e48fa82106828aa7ea58a04f6892a39d602",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "btcusd-1440x900-chart.png",
+      "bytes": 245621,
+      "sha256": "cbddd55ece109d1c7823d6a795559646fb32be217958aeaaa6dc3f88f0d2bbe6",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "btcusd-1440x900-replay.png",
+      "bytes": 132214,
+      "sha256": "b5151921225db6ab7cb073430fff2e9fcb78bedcc13f6cf337148d5ab25afd3c",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "ethusd-1440x900-chart.png",
+      "bytes": 158377,
+      "sha256": "df1f4241df3593fb0ee01456553b8a3c856660c9b7c8c1c93b2489919b6fbc1d",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "mstr-1440x900-chart.png",
+      "bytes": 154874,
+      "sha256": "4db1b3d2cd9fcfcf05594d2d4bc907fb535c7e820b892c298f3435104651e034",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "bmnr-1440x900-chart.png",
+      "bytes": 134967,
+      "sha256": "ca4ffe8ae98e17f802bf2216016ac370d0d87665fee3d354c20218eb0be851c2",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "tqqq-1440x900-chart.png",
+      "bytes": 224061,
+      "sha256": "3a895ce0b322aba4839392126375ee826234c031c69f4709075e4e093083f428",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "tqqq-1440x900-statistics.png",
+      "bytes": 157493,
+      "sha256": "907096081af856b1e1500bd8026b4ed6c99f5a3b51f72a8a526c0c958a10c058",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "btcusd-1920x1080-chart.png",
+      "bytes": 299224,
+      "sha256": "2fa522481bce21dee01d5b163fbefe9b4a19a9b68b92863e1c8111cb6d70c023",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "btcusd-1920x1080-replay.png",
+      "bytes": 164625,
+      "sha256": "b02870cfde2763adf3b099f7ee10d7b1f93a1e01282adf67470bec76efdb813c",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "ethusd-1920x1080-chart.png",
+      "bytes": 199918,
+      "sha256": "c332d4a56ae199528a280ee5b55fcca4a242ef5dd9d89259130f5573ba426d33",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "mstr-1920x1080-chart.png",
+      "bytes": 200739,
+      "sha256": "7215b4911889f7405729f7750fbe9475a4d26b3a61e51c7873761002ac699b77",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "bmnr-1920x1080-chart.png",
+      "bytes": 157362,
+      "sha256": "650d94fe2b188d54bbafadda1fad4a594b94e55d996f878e06943fc710f5458c",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "tqqq-1920x1080-chart.png",
+      "bytes": 304102,
+      "sha256": "584feda929677411cd4a04e6f8a6405754a27db69dc8352975fb494019e026c1",
+      "validated": true
+    },
+    {
+      "gate": "wp6",
+      "file": "tqqq-1920x1080-statistics.png",
+      "bytes": 244841,
+      "sha256": "eb083f1e434679cc892cc7ddca52b3a7ebae57f6c9f77efb365c48cf2328890b",
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "btcusd-390x844-chart.png",
+      "bytes": 101904,
+      "sha256": "6eea5f9dbb2996c066478d63c9c4f21713cbe223223feb2e1bd8eed4ba948364",
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "btcusd-390x844-hover.png",
+      "bytes": 100785,
+      "sha256": "ccabf3f612b31d893e29e44899a72300af9e8b436c3d00c0d1d4777e7c5d12c0",
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "btcusd-390x844-heading-menu.png",
+      "bytes": 91376,
+      "sha256": "b545c01e777493d79adabf0cdf3a5545565f2b6c4158012ca40b3cb5ca63c4f1",
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "btcusd-390x844-interval-30m.png",
+      "bytes": 41677,
+      "sha256": "8c467790bc178606cf911f4cb68074a1dbe925931751baccd23c798e84d2af10",
+      "clip": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "scale": 1
+      },
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "compare-390x844-chart.png",
+      "bytes": 57494,
+      "sha256": "5c9247bc5bd61d0eda5ae6af014ccf6c5c07aa8ae70d09a358234761791f64dd",
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "btcusd-320x740-chart.png",
+      "bytes": 77217,
+      "sha256": "3e9839192f0ef457ee556ed01e7a659d41aee906684e8adee86f976f20bf1146",
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "btcusd-320x740-heading-menu.png",
+      "bytes": 65781,
+      "sha256": "1f20dfe685fe68df1bb6c040a1d6989a0a649aa339f882608e25cf041c864c44",
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "btcusd-320x740-interval-30m.png",
+      "bytes": 40356,
+      "sha256": "91b6caeff05cf35f674f597aa530ef0ce91b7c5c97d5744f45b690e4d3d0020a",
+      "clip": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 740,
+        "scale": 1
+      },
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "compare-320x740-chart.png",
+      "bytes": 46677,
+      "sha256": "6865d9bb18b7ee24eb9f6a84152188ed1a908678af6bc8aa4b41739c15109293",
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "btcusd-768x1024-chart.png",
+      "bytes": 181944,
+      "sha256": "dd4a078c39836e1d793dc6e0cfb2441978db546557f262b04bc30685182c97e0",
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "compare-768x1024-chart.png",
+      "bytes": 95045,
+      "sha256": "c3fc8ae17f597947ead0b2b0fcdd3215367b3f93971fb160ee7380802a392507",
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "btcusd-1024x768-chart.png",
+      "bytes": 192156,
+      "sha256": "577768b26fee569a1d88ae90d9bf2cf4e687d1149ba989c558982e6398cd66d4",
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "compare-1024x768-chart.png",
+      "bytes": 89108,
+      "sha256": "2fc709cab945f4a157fd6bae3d5593f798b6200d41711edc73885dd1424b2333",
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "btcusd-1440x900-chart.png",
+      "bytes": 244492,
+      "sha256": "67eb7c053b64435b483a4fa838751ebc57578d262e312ab9df08a8654571ce2f",
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "btcusd-1440x900-hover.png",
+      "bytes": 244663,
+      "sha256": "decc1937eb24650ae58301a67e08e9a13fdbe53587a583ae350453079da87b08",
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "compare-1440x900-chart.png",
+      "bytes": 111840,
+      "sha256": "abbc3276b6a385105f98b9f3914a6b4e68281c2ff8a3212854fe29145e3eb798",
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "btcusd-1920x1080-chart.png",
+      "bytes": 299224,
+      "sha256": "2fa522481bce21dee01d5b163fbefe9b4a19a9b68b92863e1c8111cb6d70c023",
+      "validated": true
+    },
+    {
+      "gate": "chart-qa",
+      "file": "compare-1920x1080-chart.png",
+      "bytes": 134446,
+      "sha256": "c2ce4423999a33f25f8428ff14c681a21c42db81f6e4e942a1fb8909901277c9",
+      "validated": true
+    }
+  ],
+  "retention": "One representative PNG per gate is committed; all referenced local files were read and hash-checked before packaging."
+}

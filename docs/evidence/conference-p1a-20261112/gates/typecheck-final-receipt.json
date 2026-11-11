@@ -1,0 +1,17 @@
+{
+  "name": "typecheck-final",
+  "command": [
+    "npm",
+    "run",
+    "typecheck"
+  ],
+  "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "sourceTree": "7ce03ecfccd2b953c50d4f0efd10afa45b97a790",
+  "startedAt": "2026-11-11T19:40:50.349343+00:00",
+  "exitCode": 0,
+  "durationSec": 2.991,
+  "finishedAt": "2026-11-11T19:40:53.336173+00:00",
+  "headAfter": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "trackedDiffAfter": "",
+  "logSha256": "d9185066952b9395d37541b6167aa9e7b4bb93fd4f5a9ec49f0afba63fa3697d"
+}

@@ -1,0 +1,17 @@
+{
+  "sourceCommit": "180c55df48242ae8afe83f8b80ada457d552d2a7",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "--test-concurrency=4"
+  ],
+  "exitCode": 130,
+  "complete": false,
+  "reason": "Stopped after concrete review-inventory failure to correct the missing conference stylesheet seed and run the complete suite again on the corrected source.",
+  "observedFailures": [
+    "declared ETH review inventory includes every top-level browser source and root stylesheet"
+  ],
+  "logSha256": "ce229cfa7386c5be55223b1f4804a608a5f12cfa8059efb36e7522a5771c9e9c",
+  "recordedAt": "2026-11-11T19:23:39.300062+00:00"
+}

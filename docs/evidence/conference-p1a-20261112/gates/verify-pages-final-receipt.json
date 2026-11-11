@@ -1,0 +1,17 @@
+{
+  "name": "verify-pages-final",
+  "command": [
+    "npm",
+    "run",
+    "verify:pages"
+  ],
+  "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "sourceTree": "7ce03ecfccd2b953c50d4f0efd10afa45b97a790",
+  "startedAt": "2026-11-11T19:40:50.354425+00:00",
+  "exitCode": 0,
+  "durationSec": 3.551,
+  "finishedAt": "2026-11-11T19:40:53.901258+00:00",
+  "headAfter": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "trackedDiffAfter": "",
+  "logSha256": "d949a57bda6ee9e09eb383fc90f68e64c9185867f6d9a76086f58bf0d1613c90"
+}
