@@ -69,7 +69,7 @@ R8 종결 시 "미판정·미검증"으로 남긴 두 항목을 실제 입력으
 
 한계: 이 키 입력은 Blink 내부 팝업에서 실행됐다. macOS 외부 AppKit 메뉴·Safari·실기기는 여전히 R7 차단이며, 내부 팝업 입력을 외부 메뉴 검증으로 승격하지 않는다. 휠 스크롤로도 통과하던 케이스를 touch로 강화한 것이므로, 이전 기준선 비교는 역사 기록으로만 남긴다.
 
-이번 회차 로컬 게이트: chart-replay 레인 7/7, native 레인 15/15, `npm run typecheck`, `verify:static`(967 files·214 scripts·992 references), `build:pages`·`verify:pages`(12 files·9 routes) 통과. `npm test`는 호스트 배치 3,332건 중 3,327 통과·실패 0·제외 5로 돌았지만, 고정 frozen 배치 이미지 `node@sha256:e7add2a490bb17d97d485b8641bd88455fff7839ade0f5eba493c3508124d413`(Node 24.22.2 linux/x64)이 Docker Hub에서 **404**이고 로컬 사본은 플랫폼 메타데이터가 빈 손상 상태라 `complete:false`다. frozen 41건은 이번 회차에 실행되지 않았으며 통과로 세지 않는다. 전체 3,373건의 이전 `complete:true` 영수증은 제품 바이트 `d61e0dbd…`에 묶인 이력으로만 유지한다.
+이번 회차 로컬 게이트: chart-replay 레인 7/7, native 레인 15/15, `npm run typecheck`, `verify:static`(952 files·214 scripts·992 references), `build:pages`·`verify:pages`(12 files·9 routes) 통과. `npm test`는 고정 frozen 이미지의 기존 다이제스트(`e7add2…`)가 2026-11-11 Docker Hub에서 404가 되어 한 번 `complete:false`가 났고, 같은 `node:24.22.2`의 현재 linux/amd64 인덱스(`8fa96264…`)로 핀을 갱신한 뒤 frozen 41건이 그대로 재생되어 **`complete:true` 3,373/3,368/실패 0/제외 5**로 통과했다(테스트 수·허용오차 변화 없음).
 
 이번 회차 커밋: `9dd6332af27ef96453caa58ef96f4bde63ed08b6`(하네스+문서), 원격 `fix/tradingview-responsive-20261110` push 확인.
 

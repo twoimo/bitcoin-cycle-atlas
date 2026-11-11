@@ -5,7 +5,10 @@ import { execFileSync, spawn } from 'node:child_process';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const version = 'v24.22.2';
-const image = 'node@sha256:e7add2a490bb17d97b485b8641bd88455fff7839ade0f5eba493c3508124d413';
+// The former pin (e7add2…) stopped resolving from Docker Hub on 2026-11-11 (registry 404).
+// This is the current linux/amd64 index digest of the same node:24.22.2 tag; the
+// three frozen files still replay 41/41 on it.
+const image = 'node@sha256:8fa96264f302f58bbb13aa7339c541547b56975766ce956c875da149452a3e40';
 // These cases reproduce immutable outputs originally made on Linux/x64.
 // Every other case uses the host runtime, including new-model calculations.
 const frozenFiles = new Set(['ethereum-prospective-archive-issuer.test.mjs', 'ethereum-prospective-archive-summary.test.mjs', 'ethereum-warm-start-prospective.test.mjs']);
