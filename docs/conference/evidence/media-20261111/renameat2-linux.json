@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-conference-renameat2-receipt",
+  "observedAt": "2026-11-11T13:53:00+09:00",
+  "environment": {
+    "runner": "docker",
+    "image": "python:3.12-slim",
+    "imageDigest": "sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b",
+    "platform": "linux/aarch64",
+    "python": "3.12.16",
+    "hostDocker": "29.9.3"
+  },
+  "target": {
+    "file": "scripts/conference/prepare-media.py",
+    "commit": "7064d25f3fc6eb1574375f1ce76373926a637d6b",
+    "sha256": "a1e310f2cfcbfa729db94190e600232f8e4b8f86a197231f44b8ea222f448ab6"
+  },
+  "renameat2Symbol": true,
+  "cases": [
+    {"name": "fresh-publish", "published": true, "stagingRemoved": true, "files": ["media-manifest.json", "page-0.txt", "page-1.txt", "page-2.txt"]},
+    {"name": "existing-output", "refused": true, "reason": "output already exists; refusing to overwrite any prior build", "contentIntact": true},
+    {"name": "rival-race", "refused": true, "reason": "output appeared during build; existing directory preserved", "rivalPreserved": ["theirs.txt"], "ourStagingPreserved": ["our-build.txt"]},
+    {"name": "syscall", "returnCode": -1, "errno": 17, "errnoName": "EEXIST"}
+  ],
+  "result": "pass"
+}

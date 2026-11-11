@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-conference-media-inventory",
+  "observedAt": "2026-11-11T14:00:00+09:00",
+  "sourceRoot": "/Users/twoimo/Documents/projects/plspo-conference-20261031",
+  "note": "자동화 가능분만 실측했다. mediaPrepared=false, 청취·시각 검수·배포 검증은 미수행이다.",
+  "pdfs": [
+    {
+      "role": "final",
+      "deckId": "final-290",
+      "path": "00_열람/플스포_강연자료_최종.pdf",
+      "bytes": 63311016,
+      "sha256": "4b1affb46789400a4079743bb8f5b29bfbdcc4aa36544f4a43c3c7516dbd24db",
+      "pages": 290,
+      "requestedPrefix": "4b1affb46789400a",
+      "prefixMatches": true
+    },
+    {
+      "role": "r17-original",
+      "deckId": "r17-257",
+      "path": "편집형슬라이드_재구성_R17_20261104/결과물/플스포_강연자료_R17.pdf",
+      "bytes": 110858734,
+      "sha256": "530b4b3851b46e2c1bb74191e2ed0c2af448cdcd8361550f376d03413b33e62e",
+      "pages": 257,
+      "requestedPrefix": "530b4b3851b46e2c",
+      "prefixMatches": true
+    },
+    {
+      "role": "r17-clean",
+      "deckId": "r17-257",
+      "path": "깔끔본_R17_로고_20261109/플스포_강연자료_최종본_깔끔본_20261110.pdf",
+      "bytes": 20233799,
+      "sha256": "3760cd72c04c4625750f3fe80b0b28cc666fe9a0b9a8467823750c30b87c873e",
+      "pages": 257,
+      "requestedPrefix": "baa2224e469cd2d2",
+      "prefixMatches": false
+    },
+    {
+      "role": "r11-lookalike-290",
+      "path": "정밀원근_녹음대조_R11_20261103/결과물/플스포_강연자료_최종.pdf",
+      "bytes": 130867944,
+      "sha256": "46ab10ff6b1052cd5feb453685ed3ece562ff48441c7a325eaa0c905a401229a",
+      "pages": 290,
+      "note": "이름은 최종/R17 계열로 보이지만 290쪽이다. decks[1]에 넣으면 580쪽이 된다."
+    }
+  ],
+  "pageContract": {"plannedPages": 547, "measuredFinalPages": 290, "measuredR17Pages": 257, "sum": 547, "matches": true},
+  "audio": {
+    "preparedFiles": 16,
+    "sessions": 15,
+    "totalDurationSec": 20400,
+    "manifestAssetHashMatches": "16/16",
+    "maxFileBytes": 14969620,
+    "maxAssetBytes": 26214400,
+    "inputs": [
+      {"id": "plaud-1", "bytes": 72000800, "sha256": "816e26250f012e5b92bea16379b108a5e3b665e582fc5034a4f6899afad0597d", "matchesManifest": true},
+      {"id": "plaud-2", "bytes": 9603152, "sha256": "cadc5e3abcfd6ec2ebcaa4c1c1649b3481eba36f2da60859e2ccc2c224145aff", "matchesManifest": true}
+    ],
+    "subtitles": [
+      {"id": "plaud1", "bytes": 485003, "sha256": "90544fc7481d1445b667e858ce19379fbbdbbc1f207a932f296de7a188a8259c"},
+      {"id": "plaud2", "bytes": 75582, "sha256": "78647f0ded22969fd66cac7fddafaa057d7edf957db5d08b5c6b7c74216d8976"}
+    ],
+    "artifacts": {
+      "zip": "wpa-audio-only-unreviewed-20261110.zip",
+      "sha256": "bda4a81215ebff2b5ea1f3003bf6f9493b1bba4232e5b6057aa58ce37b9f1020",
+      "bytes": 127289869
+    },
+    "audioPrepared": true,
+    "mediaPrepared": false,
+    "listeningReview": "pending"
+  },
+  "notPerformed": ["listening review (10 points)", "547-page WebP render and visual review", "deployment package asset count", "Range/206 and session-boundary playback"]
+}

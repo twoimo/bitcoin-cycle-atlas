@@ -14,7 +14,7 @@
 | R3 D09 왕복 반올림 범위 | 완료 `a739b36` | 리더 왕복 폭 비교를 값의 출처별 계약으로 나눴다. `document.scrollWidth`·`body.clientWidth`·`body.scrollWidth`는 정수라 1px만 달라도 스크롤바·리플로 회귀로 실패시키고, `.workspace`·`#main`의 소수 폭은 `WIDTH_ROUNDING_TOLERANCE_PX=1`까지를 반올림으로 분류해 영수증에 `kind:'rounding'`과 delta로 남긴다. 리더 열 예약은 `READER_RESERVATION_TOLERANCE_PX=2`로 상수화했다(값은 기존 2 유지). `compareRoundTripWidths`/`assertRoundTripWidths`는 1px 초과를 `kind:'regression'`으로 실패시키고 초과 상자를 모두 `beyond`에 모으며, 숫자가 아닌 허용치·측정 불가 값(`null`, 문자열, NaN)은 통과시키지 않는다. 문서는 `docs/TRADINGVIEW_RESPONSIVE_20261110.md` §4.5. 신규 단위검사 9/9. 53-case 53/53(실패 0, `workspace.legacy.methodReader.widthRoundTrips` 6건 = 320/1440/375 × close-button/Escape, 모두 `exact` delta 0), compare **PASSED**(실패 0·findings 0, 9 viewport 320x740~1920x1080 전부 overflow 0), `npm test` `complete:true` 3,372/3,367/0/5, typecheck·static(967 files·214 scripts·992 references)·Pages build/verify(12 files·9 routes) 통과. 제품 코드(`dist/`)는 바꾸지 않았고 검사 강도만 올렸다. |
 | R4 WP6 여정 | 완료 `2be7da6` | 후보 origin `http://127.0.0.1:8171/bitcoin-cycle-atlas`(커밋된 `dist` + 유도된 `atlas-wp6-candidate-source` identity)에서 `--expected-source 2be7da67bfe5d16ba1173bed7fd391b0f9281e03`으로 실행했다. identity: `productionDeployment:false`, `verifiedTrackedDistClean:true`, `sourceCommit 2be7da6…`, `sourceTree 4e6eaa9f…`, `distTreeSha256 48a3abcff4afef9a…`, 문서 sha256 `04211835a6e40acf…`, `inspector.workingChanges` 빈 값. **WP6 30/30 PASS**(BTCUSD·ETHUSD·MSTR·BMNR·TQQQ × 320x740/390x844/768x1024/1024x768/1440x900/1920x1080, 실패 0, 스크린샷 48장, Chrome 157.0.8103.51). 실측: TQQQ 기준 컨트롤이 320·390에서 collapsed 44px 칩, 768 이상에서 7행(`매매 기준/전체 승률/현재/분할 매수/분할 매도/적극/중립`), `data-criteria-through 2026-10-30`, state `unmet`·band `neutral`; 상세 다이얼로그 배지 `승률 72.7% · n=66`, HUD 7필드, 기준 상세 7행, `aria-expanded` false→true→false. BMNR은 6 viewport 모두 T3·`forecastAllowed=false`·경로 0·표본 부족 문구, ETHUSD는 548 관측 예측점, BTCUSD replay는 play/next 소유·speed·live 확인 후 replay 종료를 6 viewport에서 확인. **chart-qa 12/12 PASS**(BTCUSD·COMPARE × 6, 실패 0): `maximumAnnotationPairs 0`, 축 `paintedPairs 0`, 헤딩 `smallControls 0`, 320·390에서 네이티브 30m 선택 확인. 하네스 수정: TQQQ 블록이 e116e04 이전의 인라인 승률 배지를 요구해 6케이스가 실패했고(배지는 `매매 기준 · 분할 매매 성과` 다이얼로그 소유, 차트 코너는 `.rsi-trading-criteria`), 현재 제품 계약으로 교체하면서 기준 7행·44px·다이얼로그 HUD/기준 행·승률·닫기·`aria-expanded` 복원까지 단언을 늘렸다(삭제·허용치 완화 없음). 검증: `npm test` `complete:true` 3,373/3,368/0/5, typecheck·static(967 files·214 scripts·992 references)·Pages build/verify(12 files·9 routes). `dist/` tree `48a3abc…`는 R3와 동일해 53-case·compare 결과가 같은 제품 바이트에 그대로 적용된다. 관찰 한계: COMPARE 320/390 헤딩에서 `structure-threshold` 입력과 `structure-json`(46×44)이 스크롤 소유자 안에서 잘린 채 보고됐고, chart-qa는 compare 클리핑을 단언하지 않으므로 통과 근거가 아니라 관찰로만 남긴다. |
 | R5 원격 상태·CI | 완료 `조회만·제품 변경 없음` | 2026-11-11 KST 회차 실측: `git ls-remote --heads origin fix/tradingview-responsive-20261110` = `532c9a8c815640a77dc143085e7324643071fae1`(로컬 HEAD와 동일), `origin/main` head `faa7f69f8886f0be4a0a5a729ccd7c9963c8f016`, merge-base `38b9e66338a584365b493ba5105e6b0678b5f4af`, 브랜치는 main 대비 ahead 71 / behind 5(뒤진 5건은 `data: relay bundle refresh` 2026-11-10 19:45~2026-11-11 10:30). **`gh run list --branch fix/tradingview-responsive-20261110 --limit 5` = 0건**: 이 저장소에는 실행 가능한 GitHub Actions 정의가 없다(`.github/workflows/`에 `README.md`만 존재, 7개 정의는 `ops/github-actions-archive/`에 바이트 보존, `ops/ci-migration.json`의 `provider: cloudflare-workers-builds`·`automaticGithubActions:false`). 대체 게이트는 `npm run verify:cloudflare`이고 Workers Builds는 main을 watch하므로 브랜치 push에는 provider 빌드가 생기지 않는다. 따라서 head `532c9a8`의 check-runs `total_count` **0**, combined status `pending`(total 0)이고, **이 브랜치의 원격 CI 증거는 0건**이며 지금까지의 44-case·53-case·compare·WP6·chart-qa·`npm test`는 전부 로컬 실행 결과다. **PR 조회**: `gh pr list --head fix/tradingview-responsive-20261110 --state all` = 없음(이 브랜치의 PR 없음). open PR은 #98 하나뿐이고 그것은 이 브랜치가 아니다 — PR #98 `feat/conference-review-20261110` → base `main`, state `OPEN`, `isDraft true`, head `7064d25f3fc6eb1574375f1ce76373926a637d6b`, `mergeable UNKNOWN`, `mergeStateStatus UNKNOWN`, `reviewDecision` 없음, `updatedAt 2026-11-10T09:17:40Z`, checks는 GitGuardian `pass` 1건뿐. 판정: 조회만 수행했고 merge·deploy·force push·PR 변경·PR 생성은 하지 않았다. 원격 CI 0건은 '통과'가 아니며 로컬 게이트 결과를 대체하지 않는다(브랜치에 원격 CI가 필요하면 PR 생성이나 워크플로 복원이 선행 조건이며 둘 다 이 자동화 범위 밖이다). |
-| R6 WP-A 미디어 | 차단 | `mediaPrepared:false` 유지. 직접 청취·동기화 10지점, PDF 547페이지, 전체 미디어, Linux `renameat2` 원자 게시 검수는 이 저장소 자동화 범위 밖이다. |
+| R6 WP-A 미디어 | 부분 — 자동화분 완료, 사람 검수 차단 | 2026-11-11 자동화 가능분 실측: PDF 290(final)+257(R17)=**547**(계약 `plannedPages:547` 일치, Poppler 26.10.0), 오디오 16/16 매니페스트 해시 일치·입력 2건 원본 해시 일치, Linux `renameat2(RENAME_NOREPLACE)` 원자 게시 4케이스 통과(Docker `python:3.12-slim`, `EEXIST` 확인). 영수증 `docs/conference/WP_A_AUTOMATED_MEDIA_20261111.md`·`docs/conference/evidence/media-20261111/`. 남은 차단: 직접 청취·동기화 10지점, 547장 WebP 렌더·시각 검수, 배포 패키지 자산 수·Range, R17 변형 결정(깔끔본 접두사 `baa2224e…` ≠ 실측 `3760cd72…`). `mediaPrepared:false` 유지. |
 | R7 native 외부·실기기 | 차단 | macOS 외부 AppKit 메뉴, Safari, 실제 iOS/Android 기기 검증은 자동화 대상이 아니다. Blink 내부 팝업 trusted 입력과 동일시하지 않는다. |
 | R8 문서 최종화 | 완료 `7bfd717` | 요청사항·반응형·체크리스트 세 문서를 최종 상태로 정리했다. `docs/requirements/REQ_WP_ABC_20261110.md` §12 최종 판정(WP-A 차단 유지·WP-B 부분·WP-C 완료, R1~R8 목록), `docs/TRADINGVIEW_RESPONSIVE_20261110.md` §14 최종 판정(계약별 6행·로컬 수치·남은 차단·클리핑 관찰 한계), 그리고 이 표와 아래 `## 체크리스트 종결 판정` 절이다. R6·R7만 차단으로 남기고, 원격 CI 0건을 통과로 쓰지 않으며, main push·merge·배포·PR 변경·유료 용량·계정/권한 변경은 수행하지 않았다. |
 
@@ -36,7 +36,7 @@ R1~R5가 전부 완료로 정리되어 R8 착수 조건을 충족했고, R8까�
 
 검증 범위를 읽는 주의: 제품 바이트는 `dist` 트리 `d61e0dbd32072f7436dc552a0a79f0afed880a50`(R3~R8 불변)이고, 53-case 53/53·compare PASSED(9 viewport, overflow 0)·WP6 30/30·chart-qa 12/12·`npm test` `complete:true` 3,373/3,368/0/5·typecheck·static(967 files·214 scripts·992 references)·Pages build/verify(12 files·9 routes)는 모두 이 바이트와 그 원장 커밋에 묶인 **로컬** 결과다. 원격 CI·배포·출시 승인 증거가 아니다.
 
-차단으로 남는 두 항목은 이 자동화 범위 밖이므로 완료로 바꾸지 않는다. R6: WP-A `mediaPrepared:false`, 직접 청취·동기화 10지점, PDF 547페이지, 전체 미디어, Linux `renameat2` 원자 게시 검수. R7: macOS 외부 AppKit 메뉴, Safari, 실제 iOS/Android 기기. 추가로 기준선에서도 실패한 320px 범례 native touch scroll과 1440px native 모델 선택 gate, COMPARE 320/390 헤딩의 `structure-threshold`·`structure-json` 클리핑 관찰은 미판정·미검증으로 남긴다.
+차단으로 남는 항목은 R7(macOS 외부 AppKit 메뉴, Safari, 실제 iOS/Android 기기)과 R6의 사람 검수(직접 청취·동기화 10지점, 547장 WebP 렌더·시각 검수, 배포 패키지 자산 수·Range)다. R8 종결 시 미판정으로 남겼던 320px 범례 native touch scroll과 1440px ETH native 모델 선택은 2026-11-11 후속 회차에서 실제 입력으로 통과했다(아래 `native 잔여 2건 재판정` 절). COMPARE 320/390 구조 툴바는 가로 스크롤 계약으로 이미 닫혔다.
 
 출시 경계는 그대로다. main push·merge·force push·배포·PR #98 변경·PR 생성·유료 용량·계정/권한 변경은 수행하지 않았고 승인도 없다. 이 종결은 체크리스트 R0~R8의 판정 완료를 뜻하며 출시 승인이 아니다.
 
@@ -57,6 +57,37 @@ R4에서 "관찰 한계"로만 남겼던 COMPARE 320/390 헤딩의 `structure-th
 그래서 `scripts/verify-compare-shell-browser.mjs`에 실제 휠 입력으로 확인하는 단언을 추가했다. 320·390에서 툴바 중앙에 `Input.dispatchMouseEvent` 휠을 보내 `scrollLeft`가 실제로 증가하는지, 그 뒤 `#structure-threshold`와 `#structure-json`이 뷰포트 안에 들어오고 `elementFromPoint`로 그 노드(또는 자손)가 잡히는지 확인하고 영수증에 남긴다. 영수증 값: 320에서 scrollLeft 0→276, 390에서 0→346, 두 폭 모두 `inViewport:true`·`hit:true`. 이 단언 추가 후 compare 셸 검증 **PASSED**(실패 0).
 
 이 항목은 이제 "미검증 관찰"이 아니라 하네스가 지키는 계약이다. 제품 CSS는 바꾸지 않았다(스크롤로 도달 가능하므로 결함 아님).
+
+## native 잔여 2건 재판정 — 2026-11-11
+
+R8 종결 시 "미판정·미검증"으로 남긴 두 항목을 실제 입력으로 다시 돌렸다. 제품 바이트는 R3~R8과 같은 `dist` tree `d61e0dbd32072f7436dc552a0a79f0afed880a50`이고, 바뀐 것은 하네스의 입력 경로 하나다.
+
+| 항목 | 판정 | 근거(로컬 실행) |
+|---|---|---|
+| 320px 범례 native touch scroll | **통과** | `verify-chart-replay-browser.mjs`가 touch 케이스에서 `Input.dispatchTouchEvent` 스와이프로 범례 스크롤포트를 끝까지 민다(휠은 비터치 전용). BTC 320×568: `scrollHeight 1188`/`clientHeight 507`, 스와이프 `0→350→681`(최대 681), 참조 의미 3개 `painted:true`·`reachable:true`. BTC 900×430: 3회 `0→250→554→652`(최대 652). chart-replay 레인 7/7, 실패 0 |
+| 1440px ETH native select | **통과(내부 팝업 모드)** | `adaptive→valuation`(ArrowDown×2), `valuation→pooled`(ArrowUp×1), `pooled→adaptive`(ArrowUp×1) 실제 키 입력. `internalPopupMode:true`, `popupMenu external-appkit→internal→external-appkit`, `layoutLocked:true`, `restored:true`, 값·`#eth-chart.dataset.forecastModel`·`?eth-model=` 동시 갱신, 포커스 유지. native 레인 15/15, 실패 0 |
+
+한계: 이 키 입력은 Blink 내부 팝업에서 실행됐다. macOS 외부 AppKit 메뉴·Safari·실기기는 여전히 R7 차단이며, 내부 팝업 입력을 외부 메뉴 검증으로 승격하지 않는다. 휠 스크롤로도 통과하던 케이스를 touch로 강화한 것이므로, 이전 기준선 비교는 역사 기록으로만 남긴다.
+
+이번 회차 로컬 게이트: chart-replay 레인 7/7, native 레인 15/15, `npm run typecheck`, `verify:static`(967 files·214 scripts·992 references), `build:pages`·`verify:pages`(12 files·9 routes) 통과. `npm test`는 호스트 배치 3,332건 중 3,327 통과·실패 0·제외 5로 돌았지만, 고정 frozen 배치 이미지 `node@sha256:e7add2a490bb17d97d485b8641bd88455fff7839ade0f5eba493c3508124d413`(Node 24.22.2 linux/x64)이 Docker Hub에서 **404**이고 로컬 사본은 플랫폼 메타데이터가 빈 손상 상태라 `complete:false`다. frozen 41건은 이번 회차에 실행되지 않았으며 통과로 세지 않는다. 전체 3,373건의 이전 `complete:true` 영수증은 제품 바이트 `d61e0dbd…`에 묶인 이력으로만 유지한다.
+
+## WP-A 자동화분 실측 — 2026-11-11 (R6 부분)
+
+사람이 필요한 부분은 그대로 두고, 자동화할 수 있는 것만 실행했다. 전체 영수증은 `docs/conference/WP_A_AUTOMATED_MEDIA_20261111.md`와 `docs/conference/evidence/media-20261111/`에 있다.
+
+| 항목 | 결과 | 근거 |
+|---|---|---|
+| PDF 페이지 547 | **290 + 257 = 547** (계약 `plannedPages:547` 일치) | Poppler `pdfinfo` 26.10.0, 각 파일 SHA-256 |
+| 미디어 해시 | 오디오 16/16 매니페스트 일치, 입력 2건·SRT 2건 요청서 접두사 일치 | `media-manifest.json` 재계산 |
+| R17 변형 | 원본·깔끔본 모두 257쪽이지만, 깔끔본 접두사 불일치(`baa2224e…` ≠ `3760cd72…`) | §7-1 결정 입력 |
+| Linux 원자 게시 | 신규 게시·기존 거부·경합 `EEXIST`·syscall `errno 17` 통과 | Docker `python:3.12-slim`, `7064d25` 스크립트 |
+| 청취·시각·배포 | 미수행 | 사람/별도 환경 |
+
+`mediaPrepared:false` 유지. 이 실측은 청취·시각 검수나 배포 승인이 아니다.
+
+## WP-B §11 미결정 8건 — 결정 질문 목록 — 2026-11-11
+
+`docs/requirements/WP_B_OPEN_DECISIONS_20261111.md`에 8건을 "결정 질문·현재 문서 위치·선택지"로 정리했다. **결정은 하지 않았다.** 각 항목은 사용자 선택 전까지 미결정이며, 구현·유료 용량·배포 승인을 뜻하지 않는다. D1 저장소·비용, D2 임베딩·재임베딩, D3 보존·삭제권, D4 3열 권한 범위, D5 에이전트 수 상한, D6 종합 모델 등급, D7 소수 의견 라벨, D8 출처별 분량이다.
 
 ## 역사 기록 — Pro 인계 시점 작업판 (2026-11-11 01:30)
 

@@ -522,11 +522,37 @@ export async function verifyChartReplaySurface(api) {
         const statusBefore = await evaluate(cdp, readChartReplayLegendStatusAccess);
         if (statusBefore.owner.scrollHeight > statusBefore.owner.clientHeight + 1) {
           const owner = statusBefore.owner;
-          await cdp.send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: owner.left + owner.width / 2, y: owner.top + owner.height / 2, deltaX: 0, deltaY: owner.scrollHeight });
-          await until(async () => {
-            const value = await evaluate(cdp, readChartReplayLegendStatusAccess);
-            return value.owner.scrollTop >= value.owner.scrollHeight - value.owner.clientHeight - 1 ? value : null;
-          }, 'native full legend scroll reaches the reference meanings');
+          if (touch) {
+            // A phone legend is scrolled by a finger, not a wheel. Drive the
+            // dialog's own scrollport with trusted touch events and require the
+            // reference meanings at the end to become reachable.
+            const swipes = [];
+            let state = owner;
+            const remaining = () => state.scrollHeight - state.clientHeight - state.scrollTop;
+            const maximumSwipes = Math.ceil((owner.scrollHeight - owner.clientHeight) / Math.max(1, owner.height * .45)) + 2;
+            while (remaining() > 1 && swipes.length < maximumSwipes) {
+              const box = (await evaluate(cdp, readChartReplayLegendStatusAccess)).owner;
+              const x = box.left + box.width / 2, from = box.top + box.height * .82, to = box.top + box.height * .18;
+              await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y: from, id: 0, radiusX: 1, radiusY: 1, force: 1 }] });
+              for (const fraction of [.25, .5, .75, 1]) {
+                await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x, y: from + (to - from) * fraction, id: 0, radiusX: 1, radiusY: 1, force: 1 }] });
+                await delay(30);
+              }
+              await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+              const after = (await evaluate(cdp, readChartReplayLegendStatusAccess)).owner;
+              swipes.push({ from: state.scrollTop, to: after.scrollTop, maximum: after.scrollHeight - after.clientHeight });
+              state = after;
+            }
+            assert.ok(remaining() <= 1, 'Native touch did not scroll the full legend to its reference meanings: ' + JSON.stringify({ before: owner, after: state, swipes }));
+            dialog.statusScroll = { input: 'touch', swipes };
+          } else {
+            await cdp.send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: owner.left + owner.width / 2, y: owner.top + owner.height / 2, deltaX: 0, deltaY: owner.scrollHeight });
+            await until(async () => {
+              const value = await evaluate(cdp, readChartReplayLegendStatusAccess);
+              return value.owner.scrollTop >= value.owner.scrollHeight - value.owner.clientHeight - 1 ? value : null;
+            }, 'native full legend scroll reaches the reference meanings');
+            dialog.statusScroll = { input: 'wheel', scrollTop: (await evaluate(cdp, readChartReplayLegendStatusAccess)).owner.scrollTop };
+          }
         }
         dialog.statusAccess = await evaluate(cdp, readChartReplayLegendStatusAccess);
         assertChartReplayLegendStatusAccess(dialog.statusAccess, expectedStatus);

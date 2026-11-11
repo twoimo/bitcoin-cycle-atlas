@@ -289,8 +289,18 @@ headless native client를 emulation 전에 검증하는 helper와 consolidated d
 ### 14.3 남은 차단·미검증 (이 문서 범위 밖)
 
 - macOS 외부 AppKit 메뉴, Safari, 실제 iOS/Android 기기: 미검증. Blink 내부 네이티브 select 팝업 입력을 외부 AppKit 메뉴 검증과 동일시하지 않는다.
-- 기준선에서도 동일하게 실패한 320px 범례 native touch scroll, 1440px native 모델 선택 gate: 미완료로 유지한다.
+- 기준선에서도 동일하게 실패했던 320px 범례 native touch scroll과 1440px native 모델 선택 gate는 2026-11-11 후속 회차에서 실제 입력으로 통과했다(§14.4). 이력은 위 절에 그대로 보존한다.
 - WP-A `mediaPrepared:false`, 직접 청취·동기화 10지점, PDF 547페이지, Linux `renameat2` 원자 게시: 별도 보류.
 - 원격 CI·배포·main 병합: 이 브랜치에서 수행하지 않았고 승인도 없다.
 
-관찰 한계(통과 근거 아님): COMPARE 320/390 헤딩에서 `structure-threshold` 입력과 `structure-json`(46×44)이 스크롤 소유자 안에서 잘린 채 보고됐고, chart-qa는 compare 클리핑을 단언하지 않는다. 이 항목은 여전히 미판정 관찰로 남긴다.
+관찰 한계(당시): COMPARE 320/390 헤딩에서 `structure-threshold` 입력과 `structure-json`(46×44)이 스크롤 소유자 안에서 잘린 채 보고됐다. 이후 실측 결과 잘림이 아니라 가로 스크롤이었고(`.lab-toolbar` `scrollWidth 544 > clientWidth 268`, 320에서 `scrollLeft 0→276`, 390에서 `0→346`), `verify-compare-shell-browser.mjs`가 실제 휠 입력으로 도달성을 단언하는 계약으로 바뀌었다.
+
+### 14.4 native 잔여 2건 재판정 — 2026-11-11
+
+위 14.3의 두 gate를 실제 입력으로 다시 판정했다. 제품 바이트는 그대로(`dist` tree `d61e0dbd…`)이고, 바뀐 것은 하네스의 입력 경로 하나다.
+
+**320px 범례 — 통과(실제 touch).** `scripts/verify-chart-replay-browser.mjs`는 touch 케이스에서 범례 스크롤포트를 `Input.dispatchTouchEvent` 스와이프로 끝까지 민다(휠은 비터치 케이스 전용). 실측: BTC 320×568 `scrollHeight 1188 / clientHeight 507`, 스와이프 2회 `0→350→681`(최대 681), 참조 의미 3개 전부 `painted:true`·`reachable:true`; BTC 900×430은 3회 `0→250→554→652`(최대 652). chart-replay 레인 7/7 통과, 실패 0.
+
+**1440px ETH 모델 선택 — 통과(내부 팝업 모드, 레이아웃 불변).** `selectNativeOptionByKeyboard`가 `adaptive→valuation`(ArrowDown 2회), `valuation→pooled`(ArrowUp 1회), `pooled→adaptive`(ArrowUp 1회)를 실제 키 이벤트로 수행했다. 영수증: `internalPopupMode:true`, `popupMenu {before:'external-appkit', during:'internal', after:'external-appkit'}`, `layoutLocked:true`, `restored:true`, 각 전환의 `observed.value` 일치·포커스 유지, `#eth-chart.dataset.forecastModel`와 `?eth-model=` 쿼리가 함께 갱신됐다(값 대입·합성 이벤트 없음). native 레인 15/15 통과, 실패 0.
+
+한계는 그대로다. 이 키 입력은 **Blink 내부 팝업**에서 실행됐고 macOS 외부 AppKit 메뉴가 아니다(14.3 첫 불릿 유지). 헤드리스 Chrome은 외부 메뉴를 만들 수 없으므로, 데스크톱 실사용 메뉴 검증은 여전히 사람·실기기 몫이다.
