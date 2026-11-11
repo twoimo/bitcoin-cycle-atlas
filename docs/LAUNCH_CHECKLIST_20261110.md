@@ -40,6 +40,14 @@ R1~R5가 전부 완료로 정리되어 R8 착수 조건을 충족했고, R8까�
 
 검수·기계 점검의 상세는 `docs/conference/WP_A_AUTOMATED_MEDIA_20261111.md` §7, 결정표는 `docs/requirements/WP_B_OPEN_DECISIONS_20261111.md`에 있다. 남은 사람 항목은 **WP-A 청취 10지점, WP-A Range/206(배포 후), Safari·실기기**다.
 
+## 2026-11-12 우선순위 재정리
+
+- **P0** 최종 자산 잠금(WP-A A-0)과 차트 마감(h1 계약 → compare·반응형·WP6·chart-qa → main 배포). 최종 PDF/PPTX는 `yyOkfU0FkYzNPO8f` 세션이 계속 갱신 중이므로, 해시·페이지 수가 적힌 `deck-lock` 전에는 WP-A 타임라인을 시작하지 않는다.
+- **P1** 컨퍼런스 복습 페이지(WP-A) — 자산 잠금 후 즉시 착수.
+- **P2** 리브랜딩·스카우트 표면 — 저장소/도메인 이름, README, 케이스 스터디. P1 데모가 동작한 뒤 진행한다.
+- **P3** 릴레이 RAG, **P4** 인증·비공개, **P5** 시즌 테마.
+- 상세: [요구사항 인덱스](requirements/README.md)의 개발 우선순위 표, [리브랜딩·스카우트 요구사항](requirements/REQ_REBRAND_SCOUTING_20261112.md), WP-A A-0.
+
 ## 체크리스트 종결 판정 — 2026-11-11 (R8)
 
 **체크리스트 완료.** 브랜치 `fix/tradingview-responsive-20261110`, 종결 시점 HEAD `11540d62659b207f32111759faa5673738ce6765`, 이후 `0e1a7c67581c57820b58f3298e08510b5f551b50`에서 compare 구조 툴바 도달성 단언을 추가했다(제품 바이트 불변). R0~R5·R8 완료, R6·R7 차단 유지.
