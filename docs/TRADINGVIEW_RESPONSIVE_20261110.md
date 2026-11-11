@@ -261,3 +261,36 @@ headless native client를 emulation 전에 검증하는 helper와 consolidated d
 검증 계약도 구성에 맞춰 조정했다. 내비 소유자는 사이드바(렌더 시) 또는 폰 레일이고, 데이터 표의 아래 정렬은 viewport가 아니라 콘텐츠 바 상단을 기준으로 계산한다. 검사 항목을 삭제하거나 허용치를 늘리지 않았다.
 
 실행 결과: 53-case 네이티브 브라우저 스위트 53/53 passed(failures 0), compare 셸 실브라우저 PASSED, typecheck·verify:static·build:pages·verify:pages 통과. 전체 `npm test`는 최종 소스에서 재실행했다. 이 결과는 macOS 외부 AppKit 메뉴·Safari·실기기 검증이 아니며, 44-case·WP6 여정과 원격 CI·배포는 별도다.
+
+## 14. 최종 판정 — 2026-11-11 (R8)
+
+이 절이 이 문서의 현재 판정이다. §2의 TradingView 관측, §3의 기준선, §10의 `2d9d99f` 시점 수치, §12·§13의 통합·후속 기록은 각 시점의 영수증이며, 이 절의 판정을 소급해 바꾸지 않는다. 브랜치 `fix/tradingview-responsive-20261110`, 판정 시점 HEAD `11540d62659b207f32111759faa5673738ce6765`.
+
+### 14.1 계약별 최종 상태
+
+| 계약 | 최종 판정 | 근거(로컬 실행) |
+|---|---|---|
+| §4.1 폰 ≤620px (48px 도크·44px 조작·레일) | 완료 | 53-case 53/53의 320x740·390x844 케이스, WP6 320·390 케이스, chart-qa 12/12의 320·390 네이티브 30m 선택 |
+| §4.2 태블릿 621–959px (overlay reader) | 완료 | compare 9 viewport(PASSED, overflow 0), 959 이하 overlay 모드의 `#main` inert 유지 단언 |
+| §4.3 960px 이상 (split reader, 가운데 열 예약) | 완료 (R1, `4d22531`) | 960/1024/1200/1440/1920에서 차트 열 축소 320 = reader 폭, reader·차트 겹침 0, 문서 폭 불변, 닫으면 path bytes 복원 |
+| §4.4 확정 배치 (원래 노드 이동·복원) | 완료 | 53-case·WP6의 nav/footer 노드 identity·`aria-current`·왕복 케이스 |
+| §4.5 측정 폭 허용 오차 (D09) | 완료 (R3, `a739b36`) | 출처별 계약 분리: 정수 폭 `document.scrollWidth`·`body.clientWidth/scrollWidth`는 1px 차이도 회귀, 소수 폭 `.workspace`·`#main`만 `WIDTH_ROUNDING_TOLERANCE_PX=1`, 예약은 `READER_RESERVATION_TOLERANCE_PX=2`, 비수치 측정값 불통과. 왕복 6건 전부 `exact` delta 0 |
+| §5 수용기준 | 완료(로컬 범위) | 아래 14.2 수치. 원격 CI·배포·실기기는 이 표의 범위가 아니다 |
+
+### 14.2 이 판정에 쓰인 로컬 검증 수치
+
+- 제품 바이트: `dist` 트리 `d61e0dbd32072f7436dc552a0a79f0afed880a50`(R4 커밋 `2be7da6`와 동일, R3·R4·R5·R8 동안 불변). 아래 브라우저 결과는 모두 이 바이트에 묶여 있다.
+- 53-case 네이티브 브라우저 스위트 **53/53 passed, failures 0**; compare 셸 실브라우저 **PASSED**(실패 0·findings 0, 320x740~1920x1080 9 viewport 전부 `overflow 0`).
+- WP6 여정 **30/30 PASS**(5종목 × 6 viewport, 실패 0, 스크린샷 48장), chart-qa **12/12 PASS**(annotation 0쌍, 축 0쌍, compare 헤딩 small controls 0).
+- 전체 `npm test` `ATLAS_TEST_TOTAL {"complete":true,"tests":3373,"pass":3368,"fail":0,"skipped":5}`(Docker Desktop 기동 후 frozen 배치 포함, 종료 후 원상 복구).
+- `npm run typecheck` 정상, `npm run verify:static` 967 files·214 scripts·992 references, `npm run build:pages`/`verify:pages` 12 files·9 routes.
+- 이 수치는 전부 **로컬 실행**이다. 이 저장소에는 실행되는 GitHub Actions가 없고(`ops/github-actions-archive/`, `ops/ci-migration.json`), Workers Builds는 main만 watch하므로 이 브랜치의 원격 CI 증거는 0건이다. 원격 CI 0건을 '통과'로 읽지 않는다.
+
+### 14.3 남은 차단·미검증 (이 문서 범위 밖)
+
+- macOS 외부 AppKit 메뉴, Safari, 실제 iOS/Android 기기: 미검증. Blink 내부 네이티브 select 팝업 입력을 외부 AppKit 메뉴 검증과 동일시하지 않는다.
+- 기준선에서도 동일하게 실패한 320px 범례 native touch scroll, 1440px native 모델 선택 gate: 미완료로 유지한다.
+- WP-A `mediaPrepared:false`, 직접 청취·동기화 10지점, PDF 547페이지, Linux `renameat2` 원자 게시: 별도 보류.
+- 원격 CI·배포·main 병합: 이 브랜치에서 수행하지 않았고 승인도 없다.
+
+관찰 한계(통과 근거 아님): COMPARE 320/390 헤딩에서 `structure-threshold` 입력과 `structure-json`(46×44)이 스크롤 소유자 안에서 잘린 채 보고됐고, chart-qa는 compare 클리핑을 단언하지 않는다. 이 항목은 여전히 미판정 관찰로 남긴다.
