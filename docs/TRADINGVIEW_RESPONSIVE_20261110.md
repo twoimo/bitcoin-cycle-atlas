@@ -279,7 +279,7 @@ headless native client를 emulation 전에 검증하는 helper와 consolidated d
 
 ## 14. 최종 판정 — 2026-11-11 (R8)
 
-이 절이 이 문서의 현재 판정이다. §2의 TradingView 관측, §3의 기준선, §10의 `2d9d99f` 시점 수치, §12·§13의 통합·후속 기록은 각 시점의 영수증이며, 이 절의 판정을 소급해 바꾸지 않는다. 브랜치 `fix/tradingview-responsive-20261110`, 판정 시점 HEAD `bbb1f3e909de43dacb5b2f0f0fbe71e7927bbf3e`, 배포된 제품 소스 `a8276861d200f421bd6a07cad85abfdd03694257`.
+이 절이 이 문서의 현재 판정이다. §2의 TradingView 관측, §3의 기준선, §10의 `2d9d99f` 시점 수치, §12·§13의 통합·후속 기록은 각 시점의 영수증이며, 이 절의 판정을 소급해 바꾸지 않는다. 브랜치 `fix/tradingview-responsive-20261110`, 판정 시점 HEAD `09334064befc060f305520a61cfe6b695fb21930`, 배포된 제품 소스 `09334064befc060f305520a61cfe6b695fb21930`.
 
 ### 14.1 계약별 최종 상태
 
@@ -294,7 +294,7 @@ headless native client를 emulation 전에 검증하는 helper와 consolidated d
 
 ### 14.2 이 판정에 쓰인 로컬 검증 수치
 
-- 제품 바이트: `dist` 트리 `5457057b0da9de1931c0a582a9bec96fc96d7168`(배포 소스 `a827686`). R3~R8 시점의 `d61e0dbd…` 영수증은 그 시점의 것이고, 2026-11-11 배포 수정(`content-shell`·`center-workbench`)으로 바뀌었다. 아래 R8 수치는 그 당시 바이트, 14.4·14.5는 새 바이트에 묶인다.
+- 제품 바이트: `dist` 트리 `21fcea541ac1f203c21721897df93015c96e8b76`(배포 소스 `0933406`, WP-D 포함). R3~R8 시점의 `d61e0dbd…`, 첫 배포의 `5457057b…` 영수증은 그 시점의 것이고, 2026-11-11 WP-D 좌상단 오버레이 수정으로 바뀌었다. 아래 R8 수치는 그 당시 바이트, 14.4~14.6은 새 바이트에 묶인다.
 - 53-case 네이티브 브라우저 스위트 **53/53 passed, failures 0**; compare 셸 실브라우저 **PASSED**(실패 0·findings 0, 320x740~1920x1080 9 viewport 전부 `overflow 0`).
 - WP6 여정 **30/30 PASS**(5종목 × 6 viewport, 실패 0, 스크린샷 48장), chart-qa **12/12 PASS**(annotation 0쌍, 축 0쌍, compare 헤딩 small controls 0).
 - 전체 `npm test` `ATLAS_TEST_TOTAL {"complete":true,"tests":3373,"pass":3368,"fail":0,"skipped":5}`(Docker Desktop 기동 후 frozen 배치 포함, 종료 후 원상 복구).
@@ -324,8 +324,8 @@ headless native client를 emulation 전에 검증하는 helper와 consolidated d
 
 사용자 요청으로 main에 fast-forward하고 production 배포를 완료했다. 배포 전 production은 2026-11-09 이후 갱신되지 않고 있었고(라이브 source `36e7db09`), browser stage의 `generated-pages`·`panel-tests`·Linux `eth` 320·모델 stage 19분 예산 초과를 차례로 고쳤다(상세 표는 [출시 체크리스트](LAUNCH_CHECKLIST_20261110.md) `## 배포` 절).
 
-- 배포 소스 `a8276861d200f421bd6a07cad85abfdd03694257`(dist tree `5457057b…`), Worker `bitcoin-cycle-atlas` `deployed_on 2026-11-11T08:33:45Z`
+- 배포 소스 `09334064befc060f305520a61cfe6b695fb21930`(dist tree `21fcea54…`, WP-D 포함), Worker `bitcoin-cycle-atlas` `deployed_on 2026-11-11T13:55:16Z`
 - model 빌드 `af2fe1c9-2272-4cc4-a184-410045fba689` success(13분 47초, `--test-concurrency=3`), browser 빌드 `91adb41c-939e-4da6-8e47-393fb0024087` success
-- 라이브 `publication.json` manifest `4ee6b95f…`, contentDigest `73d42521…`, `verifyServedPublication` **PASS / phase confirmed**(4개 핵심 파일 본문 해시 일치, servedCommit = servedDigest = `a827686`)
+- 라이브 `publication.json` manifest `c9298c42…`, `verifyServedPublication` **PASS / phase confirmed**(4개 핵심 파일 본문 해시 일치, servedCommit = servedDigest = `0933406`)
 - `/`, `/?symbol=ETHUSD`, `/?page=data` HTTP 200
 - 이후 main은 자동 `data: relay bundle refresh` `366e988`로 전진했고, 같은 제품 코드에 새 릴레이 데이터를 실어 재배포한다.

@@ -1,10 +1,10 @@
 # Atlas 서비스 품질·출시 체크리스트
 
-시작 기준은 2026-11-10의 `38b9e66`이다. 브랜치 `fix/tradingview-responsive-20261110`, **배포된 제품 소스는 `a8276861d200f421bd6a07cad85abfdd03694257`**(`dist` tree `5457057b0da9de1931c0a582a9bec96fc96d7168`)이며 2026-11-11 production에 배포·검증됐다. 이 문서와 Pages 재생성 산출물을 포함하는 인계 커밋은 브랜치의 Git identity로 확인한다. 아래 현재 작업판은 2026-11-11 KST 갱신이며, 이전 리비전의 검증 결과를 새 후보 전체 통과로 읽지 않는다.
+시작 기준은 2026-11-10의 `38b9e66`이다. 브랜치 `fix/tradingview-responsive-20261110`, **배포된 제품 소스는 `09334064befc060f305520a61cfe6b695fb21930`**(`dist` tree `21fcea541ac1f203c21721897df93015c96e8b76`)이며 2026-11-11 22:55 KST production에 배포·검증됐다(WP-D 포함). 이 문서와 Pages 재생성 산출물을 포함하는 인계 커밋은 브랜치의 Git identity로 확인한다. 아래 현재 작업판은 2026-11-11 KST 갱신이며, 이전 리비전의 검증 결과를 새 후보 전체 통과로 읽지 않는다.
 
 ## 현재 작업판 — 자동 진행 (2026-11-11 기준)
 
-이 표가 이 저장소의 단일 진행 원장이다. 아래 `## 2026-11-11 후속 2~8` 절과 `## 역사 기록` 절은 각 시점의 영수증이며, 현재 판정은 이 표를 따른다. 브랜치 `fix/tradingview-responsive-20261110`, 기준 커밋 `bbb1f3e909de43dacb5b2f0f0fbe71e7927bbf3e`(배포 영수증 포함). 이후 main은 자동 `data: relay bundle refresh` `366e988`로 한 칸 더 전진했고, 그 빌드가 같은 제품 코드에 새 릴레이 데이터를 실어 재배포한다.
+이 표가 이 저장소의 단일 진행 원장이다. 아래 `## 2026-11-11 후속 2~8` 절과 `## 역사 기록` 절은 각 시점의 영수증이며, 현재 판정은 이 표를 따른다. 브랜치 `fix/tradingview-responsive-20261110`, 기준 커밋 `09334064befc060f305520a61cfe6b695fb21930`(WP-D 배포 영수증 포함). main은 자동 `data: relay bundle refresh`로 계속 전진할 수 있고, 각 빌드가 같은 제품 코드에 새 릴레이 데이터를 실어 재배포한다.
 
 | ID | 상태 | 닫는 조건 |
 |---|---|---|
@@ -19,7 +19,25 @@
 | R8 문서 최종화 | 완료 `7bfd717` | 요청사항·반응형·체크리스트 세 문서를 최종 상태로 정리했다. `docs/requirements/REQ_WP_ABC_20261110.md` §12 최종 판정(WP-A 차단 유지·WP-B 부분·WP-C 완료, R1~R8 목록), `docs/TRADINGVIEW_RESPONSIVE_20261110.md` §14 최종 판정(계약별 6행·로컬 수치·남은 차단·클리핑 관찰 한계), 그리고 이 표와 아래 `## 체크리스트 종결 판정` 절이다. R6·R7만 차단으로 남기고, 원격 CI 0건을 통과로 쓰지 않으며, main push·merge·배포·PR 변경·유료 용량·계정/권한 변경은 수행하지 않았다. |
 | R9 WP-D 전 종목 좌상단 오버레이 | **완료** (2026-11-11) | BTC 기준 단일 행 오버레이로 통일했다. ETHUSD·MSTR·BMNR의 `.eth-readout`을 1행(간격 · 관측 종가 · 가격 · 전봉 변화 · 기준일)으로 바꾸고 출처는 별도 `.eth-readout-source` 행으로 분리했으며, OHLC는 `details` 접힘(기본 닫힘, 펼치면 O/H/L/C)으로 옮겼다. 실측(플롯 폭 대비): 1440 ETH 319×23(23.9%)·MSTR 306×23(22.9%)·BMNR 296×23(22.2%), 768 44.6~48.1%, 320 줄바꿈 40px·가로 오버플로 0, readout 오른쪽 바깥 히트는 차트 SVG. 검증: native 15/15(신규 `verifyCompactReadout`), 반응형 44/44, WP6 30/30, chart-qa 12/12, panel 138/138, compare PASSED, `npm test` `complete:true` 3,373/3,368/0/5, typecheck·static(958 files·214 scripts·992 references). 계약: 요청서 §13, 반응형 §4.6. |
 
+
+
 R1~R5가 전부 완료로 정리되어 R8 착수 조건을 충족했고, R8까지 이번 회차에 닫았다. 이 표의 완료 6행(R0~R5)과 R8이 이 자동화의 전 범위이고, 남은 것은 R6(WP-A 미디어·청취·PDF·Linux 원자 게시)와 R7(macOS 외부 AppKit 메뉴·Safari·실기기) 두 차단뿐이다. 원격 CI는 이 저장소에 존재하지 않으므로(GitHub Actions 아카이브·Workers Builds는 main watch) 어떤 판정도 '원격 CI 통과'를 근거로 쓰지 않았고 로컬 게이트 수치만 인용했다.
+
+## 남은 작업 — 2026-11-11 22:55 KST 기준
+
+자동화로 닫을 수 없는 항목만 남았다. R0~R9·WP-C·native 잔여 2건·WP-D·production 배포는 완료다.
+
+| 구분 | 항목 | 닫는 조건 | 상태 |
+|---|---|---|---|
+| WP-A 사람 검수 | 오디오 직접 청취·동기화 10지점 | 실제 청취로 ±0.5초 확인 | 미수행 |
+| WP-A 사람 검수 | 547장 WebP 시각 검수 | 렌더된 547장 전수 확인 | 미수행 |
+| WP-A 배포 | 자산 수·Range/206·세션 경계 재생 | 배포 패키지 실측 | 미검증 |
+| WP-A 결정 | R17 원본/깔끔본 선택 | 사용자 선택(깔끔본 접두사 불일치 포함) | 미결정 |
+| R7 | macOS 외부 AppKit 메뉴·Safari·실기기 | 실기기·실브라우저 확인 | 차단 |
+| WP-B | §11 미결정 8건 | 사용자 결정([질문 목록](requirements/WP_B_OPEN_DECISIONS_20261111.md)) | 미결정 |
+| 원격 CI | 브랜치 CI 증거 | 워크플로 복원 또는 PR 생성(현재 설계상 없음) | 없음 |
+
+현재 통과 수치(로컬): 53-case 53/53, compare PASSED(9 viewport), WP6 30/30, chart-qa 12/12, 반응형 44/44, panel 138/138, native 15/15, `npm test` `complete:true` 3,373/3,368/0/5, typecheck·static(958 files·214 scripts·992 references). production은 `0933406`(dist tree `21fcea54…`)을 서빙하고 `verifyServedPublication` PASS/confirmed다.
 
 ## 체크리스트 종결 판정 — 2026-11-11 (R8)
 
@@ -116,6 +134,8 @@ R8 종결 시 "미판정·미검증"으로 남긴 두 항목을 실제 입력으
 - `verifyServedPublication` **PASS**: index.html·site-entry.js·data/btc-daily.json·data/forecast-ledger/index.json 본문 해시 일치, servedCommit = servedDigest = `a827686…`
 - `/`, `/?symbol=ETHUSD`, `/?page=data` HTTP 200
 - 브라우저 stage 게이트: runtime-preflight·locked-dependencies·generated-pages·typecheck·panel-tests·service-build·postgres-service-tests·native-browser(53) 전부 PASS, publication/standalone PASS
+
+**2026-11-11 22:55 KST 재배포(WP-D)**: main `09334064befc060f305520a61cfe6b695fb21930`, model 빌드 success(12분), browser 빌드 `325effd2-b3e7-4aac-88a8-e2b1cfd84417` success(16분 34초), Worker `deployed_on 2026-11-11T13:55:16Z`, 라이브 source `0933406`·manifest `c9298c42…`, `verifyServedPublication` **PASS / phase confirmed**(4개 핵심 파일). 첫 시도는 10× cadence 100ms 예산 초과(120ms)로 실패했고, readout 검사를 케이스 끝으로 옮긴 뒤 cadence **passed**로 통과했다.
 
 ## 2026-11-11 추가 요청 — WP-D 전 종목 좌상단 오버레이
 
