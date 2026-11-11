@@ -9,7 +9,7 @@
 | ID | 상태 | 닫는 조건 |
 |---|---|---|
 | R0 인계·셸·reader 기본 수정 | 완료 | D01 relay 클릭, N01/N02 내비 소유권·44px, 하네스 수집 범위, D03 reader Back, D05 reader 44px, D06/D09 사전 native client 검사·휠 도달·자손 hit, D07 복원 readback, D08 플랫폼 고정, relay dataset 소유권, 부트 진단 계측까지 반영. 44-case 44/44, 53-case 53/53, compare PASSED, npm test `complete:true` 3,360/3,355/0/5. |
-| R1 D04 compare reader 겹침 | 진행 | 960px 이상에서 reader가 차트 316px를 덮으면서 `overlay=false`(키보드 트랩 없음)인 결함. 열 폭을 `var(--detail-width,320px)`로 예약해 겹침 0을 만들고, `verify-workspace-browser`의 "폭 불변" 단언을 새 계약(문서 폭 불변 + 워크스페이스 축소 = reader 폭 + 차트 미가림 + 닫기 도달)으로 교체한다. 53-case·compare·npm test 재통과가 조건. 실패하면 되돌리고 이유를 기록한다. |
+| R1 D04 compare reader 겹침 | 완료 `4d22531` | 960px 이상 compare 그리드의 가운데 열을 `var(--detail-width,320px)`로 예약했다. 실측: 960/1024/1200/1440/1920에서 reader 폭 320, 차트 열 축소 320(= reader 폭), reader·차트 겹침 0, 문서 폭 불변, 959 이하 overlay 모드는 `#main` inert 유지. `verify-workspace-browser` 단언을 새 계약으로 교체(문서 폭 불변, 차트 열 축소 = reader 폭 ±2, split 겹침 0·inert 아님, overlay는 inert 필수, 차트는 점 개수·y값을 보존한 채 수평 재투영, 닫으면 원래 path bytes 복원). 검증: 53-case 53/53·실패 0, compare PASSED(9 viewport·overflow 0), `npm test` `complete:true` 3,360/3,355/0/5, typecheck·static·Pages build/verify 통과. |
 | R2 D02 source sheet 준비 상태 | 대기 | `renderMethod()`가 `state.comparison`을 무가드로 읽는다. `showMethod()`는 dataset만 검사한다. 데이터 owner가 준비(`comparison` 생성)됐을 때만 잠금을 풀고, 미준비 상태에서 handler가 예외 없이 명시적으로 처리해야 한다. `?page=data` 직접 진입은 잠금+이유 유지, compare 준비 후 이동은 시트가 실제 내용으로 열려야 한다. |
 | R3 D09 왕복 반올림 범위 | 대기 | compare 왕복 폭 비교의 허용 오차 범위를 명시적으로 문서화하고, 실제 반올림으로 인한 차이와 회귀를 구분하는 단언을 추가한다. |
 | R4 WP6 여정 | 대기 | `node scripts/verify-wp6-browser.mjs --origin <로컬 후보 origin> --out build/wp6-<sha> --phase candidate --expected-source <HEAD SHA>`로 5종목×6 viewport(30)와 chart-qa(BTCUSD·COMPARE×6)를 실행해 결과를 이 표에 기록한다. 운영 origin 결과를 후보 증거로 쓰지 않는다. |
@@ -189,6 +189,27 @@ compare 셸 검증에서 두 가지가 실제 입력을 증명하지 못했다.
 최종 확인: 44-case 44/44, 53-case 53/53, compare PASSED, 전체 `npm test` `complete:true` 3,360개 중 3,355 통과·실패 0·제외 5, typecheck·static·Pages build/verify 통과.
 
 남은 항목: D04(폭 불변 계약과 겹침 제거 중 제품 결정), D02 데이터 owner 준비 상태 설계, WP-A 미디어·청취·PDF·Linux 게시, macOS 외부 AppKit·Safari·실기기, 원격 CI·배포.
+
+## 2026-11-11 후속 9 — R1 D04 완료
+
+R1은 960px 이상 compare에서 reader가 차트를 덮는 결함이었다. 1440에서 실측한 상태는 reader `x=1075..1395`(폭 320)가 차트 호스트 `x=56..1391`(폭 1335)를 295px 덮고, `overlay=false`·`inert` 없음이었다. 즉 덮인 영역이 탭 가능한 채로 남아 있었다.
+
+수정은 `dist/chart-details-panel.css`의 960px 이상 compare 규칙에서 가운데 열을 `0`에서 `var(--detail-width,320px)`로 바꾼 것이다. reader는 계속 뷰포트에 고정해 닫기 동작을 유지하되, 그리드가 같은 폭을 비워 두므로 차트가 가려지지 않는다.
+
+실측(수정 후): 960에서 차트 열 859→539, 1024에서 923→603, 1200에서 1099→779, 1440에서 1339→1019, 1920에서 1819→1499로 축소량이 모두 320(= reader 폭)이고 reader·차트 겹침은 0, 문서 폭은 불변이다. 959 이하에서는 기존 overlay 모드가 유지되고 `#main`이 inert로 남는다.
+
+`scripts/verify-workspace-browser.mjs`의 "Opening reader changed document or chart workspace width" 단언은 새 계약으로 교체했다. 문서 폭 불변은 그대로 요구하고, split 모드에서는 차트 열 축소량이 reader 폭 ±2이며 reader와 차트가 겹치지 않고 `#main`이 inert가 아님을, overlay 모드에서는 반대로 `#main`이 inert임을 요구한다. 차트 path는 폭이 줄면 정당하게 재투영되므로 split 모드에서만 "path 수·점 개수·y 범위 보존 + 어떤 path도 새 폭을 넘지 않음 + 최소 한 계열의 x축 축소"를 검사하고, overlay 모드에서는 기존처럼 path bytes 동일을 요구한다. 닫을 때는 문서·차트 폭과 path bytes가 기준 상태로 정확히 복원되어야 한다. 검사를 삭제하거나 허용치를 늘린 것이 아니라, 폭이 변하는 레이아웃에서 증거로 삼을 수 있는 조건을 명시한 것이다.
+
+이번 후보 커밋 `4d22531`에서 실행한 결과:
+
+- 전체 사이트 53-case 네이티브 브라우저 스위트 **53/53 passed, failures 0**(sourceCommit `92267b8`).
+- compare 셸 실브라우저 **PASSED**, 실패 0, viewport 320x740~1920x1080 9종 전부 `overflow 0`.
+- 전체 `npm test`: `ATLAS_TEST_TOTAL {"complete":true,"tests":3360,"pass":3355,"fail":0,"skipped":5,"batches":2}`. Docker Desktop을 켜서 frozen 배치까지 실행하고 다시 내렸다.
+- `npm run typecheck`, `npm run verify:static`(967 files·214 scripts·992 references), `npm run build:pages`, `npm run verify:pages`(12 files·9 routes) 통과.
+
+주의: 이번 실행에서 `fc-list`가 PATH에 없어 53-case가 즉시 중단됐다. Homebrew 경로(`/opt/homebrew/bin`)를 PATH에 넣어 재실행했고, 한국어 폰트 검사는 실제로 수행됐다(검사를 건너뛴 것이 아니다). Docker도 PATH에 없어 절대 경로 CLI를 써서 기동했다.
+
+남은 항목: D02 데이터 owner 준비 상태 설계, D09 왕복 반올림 범위, WP6 여정(R4), 원격 상태·CI(R5), R6·R7 차단 유지, R8 문서 최종화. `mediaPrepared:false`와 출시 보류를 유지한다.
 
 ## 목표와 경계
 
