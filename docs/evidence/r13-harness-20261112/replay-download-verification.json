@@ -1,0 +1,773 @@
+{
+  "verifiedAt": "2026-11-11T23:43:45.632Z",
+  "files": [
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/atlas-first-project-bar-rq94vX/atlas-chart-replay-BTCUSD-2026-10-21.json",
+      "bytes": 3553700,
+      "sha256": "96c9af54b4374424f3c339b96e8134e7bce48681db27a2306ab5b87c426b613c",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.exports.1"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.exports.1"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/atlas-last-observed-bar-HVEg9o/atlas-chart-replay-BTCUSD-2026-11-06.json",
+      "bytes": 3565059,
+      "sha256": "5076912f8e3315b0761d0619640e5649348273a7446790b40fe0a1c0efd90ee5",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.exports.2"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.exports.2"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/atlas-project-start-Nsd5X5/atlas-chart-replay-BTCUSD-2026-10-20.json",
+      "bytes": 3552981,
+      "sha256": "64b6ee939b73f6dabdb9dfa1f4d52d6443e51319bcb1ed9639f4e8caf64e35d1",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.exports.0"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.exports.0"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/current-model-before-replay-hngQtg/Bitcoin_Long_Horizon_Scenarios.json",
+      "bytes": 15002681,
+      "sha256": "8ea16618d90f7ac2028b2ab775b5846dbbc3b1b784765e577391dcb54e059c0f",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.currentModelExport"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.currentModelExport"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/first-available-daily-empty-uX8Qh2/atlas-chart-replay-BTCUSD-2011-08-17.json",
+      "bytes": 3527023,
+      "sha256": "2a79670e2f05586231593bd5fbc017e349733bea4c58c13179eff336b27bd24b",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.exports.6"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.exports.6"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/first-available-daily-revealed-kUH4X3/atlas-chart-replay-BTCUSD-2011-08-18.json",
+      "bytes": 3527704,
+      "sha256": "5a1e64837c001bd972dde157a7be60ea255c9d2e906097dd58502a29527c8bbe",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.exports.7"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.exports.7"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/first-available-week-revealed-CRnOYU/atlas-chart-replay-BTCUSD-2011-08-22.json",
+      "bytes": 3528262,
+      "sha256": "dc03c573fa9113982b46702c2925f4a9e97c0b1ef3a8984a30baa3968caa1a0c",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.exports.5"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.exports.5"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/fixed-origin-Laiirg/atlas-chart-replay-BTCUSD-2025-05-10.json",
+      "bytes": 76410,
+      "sha256": "5d3aa971fff647063e640631f523a195b070f854cfd2f4e36c5e5ff424751da8",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.exports.12"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.exports.12"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/next-bar-KrbwZ6/atlas-chart-replay-BTCUSD-2025-05-11.json",
+      "bytes": 77681,
+      "sha256": "935da8a2419bd87dedeccf6d7307cd115bd85846df71670fb3a1904f32e2fa24",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.exports.13"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.exports.13"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/original-project-first-observation-tdg6Gh/atlas-chart-replay-BTCUSD-2026-10-21.json",
+      "bytes": 434499,
+      "sha256": "dfefd21e5e70e542743a69abff7865874de05c03900ab0e425e4b1442f285e9c",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.exports.11"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.exports.11"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/original-project-forecast-Eczd00/atlas-chart-replay-BTCUSD-2026-10-20.json",
+      "bytes": 433264,
+      "sha256": "21ea105bc500039a93a40f38c6926badb9381519ad4db467415f3ed25dc27912",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.exports.10"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.exports.10"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/preserved-record-ILJU2s/atlas-chart-replay-BTCUSD-2026-10-25.json",
+      "bytes": 91518,
+      "sha256": "22689d7560df8a8e2e65b847d1c8548eb3bea83cbc0ea75bf0045738cc91a216",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.exports.15"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.exports.15"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/rewound-origin-ran3uw/atlas-chart-replay-BTCUSD-2025-05-10.json",
+      "bytes": 76410,
+      "sha256": "5d3aa971fff647063e640631f523a195b070f854cfd2f4e36c5e5ff424751da8",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.exports.14"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.exports.14"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/scissors-chosen-first-date-ZtS38Q/atlas-chart-replay-BTCUSD-2026-10-19.json",
+      "bytes": 3554479,
+      "sha256": "d844ce5691e39b85347da9afc4419b27df5522ba52ae96b749d77767c24f9b46",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.exports.4"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.exports.4"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/weekly-august-retrospective-two-observations-0LfrKE/atlas-chart-replay-BTCUSD-2026-08-18.json",
+      "bytes": 3580160,
+      "sha256": "5319ce618802a1da0de642d1d90452395e628da65aefabd06d9df28f2afca033",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.exports.8"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.exports.8"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/weekly-disclosed-prefix-DuY5cf/atlas-chart-replay-BTCUSD-2026-10-21.json",
+      "bytes": 3553700,
+      "sha256": "96c9af54b4374424f3c339b96e8134e7bce48681db27a2306ab5b87c426b613c",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.exports.3"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.exports.3"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-1440x900/weekly-june-retrospective-two-observations-ljoghC/atlas-chart-replay-BTCUSD-2026-06-02.json",
+      "bytes": 3610020,
+      "sha256": "2907c9712301aac042d499edafb7329fd80597ca9b3649b2649fc8e086840d8e",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.43.chartReplay.exports.9"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.0.chartReplay.exports.9"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-320x568/atlas-first-project-bar-hcNYYX/atlas-chart-replay-BTCUSD-2026-10-21.json",
+      "bytes": 3553700,
+      "sha256": "ab5bbaa45fad1bbd270e8f006ba3f2715c99feaeaf07d1ee6462f542c245e801",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.44.chartReplay.exports.1"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.1.chartReplay.exports.1"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-320x568/atlas-last-observed-bar-wqjumd/atlas-chart-replay-BTCUSD-2026-11-06.json",
+      "bytes": 3565059,
+      "sha256": "4a104c8ff7c15c015f8aaec8efae1330ddbd39f721a89533a125c07330ee2474",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.44.chartReplay.exports.2"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.1.chartReplay.exports.2"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-320x568/atlas-project-start-7MzmoR/atlas-chart-replay-BTCUSD-2026-10-20.json",
+      "bytes": 3552981,
+      "sha256": "cd7ac2451f81630ad07a86cc7953c1c292036145d997435e6c6962fc906d23b2",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.44.chartReplay.exports.0"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.1.chartReplay.exports.0"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-320x568/current-model-before-replay-kknYiA/Bitcoin_Long_Horizon_Scenarios.json",
+      "bytes": 15002681,
+      "sha256": "8ea16618d90f7ac2028b2ab775b5846dbbc3b1b784765e577391dcb54e059c0f",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.44.chartReplay.currentModelExport"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.1.chartReplay.currentModelExport"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-320x568/fixed-origin-oLg3yT/atlas-chart-replay-BTCUSD-2026-05-10.json",
+      "bytes": 76056,
+      "sha256": "ef42239768ae6b0f267fba1f7fef4e8774ff679b2d09f8fc0a91e4cea64e9715",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.44.chartReplay.exports.5"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.1.chartReplay.exports.5"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-320x568/next-bar-nP7FGA/atlas-chart-replay-BTCUSD-2026-05-11.json",
+      "bytes": 77303,
+      "sha256": "a84b84400265c34a450385dd42f80436eddf80f7678a5329623bb0efc37499ed",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.44.chartReplay.exports.6"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.1.chartReplay.exports.6"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-320x568/original-project-first-observation-w2YaiQ/atlas-chart-replay-BTCUSD-2026-10-21.json",
+      "bytes": 434499,
+      "sha256": "dfefd21e5e70e542743a69abff7865874de05c03900ab0e425e4b1442f285e9c",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.44.chartReplay.exports.4"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.1.chartReplay.exports.4"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-320x568/original-project-forecast-OHSMOI/atlas-chart-replay-BTCUSD-2026-10-20.json",
+      "bytes": 433264,
+      "sha256": "21ea105bc500039a93a40f38c6926badb9381519ad4db467415f3ed25dc27912",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.44.chartReplay.exports.3"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.1.chartReplay.exports.3"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-320x568/preserved-record-D1QE7l/atlas-chart-replay-BTCUSD-2026-10-25.json",
+      "bytes": 91518,
+      "sha256": "22689d7560df8a8e2e65b847d1c8548eb3bea83cbc0ea75bf0045738cc91a216",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.44.chartReplay.exports.8"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.1.chartReplay.exports.8"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-320x568/rewound-origin-P9wcAy/atlas-chart-replay-BTCUSD-2026-05-10.json",
+      "bytes": 76056,
+      "sha256": "ef42239768ae6b0f267fba1f7fef4e8774ff679b2d09f8fc0a91e4cea64e9715",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.44.chartReplay.exports.7"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.1.chartReplay.exports.7"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-900x430/atlas-first-project-bar-NOPKyo/atlas-chart-replay-BTCUSD-2026-10-21.json",
+      "bytes": 3553700,
+      "sha256": "cb724c09d30ac9d1dc694e4ab4418713bf6c56c9adf0094bf2ea99345e4bcc49",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.45.chartReplay.exports.1"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.2.chartReplay.exports.1"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-900x430/atlas-last-observed-bar-wdDR59/atlas-chart-replay-BTCUSD-2026-11-06.json",
+      "bytes": 3565059,
+      "sha256": "c0233e13274b1b649e3f9d1f46b89ecdd30c4b29d976bcb81d16e2e78320891d",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.45.chartReplay.exports.2"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.2.chartReplay.exports.2"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-900x430/atlas-project-start-FM5qxK/atlas-chart-replay-BTCUSD-2026-10-20.json",
+      "bytes": 3552981,
+      "sha256": "d1e69ab896f710b9ad21ef6914fabac6f3bfaea2ba21f6933f28179a90db561d",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.45.chartReplay.exports.0"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.2.chartReplay.exports.0"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-900x430/current-model-before-replay-LxEoCZ/Bitcoin_Long_Horizon_Scenarios.json",
+      "bytes": 15002681,
+      "sha256": "8ea16618d90f7ac2028b2ab775b5846dbbc3b1b784765e577391dcb54e059c0f",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.45.chartReplay.currentModelExport"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.2.chartReplay.currentModelExport"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-900x430/fixed-origin-JLnp3w/atlas-chart-replay-BTCUSD-2026-05-10.json",
+      "bytes": 76056,
+      "sha256": "f1cc38c476439da4d3fcfdd60f395d1405446b39609f622780395137633deea0",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.45.chartReplay.exports.5"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.2.chartReplay.exports.5"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-900x430/next-bar-3R6ngQ/atlas-chart-replay-BTCUSD-2026-05-11.json",
+      "bytes": 77303,
+      "sha256": "e9e98b405a6b54eff5d084d958ddd6fd2d199097b4a04a13a3dfc637b6e48b10",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.45.chartReplay.exports.6"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.2.chartReplay.exports.6"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-900x430/original-project-first-observation-rFFp2R/atlas-chart-replay-BTCUSD-2026-10-21.json",
+      "bytes": 434499,
+      "sha256": "dfefd21e5e70e542743a69abff7865874de05c03900ab0e425e4b1442f285e9c",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.45.chartReplay.exports.4"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.2.chartReplay.exports.4"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-900x430/original-project-forecast-llyW8K/atlas-chart-replay-BTCUSD-2026-10-20.json",
+      "bytes": 433264,
+      "sha256": "21ea105bc500039a93a40f38c6926badb9381519ad4db467415f3ed25dc27912",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.45.chartReplay.exports.3"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.2.chartReplay.exports.3"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-900x430/preserved-record-kChq5s/atlas-chart-replay-BTCUSD-2026-10-25.json",
+      "bytes": 91518,
+      "sha256": "22689d7560df8a8e2e65b847d1c8548eb3bea83cbc0ea75bf0045738cc91a216",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.45.chartReplay.exports.8"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.2.chartReplay.exports.8"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-btc-900x430/rewound-origin-ttSflu/atlas-chart-replay-BTCUSD-2026-05-10.json",
+      "bytes": 76056,
+      "sha256": "f1cc38c476439da4d3fcfdd60f395d1405446b39609f622780395137633deea0",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.45.chartReplay.exports.7"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.2.chartReplay.exports.7"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-eth-1440x900/fixed-origin-LydxZ7/atlas-chart-replay-ETHUSD-2025-04-30.json",
+      "bytes": 110832,
+      "sha256": "b19c099e9ce53290863d964f3a7faa105e195306d8aa1eacafc3e7bb3f0b92cf",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.46.chartReplay.exports.0"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.3.chartReplay.exports.0"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-eth-1440x900/next-bar-x790aQ/atlas-chart-replay-ETHUSD-2025-05-01.json",
+      "bytes": 112046,
+      "sha256": "2a4f677c229c9879b4a347003bf2cc9fbda380767a0aa329621668bd2ff79c81",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.46.chartReplay.exports.1"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.3.chartReplay.exports.1"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-eth-1440x900/preserved-record-ajOUov/atlas-chart-replay-ETHUSD-2026-10-25.json",
+      "bytes": 92725,
+      "sha256": "33acaeb04a329ccd5d4a9b96068af2d502f1123a3ef49a633975cb55aae728e8",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.46.chartReplay.exports.3"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.3.chartReplay.exports.3"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-eth-1440x900/rewound-origin-oCM9J0/atlas-chart-replay-ETHUSD-2025-04-30.json",
+      "bytes": 110832,
+      "sha256": "b19c099e9ce53290863d964f3a7faa105e195306d8aa1eacafc3e7bb3f0b92cf",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.46.chartReplay.exports.2"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.3.chartReplay.exports.2"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-eth-320x568/fixed-origin-YZa5mb/atlas-chart-replay-ETHUSD-2026-04-30.json",
+      "bytes": 110537,
+      "sha256": "ba4e1f2e9c0ae8e76ef47a157da90df9a8571739abf0531b13714a88c7384ade",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.47.chartReplay.exports.0"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.4.chartReplay.exports.0"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-eth-320x568/next-bar-GQVGT9/atlas-chart-replay-ETHUSD-2026-05-01.json",
+      "bytes": 111762,
+      "sha256": "7972efc2bd31529e0993cd0056850a861fb77d88a6f31a6b9b4173b6809c0a56",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.47.chartReplay.exports.1"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.4.chartReplay.exports.1"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-eth-320x568/preserved-record-5ObdxV/atlas-chart-replay-ETHUSD-2026-10-25.json",
+      "bytes": 92725,
+      "sha256": "33acaeb04a329ccd5d4a9b96068af2d502f1123a3ef49a633975cb55aae728e8",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.47.chartReplay.exports.3"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.4.chartReplay.exports.3"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-eth-320x568/rewound-origin-okK4DM/atlas-chart-replay-ETHUSD-2026-04-30.json",
+      "bytes": 110537,
+      "sha256": "ba4e1f2e9c0ae8e76ef47a157da90df9a8571739abf0531b13714a88c7384ade",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.47.chartReplay.exports.2"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.4.chartReplay.exports.2"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-mstr-1440x900/fixed-origin-gMTKot/atlas-chart-replay-MSTR-2026-10-23.json",
+      "bytes": 83467,
+      "sha256": "2026ab09ad2697588e7fc9cbda026d1453ccbc0f81eaae78c75ff901b37c1336",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.48.chartReplay.exports.0"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.5.chartReplay.exports.0"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-mstr-1440x900/next-bar-QvH9tj/atlas-chart-replay-MSTR-2026-10-26.json",
+      "bytes": 84836,
+      "sha256": "52548861ec9f807dc5b2f3b1d5e8309386df51efc61a265e252116746a6d39f0",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.48.chartReplay.exports.1"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.5.chartReplay.exports.1"
+        }
+      ],
+      "retainedAs": null
+    },
+    {
+      "source": "build/r13/native-53/lanes/chart-replay/chart-replay-downloads/chart-replay-mstr-1440x900/rewound-origin-pxlFW6/atlas-chart-replay-MSTR-2026-10-23.json",
+      "bytes": 83467,
+      "sha256": "2026ab09ad2697588e7fc9cbda026d1453ccbc0f81eaae78c75ff901b37c1336",
+      "references": [
+        {
+          "report": "build/r13/native-53/report.json",
+          "pointer": "$.cases.48.chartReplay.exports.2"
+        },
+        {
+          "report": "build/r13/native-53/lanes/chart-replay/report.json",
+          "pointer": "$.cases.5.chartReplay.exports.2"
+        }
+      ],
+      "retainedAs": null
+    }
+  ]
+}
