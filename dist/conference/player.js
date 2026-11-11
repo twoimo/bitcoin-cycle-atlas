@@ -356,7 +356,19 @@ export function mountConferencePlayer(host, options = {}) {
     if (panel.open) panel.close?.();
     panel.removeAttribute('open'); panel.hidden = true; transcriptMode = null;
     for (const button of root.querySelectorAll('[data-action="transcript"]')) button.setAttribute('aria-expanded', 'false');
-    if (restoreFocus && transcriptOpener?.isConnected) transcriptOpener.focus?.({preventScroll:true});
+    if (restoreFocus) {
+      const available = node => {
+        if (!node?.isConnected || node.disabled || node.closest?.('[hidden],[inert]')) return false;
+        if (node.checkVisibility) return node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true});
+        if (node.getClientRects && !node.getClientRects().length) return false;
+        const style = view?.getComputedStyle?.(node);
+        return style?.display !== 'none' && style?.visibility !== 'hidden' && style?.opacity !== '0';
+      };
+      // Settings close when the transcript opens; resizing can also hide a
+      // desktop opener. The caption remains reachable in both layouts.
+      const target = available(transcriptOpener) ? transcriptOpener : root.querySelector('.conference-caption');
+      target?.focus?.({preventScroll:true});
+    }
   }
   function openTranscript(opener) {
     if (!timeline) return;

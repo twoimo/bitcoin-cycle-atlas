@@ -141,6 +141,11 @@ async function createPage(viewport){const context=await browserCdp.send('Target.
 async function navigate(cdp,query,state='ready'){await cdp.send('Page.navigate',{url:origin+'/bitcoin-cycle-atlas/?page=conference&'+query});await until(()=>evaluate(cdp,state=>document.querySelector('.conference-player')?.dataset.state===state,state),'conference '+state);await until(()=>evaluate(cdp,()=>document.readyState==='complete'&&document.fonts.status==='loaded'),'document and fonts before measurement');if(state==='ready')await until(()=>evaluate(cdp,()=>{const audio=document.querySelector('.conference-audio');return audio?.readyState>=1&&document.querySelector('.conference-slide-image')?.naturalWidth>0;}),'real media metadata/image');await delay(100);}
 async function stateTime(cdp){return evaluate(cdp,()=>Number(document.querySelector('.conference-player').dataset.time));}
 async function pageSettings(cdp,width,open){if(width<=767){const current=await evaluate(cdp,()=>document.querySelector('[data-action=settings]').getAttribute('aria-expanded')==='true');if(current!==open)await click(cdp,'[data-action=settings]');}}
+async function captionFocusReceipt(cdp) {
+  const receipt=await evaluate(cdp,()=>{const active=document.activeElement,caption=document.querySelector('.conference-caption');return {captionFocused:active===caption,
+    visible:!!active&&!active.closest('[hidden]')&&active.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),panelOpen:document.querySelector('.conference-transcript').open};});
+  assert.equal(receipt.panelOpen,false,'Transcript closes');assert.equal(receipt.captionFocused,true,'Hidden opener falls back to the caption');assert.equal(receipt.visible,true,'Restored focus remains visible');return receipt;
+}
 
 async function coreInteractions(cdp,entry,viewport){
   await click(cdp,'[data-action=play]');await until(()=>evaluate(cdp,()=>document.querySelector('.conference-player').dataset.playing==='true'&&!document.querySelector('audio').paused),'native media play');
@@ -161,6 +166,21 @@ async function coreInteractions(cdp,entry,viewport){
   await type(cdp,'[data-role=transcript-search]','3725초');await click(cdp,'.conference-transcript-row:not([hidden])');assert.ok(Math.abs(await stateTime(cdp)-3725)<.1,'Transcript row seeks');
   entry.transcript=await evaluate(cdp,inspect);assertLayout(entry.transcript,viewport);entry.transcriptScreenshot=await screenshot(cdp,entry.id+'-transcript');
   await click(cdp,'[data-action=close-transcript]');assert.equal(await evaluate(cdp,()=>document.activeElement?.classList.contains('conference-caption')),true,'Transcript restores opener focus');
+  if(viewport.width<=767){
+    await pageSettings(cdp,viewport.width,true);await click(cdp,'.conference-transcript-toggle');
+    await until(()=>evaluate(cdp,()=>document.querySelector('.conference-transcript').open&&document.querySelector('.conference-options').hidden),'mobile settings opener becomes hidden');
+    await key(cdp,'Escape');entry.mobileSettingsFocusReturn=await captionFocusReceipt(cdp);
+  }
+  if(viewport.width===1440){
+    await click(cdp,'.conference-transcript-toggle');await until(()=>evaluate(cdp,()=>document.querySelector('.conference-transcript').open&&document.querySelector('.conference-transcript').dataset.mode==='dock'),'desktop explicit transcript opener');
+    await cdp.send('Emulation.setDeviceMetricsOverride',{width:320,height:740,deviceScaleFactor:1,mobile:false});
+    await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
+    await until(()=>evaluate(cdp,()=>{const panel=document.querySelector('.conference-transcript');return panel.open&&panel.dataset.mode==='sheet'&&panel.matches(':modal')&&document.querySelector('.conference-options').hidden;}),'desktop dock becomes a phone sheet');
+    await key(cdp,'Escape');entry.resizedFocusReturn=await captionFocusReceipt(cdp);entry.resizedFocusReturn.layout=await evaluate(cdp,inspect);assertLayout(entry.resizedFocusReturn.layout,{width:320,height:740});
+    entry.resizedFocusReturn.screenshot=await screenshot(cdp,entry.id+'-resized-focus');
+    await cdp.send('Emulation.setDeviceMetricsOverride',{width:viewport.width,height:viewport.height,deviceScaleFactor:1,mobile:false});
+    await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:false,maxTouchPoints:1});await delay(100);
+  }
   await cdp.send('Page.reload',{ignoreCache:true});await until(()=>evaluate(cdp,()=>document.querySelector('.conference-player')?.dataset.state==='ready'),'reload restored');await until(()=>evaluate(cdp,()=>document.querySelector('audio')?.readyState>=1),'reload metadata');
   const restored=await evaluate(cdp,inspect);assert.equal(restored.state.deck,'r17-257');assert.ok(Math.abs(Number(restored.state.time)-3725)<.1);assert.equal(restored.audio.paused,true,'Reload does not autoplay');entry.reloaded={time:restored.state.time,deck:restored.state.deck,paused:restored.audio.paused};
   entry.nativePlayback=true;entry.speedOptions=[.75,1,1.25,1.5,2];

@@ -232,6 +232,44 @@ test('transcript defaults closed, switches dock to sheet, searches original rows
   } finally {f.controller.destroy();}
 });
 
+test('closing a transcript opened through mobile settings returns focus to the visible caption', async () => {
+  const f = fixture({width:390});
+  try {
+    await f.controller.load(); f.click('settings');
+    const options = f.host.querySelector('.conference-options');
+    const opener = f.host.querySelector('.conference-transcript-toggle');
+    const caption = f.host.querySelector('.conference-caption'), focused = [];
+    opener.focus = () => focused.push('hidden opener');
+    caption.focus = () => focused.push('caption');
+    assert.equal(options.hidden, false);
+    opener.dispatchEvent(new f.window.Event('click',{bubbles:true}));
+    assert.equal(options.hidden, true, 'opening the sheet closes mobile settings');
+    f.click('close-transcript');
+    assert.deepEqual(focused, ['caption']);
+  } finally {f.controller.destroy();}
+});
+
+test('desktop-to-phone resize falls back from the now-hidden transcript opener while a visible desktop opener is retained', async () => {
+  const f = fixture({width:1440});
+  try {
+    await f.controller.load();
+    const opener = f.host.querySelector('.conference-transcript-toggle');
+    const caption = f.host.querySelector('.conference-caption'), focused = [];
+    opener.focus = () => focused.push('opener');
+    opener.getClientRects = () => [{width:44,height:44}];
+    caption.focus = () => focused.push('caption');
+    opener.dispatchEvent(new f.window.Event('click',{bubbles:true}));
+    f.click('close-transcript');
+    assert.deepEqual(focused, ['opener']);
+    opener.dispatchEvent(new f.window.Event('click',{bubbles:true}));
+    f.view.innerWidth = 320; f.view.dispatchEvent(new f.window.Event('resize'));
+    assert.equal(f.host.querySelector('.conference-options').hidden, true);
+    assert.equal(f.host.querySelector('.conference-transcript').dataset.mode, 'sheet');
+    f.click('close-transcript');
+    assert.deepEqual(focused, ['opener','caption']);
+  } finally {f.controller.destroy();}
+});
+
 test('native media time drives the global progress and ended advances only when playback was active', async () => {
   const f = fixture({href:'https://atlas.test/?page=conference&t=3719&deck=final-290'});
   try {
