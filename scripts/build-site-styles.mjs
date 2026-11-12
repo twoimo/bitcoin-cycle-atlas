@@ -20,7 +20,7 @@ const afterShell = Object.freeze([
   'compact-toolbar.css', 'ui/rsi-simulation.css', 'legacy-workspace-toolbar.css',
   'vendor/skullet/styles.css', 'loading-surfaces.css', 'editorial-system.css',
   'editorial-panels.css', 'editorial-ledgers.css', 'relay-room.css',
-  'conference/player.css', 'ui/chart-legend.css', 'ui/quote-hud.css',
+  'conference/player.css', 'ui/chart-legend.css', 'ui/quote-hud.css', 'ui/shell-layout.css',
 ]);
 // Keep the base and shell as direct links. Their relative order is also an
 // existing 44px touch-floor contract; both intervening ranges stay in order.

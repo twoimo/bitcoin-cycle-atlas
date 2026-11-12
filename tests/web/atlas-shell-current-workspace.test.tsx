@@ -55,6 +55,9 @@ test('current navigation follows the open workspace through first chart construc
   document.body.dataset.centerTool = 'housing';
   document.body.dataset.page = 'evidence';
   await settle();
-  assert.equal(nav.parentElement, document.querySelector('.atlas-sidebar'));
+  assert.equal(nav.parentElement, document.querySelector('.atlas-dashboard-header > .atlas-dashboard-nav'));
+  assert.equal(document.querySelectorAll('.atlas-nav').length, 1);
+  assert.equal(document.querySelector('.atlas-nav'), nav);
+  assert.equal(document.body.dataset.shellWidth, 'standard');
   assert.deepEqual(selected(), ['evidence'], 'a direct dashboard page owns its current destination');
 });

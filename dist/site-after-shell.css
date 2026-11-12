@@ -3789,3 +3789,211 @@ body[data-page="relay"]{overflow:hidden}
   }
 }
 
+
+/* Source: ui/shell-layout.css; SHA-256: ac7fdce828317cbc493c49e3e8c8f1d04feb387e13a1202ef79f9bf55bf78584 */
+/* R19 P1: the shared page frame, original navigation and outer sections.
+ * Chart coordinates and the independent content scroll owners stay local.
+ * P0 owns the palette; later stages own chart chrome and section internals. */
+body[data-shell=dashboard] {
+  --app-sidebar-width: 0px;
+  --app-header-height: 112px;
+  background: var(--surface-raised);
+}
+body[data-shell=dashboard] :is(.atlas-sidebar, #root > .atlas-sidebar) {
+  display: none !important;
+}
+body[data-shell=dashboard] .atlas-dashboard-header.atlas-canvas-heading {
+  position: fixed;
+  inset: 0 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: 44px 44px;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: var(--app-header-height);
+  min-height: var(--app-header-height);
+  padding: 8px max(var(--shell-gutter), calc((100% - var(--shell-container-wide)) / 2));
+  box-sizing: border-box;
+  overflow: visible;
+  background: var(--bg);
+}
+body[data-shell=dashboard] .atlas-dashboard-header > .atlas-sidebar-toggle {
+  display: none;
+}
+body[data-shell=dashboard] .atlas-dashboard-header > .atlas-shell-copy {
+  grid-area: 1 / 1;
+  min-width: 0;
+  align-self: center;
+  align-items: baseline;
+}
+body[data-shell=dashboard] .atlas-shell-copy > .atlas-shell-heading {
+  flex: none;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 650;
+}
+body[data-shell=dashboard] .atlas-dashboard-header > .atlas-shell-controls {
+  grid-area: 1 / 2;
+  max-width: min(45vw, 480px);
+  align-self: center;
+}
+body[data-shell=dashboard] .atlas-dashboard-nav {
+  grid-area: 2 / 1 / 3 / -1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  width: 100%;
+  height: 44px;
+}
+body[data-shell=dashboard] .atlas-dashboard-nav > .atlas-nav {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pinch-zoom;
+  scrollbar-width: none;
+  scroll-padding-inline: 4px;
+}
+body[data-shell=dashboard] .atlas-dashboard-nav .atlas-nav :is(a, button) {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: auto;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  margin: 0;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: var(--pill-radius);
+  background: transparent;
+  color: var(--muted);
+  font: 500 var(--type-body-sm)/20px var(--font);
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+body[data-shell=dashboard] .atlas-dashboard-nav .atlas-nav :is(a, button):hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+body[data-shell=dashboard] .atlas-dashboard-nav .atlas-nav [aria-current=page] {
+  color: var(--nav-active-text);
+  background: var(--nav-active-bg);
+}
+body[data-shell=dashboard] .atlas-dashboard-nav .atlas-nav :is(a, button) > span:last-child:not([data-icon]) {
+  position: static;
+  display: inline !important;
+  width: auto;
+  height: auto;
+  margin: 0;
+  clip-path: none;
+  overflow: visible;
+}
+body[data-shell=dashboard] .atlas-dashboard-nav .atlas-nav svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  opacity: 1;
+}
+body[data-shell=dashboard] .atlas-nav-scroll {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--pill-radius);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+body[data-shell=dashboard] .atlas-nav-scroll[hidden] { display: none; }
+body[data-shell=dashboard] .atlas-nav-scroll:disabled { color: var(--subtle); cursor: default; }
+body[data-shell=dashboard] .atlas-nav-scroll svg { width: 20px; height: 20px; }
+body[data-shell=dashboard] .atlas-dashboard-nav :is(a, button):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+}
+body[data-shell=dashboard] .workspace,
+body[data-shell=dashboard] #root > .workspace {
+  margin-left: 0 !important;
+  margin-top: var(--app-header-height);
+  width: 100%;
+  height: calc(100dvh - var(--app-header-height));
+  min-width: 0;
+  min-height: 0;
+  padding: 24px var(--shell-gutter) calc(24px + var(--content-bottom-height));
+  box-sizing: border-box;
+  background: var(--surface-raised);
+}
+body[data-shell=dashboard] #main {
+  width: 100%;
+  max-width: var(--shell-container);
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  margin: 0 auto;
+  padding: 0 !important;
+  box-sizing: border-box;
+}
+body[data-shell=dashboard][data-shell-width=wide] #main { max-width: var(--shell-container-wide); }
+body[data-shell=dashboard] #main > :is(#evidence-view, #ipo-view, #data-view, #market-view, #relay-view, #conference-view) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  /* Each section keeps its own scroll/overlay contract. In particular the
+     IPO source disclosure must be able to extend beyond a short card. */
+  box-sizing: border-box;
+}
+body[data-shell=dashboard] .content-bottom-bar {
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding-inline: max(var(--shell-gutter), calc((100% - var(--shell-container-wide)) / 2));
+}
+/* The original chart navigation keeps its exact rail/tray dimensions. */
+body[data-shell=chart] .workbench-rail .atlas-nav :is(a, button) { border-radius: var(--pill-radius); }
+@media (max-width: 620px) {
+  /* The original mobile stylesheet hides this ID in a direct header slot.
+     Settings now owns the indicator's existing 44px phone-dock slot, so the
+     display override must outrank that ID rule while keeping its geometry. */
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock] > #atlas-display-options {
+    display: inline-flex;
+  }
+}
+@media (max-width: 767px) {
+  body[data-shell=dashboard] { --shell-gutter: 12px; }
+  body[data-shell=dashboard] .workspace,
+  body[data-shell=dashboard] #root > .workspace { padding-block: 12px calc(12px + var(--content-bottom-height)); }
+  body[data-shell=dashboard] .atlas-shell-copy > .atlas-shell-heading { font-size: 17px; line-height: 24px; }
+  body[data-shell=dashboard] .atlas-dashboard-header .atlas-page-description { display: none; }
+  body[data-shell=dashboard] .atlas-dashboard-nav .atlas-nav :is(a, button) { padding-inline: 12px; }
+}
+

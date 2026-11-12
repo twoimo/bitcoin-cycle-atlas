@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {parseHTML} from 'linkedom';
 import {mountMobileShellHeading,shellFeatureContainer} from '../dist/ui/mobile-shell-heading.js';
 import {mountShellSlots} from '../dist/ui/shell-slots.js';
@@ -103,4 +104,46 @@ test('shell refreshes preserve settings and indicator slot identities without du
   assert.equal(indicators.parentElement,heading);assert.equal(settings.parentElement,heading);
   f.resize(320);slots.refresh({symbol:'BMNR'});
   assert.equal(settings.parentElement,heading);assert.equal(indicators.parentElement,shellFeatureContainer(feature));
+});
+
+test('the phone settings display rule outranks the legacy ID hide without changing its 44px slot',t=>{
+  const {document,heading,feature,settings}=fixture(t);
+  const controller=mountMobileShellHeading(document);t.after(()=>controller.destroy());controller.update({heading,feature,symbol:'BTCUSD'});
+  const rules=file=>{
+    const style=document.createElement('style');style.textContent=readFileSync(new URL(file,import.meta.url),'utf8');document.head.append(style);
+    return [...style.sheet.cssRules].filter(rule=>rule.type===4&&rule.media.mediaText.replace(/\s/g,'')==='(max-width:620px)')
+      .flatMap(rule=>[...rule.cssRules]);
+  };
+  const legacy=rules('../dist/mobile-workspace.css').find(rule=>rule.selectorText?.includes('#atlas-display-options')&&rule.style.getPropertyValue('display')==='none');
+  const override=rules('../dist/ui/shell-layout.css').find(rule=>rule.selectorText?.includes('#atlas-display-options')&&rule.style.getPropertyValue('display')==='inline-flex');
+  assert.ok(legacy,'exercise the actual legacy ID hide, not an assumed generic rule');
+  assert.ok(override,'a connected button still needs a paintable display rule');
+  const hiddenBranch=legacy.selectorText.split(',').find(selector=>selector.includes('#atlas-display-options')).trim();
+  assert.equal(settings.matches(hiddenBranch),true);
+  assert.equal(settings.matches(override.selectorText),true);
+  assert.equal(legacy.style.getPropertyPriority('display'),'');assert.equal(override.style.getPropertyPriority('display'),'');
+  // Deliberately bounded to these plain selectors. Unsupported selector syntax
+  // must fail this static cascade proof rather than receive an invented score.
+  const specificity=selector=>{
+    const attributes=[...selector.matchAll(/\[[^\]]+\]/g)].length;
+    let rest=selector.replace(/\[[^\]]+\]/g,'');
+    const ids=[...rest.matchAll(/#[\w-]+/g)].length,classes=[...rest.matchAll(/\.[\w-]+/g)].length;
+    rest=rest.replace(/#[\w-]+|\.[\w-]+/g,'');
+    const tags=rest.match(/[a-zA-Z][\w-]*/g)||[];
+    assert.match(rest.replace(/[a-zA-Z][\w-]*/g,''),/^[\s>+~]*$/,'only the measured plain ID/class/attribute selectors are supported');
+    return [ids,classes+attributes,tags.length];
+  };
+  const before=specificity(hiddenBranch),after=specificity(override.selectorText);
+  assert.deepEqual(before,[1,1,0]);
+  assert.ok(after.some((value,index)=>value>before[index]&&after.slice(0,index).every((part,i)=>part===before[i])),
+    `phone display specificity ${after} must outrank original hide ${before}`);
+  assert.deepEqual(Array.from({length:override.style.length},(_,index)=>override.style[index]),['display'],
+    'the override changes paint eligibility only, retaining the existing dock geometry');
+  const geometry=rules('../dist/atlas-shell.css').find(rule=>rule.selectorText?.replace(/["'\s]/g,'').includes('[data-mobile-heading=phone-dock]')
+    &&rule.selectorText.includes('.workbench-icon')&&rule.style.getPropertyValue('width')==='44px'&&settings.matches(rule.selectorText));
+  assert.ok(geometry);
+  for(const property of ['width','min-width','max-width','height','min-height'])assert.equal(geometry.style.getPropertyValue(property),'44px');
+  document.body.dataset.shell='dashboard';assert.equal(settings.matches(override.selectorText),false,'dashboard controls cannot inherit the chart-only override');
+  document.body.dataset.shell='chart';delete heading.dataset.mobileHeading;
+  assert.equal(settings.matches(override.selectorText),false,'the override is limited to the mounted phone dock');
 });

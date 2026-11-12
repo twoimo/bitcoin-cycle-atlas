@@ -143,6 +143,8 @@ export function initAtlasShell() {
     // same four perimeter regions instead of the dashboard composition.
     const chart = page === 'outlook' || page === 'compare';
     document.body.dataset.shell = chart ? 'chart' : 'dashboard';
+    if (chart) delete document.body.dataset.shellWidth;
+    else document.body.dataset.shellWidth = ['data', 'market', 'relay', 'conference'].includes(page) ? 'wide' : 'standard';
     header.hidden = chart; group.hidden = chart;
     // One top region per route: the chart frame keeps its own toolbar selector, and
     // the page header carries it only while the dashboard composition is active.
@@ -179,5 +181,5 @@ export function initAtlasShell() {
   sync();
   const removeRailTooltip = mountRailTooltip(document);
   const shellSlots = mountShellSlots(document);
-  return () => { pageDescription.destroy(); shellSlots.destroy(); removeRailTooltip(); pageObserver.disconnect(); workspaceObserver.disconnect(); document.removeEventListener('click', routeToService, true); };
+  return () => { pageObserver.disconnect(); workspaceObserver.disconnect(); pageDescription.destroy(); shellSlots.destroy(); contentShell.setActive(false); removeRailTooltip(); document.removeEventListener('click', routeToService, true); };
 }
