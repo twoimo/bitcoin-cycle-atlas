@@ -75,3 +75,15 @@ node scripts/verify-conference-data-browser.mjs \
 **P4를 닫으려면 새 후보의 원래 실미디어 20/20·브라우저 14/14 영수증이 필요하다.** 하네스·표본·임계값을 약화하지 않고, 2500ms와 기존 계약도 유지한다.
 
 요약은 [summary.json](summary.json), 명령/종료 코드는 [checks.json](checks.json), 원본 gzip 영수증과 해시는 [raw-manifest.json](raw-manifest.json)에 있다. 선언·보호 파일 대조는 [source-preservation.json](source-preservation.json), 역할 대비는 [token-contrast.json](token-contrast.json), 크기·캐시 범위는 [size-and-scope.json](size-and-scope.json)에 있다.
+
+
+## Mac 재검증 (2026-11-13 07:26–07:32 KST)
+
+Chrome 157.0.8103.79. 제품 `fcb941d`, 당시 문서 HEAD `521b2ab`. P4는 닫지 않는다. 상세는 [mac-fcb941d.md](mac-fcb941d.md).
+
+| 게이트 | 필요 | 시도 | 통과 | 결과 |
+|---|---:|---:|---:|---|
+| 컨퍼런스 브라우저 | 14 | 14 | 13 | exit 1. `fixture-1024x768` stage 545.765625, visual 958 |
+| 실미디어 | 20 | 0 | 0 | 자산 562/562 해시 일치. siteFileCount 1721 ≠ 1530. 브라우저 0, exit 1 |
+
+정본 `dist`의 unavailable 매니페스트와 기존 pages·audio는 변경하지 않았다. 임계값과 파일 수 계약은 완화하지 않았다.
