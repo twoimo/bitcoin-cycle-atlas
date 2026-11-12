@@ -1,0 +1,86 @@
+[
+  {
+    "name": "focused",
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "tests/daily-data-view.test.mjs",
+      "tests/daily-data-shell-layout.test.mjs",
+      "tests/daily-data-performance.test.mjs",
+      "tests/research-workbench.test.mjs",
+      "tests/research-reader-focus.test.mjs",
+      "tests/research-reader.test.mjs",
+      "tests/research-source-reader.test.mjs",
+      "tests/r19p1-shell.test.mjs",
+      "tests/r19p1-served-shell.test.mjs",
+      "tests/page-heading-and-touch-floor.test.mjs",
+      "tests/ipo-view.test.mjs",
+      "tests/ipo-compact-header.test.mjs",
+      "tests/ipo-month-calendar.test.mjs",
+      "tests/relay-standalone.test.mjs",
+      "tests/market-lab-math.test.mjs",
+      "tests/market-lab-source.test.mjs",
+      "tests/market-lab-standalone.test.mjs",
+      "tests/market-structure.test.mjs",
+      "tests/static-module-references.test.mjs",
+      "tests/web/market-lab-panels.test.tsx",
+      "tests/web/us-direction.test.tsx",
+      "tests/web/atlas-shell.test.tsx"
+    ],
+    "exitCode": 0,
+    "log": "focused.log"
+  },
+  {
+    "name": "typecheck",
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "exitCode": 0,
+    "log": "typecheck.log"
+  },
+  {
+    "name": "static",
+    "command": [
+      "npm",
+      "run",
+      "verify:static"
+    ],
+    "exitCode": 0,
+    "log": "static.log"
+  },
+  {
+    "name": "css",
+    "command": [
+      "node",
+      "scripts/build-site-styles.mjs",
+      "--check"
+    ],
+    "exitCode": 0,
+    "log": "css.log"
+  },
+  {
+    "name": "preloads",
+    "command": [
+      "node",
+      "scripts/build-site-preloads.mjs",
+      "--check"
+    ],
+    "exitCode": 0,
+    "log": "preloads.log"
+  },
+  {
+    "name": "pages",
+    "command": [
+      "npm",
+      "run",
+      "verify:pages"
+    ],
+    "exitCode": 0,
+    "log": "pages.log"
+  }
+]

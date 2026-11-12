@@ -1,0 +1,460 @@
+{
+  "schemaVersion": 1,
+  "kind": "r19-p3-dashboard-candidate",
+  "recordedAt": "2026-11-12T20:57:21.096167+00:00",
+  "baselineCommit": "fbb46aac4e94e22953f3bcae1f572b74826954d0",
+  "productCommit": "042b04a4de56ece2bf5a6bd898b750ec5170e9f0",
+  "branch": "fix/tradingview-responsive-20261110",
+  "status": "implemented; native acceptance blocked",
+  "scope": [
+    "relay",
+    "evidence",
+    "data",
+    "ipo",
+    "market-us"
+  ],
+  "authoredCssFiles": [
+    "dist/relay-room.css",
+    "dist/editorial-ledgers.css",
+    "dist/ipo-view.css",
+    "dist/market-lab.css",
+    "apps/web/src/us-direction.css"
+  ],
+  "contract": {
+    "viewports": [
+      320,
+      390,
+      768,
+      1440
+    ],
+    "requiredP3Layouts": 20,
+    "horizontalPageOverflowPx": 0,
+    "bodyPx": 15,
+    "metadataPx": 13,
+    "tables": "Preserve existing dense type, row/header geometry, sticky identity and owned scroll",
+    "touchTargetPx": 44,
+    "focusOutlinePx": 2,
+    "reducedMotion": true,
+    "axisTolerancePx": 2,
+    "a9InitialPaintedBudgetMs": 2500,
+    "textContrast": 4.5,
+    "iconContrast": 3.0,
+    "h1Count": 1
+  },
+  "static": {
+    "focused": {
+      "tests": 229,
+      "passed": 229,
+      "failed": 0,
+      "skipped": 0
+    },
+    "typecheck": {
+      "exitCode": 0
+    },
+    "site": {
+      "status": "ok",
+      "files": 1159,
+      "scripts": 221,
+      "references": 847
+    },
+    "cssBuild": {
+      "sources": 43,
+      "bundles": 2,
+      "exitCode": 0
+    },
+    "preloads": {
+      "moduleUrls": 56,
+      "uniqueModules": 54,
+      "edges": 82,
+      "exitCode": 0
+    },
+    "pages": {
+      "files": 104,
+      "routes": 9,
+      "exitCode": 0
+    },
+    "syntax": {
+      "files": 5,
+      "warnings": 0
+    },
+    "contrast": {
+      "method": "Unchanged original role-token function; source calculation, not native glyph/paint verification",
+      "originalPairs": 40,
+      "originalPassed": 40,
+      "p3AdditionalPairs": 8,
+      "p3AdditionalPassed": 8,
+      "p3MinimumTextRatio": 4.825266537959948
+    },
+    "rootCssRequests": 4,
+    "rootCssGzip9DeltaBytes": 4225,
+    "generatedJavaScriptOnlyCssAssetNameChanged": true
+  },
+  "npmTest": {
+    "pass": 3903,
+    "fail": 17,
+    "skip": 0,
+    "complete": false,
+    "exitCode": 1,
+    "existingFailureGroups": 6,
+    "sameBaselineFiles": 15,
+    "frozenRuntimeError": "spawn docker ENOENT",
+    "baselineProvided": {
+      "pass": 3898,
+      "fail": 17,
+      "skip": 5,
+      "complete": false
+    },
+    "disposition": "Existing 17 failures held for pre-merge gate."
+  },
+  "preservation": {
+    "protectedFour": {
+      "files": 4,
+      "changed": 0,
+      "added": 0,
+      "same": 4
+    },
+    "priceAxis": {
+      "files": 1,
+      "changed": 0,
+      "added": 0,
+      "same": 1
+    },
+    "allScripts": {
+      "files": 217,
+      "changed": 0,
+      "added": 0,
+      "same": 217
+    },
+    "allTests": {
+      "files": 424,
+      "changed": 0,
+      "added": 0,
+      "same": 424
+    },
+    "staticDataAndConference": {
+      "files": 191,
+      "changed": 0,
+      "added": 0,
+      "same": 191
+    },
+    "packages": {
+      "files": 15,
+      "changed": 0,
+      "added": 0,
+      "same": 15
+    },
+    "rootRuntimeJavaScript": {
+      "files": 196,
+      "changed": 0,
+      "added": 0,
+      "same": 196
+    },
+    "webNonCssSource": {
+      "files": 39,
+      "changed": 0,
+      "added": 0,
+      "same": 39
+    },
+    "dependencies": {
+      "files": 2,
+      "changed": 0,
+      "added": 0,
+      "same": 2
+    },
+    "rootTokensAndShell": {
+      "files": 3,
+      "changed": 0,
+      "added": 0,
+      "same": 3
+    },
+    "existingEvidence": {
+      "files": 611,
+      "changed": 0,
+      "same": 611,
+      "method": "git blob object identity; per-file SHA-256 not repeated"
+    }
+  },
+  "native": {
+    "sourceStable": true,
+    "sourceFiles": 1454,
+    "sourceRecheckAfterAllTests": {
+      "files": 1454,
+      "changed": 0
+    },
+    "complete": false,
+    "qualifies": false,
+    "screenshots": 0,
+    "primaryBlocker": "Chromium exits SIGABRT: socket() failed: Operation not permitted (1). Cases do not start.",
+    "p3Layouts": {
+      "required": 20,
+      "attempted": 0,
+      "passed": 0
+    },
+    "p1Layouts": {
+      "required": 28,
+      "attempted": 0,
+      "passed": 0
+    },
+    "p1Navigation": {
+      "required": 56,
+      "attempted": 0,
+      "passed": 0
+    },
+    "p1ChartReturns": {
+      "required": 8,
+      "attempted": 0,
+      "passed": 0
+    },
+    "eth": {
+      "required": 53,
+      "attempted": 0,
+      "passed": 0
+    },
+    "responsive": {
+      "required": 44,
+      "attempted": 0,
+      "passed": 0,
+      "correctedPreviewHttpStatus": 200,
+      "initialPreflight": "Separate execution-session server was unreachable; original receipts retained. Same-session server retry reached HTTP 200, then Chromium startup failed."
+    },
+    "priceAxis": {
+      "required": 16,
+      "attempted": 0,
+      "passed": 0,
+      "qualifiesPriceAxisVerification": false,
+      "maxErrorPx": null
+    },
+    "a9": {
+      "required": 6,
+      "attempted": 0,
+      "passed": 0,
+      "initialPaintedReadyMs": null,
+      "pageTransitionMs": null,
+      "baselineDeltaMs": null
+    },
+    "horizontalOverflowPx": null,
+    "h1Count": null,
+    "computedBodyPx": null,
+    "computedTouchTargetMinPx": null,
+    "nativeContrast": null,
+    "focus": null,
+    "reducedMotion": null
+  },
+  "p3Matrix": [
+    {
+      "page": "relay",
+      "width": 320,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "relay",
+      "width": 390,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "relay",
+      "width": 768,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "relay",
+      "width": 1440,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "evidence",
+      "width": 320,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "evidence",
+      "width": 390,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "evidence",
+      "width": 768,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "evidence",
+      "width": 1440,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "data",
+      "width": 320,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "data",
+      "width": 390,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "data",
+      "width": 768,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "data",
+      "width": 1440,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "ipo",
+      "width": 320,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "ipo",
+      "width": 390,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "ipo",
+      "width": 768,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "ipo",
+      "width": 1440,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "market-us",
+      "width": 320,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "market-us",
+      "width": 390,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "market-us",
+      "width": 768,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    },
+    {
+      "page": "market-us",
+      "width": 1440,
+      "height": 900,
+      "attempted": false,
+      "passed": false,
+      "overflowPx": null,
+      "h1Count": null,
+      "screenshot": null
+    }
+  ],
+  "evidence": {
+    "checks": "checks.json",
+    "sourcePreservation": "source-preservation.json.gz",
+    "staticStyle": "style-audit.json",
+    "npmFailures": "npm-failures.json",
+    "rawManifest": "raw-manifest.json"
+  },
+  "limits": "Source tests and calculated token ratios do not establish native P3 acceptance. Prior product measurements are not reused as this candidate measurements.",
+  "testedProductCommit": "a4f127f2552db288bba1483510cc57ce9be13784",
+  "productTree": "869e8da4088aab544fed54262778287093fe4dfa",
+  "publication": {
+    "file": "publication.json",
+    "identicalTree": true,
+    "changedPaths": 0
+  }
+}

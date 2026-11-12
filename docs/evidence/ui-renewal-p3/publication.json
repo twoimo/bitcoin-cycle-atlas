@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-12T21:04:33.137612+00:00",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "branch": "fix/tradingview-responsive-20261110",
+  "baselineCommit": "fbb46aac4e94e22953f3bcae1f572b74826954d0",
+  "testedProductCommit": "a4f127f2552db288bba1483510cc57ce9be13784",
+  "publishedProductCommit": "042b04a4de56ece2bf5a6bd898b750ec5170e9f0",
+  "testedTree": "869e8da4088aab544fed54262778287093fe4dfa",
+  "publishedTree": "869e8da4088aab544fed54262778287093fe4dfa",
+  "identicalTree": true,
+  "changedPathsBetweenTestedAndPublished": 0,
+  "uploadedProductBlobs": 20,
+  "matchedProductBlobIds": 20,
+  "transport": "GitHub connector Git data API; ordinary CLI push lacked credentials. Connector assigned new commit metadata.",
+  "verification": "Fetched published branch through Git, compared entire trees and all paths. Native source receipts are retained byte-for-byte with their original tested commit; neither product has native acceptance.",
+  "testedCommitObject": "tested-product-commit.txt",
+  "testedCommitObjectSha256": "ecaa8bd166da89a789f8d9ab2c2a50cb17d1d3aeaf9c502ef3a1f6d094b41086"
+}

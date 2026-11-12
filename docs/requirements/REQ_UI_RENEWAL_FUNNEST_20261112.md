@@ -1,6 +1,6 @@
 # 요구사항 — Funnest Charts UI/UX로 전면 리뉴얼 (초안)
 
-작성 2026-11-12. 현재 상태: **P0는 `b787935` Mac에서 10/10·커버리지 40/40·`qualifiesP0Verification:true`로 닫혔다. P1은 `67125bd` Mac에서 레이아웃 28/28·내비 56/56·차트 복귀 8/8·오버플로 0·failures 0·`qualifiesP1Verification:true`로 닫혔다.** 표본과 4.5/3.0은 유지한다. 다음 한 건 `P2A0-6ffbdda`의 임시 페이지·Datafeed·검증기는 `cefc568`·`b0cf985`에 구현했다. Mac `1c8f0c3`에서 startup 6/6·features 7/7·touch 4/4·keyboard 0/4·qualifier false였다. `Q-P2A0-1-15e9e7b` 수정 후보 `a4485e6`은 타깃·대비·검색 모달 키보드를 보완했다. **P2a-0은 `72d3aa1` Mac에서 startup 6/6·features 7/7·keyboard 4/4·touch 4/4·qualifier true로 닫혔다.** **P2 차트 크롬 후보 `b230fa8`의 Mac 게이트는 ETH 42/53, 반응형 44/44, 축 16/16이다. 이전 `0cf36d8`은 17/53이었다. `3b79d63` Mac에서 ETH 53/53·반응형 44/44·축 16/16·A-9 6/6·qualifies true로 P2 차트 크롬은 닫혔다.** 기존 엔진과 하이브리드 소유권을 유지한다. 같은 Linux 게이트는 ETH 0/53 시도·반응형 0/44·축 0/16으로 시작이 차단됐고 통과는 모두 0이다. P2 차트 크롬은 닫혔고 P3 대시보드는 미착수다. P2b·P4·P5·배포는 미착수다. [P2 구현·원본 영수증](../evidence/ui-renewal-p2/README.md). [P1 Mac 정본 영수증](../evidence/qa-r19p1-20261112/mac-67125bd.json) · [P0 Mac 영수증](../evidence/qa-r19p1-20261112/mac-b787935.json) · [P2a-0 구현·측정 한계](../evidence/p2a0-6ffbdda/README.md). 이전 P1 발견과 수정 이력은 [체크리스트 Q-R19P1-2~4](../LAUNCH_CHECKLIST_20261110.md)에 보존한다. 대상 `twoimo/bitcoin-cycle-atlas`.
+작성 2026-11-12. 현재 상태: **P0는 `b787935` Mac에서 10/10·커버리지 40/40·`qualifiesP0Verification:true`로 닫혔다. P1은 `67125bd` Mac에서 레이아웃 28/28·내비 56/56·차트 복귀 8/8·오버플로 0·failures 0·`qualifiesP1Verification:true`로 닫혔다.** 표본과 4.5/3.0은 유지한다. 다음 한 건 `P2A0-6ffbdda`의 임시 페이지·Datafeed·검증기는 `cefc568`·`b0cf985`에 구현했다. Mac `1c8f0c3`에서 startup 6/6·features 7/7·touch 4/4·keyboard 0/4·qualifier false였다. `Q-P2A0-1-15e9e7b` 수정 후보 `a4485e6`은 타깃·대비·검색 모달 키보드를 보완했다. **P2a-0은 `72d3aa1` Mac에서 startup 6/6·features 7/7·keyboard 4/4·touch 4/4·qualifier true로 닫혔다.** **P2 차트 크롬 후보 `b230fa8`의 Mac 게이트는 ETH 42/53, 반응형 44/44, 축 16/16이다. 이전 `0cf36d8`은 17/53이었다. `3b79d63` Mac에서 ETH 53/53·반응형 44/44·축 16/16·A-9 6/6·qualifies true로 P2 차트 크롬은 닫혔다.** 기존 엔진과 하이브리드 소유권을 유지한다. 같은 Linux 게이트는 ETH 0/53 시도·반응형 0/44·축 0/16으로 시작이 차단됐고 통과는 모두 0이다. P2 차트 크롬은 닫혔고 **P3 대시보드 제품 `042b04a`는 구현 후 네이티브 실측 대기**다. 집중 검사 229/229, 5페이지 × 4폭은 시도 0/20이며 가로 오버플로는 미측정이다. [P3 구현·증거](../evidence/ui-renewal-p3/README.md). P2b·P4·P5·배포는 미착수다. [P2 구현·원본 영수증](../evidence/ui-renewal-p2/README.md). [P1 Mac 정본 영수증](../evidence/qa-r19p1-20261112/mac-67125bd.json) · [P0 Mac 영수증](../evidence/qa-r19p1-20261112/mac-b787935.json) · [P2a-0 구현·측정 한계](../evidence/p2a0-6ffbdda/README.md). 이전 P1 발견과 수정 이력은 [체크리스트 Q-R19P1-2~4](../LAUNCH_CHECKLIST_20261110.md)에 보존한다. 대상 `twoimo/bitcoin-cycle-atlas`.
 참조 저장소: `funnest-xyz/funnest-charts` (Apache-2.0, `main` @ `39cb29ae250448d520384c12de555b1c00727883`, 2026-11-12). 홈페이지 `https://charts.funnest.xyz`.
 방법: 저장소 소스(`apps/site/app/globals.css`, README)와 실제 홈페이지(1440×900)를 함께 읽고, `ui-ux-pro-max`로 방향을 대조했다. 참조 스크린샷은 `docs/evidence/funnest-ui-20261112/home-1440.png`.
 
@@ -30,7 +30,7 @@ Atlas의 현재 다크·골드·hairlines 편집 톤을 **Funnest Charts의 밝�
 | 토큰·테마 | 다크 고정, 골드 액센트, hairline | 라이트 기본 + 다크 모드, 바이올렛 액센트, 카드 표면·부드러운 그림자 |
 | 셸·내비 | 좌측 사이드바 + 우측 아이콘 레일, 11–13px | 1140/1280 컨테이너, 알약 탭·버튼, 15–17px 본문, 카드 섹션 |
 | 차트 워크벤치 | 다크 캔버스, 툴바 한 줄, 좌상단 오버레이 | 둥근 카드 안 차트 + 카드 헤더 툴바, 동일한 오버레이 정보, 빨강/파랑 캔들 옵션 |
-| 대시보드(릴레이·리서치·자산·공모주·시장) | 표·리스트 중심, 11px | 카드 그리드, 알약 필터, 13–15px 본문, 표는 밀도 예외 |
+| 대시보드(릴레이·리서치·자산·공모주·시장) | 표·리스트 중심, 11px | 카드 그리드, 알약 필터, 15px 본문·13px 메타, 표는 기존 밀도 유지 |
 | 컨퍼런스 복습 | 장표 중심 + 하단 컨트롤(자체 완성) | 같은 레이아웃에 새 토큰·타이포·알약 컨트롤 적용 |
 
 ### 3.1 유지 계약
@@ -191,6 +191,16 @@ Atlas의 현재 다크·골드·hairlines 편집 톤을 **Funnest Charts의 밝�
 집중 단위·계약 **286/286**, typecheck·Pages build/verify(**104파일·9경로**)·static(**1,159파일·221스크립트·847참조**)는 통과했다. 원래 토큰 표본 **40/40**, 6개 렌더러의 색 문자열 외 바이트 동일, 보호/하네스/소유권 파일 **22/22 동일**을 기록했다. CSS 요청 4개 유지, gzip-9 합계 +1,734B이며 A-9 시간 영향 0ms를 주장하지 않는다. P1과 P2a-0은 닫힌 상태로 보존하고 P2b·P3·P4·P5·배포는 시작하지 않았다. [상세·Mac 재현 명령](../evidence/ui-renewal-p2/README.md) · [수치](../evidence/ui-renewal-p2/summary.json).
 
 **Mac 재검증(2026-11-13 02:58:03–03:16:29 KST, Chrome 157.0.8103.79, HEAD `4b66980`)** — 제품 `0cf36d8`과 문서 HEAD 사이 제품 경로 차이는 없다. ETH 53시도·17통과·36실패. 반응형 44/44. 축 16/16, `qualifiesPriceAxisVerification:true`. A-9 6/6, painted 2,171.3–2,207.7ms. `sourceStable:true`, runner `complete:true`, `qualifies:false`. 실패 서명은 data 식별 10, `dark()` 22, 제목 이동 3, 리서치 밀도 1이다. 검사기와 채널 90·44px·2px·4.5/3.0·축 ±2px·2,500ms는 유지했다. 짝 비교가 없어 A-9 0ms 영향은 주장하지 않는다. P2는 열림이다. [Mac 영수증](../evidence/qa-p2-chrome-mac-4b66980/README.md). **Mac 재검증(2026-11-13 03:58:35–04:27:26 KST, Chrome 157.0.8103.79, HEAD `f93d4ec`)** — 제품 `b230fa8`과 문서 HEAD 사이 제품 경로 차이는 없다. ETH 53시도·42통과·11실패. 반응형 44/44. 축 16/16, `qualifiesPriceAxisVerification:true`. A-9 6/6, painted 2,173.3–2,206ms. `sourceStable:true`, runner `complete:true`, `qualifies:false`. 이전 36서명은 이번 실패 문자열에 없다. 남은 11건은 Q-P2CHROME-2다. 검사기와 임계값은 유지했다. [영수증](../evidence/qa-q-p2chrome-1-mac-b230fa8/README.md). **Mac 재검증(2026-11-13 04:58:24–05:24:21 KST, Chrome 157.0.8103.79, HEAD `3b79d63`)**: ETH 53/53, 반응형 44/44, 축 16/16, `qualifiesPriceAxisVerification` true, A-9 6/6, painted 2,219–2,305.8ms, sourceStable true, complete true, qualifies true. 이전 11건은 재현되지 않았다. P2 차트 크롬은 이 게이트로 닫는다. D-1~D-8은 P5로 보류. [영수증](../evidence/qa-q-p2chrome-2-mac-3b79d63/README.md).
+
+### 4.2. P3 대시보드 — 구현 후보, 네이티브 실측 대기
+
+원격 제품 `042b04a4de56ece2bf5a6bd898b750ec5170e9f0`는 기준 `fbb46aac4e94e22953f3bcae1f572b74826954d0` 위에서 릴레이·리서치·자산·공모주·시장의 카드 그리드·알약 필터·15px 본문을 구현했다. 작성 CSS 5파일과 생성물·캐시 링크만 바꿨다. 실제 검증한 로컬 후보 `a4f127f2552db288bba1483510cc57ce9be13784`와 원격 제품의 전체 Git 트리는 동일하며 파일 차이 0이다. GitHub 연결 경로의 커밋 메타데이터 차이는 [대응 기록](../evidence/ui-renewal-p3/publication.json)에 보존했다. 표 행·헤더·sticky 식별 열·스크롤 소유권과 데이터·URL·차트 계산을 보존했다. [구현·명령·원본 증거](../evidence/ui-renewal-p3/README.md) · [수치](../evidence/ui-renewal-p3/summary.json).
+
+집중 검사 **229/229**, typecheck·정적 **1,159파일/221스크립트/847참조**·Pages **104파일/9경로**·CSS/preload 검사가 통과했다. 기존 대비 토큰 **40/40**, 추가 상태 **8/8**은 소스 계산이며 네이티브 페인트 통과가 아니다. 보호 4파일·가격 축·검사 스크립트 217개·테스트 424개·데이터/컨퍼런스 191개는 변경 0이다.
+
+원래 Chromium이 `socket() failed: Operation not permitted (1)`로 시작되지 않아 **P3 20화면 시도 0·통과 0**, P1 28/56/8·ETH 53·반응형 44·축 16·A-9 6도 시도/통과 0이다. 전후 **1,454파일** 동일, `sourceStable:true`, `complete:false`, `qualifies:false`. 스크린샷 0, 오버플로·폰트·h1·44px·포커스·reduced-motion·실제 대비·축 오차·A-9 시간은 미측정이다. **P3를 닫지 않는다.** 원래 44px·2px·4.5/3.0·축 ±2px·2,500ms·h1 1개·오버플로 0을 그대로 요구한다.
+
+이번 `npm test` host 배치는 **3,903 pass·17 fail·0 skip**, 고정 런타임 배치는 Docker가 없어 시작하지 못해 `complete:false`다. 기준의 **3,898 pass·17 fail·5 skip**과 같은 6개 실패 묶음이며, 관련 테스트·소스 15파일은 `b230fa8`과 동일하다. 기존 17실패는 수정하지 않고 병합 전 게이트로 보류한다. P2b·P4·P5·main push·배포는 수행하지 않았다.
 
 ## 5. 수용 기준
 
