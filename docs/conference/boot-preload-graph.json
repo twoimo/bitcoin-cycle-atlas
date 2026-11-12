@@ -534,8 +534,8 @@
     {
       "url": "./ui/page-description.js",
       "file": "ui/page-description.js",
-      "bytes": 8873,
-      "sha256": "f9407527f597fe42c863bc1b2a4334d9cd36fb84067552b7f3a1099f864fe70c",
+      "bytes": 9061,
+      "sha256": "a3ea1350945329c98db494aa929255cce4b9ffd68a27c24af1ef31f6991dacd0",
       "depth": 2,
       "imports": []
     },
@@ -878,6 +878,6 @@
     "sharedModulePreloads": 1,
     "staticImportEdges": 81,
     "maxShortestImportDepth": 6,
-    "moduleBytesByUrl": 750872
+    "moduleBytesByUrl": 751060
   }
 }

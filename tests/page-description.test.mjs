@@ -8,7 +8,7 @@ const settle = () => new Promise(resolve => setImmediate(resolve));
 function fixture({page='outlook', center, embedded=false, toolbar=true, beforeMount} = {}) {
   const {document, window} = parseHTML(`<html><body data-page="${page}"${center ? ` data-center-tool="${center}"` : ''}${embedded ? ' data-embedded="true"' : ''}>
     <header class="atlas-dashboard-header"><button id="sidebar-toggle">목록</button><h1 class="atlas-shell-heading"></h1></header>
-    <div class="workspace"><main><section class="atlas-chart-stage">${toolbar ? '<header class="atlas-canvas-heading" style="height:48px"><button id="symbol" aria-label="TQQQ 종목 선택">삼플레</button><select id="interval" aria-label="TQQQ 가격 간격"><option value="daily">일봉</option></select></header>' : ''}<div class="atlas-plot"><svg aria-label="관측 가격"></svg></div></section></main></div></body></html>`);
+    <div class="workspace"><main><section class="atlas-chart-stage">${toolbar ? '<header class="atlas-canvas-heading" style="height:48px"><button id="symbol" class="symbol-selector-trigger" aria-label="TQQQ 종목 선택" aria-haspopup="dialog" aria-controls="symbol-search-dialog" aria-expanded="false"><span class="symbol-selector-label">삼플레</span></button><select id="interval" aria-label="TQQQ 가격 간격"><option value="daily">일봉</option></select></header>' : ''}<div class="atlas-plot"><svg aria-label="관측 가격"></svg></div></section></main></div></body></html>`);
   const header = document.querySelector('.atlas-dashboard-header');
   const heading = header.querySelector('h1');
   beforeMount?.({document, window});
@@ -260,20 +260,24 @@ test('an embedded child leaves page context to its parent and keeps existing con
   assert.equal(f.heading.hasAttribute('aria-describedby'), false);
 });
 
-test('the same heading follows symbol and compare chrome without changing either control owner', () => {
+test('the normal-flow label and fixed compare title reuse one h1 without changing the symbol control or its event handlers', () => {
   const f = fixture();
   try {
-    const {document, controller, heading, header} = f;
+    const {document, window, controller, heading, header} = f;
     const toolbar = document.querySelector('.atlas-canvas-heading');
     const symbol = document.getElementById('symbol');
-    symbol.classList.add('symbol-selector-trigger');
-    symbol.getBoundingClientRect = () => ({left:56, top:1, width:128, height:36});
+    let symbolMeasurements = 0, clicks = 0;
+    const keys = [];
+    symbol.getBoundingClientRect = () => { symbolMeasurements++; return {left:56, top:1, width:128, height:36}; };
+    symbol.addEventListener('click', () => clicks++);
+    symbol.addEventListener('keydown', event => keys.push(event.key));
     toolbar.getBoundingClientRect = () => ({left:52, top:0, right:1440, width:1388, height:38});
     const before = toolbar.outerHTML;
     controller.sync();
     const copy = heading.parentElement;
-    assert.equal(copy.dataset.headingPlacement, 'symbol');
-    assert.deepEqual([copy.style.left, copy.style.top, copy.style.width], ['60px','3px','120px']);
+    assert.equal(copy.dataset.headingPlacement, 'label');
+    assert.equal(copy.hasAttribute('style'), false, 'normal flow must not inherit symbol coordinates or clipping');
+    assert.equal(symbolMeasurements, 0, 'the label no longer measures or paints inside the symbol button');
     assert.equal(toolbar.outerHTML, before);
     assert.equal(toolbar.nextElementSibling === copy, true);
     const compare = document.createElement('div');
@@ -288,6 +292,25 @@ test('the same heading follows symbol and compare chrome without changing either
     assert.equal(toolbar.outerHTML, compareBefore);
     assert.equal(document.querySelectorAll('h1').length, 1);
     assert.equal(heading.textContent, '사이클 비교');
+    document.body.dataset.page = 'outlook';
+    controller.sync();
+    assert.equal(copy.dataset.headingPlacement, 'label');
+    assert.equal(copy.hasAttribute('style'), false, 'returning from fixed compare removes every inline placement property');
+    assert.equal(copy.closest('.atlas-plot'), null);
+    assert.equal(copy.closest('.symbol-selector-trigger'), null);
+    assert.equal(document.getElementById('symbol'), symbol);
+    assert.equal(symbol.disabled, false);
+    assert.equal(symbol.getAttribute('aria-label'), 'TQQQ 종목 선택');
+    assert.equal(symbol.getAttribute('aria-haspopup'), 'dialog');
+    assert.equal(symbol.getAttribute('aria-controls'), 'symbol-search-dialog');
+    assert.equal(symbol.getAttribute('aria-expanded'), 'false');
+    assert.equal(toolbar.outerHTML, compareBefore, 'the label changes no source controls, attributes or child order');
+    symbol.dispatchEvent(new window.Event('click'));
+    for (const key of ['Enter', ' ', 'Escape']) {
+      const event = new window.Event('keydown', {bubbles:true, cancelable:true}); event.key = key;
+      symbol.dispatchEvent(event); assert.equal(event.defaultPrevented, false, 'heading placement does not consume source keyboard input');
+    }
+    assert.equal(clicks, 1); assert.deepEqual(keys, ['Enter', ' ', 'Escape']);
     document.body.dataset.page = 'data';
     controller.sync();
     assert.equal(copy.parentElement === header, true);
@@ -297,33 +320,96 @@ test('the same heading follows symbol and compare chrome without changing either
   } finally {f.controller.destroy();}
 });
 
-test('late symbol attachment and replacement refresh caption coordinates on the same toolbar', async () => {
+test('late symbol replacement and scroll leave the normal-flow label unpositioned and disposal schedules no label frames', async () => {
+  const frameGlobals = Object.fromEntries(['requestAnimationFrame','cancelAnimationFrame'].map(name => [name, Object.getOwnPropertyDescriptor(globalThis, name)]));
   const f = fixture();
   try {
     const {document, window, controller, heading} = f;
     const toolbar = document.querySelector('.atlas-canvas-heading');
     const copy = heading.parentElement;
+    document.getElementById('symbol').remove();
     const symbol = document.createElement('button');
     symbol.className = 'symbol-selector-trigger';
     symbol.getBoundingClientRect = () => ({left:4, top:854, width:88, height:44});
     toolbar.prepend(symbol);
     await settle();
-    assert.deepEqual([copy.style.left, copy.style.top, copy.style.width], ['8px','856px','80px']);
+    assert.equal(copy.dataset.headingPlacement, 'label');
+    assert.equal(copy.hasAttribute('style'), false);
     const next = symbol.cloneNode();
     next.getBoundingClientRect = () => ({left:56, top:2, width:128, height:44});
     symbol.replaceWith(next);
     await settle();
-    assert.deepEqual([copy.style.left, copy.style.top, copy.style.width], ['60px','4px','120px']);
+    assert.equal(copy.hasAttribute('style'), false);
+    assert.equal(document.getElementById('atlas-page-heading'), heading);
     next.getBoundingClientRect = () => ({left:-24, top:2, width:128, height:44});
     toolbar.getBoundingClientRect = () => ({left:52, top:0, right:768, width:716, height:48});
     document.dispatchEvent(new window.Event('scroll'));
-    assert.equal(copy.style.clipPath, 'inset(0 0px 0 72px)', 'caption must not paint over the left rail when its owner scrolls away');
-    let cancelled = null;
-    window.requestAnimationFrame = () => 19;
+    assert.equal(copy.hasAttribute('style'), false, 'scrolling the symbol cannot clip or reposition the outside label');
+    let cancelled = null, scheduled = 0;
+    window.requestAnimationFrame = () => { scheduled++; return 19; };
     window.cancelAnimationFrame = id => { cancelled = id; };
     window.dispatchEvent(new window.Event('resize'));
     controller.destroy();
-    assert.equal(cancelled, 19);
+    assert.equal(scheduled, 0, 'a normal-flow label never schedules fixed placement work');
+    assert.equal(cancelled, null);
     assert.equal(document.querySelector('#atlas-page-heading'), null);
-  } finally {f.controller.destroy();}
+  } finally {
+    f.controller.destroy();
+    for (const [name, descriptor] of Object.entries(frameGlobals)) {
+      if (descriptor) Object.defineProperty(globalThis, name, descriptor);
+      else delete globalThis[name];
+    }
+  }
+});
+
+test('label ownership is invariant for the four requested viewport reference boxes without measuring symbol geometry', () => {
+  // Supplied boxes are model inputs only; Linkedom does not render these widths.
+  for (const {width, box} of [
+    {width:320, box:{left:4, top:854, width:88, height:44}},
+    {width:390, box:{left:4, top:854, width:106, height:44}},
+    {width:768, box:{left:56, top:2, width:128, height:44}},
+    {width:1440, box:{left:56, top:1, width:128, height:36}},
+  ]) {
+    let measurements = 0;
+    const f = fixture({beforeMount({document}) {
+      document.querySelector('.symbol-selector-trigger').getBoundingClientRect = () => { measurements++; return box; };
+    }});
+    try {
+      const {document, controller, heading} = f, copy = heading.parentElement;
+      controller.sync(); controller.sync();
+      const toolbar = document.querySelector('.atlas-canvas-heading');
+      assert.equal(copy.dataset.headingPlacement, 'label', width + ': normal-flow placement');
+      assert.equal(toolbar.nextElementSibling, copy);
+      assert.equal(copy.hasAttribute('style'), false);
+      assert.equal(copy.closest('.atlas-plot,.symbol-selector-trigger'), null);
+      assert.equal(copy.hidden, false); assert.equal(heading.hidden, false);
+      assert.equal(document.querySelectorAll('h1').length, 1);
+      assert.equal(document.querySelectorAll('.symbol-selector-trigger').length, 1);
+      assert.equal(heading.getAttribute('aria-describedby'), 'atlas-page-description');
+      assert.equal(document.querySelectorAll('#atlas-page-description').length, 1);
+      assert.equal(measurements, 0, width + ': the old symbol-overlap coordinates cannot be regenerated');
+    } finally {f.controller.destroy();}
+  }
+});
+
+test('returning from compare to the label releases resize owners and rejects queued fixed placement', () => {
+  const f = observedCompareFixture();
+  try {
+    const {document, controller, heading, observer, frames} = f, copy = heading.parentElement;
+    observer.notify(document.querySelector('.workspace'));
+    assert.equal(frames.size, 1);
+    document.body.dataset.page = 'outlook'; controller.sync();
+    assert.equal(copy.dataset.headingPlacement, 'label');
+    assert.equal(copy.hasAttribute('style'), false);
+    assert.equal(observer.targets.size, 0, 'normal-flow labels have no fixed-placement observers');
+    f.flushFrame();
+    assert.equal(copy.hasAttribute('style'), false, 'an old compare frame cannot position the label');
+    assert.equal(frames.size, 0);
+    assert.equal(document.querySelectorAll('h1').length, 1);
+    document.body.dataset.page = 'compare'; controller.sync();
+    assert.equal(copy.dataset.headingPlacement, 'compare');
+    assert.deepEqual([copy.style.left, copy.style.top, copy.style.width], ['48px','922.5px','68px']);
+    assert.ok(observer.targets.has(document.querySelector('.lab-toolbar')));
+    assert.equal(document.getElementById('atlas-page-heading'), heading);
+  } finally {f.cleanup();}
 });

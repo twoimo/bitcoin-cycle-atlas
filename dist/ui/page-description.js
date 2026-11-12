@@ -34,16 +34,15 @@ export function mountPageDescription(document, {header, heading} = {}) {
   const view = document.defaultView;
   const Resize = view?.ResizeObserver || globalThis.ResizeObserver;
   const resize = Resize ? new Resize(schedulePlace) : null;
-  // The H1 remains a sibling of the toolbar. Its paint follows existing chrome,
-  // never the quote/legend/price axis and never a new row in the chart layout.
+  // The H1 remains outside the toolbar's control tree. Price charts reserve a
+  // normal-flow label above the plot; compare keeps its existing chrome slot.
   function place() {
-    if (destroyed || copy.className !== 'atlas-page-intro' || !lastAnchor) return;
+    if (destroyed || copy.className !== 'atlas-page-intro' || copy.dataset.headingPlacement !== 'compare' || !lastAnchor) return;
     const box = lastAnchor.getBoundingClientRect?.();
     if (!box?.width || !box.height) return;
-    const comparison = copy.dataset.headingPlacement === 'compare';
-    const left = comparison ? box.left - 76 : box.left + 4;
-    const top = comparison ? box.top + (box.height - 14) / 2 : box.top + 2;
-    const width = comparison ? 68 : Math.max(0, box.width - 8);
+    const left = box.left - 76;
+    const top = box.top + (box.height - 14) / 2;
+    const width = 68;
     for (const [name, value] of Object.entries({left, top, width})) {
       const next = `${value}px`;
       if (copy.style[name] !== next) copy.style[name] = next;
@@ -57,7 +56,7 @@ export function mountPageDescription(document, {header, heading} = {}) {
     }
   }
   function schedulePlace() {
-    if (destroyed || frame !== null || copy.className !== 'atlas-page-intro' || !lastAnchor) return;
+    if (destroyed || frame !== null || copy.className !== 'atlas-page-intro' || copy.dataset.headingPlacement !== 'compare' || !lastAnchor) return;
     if (view?.requestAnimationFrame) frame = view.requestAnimationFrame(() => { frame = null; place(); });
     else place();
   }
@@ -75,12 +74,17 @@ export function mountPageDescription(document, {header, heading} = {}) {
     return true;
   }
   function anchorTo(toolbar, comparison) {
-    const anchor = toolbar?.querySelector(comparison ? '.lab-toolbar' : '.symbol-selector-trigger') || null;
-    const placement = comparison ? 'compare' : 'symbol';
+    const anchor = comparison ? toolbar?.querySelector('.lab-toolbar') || null : null;
+    const placement = comparison ? 'compare' : 'label';
     if (copy.dataset.headingPlacement !== placement) copy.dataset.headingPlacement = placement;
     lastAnchor = anchor;
-    observeLayout(toolbar, anchor);
-    place();
+    if (comparison) { observeLayout(toolbar, anchor); place(); }
+    else {
+      observeLayout(null, null);
+      // Native flow owns the label, including a phone dock below the plot.
+      // Remove fixed coordinates and clipping left by a previous compare visit.
+      copy.removeAttribute('style');
+    }
   }
   function sync() {
     if (destroyed) return;
@@ -124,9 +128,9 @@ export function mountPageDescription(document, {header, heading} = {}) {
       queued = false;
       if (destroyed) return;
       const toolbar = document.querySelector('.atlas-canvas-heading');
-      const anchor = toolbar?.querySelector(copy.dataset.headingPlacement === 'compare' ? '.lab-toolbar' : '.symbol-selector-trigger') || null;
+      const anchor = copy.dataset.headingPlacement === 'compare' ? toolbar?.querySelector('.lab-toolbar') || null : null;
       if (toolbar !== lastToolbar || copy.className === 'atlas-page-intro' && (anchor !== lastAnchor || toolbar?.nextElementSibling !== copy)) sync();
-      else if (copy.className === 'atlas-page-intro' && observeLayout(toolbar, anchor)) schedulePlace();
+      else if (copy.className === 'atlas-page-intro' && copy.dataset.headingPlacement === 'compare' && observeLayout(toolbar, anchor)) schedulePlace();
     };
     const microtask = document.defaultView?.queueMicrotask || globalThis.queueMicrotask;
     if (microtask) microtask(check); else check();

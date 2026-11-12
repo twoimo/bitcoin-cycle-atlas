@@ -8,6 +8,7 @@ import {tmpdir} from 'node:os';
 import {extname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {headlessWindowArgument, verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
+import {pageHeadingOverlapAreas, validatePageHeadingState as validate} from './page-heading-browser-contract.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url)), site = resolve(root, 'dist');
 const argv = process.argv.slice(2), arg = (name, fallback) => argv.includes(name) ? argv[argv.indexOf(name) + 1] : fallback;
@@ -79,7 +80,7 @@ function inspectHeading() {
   const heading = document.getElementById('atlas-page-heading'), copy = heading?.parentElement;
   const toolbar = document.querySelector('.atlas-canvas-heading'), plot = document.querySelector('.atlas-plot');
   const allHeadings = [...document.querySelectorAll('h1')], headingBox = rect(heading), glyphs = textBoxes(heading), viewport = {left:0, top:0, right:innerWidth, bottom:innerHeight};
-  const style = heading ? getComputedStyle(heading) : null, paintIssues = [];
+  const style = heading ? getComputedStyle(heading) : null, copyStyle = copy ? getComputedStyle(copy) : null, paintIssues = [];
   let fixedEscape = false;
   for (let node = heading; node; node = node.parentElement) {
     const css = getComputedStyle(node), label = node.id || node.className || node.tagName;
@@ -108,67 +109,48 @@ function inspectHeading() {
   const pseudo = toolbar && getComputedStyle(toolbar, '::after');
   if (pseudo && pseudo.display !== 'none' && pseudo.visibility !== 'hidden' && pseudo.content.replace(/^["']|["']$/g, '') === text) duplicates.push('toolbar::after');
   const descriptionId = heading?.getAttribute('aria-describedby'), description = descriptionId && document.getElementById(descriptionId);
-  const anchor = toolbar?.querySelector(copy?.dataset.headingPlacement === 'compare' ? '.lab-toolbar' : '.symbol-selector-trigger');
-  const anchorBox = rect(anchor), comparison = copy?.dataset.headingPlacement === 'compare';
+  const placement = copy?.dataset.headingPlacement || null, comparison = placement === 'compare';
+  const anchor = placement === 'label' ? null : toolbar?.querySelector(comparison ? '.lab-toolbar' : '.symbol-selector-trigger');
+  const anchorBox = rect(anchor), labelBox = placement === 'label' ? rect(copy) : null;
   const expected = anchorBox && {left:comparison ? anchorBox.left - 76 : anchorBox.left + 4, top:comparison ? anchorBox.top + (anchorBox.height - 14) / 2 : anchorBox.top + 2};
   const notice = document.getElementById('btc-refresh-notice');
   return {
     title:text, h1Count:allHeadings.length, paintedH1Count:allHeadings.filter(painted).length, heading:headingBox, glyphs,
     headingInViewport:inBox(headingBox, viewport), glyphsInViewport:glyphs.length > 0 && glyphs.every(box => inBox(box, viewport)),
     headingInToolbar:inBox(headingBox, rect(toolbar)), glyphsInToolbar:glyphs.length > 0 && glyphs.every(box => inBox(box, rect(toolbar))),
+    // The label's visible text is the H1. A Range over the whole copy would
+    // also count the deliberately hidden aria-describedby paragraph.
+    labelRow:labelBox ? {rect:labelBox, glyphs, painted:painted(copy), inViewport:inBox(labelBox, viewport),
+      position:copyStyle.position, order:copyStyle.order, padding:copyStyle.padding} : null,
     painted:painted(heading), paintIssues:[...new Set(paintIssues)], color:style?.color, fontSize:style?.fontSize, lineHeight:style?.lineHeight, fontFamily:style?.fontFamily,
     describedBy:descriptionId, description:description?.textContent.trim() || '', descriptionCount:descriptionId ? document.querySelectorAll(`[id="${descriptionId}"]`).length : 0,
     followsToolbar:Boolean(toolbar && toolbar.nextElementSibling === copy), outsidePlot:Boolean(copy && !copy.closest('.atlas-plot')),
     inDashboardHeader:Boolean(copy?.classList.contains('atlas-shell-copy') && copy.closest('.atlas-dashboard-header')),
-    placement:{anchor:anchorBox, expected, delta:expected && headingBox ? {left:headingBox.left - expected.left, top:headingBox.top - expected.top} : null},
+    placement:{kind:placement, anchor:anchorBox, expected, delta:expected && headingBox ? {left:headingBox.left - expected.left, top:headingBox.top - expected.top} : null},
     layout:{workspace:rect(document.querySelector('.workspace')), stage:rect(document.querySelector('.atlas-chart-stage'))},
     btcRefreshNotice:notice ? {state:notice.dataset.state || null, hidden:notice.hidden, busy:notice.getAttribute('aria-busy') === 'true',
       rect:rect(notice), compareReservedHeight:document.documentElement.style.getPropertyValue('--btc-compare-notice-height')} : null,
     overflow:Math.max(0, document.documentElement.scrollWidth - innerWidth), duplicateTitles:duplicates,
     overlayCollisions:overlays.filter(node => intersects(headingBox, rect(node)) || glyphs.some(box => intersects(box, rect(node)))).map(node => node.id || node.className),
     symbolGlyphs, symbolGlyphsInToolbar:symbolGlyphs.every(box => inBox(box, rect(toolbar)) && inBox(box, viewport)), symbolCollision:glyphs.some(a => symbolGlyphs.some(b => intersects(a, b))),
-    symbolButton:rect(symbolButton), symbolButtonStyle:buttonStyle && Object.fromEntries(['height','minHeight','maxHeight','paddingTop','paddingBottom','marginTop','marginBottom','fontSize','lineHeight'].map(key => [key, buttonStyle[key]])),
+    symbolButton:rect(symbolButton), symbolLabel:rect(symbolLabel), symbolButtonStyle:buttonStyle && Object.fromEntries(['height','minHeight','maxHeight','paddingTop','paddingBottom','marginTop','marginBottom','fontSize','lineHeight'].map(key => [key, buttonStyle[key]])),
     pointer:Object.fromEntries(['fine','coarse','none'].map(value => [value, matchMedia(`(pointer:${value})`).matches])),
     geometry:{toolbar:rect(toolbar), plot:rect(plot), bottom:rect(document.querySelector('.workbench-bottom-bar')), readout:painted(readout) ? rect(readout) : null, source:painted(source) ? rect(source) : null},
   };
-}
-
-function validate(state, previous, expectedTitle) {
-  const failures = [], check = (condition, message) => { if (!condition) failures.push(message); };
-  const conference = expectedTitle === '컨퍼런스 복습';
-  check(state.h1Count === 1 && state.paintedH1Count === 1 && state.painted, `h1 total=${state.h1Count}, painted=${state.paintedH1Count}`);
-  check(state.title === expectedTitle, `unexpected title ${state.title}`);
-  check(state.describedBy === 'atlas-page-description' && state.descriptionCount === 1 && state.description.length > 15, 'description connection missing');
-  check(state.headingInViewport && state.glyphsInViewport && (conference || state.headingInToolbar && state.glyphsInToolbar), conference ? 'heading/glyphs outside viewport' : 'heading/glyphs outside visible toolbar');
-  check(state.paintIssues.length === 0, `heading paint: ${state.paintIssues.join('; ')}`);
-  check(state.color !== 'transparent' && !/rgba\([^)]*,\s*0\)/.test(state.color || ''), 'transparent heading text');
-  check((conference ? state.inDashboardHeader : state.followsToolbar) && state.outsidePlot, 'heading lost shell ownership');
-  if (!conference) check(state.placement.delta && Math.abs(state.placement.delta.left) <= .01 && Math.abs(state.placement.delta.top) <= .01, `stale anchor coordinates: ${JSON.stringify(state.placement.delta)}`);
-  check(state.overflow === 0, `horizontal overflow ${state.overflow}px`);
-  check(state.duplicateTitles.length === 0, `duplicate titles: ${state.duplicateTitles.join(', ')}`);
-  check(state.overlayCollisions.length === 0 && !state.symbolCollision, `text overlap: ${state.overlayCollisions.join(', ')} symbol=${state.symbolCollision}`);
-  check(state.symbolGlyphsInToolbar, 'symbol glyphs outside visible toolbar');
-  if (previous) {
-    check(state.description === previous.description, 'page description changed');
-    for (const [name, current] of Object.entries(state.geometry)) {
-      const before = previous.geometry[name];
-      if (!current || !before) { check(current === before, `${name} visibility changed`); continue; }
-      for (const field of ['left','top','width','height']) check(Math.abs(current[field] - before[field]) <= .01, `${name}.${field} ${before[field]} -> ${current[field]}`);
-    }
-  }
-  return failures;
 }
 
 async function settledHeading(cdp, label, {waitForBtcRefresh = false} = {}) {
   let last = '', steady = 0, state;
   await until(async () => {
     state = await evaluate(cdp, inspectHeading);
+    state.overlapAreas = pageHeadingOverlapAreas(state);
     // The provider request can leave the notice stationary for seconds before
     // completing. Geometry alone must not qualify that transient baseline.
     if (waitForBtcRefresh && (state.btcRefreshNotice?.busy || state.btcRefreshNotice?.state === 'refreshing')) {
       last = ''; steady = 0; return false;
     }
-    const key = JSON.stringify([state.geometry, state.heading, state.placement, state.layout, state.btcRefreshNotice]);
+    const key = JSON.stringify([state.geometry, state.heading, state.glyphs, state.labelRow, state.symbolButton,
+      state.symbolLabel, state.symbolGlyphs, state.overlapAreas, state.placement, state.layout, state.btcRefreshNotice]);
     steady = key === last ? steady + 1 : 0; last = key;
     return steady >= 3;
   }, label);
@@ -224,7 +206,7 @@ try {
     'dist/atlas-shell.css', 'dist/ui/page-description.js', 'dist/index.html', 'dist/app.js', 'dist/btc-refresh-status.js',
     'dist/daily-data-view.js', 'dist/daily-data.css',
     'dist/research-reader.js', 'dist/research-reader.css', 'dist/editorial-ledgers.css',
-    'dist/relay-room.js', 'dist/relay-room.css', 'scripts/verify-page-heading-browser.mjs',
+    'dist/relay-room.js', 'dist/relay-room.css', 'scripts/verify-page-heading-browser.mjs', 'scripts/page-heading-browser-contract.mjs',
     'dist/conference/route.js', 'dist/conference/player.js', 'dist/conference/player.css',
   ]) report.sourceFiles[path] = createHash('sha256').update(await readFile(resolve(root, path))).digest('hex');
   const mime = {'.html':'text/html;charset=utf-8','.js':'text/javascript','.json':'application/json','.css':'text/css','.svg':'image/svg+xml','.png':'image/png','.woff2':'font/woff2'};

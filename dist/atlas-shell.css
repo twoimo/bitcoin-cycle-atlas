@@ -266,20 +266,18 @@ body[data-shell=chart] .shell-feature-panel[data-shell-measuring=true] .shell-fe
 }
 
 /* Page context reuses one described heading across chart and content routes.
-   Chart headings paint in existing chrome; only content headers own a row. */
+   Price charts reserve a label outside the plot and the symbol's hit target;
+   compare retains its separate fixed title slot inside the toolbar. */
 .atlas-page-intro,.atlas-shell-copy{min-width:0;box-sizing:border-box}
 .atlas-page-intro{position:fixed;display:block;height:14px;margin:0;padding:0;border:0;background:transparent;color:var(--text);pointer-events:none;z-index:61}
 .atlas-page-intro>.atlas-shell-heading{margin:0;font-size:12px;font-weight:500;line-height:14px;letter-spacing:0;white-space:nowrap;text-align:center}
 .atlas-page-description{margin:0;color:var(--muted);font:11px/14px var(--font);white-space:normal;word-break:normal;overflow-wrap:break-word}
 .atlas-page-intro>.atlas-page-description{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-/* Keep the symbol's existing horizontal budget and full click target. The H1
-   captions it from a sibling, so controls and their DOM owners stay intact. */
-body[data-shell=chart] .atlas-canvas-heading:has(+ .atlas-page-intro[data-heading-placement=symbol]) .symbol-selector-trigger{box-sizing:border-box;padding-top:14px!important;padding-bottom:0!important}
-@media(min-width:1120px) and (pointer:fine),(min-width:1120px) and (pointer:none){
-  /* Reserve the caption's painted glyphs on taller system-font metrics too,
-     while retaining the 36px target and keeping symbol glyphs inside the row. */
-  body[data-shell=chart] .atlas-canvas-heading:has(+ .atlas-page-intro[data-heading-placement=symbol]) .symbol-selector-trigger{height:36px;min-height:36px;padding-top:19px!important}
-}
+/* A full-width normal-flow row also fits the 320px dock without displacing
+   its original controls. The order keeps it above the plot when the dock is
+   ordered last on phones; it never overlays prices, legends or controls. */
+body[data-shell=chart] .atlas-page-intro[data-heading-placement=label]{position:static;order:-1;flex:none;width:100%;height:22px;padding:4px 8px;z-index:auto}
+body[data-shell=chart] .atlas-page-intro[data-heading-placement=label]>.atlas-shell-heading{text-align:left}
 /* Compare already scrolls its controls horizontally. Its title stays beside
    that scroll owner, after the original phone return button, in the same row. */
 body[data-page=compare] .atlas-canvas-heading:has(+ .atlas-page-intro[data-heading-placement=compare])>.lab-toolbar{margin-left:76px}
