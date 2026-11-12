@@ -1,0 +1,103 @@
+{
+  "head": "7f2982d944e329f3f00ecd0a592d22117eac6032",
+  "platform": "macOS darwin arm64 · Google Chrome 157.0.8103.79 · headless=new",
+  "command": "node scripts/verify-conference-browser.mjs --out build/conference-r13-0912",
+  "sourceCommit": "7f2982d944e329f3f00ecd0a592d22117eac6032",
+  "finishedAt": "2026-11-12T00:11:52.795Z",
+  "status": "failed",
+  "summary": {
+    "cases": 14,
+    "passed": 5,
+    "failed": 9
+  },
+  "cases": [
+    {
+      "id": "fixture-390x844",
+      "status": "failed",
+      "failures": [
+        "Error: Browser evaluation: {\"exceptionId\":1,\"text\":\"Uncaught\",\"lineNumber\":0,\"columnNumber\":224,\"scriptId\":\"115\",\"stackTrace\":{\"callFrames\":[{\"functionName\":\"\",\"scriptId\":\"115\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":230},{\"functionName\":\"\",\"scriptId\":\"115\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":313}]},\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: Missing visible .conference-transcript-row:not([hidden])\\n    at <anonymous>:1:231\\n    at <anonymous>:1:314\",\"objectId\":\"-7196133696211306183.2.2\"}}"
+      ]
+    },
+    {
+      "id": "fixture-320x740",
+      "status": "failed",
+      "failures": [
+        "Error: Browser evaluation: {\"exceptionId\":1,\"text\":\"Uncaught\",\"lineNumber\":0,\"columnNumber\":224,\"scriptId\":\"115\",\"stackTrace\":{\"callFrames\":[{\"functionName\":\"\",\"scriptId\":\"115\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":230},{\"functionName\":\"\",\"scriptId\":\"115\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":313}]},\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: Missing visible .conference-transcript-row:not([hidden])\\n    at <anonymous>:1:231\\n    at <anonymous>:1:314\",\"objectId\":\"5432247586894303815.2.2\"}}"
+      ]
+    },
+    {
+      "id": "fixture-768x1024",
+      "status": "failed",
+      "failures": [
+        "Error: Browser evaluation: {\"exceptionId\":1,\"text\":\"Uncaught\",\"lineNumber\":0,\"columnNumber\":224,\"scriptId\":\"112\",\"stackTrace\":{\"callFrames\":[{\"functionName\":\"\",\"scriptId\":\"112\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":230},{\"functionName\":\"\",\"scriptId\":\"112\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":313}]},\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: Missing visible .conference-transcript-row:not([hidden])\\n    at <anonymous>:1:231\\n    at <anonymous>:1:314\",\"objectId\":\"-7463568999345117348.2.2\"}}"
+      ]
+    },
+    {
+      "id": "fixture-1024x768",
+      "status": "failed",
+      "failures": [
+        "Error: Browser evaluation: {\"exceptionId\":1,\"text\":\"Uncaught\",\"lineNumber\":0,\"columnNumber\":224,\"scriptId\":\"112\",\"stackTrace\":{\"callFrames\":[{\"functionName\":\"\",\"scriptId\":\"112\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":230},{\"functionName\":\"\",\"scriptId\":\"112\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":313}]},\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: Missing visible .conference-transcript-row:not([hidden])\\n    at <anonymous>:1:231\\n    at <anonymous>:1:314\",\"objectId\":\"5196476077362478059.2.2\"}}"
+      ]
+    },
+    {
+      "id": "fixture-1440x900",
+      "status": "failed",
+      "failures": [
+        "Error: Browser evaluation: {\"exceptionId\":1,\"text\":\"Uncaught\",\"lineNumber\":0,\"columnNumber\":224,\"scriptId\":\"112\",\"stackTrace\":{\"callFrames\":[{\"functionName\":\"\",\"scriptId\":\"112\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":230},{\"functionName\":\"\",\"scriptId\":\"112\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":313}]},\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: Missing visible .conference-transcript-row:not([hidden])\\n    at <anonymous>:1:231\\n    at <anonymous>:1:314\",\"objectId\":\"5766501422326588.2.2\"}}"
+      ]
+    },
+    {
+      "id": "fixture-1920x1080",
+      "status": "failed",
+      "failures": [
+        "Error: Browser evaluation: {\"exceptionId\":1,\"text\":\"Uncaught\",\"lineNumber\":0,\"columnNumber\":224,\"scriptId\":\"112\",\"stackTrace\":{\"callFrames\":[{\"functionName\":\"\",\"scriptId\":\"112\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":230},{\"functionName\":\"\",\"scriptId\":\"112\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":313}]},\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: Missing visible .conference-transcript-row:not([hidden])\\n    at <anonymous>:1:231\\n    at <anonymous>:1:314\",\"objectId\":\"4043464303441215435.2.2\"}}"
+      ]
+    },
+    {
+      "id": "fixture-1280x900",
+      "status": "failed",
+      "failures": [
+        "Error: Browser evaluation: {\"exceptionId\":1,\"text\":\"Uncaught\",\"lineNumber\":0,\"columnNumber\":224,\"scriptId\":\"112\",\"stackTrace\":{\"callFrames\":[{\"functionName\":\"\",\"scriptId\":\"112\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":230},{\"functionName\":\"\",\"scriptId\":\"112\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":313}]},\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: Missing visible .conference-transcript-row:not([hidden])\\n    at <anonymous>:1:231\\n    at <anonymous>:1:314\",\"objectId\":\"7286952327333358462.2.2\"}}"
+      ]
+    },
+    {
+      "id": "fixture-1023x900",
+      "status": "failed",
+      "failures": [
+        "Error: Browser evaluation: {\"exceptionId\":1,\"text\":\"Uncaught\",\"lineNumber\":0,\"columnNumber\":224,\"scriptId\":\"112\",\"stackTrace\":{\"callFrames\":[{\"functionName\":\"\",\"scriptId\":\"112\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":230},{\"functionName\":\"\",\"scriptId\":\"112\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":313}]},\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: Missing visible .conference-transcript-row:not([hidden])\\n    at <anonymous>:1:231\\n    at <anonymous>:1:314\",\"objectId\":\"5001937554705528619.2.2\"}}"
+      ]
+    },
+    {
+      "id": "fixture-767x900",
+      "status": "failed",
+      "failures": [
+        "Error: Browser evaluation: {\"exceptionId\":1,\"text\":\"Uncaught\",\"lineNumber\":0,\"columnNumber\":224,\"scriptId\":\"115\",\"stackTrace\":{\"callFrames\":[{\"functionName\":\"\",\"scriptId\":\"115\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":230},{\"functionName\":\"\",\"scriptId\":\"115\",\"url\":\"\",\"lineNumber\":0,\"columnNumber\":313}]},\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: Missing visible .conference-transcript-row:not([hidden])\\n    at <anonymous>:1:231\\n    at <anonymous>:1:314\",\"objectId\":\"-2427879427951081805.2.2\"}}"
+      ]
+    },
+    {
+      "id": "missing-timeline",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "id": "invalid-timeline",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "id": "navigation-lifecycle",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "id": "navigation-BTCUSD",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "id": "navigation-ETHUSD",
+      "status": "passed",
+      "failures": []
+    }
+  ]
+}
