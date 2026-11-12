@@ -1,0 +1,12 @@
+{
+  "command": [
+    "node",
+    "scripts/verify-ui-renewal-p0-browser.mjs",
+    "--out",
+    "docs/evidence/q-r19p0-2-e3ef789/linux-20261112"
+  ],
+  "exitCode": 1,
+  "elapsedSeconds": 1.177,
+  "stdout": "{\"status\":\"unverified\",\"qualifiesP0Verification\":false,\"counts\":{\"required\":10,\"attempted\":0,\"passed\":0,\"failed\":0,\"unattempted\":10},\"staticTokens\":40,\"actualContrastSamples\":0,\"failures\":1,\"reason\":\"Chromium launch: Error: Chromium exited null/SIGABRT: /usr/bin/chromium: 9: [: 5225713664: unexpected operator\\n[29:29:1112/194234.761598:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\\n[1112/194234.761769:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\\n\\n    at file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p0-browser.mjs:307:144\\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p0-browser.mjs:102:127)\\n    at async verifyUiRenewalP0Browser (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p0-browser.mjs:307:18)\\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p0-browser.mjs:392:90\",\"out\":\"/workspace/scratch/577747000761/bitcoin-cycle-atlas/docs/evidence/q-r19p0-2-e3ef789/linux-20261112\",\"reportWritten\":true}\n",
+  "stderr": ""
+}

@@ -81,9 +81,12 @@ function model({width=320,top=4,text='가격 차트',pointerEvents='none',nested
   const order=()=>[root,...descendants(root)];
   const visible=node=>{for(let current=node;current;current=current.parentElement)if(current.hidden||current.computed?.display==='none'||current.computed?.opacity==='0')return false;return !['hidden','collapse'].includes(computed(node).visibility);};
   const charRanges=()=>{let offset=0;return Array.from(textNode.data,(char,index)=>{const value={char,start:offset,end:offset+char.length,rect:textNode.boxes[index]};offset+=char.length;return value;});};
+  // Tests declare the expected native painted regions independently. No
+  // production clip parser is used to decide mocked hit-test results.
+  const paintedAt=(node,x,y)=>(node.paintRects??[node.bounds]).some(box=>containsPoint(box,x,y));
   function hit(x,y,{ignorePointerEventsNone=false,backend=false}={}) {
-    for(const node of pseudoNodes.slice().reverse())if(node.painted&&visible(node.ownerElement)&&containsPoint(node.bounds,x,y)&&(ignorePointerEventsNone||computed(node.ownerElement,node.pseudo).pointerEvents!=='none'))return node;
-    for(const node of overlays.slice().reverse())if(visible(node)&&containsPoint(node.bounds,x,y)&&(ignorePointerEventsNone||node.computed.pointerEvents!=='none'))return node;
+    for(const node of pseudoNodes.slice().reverse())if(node.painted&&visible(node.ownerElement)&&paintedAt(node,x,y)&&(ignorePointerEventsNone||computed(node.ownerElement,node.pseudo).pointerEvents!=='none'))return node;
+    for(const node of overlays.slice().reverse())if(visible(node)&&paintedAt(node,x,y)&&(ignorePointerEventsNone||node.computed.pointerEvents!=='none'))return node;
     if(charRanges().some(item=>item.char.trim()&&item.rect&&containsPoint(item.rect,x,y))&&visible(owner)&&(ignorePointerEventsNone||owner.computed.pointerEvents!=='none'))return backend?textNode:owner;
     return main;
   }
@@ -97,9 +100,9 @@ function model({width=320,top=4,text='가격 차트',pointerEvents='none',nested
     querySelector:selector=>order().find(node=>node.nodeType===1&&matches(node,selector))||null,
     querySelectorAll:selector=>order().filter(node=>node.nodeType===1&&matches(node,selector)),
     createTreeWalker(node,whatToShow,filter){const nodes=descendants(node).filter(item=>whatToShow===4?item.nodeType===3:whatToShow===1?item.nodeType===1:true).filter(item=>!filter||((typeof filter==='function'?filter(item):filter.acceptNode(item))===1));let i=0;return {currentNode:node,nextNode(){this.currentNode=nodes[i++]||null;return this.currentNode;}};},
-    createRange(){let a=null,b=null,start=0,end=0;return {setStart(node,offset){a=node;start=offset;},setEnd(node,offset){b=node;end=offset;},
-      selectNodeContents(node){a=b=node.nodeType===3?node:descendants(node).find(item=>item.nodeType===3);start=0;end=a?.data.length||0;},
-      getClientRects(){if(!a||a!==b||end<=start)return [];let offset=0;return Array.from(a.data,(char,index)=>{const from=offset;offset+=char.length;return from<end&&offset>start?a.boxes[index]:null;}).filter(r=>r&&r.width>0&&r.height>0).map(r=>({...r}));},
+    createRange(){let a=null,b=null,start=0,end=0,whole=false;return {setStart(node,offset){a=node;start=offset;whole=false;},setEnd(node,offset){b=node;end=offset;whole=false;},
+      selectNodeContents(node){a=b=node.nodeType===3?node:descendants(node).find(item=>item.nodeType===3);start=0;end=a?.data.length||0;whole=true;},
+      getClientRects(){if(!a||a!==b||end<=start)return [];if(whole&&a.fullRangeRects)return a.fullRangeRects.map(r=>({...r}));let offset=0;return Array.from(a.data,(char,index)=>{const from=offset;offset+=char.length;return from<end&&offset>start?a.boxes[index]:null;}).filter(r=>r&&r.width>0&&r.height>0).map(r=>({...r}));},
       getBoundingClientRect(){return union(this.getClientRects());},detach(){}};},
     elementFromPoint:(x,y)=>hit(x,y),elementsFromPoint:(x,y)=>{const target=hit(x,y),nodes=[];for(let current=target;current;current=current.parentElement)nodes.push(current);return nodes;}});
   const globals={document,window:null,innerWidth:width,innerHeight:900,scrollX:0,scrollY:0,getComputedStyle:computed,
@@ -107,6 +110,7 @@ function model({width=320,top=4,text='가격 차트',pointerEvents='none',nested
     Element,HTMLElement:Element,Text,CSS:{escape:value=>String(value).replace(/([^\w-])/g,'\\$1')},location:{href:document.URL},console};
   globals.window=globals;document.defaultView=globals;
   return {globals,document,root,body,main,heading,owner,textNode,all,overlays,pseudoNodes,hit,charRanges,
+    addText(element,value,rangeRects){const text=new Text(value,[]);text.fullRangeRects=rangeRects;text.ownerDocument=document;element.append(text);return text;},
     addOverlay({bounds=rect(left+2,top+2,8,10),internal=false,parent=null,tag='div',pointerEvents='auto',style={},id=`overlay-${overlays.length}`}={}){
       const overlay=new Element(tag,id,bounds,{position:'absolute',zIndex:'100',backgroundColor:'rgb(0, 0, 0)',pointerEvents,...style});overlay.ownerDocument=document;
       (parent||(internal?heading:main)).append(overlay);overlays.push(overlay);return overlay;},
@@ -279,4 +283,214 @@ test('main integration retains a hidden heading as failed evidence instead of dr
   const result=await inspectP0Snapshot(cdpFor(f,{snapshot}),{symbol:'BTCUSD',width:320,theme:'light'},'chart',[],[]);
   assert.equal(result.samples.length,1);assert.equal(result.samples[0].visible,false);
   assert.equal(result.samples[0].nativeTextHit.status,'failed');assert.notEqual(validateP0Paint(result.samples[0]).status,'passed');
+});
+
+test('the recorded Mac description Range overlap is proved empty after its measured inset clip',async()=>{
+  // Q-R19P0-2 Mac receipt: four title glyphs x8..52.421875, y57..71;
+  // description text Range x24..397.59375, y70..83 overlaps by 1 CSS px.
+  const advances=[10.53515625,10.53515625,2.28125,10.53515625,10.53515625];let left=8;
+  const glyphBoxes=advances.map(width=>{const r=rect(left,57,width,14);left+=width;return r;});
+  const f=model({width:320,top:57,glyphBoxes});
+  // The raw description extends past the viewport. Its own proven zero clip
+  // still wins when a positioned containing block sits inside root overflow.
+  f.main.computed.position='relative';
+  for(const node of [f.root,f.body])Object.assign(node.computed,{overflow:'hidden',overflowX:'hidden',overflowY:'hidden'});
+  const description=f.addOverlay({id:'atlas-page-description',tag:'p',bounds:rect(24,70,1,1),style:{backgroundColor:'transparent',
+    position:'absolute',overflow:'hidden',overflowX:'hidden',overflowY:'hidden',clipPath:'inset(50%)'}});
+  f.addText(description,'스크린리더 전용 설명',[rect(24,70,373.59375,13)]);description.paintRects=[];
+  const cdp=cdpFor(f),result=await verifyP0TextInk(cdp,'#atlas-page-heading');
+  assert.equal(result.status,'passed',JSON.stringify(result));
+  const receipt=result.geometry.clippedPaintCandidates.find(item=>item.selector==='#atlas-page-description'&&item.kind==='text');
+  assert.ok(receipt,'a measured empty clip must have evidence; the description ID is not an exemption');
+  assert.equal(receipt.rawRect.left,24);assert.equal(receipt.rawRect.right,397.59375);
+  assert.equal(receipt.rawRect.top,70);assert.equal(receipt.rawRect.bottom,83);
+  assert.equal(receipt.paintRect,null);assert.equal(receipt.status,'empty');
+  const inset=receipt.clips.find(item=>item.value==='inset(50%)');
+  assert.ok(inset);assert.equal(inset.referenceRect.width,1);assert.equal(inset.referenceRect.height,1);
+  assert.equal(result.geometry.glyphs.length,4);
+  assert.deepEqual([...new Set(result.probes.map(point=>point.glyphIndex))].sort(),[0,1,2,3]);
+  assert.equal(result.geometry.intersections.length,0);
+});
+
+test('empty rectangular clipping is geometry based, independent of sr-only ID, class or box size',async()=>{
+  for(const [id,bounds,clipPath]of [
+    ['ordinary-overlay',rect(8,4,80,14),'inset(50%)'],
+    ['atlas-page-description',rect(8,4,30,14),'inset(100% 0)'],
+    ['arbitrary-description',rect(8,4,30,14),'inset(0 50%)'],
+  ]){
+    const f=model(),node=f.addOverlay({id,bounds,style:{clipPath}});node.paintRects=[];
+    const result=await verifyP0TextInk(cdpFor(f),'#atlas-page-heading');
+    assert.equal(result.status,'passed',JSON.stringify({clipPath,result}));
+    assert.ok(result.geometry.clippedPaintCandidates.some(item=>item.selector==='#'+id&&item.status==='empty'&&item.paintRect===null));
+    assert.equal(result.geometry.intersections.length,0);assert.ok(result.probes.length>=4);
+  }
+});
+
+test('a positive clipped rectangle disjoint from the title is measured before it is discarded',async()=>{
+  for(const clipPath of ['inset(0 0 0 64px)','inset(0 0 0 80%)','inset(0 0 0 64px) border-box']){
+    const f=model(),node=f.addOverlay({bounds:rect(8,4,80,14),style:{clipPath}});node.paintRects=[rect(72,4,16,14)];
+    const result=await verifyP0TextInk(cdpFor(f),'#atlas-page-heading');assert.equal(result.status,'passed',JSON.stringify(result));
+    const receipt=result.geometry.clippedPaintCandidates.find(item=>item.selector==='#'+node.id);
+    assert.ok(receipt);assert.equal(receipt.paintRect.left,72);assert.equal(receipt.paintRect.right,88);
+    assert.equal(result.geometry.intersections.length,0);assert.ok(result.probes.length>=4);
+  }
+});
+
+test('visible clipped paint retains failure even on the same description ID',async()=>{
+  for(const [clipPath,paintRect]of [
+    ['inset(0)',rect(8,4,30,14)],['inset(0 16px 0 6px)',rect(14,4,8,14)],
+    ['inset(0 0 0 20%)',rect(14,4,24,14)],
+  ]){
+    const f=model(),node=f.addOverlay({id:'atlas-page-description',bounds:rect(8,4,30,14),style:{clipPath}});node.paintRects=[paintRect];
+    const result=await verifyP0TextInk(cdpFor(f),'#atlas-page-heading');
+    assert.equal(result.status,'failed',JSON.stringify({clipPath,result}));
+    assert.ok(result.geometry.intersections.length>0);assert.ok(result.probes.some(point=>!point.accepted&&containsPoint(paintRect,point.x,point.y)));
+  }
+});
+
+test('unsupported clip grammar remains unverified even when every native hit would be the heading',async()=>{
+  for(const clipPath of ['circle(50%)','url(#missing)','inset(calc(50%))','inset(50% round 2px)','inset(50%) content-box']){
+    const f=model();f.addOverlay({bounds:rect(8,4,30,14),style:{clipPath}});
+    const result=await verifyP0TextInk(cdpFor(f,{hitOverride:()=>f.textNode}),'#atlas-page-heading');
+    assert.equal(result.status,'unverified',JSON.stringify({clipPath,result}));
+    assert.match(result.reason,/clip|reference|geometry/i);
+  }
+});
+
+test('missing, fragmented or non-box clipping references cannot prove empty paint',async()=>{
+  for(const variant of ['missing-client-rect','fragmented-client-rect','display-contents','nonfinite-box']){
+    const f=model(),node=f.addOverlay({bounds:rect(8,4,1,1),style:{backgroundColor:'transparent',clipPath:'inset(50%)'}});
+    f.addText(node,'설명',[rect(8,4,30,14)]);node.paintRects=[];
+    if(variant==='missing-client-rect')node.getClientRects=()=>[];
+    if(variant==='fragmented-client-rect')node.getClientRects=()=>[rect(8,4,1,1),rect(10,4,1,1)];
+    if(variant==='display-contents')node.computed.display='contents';
+    if(variant==='nonfinite-box')node.getBoundingClientRect=()=>rect(NaN,4,1,1);
+    const result=await verifyP0TextInk(cdpFor(f,{hitOverride:()=>f.textNode}),'#atlas-page-heading');
+    assert.equal(result.status,'unverified',JSON.stringify({variant,result}));
+  }
+});
+
+test('ancestor clip-path clips descendant paint including a fixed-position descendant',async()=>{
+  for(const position of ['static','absolute','fixed']){
+    const f=model(),parent=f.addOverlay({bounds:rect(8,4,80,14),style:{backgroundColor:'transparent',clipPath:'inset(0 0 0 64px)'}});
+    parent.paintRects=[];
+    const child=f.addOverlay({parent,bounds:rect(8,4,30,14),style:{position}});child.paintRects=[];
+    const result=await verifyP0TextInk(cdpFor(f),'#atlas-page-heading');assert.equal(result.status,'passed',JSON.stringify({position,result}));
+    const receipt=result.geometry.clippedPaintCandidates.find(item=>item.selector==='#'+child.id);
+    assert.ok(receipt);assert.equal(receipt.paintRect,null);assert.ok(receipt.clips.some(item=>item.selector==='#'+parent.id));
+  }
+});
+
+test('own overflow clips overflowing text using the measured box without suppressing its heading proof',async()=>{
+  const f=model(),node=f.addOverlay({bounds:rect(72,4,2,14),style:{backgroundColor:'transparent',overflow:'hidden',overflowX:'hidden',overflowY:'hidden'}});
+  f.addText(node,'내용',[rect(8,4,30,14)]);node.paintRects=[];
+  const result=await verifyP0TextInk(cdpFor(f),'#atlas-page-heading');assert.equal(result.status,'passed',JSON.stringify(result));
+  assert.ok(result.geometry.clippedPaintCandidates.some(item=>item.kind==='text'&&item.selector==='#'+node.id&&item.status==='empty'));
+  assert.equal(result.geometry.intersections.length,0);
+});
+
+test('overflow clips descendants but not the clipping element own border paint',async()=>{
+  const f=model(),node=f.addOverlay({bounds:rect(8,4,30,14),style:{backgroundColor:'transparent',overflow:'hidden',overflowX:'hidden',overflowY:'hidden',
+    borderLeftWidth:'3px',borderLeftColor:'rgb(0, 0, 0)',borderLeftStyle:'solid'}});
+  Object.defineProperty(node,'clientLeft',{get:()=>3});Object.defineProperty(node,'clientWidth',{get:()=>27});
+  node.paintRects=[rect(8,4,3,14)];
+  const result=await verifyP0TextInk(cdpFor(f),'#atlas-page-heading');assert.equal(result.status,'failed',JSON.stringify(result));
+  assert.ok(result.geometry.overlappingPaintCandidates.some(item=>item.selector==='#'+node.id&&item.kind==='border'));
+});
+
+test('an absolute or fixed descendant cannot be falsely removed by an unrelated overflow ancestor',async()=>{
+  for(const position of ['absolute','fixed']){
+    const f=model(),parent=f.addOverlay({bounds:rect(200,200,10,10),style:{position:'static',backgroundColor:'transparent',overflow:'hidden',overflowX:'hidden',overflowY:'hidden'}});
+    parent.paintRects=[];
+    const child=f.addOverlay({parent,bounds:rect(14.1,5,1,12),style:{position}});child.paintRects=[child.bounds];
+    const result=await verifyP0TextInk(cdpFor(f),'#atlas-page-heading');
+    assert.notEqual(result.status,'passed',JSON.stringify({position,result}));
+    assert.ok(['failed','unverified'].includes(result.status));
+  }
+});
+
+test('a positive subpixel inset remnant is not rounded into an empty sr-only exception',async()=>{
+  const f=model(),node=f.addOverlay({bounds:rect(14,5,1,12),style:{clipPath:'inset(0 49% 0 49%)'}});
+  node.paintRects=[rect(14.49,5,.02,12)];
+  const result=await verifyP0TextInk(cdpFor(f),'#atlas-page-heading');
+  assert.equal(result.status,'unverified',JSON.stringify(result));
+  const receipt=result.geometry.clippedPaintCandidates.find(item=>item.selector==='#'+node.id);
+  assert.ok(receipt?.paintRect?.width>0);assert.ok(result.geometry.intersections.some(hit=>hit.area>0&&hit.rect.width<1));
+});
+
+test('opening the same one-pixel description clip cannot retain its empty-paint exception',async()=>{
+  const f=model({top:57}),node=f.addOverlay({id:'atlas-page-description',bounds:rect(24,70,1,1),style:{backgroundColor:'transparent',clipPath:'inset(0)',overflow:'hidden',overflowX:'hidden',overflowY:'hidden'}});
+  f.addText(node,'설명',[rect(24,70,373.59375,13)]);node.paintRects=[rect(24,70,1,1)];
+  const result=await verifyP0TextInk(cdpFor(f),'#atlas-page-heading');
+  assert.equal(result.status,'unverified',JSON.stringify(result));
+  assert.ok(result.geometry.intersections.some(hit=>hit.area>0));
+  assert.match(result.reason,/interior integer probe/);
+});
+
+test('CSS zoom with px clipping does not use an unscaled box as an empty proof',async()=>{
+  const f=model(),node=f.addOverlay({bounds:rect(8,4,30,14),style:{clipPath:'inset(10px)',zoom:'2'}});node.paintRects=[];
+  const result=await verifyP0TextInk(cdpFor(f,{hitOverride:()=>f.textNode}),'#atlas-page-heading');
+  assert.equal(result.status,'unverified',JSON.stringify(result));
+});
+
+test('native pseudo quads are clipped by their own computed clip before intersection testing',async()=>{
+  for(const [clipPath,paintRects,status]of [
+    ['inset(50%)',[],'passed'],['inset(0)',[rect(14.1,5,1,12)],'failed'],['circle(50%)',[],'unverified'],
+  ]){
+    const f=model(),owner=f.addOverlay({bounds:rect(200,200,20,20),style:{backgroundColor:'transparent'}});owner.paintRects=[];
+    const pseudo=f.addPseudo(owner,{bounds:rect(14.1,5,1,12),style:{clipPath}});pseudo.paintRects=paintRects;
+    const cdp=cdpFor(f),result=await verifyP0TextInk(cdp,'#atlas-page-heading');assert.equal(result.status,status,JSON.stringify({clipPath,result}));
+    if(status==='passed'){
+      assert.ok(cdp.calls.some(call=>call.method==='DOM.getBoxModel'),'a pseudo clip must use its own native box');
+      assert.equal(result.geometry.intersections.length,0);
+      assert.ok(result.geometry.clippedPaintCandidates.some(item=>item.kind==='pseudo'&&item.paintRect===null));
+    }
+  }
+});
+
+test('a pseudo outside its owner still inherits the owner clip, and missing quad never passes',async()=>{
+  const f=model(),owner=f.addOverlay({bounds:rect(200,200,20,20),style:{backgroundColor:'transparent',clipPath:'inset(50%)'}});owner.paintRects=[];
+  const pseudo=f.addPseudo(owner,{bounds:rect(14.1,5,1,12)});pseudo.paintRects=[];
+  const result=await verifyP0TextInk(cdpFor(f),'#atlas-page-heading');assert.equal(result.status,'passed',JSON.stringify(result));
+  assert.ok(result.geometry.clippedPaintCandidates.some(item=>item.kind==='pseudo'&&item.paintRect===null));
+  const missing=await verifyP0TextInk(cdpFor(f,{failMethod:'DOM.getBoxModel'}),'#atlas-page-heading');
+  assert.equal(missing.status,'unverified');
+});
+
+test('a positioned pseudo escaping its owner overflow remains an occlusion candidate',async()=>{
+  for(const position of ['absolute','fixed']){
+    const f=model(),owner=f.addOverlay({bounds:rect(200,200,20,20),style:{position:'static',backgroundColor:'transparent',overflow:'hidden',overflowX:'hidden',overflowY:'hidden'}});owner.paintRects=[];
+    const pseudo=f.addPseudo(owner,{bounds:rect(14.1,5,1,12),style:{position}});pseudo.paintRects=[pseudo.bounds];
+    const result=await verifyP0TextInk(cdpFor(f),'#atlas-page-heading');
+    assert.notEqual(result.status,'passed',JSON.stringify({position,result}));
+  }
+});
+
+test('a changed pseudo quad or clip between measurements cannot reuse old empty-paint evidence',async()=>{
+  for(const change of ['quad','clip']){
+    const f=model(),owner=f.addOverlay({bounds:rect(200,200,20,20),style:{backgroundColor:'transparent'}});owner.paintRects=[];
+    const pseudo=f.addPseudo(owner,{bounds:rect(14.1,5,1,12),style:{clipPath:'inset(50%)'}});pseudo.paintRects=[];
+    const cdp=cdpFor(f),send=cdp.send.bind(cdp);let measurements=0;
+    cdp.send=async(method,params)=>{
+      const result=await send(method,params);
+      if(method==='DOM.getBoxModel'){
+        measurements++;
+        if(change==='clip'&&measurements===1)owner.pseudos['::before'].clipPath='inset(0)';
+        if(change==='quad'&&measurements===2)result.model.border=result.model.border.map((coordinate,index)=>coordinate+(index%2===0?1:0));
+      }
+      return result;
+    };
+    const result=await verifyP0TextInk(cdp,'#atlas-page-heading');
+    assert.equal(result.status,'unverified',JSON.stringify({change,result}));
+    assert.match(result.reason,/chang|differ|stable|quad/i);
+  }
+});
+
+test('clipping required heading ink never makes the required title vacuously visible',async()=>{
+  for(const clipPath of ['inset(50%)','inset(0 0 0 80%)']){
+    const f=model({headingStyle:{clipPath}}),result=await verifyP0TextInk(cdpFor(f,{hitOverride:()=>f.textNode}),'#atlas-page-heading');
+    assert.notEqual(result.status,'passed',JSON.stringify({clipPath,result}));assert.match(result.reason,/clipp|ink|glyph/i);
+    const snapshot=await inspectP0Snapshot(cdpFor(f,{snapshot:snapshotFor(f),hitOverride:()=>f.textNode}),{symbol:'BTCUSD',width:320,theme:'light'},'chart',[],[]);
+    assert.notEqual(validateP0Paint(snapshot.samples[0]).status,'passed');
+  }
 });

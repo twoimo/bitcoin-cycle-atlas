@@ -1,8 +1,9 @@
 // P0 text-only paint proof. No style, DOM, scrolling or input mutations.
 // This collector is serialized into the inspected document: keep it standalone.
-export function inspectP0TextInk(selector) {
-  const result={selector,text:'',rect:null,glyphs:[],overlappingPaintCandidates:[],intersections:[],unmeasuredPseudos:[],issues:[]};
-  const issue=message=>{if(!result.issues.includes(message))result.issues.push(message);};
+export function inspectP0TextInk(selector,nativePseudos=[]) {
+  const result={selector,text:'',rect:null,glyphs:[],overlappingPaintCandidates:[],clippedPaintCandidates:[],intersections:[],unmeasuredPseudos:[],issues:[]};
+  let issueCount=0;
+  const issue=message=>{issueCount++;if(!result.issues.includes(message))result.issues.push(message);};
   const rect=value=>({left:value.left,top:value.top,right:value.right,bottom:value.bottom,width:value.width,height:value.height});
   const positive=value=>value&&['left','top','right','bottom','width','height'].every(key=>Number.isFinite(value[key]))&&value.right>value.left&&value.bottom>value.top;
   const intersection=(a,b)=>{const left=Math.max(a.left,b.left),top=Math.max(a.top,b.top),right=Math.min(a.right,b.right),bottom=Math.min(a.bottom,b.bottom);return right>left&&bottom>top?{left,top,right,bottom,width:right-left,height:bottom-top}:null;};
@@ -23,9 +24,118 @@ export function inspectP0TextInk(selector) {
   // Visibility may be restored by a descendant. Display, opacity and hidden
   // content still suppress its complete subtree.
   const hidden=node=>['hidden','collapse'].includes(style(node).visibility)||chain(node).some(current=>{const s=style(current);return current.hasAttribute?.('hidden')||s.display==='none'||Number(s.opacity)===0||s.contentVisibility==='hidden';});
-  const effects=(node,s)=>{
-    for(const [name,normal]of [['transform','none'],['translate','none'],['rotate','none'],['scale','none'],['perspective','none'],['filter','none'],['backdropFilter','none'],['mixBlendMode','normal'],['clipPath','none'],['maskImage','none']])if(value(s,name,normal)!==normal)issue(`${path(node)}: unsupported ${name}`);
+  const effects=(node,s,{measuredClip=false}={})=>{
+    for(const [name,normal]of [['transform','none'],['translate','none'],['rotate','none'],['scale','none'],['perspective','none'],['filter','none'],['backdropFilter','none'],['mixBlendMode','normal'],['maskImage','none']])if(value(s,name,normal)!==normal)issue(`${path(node)}: unsupported ${name}`);
+    if(!measuredClip&&value(s,'clipPath','none')!=='none')issue(`${path(node)}: unsupported clipPath`);
+    if(!['','normal','1'].includes(value(s,'zoom','1')))issue(`${path(node)}: unsupported zoom`);
     if(value(s,'clip','auto')!=='auto')issue(`${path(node)}: unsupported clip`);
+  };
+  // Clip-path percentages use the native border box, not the overflowing text
+  // Range. Keep exact decimal comparisons until emptiness has been decided:
+  // 49.999…% must never round to 50% and hide a positive paint fragment.
+  const rational=text=>{
+    const match=/^\+?(\d+(?:\.\d*)?|\.\d+)(?:e([+-]?\d+))?$/i.exec(String(text));
+    if(!match||match[1].length>128||Math.abs(Number(match[2]||0))>400)return null;
+    const [whole,fraction='']=match[1].split('.'),exponent=Number(match[2]||0)-fraction.length;
+    return {n:BigInt((whole||'0')+fraction)*10n**BigInt(Math.max(0,exponent)),d:10n**BigInt(Math.max(0,-exponent))};
+  };
+  const sum=(a,b)=>({n:a.n*b.d+b.n*a.d,d:a.d*b.d});
+  const subtract=(a,b)=>({n:a.n*b.d-b.n*a.d,d:a.d*b.d});
+  const numeric=a=>Number(a.n)/Number(a.d);
+  const insetRectangle=(text,reference)=>{
+    const match=/^(?:border-box\s+)?inset\(\s*([^()]*)\s*\)(?:\s+border-box)?$/i.exec(text.trim());
+    if(!match||/border-box/i.test(text)&&/^border-box/i.test(text)&&/border-box$/i.test(text))return null;
+    const tokens=match[1].trim().split(/\s+/);if(tokens.length<1||tokens.length>4)return null;
+    const values=tokens.map(token=>{
+      const part=/^(\+?(?:\d+(?:\.\d+)?|\.\d+))(%|px)?$/i.exec(token);if(!part)return null;
+      const amount=rational(part[1]);if(!amount||!part[2]&&amount.n!==0n)return null;
+      return {amount,unit:(part[2]||'px').toLowerCase()};
+    });if(values.some(item=>!item))return null;
+    const [top,right=top,bottom=top,left=right]=values;
+    const axis=(start,end,first,last)=>{
+      const extent=rational(end-start);if(!extent||extent.n<=0n)return null;
+      const resolve=item=>item.unit==='%'?{n:item.amount.n*extent.n,d:item.amount.d*extent.d*100n}:item.amount;
+      const a=resolve(first),b=resolve(last),total=sum(a,b),available=subtract(extent,total);
+      if(available.n<=0n){
+        // CSS Shapes proportionally reduces opposing insets that exceed the
+        // reference extent. The resulting closed edge encloses no area.
+        const offset=numeric({n:a.n*total.d*extent.n,d:a.d*total.n*extent.d});
+        const point=start+offset;return Number.isFinite(point)?{start:point,end:point,empty:true}:null;
+      }
+      const lower=start+numeric(a),upper=end-numeric(b);
+      if(!Number.isFinite(lower)||!Number.isFinite(upper)||!(upper>lower)||!(numeric(available)>0))return null;
+      return {start:lower,end:upper,empty:false};
+    };
+    const x=axis(reference.left,reference.right,left,right),y=axis(reference.top,reference.bottom,top,bottom);
+    if(!x||!y)return null;
+    return {left:x.start,top:y.start,right:x.end,bottom:y.end,width:x.end-x.start,height:y.end-y.start};
+  };
+  const nativeReference=(node,provided=null)=>{
+    if(provided)return positive(provided)?rect(provided):null;
+    if(style(node).display==='contents'||node.namespaceURI&&node.namespaceURI!=='http://www.w3.org/1999/xhtml')return null;
+    const boxes=[...node.getClientRects()].map(rect);if(boxes.length!==1||!positive(boxes[0]))return null;
+    const box=rect(node.getBoundingClientRect());
+    return positive(box)&&['left','top','right','bottom'].every(key=>box[key]===boxes[0][key])?box:null;
+  };
+  const overflowApplies=(clipper,node,ownContent,pseudoStyle=null)=>{
+    if(pseudoStyle){
+      const position=value(pseudoStyle,'position','static');
+      if(position==='fixed')return false;
+      if(position==='absolute'){
+        let containing=node;
+        while(containing&&value(style(containing),'position','static')==='static')containing=containing.parentElement;
+        if(!containing||containing!==clipper&&!clipper.contains(containing))return false;
+      }
+    }
+    if(clipper===node)return ownContent;
+    // Absolute/fixed descendants can escape an overflow ancestor before their
+    // containing block. Clip-path has no such exception and is handled apart.
+    for(let current=node;current&&current!==clipper;current=current.parentElement){
+      const position=value(style(current),'position','static');
+      if(position==='fixed')return false;
+      if(position==='absolute'){
+        let containing=current.parentElement;
+        while(containing&&value(style(containing),'position','static')==='static')containing=containing.parentElement;
+        if(!containing||containing!==clipper&&!clipper.contains(containing))return false;
+      }
+    }
+    return true;
+  };
+  const clippedPaint=(node,kind,rawBox,{pseudo=null,pseudoStyle=null}={})=>{
+    const clips=[],firstIssue=issueCount;
+    let paintRect=rawBox;
+    const ancestry=chain(node),entries=pseudo?[{node,s:pseudoStyle,reference:rawBox,label:path(node)+pseudo},...ancestry.map(current=>({node:current,s:style(current),label:path(current)}))]:ancestry.map(current=>({node:current,s:style(current),label:path(current)}));
+    for(const entry of entries){
+      const {node:current,s,label}=entry;effects(current,s,{measuredClip:true});
+      const clipPath=value(s,'clipPath','none');
+      if(clipPath!=='none'){
+        const reference=nativeReference(current,entry.reference),clipRect=reference&&insetRectangle(clipPath,reference);
+        if(!clipRect)issue(`${label}: unsupported or missing clipPath rectangle (${clipPath})`);
+        else{clips.push({selector:label,kind:'clip-path',value:clipPath,referenceRect:reference,clipRect});paintRect=paintRect&&intersection(paintRect,clipRect);}
+      }
+      const x=/^(auto|scroll|hidden|clip)$/.test(s.overflowX),y=/^(auto|scroll|hidden|clip)$/.test(s.overflowY);
+      const ownContent=kind==='text'||kind==='text-shadow'||Boolean(pseudo&&current===node&&!entry.reference);
+      if(!x&&!y||entry.reference||!overflowApplies(current,node,ownContent,pseudoStyle)||!paintRect)continue;
+      // Root/body overflow propagation and scrollbars need viewport/scrollport
+      // evidence beyond this rectangular path. Never guess a smaller clip.
+      const reference=nativeReference(current),borders=['Left','Top','Right','Bottom'].map(side=>Number.parseFloat(s[`border${side}Width`]));
+      if(!reference||borders.some(number=>!Number.isFinite(number)||number<0)){
+        issue(`${label}: overflow clip reference is missing`);continue;
+      }
+      const [bl,bt,br,bb]=borders,padding={left:reference.left+bl,top:reference.top+bt,right:reference.right-br,bottom:reference.bottom-bb};
+      padding.width=padding.right-padding.left;padding.height=padding.bottom-padding.top;
+      const clipRect={left:x?padding.left:paintRect.left,right:x?padding.right:paintRect.right,top:y?padding.top:paintRect.top,bottom:y?padding.bottom:paintRect.bottom};clipRect.width=clipRect.right-clipRect.left;clipRect.height=clipRect.bottom-clipRect.top;
+      const narrows=paintRect.left<clipRect.left||paintRect.right>clipRect.right||paintRect.top<clipRect.top||paintRect.bottom>clipRect.bottom;
+      if(narrows&&(current===document.documentElement||current===document.body||current.clientWidth!==Math.round(padding.width)||current.clientHeight!==Math.round(padding.height)||/[^0.\s%px]/i.test(value(s,'borderRadius','0px'))||!['','0px','0'].includes(value(s,'overflowClipMargin','0px')))){
+        issue(`${label}: unsupported overflow clip rectangle`);continue;
+      }
+      clips.push({selector:label,kind:'overflow',value:`${s.overflowX} ${s.overflowY}`,referenceRect:reference,clipRect});paintRect=intersection(paintRect,clipRect);
+    }
+    // Validate every geometry effect before accepting an empty region. Unknown
+    // clipping/effects remain unverified rather than silently pruning paint.
+    const complete=issueCount===firstIssue;
+    if(clips.length)result.clippedPaintCandidates.push({selector:path(node),...(pseudo?{pseudo}:{}),kind,rawRect:rawBox,paintRect,clips,status:!complete?'unverified':!paintRect?'empty':['left','top','right','bottom'].some(key=>paintRect[key]!==rawBox[key])?'clipped':'unchanged'});
+    return {paintRect:complete?paintRect:rawBox,clips};
   };
   let target;
   try{const nodes=[...document.querySelectorAll(selector)];if(nodes.length!==1){issue('text selector must identify exactly one element');return result;}target=nodes[0];}
@@ -68,14 +178,16 @@ export function inspectP0TextInk(selector) {
   if(!result.glyphs.length){issue('no visible non-whitespace text ink was collected');return result;}
   const add=(node,kind,box,extra={})=>{
     if(!positive(box))return;
-    const overlaps=result.glyphs.flatMap((glyph,glyphIndex)=>{const hit=intersection(glyph.rect,box);return hit?[{glyphIndex,rect:hit,area:hit.width*hit.height}]:[];});if(!overlaps.length)return;
-    if(result.intersections.length+overlaps.length>4096){issue('paint intersections exceed the 4096 evidence bound');return;}
+    if(!result.glyphs.some(glyph=>intersection(glyph.rect,box)))return;
     const relation=node===target?'self':node.contains(target)?'ancestor':target.contains(node)?'internal':'external';
     if((relation==='self'||relation==='ancestor')&&['background','border'].includes(kind))return;
+    const {pseudoStyle,...detail}=extra,clipping=clippedPaint(node,kind,box,{pseudo:extra.pseudo,pseudoStyle});
+    if(!clipping.paintRect)return;
+    const overlaps=result.glyphs.flatMap((glyph,glyphIndex)=>{const hit=intersection(glyph.rect,clipping.paintRect);return hit?[{glyphIndex,rect:hit,area:hit.width*hit.height}]:[];});if(!overlaps.length)return;
+    if(result.intersections.length+overlaps.length>4096){issue('paint intersections exceed the 4096 evidence bound');return;}
     const id=`paint-${result.overlappingPaintCandidates.length}`;
-    result.overlappingPaintCandidates.push({id,selector:path(node),kind,rect:box,relation,...extra});
+    result.overlappingPaintCandidates.push({id,selector:path(node),kind,rawRect:box,rect:clipping.paintRect,clips:clipping.clips,relation,...detail});
     result.intersections.push(...overlaps.map(hit=>({...hit,candidateId:id})));
-    effects(node,style(node));
   };
   const elements=[...document.querySelectorAll('*')];if(elements.length>20000){issue('document exceeds the 20000 element evidence bound');return result;}
   const svgShapes=new Set(['path','rect','circle','ellipse','line','polyline','polygon','use','image']);
@@ -132,7 +244,16 @@ export function inspectP0TextInk(selector) {
       const relation=node===target?'self':node.contains(target)?'ancestor':target.contains(node)?'internal':'external';
       // A pseudo can extend outside its owner's box. The native wrapper must
       // obtain its own backend-node quad before deciding whether it intersects.
-      result.unmeasuredPseudos.push({selector:path(node),pseudo,relation,unsupportedEffects});
+      const clipKeys=['clipPath','clip','overflowX','overflowY','overflowClipMargin','borderRadius','position','transform','translate','rotate','scale','perspective','filter','backdropFilter','mixBlendMode','maskImage','zoom','display','opacity'];
+      const paintState=s=>Object.fromEntries(clipKeys.map(key=>[key,value(s,key)]));
+      const pending={selector:path(node),pseudo,relation,unsupportedEffects,clipSnapshot:{own:paintState(ps),ancestors:chain(node).map(current=>({selector:path(current),rect:rect(current.getBoundingClientRect()),style:paintState(style(current))}))}};
+      result.unmeasuredPseudos.push(pending);
+      const measured=nativePseudos.find(item=>item.selector===pending.selector&&item.pseudo===pseudo);
+      if(measured){
+        Object.assign(pending,{nativeQuad:measured.nativeQuad,nativeRect:measured.nativeRect,backendNodeId:measured.backendNodeId});
+        if(unsupportedEffects.length)issue(`${path(node)+pseudo}: pseudo effect can paint outside its native box`);
+        add(node,'pseudo',measured.nativeRect,{pseudo,pseudoStyle:ps,backendNodeId:measured.backendNodeId,nativeQuad:measured.nativeQuad});
+      }
     }
   }
   for(const candidate of result.overlappingPaintCandidates)if(candidate.unsupported)issue(`${candidate.selector}: unsupported ${candidate.kind} paint`);
@@ -147,7 +268,7 @@ export async function verifyP0TextInk(cdp,selector) {
   try{
     const response=await cdp.send('Runtime.evaluate',{expression:`(${inspectP0TextInk.toString()})(${JSON.stringify(selector)})`,returnByValue:true,awaitPromise:true});
     if(response.exceptionDetails)return unresolved('text ink collection raised a browser exception');
-    const geometry=response.result?.value;evidence.geometry=geometry;
+    let geometry=response.result?.value;evidence.geometry=geometry;
     if(!geometry||geometry.selector!==selector||!geometry.text?.trim()||!geometry.rect||!Array.isArray(geometry.glyphs)||!geometry.glyphs.length)return unresolved('native text geometry is missing');
     if(!Array.isArray(geometry.issues)||!Array.isArray(geometry.intersections)||!Array.isArray(geometry.overlappingPaintCandidates))return unresolved('native text paint inventory is missing');
     if(geometry.issues.length){evidence.issues.push(...geometry.issues);return unresolved(geometry.issues.join('; '));}
@@ -166,6 +287,7 @@ export async function verifyP0TextInk(cdp,selector) {
       allowed.push(new Set([owner.backendNodeId,text.backendNodeId]));
     }
     if(!Array.isArray(geometry.unmeasuredPseudos))return unresolved('native pseudo paint inventory is missing');
+    const nativePseudos=[];
     for(const pending of geometry.unmeasuredPseudos){
       const owner=await resolveOwner(pending.selector),pseudo=owner.pseudoElements?.find(node=>node.pseudoType===pending.pseudo.slice(2));
       if(!Number.isInteger(pseudo?.backendNodeId)||pseudo.backendNodeId<=0)return unresolved('native pseudo paint backend evidence is missing');
@@ -174,13 +296,24 @@ export async function verifyP0TextInk(cdp,selector) {
       const left=Math.min(quad[0],quad[2],quad[4],quad[6]),right=Math.max(quad[0],quad[2],quad[4],quad[6]),top=Math.min(quad[1],quad[3],quad[5],quad[7]),bottom=Math.max(quad[1],quad[3],quad[5],quad[7]);
       const rect={left,top,right,bottom,width:right-left,height:bottom-top};
       if(!(rect.width>0&&rect.height>0))return unresolved('native pseudo paint has no positive quad');
-      pending.nativeQuad=quad;pending.nativeRect=rect;pending.backendNodeId=pseudo.backendNodeId;
-      if(pending.unsupportedEffects?.length)evidence.issues.push('pseudo effect can paint outside its native box');
-      const overlaps=geometry.glyphs.flatMap((glyph,glyphIndex)=>{const a=glyph.rect,l=Math.max(a.left,left),r=Math.min(a.right,right),t=Math.max(a.top,top),b=Math.min(a.bottom,bottom);return r>l&&b>t?[{glyphIndex,rect:{left:l,top:t,right:r,bottom:b,width:r-l,height:b-t},area:(r-l)*(b-t)}]:[];});
-      if(!overlaps.length)continue;
-      const id=`paint-${geometry.overlappingPaintCandidates.length}`;
-      geometry.overlappingPaintCandidates.push({id,selector:pending.selector,kind:'pseudo',rect,relation:pending.relation,pseudo:pending.pseudo,backendNodeId:pseudo.backendNodeId,nativeQuad:quad});
-      geometry.intersections.push(...overlaps.map(hit=>({...hit,candidateId:id})));
+      if(quad[0]!==left||quad[1]!==top||quad[2]!==right||quad[3]!==top||quad[4]!==right||quad[5]!==bottom||quad[6]!==left||quad[7]!==bottom)return unresolved('native pseudo paint quad is not an axis-aligned rectangle');
+      nativePseudos.push({selector:pending.selector,pseudo:pending.pseudo,nativeQuad:quad,nativeRect:rect,backendNodeId:pseudo.backendNodeId});
+    }
+    if(nativePseudos.length){
+      // Reuse the same DOM/computed-style clipping path for a pseudo's own
+      // native quad. Pseudo offsets can put its paint far outside its owner.
+      const second=await cdp.send('Runtime.evaluate',{expression:`(${inspectP0TextInk.toString()})(${JSON.stringify(selector)},${JSON.stringify(nativePseudos)})`,returnByValue:true,awaitPromise:true});
+      if(second.exceptionDetails)return unresolved('native pseudo clip collection raised a browser exception');
+      const measured=second.result?.value;
+      if(!measured||!Array.isArray(measured.issues)||!Array.isArray(measured.intersections)||!Array.isArray(measured.overlappingPaintCandidates)||!Array.isArray(measured.unmeasuredPseudos))return unresolved('native pseudo clipped paint geometry is missing');
+      const identity=item=>JSON.stringify({selector:item.selector,text:item.text,rect:item.rect,glyphs:item.glyphs,pseudos:item.unmeasuredPseudos.map(({selector,pseudo,relation,unsupportedEffects,clipSnapshot})=>({selector,pseudo,relation,unsupportedEffects,clipSnapshot}))});
+      if(identity(measured)!==identity(geometry))return unresolved('text or pseudo clipping inventory changed before probing');
+      geometry=measured;evidence.geometry=geometry;
+      if(geometry.issues.length){evidence.issues.push(...geometry.issues);return unresolved(geometry.issues.join('; '));}
+      for(const item of nativePseudos){
+        const measuredAgain=await cdp.send('DOM.getBoxModel',{backendNodeId:item.backendNodeId});
+        if(JSON.stringify(measuredAgain.model?.border)!==JSON.stringify(item.nativeQuad))return unresolved('native pseudo paint quad changed before probing');
+      }
     }
     const plan=[],integerBounds=rect=>{
       if(!rect||!['left','top','right','bottom'].every(key=>Number.isFinite(rect[key])))return null;
