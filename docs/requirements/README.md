@@ -3,6 +3,7 @@
 | 문서 | 주제 | 상태 | 비고 |
 |---|---|---|---|
 | [REQ_AUTH_PRIVATE_20261109.md](REQ_AUTH_PRIVATE_20261109.md) | 초대 기반 회원가입·관리자 승인·역할/강등·프로필/비밀번호/탈퇴·Google 로그인·비공개(블러) 접근·보안 7종 검증 | 요구사항 확정 대기 | 구현 전. 미결정 4건 포함 |
+| [REQ_RELAY_TELEGRAM_CLONE_20261112.md](REQ_RELAY_TELEGRAM_CLONE_20261112.md) | 릴레이 콘텐츠를 Telegram Web UI로 클론 | 요구사항 기록·구현 전 | 1440 목록 360·메시지 696, 390 전환, T-1~T-6, R22 다음 |
 | [REQ_RELAY_RAG_20261109.md](REQ_RELAY_RAG_20261109.md) | 릴레이 3열·RAG·소스 전담 3개+종합·라우터·예산·평가·QA | 문서 계약 정리 완료·일부 미결정 | 구현 전. WP-B 추가 계약은 이관됨. §11의 저장·비용·모델·보존·권한 등 8개 결정은 유지 |
 | [REQ_REBRAND_SCOUTING_20261112.md](REQ_REBRAND_SCOUTING_20261112.md) | 저장소·도메인 리브랜딩, 플스포컴퍼니(김동호) 스카우트 대응 표면 | 요구사항 확정 대기 | 이름·도메인 미결정 4건. 리서치·마이그레이션 계획 포함 |
 | [REQ_RAG_FREE_ARCH_20261112.md](REQ_RAG_FREE_ARCH_20261112.md) | 릴레이 RAG 무료 아키텍처(Vectorize·D1 없이 정적 인덱스+Workers AI) | 설계 확정·구현 전 | bge-m3 1024d·int8, 코퍼스 0.3MB, 무료 10k neurons/일, 추출형 폴백 |
