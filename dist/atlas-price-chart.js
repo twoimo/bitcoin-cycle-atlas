@@ -199,7 +199,9 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   let s=`<title>${historical?'실제 비트코인 가격':'실제 비트코인 가격과 미래 가정'}</title><desc>가격 실선은 실제 관측, 금색 가격 점선은 미래 가정입니다. 색 원과 기간선의 실선은 사후 기준, 점선은 잠정 또는 가정 기준입니다. 그래프를 누르면 값을 고정해 읽을 수 있습니다. 미래 음영은 보정된 확률 구간이 아닙니다.</desc><defs><clipPath id="${clip}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${bottom-T}"/></clipPath><clipPath id="${priceClip}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${priceBottom-T}"/></clipPath><clipPath id="${axisClip}"><rect x="${W-R}" y="${T}" width="${R}" height="${priceBottom-T}"/></clipPath></defs>`;
   // The complete frame adds paint, not a larger DOM budget. Batch identical
   // grid strokes while retaining every original tick coordinate and label.
-  s+=`<path class="price-axis-grid" d="${priceScale.ticks.map(price=>`M${L},${y(price)}H${W-R}`).join('')}" fill="none" stroke="var(--grid)"/>`;
+  // Keep both endpoints explicit like the plotted series: narrowing the reader
+  // column changes X only, while each coordinate pair retains the same Y.
+  s+=`<path class="price-axis-grid" d="${priceScale.ticks.map(price=>{const yy=y(price);return `M${L},${yy}L${W-R},${yy}`;}).join('')}" fill="none" stroke="var(--grid)"/>`;
   for(const price of priceScale.ticks){const yy=y(price),label=axisLabels.tick(price);s+=`<text x="${W-R+axisText.inset}" y="${yy+4}" text-anchor="start" ${axisText.attributes(label)} fill="var(--chart-axis-ink)" font-size="${axisText.fontSize}">${esc(label)}</text>`;}
   let months=span>5000?(small?60:24):span>3000?(small?36:24):span>1100?(small?12:6):span>550?(small?6:3):span>270?3:1;
   if(Number.isFinite(dateTickMinSpacing)&&dateTickMinSpacing>0){
