@@ -9,6 +9,29 @@ const contained = (inner, outer) => hasBox(inner) && hasBox(outer) && inner.left
 export const priceAxisIntersectionArea = (a, b) => a && b
   ? Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) * Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top)) : 0;
 
+/** Prove an empty clipping region, never infer sr-only from an ID or size.
+ * CSS inset shorthand uses T/R/B/L; opposing insets totaling at least 100%
+ * leave no area (CSS Shapes 1, inset()). Only nonnegative percentages and
+ * zero lengths are recognized; other syntax keeps the strict geometry path.
+ * Exact decimal arithmetic prevents a tiny positive area rounding to zero. */
+export function priceAxisHasEmptyInsetClip(value) {
+  const match = typeof value === 'string' && /^inset\(\s*([^()]*)\s*\)$/i.exec(value.trim());
+  if (!match) return false;
+  const tokens = match[1].trim().split(/\s+/);
+  if (tokens.length < 1 || tokens.length > 4) return false;
+  const values = tokens.map(token => {
+    if (/^\+?(?:0+(?:\.0+)?|\.0+)(?:px)?$/i.test(token)) return {n:0n,d:1n};
+    const percent = /^\+?(\d+(?:\.\d+)?|\.\d+)%$/.exec(token);
+    if (!percent) return null;
+    const [whole, fraction = ''] = percent[1].split('.');
+    return {n:BigInt((whole || '0') + fraction),d:10n ** BigInt(fraction.length)};
+  });
+  if (values.some(value => value === null)) return false;
+  const [top, right = top, bottom = top, left = right] = values;
+  const closed = (a,b) => a.n * b.d + b.n * a.d >= 100n * a.d * b.d;
+  return closed(top,bottom) || closed(left,right);
+}
+
 /** Computed visibility belongs to the actual node: a child may override a
  * hidden ancestor. Display/opacity still suppress the whole subtree. A hidden
  * content subtree retains its owner's background, but not its text ink. */

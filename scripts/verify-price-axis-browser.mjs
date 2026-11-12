@@ -13,7 +13,7 @@ import {fileURLToPath, pathToFileURL} from 'node:url';
 import {headlessWindowArgument, verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
 import {
   activePriceAxisBadge, comparePriceAxisStates, priceAxisAlignment, priceAxisOverlapEvidence, priceAxisOverlayCoverage,
-  priceAxisObservationForState, priceAxisPaintStyleState, priceAxisSourceExpectations, priceAxisSymbols, priceAxisWidths, validatePriceAxisState,
+  priceAxisObservationForState, priceAxisHasEmptyInsetClip, priceAxisPaintStyleState, priceAxisSourceExpectations, priceAxisSymbols, priceAxisWidths, validatePriceAxisState,
 } from './price-axis-browser-contract.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url)), site = resolve(root,'dist'), prefix = '/bitcoin-cycle-atlas';
@@ -64,7 +64,7 @@ class Cdp {
   }
 }
 async function evaluate(cdp, fn, ...args) {
-  const helper = fn === inspectPriceAxis ? `const priceAxisPaintStyleState = ${priceAxisPaintStyleState.toString()};` : '';
+  const helper = fn === inspectPriceAxis ? [priceAxisPaintStyleState,priceAxisHasEmptyInsetClip].map(helper => `const ${helper.name} = ${helper.toString()};`).join('\n') : '';
   const result = await cdp.send('Runtime.evaluate',{expression:`(()=>{${helper}return (${fn.toString()})(${args.map(value => JSON.stringify(value)).join(',')});})()`,awaitPromise:true,returnByValue:true});
   if (result.exceptionDetails) throw new Error(`Browser evaluation: ${JSON.stringify(result.exceptionDetails).slice(0,1000)}`);
   return result.result.value;
@@ -111,9 +111,19 @@ export function inspectPriceAxis(symbol) {
     return rect(Math.min(...points.map(p => p.x)),Math.min(...points.map(p => p.y)),Math.max(...points.map(p => p.x)),Math.max(...points.map(p => p.y)));
   };
   const clipped = (node, original, issues = geometryIssues) => {
+    // A zero-area clip on a box also clips every descendant. Resolve this
+    // before reporting unsupported shapes lower in that invisible subtree.
+    // display:contents has no box: its declaration cannot prove zero paint.
+    const ancestors = [];
+    for (let current = node; current; current = current.parentElement) {
+      const css = getComputedStyle(current);
+      if (css.display !== 'contents' && priceAxisHasEmptyInsetClip(css.clipPath)) return null;
+      ancestors.push({current,css});
+    }
     let result = original;
-    for (let current = node; current && result; current = current.parentElement) {
-      const css = getComputedStyle(current), clip = css.clipPath;
+    for (const {current,css} of ancestors) {
+      if (!result) break;
+      const clip = css.clipPath;
       if (clip && clip !== 'none') {
         const id = clip.match(/#([^"')]+)["']?\)$/)?.[1], path = id && document.getElementById(id), children = path ? [...path.children] : [];
         if (!path || path.getAttribute('clipPathUnits') === 'objectBoundingBox' || children.length !== 1 || children[0].localName !== 'rect' || path.hasAttribute('transform') || children[0].hasAttribute('transform')) issues.push(`unsupported clip geometry on ${describe(current)}: ${clip}`);
