@@ -202,6 +202,8 @@ Atlas의 현재 다크·골드·hairlines 편집 톤을 **Funnest Charts의 밝�
 
 이번 `npm test` host 배치는 **3,903 pass·17 fail·0 skip**, 고정 런타임 배치는 Docker가 없어 시작하지 못해 `complete:false`다. 기준의 **3,898 pass·17 fail·5 skip**과 같은 6개 실패 묶음이며, 관련 테스트·소스 15파일은 `b230fa8`과 동일하다. 기존 17실패는 수정하지 않고 병합 전 게이트로 보류한다. P2b·P4·P5·main push·배포는 수행하지 않았다.
 
+**Mac 재검증(2026-11-13, Chrome 157.0.8103.79, 제품 `042b04a`)** — 기존 P1 게이트 레이아웃 28시도·25통과, 내비 56/56, 복귀 8/8, `sourceStable:true`, `qualifiesP1Verification:false`. P3 20화면 가로 오버플로 0, 시장 자식 오버플로 0. 실패 3건은 relay 320·390·768의 h1 글자 잉크 미검증이다. 목록 59번째 항목 페인트가 제목 글자와 교차하고, 기존 검사기는 unsupported overflow clip을 통과로 바꾸지 않는다. relay-1440은 통과했다. 리서치 표 후보는 320에서 td 13px·th 11px·행 64px, 1440에서 td 13px·행 48px다. 기준 커밋 계산 비교는 없다. P3를 닫지 않는다. [영수증](../evidence/qa-q-p3dash-1-mac-042b04a/README.md).
+
 ## 5. 수용 기준
 
 | # | 기준 | 측정 |
