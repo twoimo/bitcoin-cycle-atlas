@@ -18,11 +18,41 @@
   },
   "initialPass": "0/6",
   "functionalPass": "6/6",
-  "previousRun": {"commit": "8487b26", "initialReadyMs": "4542.6~4893.0", "initialPass": "0/6"},
-  "conferenceRegression": {"cases": 14, "passed": 14, "failures": 0, "status": "passed"},
-  "css": {"linksBefore": 41, "linksAfter": 4, "gzipBytesBefore": 142004, "gzipBytesAfter": 121311, "styleCheck": "ok (41 sources, 2 bundles, bytes+sha256 match)"},
+  "previousRun": {
+    "commit": "8487b26",
+    "initialReadyMs": "4542.6~4893.0",
+    "initialPass": "0/6"
+  },
+  "conferenceRegression": {
+    "cases": 14,
+    "passed": 14,
+    "failures": 0,
+    "status": "passed"
+  },
+  "css": {
+    "linksBefore": 41,
+    "linksAfter": 4,
+    "gzipBytesBefore": 142004,
+    "gzipBytesAfter": 121311,
+    "styleCheck": "ok (41 sources, 2 bundles, bytes+sha256 match)"
+  },
   "waterfall1440x900": {
-    "levelStartTimesMs": [175, 564, 748, 922, 1115, 1203, 1382, 1560, 1766, 2175, 2331, 2497, 2691, 2871],
+    "levelStartTimesMs": [
+      175,
+      564,
+      748,
+      922,
+      1115,
+      1203,
+      1382,
+      1560,
+      1766,
+      2175,
+      2331,
+      2497,
+      2691,
+      2871
+    ],
     "timelineJsonStartMs": 2871,
     "timelineJsonDurationMs": 356,
     "requests": 70,
@@ -32,5 +62,51 @@
     "cssRequests": 4,
     "cssTransferBytes": 122511
   },
-  "verdict": "A-9 open. CSS consolidation cut ~1.4s but the acceptance gate still fails; residual cost is module-graph depth (one RTT per import level) plus late timeline.json discovery."
+  "verdict": "A-9 open. CSS consolidation cut ~1.4s but the acceptance gate still fails; residual cost is module-graph depth (one RTT per import level) plus late timeline.json discovery.",
+  "regressionAtCommit": "0abd8ff884bcff88545c68cc4b36515b9597f776",
+  "regression": {
+    "conference": {
+      "cases": 14,
+      "passed": 14,
+      "failures": 0
+    },
+    "responsive": {
+      "cases": 44,
+      "passed": 44,
+      "failures": 0,
+      "symbols": [
+        "BTCUSD",
+        "ETHUSD",
+        "MSTR",
+        "BMNR"
+      ],
+      "screenshotsPerSymbol": 25
+    },
+    "wp6": {
+      "cases": 30,
+      "passed": 30,
+      "status": "PASS",
+      "screenshots": 48
+    },
+    "chartQa": {
+      "cases": 12,
+      "passed": 12,
+      "status": "PASS",
+      "screenshots": 18
+    },
+    "compareShell": {
+      "status": "PASSED",
+      "failures": 0,
+      "qualifiesFullVerification": false
+    },
+    "npmTest": {
+      "complete": true,
+      "tests": 3464,
+      "pass": 3459,
+      "skipped": 5,
+      "fail": 0,
+      "batches": 2
+    },
+    "note": "First WP6/chart-qa run failed with spawnSync fc-list ENOENT because PATH lacked /opt/homebrew/bin; rerun with PATH passed. Not a product defect."
+  }
 }

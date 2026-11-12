@@ -64,3 +64,20 @@
 - 요약: [../evidence/a9-macos-20261112/summary.json](../evidence/a9-macos-20261112/summary.json)
 - 원본 report: `build/conference-data-browser/report.json`(미커밋), 컨퍼런스 14: `build/conference-a9-regression/report.json`(미커밋)
 - Pro 쪽 원본: [A9_BOOT_VERIFICATION_20261112.md](A9_BOOT_VERIFICATION_20261112.md), `docs/evidence/a9-20261112/`
+
+## 6. 같은 커밋의 회귀 게이트 (macOS, HEAD `0abd8ff`)
+
+CSS 41→4 통합은 전역 스타일을 건드리므로 표면별 게이트를 macOS에서 다시 돌렸다. 모두 `dist`가 커밋된 clean 트리, `ATLAS_BROWSER_PATH=/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`, `PATH`에 `/opt/homebrew/bin`(fc-list) 포함 조건이다.
+
+| 게이트 | 결과 | 비고 |
+|---|---|---|
+| 컨퍼런스 14 | **14/14 통과·실패 0** | `build/conference-a9-regression` |
+| 반응형 44 | **44/44 통과** (BTCUSD·ETHUSD·MSTR·BMNR 각 11, 스크린샷 25장씩 검증) | `r10-browser-gates.mjs` |
+| WP6 30 | **30/30 통과**(PASS, 스크린샷 48장) | 동일 러너 |
+| chart-qa 12 | **12/12 통과**(PASS, 스크린샷 18장) | 동일 러너 |
+| compare 셸 | **PASSED, failures 0** | `verify-compare-shell-browser.mjs`, `qualifiesFullVerification:false`는 기존 스코프 표기 |
+| `npm test` | `complete:true` **3,459 pass + 5 skip = 3,464**, 실패 0, 2배치 | exit 0 |
+| A-9 초기 로드 | **0/6** | 위 §2 |
+
+- 첫 실행에서 WP6·chart-qa가 `spawnSync fc-list ENOENT`로 죽었는데, 이는 macOS에 `fc-list`가 없어서가 아니라 실행 PATH에 `/opt/homebrew/bin`이 빠진 내 실수였다. PATH를 채운 재실행에서 30/30·12/12로 통과했으므로 제품 결함이 아니다. 이 실패를 통과로 덮지 않고 그대로 적는다.
+- `verify:pages`는 여전히 기존 실패다(Pro 라운드 1 보고와 동일).
