@@ -13,7 +13,9 @@ import { createServer } from 'node:http';
 import { mkdtemp, readFile, writeFile, mkdir, rm, stat, realpath } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { extname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { readNativeInteractiveTarget } from './verify-workspace-browser.mjs';
+import { validateP1Target } from './verify-ui-renewal-p1-browser.mjs';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const argv = process.argv.slice(2);
@@ -26,6 +28,47 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const viewports = [[320, 740], [390, 844], [456, 900], [620, 900], [768, 1024], [1024, 768], [1280, 800], [1440, 900], [1920, 1080]];
 const phoneMax = 620, tabletMax = 959;
+
+// P1 adds a third explicit owner; it does not make a missing/hidden navigation
+// acceptable. The old sidebar/phone rail contracts remain the fallback cases.
+export function validateContentNavigationOwner(state) {
+  const failures = [];
+  if (state.navCount !== 1 || state.originalNav !== true) failures.push('navigation must be the one original node');
+  if (state.navItems !== 7 || state.navLabelled !== 7) failures.push('all seven named navigation destinations must remain');
+  if (state.headerOwnsNav) {
+    if (state.headerHostCount !== 1 || !state.headerNavPainted || state.sidebarRendered || state.navInSidebar || state.navInRail || !state.railInDoc || !state.railHidden || state.railCount !== 0) failures.push('header navigation has a duplicate owner or orphan rail');
+    if (state.navDirection !== 'row' || !/^(auto|scroll)$/.test(state.navOverflowX)) failures.push('header navigation must own its native horizontal scroll');
+  } else if (state.headerHostCount) failures.push('dashboard header did not take its original navigation');
+  else if (state.sidebarRendered) {
+    if (!state.navInSidebar || state.navInRail || !state.railInDoc || !state.railHidden || state.railCount !== 0) failures.push('rendered sidebar must own navigation with no painted rail');
+  } else if (!state.railInDoc || state.railHidden || !state.navInRail || state.railCount !== 1) failures.push('phone rail must own navigation exactly once');
+  return failures;
+}
+
+// Fixed wheel jumps can alternate between opposite clipped edges of a tab.
+// Keep the native delta inside both the tab's fully visible interval and the
+// remaining scroll extent; invalid or wider-than-port geometry cannot pass.
+export function contentNavigationWheelDelta({itemLeft,itemRight,portLeft,portRight,scrollLeft,scrollWidth,clientWidth}={}) {
+  if (![itemLeft,itemRight,portLeft,portRight,scrollLeft,scrollWidth,clientWidth].every(Number.isFinite) ||
+    !(itemRight>itemLeft && portRight>portLeft && clientWidth>0) || scrollWidth<clientWidth ||
+    itemRight-itemLeft>portRight-portLeft || scrollLeft<0 || scrollLeft>scrollWidth-clientWidth) return null;
+  const minimum=itemRight-portRight, maximum=itemLeft-portLeft;
+  const requested=maximum<0 ? Math.max(Math.floor(maximum),minimum) : minimum>0 ? Math.min(Math.ceil(minimum),maximum) : 0;
+  const delta=Math.max(-scrollLeft,Math.min(scrollWidth-clientWidth-scrollLeft,requested));
+  return delta===0 ? 0 : delta;
+}
+
+function readContentNavigationOwner() {
+  const nav = document.querySelector('.atlas-nav'), headerHost = document.querySelector('.atlas-dashboard-header .atlas-dashboard-nav'), rail = document.querySelector('.content-rail'), sidebar = document.querySelector('.atlas-sidebar');
+  const painted = node => Boolean(node?.isConnected && !node.closest('[hidden],[inert]') && node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}) && node.getBoundingClientRect().width > 1 && node.getBoundingClientRect().height > 1);
+  const style = nav && getComputedStyle(nav), items = [...nav?.querySelectorAll('[data-atlas-page]') || []];
+  return {navCount:document.querySelectorAll('.atlas-nav').length, originalNav:nav === window.__wpcOriginalNav,
+    navItems:items.length, navLabelled:items.filter(n => n.getAttribute('aria-label') || n.getAttribute('title')).length,
+    headerHostCount:document.querySelectorAll('.atlas-dashboard-header .atlas-dashboard-nav').length,
+    headerOwnsNav:Boolean(headerHost?.contains(nav)),headerNavPainted:painted(headerHost) && painted(nav),navDirection:style?.flexDirection,navOverflowX:style?.overflowX,
+    navInSidebar:Boolean(sidebar?.contains(nav)),navInRail:Boolean(rail?.contains(nav)),sidebarRendered:painted(sidebar),
+    railInDoc:Boolean(rail?.isConnected),railHidden:rail?.hidden,railCount:[...document.querySelectorAll('.workbench-rail')].filter(painted).length};
+}
 
 const routes = [
   ['outlook', 'index.html?page=outlook', 'page'],
@@ -199,6 +242,12 @@ const main = async () => {
     const list = await (await fetch(`http://127.0.0.1:${port[0]}/json/list`)).json();
     const cdp = await Cdp.connect(list.find(t => t.id === targetId).webSocketDebuggerUrl);
     await cdp.send('Page.enable'); await cdp.send('Runtime.enable'); await cdp.send('Log.enable');
+    // Capture the parser-created navigation before shell code can move it.
+    // This reference is read-only evidence: no product DOM or focus is changed.
+    await cdp.send('Page.addScriptToEvaluateOnNewDocument', {source:`(() => {
+      const remember = () => { const nav = document.querySelector('.atlas-nav'); if (!nav) return; window.__wpcOriginalNav = nav; observer.disconnect(); };
+      const observer = new MutationObserver(remember); observer.observe(document, {childList:true, subtree:true}); remember();
+    })();`});
     // Verified before the first emulation: the phone-to-1920 journey must fit in
     // the native client, not only in the emulated viewport.
     report.nativeWindowEnvelope = await verifyHeadlessWindowEnvelope(cdp, { width: 1920, height: 1080 });
@@ -302,6 +351,66 @@ const main = async () => {
       if (!hit || !hit.inside) return { ok: false, reason: 'unreachable point', x: Math.round(x), y: Math.round(y), hit };
       for (const type of ['mousePressed', 'mouseReleased']) await cdp.send('Input.dispatchMouseEvent', { type, x, y, button: 'left', clickCount: 1 });
       return { ok: true, x: Math.round(x), y: Math.round(y), hit };
+    };
+
+    // Header tabs replace the old vertical owner. Reach every original node
+    // through native horizontal wheel and Tab inputs, then restore the first
+    // item through Shift+Tab. No DOM scrolling/focus helper can satisfy this.
+    const verifyHeaderNavigation = async () => {
+      const owner = await evaluate(cdp, readContentNavigationOwner);
+      if (!owner.headerOwnsNav) return null;
+      const receipt = {owner, pointer:[], keyboard:[], wheel:[], failures:[]};
+      receipt.failures.push(...validateContentNavigationOwner(owner));
+      const ids = await evaluate(cdp, () => [...document.querySelectorAll('.atlas-dashboard-nav .atlas-nav [data-atlas-page]')].map(n => n.dataset.atlasPage));
+      const key = async reverse => {for (const type of ['keyDown','keyUp']) await cdp.send('Input.dispatchKeyEvent', {type,key:'Tab',code:'Tab',windowsVirtualKeyCode:9,nativeVirtualKeyCode:9,modifiers:reverse ? 8 : 0});await sleep(25);};
+      const reachKeyboard = async (selector, reverse=false) => {
+        // A pointer-focused item must acquire its ring from a real keypress.
+        if (await evaluate(cdp, s => document.activeElement === document.querySelector(s), selector)) {await key(!reverse);await key(reverse);}
+        for (let i=0; i<280; i++) {
+          if (await evaluate(cdp, s => document.activeElement === document.querySelector(s), selector)) {
+            const target = await evaluate(cdp, readNativeInteractiveTarget, selector, true);
+            const failures = validateP1Target(target, {keyboard:true});
+            receipt.keyboard.push({selector,reverse,target,failures});receipt.failures.push(...failures.map(message => `${selector}: ${message}`));return;
+          }
+          await key(reverse);
+        }
+        receipt.failures.push('Native Tab did not reach '+selector);
+      };
+      for (const id of ids) {
+        const selector = `.atlas-dashboard-nav .atlas-nav [data-atlas-page="${id}"]`;
+        let target;
+        for (let attempt=0; attempt<24; attempt++) {
+          target = await evaluate(cdp, readNativeInteractiveTarget, selector);
+          if (!validateP1Target(target).length) break;
+          const scroll = await evaluate(cdp, s => {
+            const nav = document.querySelector('.atlas-dashboard-nav .atlas-nav'), item = document.querySelector(s);
+            if (!nav || !item) return null;
+            const r = item.getBoundingClientRect(), b = nav.getBoundingClientRect();
+            const portLeft=Math.max(0,b.left+nav.clientLeft),portRight=Math.min(innerWidth,b.left+nav.clientLeft+nav.clientWidth);
+            const top=Math.max(0,b.top+nav.clientTop),bottom=Math.min(innerHeight,b.top+nav.clientTop+nav.clientHeight);
+            if (!(portRight>portLeft && bottom>top)) return null;
+            const x=(portLeft+portRight)/2,y=(top+bottom)/2,hit=document.elementFromPoint(x,y);
+            return {x,y,itemLeft:r.left,itemRight:r.right,portLeft,portRight,scrollLeft:nav.scrollLeft,scrollWidth:nav.scrollWidth,clientWidth:nav.clientWidth,
+              before:nav.scrollLeft,exposed:Boolean(hit && (hit === nav || nav.contains(hit)))};
+          }, selector);
+          if (!scroll?.exposed) break;
+          scroll.deltaX=contentNavigationWheelDelta(scroll);
+          if (!scroll.deltaX) break;
+          await cdp.send('Input.dispatchMouseEvent', {type:'mouseMoved',x:scroll.x,y:scroll.y});
+          await cdp.send('Input.dispatchMouseEvent', {type:'mouseWheel',x:scroll.x,y:scroll.y,deltaX:scroll.deltaX,deltaY:0});await sleep(160);
+          const after = await evaluate(cdp, () => document.querySelector('.atlas-dashboard-nav .atlas-nav').scrollLeft);
+          receipt.wheel.push({selector,...scroll,after});
+          if (after === scroll.before) {receipt.failures.push('Native horizontal wheel did not move navigation for '+id);break;}
+        }
+        target = await evaluate(cdp, readNativeInteractiveTarget, selector);
+        const failures = validateP1Target(target);receipt.pointer.push({selector,target,failures});receipt.failures.push(...failures.map(message => `${selector}: ${message}`));
+        if (!failures.length) await cdp.send('Input.dispatchMouseEvent', {type:'mouseMoved',x:target.x,y:target.y});
+      }
+      for (const id of ids) await reachKeyboard(`.atlas-dashboard-nav .atlas-nav [data-atlas-page="${id}"]`);
+      if (ids.length) await reachKeyboard(`.atlas-dashboard-nav .atlas-nav [data-atlas-page="${ids[0]}"]`,true);
+      receipt.after = await evaluate(cdp, readContentNavigationOwner);
+      receipt.failures.push(...validateContentNavigationOwner(receipt.after));
+      return receipt;
     };
 
 
@@ -603,7 +712,8 @@ const main = async () => {
           };
           // The navigation owner differs by width, so its real host is collected
           // instead of only the chart's own rail.
-          const navHost = document.querySelector('.content-rail .atlas-nav') ? '.content-rail'
+          const navHost = document.querySelector('.atlas-dashboard-header .atlas-dashboard-nav .atlas-nav') ? '.atlas-dashboard-nav'
+            : document.querySelector('.content-rail .atlas-nav') ? '.content-rail'
             : document.querySelector('.atlas-sidebar .atlas-nav') ? '.atlas-sidebar' : '.workbench-rail';
           const regions = ['.atlas-canvas-heading', navHost, '.workbench-bottom-bar'];
           const nodes = [...document.querySelectorAll(regions.map(s => s + ' button,' + s + ' a[href],' + s + ' select,' + s + ' summary').join(','))];
@@ -626,29 +736,35 @@ const main = async () => {
             bottomOwnsFooter: Boolean(document.querySelector('.workbench-bottom-bar .footer')),
           };
         });
+        const navOwnership = await evaluate(cdp, readContentNavigationOwner);
+        const headerNavigation = await verifyHeaderNavigation();
         const entry = {
           route: name, viewport: `${w}x${h}`, klass: w <= phoneMax ? 'phone' : w <= tabletMax ? 'tablet' : 'desktop',
           boot: bootState, regions: state.regions, present: state.present, overflow: state.overflow,
           headings: state.headings.length, duplicates: state.duplicates,
-          ...shellTargets, errors: [...errors], expectedMissingData:[...expectedMissingData], conference:state.conference,
+          ...shellTargets, navOwnership, headerNavigation, errors: [...errors], expectedMissingData:[...expectedMissingData], conference:state.conference,
         };
         report.contentWidths.push(entry);
         const where = `content ${name} ${w}x${h}`;
         if (bootState !== 'ready') fail(where, 'boot ' + bootState);
         for (const key of ['top', 'left', 'right', 'bottom']) if (!state.present[key]) fail(where, `missing shell region ${key}`);
         if (state.regions.top !== 'visible') fail(where, 'top region ' + state.regions.top);
-        // The dashboard composition keeps the navigation in its sidebar; the right
-        // icon rail is the phone-width host for the same node, never a second copy.
-        if (shellTargets.sidebarRendered && (state.regions.right === 'visible' || shellTargets.railPainted)) fail(where, 'dashboard kept a right rail beside the rendered sidebar');
-        if (!shellTargets.sidebarRendered && state.regions.right !== 'visible') fail(where, 'right region ' + state.regions.right);
+        // P1 owns the same nav in a scrolling header. The legacy sidebar/rail
+        // branches remain strict when no header owner has been mounted.
+        for (const issue of validateContentNavigationOwner(navOwnership)) fail(where, issue);
+        if (navOwnership.headerOwnsNav) {
+          if (state.regions.left === 'visible' || state.regions.right === 'visible') fail(where, 'header navigation left an orphan sidebar or rail');
+          for (const issue of headerNavigation?.failures || ['header navigation native evidence missing']) fail(where, issue);
+        } else {
+          if (shellTargets.sidebarRendered && (state.regions.right === 'visible' || shellTargets.railPainted)) fail(where, 'dashboard kept a right rail beside the rendered sidebar');
+          if (!shellTargets.sidebarRendered && state.regions.right !== 'visible') fail(where, 'right region ' + state.regions.right);
+          if (w >= 960 && state.regions.left !== 'visible') fail(where, 'left region ' + state.regions.left);
+        }
         if (w > phoneMax && state.regions.bottom !== 'visible') fail(where, 'bottom region ' + state.regions.bottom);
-        if (w >= 960 && state.regions.left !== 'visible') fail(where, 'left region ' + state.regions.left);
-        if (state.overflow > 1) fail(where, `horizontal overflow ${state.overflow}px`);
+        if (state.overflow !== 0) fail(where, `horizontal overflow ${state.overflow}px`);
         if (expectedMissingData.length && state.conference.state !== 'empty') fail(where, 'missing timeline did not render the conference empty state');
         if (state.headings.length !== 1) fail(where, 'visible h1 count ' + state.headings.length + ' (' + state.headings.map(h => h.id || h.text).join(' | ') + ')');
         if (state.duplicates.length) fail(where, 'duplicate ids ' + state.duplicates.join(','));
-        if (shellTargets.sidebarRendered && !shellTargets.sidebarOwnsNav) fail(where, 'the rendered dashboard sidebar does not own the navigation');
-        if (!shellTargets.sidebarRendered && !shellTargets.railOwnsNav) fail(where, 'phone content route lost its navigation host');
         if (!shellTargets.bottomOwnsFooter) fail(where, 'the source footer is not owned by the bottom bar');
         if (shellTargets.navLabelled < shellTargets.navItems) fail(where, `${shellTargets.navItems - shellTargets.navLabelled} rail links without an accessible name`);
         if (w <= 1100 && shellTargets.tiny.length) fail(where, `${shellTargets.tiny.length} shell targets below 44px: ` + shellTargets.tiny.map(t => `${t.name} ${t.w}x${t.h}`).join('; '));
@@ -755,6 +871,7 @@ const main = async () => {
             rail: document.querySelector(".content-rail"),
             bottom: document.querySelector(".content-bottom-bar"),
             header: document.querySelector(".atlas-dashboard-header"),
+            navHost: document.querySelector(".atlas-dashboard-header .atlas-dashboard-nav"),
             nav: document.querySelector(".atlas-nav"),
             footer: document.querySelector(".footer"),
             source: document.querySelector(".content-bottom-bar [data-method]") || document.querySelector("#main > .footer [data-method]"),
@@ -785,6 +902,8 @@ const main = async () => {
             sourceReason: source?.getAttribute("data-disabled-reason") || null,
           };
         });
+        before.navOwnership = await evaluate(cdp, readContentNavigationOwner);
+        before.headerNavigation = await verifyHeaderNavigation();
         const navClick = await domClick('.atlas-nav [data-atlas-page="outlook"]');
         await sleep(1400);
         const onChart = await evaluate(cdp, () => {
@@ -796,6 +915,7 @@ const main = async () => {
             page: document.body.dataset.page, shell: document.body.dataset.shell,
             contentRailPresent: Boolean(document.querySelector(".content-rail")),
             contentBottomPresent: Boolean(document.querySelector(".content-bottom-bar")),
+            contentNavPresent: Boolean(document.querySelector(".atlas-dashboard-header .atlas-dashboard-nav")),
             railCount: [...document.querySelectorAll(".workbench-rail")].filter(n => n.getClientRects().length && getComputedStyle(n).display !== "none").length,
             bottomCount: [...document.querySelectorAll(".workbench-bottom-bar")].filter(n => n.getClientRects().length && getComputedStyle(n).display !== "none").length,
             railIsNative: Boolean(nativeRail) && !nativeRail.classList.contains("content-rail"),
@@ -814,6 +934,7 @@ const main = async () => {
         });
         await cdp.send("Runtime.evaluate", { expression: "history.back()", returnByValue: true });
         await sleep(1500);
+        const backHeaderNavigation = await verifyHeaderNavigation();
         const back = await evaluate(cdp, () => {          const marks = window.__wpcContent;
           const rail = document.querySelector(".content-rail");
           const item = document.querySelector('.atlas-nav [data-atlas-page="outlook"]');
@@ -827,6 +948,7 @@ const main = async () => {
           return {
             page: document.body.dataset.page, shell: document.body.dataset.shell,
             sameRail: marks.rail === rail, sameBottom: marks.bottom === document.querySelector(".content-bottom-bar"),
+            sameNavHost: marks.navHost === document.querySelector(".atlas-dashboard-header .atlas-dashboard-nav"),
             navInRail: Boolean(rail?.contains(document.querySelector(".atlas-nav"))),
             navInSidebar: Boolean(document.querySelector(".atlas-sidebar")?.contains(document.querySelector(".atlas-nav"))),
             footerInBottom: Boolean(document.querySelector(".content-bottom-bar")?.contains(document.querySelector(".footer"))),
@@ -840,6 +962,8 @@ const main = async () => {
             sourceReason: source?.getAttribute("data-disabled-reason") || null,
           };
         });
+        back.navOwnership = await evaluate(cdp, readContentNavigationOwner);
+        back.headerNavigation = backHeaderNavigation;
         // The price owner published readiness when the chart loaded its data in
         // this document, so the same control that was locked on entry must now be
         // live and open the real sheet. The node, its host and its label are the
@@ -860,22 +984,18 @@ const main = async () => {
         report.contentTrips = report.contentTrips || [];
         report.contentTrips.push({ route: name, viewport: `${w}x${h}`, navClick, before, onChart, back, backSourceClick, backSourceSheet });
         const where = `trip ${name} ${w}x${h}`;
-        const railOwnsNav = before.sidebarRendered === false;
         if (!before.bottomInDoc || before.bottomCount !== 1) fail(where, "content bottom region not owned once on entry: " + JSON.stringify(before));
-        if (railOwnsNav) {
-          if (!before.railInDoc || before.railHidden || !before.navInRail || before.railCount !== 1) fail(where, "phone content rail did not take the navigation: " + JSON.stringify(before));
-        } else if (!before.railInDoc || !before.railHidden || before.navInRail || !before.navInSidebar || before.railCount !== 0) {
-          fail(where, "rendered dashboard sidebar must own the navigation without a painted rail: " + JSON.stringify(before));
-        }
+        for (const issue of validateContentNavigationOwner(before.navOwnership)) fail(where, 'entry: '+issue);
+        if (before.navOwnership.headerOwnsNav) for (const issue of before.headerNavigation?.failures || ['header navigation native evidence missing']) fail(where, 'entry: '+issue);
         if (!before.footerInBottom) fail(where, "footer not owned by the content bottom region: " + JSON.stringify(before));
         if (before.sourceReadiness === "ready") {
           if (before.sourceDisabled === true || before.sourceReason) fail(where, "a prepared price owner left the content source control locked: " + JSON.stringify(before));
         } else if (before.sourceReadiness === "unset" || before.sourceReadiness === "unavailable") {
           if (before.sourceDisabled !== true || !before.sourceReason) fail(where, "source control not disabled with a reason: " + JSON.stringify(before));
         } else fail(where, "unexpected source readiness on entry: " + before.sourceReadiness);
-        if (!navClick.ok) fail(where, "chart navigation unreachable from the content rail: " + JSON.stringify(navClick));
+        if (!navClick.ok) fail(where, "chart navigation unreachable from its content owner: " + JSON.stringify(navClick));
         if (onChart.page !== "outlook") fail(where, "navigation did not reach the price chart: " + onChart.page);
-        if (onChart.contentRailPresent || onChart.contentBottomPresent) fail(where, "content regions survived the chart return");
+        if (onChart.contentRailPresent || onChart.contentBottomPresent || onChart.contentNavPresent) fail(where, "content regions survived the chart return");
         if (w > phoneMax && (onChart.railCount !== 1 || onChart.bottomCount !== 1)) fail(where, "duplicate shell regions on the chart: " + onChart.railCount + "/" + onChart.bottomCount);
         if (w <= phoneMax && (onChart.railCount > 1 || onChart.bottomCount > 1)) fail(where, "duplicate shell regions on the phone chart: " + onChart.railCount + "/" + onChart.bottomCount);
         if (!onChart.railIsNative || !onChart.nativeRailOwnsNav) fail(where, "chart rail did not take the navigation back: " + JSON.stringify(onChart));
@@ -884,17 +1004,14 @@ const main = async () => {
         if (!onChart.footerInMain) fail(where, "source footer did not return to the page");
         if (Object.values(onChart.nodesPreserved).some(v => !v)) fail(where, "shell nodes were replaced instead of preserved: " + JSON.stringify(onChart.nodesPreserved));
         if (back.page !== name) fail(where, "back did not restore the content route: " + back.page);
-        const expectedRails = back.sidebarRendered ? 0 : 1;
+        const expectedRails = back.navOwnership.headerOwnsNav || back.sidebarRendered ? 0 : 1;
         if (back.railCount !== expectedRails || back.bottomCount !== 1) fail(where, "shell regions after return: " + back.railCount + "/" + back.bottomCount);
-        if (!back.sameRail || !back.sameBottom) fail(where, "content regions were re-created after the return");
-        if (back.sidebarRendered === false) {
-          if (!back.railVisible || !back.navInRail) fail(where, "phone content rail stopped owning the navigation after the return");
-        } else if (back.railVisible || back.navInRail || !back.navInSidebar) {
-          fail(where, "dashboard sidebar lost the navigation or the rail reappeared: " + JSON.stringify(back));
-        }
+        if (!back.sameRail || !back.sameBottom || !back.sameNavHost) fail(where, "content regions were re-created after the return");
+        for (const issue of validateContentNavigationOwner(back.navOwnership)) fail(where, 'return: '+issue);
+        if (back.navOwnership.headerOwnsNav) for (const issue of back.headerNavigation?.failures || ['header navigation native evidence missing']) fail(where, 'return: '+issue);
         if (!back.footerInBottom) fail(where, "footer ownership not restored");
         if (!back.navHit?.inside) fail(where, "navigation is not hit-testable after the return: " + JSON.stringify(back.navHit));
-        if (w <= 1100 && (back.navHit.w < 44 || back.navHit.h < 44)) fail(where, "rail navigation is not a 44px target after the return: " + JSON.stringify(back.navHit));
+        if ((w <= 1100 || back.navOwnership.headerOwnsNav) && (back.navHit.w < 44 || back.navHit.h < 44)) fail(where, "navigation is not a 44px target after the return: " + JSON.stringify(back.navHit));
         if (back.sourceReadiness !== "ready") fail(where, "the price owner did not publish readiness after loading in this document: " + JSON.stringify({ before: before.sourceReadiness, back: back.sourceReadiness }));
         if (back.sourceDisabled !== false) fail(where, "source control state not restored on the content route: " + JSON.stringify(back));
         if (back.sourceReason) fail(where, "source control kept a disabled reason after readiness: " + JSON.stringify(back));
@@ -917,7 +1034,7 @@ const main = async () => {
     report.assertions.widthsWithOverflow = report.widths.filter(r => r.overflow > 1).map(r => r.viewport);
     report.assertions.routesWithAllRegions = report.inventory.filter(r => Object.values(r.present).every(Boolean)).map(r => r.route);
     report.assertions.contentWidthsCovered = report.contentWidths.filter(e => e.viewport).map(e => e.route + ' ' + e.viewport);
-    report.assertions.contentWidthsWithOverflow = report.contentWidths.filter(e => e.overflow > 1).map(e => e.route + ' ' + e.viewport);
+    report.assertions.contentWidthsWithOverflow = report.contentWidths.filter(e => e.overflow !== undefined && e.overflow !== 0).map(e => e.route + ' ' + e.viewport);
     report.assertions.failureCount = failed;
     report.status = failed ? 'FAILED' : 'PASSED';
   } catch (error) {
@@ -939,4 +1056,4 @@ const main = async () => {
   }, null, 1));
   process.exit(report.status === 'PASSED' ? 0 : 1);
 };
-main();
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) main();
