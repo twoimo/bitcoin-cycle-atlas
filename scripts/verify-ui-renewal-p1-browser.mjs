@@ -254,6 +254,28 @@ async function sourceInventory() {
 }
 async function screenshot(cdp,out,name) {const result=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false}),bytes=Buffer.from(result.data,'base64');await writeFile(resolve(out,name),bytes);return {file:name,bytes:bytes.length,sha256:sha256(bytes)};}
 
+// The browser gate and transport regression use this same server. The optional
+// root lets the regression exercise path boundaries without touching dist.
+export function createP1StaticServer(siteDirectory=site) {
+  const servedSite=resolve(siteDirectory);
+  const mime={'.html':'text/html;charset=utf-8','.js':'text/javascript','.mjs':'text/javascript','.json':'application/json','.css':'text/css','.svg':'image/svg+xml','.woff2':'font/woff2','.webp':'image/webp','.png':'image/png'};
+  return createServer(async(req,res)=>{
+    try {
+      const p=decodeURIComponent(new URL(req.url,'http://localhost').pathname);
+      if(!p.startsWith(prefix+'/'))throw new Error('route');
+      let f=resolve(servedSite,'.'+p.slice(prefix.length));
+      // The site directory itself is valid only before its index rewrite.
+      // The resolved file must still be a strict descendant below.
+      if(f!==servedSite&&!f.startsWith(servedSite+'/'))throw new Error('scope');
+      if((await stat(f)).isDirectory())f=resolve(f,'index.html');
+      f=await realpath(f);
+      if(!f.startsWith(servedSite+'/'))throw new Error('scope');
+      res.writeHead(200,{'content-type':mime[extname(f)]||'application/octet-stream','cache-control':'no-store'});
+      res.end(await readFile(f));
+    } catch {res.writeHead(404);res.end('not found');}
+  });
+}
+
 export async function verifyUiRenewalP1Browser(argv=process.argv.slice(2)) {
   const report={schemaVersion:1,kind:'atlas-ui-renewal-p1',request:'HANDOFF-R19P1-1-595c365',recordedAt:new Date().toISOString(),qualifiesP1Verification:false,qualifiesFullVerification:false,
     scope:'28 route shell layouts, 56 native pointer/keyboard destination activations and 8 chart-to-content returns at 320/390/768/1440. Canonical market keeps its authored chart-hosted owner. Existing P0 contrast/settings-icon gate remains independent and unchanged.',
@@ -264,8 +286,7 @@ export async function verifyUiRenewalP1Browser(argv=process.argv.slice(2)) {
     await mkdir(dirname(settings.out),{recursive:true});await mkdir(settings.out,{recursive:false});ownsOut=true;
     report.testedHead=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();report.workingTree=execFileSync('git',['status','--short'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean);
     report.sourceHashes=await sourceInventory();stage='browser executable';await access(settings.bin,constants.X_OK);
-    const mime={'.html':'text/html;charset=utf-8','.js':'text/javascript','.mjs':'text/javascript','.json':'application/json','.css':'text/css','.svg':'image/svg+xml','.woff2':'font/woff2','.webp':'image/webp','.png':'image/png'};
-    server=createServer(async(req,res)=>{try{const p=decodeURIComponent(new URL(req.url,'http://localhost').pathname);if(!p.startsWith(prefix+'/'))throw new Error('route');let f=resolve(site,'.'+p.slice(prefix.length));if(!f.startsWith(site+'/'))throw new Error('scope');if((await stat(f)).isDirectory())f=resolve(f,'index.html');f=await realpath(f);if(!f.startsWith(site+'/'))throw new Error('scope');res.writeHead(200,{'content-type':mime[extname(f)]||'application/octet-stream','cache-control':'no-store'});res.end(await readFile(f));}catch{res.writeHead(404);res.end('not found');}});
+    server=createP1StaticServer();
     stage='static server';await new Promise((ok,no)=>{server.once('error',no);server.listen(0,'127.0.0.1',ok);});const origin=`http://127.0.0.1:${server.address().port}`,base=origin+prefix+'/';
     profile=await mkdtemp(resolve(tmpdir(),'atlas-ui-p1-'));stage='Chromium launch';
     chrome=spawn(settings.bin,['--headless=new','--disable-gpu','--disable-dev-shm-usage','--disable-background-networking','--no-first-run','--hide-scrollbars',headlessWindowArgument,'--remote-debugging-port=0',`--user-data-dir=${profile}`,'about:blank'],{stdio:['ignore','ignore','pipe']});
