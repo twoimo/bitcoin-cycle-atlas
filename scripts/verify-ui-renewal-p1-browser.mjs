@@ -145,6 +145,80 @@ class Cdp {
   send(method,params={}) {const id=++this.id;return new Promise((accept,reject)=>{const timer=setTimeout(()=>{this.pending.delete(id);reject(new Error(`CDP timeout: ${method}`));},30000);this.pending.set(id,{resolve:accept,reject,timer});this.ws.send(JSON.stringify({id,method,params}));});}
   close(){for(const p of this.pending.values()){clearTimeout(p.timer);p.reject(new Error('CDP closed'));}this.pending.clear();this.ws.close();}
 }
+// Each page owns its paused requests until their decisions have settled. A
+// cancellation is evidence only when the browser reports the same network ID
+// before our own stopLoading. Shutdown never turns an active error into a pass.
+export function createP1NetworkInterception(cdp,{origin,pageId,failures,diagnostic={}}) {
+  const requests=[],networkEnds=[],pending=new Set();
+  let phase='active',order=0,ownedStopOrder=null,closing=null;
+  Object.assign(diagnostic,{pageId,requests,networkEnds,teardown:[],cleanupFailures:[]});
+  const step=(action,detail={})=>{const item={action,order:++order,...detail};diagnostic.teardown.push(item);return item;};
+  const failed=(message)=>failures.push(`network interception: ${message} (${pageId})`);
+  const networkEnded=p=>{
+    const paused=requests.findLast(item=>item.networkId===p.requestId);
+    networkEnds.push({networkId:p.requestId,pausedRequestOrder:paused?.order||null,canceled:p.canceled===true,errorText:p.errorText||'',phase,order:++order});
+  };
+  const requestPaused=p=>{
+    const entry={requestId:p.requestId,networkId:p.networkId||null,frameId:p.frameId||null,url:p.request?.url||'',phase,order:++order,status:'pending'};
+    requests.push(entry);
+    // Assertions have finished. Keep new requests paused for the explicit page
+    // stop below instead of creating more decisions behind the drain barrier.
+    if(phase!=='active'){entry.status='teardown-paused';return;}
+    const task=(async()=>{
+      try {
+        const url=new URL(entry.url),local=url.origin===origin||['data:','blob:'].includes(url.protocol);
+        entry.command=local?'Fetch.continueRequest':'Fetch.failRequest';
+        await cdp.send(entry.command,{requestId:p.requestId,...(local?{}:{errorReason:'BlockedByClient'})});
+        entry.status=local?'continued':'blocked';
+      }catch(error){entry.error=error.message;entry.errorPhase=phase;entry.errorOrder=++order;entry.status='error';}
+    })();
+    pending.add(task);task.then(()=>pending.delete(task));
+  };
+  function finishDecisions() {
+    for(const entry of requests.filter(item=>item.status==='error')) {
+      const cancellation=entry.networkId&&networkEnds.find(end=>end.networkId===entry.networkId&&end.pausedRequestOrder===entry.order&&
+        (end.canceled||end.errorText==='net::ERR_ABORTED')&&end.order>entry.order&&
+        end.order<=entry.errorOrder&&end.order<ownedStopOrder);
+      if(/^Invalid InterceptionId\.?$/.test(entry.error)&&cancellation){
+        entry.status='canceled';entry.cancellation=cancellation;
+      }else{entry.status='failed';failed(`${entry.error}; request ${entry.requestId}`);}
+    }
+  }
+  async function cleanupCommand(method) {
+    step(method);
+    try{await cdp.send(method);}
+    catch(error){const message=`${method}: ${error.message}`;diagnostic.cleanupFailures.push(message);failed(message);}
+  }
+  return {
+    diagnostic,
+    async start(){
+      cdp.listeners.set('Network.loadingFailed',networkEnded);
+      cdp.listeners.set('Fetch.requestPaused',requestPaused);
+      await cdp.send('Fetch.enable',{patterns:[{urlPattern:'*'}]});
+    },
+    close(dispose=async()=>{}){
+      if(closing)return closing;
+      closing=(async()=>{
+        phase='draining';step('drain',{pending:pending.size});
+        while(pending.size)await Promise.all([...pending]);
+        // No decision command remains when we invalidate the page's requests.
+        // Therefore our stop/disable/close cannot manufacture InvalidID/closed
+        // errors and later teardown cancellation cannot excuse an earlier one.
+        phase='stopping';ownedStopOrder=order+1;
+        await cleanupCommand('Page.stopLoading');
+        phase='disabling';await cleanupCommand('Fetch.disable');
+        cdp.listeners.delete('Fetch.requestPaused');cdp.listeners.delete('Network.loadingFailed');
+        finishDecisions();phase='closed';step('CDP.close');cdp.close();
+        step('Target.disposeBrowserContext');
+        try{await dispose();}
+        catch(error){const message=`Target.disposeBrowserContext: ${error.message}`;diagnostic.cleanupFailures.push(message);diagnostic.status='failed';failed(message);throw error;}
+        diagnostic.status=diagnostic.cleanupFailures.length||requests.some(item=>item.status==='failed')?'failed':'closed';
+      })();
+      return closing;
+    },
+  };
+}
+
 async function evaluate(cdp,fn,...args) {const r=await cdp.send('Runtime.evaluate',{expression:`(${fn.toString()})(${args.map(v=>JSON.stringify(v)).join(',')})`,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw new Error(`Browser evaluation: ${JSON.stringify(r.exceptionDetails).slice(0,1000)}`);return r.result.value;}
 async function until(fn,label,timeout=45000) {const end=Date.now()+timeout;while(Date.now()<end){try{const value=await fn();if(value)return value;}catch(error){if(!/Execution context was destroyed|Cannot find context with specified id/.test(error.message))throw error;}await delay(100);}throw new Error(`Timed out: ${label}`);}
 async function settle(cdp){await ensureOwnedVisibleForPaint(cdp,evaluate,until);await evaluate(cdp,async()=>{await document.fonts.ready;await new Promise(ok=>requestAnimationFrame(()=>requestAnimationFrame(ok)));});}
@@ -279,7 +353,7 @@ export function createP1StaticServer(siteDirectory=site) {
 export async function verifyUiRenewalP1Browser(argv=process.argv.slice(2)) {
   const report={schemaVersion:1,kind:'atlas-ui-renewal-p1',request:'HANDOFF-R19P1-1-595c365',recordedAt:new Date().toISOString(),qualifiesP1Verification:false,qualifiesFullVerification:false,
     scope:'28 route shell layouts, 56 native pointer/keyboard destination activations and 8 chart-to-content returns at 320/390/768/1440. Canonical market keeps its authored chart-hosted owner. Existing P0 contrast/settings-icon gate remains independent and unchanged.',
-    methodology:'read-only DOM/IntersectionObserver evidence and unchanged P0 native glyph/paint proof; native CDP key/pointer/wheel inputs; isolated profile/static origin; no product focus/scroll/style mutation, threshold relaxation or hidden-item omission',layouts:[],journeys:[],failures:[]};
+    methodology:'read-only DOM/IntersectionObserver evidence and unchanged P0 native glyph/paint proof; native CDP key/pointer/wheel inputs; isolated profile/static origin; no product focus/scroll/style mutation, threshold relaxation or hidden-item omission',layouts:[],journeys:[],networkInterception:[],failures:[]};
   let settings,ownsOut=false,server,profile,chrome,browser,stderr='',stage='arguments';
   try {
     settings=parseP1Arguments(argv);if(settings.help){console.log('Usage: node scripts/verify-ui-renewal-p1-browser.mjs --out NEW_DIRECTORY [--browser CHROME_PATH]\n28 direct shell layouts; 56 actual nav activations. Native failure/partial coverage never qualifies P1. Existing P0 must be run separately.');return report;}
@@ -293,18 +367,19 @@ export async function verifyUiRenewalP1Browser(argv=process.argv.slice(2)) {
     let launchError;chrome.once('error',e=>launchError=e);chrome.stderr.on('data',b=>stderr=(stderr+b).slice(-6000));
     const port=await until(async()=>{if(launchError)throw launchError;if(chrome.exitCode!==null||chrome.signalCode!==null)throw new Error(`Chromium exited ${chrome.exitCode}/${chrome.signalCode}: ${stderr}`);try{return(await readFile(resolve(profile,'DevToolsActivePort'),'utf8')).trim().split('\n');}catch{return null;}},'Chromium debugging endpoint');
     browser=await Cdp.connect(`ws://127.0.0.1:${port[0]}${port[1]}`);report.browser=await browser.send('Browser.getVersion');
-    async function newPage(width){const {browserContextId}=await browser.send('Target.createBrowserContext'),{targetId}=await browser.send('Target.createTarget',{url:'about:blank',browserContextId});const targets=await(await fetch(`http://127.0.0.1:${port[0]}/json/list`)).json(),cdp=await Cdp.connect(targets.find(t=>t.id===targetId).webSocketDebuggerUrl);for(const d of ['Page','Runtime','Network','DOM','CSS'])await cdp.send(`${d}.enable`);
+    async function newPage(width,pageId){const {browserContextId}=await browser.send('Target.createBrowserContext'),{targetId}=await browser.send('Target.createTarget',{url:'about:blank',browserContextId});const targets=await(await fetch(`http://127.0.0.1:${port[0]}/json/list`)).json(),cdp=await Cdp.connect(targets.find(t=>t.id===targetId).webSocketDebuggerUrl);for(const d of ['Page','Runtime','Network','DOM','CSS'])await cdp.send(`${d}.enable`);
       const runtimeErrors=[];cdp.listeners.set('Runtime.exceptionThrown',p=>runtimeErrors.push(p.exceptionDetails?.exception?.description||p.exceptionDetails?.text||'runtime exception'));
       const nativeWindowEnvelope=await verifyHeadlessWindowEnvelope(cdp,{width,height:900});await cdp.send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<621});
       // Static deterministic data remain local. Explicit external requests are
       // denied as in P0; no local error or incomplete product readiness is hidden.
-      cdp.listeners.set('Fetch.requestPaused',p=>{const u=new URL(p.request.url);cdp.send(u.origin===origin||['data:','blob:'].includes(u.protocol)?'Fetch.continueRequest':'Fetch.failRequest',{requestId:p.requestId,...(u.origin===origin||['data:','blob:'].includes(u.protocol)?{}:{errorReason:'BlockedByClient'})}).catch(e=>report.failures.push(`network interception: ${e.message}`));});await cdp.send('Fetch.enable',{patterns:[{urlPattern:'*'}]});
-      return {cdp,nativeWindowEnvelope,runtimeErrors,close:async()=>{cdp.close();await browser.send('Target.disposeBrowserContext',{browserContextId});}};
+      const diagnostic={};report.networkInterception.push(diagnostic);
+      const interception=createP1NetworkInterception(cdp,{origin,pageId,failures:report.failures,diagnostic});await interception.start();
+      return {cdp,nativeWindowEnvelope,runtimeErrors,close:()=>interception.close(()=>browser.send('Target.disposeBrowserContext',{browserContextId}))};
     }
     stage='direct shell matrix';
-    for(const spec of p1Cases){const result={...spec,status:'unverified',failures:[]};report.layouts.push(result);let page;try{page=await newPage(spec.width);result.nativeWindowEnvelope=page.nativeWindowEnvelope;await page.cdp.send('Page.navigate',{url:new URL(spec.path,base).href});await ready(page.cdp,spec.id,{direct:!spec.hosted});result.state=await inspectP1Snapshot(page.cdp,spec);result.failures.push(...validateP1Layout(result.state,spec));result.screenshot=await screenshot(page.cdp,settings.out,`${spec.caseId}.png`);result.failures.push(...page.runtimeErrors.map(e=>`runtime: ${e}`));result.status=result.failures.length?'failed':'passed';}catch(e){result.failures.push(e.stack||String(e));}finally{await page?.close();}report.failures.push(...result.failures.map(f=>`${spec.caseId}: ${f}`));console.log(JSON.stringify({case:spec.caseId,status:result.status,failures:result.failures}));}
+    for(const spec of p1Cases){const result={...spec,status:'unverified',failures:[]};report.layouts.push(result);let page;try{page=await newPage(spec.width,spec.caseId);result.nativeWindowEnvelope=page.nativeWindowEnvelope;await page.cdp.send('Page.navigate',{url:new URL(spec.path,base).href});await ready(page.cdp,spec.id,{direct:!spec.hosted});result.state=await inspectP1Snapshot(page.cdp,spec);result.failures.push(...validateP1Layout(result.state,spec));result.screenshot=await screenshot(page.cdp,settings.out,`${spec.caseId}.png`);result.failures.push(...page.runtimeErrors.map(e=>`runtime: ${e}`));result.status=result.failures.length?'failed':'passed';}catch(e){result.failures.push(e.stack||String(e));}finally{await page?.close();}report.failures.push(...result.failures.map(f=>`${spec.caseId}: ${f}`));console.log(JSON.stringify({case:spec.caseId,status:result.status,failures:result.failures}));}
     stage='native navigation journeys';
-    for(const width of p1Widths)for(const mode of ['pointer','keyboard']){const journey={id:`${mode}-${width}`,width,mode,status:'unverified',steps:[],failures:[]};report.journeys.push(journey);let page;try{page=await newPage(width);journey.nativeWindowEnvelope=page.nativeWindowEnvelope;
+    for(const width of p1Widths)for(const mode of ['pointer','keyboard']){const journey={id:`${mode}-${width}`,width,mode,status:'unverified',steps:[],failures:[]};report.journeys.push(journey);let page;try{page=await newPage(width,journey.id);journey.nativeWindowEnvelope=page.nativeWindowEnvelope;
       // Each destination starts from the same direct relay shell. It is a real
       // route change, including price -> dashboard ownership. Resetting the
       // document between destinations cannot synthesize any focus/hit result.
