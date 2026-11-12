@@ -1,0 +1,514 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-r17-price-axis-implementation-evidence",
+  "recordedAt": "2026-11-12T08:00:48.521574+00:00",
+  "branch": "fix/tradingview-responsive-20261110",
+  "requestedHead": "d590982b61167a2e6b0656d9ab178e651d2d0384",
+  "preservedConcurrentDocsCommit": "11f81069c5f37a5a5d7938347bff40cc8867704b",
+  "productCommit": "91cf41ce2c73a272c8a0e7ccd7c101333b3970e0",
+  "productTree": "fae780b3c703bc2fd3a93c4114f4deb456d4b51f",
+  "status": "implementation complete; native Mac acceptance pending",
+  "qualifiesNativeAcceptance": false,
+  "scope": {
+    "requirement": "REQ_WP_ABC_20261110 §A-5.2(2)",
+    "checklist": "R17",
+    "changedCodeFiles": [
+      "dist/atlas-price-chart.js",
+      "dist/chart-workspace-controls.css",
+      "dist/empty-price-chart.js",
+      "dist/index.html",
+      "dist/price-axis.js",
+      "dist/site-before-shell.css",
+      "docs/conference/boot-preload-graph.json",
+      "scripts/price-axis-browser-contract.mjs",
+      "scripts/verify-price-axis-browser.mjs",
+      "tests/price-axis-browser-contract.test.mjs",
+      "tests/price-axis-overlay.test.mjs"
+    ],
+    "sourceSha256": {
+      "dist/atlas-price-chart.js": "1ce9227ea186ca816a329d8f64cb9e47210d4b623d6c613de55f4224fc4bbe3f",
+      "dist/chart-workspace-controls.css": "6fae05d4c8e4742466935714fc1bb0f5f6f01effb8ce4f2960a19019b7e69013",
+      "dist/empty-price-chart.js": "1760bbcdc3a4f322fc5b39d3c56f0a1f25872545ef91ac45862c339ede2aa0a7",
+      "dist/index.html": "4d89915a792ccc5e6898a4eb20b04e670ba2e7ef7039bad30c26d88511503b8d",
+      "dist/price-axis.js": "3a06f852424066a412d2709a3dd0a9227f670a9345ed2ac8179cc0d8d387fb4b",
+      "dist/site-before-shell.css": "13aa03dfcafd86e5539922e35a4a104ebf769a199dc7813cb1d973d965cea0e5",
+      "docs/conference/boot-preload-graph.json": "77d329360019514602639e456e156b6ad0c2132899fa8ebc31ac4cf4ba463174",
+      "scripts/price-axis-browser-contract.mjs": "88574b474da815e843776b76b879c5b3782e837c348cfa632323f67568687ca9",
+      "scripts/verify-price-axis-browser.mjs": "257077b652fac58c6fde80c7f48214f139fc1f4981cd3a73859dbe2682c2503b",
+      "tests/price-axis-browser-contract.test.mjs": "07f202ce00b2fc5b0740cc61aca73e0ad2ddb55b6b3b3fa44317f2d3f1cafe1c",
+      "tests/price-axis-overlay.test.mjs": "1e777fd295cbe9c2b35b7dad5d90e39f532c20fb308ec4444f1c38d856066ab1"
+    },
+    "protectedFilesSha256": {
+      "dist/equity-view.js": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5",
+      "dist/eth-view.js": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4",
+      "dist/instrument-indicator-overlay.js": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a",
+      "scripts/verify-eth-candidate-browser.mjs": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e"
+    },
+    "protectedFilesByteIdenticalToRequestedHead": true,
+    "existingMacReceiptsModified": false,
+    "mediaCommitted": false,
+    "mainPushMergeDeployForcePushNewInstallAccountOrPermissionChanges": false
+  },
+  "restoredRuntime": {
+    "node": "v24.22.1",
+    "platform": "Linux",
+    "projectNodeModulesPresent": false
+  },
+  "restoredRegression": {
+    "files": 39,
+    "totals": {
+      "tests": 484,
+      "pass": 484,
+      "fail": 0,
+      "skipped": 0
+    },
+    "batches": [
+      {
+        "log": "regressions-restored.tap",
+        "files": [
+          "tests/boot-preloads.test.mjs",
+          "tests/chart-cursor.test.mjs",
+          "tests/chart-data-export.test.mjs",
+          "tests/chart-display-modes.test.mjs",
+          "tests/chart-export-workbench.test.mjs",
+          "tests/chart-magnet.test.mjs",
+          "tests/chart-navigation-dialog-owner.test.mjs",
+          "tests/chart-navigation.test.mjs",
+          "tests/chart-overlays.test.mjs",
+          "tests/chart-performance.test.mjs",
+          "tests/chart-replay-atlas.test.mjs",
+          "tests/chart-replay-retrospective-renderer.test.mjs",
+          "tests/chart-replay-ui.test.mjs",
+          "tests/chart-tradingview-parity.test.mjs",
+          "tests/chart-viewport-navigation.test.mjs",
+          "tests/cycle-period-bottom-layout.test.mjs",
+          "tests/cycle-period-comparison.test.mjs",
+          "tests/cycle-price-alignment.test.mjs",
+          "tests/equity-chart-rendering.test.mjs",
+          "tests/eth-chart-rendering.test.mjs",
+          "tests/eth-market-data.test.mjs",
+          "tests/inspection-policy.test.mjs",
+          "tests/intraday-rendering.test.mjs",
+          "tests/mobile-gestures.test.mjs",
+          "tests/page-heading-and-touch-floor.test.mjs",
+          "tests/page-heading-browser-contract.test.mjs",
+          "tests/pending-forecast-chart-reflow.test.mjs",
+          "tests/price-axis-browser-contract.test.mjs",
+          "tests/price-axis-layout.test.mjs",
+          "tests/price-axis.test.mjs",
+          "tests/price-source-contract.test.mjs",
+          "tests/replay-fixed-forecast.test.mjs",
+          "tests/site-preloads.test.mjs",
+          "tests/workspace-price-axis.test.mjs"
+        ],
+        "sha256": "cbf537fd2857a8ce1012c559e6aa4379618374157824a91dd187774af51b9aff",
+        "tests": 442,
+        "pass": 442,
+        "fail": 0,
+        "skipped": 0
+      },
+      {
+        "log": "regressions-restored-additional-final.tap",
+        "files": [
+          "tests/eth-view-state.test.mjs",
+          "tests/ethereum-event-rendering.test.mjs",
+          "tests/forecast-evidence.test.mjs",
+          "tests/site-styles.test.mjs",
+          "tests/static-module-references.test.mjs"
+        ],
+        "sha256": "6ce011339440d67ef7c423eaf456c9f1a7614231213c018d9aef77f68b4aa939",
+        "tests": 38,
+        "pass": 38,
+        "fail": 0,
+        "skipped": 0
+      }
+    ],
+    "blockedByMissingLinkedom": [
+      {
+        "path": "tests/legacy-price-axis.test.mjs",
+        "missingPackages": [
+          "linkedom"
+        ]
+      },
+      {
+        "path": "tests/page-description.test.mjs",
+        "missingPackages": [
+          "linkedom"
+        ]
+      },
+      {
+        "path": "tests/price-axis-overlay.test.mjs",
+        "missingPackages": [
+          "linkedom"
+        ]
+      },
+      {
+        "path": "tests/replay-fixed-forecast-ui.test.mjs",
+        "missingPackages": [
+          "linkedom"
+        ]
+      },
+      {
+        "path": "tests/responsive-workspace.test.mjs",
+        "missingPackages": [
+          "linkedom"
+        ]
+      }
+    ],
+    "finalContractRerun": {
+      "path": "build/r17/validation/axis-browser-contract-final.tap",
+      "sha256": "dd4b9399b5654c81bcee2c8e61e345b5dbc1a3e82078d371516487a626497a33",
+      "tests": 19,
+      "pass": 19,
+      "fail": 0,
+      "skipped": 0
+    },
+    "aggregation": "442 + 38 - 15 (superseded browser-contract cases) + 19 (final browser-contract cases) = 484 distinct cases across 39 files",
+    "sameContractCountedOnlyOnce": true
+  },
+  "generatedResourceTests": {
+    "path": "build/r17/validation/generated-final.tap",
+    "sha256": "8c7eac84106917a9957eef3dd014f3eee8587ce96f8d5b73f0c284ab67f16c4f",
+    "tests": 18,
+    "pass": 18,
+    "fail": 0,
+    "skipped": 0
+  },
+  "staticCheck": {
+    "command": "node scripts/verify-static.mjs",
+    "exitCode": 0,
+    "result": {
+      "status": "ok",
+      "files": 968,
+      "checkedScripts": 219,
+      "checkedReferences": 972,
+      "basePath": "/bitcoin-cycle-atlas/",
+      "standalone": null
+    }
+  },
+  "styles": {
+    "commands": [
+      "node scripts/build-site-styles.mjs",
+      "node scripts/build-site-styles.mjs --check"
+    ],
+    "exitCode": 0,
+    "result": {
+      "status": "ok",
+      "mode": "check",
+      "sourceStylesheets": 41,
+      "files": [
+        {
+          "file": "site-before-shell.css",
+          "bytes": 384339,
+          "sha256": "13aa03dfcafd86e5539922e35a4a104ebf769a199dc7813cb1d973d965cea0e5"
+        },
+        {
+          "file": "site-after-shell.css",
+          "bytes": 166998,
+          "sha256": "88c36117bd2f6fc4fb01e4d8492b86c844600cdd7ce3e1dde237e4ad51529adc"
+        }
+      ]
+    }
+  },
+  "preloads": {
+    "commands": [
+      "node scripts/build-site-preloads.mjs",
+      "node scripts/build-site-preloads.mjs --check"
+    ],
+    "exitCode": 0,
+    "result": {
+      "status": "ok",
+      "mode": "check",
+      "moduleUrls": 55,
+      "uniqueModuleFiles": 53,
+      "conferenceModulePreloads": 54,
+      "sharedModulePreloads": 1,
+      "staticImportEdges": 81,
+      "maxShortestImportDepth": 6,
+      "moduleBytesByUrl": 756926,
+      "timeline": {
+        "url": "./conference/timeline.json",
+        "file": "conference/timeline.json",
+        "bytes": 1044921,
+        "sha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad",
+        "rel": "preload",
+        "as": "fetch",
+        "crossorigin": "anonymous",
+        "fetchpriority": "high"
+      },
+      "manifestSha256": "77d329360019514602639e456e156b6ad0c2132899fa8ebc31ac4cf4ba463174"
+    }
+  },
+  "syntaxAndDiffCheck": {
+    "exitCode": 0,
+    "paths": [
+      "dist/price-axis.js",
+      "dist/atlas-price-chart.js",
+      "dist/empty-price-chart.js",
+      "scripts/verify-price-axis-browser.mjs",
+      "scripts/price-axis-browser-contract.mjs"
+    ]
+  },
+  "nativePriceAxis": {
+    "command": "node scripts/verify-price-axis-browser.mjs --browser /usr/bin/chromium --out build/r17/browser-91cf41c",
+    "exitCode": 1,
+    "reportPath": "build/r17/browser-91cf41c/report.json",
+    "reportSha256": "ba1681fe0a7f9e58ec6cd8b7c229bc4348af2400df9ab6e5fc52d495b2db5b52",
+    "screenshots": 0,
+    "elementFromPointObservations": 0,
+    "report": {
+      "schemaVersion": 1,
+      "kind": "atlas-price-axis-browser",
+      "recordedAt": "2026-11-12T07:59:46.743Z",
+      "qualifiesFullVerification": false,
+      "qualifiesPriceAxisVerification": false,
+      "methodology": {
+        "geometry": "unrounded native CSS coordinates",
+        "occlusion": "strict zero foreground intersection of clip-aware painted bounds; same-SVG paint behind the axis is separately recorded as underlap; pseudo paint uses conservative native owner bounds; native center elementFromPoint",
+        "frame": "complete SVG 0..height axis and left-frame top/bottom grid; visible centerline endpoints, allowing normal outer half-stroke clipping",
+        "sources": "preserved local JSON, independent of DOM labels",
+        "network": "own static origin only; external requests aborted",
+        "matrix": "8 default routes + 8 explicit candle routes; all required"
+      },
+      "requiredCases": 16,
+      "cases": [],
+      "comparisons": [],
+      "failures": [
+        "Chromium launch: Error: Chromium exited (exit=null, signal=SIGABRT): /usr/bin/chromium: 9: [: 5225713664: unexpected operator\n[26:26:1112/165946.966642:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/165946.966943:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[47:47:0100/000000.016281:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n[1:1:0100/000000.029925:ERROR:content/zygote/zygote_main_linux.cc:197] Failed sending zygote boot message: Broken pipe (32)\n\n    at file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-price-axis-browser.mjs:299:73\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-price-axis-browser.mjs:75:30)\n    at async verifyPriceAxisBrowser (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-price-axis-browser.mjs:297:18)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-price-axis-browser.mjs:384:90"
+      ],
+      "sourceFiles": {
+        "dist/index.html": "4d89915a792ccc5e6898a4eb20b04e670ba2e7ef7039bad30c26d88511503b8d",
+        "dist/styles.css": "da82c60ef93b7e0bee81bb882c5e572a21ad58c2ca7a785facc4921fde538bd5",
+        "dist/atlas-shell.css": "74096ebf5081076ac153645c7c9998c5b99e3e369e2aa1ebc016b4a90c0b01ca",
+        "dist/chart-workspace-controls.css": "6fae05d4c8e4742466935714fc1bb0f5f6f01effb8ce4f2960a19019b7e69013",
+        "dist/site-before-shell.css": "13aa03dfcafd86e5539922e35a4a104ebf769a199dc7813cb1d973d965cea0e5",
+        "dist/price-axis.js": "3a06f852424066a412d2709a3dd0a9227f670a9345ed2ac8179cc0d8d387fb4b",
+        "dist/atlas-price-chart.js": "1ce9227ea186ca816a329d8f64cb9e47210d4b623d6c613de55f4224fc4bbe3f",
+        "dist/intraday-chart.js": "341b8906982e2966e16d85fb4ffa478be21013da35a96b47b960763cc4121114",
+        "dist/empty-price-chart.js": "1760bbcdc3a4f322fc5b39d3c56f0a1f25872545ef91ac45862c339ede2aa0a7",
+        "dist/chart-hover.js": "2babcf82e20c0a6aa3aafd8f660a9175b94b11192fe3e4670c645683b8093067",
+        "dist/chart-overlays.js": "ccd7029b77cfc5e83e3eed12eb3570e74b228f8591a3778621d34ca8c043b9fc",
+        "dist/lab-view.js": "e80e21c9c5d1884ad0244795f5d82d50bcdcc7789f3247badcf348589336aaa4",
+        "dist/eth-view.js": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4",
+        "dist/equity-forecast-chart.js": "f1fc5b96f2edb14da6153ca90781852107dc29aa7d5e0b6d2cb16d62d86ef783",
+        "dist/data/btc-daily.json": "d04c7443eb4ccd17d93ddc2d61b75e844d86b6cf5f5d456aa986def86e97aca9",
+        "dist/data/btc-volume.json": "a602ba904b78284138684377ea559598173063ee435350ce281de430150a9993",
+        "dist/data/eth-ohlc.json": "a6bfab88a2a5ba982bb68ecf78932bf3438713cad54b2a075894ebbad0b445a5",
+        "scripts/verify-price-axis-browser.mjs": "257077b652fac58c6fde80c7f48214f139fc1f4981cd3a73859dbe2682c2503b",
+        "scripts/price-axis-browser-contract.mjs": "88574b474da815e843776b76b879c5b3782e837c348cfa632323f67568687ca9",
+        "scripts/headless-browser-window.mjs": "eeda1713107d631cb9766a3b487bc9e8e61c2ece4e67dff2fc081b8cba3ff812"
+      },
+      "testedHead": "91cf41ce2c73a272c8a0e7ccd7c101333b3970e0",
+      "workingTree": [],
+      "expectedSources": {
+        "BTCUSD": {
+          "symbol": "BTCUSD",
+          "source": "Coin Metrics",
+          "file": "dist/data/btc-daily.json",
+          "date": "2026-11-06",
+          "rawValue": 75826.5258667446,
+          "text": "$75,826.53",
+          "candle": {
+            "symbol": "BTCUSD",
+            "source": "Bitstamp",
+            "file": "dist/data/btc-volume.json",
+            "date": "2026-11-06",
+            "rawValue": 75746.53,
+            "text": "$75,746.53"
+          }
+        },
+        "ETHUSD": {
+          "symbol": "ETHUSD",
+          "source": "Coinbase Exchange",
+          "file": "dist/data/eth-ohlc.json",
+          "date": "2026-11-06",
+          "rawDate": "2026-11-06T00:00:00.000Z",
+          "rawValue": 2235.37,
+          "text": "$2,235.37"
+        }
+      },
+      "browserExecutable": "/usr/bin/chromium",
+      "browserProcess": {
+        "exitCode": null,
+        "signalCode": "SIGABRT",
+        "stderr": "/usr/bin/chromium: 9: [: 5225713664: unexpected operator\n[26:26:1112/165946.966642:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/165946.966943:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[47:47:0100/000000.016281:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n[1:1:0100/000000.029925:ERROR:content/zygote/zygote_main_linux.cc:197] Failed sending zygote boot message: Broken pipe (32)\n"
+      },
+      "counts": {
+        "required": 16,
+        "attempted": 0,
+        "unattempted": 16,
+        "passed": 0,
+        "failed": 0,
+        "default": 0,
+        "candles": 0,
+        "alignmentPairs": 0,
+        "alignmentPassed": 0
+      },
+      "coverage": {
+        "status": "unverified",
+        "categories": {
+          "legend": {
+            "observedCaseCount": 0,
+            "observedCases": [],
+            "unobservedCases": []
+          },
+          "event": {
+            "observedCaseCount": 0,
+            "observedCases": [],
+            "unobservedCases": []
+          },
+          "forecast": {
+            "observedCaseCount": 0,
+            "observedCases": [],
+            "unobservedCases": []
+          }
+        },
+        "missing": [
+          "legend",
+          "event",
+          "forecast"
+        ]
+      },
+      "status": "failed"
+    }
+  },
+  "existingNativeSuite": {
+    "command": "ATLAS_BROWSER_PATH=/usr/bin/chromium ATLAS_BROWSER_OUT=build/r17/native-53 ETH_BROWSER_IMAGE_LOG_MODE=failures-only node scripts/verify-eth-candidate-browser.mjs",
+    "exitCode": 1,
+    "plannedCases": 53,
+    "inventoryMethod": "createEthBrowserCaseSpecs().length",
+    "attemptedCases": 0,
+    "passedCases": 0,
+    "reportPath": "build/r17/native-53/report.json",
+    "reportSha256": "c4ddf5841a001c110ec8d3b55165bd72b24802bf5d06502ef344091be9436ae0",
+    "sourceCommit": "91cf41ce2c73a272c8a0e7ccd7c101333b3970e0",
+    "status": "failed",
+    "error": "Error: Timed out: Chromium DevToolsActivePort\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:69:9)\n    at async main (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:1021:16)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:1258:5",
+    "chromeStderrTail": "/usr/bin/chromium: 9: [: 5225713664: unexpected operator\n[20:20:1112/165947.625252:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/165947.625768:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[38:38:0100/000000.660766:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n[39:39:0100/000000.660854:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n"
+  },
+  "restoredBlockedChecks": {
+    "typecheck": {
+      "command": "npm run typecheck",
+      "exitCode": 127,
+      "reason": "tsc: not found",
+      "logSha256": "3080f203c73ef57838cbc139f988ef09f0f76bc148ba64a468c90cfada4165ab"
+    },
+    "domAxis": {
+      "command": "node --test --test-reporter=tap tests/legacy-price-axis.test.mjs tests/price-axis-overlay.test.mjs",
+      "exitCode": 1,
+      "reason": "ERR_MODULE_NOT_FOUND: linkedom; both test files fail before their 16 test bodies start",
+      "fileFailures": 2,
+      "testBodiesAttempted": 0,
+      "logSha256": "d9061061a7c41b4ad8073241b28003d85f2976593710dd208b05c5fa5230aa69"
+    },
+    "pages": {
+      "command": "npm run verify:pages",
+      "exitCode": 1,
+      "reason": "verify:skullet cannot open node_modules/skullet/package.json; Pages build not reached",
+      "logSha256": "5dd92972f9b6ef9f5478b471102e3a7b9b97396b976e9e8bd2815a9b19eaafaa"
+    }
+  },
+  "beforeExecutorReplacement": {
+    "evidenceLimit": "Observed in this session before the executor/workspace was replaced; original log files no longer available. These are not rerun passes on the restored environment.",
+    "axisDomAndExisting": {
+      "tests": 43,
+      "pass": 43,
+      "fail": 0,
+      "skipped": 0,
+      "newOverlayTests": 14
+    },
+    "typecheck": {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "errors": 0
+    },
+    "webBuild": {
+      "command": "npm run build:web",
+      "exitCode": 0,
+      "viteVersion": "8.3.5"
+    },
+    "panels": {
+      "initialCommand": "npm run test:panels",
+      "initialExitCode": 1,
+      "initialReason": "tsx CLI IPC listen EPERM",
+      "executedCommand": "node --import tsx --test tests/web/*.test.tsx",
+      "tests": 138,
+      "pass": 138,
+      "fail": 0,
+      "skipped": 0
+    },
+    "pages": {
+      "command": "npm run verify:pages",
+      "exitCode": 1,
+      "reason": "Pages artifact file coverage changed",
+      "trackedAssets": [
+        "index-ByyNTPeH.js",
+        "index-GpQviUwB.css"
+      ],
+      "rebuiltAssets": [
+        "index-DYrPna6T.js",
+        "index--fpvWvZF.css"
+      ],
+      "baselineComparisonPerformed": false,
+      "preexistingFailureClaimed": false
+    },
+    "interruptedBroadRegressionCountedAsPass": false
+  },
+  "resolvedIntermediateFailures": [
+    {
+      "check": "dense SVG node budget",
+      "reason": "new frame elements exceeded the unchanged <100-node fixture budget",
+      "resolution": "batch identical BTC grid strokes as one path; final chart-performance tests pass; no threshold changed"
+    },
+    {
+      "check": "site-styles cache hash",
+      "reason": "13-character CSS URL prefix did not match the existing 12-character contract",
+      "resolution": "derive the first 12 SHA-256 characters; subsequent additional batch 38/38 and generated-resource checks 18/18 pass"
+    }
+  ],
+  "notRun": [
+    "full npm test / frozen Linux replay",
+    "actual 4-viewport price-axis screenshots and native hit/occlusion measurements",
+    "new A-9 2500ms performance run",
+    "conference media / Range / exact seek / skip exit 2 browser cases",
+    "final restored DOM and TypeScript/Pages gates with project dependencies"
+  ],
+  "preservedContracts": [
+    "A-9 2500ms",
+    "150ms transition",
+    "Range 206/416",
+    "exact seek",
+    "one visible h1",
+    "missing media skip exit 2",
+    "dense SVG <100 nodes"
+  ],
+  "macRerun": {
+    "command": "node scripts/verify-price-axis-browser.mjs --browser \"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --out build/r17/mac-price-axis-91cf41c",
+    "requiredCases": 16,
+    "requiredAlignmentPairs": 8,
+    "widths": [
+      320,
+      390,
+      768,
+      1440
+    ],
+    "symbols": [
+      "BTCUSD",
+      "ETHUSD"
+    ],
+    "modes": [
+      "default",
+      "candles"
+    ],
+    "requiredStatus": "passed",
+    "requiredOverlayCoverage": [
+      "legend",
+      "event",
+      "forecast"
+    ],
+    "occludedArea": 0,
+    "horizontalOverflow": 0,
+    "maxBtcEthHorizontalDeltaPx": 2,
+    "sourceValues": "read independently from preserved JSON at execution time"
+  }
+}
