@@ -58,13 +58,12 @@ function collect({width=320,page='evidence',collapsed=false,shadow='none',unsupp
 
 test('P1 heading correction is dashboard-only and retains the shared palette and card contract',()=>{
   assert.equal(body.display,'flow-root');
-  assert.equal(body['--shell-card-shadow'],'0 2px 8px var(--shadow-color)');
-  assert.equal(card['box-shadow'],'var(--shell-card-shadow)');
+  assert.equal(card['box-shadow'],'0 2px 8px var(--shadow-color)');
   assert.equal(card.background,'var(--surface)');assert.equal(card.border,'1px solid var(--border)');
   assert.equal(card['border-radius'],'var(--card-radius-md)');assert.equal(tokens.get('--card-radius-md'),'16px');
   assert.equal(tokens.get('--shadow'),'0 10px 40px var(--shadow-color)');
   assert.equal(tokens.has('--shell-card-shadow'),false,'local card geometry must not replace the P0 root token');
-  assert.deepEqual(parsed.declarations.filter(row=>row.property==='--shell-card-shadow').map(row=>[compact(row.selector),row.ancestors]),[[bodySelector,[]]]);
+  assert.deepEqual(parsed.declarations.filter(row=>row.property==='--shell-card-shadow'),[],'the P0 source audit retains root ownership of every paint alias');
   for(const row of parsed.declarations.filter(row=>row.value==='flow-root'))assert.equal(compact(row.selector),bodySelector);
   assert.equal(body.overflow,undefined);assert.equal(body['clip-path'],undefined);
   assert.equal(card.overflow,undefined);assert.equal(card['clip-path'],undefined,'the IPO disclosure must retain its existing clipping owner');
@@ -88,7 +87,7 @@ test('negative model: fixing body origin alone cannot prove the original broad c
 });
 
 for(const width of widths)test(`corrected ${width}px model: contained title and bounded card shadow yield no unsupported paint candidates`,()=>{
-  const shadow=computedShadow(body['--shell-card-shadow']);
+  const shadow=computedShadow(card['box-shadow']);
   for(const page of Object.keys(pages)) {
     const result=collect({width,page,shadow});
     assert.equal(result.text,pages[page]);assert.ok(result.glyphs.length>0);

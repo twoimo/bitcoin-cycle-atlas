@@ -60,7 +60,10 @@ export function createContentShell({ document }) {
         if (direction === 'previous') previousNav = button; else nextNav = button;
       }
       const Resize = document.defaultView?.ResizeObserver;
-      navResize = Resize ? new Resize(updateNavigationScroll) : null;
+      navResize = Resize ? new Resize(() => {
+        updateNavigationScroll();
+        revealNavigationTarget(document.activeElement);
+      }) : null;
     }
     return true;
   }
@@ -71,6 +74,36 @@ export function createContentShell({ document }) {
     previousNav.hidden = nextNav.hidden = maximum === 0;
     previousNav.disabled = nav.scrollLeft <= 0;
     nextNav.disabled = nav.scrollLeft >= maximum - 1;
+  }
+
+  // Native Tab may keep only the center of a wide pill in view. Reveal the
+  // whole original target inside this scroll owner, including its edge space;
+  // do not move focus or scroll the page, content cards, or chart rails.
+  function revealNavigationTarget(target) {
+    if (!navHost || !nav || nav.parentElement !== navHost ||
+        target?.parentElement !== nav || !target.matches?.('[data-atlas-page]') ||
+        typeof nav.getBoundingClientRect !== 'function' || typeof target.getBoundingClientRect !== 'function') return;
+    const owner = nav.getBoundingClientRect(), item = target.getBoundingClientRect();
+    if (!(owner.width > 0 && nav.clientWidth > 0 && item.width > 0)) return;
+    const style = document.defaultView?.getComputedStyle?.(nav);
+    const padding = side => Math.max(0, Number.parseFloat(style?.[side]) || 0);
+    const left = owner.left + nav.clientLeft + padding('paddingLeft');
+    const right = owner.left + nav.clientLeft + nav.clientWidth - padding('paddingRight');
+    if (!(right > left)) return;
+    const delta = item.left < left ? Math.floor(item.left - left)
+      : item.right > right ? Math.ceil(item.right - right) : 0;
+    if (delta) nav.scrollBy?.({left: delta, behavior: 'instant'});
+    updateNavigationScroll();
+  }
+
+  function focusNavigation(event) {
+    const target = event.target;
+    revealNavigationTarget(target);
+    // A platform may finish its default focus scroll after focusin. Recheck
+    // that same focus once the event finishes; stale targets cannot scroll.
+    queueMicrotask(() => {
+      if (document.activeElement === target) revealNavigationTarget(target);
+    });
   }
 
   // The regions exist only while a dashboard route owns them, so the price
@@ -90,6 +123,7 @@ export function createContentShell({ document }) {
     rail.remove(); bottom.remove();
     navHost?.remove(); navResize?.disconnect();
     nav?.removeEventListener('scroll', updateNavigationScroll);
+    nav?.removeEventListener('focusin', focusNavigation);
   }
 
   // These routes render the site footer, whose source control belongs to the
@@ -162,8 +196,10 @@ export function createContentShell({ document }) {
         previousNav.setAttribute('aria-controls', nav.id);
         nextNav.setAttribute('aria-controls', nav.id);
         nav.addEventListener('scroll', updateNavigationScroll, {passive: true});
+        nav.addEventListener('focusin', focusNavigation);
         navResize?.observe(nav); navResize?.observe(navHost);
         updateNavigationScroll();
+        revealNavigationTarget(document.activeElement);
       }
     }
     const hideRail = !nav || nav.parentElement !== rail;
