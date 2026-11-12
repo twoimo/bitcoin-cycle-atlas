@@ -1,0 +1,22 @@
+{
+  "request": "Q-R19P0-3-8b10785",
+  "baseHead": "df0e54f303fdcd1bab0db79c42446d2ad6a6e0a5",
+  "count": 15,
+  "files": [
+    "dist/chart-bottom-bar.css",
+    "dist/index.html",
+    "dist/site-before-shell.css",
+    "docs/LAUNCH_CHECKLIST_20261110.md",
+    "docs/evidence/q-r19p0-3-8b10785/README.md",
+    "docs/evidence/q-r19p0-3-8b10785/browser-command.json",
+    "docs/evidence/q-r19p0-3-8b10785/changed-files.json",
+    "docs/evidence/q-r19p0-3-8b10785/focused-contract-command.json",
+    "docs/evidence/q-r19p0-3-8b10785/focused-contract.tap",
+    "docs/evidence/q-r19p0-3-8b10785/linux-20261112/report.json",
+    "docs/evidence/q-r19p0-3-8b10785/preserved-contract-command.json",
+    "docs/evidence/q-r19p0-3-8b10785/preserved-contract.tap",
+    "docs/evidence/q-r19p0-3-8b10785/static-checks.json",
+    "docs/evidence/q-r19p0-3-8b10785/summary.json",
+    "tests/workbench-scale-paint.test.mjs"
+  ]
+}

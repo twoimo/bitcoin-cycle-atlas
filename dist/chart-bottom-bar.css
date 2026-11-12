@@ -20,6 +20,8 @@
 .workbench-bottom-bar .workbench-range-select{display:none}
 .workbench-bottom-bar button:hover,.workbench-bottom-bar button[aria-expanded=true]{background:var(--chart-bottom-bar-surface);color:var(--chart-bottom-bar-ink-3)}
 .workbench-bottom-bar button[aria-pressed=true]{background:var(--chart-bottom-bar-surface-2);color:var(--chrome-active,var(--chart-bottom-bar-ink-4))}
+/* Scale state uses exact role colours from its first paint, without the base button fade. */
+.workbench-bottom-bar #workbench-scale,.workbench-bottom-bar #workbench-auto-scale{transition:none}
 .workbench-bottom-bar button:focus-visible,.workbench-bottom-bar select:focus-visible{outline:2px solid var(--chart-bottom-bar-rule-2);outline-offset:-2px}
 .workbench-bottom-bar button:disabled{opacity:.5;cursor:not-allowed}
 .workbench-bottom-bar [hidden]{display:none!important}

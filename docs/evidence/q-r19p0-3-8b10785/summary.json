@@ -1,0 +1,335 @@
+{
+  "request": "Q-R19P0-3-8b10785",
+  "dateKst": "2026-11-12",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "branch": "fix/tradingview-responsive-20261110",
+  "baseHead": "df0e54f303fdcd1bab0db79c42446d2ad6a6e0a5",
+  "productBase": "48c314cc2729b156dcf2450727387b6de75039bc",
+  "status": "product-css-fixed-mac-rerun-pending",
+  "qClosed": false,
+  "p0Closed": false,
+  "qualifiesP0Verification": false,
+  "qualifiesFullVerification": false,
+  "changedCode": [
+    "dist/chart-bottom-bar.css",
+    "dist/index.html",
+    "dist/site-before-shell.css",
+    "tests/workbench-scale-paint.test.mjs"
+  ],
+  "productFilesChanged": 3,
+  "newPaintTokens": 0,
+  "harnessFilesChanged": 0,
+  "protected": [
+    {
+      "path": "dist/equity-view.js",
+      "unchanged": true,
+      "sha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5"
+    },
+    {
+      "path": "dist/eth-view.js",
+      "unchanged": true,
+      "sha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4"
+    },
+    {
+      "path": "dist/instrument-indicator-overlay.js",
+      "unchanged": true,
+      "sha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a"
+    },
+    {
+      "path": "scripts/verify-eth-candidate-browser.mjs",
+      "unchanged": true,
+      "sha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e"
+    }
+  ],
+  "preserved": [
+    {
+      "path": "dist/styles.css",
+      "unchanged": true,
+      "sha256": "76323d40af41be9b820d0fddc50975318f4a73804e8df19d3a9d3c74af5e0825"
+    },
+    {
+      "path": "dist/price-axis.js",
+      "unchanged": true,
+      "sha256": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2"
+    },
+    {
+      "path": "dist/atlas-price-chart.js",
+      "unchanged": true,
+      "sha256": "36680e411160bfa320dd38c638ff8f40d5798f1a21ae122737e3abeb7851c953"
+    },
+    {
+      "path": "dist/chart-workspace-controls.css",
+      "unchanged": true,
+      "sha256": "eb480a39d7103ec71626cc8ba40e8b9f359105ba82c9cdb7b650be7d79cee76a"
+    },
+    {
+      "path": "dist/native-chart-workbench.js",
+      "unchanged": true,
+      "sha256": "243758592771fa29dc21a213a5993cbc5c2b68ab64e1aba59c2d6b8b4de26cc8"
+    },
+    {
+      "path": "dist/workbench-chrome.js",
+      "unchanged": true,
+      "sha256": "f617508049c2109bc884da4ac399e5006fd08ff3ecc8fef9344a546618b454e2"
+    },
+    {
+      "path": "dist/ui/theme.js",
+      "unchanged": true,
+      "sha256": "59f678846f2c1ce322f2f37cb7c8c7378d7b3d67cae30b35677d3468bf79e810"
+    },
+    {
+      "path": "scripts/ui-renewal-p0-contract.mjs",
+      "unchanged": true,
+      "sha256": "d34d2644e93f3a8805b0e4043f3c31bf4fcfee4eb3b5bb46bf3bca0f47324f39"
+    },
+    {
+      "path": "scripts/ui-renewal-p0-text-hit.mjs",
+      "unchanged": true,
+      "sha256": "ea481867cdf818d1cd41a1979467152c5a4a1230eed40e75bf1306a102078f64"
+    },
+    {
+      "path": "scripts/verify-ui-renewal-p0-browser.mjs",
+      "unchanged": true,
+      "sha256": "d31fda26f00111f8d3b949e64bad629395af009cb516ac46c2e0165ad90eea26"
+    },
+    {
+      "path": "tests/ui-renewal-p0-contract.test.mjs",
+      "unchanged": true,
+      "sha256": "3fbbd2f6dafbd2be1a8b41f05fa9d7e4c69a7d6b2cbcfa48184364d118d78b69"
+    },
+    {
+      "path": "tests/ui-renewal-p0-text-hit.test.mjs",
+      "unchanged": true,
+      "sha256": "3fd0fe7ec8cf39ab91ca4275fea2da1e68af227321ce0301f09b100300b4b2dd"
+    },
+    {
+      "path": "scripts/verify-price-axis-browser.mjs",
+      "unchanged": true,
+      "sha256": "55bf56030d7f7529a6fa9ebc4c0b5486392e812ffee1472ff86d578698f846b9"
+    },
+    {
+      "path": "scripts/price-axis-browser-contract.mjs",
+      "unchanged": true,
+      "sha256": "a5ba1bb5ab6809ec9784ca2e1700f9536ef61afb4bdadc9c14c0fce07e6b986b"
+    },
+    {
+      "path": "scripts/verify-conference-data-browser.mjs",
+      "unchanged": true,
+      "sha256": "45fb940df434f5452e02d3fa611041c4ff40ef2aa7834ea8094f92d6b68a5b3a"
+    },
+    {
+      "path": "scripts/verify-conference-media-browser.mjs",
+      "unchanged": true,
+      "sha256": "55806dbdb7d0d44a6eb56b005050617de970645c3295747295d13c600bafe082"
+    },
+    {
+      "path": "scripts/verify-page-heading-browser.mjs",
+      "unchanged": true,
+      "sha256": "80667a6d589cada3ecb308f250e21a953cba9a7f907e12b537d4268e8053bdef"
+    },
+    {
+      "path": "docs/requirements/README.md",
+      "unchanged": true,
+      "sha256": "5a89ddcd1e95fe5714645ef450f3346794c8223736a8fc74718630cc614c7857"
+    },
+    {
+      "path": "docs/evidence/qa-r19p0-20261112/p0-48c314c.json",
+      "unchanged": true,
+      "sha256": "869f1ce76bfaa73d97420e772efd4ceecc812f65b48d9f4d4e5574841c24b978"
+    },
+    {
+      "path": "docs/evidence/qa-r19p0-20261112/p0-8b10785.json",
+      "unchanged": true,
+      "sha256": "cc9760e4ba5171c52992c37ce14794783ad8799fe2274e352d128f215126bb3f"
+    },
+    {
+      "path": "docs/evidence/qa-r19p0-20261112/p0-e3ef789.json",
+      "unchanged": true,
+      "sha256": "c15aa491dbd1d45bb8f53bfdf850243a482a1ac0bb0d1bb33ee5e1998afe2d5b"
+    }
+  ],
+  "cause": {
+    "globalRule": "button,select{transition:background .16s,color .16s,border-color .16s}",
+    "initialRole": "--chart-bottom-bar-ink -> --muted",
+    "initialRgb": [
+      78,
+      89,
+      104
+    ],
+    "reportedProgress": 0.984,
+    "scaleTarget": [
+      90,
+      59,
+      240
+    ],
+    "scaleIntermediate": [
+      89.808,
+      59.48,
+      237.824
+    ],
+    "scaleReported": [
+      90,
+      59,
+      238
+    ],
+    "autoTarget": [
+      25,
+      31,
+      40
+    ],
+    "autoIntermediate": [
+      25.848,
+      31.928,
+      41.024
+    ],
+    "autoReported": [
+      26,
+      32,
+      41
+    ],
+    "backgroundTarget": [
+      229,
+      232,
+      235,
+      1
+    ],
+    "backgroundReported": [
+      229,
+      232,
+      235,
+      0.984
+    ],
+    "ethLifecycle": "mount unpressed controls -> update() -> legend.update()/controller.refresh() -> getBoundingClientRect/clientWidth layout read -> aria-pressed update",
+    "btcLifecycle": "set aria-pressed=true before mounting",
+    "evidenceLimit": "source lifecycle and numeric reconstruction from the Mac receipt; native transition timeline not measured here"
+  },
+  "fix": {
+    "selector": ".workbench-bottom-bar #workbench-scale,.workbench-bottom-bar #workbench-auto-scale",
+    "declaration": "transition:none",
+    "purpose": "use existing role endpoints immediately on initial pressed state, state changes and theme changes",
+    "tokenOrColorValuesChanged": false,
+    "geometryOrEventsChanged": false,
+    "browserWaitAdded": false,
+    "channelToleranceAdded": false,
+    "cssCacheKey": "c6031ebb25d3"
+  },
+  "unitContract": {
+    "focused": {
+      "tests": 88,
+      "pass": 88,
+      "fail": 0,
+      "skipped": 0,
+      "receipt": "focused-contract.tap",
+      "command": "focused-contract-command.json"
+    },
+    "preserved": {
+      "tests": 75,
+      "pass": 75,
+      "fail": 0,
+      "skipped": 0,
+      "receipt": "preserved-contract.tap",
+      "command": "preserved-contract-command.json"
+    },
+    "distinctTests": 163,
+    "passed": 163,
+    "failed": 0,
+    "skipped": 0,
+    "newRegressionTests": 5,
+    "sourceCascadeCombinations": 128,
+    "shippedCascadeCombinations": 128,
+    "nativeMeasurements": 0
+  },
+  "syntax": {
+    "files": 1,
+    "failed": 0,
+    "command": "node --check tests/workbench-scale-paint.test.mjs"
+  },
+  "diffCheck": "passed",
+  "static": {
+    "files": 1064,
+    "checkedScripts": 220,
+    "checkedReferences": 1068,
+    "siteStylesRegenerated": true,
+    "siteStylesCheck": "passed",
+    "sourceStylesheets": 41,
+    "bundles": 2,
+    "sitePreloadsRegenerated": true,
+    "sitePreloadsCheck": "passed",
+    "moduleUrls": 56,
+    "uniqueModuleFiles": 54,
+    "staticImportEdges": 82,
+    "preloadManifestUnchanged": true,
+    "receipt": "static-checks.json"
+  },
+  "sourceChecks": {
+    "staticTokenPairs": 40,
+    "staticTokenPairsPassed": 40,
+    "fontFacesVerified": 92,
+    "fontBytes": 2957724,
+    "sourceStable": true
+  },
+  "browser": {
+    "command": [
+      "node",
+      "scripts/verify-ui-renewal-p0-browser.mjs",
+      "--out",
+      "docs/evidence/q-r19p0-3-8b10785/linux-20261112"
+    ],
+    "exitCode": 1,
+    "status": "unverified",
+    "counts": {
+      "required": 10,
+      "attempted": 0,
+      "passed": 0,
+      "failed": 0,
+      "unattempted": 10
+    },
+    "harnessFailures": 1,
+    "blockedAt": "Chromium launch",
+    "failure": "Chromium launch: Error: Chromium exited null/SIGABRT: /usr/bin/chromium: 9: [: 5225713664: unexpected operator\n[29:29:1112/200627.685884:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/200627.686152:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n\n    at file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p0-browser.mjs:307:144\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p0-browser.mjs:102:127)\n    at async verifyUiRenewalP0Browser (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p0-browser.mjs:307:18)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p0-browser.mjs:392:90",
+    "report": "linux-20261112/report.json",
+    "screenshots": 0,
+    "actualContrastSamples": 0,
+    "actualFontCases": 0,
+    "actualHeadingHitCases": 0,
+    "actualUsedColorMeasurements": 0
+  },
+  "preservedThresholds": {
+    "p0Cases": 10,
+    "fixedPaintSamplesPerTheme": 20,
+    "requiredCoverageRows": 40,
+    "textContrast": 4.5,
+    "iconContrast": 3.0,
+    "horizontalOverflow": 0,
+    "r17Cases": 16,
+    "alignmentPx": 2,
+    "axisMinRightPx": 64,
+    "h1": 1,
+    "a9Ms": 2500,
+    "mediaTransitionMs": 150,
+    "rangeStatus": [
+      206,
+      416
+    ],
+    "exactSeek": "unchanged",
+    "mediaUnavailableExit": 2
+  },
+  "priorMacReceipt": "../qa-r19p0-20261112/p0-8b10785.json",
+  "priorMacEvidenceNotCountedAsThisFixPassing": true,
+  "notRun": [
+    "Native P0 10-case matrix: Chromium socket() EPERM / SIGABRT before first page; 0/10 attempted",
+    "Actual browser used colors, heading hits, contrast, fonts and screenshots: zero",
+    "Existing R17/A-9 native browser gates and full npm test were not rerun; focused existing contracts ran"
+  ],
+  "remaining": [
+    "Mac rerun of unchanged 10-case P0 gate into a new output directory",
+    "Q-R19P0-3 and P0 remain open until that rerun; no P1, P2a or unrelated Q work"
+  ],
+  "macRerunCommand": "node scripts/verify-ui-renewal-p0-browser.mjs --out build/qa-r19p0-20261112/p0-Q-R19P0-3-immediate-colors",
+  "sourceHashes": {
+    "dist/chart-bottom-bar.css": "5cadd042dd6668ac7af1a2e26afa6c9d3d8a1ebe835d23a45255b1a4b543acdd",
+    "dist/index.html": "d0d370eef72f4f94fe48b1b866f2edf27b1e750025eed0e8698fcdce37532147",
+    "dist/site-before-shell.css": "c6031ebb25d37b7a00a57ab119c262a69ba1443628aedd3a1d338efb349ce853",
+    "tests/workbench-scale-paint.test.mjs": "741e6b10688a4a8d2256f9616fac161e958ef9403e7fb4cceb5487993b328a79"
+  }
+}

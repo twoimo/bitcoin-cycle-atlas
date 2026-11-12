@@ -1,0 +1,460 @@
+TAP version 13
+# Subtest: one footer owns the original navigation controls and compact period selection dispatches the same command
+ok 1 - one footer owns the original navigation controls and compact period selection dispatches the same command
+  ---
+  duration_ms: 12.837549
+  type: 'test'
+  ...
+# Subtest: more exposes current range, UTC, update and reset while restoring focus to its visible opener
+ok 2 - more exposes current range, UTC, update and reset while restoring focus to its visible opener
+  ---
+  duration_ms: 12.694137
+  type: 'test'
+  ...
+# Subtest: major-event disclosure filters the real range and as-of without replacing or resizing chart nodes
+ok 3 - major-event disclosure filters the real range and as-of without replacing or resizing chart nodes
+  ---
+  duration_ms: 19.186644
+  type: 'test'
+  ...
+# Subtest: event list and volume provenance remain available in intraday or with chart events hidden
+ok 4 - event list and volume provenance remain available in intraday or with chart events hidden
+  ---
+  duration_ms: 17.024991
+  type: 'test'
+  ...
+# Subtest: disclosures dismiss each other, support keyboard return and release on mode changes
+ok 5 - disclosures dismiss each other, support keyboard return and release on mode changes
+  ---
+  duration_ms: 13.155349
+  type: 'test'
+  ...
+# Subtest: footer input cannot bubble into plot navigation and teardown removes both popovers and listeners
+ok 6 - footer input cannot bubble into plot navigation and teardown removes both popovers and listeners
+  ---
+  duration_ms: 1.224208
+  type: 'test'
+  ...
+# Subtest: the IPO module keeps its title but does not add a second page-level H1
+ok 7 - the IPO module keeps its title but does not add a second page-level H1
+  ---
+  duration_ms: 1.770994
+  type: 'test'
+  ...
+# Subtest: the relay channel list label is a section heading, not a second H1
+ok 8 - the relay channel list label is a section heading, not a second H1
+  ---
+  duration_ms: 0.228254
+  type: 'test'
+  ...
+# Subtest: the page keeps exactly one shell heading owner and its visible titles
+ok 9 - the page keeps exactly one shell heading owner and its visible titles
+  ---
+  duration_ms: 0.511247
+  type: 'test'
+  ...
+# Subtest: the phone chart toolbar gives the reset control a 44px touch floor
+ok 10 - the phone chart toolbar gives the reset control a 44px touch floor
+  ---
+  duration_ms: 3.870853
+  type: 'test'
+  ...
+# Subtest: the price-chart h1 reserves a visible 22px normal-flow label row without symbol padding compensation
+ok 11 - the price-chart h1 reserves a visible 22px normal-flow label row without symbol padding compensation
+  ---
+  duration_ms: 11.315222
+  type: 'test'
+  ...
+# Subtest: the normal-flow label is visible outside the toolbar and plot with zero overlap area
+ok 12 - the normal-flow label is visible outside the toolbar and plot with zero overlap area
+  ---
+  duration_ms: 3.600886
+  type: 'test'
+  ...
+# Subtest: the historical 1680px² heading-on-button layout fails even when ticker glyphs do not overlap
+ok 13 - the historical 1680px² heading-on-button layout fails even when ticker glyphs do not overlap
+  ---
+  duration_ms: 0.398512
+  type: 'test'
+  ...
+# Subtest: touching an edge has zero area and remains valid, including label-to-plot contact
+ok 14 - touching an edge has zero area and remains valid, including label-to-plot contact
+  ---
+  duration_ms: 0.27822
+  type: 'test'
+  ...
+# Subtest: one pixel of button overlap fails using raw rectangles despite false summary flags
+ok 15 - one pixel of button overlap fails using raw rectangles despite false summary flags
+  ---
+  duration_ms: 0.446504
+  type: 'test'
+  ...
+# Subtest: positive subpixel overlap is not rounded away by the existing 0.01px coordinate tolerance
+ok 16 - positive subpixel overlap is not rounded away by the existing 0.01px coordinate tolerance
+  ---
+  duration_ms: 0.579225
+  type: 'test'
+  ...
+# Subtest: the symbol label rectangle is checked independently of its button and ticker text
+ok 17 - the symbol label rectangle is checked independently of its button and ticker text
+  ---
+  duration_ms: 0.429578
+  type: 'test'
+  ...
+# Subtest: actual ticker Range rectangles cannot overlap H1 Range rectangles
+ok 18 - actual ticker Range rectangles cannot overlap H1 Range rectangles
+  ---
+  duration_ms: 0.227453
+  type: 'test'
+  ...
+# Subtest: H1 glyph overhang cannot enter a symbol button or label even when the H1 box is clear
+ok 19 - H1 glyph overhang cannot enter a symbol button or label even when the H1 box is clear
+  ---
+  duration_ms: 0.215886
+  type: 'test'
+  ...
+# Subtest: only the normal-flow label, H1 and glyphs must clear the entire toolbar
+ok 20 - only the normal-flow label, H1 and glyphs must clear the entire toolbar
+  ---
+  duration_ms: 2.425842
+  type: 'test'
+  ...
+# Subtest: one pixel of label-row intrusion into the plot fails before the H1 itself touches the plot
+ok 21 - one pixel of label-row intrusion into the plot fails before the H1 itself touches the plot
+  ---
+  duration_ms: 0.285851
+  type: 'test'
+  ...
+# Subtest: the H1 box and its glyphs are checked separately against the plot
+ok 22 - the H1 box and its glyphs are checked separately against the plot
+  ---
+  duration_ms: 0.202836
+  type: 'test'
+  ...
+# Subtest: missing raw geometry and invalid numeric rectangles cannot masquerade as zero overlap
+ok 23 - missing raw geometry and invalid numeric rectangles cannot masquerade as zero overlap
+  ---
+  duration_ms: 0.550431
+  type: 'test'
+  ...
+# Subtest: the label must remain visible, in normal flow, outside the plot and in its shell-owned sibling
+ok 24 - the label must remain visible, in normal flow, outside the plot and in its shell-owned sibling
+  ---
+  duration_ms: 0.358972
+  type: 'test'
+  ...
+# Subtest: sole painted H1, duplicate-title, description, viewport, clipping and overlay checks remain strict
+ok 25 - sole painted H1, duplicate-title, description, viewport, clipping and overlay checks remain strict
+  ---
+  duration_ms: 0.802692
+  type: 'test'
+  ...
+# Subtest: compare retains the toolbar-owned fixed anchor and its unchanged 0.01px coordinate budget
+ok 26 - compare retains the toolbar-owned fixed anchor and its unchanged 0.01px coordinate budget
+  ---
+  duration_ms: 0.41748
+  type: 'test'
+  ...
+# Subtest: geometry preservation is applied only with an explicit prior state and remains 0.01px
+ok 27 - geometry preservation is applied only with an explicit prior state and remains 0.01px
+  ---
+  duration_ms: 0.703673
+  type: 'test'
+  ...
+# Subtest: conference retains its existing dashboard heading contract without adopting the chart label contract
+ok 28 - conference retains its existing dashboard heading contract without adopting the chart label contract
+  ---
+  duration_ms: 0.177107
+  type: 'test'
+  ...
+# Subtest: empty inset proof accepts only closed opposing sides, including valid CSS shorthand and zero lengths
+ok 29 - empty inset proof accepts only closed opposing sides, including valid CSS shorthand and zero lengths
+  ---
+  duration_ms: 2.31845
+  type: 'test'
+  ...
+# Subtest: decimal boundaries do not round a tiny positive clipping area into an empty one
+ok 30 - decimal boundaries do not round a tiny positive clipping area into an empty one
+  ---
+  duration_ms: 0.385993
+  type: 'test'
+  ...
+# Subtest: malformed, negative, nonzero lengths and unsupported clip grammars retain the strict path
+ok 31 - malformed, negative, nonzero lengths and unsupported clip grammars retain the strict path
+  ---
+  duration_ms: 0.287354
+  type: 'test'
+  ...
+# Subtest: serialized collector excludes proven-empty sr-only text and descendants while keeping a painted sibling
+ok 32 - serialized collector excludes proven-empty sr-only text and descendants while keeping a painted sibling
+  ---
+  duration_ms: 31.609127
+  type: 'test'
+  ...
+# Subtest: the same ID, aria-hidden, pointer-events:none and a 1px box cannot hide visible clock ink
+ok 33 - the same ID, aria-hidden, pointer-events:none and a 1px box cannot hide visible clock ink
+  ---
+  duration_ms: 23.485463
+  type: 'test'
+  ...
+# Subtest: an unknown descendant clip is irrelevant only when an ancestor box proves zero paint area
+ok 34 - an unknown descendant clip is irrelevant only when an ancestor box proves zero paint area
+  ---
+  duration_ms: 12.702751
+  type: 'test'
+  ...
+# Subtest: display:contents does not supply an empty clipping box for its visible descendants
+ok 35 - display:contents does not supply an empty clipping box for its visible descendants
+  ---
+  duration_ms: 3.496839
+  type: 'test'
+  ...
+# Subtest: empty clipping of a tick, latest badge or continuous boundary still fails its original paint contract
+ok 36 - empty clipping of a tick, latest badge or continuous boundary still fails its original paint contract
+  ---
+  duration_ms: 9.243794
+  type: 'test'
+  ...
+# Subtest: visible unsupported CSS clips remain explicit geometry failures
+ok 37 - visible unsupported CSS clips remain explicit geometry failures
+  ---
+  duration_ms: 24.602299
+  type: 'test'
+  ...
+# Subtest: nonrectangular SVG clip paths preserve the original unsupported-geometry failure
+ok 38 - nonrectangular SVG clip paths preserve the original unsupported-geometry failure
+  ---
+  duration_ms: 7.111345
+  type: 'test'
+  ...
+# Subtest: excluding the sr-only clock does not forgive a separate visible 13-square-pixel frame occlusion
+ok 39 - excluding the sr-only clock does not forgive a separate visible 13-square-pixel frame occlusion
+  ---
+  duration_ms: 3.452041
+  type: 'test'
+  ...
+# Subtest: independent source rows preserve BTC precision and select the candle source at the same cutoff
+ok 40 - independent source rows preserve BTC precision and select the candle source at the same cutoff
+  ---
+  duration_ms: 1.858665
+  type: 'test'
+  ...
+# Subtest: actual chart-owned hit surface and a continuous SVG frame satisfy the price-axis contract
+ok 41 - actual chart-owned hit surface and a continuous SVG frame satisfy the price-axis contract
+  ---
+  duration_ms: 3.510439
+  type: 'test'
+  ...
+# Subtest: price glyph ink is required even when a tag rectangle or axis hit surface remains visible
+ok 42 - price glyph ink is required even when a tag rectangle or axis hit surface remains visible
+  ---
+  duration_ms: 4.90873
+  type: 'test'
+  ...
+# Subtest: computed child visibility overrides a hidden ancestor while display and opacity suppress descendants
+ok 43 - computed child visibility overrides a hidden ancestor while display and opacity suppress descendants
+  ---
+  duration_ms: 0.349227
+  type: 'test'
+  ...
+# Subtest: actual CSS viewport must exactly match the requested matrix case
+ok 44 - actual CSS viewport must exactly match the requested matrix case
+  ---
+  duration_ms: 6.402946
+  type: 'test'
+  ...
+# Subtest: foreground paint cannot interrupt frame lines between labels, including a clipped half-stroke
+ok 45 - foreground paint cannot interrupt frame lines between labels, including a clipped half-stroke
+  ---
+  duration_ms: 2.477199
+  type: 'test'
+  ...
+# Subtest: direct label center hits are valid, but another chart or arbitrary overlay cannot own the hit
+ok 46 - direct label center hits are valid, but another chart or arbitrary overlay cannot own the hit
+  ---
+  duration_ms: 3.656389
+  type: 'test'
+  ...
+# Subtest: touching paint bounds pass, but every positive occlusion area fails without rounding
+ok 47 - touching paint bounds pass, but every positive occlusion area fails without rounding
+  ---
+  duration_ms: 1.25867
+  type: 'test'
+  ...
+# Subtest: legend, event, and forecast occlusions are all strict zero-area checks
+ok 48 - legend, event, and forecast occlusions are all strict zero-area checks
+  ---
+  duration_ms: 2.019218
+  type: 'test'
+  ...
+# Subtest: same-chart SVG underlap is recorded separately, but foreground paint blocks even without pointer events
+ok 49 - same-chart SVG underlap is recorded separately, but foreground paint blocks even without pointer events
+  ---
+  duration_ms: 2.171027
+  type: 'test'
+  ...
+# Subtest: overlay coverage distinguishes absent cases and requires actual paint somewhere in the matrix
+ok 50 - overlay coverage distinguishes absent cases and requires actual paint somewhere in the matrix
+  ---
+  duration_ms: 2.021602
+  type: 'test'
+  ...
+# Subtest: two painted labels cannot overlap even when center hits reach their shared layer
+ok 51 - two painted labels cannot overlap even when center hits reach their shared layer
+  ---
+  duration_ms: 0.741099
+  type: 'test'
+  ...
+# Subtest: the visible cursor can represent the hidden latest only for the same independent price and date
+ok 52 - the visible cursor can represent the hidden latest only for the same independent price and date
+  ---
+  duration_ms: 3.081732
+  type: 'test'
+  ...
+# Subtest: candles require the venue close and reject the old Coin Metrics latest label
+ok 53 - candles require the venue close and reject the old Coin Metrics latest label
+  ---
+  duration_ms: 0.534187
+  type: 'test'
+  ...
+# Subtest: correct rounded text does not hide a raw readout precision or source mismatch
+ok 54 - correct rounded text does not hide a raw readout precision or source mismatch
+  ---
+  duration_ms: 0.249227
+  type: 'test'
+  ...
+# Subtest: hidden or empty ticks, missing ownership, and clipping cannot count as a pass
+ok 55 - hidden or empty ticks, missing ownership, and clipping cannot count as a pass
+  ---
+  duration_ms: 0.419473
+  type: 'test'
+  ...
+# Subtest: frame lines must meet raw endpoints without gaps, dashes, or transparent paint
+ok 56 - frame lines must meet raw endpoints without gaps, dashes, or transparent paint
+  ---
+  duration_ms: 1.267734
+  type: 'test'
+  ...
+# Subtest: BTC/ETH alignment allows exactly 2 CSS pixels and rejects 2.001 without rounding
+ok 57 - BTC/ETH alignment allows exactly 2 CSS pixels and rejects 2.001 without rounding
+  ---
+  duration_ms: 0.479754
+  type: 'test'
+  ...
+# Subtest: the ±2 comparison allowance does not allow overflow or subpixel gutter intrusion
+ok 58 - the ±2 comparison allowance does not allow overflow or subpixel gutter intrusion
+  ---
+  duration_ms: 0.305912
+  type: 'test'
+  ...
+# Subtest: four root requests retain every source sheet in its original cascade position
+ok 59 - four root requests retain every source sheet in its original cascade position
+  ---
+  duration_ms: 136.298449
+  type: 'test'
+  ...
+# Subtest: offline packaging expands the request bundles into the same 41 exact source blocks
+ok 60 - offline packaging expands the request bundles into the same 41 exact source blocks
+  ---
+  duration_ms: 65.367337
+  type: 'test'
+  ...
+# Subtest: missing, repeated, extra and reordered physical links fail instead of dropping source styles
+ok 61 - missing, repeated, extra and reordered physical links fail instead of dropping source styles
+  ---
+  duration_ms: 4.087471
+  type: 'test'
+  ...
+# Subtest: URL and sheet-scoped directives require an explicit policy before concatenation
+ok 62 - URL and sheet-scoped directives require an explicit policy before concatenation
+  ---
+  duration_ms: 0.568959
+  type: 'test'
+  ...
+# Subtest: generation is reproducible and stale or absent generated bytes are rejected
+ok 63 - generation is reproducible and stale or absent generated bytes are rejected
+  ---
+  duration_ms: 171.960475
+  type: 'test'
+  ...
+# Subtest: the default is light and only explicit light/dark preferences are accepted
+ok 64 - the default is light and only explicit light/dark preferences are accepted
+  ---
+  duration_ms: 0.949153
+  type: 'test'
+  ...
+# Subtest: initialization honors a saved choice and the early head fallback without writing storage
+ok 65 - initialization honors a saved choice and the early head fallback without writing storage
+  ---
+  duration_ms: 2.257798
+  type: 'test'
+  ...
+# Subtest: native settings buttons toggle and persist one choice while keeping focus and chart nodes intact
+ok 66 - native settings buttons toggle and persist one choice while keeping focus and chart nodes intact
+  ---
+  duration_ms: 0.87438
+  type: 'test'
+  ...
+# Subtest: reopening settings keeps the current choice when storage writes are blocked
+ok 67 - reopening settings keeps the current choice when storage writes are blocked
+  ---
+  duration_ms: 0.48382
+  type: 'test'
+  ...
+# Subtest: cross-tab preference changes update controls without re-persisting or accepting session storage
+ok 68 - cross-tab preference changes update controls without re-persisting or accepting session storage
+  ---
+  duration_ms: 2.449288
+  type: 'test'
+  ...
+# Subtest: document initialization is idempotent and teardown removes external listeners
+ok 69 - document initialization is idempotent and teardown removes external listeners
+  ---
+  duration_ms: 1.023886
+  type: 'test'
+  ...
+# Subtest: parent messages require both a matching origin and the actual parent window
+ok 70 - parent messages require both a matching origin and the actual parent window
+  ---
+  duration_ms: 2.17927
+  type: 'test'
+  ...
+# Subtest: a new child requests the parent choice before sending any fallback back to it
+ok 71 - a new child requests the parent choice before sending any fallback back to it
+  ---
+  duration_ms: 0.523761
+  type: 'test'
+  ...
+# Subtest: child requests receive the current theme at an exact origin, including late-loaded frames
+ok 72 - child requests receive the current theme at an exact origin, including late-loaded frames
+  ---
+  duration_ms: 1.129625
+  type: 'test'
+  ...
+# Subtest: a same-origin child choice reaches siblings without echoing or rewriting source data
+ok 73 - a same-origin child choice reaches siblings without echoing or rewriting source data
+  ---
+  duration_ms: 0.432813
+  type: 'test'
+  ...
+# Subtest: opaque-origin standalone documents keep local controls without sending wildcard messages
+ok 74 - opaque-origin standalone documents keep local controls without sending wildcard messages
+  ---
+  duration_ms: 0.25806
+  type: 'test'
+  ...
+# Subtest: applyTheme rejects malformed input and does not need a mounted control
+ok 75 - applyTheme rejects malformed input and does not need a mounted control
+  ---
+  duration_ms: 0.250598
+  type: 'test'
+  ...
+1..75
+# tests 75
+# suites 0
+# pass 75
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 633.395493
