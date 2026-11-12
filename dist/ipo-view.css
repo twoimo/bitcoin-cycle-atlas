@@ -175,3 +175,184 @@ body #ipo-view .ipo-source-panel { width:min(440px,100%); }
   body #ipo-view .ipo-calendar-jumps { flex:1 1 124px; justify-content:flex-end; }
   body #ipo-view .ipo-calendar-jumps button { min-height:44px; }
 }
+
+/* R19 P3: the calendar is a grid of real day cards. The retained ledger keeps
+   its existing 12–13px type, row padding, sticky company column and scroll. */
+body[data-shell=dashboard] #ipo-view {
+  min-width: 0;
+  gap: 12px;
+  font-size: var(--type-body-sm);
+}
+body[data-shell=dashboard] #ipo-view .ipo-heading {
+  align-items: flex-start;
+  gap: 12px;
+  padding-bottom: 12px;
+  overflow: visible;
+  background: var(--surface);
+}
+body[data-shell=dashboard] #ipo-view .ipo-heading-title { min-height: 44px; }
+body[data-shell=dashboard] #ipo-view .ipo-toolbar {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+body[data-shell=dashboard] #ipo-view .ipo-segmented {
+  display: flex;
+  flex: none;
+  gap: 4px;
+  max-width: 100%;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+}
+body[data-shell=dashboard] #ipo-view :is(.ipo-segmented button, .ipo-calendar-nav button, .ipo-source-disclosure summary, .ipo-day-dialog button) {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--pill-radius);
+  background: var(--surface);
+  color: var(--text);
+  font-size: var(--type-body-sm);
+  line-height: 24px;
+}
+body[data-shell=dashboard] #ipo-view :is(.ipo-segmented button, .ipo-calendar-nav button)[aria-pressed=true] {
+  border-color: var(--accent-ink);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+body[data-shell=dashboard] #ipo-view :is(.ipo-segmented button, .ipo-calendar-nav button, .ipo-source-disclosure summary, .ipo-day-dialog button):hover {
+  background: var(--surface-hover);
+}
+body[data-shell=dashboard] #ipo-view .ipo-calendar-nav button:disabled {
+  color: var(--muted);
+  cursor: default;
+}
+body[data-shell=dashboard] #ipo-view .ipo-search {
+  flex: 1 1 180px;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  max-width: 320px;
+  padding: 8px 16px;
+  border-radius: var(--pill-radius);
+  background: var(--surface-raised);
+  color: var(--text);
+  font-size: var(--type-body-sm);
+  line-height: 24px;
+}
+body[data-shell=dashboard] #ipo-view .ipo-search::placeholder { color: var(--muted); }
+body[data-shell=dashboard] #ipo-view .ipo-calendar-nav {
+  min-width: 0;
+  gap: 8px 12px;
+}
+body[data-shell=dashboard] #ipo-view .ipo-month-controls button {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+}
+body[data-shell=dashboard] #ipo-view .ipo-calendar-jumps { flex-wrap: wrap; }
+body[data-shell=dashboard] #ipo-view .ipo-month-summary {
+  font-size: var(--type-meta);
+}
+body[data-shell=dashboard] #ipo-view .ipo-pages {
+  min-width: 0;
+  max-width: 100%;
+}
+/* Seven 44px day targets cannot fit a 320px shell after its page gutters.
+   Each month scrolls horizontally; the original outer owner still pages
+   vertically, and the complete ledger keeps its separate table scroll. */
+body[data-shell=dashboard] #ipo-view .ipo-month-page {
+  min-width: 0;
+  min-height: 360px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+}
+body[data-shell=dashboard] #ipo-view :is(.ipo-month-weekdays, .ipo-month-grid) {
+  min-width: 332px;
+  grid-template-columns: repeat(7, minmax(44px, 1fr));
+  gap: 4px;
+}
+body[data-shell=dashboard] #ipo-view .ipo-month-grid {
+  grid-template-rows: repeat(var(--ipo-weeks, 6), minmax(44px, 1fr));
+  border: 0;
+}
+body[data-shell=dashboard] #ipo-view .ipo-month-day {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius-sm);
+  background: var(--surface);
+}
+body[data-shell=dashboard] #ipo-view .ipo-month-day.is-outside { background: var(--surface-raised); }
+body[data-shell=dashboard] #ipo-view .ipo-month-day.is-today { border-color: var(--accent-ink); }
+body[data-shell=dashboard] #ipo-view .ipo-month-day:is(:hover, :active) { background: var(--surface-hover); }
+body[data-shell=dashboard] #ipo-view :is(.ipo-day-more, .ipo-source) {
+  font-size: var(--type-meta);
+}
+body[data-shell=dashboard] #ipo-view :is(.ipo-table-shell, .ipo-list-page) {
+  min-width: 0;
+  max-width: 100%;
+}
+body[data-shell=dashboard] #ipo-view .ipo-table-shell {
+  border-color: var(--border);
+  border-radius: var(--card-radius-sm);
+  background: var(--surface);
+}
+body[data-shell=dashboard] #ipo-view :is(.ipo-source-panel, .ipo-day-dialog) {
+  border-radius: var(--card-radius-md);
+}
+body[data-shell=dashboard] #ipo-view :is(.ipo-source-panel p, .ipo-date-event p, .ipo-day-dialog > p, .ipo-day-detail > p, .ipo-calendar-message) {
+  font-size: var(--type-body-sm);
+  line-height: var(--copy-leading);
+  overflow-wrap: anywhere;
+}
+body[data-shell=dashboard] #ipo-view .ipo-source-panel {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+body[data-shell=dashboard] #ipo-view .ipo-source-panel a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  max-width: 100%;
+}
+body[data-shell=dashboard] #ipo-view .ipo-day-detail {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+body[data-shell=dashboard] #ipo-view .ipo-date-event {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius-sm);
+  background: var(--surface);
+}
+body[data-shell=dashboard] #ipo-view .ipo-date-event h3 {
+  font-size: var(--type-body-md);
+}
+body[data-shell=dashboard] #ipo-view :focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+}
+@media (max-width: 760px) {
+  body[data-shell=dashboard] #ipo-view .ipo-month-day { padding: 4px; }
+  body[data-shell=dashboard] #ipo-view .ipo-cal-event { font-size: 12px; }
+}
+@media (max-width: 620px) {
+  body[data-shell=dashboard] #ipo-view .ipo-heading { gap: 8px; }
+  body[data-shell=dashboard] #ipo-view .ipo-search { max-width: none; }
+  body[data-shell=dashboard] #ipo-view .ipo-month-controls { flex-basis: 224px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body[data-shell=dashboard] #ipo-view .ipo-pages { scroll-behavior: auto; }
+  body[data-shell=dashboard] #ipo-view :is(button, input, summary) { transition: none; }
+}

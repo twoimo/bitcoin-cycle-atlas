@@ -52,3 +52,158 @@ body .atlas-nav button>span:last-child:not([data-icon]){position:static;width:au
 body .daily-heading,body .ipo-heading,body .evidence-controls,body .atlas-canvas-heading{position:fixed;top:6px;right:8px;left:auto;height:36px;margin:0;padding:0 0 0 8px;z-index:51;display:flex;align-items:center;gap:8px;background:transparent;border:0;box-shadow:none;width:auto;max-width:calc(100% - 430px);overflow:hidden;white-space:nowrap}
 body .daily-heading-actions,body .ipo-toolbar{display:flex;align-items:center;gap:8px;margin:0}
 body[data-page="market"] .atlas-canvas-heading,body[data-page="market"] .daily-heading,body[data-page="market"] .ipo-heading,body[data-page="market"] .evidence-controls{display:none !important}
+
+/* R19 P3: market dashboard cards. Scope excludes the RSI, housing and theme
+   workspaces; the observed chart keeps its existing size/scroll owners. */
+body main[data-workspace=market] #market-view.market-lab{
+  font-size:var(--type-body-sm);
+  line-height:var(--copy-leading);
+}
+body main[data-workspace=market] #market-view.market-lab #ml-panel{min-width:0}
+body main[data-workspace=market] #market-view.market-lab :is(.ml-two-col,.ml-theme-grid,.ml-strategies){
+  gap:16px;
+}
+body main[data-workspace=market] #market-view.market-lab .ml-theme-grid{
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));
+}
+body main[data-workspace=market] #market-view.market-lab :is(.ml-two-col,.ml-theme-grid,.ml-strategies)>.ml-card{
+  min-width:0;
+  padding:16px;
+  border:1px solid var(--border);
+  border-radius:var(--card-radius-md);
+  background:var(--surface);
+}
+body main[data-workspace=market] #market-view.market-lab :is(.ml-card>h3,.ml-reading-heading){
+  font-size:var(--type-body-sm);
+  line-height:1.5;
+}
+body main[data-workspace=market] #market-view.market-lab :where(.ml-card>p,.ml-original>p,.ml-source-body,.ml-source-body article p,.ml-empty-copy,.ml-empty p,.ml-error,.ml-warning,.ml-notes,.ml-risk p,.ml-results dd p){
+  font-size:var(--type-body-sm);
+  line-height:var(--copy-leading);
+  overflow-wrap:anywhere;
+}
+body main[data-workspace=market] #market-view.market-lab :is(.ml-source-line,.ml-kicker,.ml-field,.ml-weight,.ml-input-group legend,.ml-result-context dt,.ml-results dt,.ml-footer){
+  font-size:var(--type-meta);
+  line-height:1.5;
+}
+body main[data-workspace=market] #market-view.market-lab :is(.ml-original,.ml-sources){
+  border:1px solid var(--border);
+  border-radius:var(--card-radius-sm);
+  background:var(--surface);
+}
+body main[data-workspace=market] #market-view.market-lab :is(.ml-original,.ml-sources)>summary{
+  min-height:44px;
+  padding:12px 16px;
+  font-size:var(--type-meta);
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+body main[data-workspace=market] #market-view.market-lab .ml-original>p{margin:0 16px 16px}
+body main[data-workspace=market] #market-view.market-lab .ml-source-body{padding:0 16px 16px}
+body main[data-workspace=market] #market-view.market-lab :is(.ml-field input,.ml-weight input,.ml-shock-row>input[type=range],.ml-primary,.ml-actions button,.ml-status button,.ml-results dd summary){
+  min-width:44px;
+  min-height:44px;
+}
+body main[data-workspace=market] #market-view.market-lab :is(.ml-primary,.ml-actions button,.ml-status button){
+  border-radius:var(--pill-radius);
+  font-size:var(--type-meta);
+}
+body main[data-workspace=market] #market-view.market-lab :is(button,input,select,summary,a,[tabindex]):focus-visible{
+  outline:2px solid var(--focus);
+  outline-offset:-2px;
+}
+/* Table text, cell spacing and native sticky/scroll behavior stay dense. */
+body main[data-workspace=market] #market-view.market-lab .ml-table-wrap{
+  max-width:100%;
+  border:1px solid var(--border);
+  border-radius:var(--card-radius-sm);
+}
+
+/* Market view tabs keep the original host toolbar height, including its
+   fine-pointer desktop exception. Compact/coarse targets still inherit 44px. */
+body .center-workspace-toolbar .workspace-view-tabs:has([data-workspace-page=market-us]){gap:4px}
+body .center-workspace-toolbar .workspace-view-tabs>[data-workspace-page]{
+  min-width:44px;
+  border:1px solid var(--control-border);
+  border-radius:var(--pill-radius);
+  padding:4px 12px;
+  color:var(--text);
+  background:var(--surface);
+  font:var(--type-meta)/1.4 var(--font);
+  box-shadow:none;
+}
+body .center-workspace-toolbar .workspace-view-tabs>[data-workspace-page][aria-selected=true]{
+  border-color:var(--accent-ink);
+  background:var(--accent-soft);
+  color:var(--accent-ink);
+  box-shadow:none;
+}
+body .center-workspace-toolbar .workspace-view-tabs>[data-workspace-page]:hover:not(:disabled){
+  border-color:var(--accent-ink);
+}
+body .center-workspace-toolbar .workspace-view-tabs>[data-workspace-page]:focus-visible{
+  outline:2px solid var(--focus);
+  outline-offset:-2px;
+}
+body .center-workspace-toolbar .workspace-view-tabs>[data-workspace-page] .workspace-region-code{
+  font-size:var(--type-meta);
+  color:inherit;
+}
+
+/* Diagnosis keeps its existing dialog and exact observed values. The three
+   source axes become separate cards, with clocks outside the body hierarchy. */
+body .compact-toolbar-dialog[data-toolbar-dialog=market-summary]{
+  font-size:var(--type-body-sm);
+}
+body .compact-toolbar-dialog[data-toolbar-dialog=market-summary] .ml-score-row{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  border:0;
+}
+body .compact-toolbar-dialog[data-toolbar-dialog=market-summary] .ml-score-row>.ml-score{
+  display:block;
+  min-width:0;
+  padding:16px;
+  border:1px solid var(--border);
+  border-radius:var(--card-radius-sm);
+  background:var(--surface-raised);
+}
+body .compact-toolbar-dialog[data-toolbar-dialog=market-summary] .ml-score-row>.ml-score h3{
+  font-size:var(--type-body-sm);
+  line-height:1.5;
+}
+body .compact-toolbar-dialog[data-toolbar-dialog=market-summary] :is(.ml-direction-kind,.ml-direction-formula>span,.ml-collection-line,.ml-axis-measure,.ml-axis-collection,.ml-axis-observations dt,.ml-axis-stats,.ml-axis-stats>span){
+  font-size:var(--type-meta);
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+body .compact-toolbar-dialog[data-toolbar-dialog=market-summary] :is(.ml-direction-method,.ml-legacy-score) p,
+body .compact-toolbar-dialog[data-toolbar-dialog=market-summary] .ml-warning{
+  font-size:var(--type-body-sm);
+  line-height:var(--copy-leading);
+  overflow-wrap:anywhere;
+}
+body .compact-toolbar-dialog[data-toolbar-dialog=market-summary] :is(.ml-direction-method,.ml-legacy-score) summary,
+body .compact-toolbar-dialog[data-toolbar-dialog=market-summary] .ml-collection-line button{
+  min-width:44px;
+  min-height:44px;
+  font-size:var(--type-meta);
+}
+body .compact-toolbar-dialog[data-toolbar-dialog=market-summary] .ml-collection-line button{
+  padding:8px 12px;
+  border:1px solid var(--control-border);
+  border-radius:var(--pill-radius);
+}
+@media(max-width:640px){
+  body main[data-workspace=market] #market-view.market-lab :is(.ml-two-col,.ml-theme-grid,.ml-strategies){gap:12px}
+  body main[data-workspace=market] #market-view.market-lab :is(.ml-two-col,.ml-theme-grid,.ml-strategies)>.ml-card{padding:12px}
+  body .compact-toolbar-dialog[data-toolbar-dialog=market-summary] .ml-score-row{grid-template-columns:minmax(0,1fr)}
+}
+@media(prefers-reduced-motion:reduce){
+  body .center-workspace-toolbar .workspace-view-tabs>[data-workspace-page],
+  body .compact-toolbar-dialog[data-toolbar-dialog=market-summary] *{
+    transition:none!important;
+    animation:none!important;
+    scroll-behavior:auto!important;
+  }
+}

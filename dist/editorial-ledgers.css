@@ -963,3 +963,255 @@ body #ipo-view .ipo-table-shell {
     min-width: 44px;
   }
 }
+
+/* R19 P3: dashboard filters and reading cards. The research paginator and
+   asset ledger keep their measured row/header sizes and native scroll owners.
+   Data tables are the density exception; prose and filter labels use 15px. */
+body[data-shell=dashboard][data-page=evidence] #evidence-view .evidence-controls {
+  display: grid;
+  grid-template-columns: minmax(156px,1fr) max-content max-content max-content;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+  margin-bottom: 0;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius-sm);
+  background: var(--surface-raised);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-padding-inline: 4px;
+  overscroll-behavior-x: contain;
+}
+body[data-shell=dashboard] #evidence-view .evidence-controls > * {
+  min-width: 0;
+}
+body[data-shell=dashboard] #evidence-view .evidence-controls :is(input,select,button) {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--control-border);
+  border-radius: var(--pill-radius);
+  background: var(--surface);
+  color: var(--text);
+  font: 400 var(--type-body-sm)/20px var(--font);
+}
+body[data-shell=dashboard] #evidence-view .evidence-search input {
+  width: 100%;
+}
+body[data-shell=dashboard] #evidence-view .evidence-controls select {
+  max-width: 180px;
+}
+body[data-shell=dashboard] #evidence-view .evidence-controls button:hover {
+  background: var(--surface-hover);
+}
+body[data-shell=dashboard] #evidence-view .evidence-table-shell {
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius-sm);
+  background: var(--surface);
+}
+body[data-shell=dashboard] #evidence-view .evidence-pagination {
+  min-width: 0;
+  padding-block: 4px 0;
+  border-top: 0;
+  font-size: var(--type-meta);
+}
+body[data-shell=dashboard] #evidence-view .evidence-pagination button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--control-border);
+  border-radius: var(--pill-radius);
+  background: var(--surface);
+  color: var(--text);
+  font: 400 var(--type-body-sm)/20px var(--font);
+}
+body[data-shell=dashboard] #evidence-view .evidence-pagination button:disabled {
+  color: var(--subtle);
+  cursor: default;
+}
+body[data-shell=dashboard] #evidence-view :is(input,select,button):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+}
+
+/* Preserve the wide action/filter grid's height and the table's bottom edge.
+   The 44px controls use the space previously occupied by toolbar padding. */
+body[data-shell=dashboard] #data-view .daily-heading {
+  padding-block: 2px;
+  border-bottom: 0;
+}
+body #data-view .asset-filters {
+  padding-block: 2px;
+  border-radius: var(--card-radius-sm);
+  background: var(--surface-raised);
+}
+body #data-view :is(.daily-back,.daily-action,.asset-filter-reset),
+body #data-view .asset-filters :is(input,select) {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--control-border);
+  border-radius: var(--pill-radius);
+  background: var(--surface);
+  color: var(--text);
+  font: 400 var(--type-body-sm)/20px var(--font);
+}
+body #data-view .daily-back {
+  width: 44px;
+  padding: 12px;
+}
+body #data-view :is(.daily-action,.asset-filter-reset):hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+body #data-view .asset-table-summary {
+  font: 400 var(--type-meta)/16px var(--font);
+}
+body #data-view .asset-context {
+  font-size: var(--type-body-sm);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+body #data-view .asset-table-panel {
+  border-top: 1px solid var(--border);
+  border-radius: var(--card-radius-sm) var(--card-radius-sm) 0 0;
+}
+body #data-view :is(.asset-history-mode,.asset-history-groups) {
+  flex-wrap: wrap;
+  gap: 8px;
+  border: 0;
+}
+body #data-view :is(.asset-history-mode,.asset-history-groups) button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--control-border);
+  border-radius: var(--pill-radius);
+  background: var(--surface);
+  color: var(--text);
+  font-size: var(--type-body-sm);
+  box-shadow: none;
+}
+body #data-view :is(.asset-history-mode,.asset-history-groups) button[aria-pressed=true] {
+  border-color: var(--accent-ink);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  box-shadow: none;
+}
+body #data-view :is(.asset-reason-metrics,.asset-history-metrics,.asset-history-record-list) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(min(100%,160px),1fr));
+  gap: 12px;
+  border: 0;
+}
+body #data-view :is(.asset-reason-metrics,.asset-history-metrics) > div,
+body #data-view .asset-history-record-list button {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius-sm);
+  background: var(--surface-raised);
+}
+body #data-view .asset-history-record-list button {
+  grid-template-columns: minmax(0,1fr);
+  min-height: 44px;
+  overflow-wrap: anywhere;
+}
+body #data-view .asset-history-record-list button[aria-pressed=true] {
+  border-color: var(--accent-ink);
+  background: var(--accent-soft);
+  box-shadow: none;
+}
+body #data-view .asset-history-record-list :is(strong,span),
+body #data-view :is(.asset-reason-metrics,.asset-history-metrics) dt {
+  font-size: var(--type-meta);
+}
+body #data-view :is(.daily-method-dialog,.asset-history-dialog) {
+  border-radius: var(--card-radius-md);
+}
+body #data-view .daily-method-dialog :is(p,li),
+body #data-view :is(.asset-selected-reason,.asset-history-disclosure,.asset-history-reason,.asset-history-empty),
+body #data-view .asset-history-method p {
+  font-size: var(--type-body-sm);
+  line-height: 1.6;
+}
+body #data-view :is(button,input,select,[tabindex],a,summary):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+}
+
+/* The original reader keeps its own fixed action band and scroll restoration. */
+body .research-reader {
+  border-radius: var(--card-radius-md);
+}
+body .research-article,
+body .research-article p:is(.research-deck,.research-lead),
+body .research-article .research-provenance,
+body .research-source-text,
+body .research-related {
+  font-size: var(--type-body-sm);
+  line-height: 1.6;
+}
+body .research-article :is(.research-meta,.research-tags span,.research-small,.research-media-kind,.research-article-footer),
+body .research-byline > div > span,
+body .research-content-switch span {
+  font-size: var(--type-meta);
+}
+body .research-crosslinks {
+  grid-template-columns: repeat(auto-fit,minmax(min(100%,220px),1fr));
+  gap: 12px;
+}
+body .research-crosslinks > span {
+  grid-column: 1 / -1;
+  font-size: var(--type-meta);
+}
+body .research-related,
+body .research-article .research-provenance {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius-sm);
+  background: var(--surface-raised);
+}
+body .research-related {
+  min-width: 0;
+  min-height: 44px;
+  overflow-wrap: anywhere;
+}
+body .research-reader-actions button,
+body .research-content-switch button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--control-border);
+  border-radius: var(--pill-radius);
+  color: var(--text);
+  background: var(--surface);
+  font-size: var(--type-body-sm);
+}
+body .research-content-switch {
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+body .research-content-switch button[aria-pressed=true] {
+  border-color: var(--accent-ink);
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  box-shadow: none;
+}
+body .research-reader :is(a,button):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+}
+@media (max-width: 640px) {
+  body .research-reader { border-radius: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body .research-reader-scroll { scroll-behavior: auto; }
+  body #data-view :is(button,input,select),
+  body #evidence-view :is(button,input,select),
+  body .research-reader :is(a,button) { transition: none; }
+}

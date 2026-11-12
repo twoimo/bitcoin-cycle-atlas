@@ -2251,7 +2251,7 @@ body:not([data-rsi-workbench=true]) main:not([data-loading-kind=rsi]) #market-vi
 }
 
 
-/* Source: editorial-ledgers.css; SHA-256: 41cad9865c8d11435b14aa66882e59ade6b0c664fde92ce87eca714c5f6a298a */
+/* Source: editorial-ledgers.css; SHA-256: 20723c1a59c58820f95888cb3bbe2e860f9e88ea68f5d197a8acd5b6fa49c0ba */
 /* Atlas · Financial tables, calendars and research reading surfaces.
  * Presentation only: keep the original scroll owners, sticky cells, measured
  * row allocation, dialog lifecycle and shell-hosted toolbar visibility.
@@ -3218,8 +3218,260 @@ body #ipo-view .ipo-table-shell {
   }
 }
 
+/* R19 P3: dashboard filters and reading cards. The research paginator and
+   asset ledger keep their measured row/header sizes and native scroll owners.
+   Data tables are the density exception; prose and filter labels use 15px. */
+body[data-shell=dashboard][data-page=evidence] #evidence-view .evidence-controls {
+  display: grid;
+  grid-template-columns: minmax(156px,1fr) max-content max-content max-content;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+  margin-bottom: 0;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius-sm);
+  background: var(--surface-raised);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-padding-inline: 4px;
+  overscroll-behavior-x: contain;
+}
+body[data-shell=dashboard] #evidence-view .evidence-controls > * {
+  min-width: 0;
+}
+body[data-shell=dashboard] #evidence-view .evidence-controls :is(input,select,button) {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--control-border);
+  border-radius: var(--pill-radius);
+  background: var(--surface);
+  color: var(--text);
+  font: 400 var(--type-body-sm)/20px var(--font);
+}
+body[data-shell=dashboard] #evidence-view .evidence-search input {
+  width: 100%;
+}
+body[data-shell=dashboard] #evidence-view .evidence-controls select {
+  max-width: 180px;
+}
+body[data-shell=dashboard] #evidence-view .evidence-controls button:hover {
+  background: var(--surface-hover);
+}
+body[data-shell=dashboard] #evidence-view .evidence-table-shell {
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius-sm);
+  background: var(--surface);
+}
+body[data-shell=dashboard] #evidence-view .evidence-pagination {
+  min-width: 0;
+  padding-block: 4px 0;
+  border-top: 0;
+  font-size: var(--type-meta);
+}
+body[data-shell=dashboard] #evidence-view .evidence-pagination button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--control-border);
+  border-radius: var(--pill-radius);
+  background: var(--surface);
+  color: var(--text);
+  font: 400 var(--type-body-sm)/20px var(--font);
+}
+body[data-shell=dashboard] #evidence-view .evidence-pagination button:disabled {
+  color: var(--subtle);
+  cursor: default;
+}
+body[data-shell=dashboard] #evidence-view :is(input,select,button):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+}
 
-/* Source: relay-room.css; SHA-256: ad9f50bb04545f3c1ab9308c2959229c85e1507939d58f5567dad1c9790c347f */
+/* Preserve the wide action/filter grid's height and the table's bottom edge.
+   The 44px controls use the space previously occupied by toolbar padding. */
+body[data-shell=dashboard] #data-view .daily-heading {
+  padding-block: 2px;
+  border-bottom: 0;
+}
+body #data-view .asset-filters {
+  padding-block: 2px;
+  border-radius: var(--card-radius-sm);
+  background: var(--surface-raised);
+}
+body #data-view :is(.daily-back,.daily-action,.asset-filter-reset),
+body #data-view .asset-filters :is(input,select) {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--control-border);
+  border-radius: var(--pill-radius);
+  background: var(--surface);
+  color: var(--text);
+  font: 400 var(--type-body-sm)/20px var(--font);
+}
+body #data-view .daily-back {
+  width: 44px;
+  padding: 12px;
+}
+body #data-view :is(.daily-action,.asset-filter-reset):hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+body #data-view .asset-table-summary {
+  font: 400 var(--type-meta)/16px var(--font);
+}
+body #data-view .asset-context {
+  font-size: var(--type-body-sm);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+body #data-view .asset-table-panel {
+  border-top: 1px solid var(--border);
+  border-radius: var(--card-radius-sm) var(--card-radius-sm) 0 0;
+}
+body #data-view :is(.asset-history-mode,.asset-history-groups) {
+  flex-wrap: wrap;
+  gap: 8px;
+  border: 0;
+}
+body #data-view :is(.asset-history-mode,.asset-history-groups) button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--control-border);
+  border-radius: var(--pill-radius);
+  background: var(--surface);
+  color: var(--text);
+  font-size: var(--type-body-sm);
+  box-shadow: none;
+}
+body #data-view :is(.asset-history-mode,.asset-history-groups) button[aria-pressed=true] {
+  border-color: var(--accent-ink);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  box-shadow: none;
+}
+body #data-view :is(.asset-reason-metrics,.asset-history-metrics,.asset-history-record-list) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(min(100%,160px),1fr));
+  gap: 12px;
+  border: 0;
+}
+body #data-view :is(.asset-reason-metrics,.asset-history-metrics) > div,
+body #data-view .asset-history-record-list button {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius-sm);
+  background: var(--surface-raised);
+}
+body #data-view .asset-history-record-list button {
+  grid-template-columns: minmax(0,1fr);
+  min-height: 44px;
+  overflow-wrap: anywhere;
+}
+body #data-view .asset-history-record-list button[aria-pressed=true] {
+  border-color: var(--accent-ink);
+  background: var(--accent-soft);
+  box-shadow: none;
+}
+body #data-view .asset-history-record-list :is(strong,span),
+body #data-view :is(.asset-reason-metrics,.asset-history-metrics) dt {
+  font-size: var(--type-meta);
+}
+body #data-view :is(.daily-method-dialog,.asset-history-dialog) {
+  border-radius: var(--card-radius-md);
+}
+body #data-view .daily-method-dialog :is(p,li),
+body #data-view :is(.asset-selected-reason,.asset-history-disclosure,.asset-history-reason,.asset-history-empty),
+body #data-view .asset-history-method p {
+  font-size: var(--type-body-sm);
+  line-height: 1.6;
+}
+body #data-view :is(button,input,select,[tabindex],a,summary):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+}
+
+/* The original reader keeps its own fixed action band and scroll restoration. */
+body .research-reader {
+  border-radius: var(--card-radius-md);
+}
+body .research-article,
+body .research-article p:is(.research-deck,.research-lead),
+body .research-article .research-provenance,
+body .research-source-text,
+body .research-related {
+  font-size: var(--type-body-sm);
+  line-height: 1.6;
+}
+body .research-article :is(.research-meta,.research-tags span,.research-small,.research-media-kind,.research-article-footer),
+body .research-byline > div > span,
+body .research-content-switch span {
+  font-size: var(--type-meta);
+}
+body .research-crosslinks {
+  grid-template-columns: repeat(auto-fit,minmax(min(100%,220px),1fr));
+  gap: 12px;
+}
+body .research-crosslinks > span {
+  grid-column: 1 / -1;
+  font-size: var(--type-meta);
+}
+body .research-related,
+body .research-article .research-provenance {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius-sm);
+  background: var(--surface-raised);
+}
+body .research-related {
+  min-width: 0;
+  min-height: 44px;
+  overflow-wrap: anywhere;
+}
+body .research-reader-actions button,
+body .research-content-switch button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--control-border);
+  border-radius: var(--pill-radius);
+  color: var(--text);
+  background: var(--surface);
+  font-size: var(--type-body-sm);
+}
+body .research-content-switch {
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+body .research-content-switch button[aria-pressed=true] {
+  border-color: var(--accent-ink);
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  box-shadow: none;
+}
+body .research-reader :is(a,button):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+}
+@media (max-width: 640px) {
+  body .research-reader { border-radius: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body .research-reader-scroll { scroll-behavior: auto; }
+  body #data-view :is(button,input,select),
+  body #evidence-view :is(button,input,select),
+  body .research-reader :is(a,button) { transition: none; }
+}
+
+
+/* Source: relay-room.css; SHA-256: 51807ceb5eb98eaa513115ab1a55f79169cc893c077748d13a8efb36ba854de6 */
 /* 릴레이 콘텐츠 방(Relay room) — 아틀라스 토큰 위에 텔레그램 웹의 채널 목록·대화 구조를 얹는다. */
 #relay-view[hidden]{display:none!important}
 body[data-page="relay"]{overflow:hidden}
@@ -3541,6 +3793,141 @@ body[data-page="relay"]{overflow:hidden}
   .relay-reader-figure{margin:36px 0}
   .relay-reader-figure figcaption{margin-top:8px;font-size:13px;line-height:18px}
   .relay-reader-foot{margin-top:36px;padding-top:20px;font-size:12px;line-height:18px}
+}
+
+/* R19 P3: existing channels are native pill filters; articles form a card
+   grid. Chat messages retain their chronological, single-column scroll owner. */
+.relay-room{
+  grid-template-columns:minmax(0,1fr);
+  grid-template-rows:auto minmax(0,1fr);
+  min-width:0;
+  font-size:var(--type-body-sm);
+  border-radius:var(--card-radius-md);
+}
+.relay-room .relay-rooms{
+  grid-template-columns:auto minmax(0,1fr) auto;
+  grid-template-rows:auto;
+  align-items:center;
+  min-width:0;
+  border-right:0;
+  border-bottom:1px solid var(--border);
+  border-radius:var(--card-radius-md) var(--card-radius-md) 0 0;
+}
+.relay-room .relay-rooms-head{height:auto;min-height:44px;gap:8px;padding:8px 16px;border:0}
+.relay-room .relay-rooms-head h2{font-size:var(--type-body-sm);font-weight:600;letter-spacing:0}
+.relay-room .relay-rooms-total{border:0;padding:0;min-width:0;font-size:var(--type-meta)}
+.relay-room .relay-room-list{
+  display:flex;gap:8px;min-width:0;max-width:100%;padding:8px 4px;
+  overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scroll-padding-inline:4px;
+}
+.relay-room .relay-room-list>li{flex:0 0 auto;min-width:0;max-width:min(100%,280px)}
+.relay-room .relay-room-item{
+  min-width:44px;min-height:44px;max-width:100%;gap:8px;padding:8px 16px;
+  border:1px solid var(--border);border-radius:var(--pill-radius);
+  background:var(--surface);color:var(--text);
+}
+.relay-room .relay-room-item:hover{background:var(--surface-hover)}
+.relay-room .relay-room-item:is(.active,[aria-current=true]){
+  border-color:var(--accent-ink);background:var(--accent-soft);color:var(--accent-ink);
+}
+.relay-room .relay-room-avatar{width:32px;height:32px;background:transparent;color:inherit}
+.relay-room .relay-room-avatar .icon{width:18px;height:18px}
+.relay-room .relay-room-name{font-size:var(--type-body-sm);font-weight:500;letter-spacing:0}
+.relay-room .relay-room-count{font-size:var(--type-meta);background:transparent;color:inherit}
+.relay-room .relay-room-sub{font-size:var(--type-meta);line-height:20px}
+.relay-room .relay-rooms-foot{display:grid;gap:4px;border:0;padding:8px 16px;font-size:var(--type-meta);line-height:20px}
+.relay-room .relay-detail{border-radius:0 0 var(--card-radius-md) var(--card-radius-md)}
+.relay-room .relay-detail-head{height:auto;min-height:68px;gap:12px;padding:8px 16px}
+.relay-room .relay-peer h2{font-size:var(--type-body-sm);font-weight:600;letter-spacing:0;line-height:24px}
+.relay-room :is(.relay-peer-sub,.relay-peer-updated){font-size:var(--type-meta);line-height:20px}
+.relay-room .relay-peer-tools{gap:12px}
+.relay-room .relay-detail .relay-detail-body{
+  min-width:0;padding:16px 16px 32px;background:var(--surface-raised);
+  border-radius:0 0 var(--card-radius-md) var(--card-radius-md);
+  overscroll-behavior:contain;
+}
+.relay-room .relay-empty{
+  padding:24px;font-size:var(--type-body-sm);line-height:var(--copy-leading);
+  border:1px solid var(--border);border-radius:var(--card-radius-sm);background:var(--surface);
+  overflow-wrap:anywhere;
+}
+.relay-room .relay-chat{width:100%;max-width:880px;margin-inline:auto;gap:12px}
+.relay-room .relay-day{margin:0;padding:8px 0;background:var(--surface-raised)}
+.relay-room .relay-day span{padding:4px 12px;border-radius:var(--pill-radius);font-size:var(--type-meta);letter-spacing:0}
+.relay-room .relay-bubble{
+  width:100%;max-width:100%;padding:16px;border:1px solid var(--border);
+  border-radius:var(--card-radius-md);background:var(--surface);
+}
+.relay-room :is(.relay-msg-text,.relay-msg-quote,.relay-reply,.relay-msg-withheld,.relay-preview-title,.relay-preview-description){
+  font-size:var(--type-body-sm);line-height:var(--copy-leading);letter-spacing:0;
+}
+.relay-room :is(.relay-msg-author,.relay-reply-name,.relay-msg-foot,.relay-preview-site,.relay-preview-url,.relay-paper-status){
+  font-size:var(--type-meta);line-height:20px;letter-spacing:0;
+}
+.relay-room .relay-msg-foot{gap:8px;margin-top:8px;flex-wrap:wrap}
+.relay-room .relay-msg-quote{padding:8px 12px;margin-bottom:8px;border-radius:var(--card-radius-sm);background:var(--surface-raised)}
+.relay-room .relay-reply{gap:4px;padding:8px 12px;margin-bottom:8px;background:var(--surface-raised)}
+.relay-room .relay-msg-previews{gap:8px;margin-top:12px;max-width:100%}
+.relay-room .relay-preview{min-width:0;min-height:44px;gap:4px;padding:12px;border-radius:var(--card-radius-sm)}
+.relay-room .relay-msg-link{display:inline-flex;align-items:center;min-width:44px;min-height:44px;margin-top:8px;font-size:var(--type-body-sm)}
+.relay-room .relay-msg-images{gap:8px;margin-top:12px}
+.relay-room .relay-msg-image{min-height:44px;border-radius:var(--card-radius-sm)}
+.relay-room .relay-msg--media .relay-bubble{padding:12px;max-width:100%;border-radius:var(--card-radius-md);background:var(--surface)}
+.relay-room .relay-msg--media .relay-msg-images{max-width:100%;border-radius:var(--card-radius-sm)}
+.relay-room .relay-msg--media[data-media="1"] .relay-msg-foot{
+  position:static;justify-content:flex-start;margin:8px 0 0;padding:0;
+  border-radius:0;background:transparent;color:var(--muted);
+}
+.relay-room .relay-msg--media[data-media="1"] .relay-msg-album{color:var(--muted)}
+.relay-room .relay-feed{width:100%;max-width:none;margin:0;padding:0}
+.relay-room .relay-articles{grid-template-columns:repeat(auto-fit,minmax(min(100%,264px),1fr));gap:16px;align-items:stretch}
+.relay-room .relay-articles>li{min-width:0;border:0}
+.relay-room .relay-article{
+  height:100%;min-width:44px;min-height:44px;grid-template-columns:minmax(0,1fr);gap:16px;
+  padding:16px;border:1px solid var(--border);border-radius:var(--card-radius-md);background:var(--surface);
+  align-content:start;transition:background .15s ease,border-color .15s ease;
+}
+.relay-room .relay-articles>li:first-child .relay-article{padding-top:16px}
+.relay-room .relay-article:hover{background:var(--surface-hover);border-color:var(--border-strong)}
+.relay-room .relay-article-title{margin-top:8px;font-size:20px;font-weight:600;line-height:28px;letter-spacing:0}
+.relay-room .relay-article-excerpt{margin-top:8px;font-size:var(--type-body-sm);line-height:var(--copy-leading);letter-spacing:0}
+.relay-room :is(.relay-article-meta,.relay-article-foot){font-size:var(--type-meta);line-height:20px}
+.relay-room .relay-article-foot{margin-top:12px}
+.relay-room .relay-article-thumb{grid-row:1;width:100%;height:160px;border-radius:var(--card-radius-sm)}
+.relay-room .relay-article-thumb--empty{display:none}
+.relay-room .relay-reader{width:100%;min-width:0;padding:24px;border:1px solid var(--border);border-radius:var(--card-radius-md);background:var(--surface)}
+.relay-room .relay-body{font-size:var(--type-body-sm);line-height:var(--copy-leading);letter-spacing:0}
+.relay-room :is(.relay-reader-author,.relay-reader-meta,.relay-reader-figure figcaption,.relay-reader-foot){font-size:var(--type-meta);line-height:20px}
+.relay-room .relay-reader-foot{flex-wrap:wrap;gap:12px}
+.relay-room .relay-reader-foot a{display:inline-flex;align-items:center;min-height:44px;min-width:44px;max-width:100%;overflow-wrap:anywhere}
+.relay-room .relay-paper{min-width:0;gap:16px;padding-top:0}
+.relay-room .relay-paper-body{min-width:0;gap:16px}
+.relay-room .relay-paper-stage{min-width:0;padding:12px;border-radius:var(--card-radius-md);background:var(--surface)}
+.relay-room .relay-paper-placeholder{min-width:0;max-width:100%;font-size:var(--type-body-sm);overflow-wrap:anywhere}
+.relay-room .relay-edition-list{min-width:0;gap:8px}
+.relay-room .relay-pager{min-width:0;gap:8px;padding:4px;scroll-padding:4px}
+.relay-room :is(.relay-edition-chip,.relay-page-chip){min-width:44px;min-height:44px;padding:8px 12px;border-radius:var(--pill-radius);font-size:var(--type-meta);line-height:20px}
+.relay-room :is(.relay-edition-chip.active,.relay-page-chip.active){background:var(--accent-soft);color:var(--accent-ink);border-color:var(--accent-ink);font-weight:600}
+.relay-room :is(.relay-refresh,.relay-detail-back,.relay-turn){width:44px;height:44px;min-width:44px;min-height:44px;border-radius:var(--pill-radius)}
+.relay-room :is(button,a,.relay-detail-body):focus-visible{outline:2px solid var(--focus);outline-offset:-3px}
+@media (max-width:980px){
+  .relay-room .relay-rooms{grid-template-columns:minmax(0,1fr)}
+  .relay-room :is(.relay-rooms-head,.relay-rooms-foot){display:none}
+  .relay-room .relay-room-list{padding:8px 12px}
+  .relay-room .relay-room-item{padding:4px 12px}
+  .relay-room .relay-room-avatar{width:24px;height:24px}
+}
+@media (max-width:640px){
+  .relay-room .relay-room-list{gap:8px;padding:8px}
+  .relay-room .relay-detail-head{gap:8px;padding:8px 12px}
+  .relay-room .relay-peer-tools{gap:8px}
+  .relay-room .relay-detail .relay-detail-body{padding:12px 12px 24px}
+  .relay-room .relay-bubble{padding:12px}
+  .relay-room .relay-reader{padding:16px}
+  .relay-room .relay-reader-head>h2{font-size:28px;line-height:36px}
+}
+@media (prefers-reduced-motion:reduce){
+  .relay-room,.relay-room *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
 
 
