@@ -15,6 +15,7 @@
     "verify:static": "node scripts/verify-static.mjs",
     "verify:conference": "node scripts/verify-conference-timeline.mjs",
     "verify:conference:browser": "node scripts/verify-conference-browser.mjs",
+    "verify:conference:media": "node scripts/verify-conference-media-browser.mjs",
     "refresh:cycle": "node scripts/refresh-cycle-calibration.mjs",
     "refresh:eth": "node scripts/refresh-eth.mjs",
     "refresh:equities": "node scripts/refresh-equities.mjs",

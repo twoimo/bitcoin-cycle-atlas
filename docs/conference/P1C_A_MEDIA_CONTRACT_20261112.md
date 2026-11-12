@@ -2,7 +2,7 @@
 
 이 문서는 잠긴 PDF 2개와 원본 MP3 2개로 페이지 이미지와 발표별 오디오를 준비하는 절차다. 기준은 [WP-ABC 요청서 A-4·A-7·A-8](../requirements/REQ_WP_ABC_20261110.md), [2026-11-12 덱 잠금](deck-lock-20261112.json), 커밋된 [timeline.json](../../dist/conference/timeline.json)이다. 생성기는 [prepare-conference-media.mjs](../../scripts/prepare-conference-media.mjs), PDF 렌더러는 [render-media.py](../../scripts/conference/render-media.py), 공통 메타데이터 검증기는 [media.js](../../dist/conference/media.js)다.
 
-현재 저장소에는 실제 페이지 이미지·오디오 대신 `status: "unavailable"`인 매니페스트가 들어 있다. 아래 547장·15파일은 **생성 계획과 검증 계약의 개수**다. 이 환경에서는 잠긴 원본 4개를 읽거나 실제 전체 산출물을 생성하지 않았으며, 실제 미디어 용량·생성 시간·브라우저 성능을 측정하지 않았다. 실행 결과와 테스트 수치는 별도의 검증 영수증에 기록한다.
+현재 저장소에는 실제 페이지 이미지·오디오 대신 `status: "unavailable"`인 매니페스트가 들어 있다. P1c-A Linux 회차에서는 잠긴 원본 4개를 읽거나 실제 전체 산출물을 생성하지 않았다. 이후 사용자가 HEAD `9715433`에서 macOS 실제 생성·`--check` 결과를 제공했다. 그 사용자 제공 실측과 P1c-B의 새 검증은 [P1c-B 영수증](P1C_B_MEDIA_VERIFICATION_20261112.md)에 구분해 기록한다. 이 문서의 547장·15오디오는 생성 계약이며, 다른 회차의 실측을 새 실행 결과로 사용하지 않는다.
 
 ## 1. 입력과 동일성
 
@@ -121,28 +121,36 @@ unavailable 선언, 404, 네트워크 실패, JSON/스키마 오류, 다른 time
 
 초기 정적 import URL 집합과 A-9 부트 preload URL을 늘리지 않는다. 기존 ready 판정, 2,500ms 초기 로드·150ms 페이지 전환 예산, 72px 이동·0.01px 허용치·H1 1개 계약과 브라우저 하네스는 유지한다. standalone의 원래 CSS 41개 블록 계약도 이 작업의 변경 대상이 아니다. 선택적 메타데이터를 ready 뒤에 처리한다는 구현 사실만으로 A-9 성능 통과를 주장하지 않는다.
 
-## 5. macOS 준비와 생성 명령
+## 5. 확인된 도구체인과 macOS 재사용
 
-저장소 루트에서 **Node.js 24 이상, Python 3.11 이상**, WebP가 포함된 PyMuPDF/Pillow, 로컬 FFmpeg와 ffprobe를 준비한다. Python 직접 의존성은 [requirements.txt](../../scripts/conference/requirements.txt)의 `PyMuPDF==1.26.6`, `Pillow==13.0.0`으로 고정한다. 해당 설치 패키지의 `Requires-Python`은 각각 `>=3.10`, `>=3.11`이므로 두 패키지를 함께 쓰는 최소 버전은 3.11이다.
+사용자의 Mac에서는 실제 생성과 `--check`가 이미 실행됐다. **새 도구 설치나 FFmpeg/PyMuPDF 다운그레이드는 이 절차에 없다.** 기존 도구가 없다고 적었던 R14 점검과 `brew install ffmpeg@7` 안내는 이 사용자 제공 결과로 갱신한다.
 
-[R14 로컬 도구 점검](../LAUNCH_CHECKLIST_20261110.md)은 이 Mac에 FFmpeg·ffprobe가 없다고 기록했다. `/opt/homebrew`의 Homebrew로 아래 설치 단계를 사용자가 실행한다. [Homebrew 공식 `ffmpeg@7` formula](https://formulae.brew.sh/formula/ffmpeg@7)는 2026-11-12 확인 시 **7.1.5**이며 `ffmpeg`와 `ffprobe`를 함께 제공한다. Keg-only이므로 PATH의 다른 FFmpeg를 우연히 선택하지 않도록 모든 명령에서 해당 keg의 경로를 명시한다.
+| 도구 | P1c-A Linux에서 실행한 환경 | 사용자가 보고한 macOS 실제 렌더 환경 |
+| --- | --- | --- |
+| Python | 3.12.14 | **3.13.12** |
+| PyMuPDF | 1.26.6 | **2.1** |
+| MuPDF | 1.26.11 | **1.28.6** |
+| Node·플랫폼 | v24.22.2·linux/x64 | **v26.13.0·darwin/arm64** |
+| Pillow | 13.0.0 | **13.0.0** |
+| libwebp | 1.6.0 | **1.6.0** |
+| FFmpeg | 7.1.5-0+deb13u1 | **9.0.2** |
+| ffprobe | 7.1.5-0+deb13u1 | **9.0.2** |
+
+Linux 환경은 [P1c-A 검증 영수증](P1C_A_VERIFICATION_20261112.md)의 실행 기록이고, Mac 환경은 사용자가 HEAD `9715433`에서 제공한 기록이다. 둘을 같은 도구체인으로 취급하지 않는다. [requirements.txt](../../scripts/conference/requirements.txt)의 `PyMuPDF==1.26.6`, `Pillow==13.0.0`은 Linux 재현 경로로 그대로 둔다. 이미 성공한 Mac 도구를 이 파일에 맞추기 위해 바꾸지 않는다.
+
+기존 Mac 셸에서 실행 파일을 확인하고, 생성 당시와 같은 경로를 이후 `--check`에도 사용한다. 아래는 버전 조회이며 설치 명령이 아니다.
 
 ```sh
-export PATH="/opt/homebrew/bin:$PATH"
-brew install ffmpeg@7
 node --version
-python3 -m venv build/conference-media-python
-build/conference-media-python/bin/python -m pip install -r scripts/conference/requirements.txt
-"$(brew --prefix ffmpeg@7)/bin/ffmpeg" -version
-"$(brew --prefix ffmpeg@7)/bin/ffprobe" -version
-"$(brew --prefix ffmpeg@7)/bin/ffmpeg" -hide_banner -encoders
+/Users/twoimo/.aside/runtime/bin/python3 --version
+/Users/twoimo/.aside/runtime/bin/python3 -c 'import pymupdf, PIL; from PIL import features; print("PyMuPDF", pymupdf.VersionBind, "MuPDF", pymupdf.VersionFitz, "Pillow", PIL.__version__, "libwebp", features.version("webp"))'
+/opt/homebrew/bin/ffmpeg -version
+/opt/homebrew/bin/ffprobe -version
 ```
 
-FFmpeg에는 software `aac` encoder가 있어야 한다. 스크립트는 `-c:a aac`를 명시하며 macOS AudioToolbox `aac_at`로 대체하지 않는다. 이 생성 경로는 버전을 고정한 Python 렌더러와 명시한 FFmpeg/ffprobe 실행 파일을 사용한다. package.json에 선언되지 않은 `sharp`나 `afconvert`를 전제하지 않으며, 이 설정을 위해 package.json을 바꾸지 않는다.
+생성기는 FFmpeg software `aac`를 명시하며 macOS AudioToolbox `aac_at`로 대체하지 않는다. 버전 문자열만 같더라도 빌드 fingerprint·아키텍처가 다르면 같은 출력 해시를 보장하지 않는다. 이번 작업은 macOS/Linux 사이의 바이트 동일성을 주장하지 않는다. package.json에 없는 `sharp`나 `afconvert`도 이 경로의 전제가 아니다.
 
-이 설치 명령은 사용자가 실행할 의존성 준비 절차이며 이 작업에서 실행하지 않았다. `ffmpeg@7`은 7 계열 formula이므로 이후 patch 또는 formula revision이 갱신될 수 있다. 실제 설치된 버전과 fingerprint를 매니페스트에 기록하고 생성과 `--check` 사이에는 같은 설치를 유지한다. Linux와 macOS가 둘 다 7.1.5라고 표시돼도 빌드·아키텍처가 다르면 같은 출력 해시를 보장하지 않는다.
-
-다음은 잠금과 원본 영수증에 적힌 **macOS 실제 입력 경로**를 사용하는 명령이다. `build/conference-media-p1c-a`는 실행 전에 존재하면 안 된다.
+아래 생성 명령은 같은 잠금 입력을 **새 디렉터리에 다시 생성할 필요가 있을 때만** 사용하는 예시다. 이미 생성된 `build/p1c-media-20261112`를 재생성하거나 덮어쓰지 않는다. 예시의 `build/p1c-media-20261112-new`도 실행 전에 없어야 한다. 입력 경로는 잠금과 원본 영수증에 적힌 macOS 경로다.
 
 ```sh
 node scripts/prepare-conference-media.mjs \
@@ -150,10 +158,10 @@ node scripts/prepare-conference-media.mjs \
   --pdf-r17 "/Users/twoimo/Documents/projects/plspo-conference-20261031/깔끔본_R17_로고_20261109/플스포_강연자료_최종본_깔끔본_20261110.pdf" \
   --audio "/Users/twoimo/Documents/projects/plspo-conference-20261031/RAW/audio/plaud_conf2026_1_of_2_1233-1733_5h00m.mp3" \
   --audio "/Users/twoimo/Documents/projects/plspo-conference-20261031/RAW/audio/plaud_conf2026_2_of_2_1733-1813_40m.mp3" \
-  --out build/conference-media-p1c-a \
-  --python build/conference-media-python/bin/python \
-  --ffmpeg "$(brew --prefix ffmpeg@7)/bin/ffmpeg" \
-  --ffprobe "$(brew --prefix ffmpeg@7)/bin/ffprobe"
+  --out build/p1c-media-20261112-new \
+  --python /Users/twoimo/.aside/runtime/bin/python3 \
+  --ffmpeg /opt/homebrew/bin/ffmpeg \
+  --ffprobe /opt/homebrew/bin/ffprobe
 ```
 
 기본 입력은 커밋된 `dist/conference/timeline.json`, `docs/conference/deck-lock-20261112.json`, 전체 사이트 인벤토리는 `dist/`다. 별도 경로가 필요하면 `--timeline`, `--deck-lock`, `--site-dist`를 명시할 수 있으나 승인 원본·품질·상한을 완화하는 CLI 옵션은 없다.
@@ -166,7 +174,7 @@ node scripts/prepare-conference-media.mjs \
 
 ## 6. 동일 명령의 `--check` 검사
 
-생성에 사용한 명령에 `--check`만 추가한다. 이 모드에서는 출력이 이미 존재해야 한다.
+사용자가 이미 생성한 `build/p1c-media-20261112`는 아래처럼 같은 도구체인으로 확인한다. 이 모드에서는 출력이 이미 존재해야 한다. 생성 당시 실행 파일이 현재 PATH의 `python3`·`ffmpeg`·`ffprobe`와 다르면 그때의 명시적 경로를 사용한다.
 
 ```sh
 node scripts/prepare-conference-media.mjs \
@@ -174,10 +182,10 @@ node scripts/prepare-conference-media.mjs \
   --pdf-r17 "/Users/twoimo/Documents/projects/plspo-conference-20261031/깔끔본_R17_로고_20261109/플스포_강연자료_최종본_깔끔본_20261110.pdf" \
   --audio "/Users/twoimo/Documents/projects/plspo-conference-20261031/RAW/audio/plaud_conf2026_1_of_2_1233-1733_5h00m.mp3" \
   --audio "/Users/twoimo/Documents/projects/plspo-conference-20261031/RAW/audio/plaud_conf2026_2_of_2_1733-1813_40m.mp3" \
-  --out build/conference-media-p1c-a \
-  --python build/conference-media-python/bin/python \
-  --ffmpeg "$(brew --prefix ffmpeg@7)/bin/ffmpeg" \
-  --ffprobe "$(brew --prefix ffmpeg@7)/bin/ffprobe" \
+  --out build/p1c-media-20261112 \
+  --python /Users/twoimo/.aside/runtime/bin/python3 \
+  --ffmpeg /opt/homebrew/bin/ffmpeg \
+  --ffprobe /opt/homebrew/bin/ffprobe \
   --check
 ```
 
@@ -185,22 +193,13 @@ node scripts/prepare-conference-media.mjs \
 
 `--check`는 **생성 당시와 동일한 Node 버전·플랫폼·아키텍처·Python 및 렌더러/인코더 도구체인**을 요구한다. 생성기·렌더러 소스 해시, 입력·timeline·잠금 해시, 설정, 남겨지는 사이트 파일 수가 달라도 stale 검사에 걸린다. 도구를 업데이트한 뒤 기존 매니페스트의 도구체인 값을 수동 수정해 통과시키지 않는다.
 
-## 7. 로컬 플레이어에 선택적으로 설치
+## 7. 로컬 설치 → 검증 → 복원
 
-생성과 `--check`가 모두 성공한 뒤, 사용자가 **로컬 작업 트리에서만** 아래 복사를 실행할 수 있다. 현재처럼 `dist/conference/pages`, `dist/conference/audio`가 없는 첫 설치를 위한 명령이다. 이미 있으면 먼저 멈추므로 기존 미디어와 새 미디어를 섞지 않는다. 이 문서 작성 과정에서는 복사를 실행하지 않았다.
+P1c-B의 [실제 미디어 검증 절차](P1C_B_MEDIA_VERIFICATION_20261112.md)를 사용한다. 설치 대상은 `pages/`, `audio/`, `media-manifest.json` 세 항목이며, timeline/player/route와 원본 PDF·MP3는 복사하거나 수정하지 않는다. 기존 unavailable 매니페스트를 보관하고, 두 자산 디렉터리가 모두 준비된 뒤 ready 매니페스트를 마지막으로 설치한다. 검증 종료 시 이번 설치 항목만 제거하고 보관한 매니페스트를 바이트 그대로 복원한다. 기존 미디어가 이미 있는 경로에는 덮어쓰거나 혼합 설치하지 않는다.
 
-```sh
-(
-  set -eu
-  test ! -e dist/conference/pages
-  test ! -e dist/conference/audio
-  cp -R build/conference-media-p1c-a/pages dist/conference/
-  cp -R build/conference-media-p1c-a/audio dist/conference/
-  cp build/conference-media-p1c-a/media-manifest.json dist/conference/media-manifest.json
-)
-```
+Cloudflare 로컬 산출물을 확인할 때는 **`npm run build:cloudflare`를 먼저 실행하고 그 뒤에 미디어를 설치**해야 한다. 이 명령은 현재 커밋·트리에 맞는 빌드 검증 영수증과 실제 `ATLAS_PUBLIC_ORIGIN`을 요구한다. `build/cloudflare-assets`는 중간 스테이징이며 최종 자산 디렉터리는 `.cloudflare/output/v0/workers/default/assets`다. 빌드를 다시 돌리면 중간/최종 산출물은 재생성되므로 설치한 미디어를 유지하는 명령으로 사용하지 않는다.
 
-설치 대상은 `pages/`, `audio/`, `media-manifest.json` 세 항목이다. 매니페스트를 마지막에 복사해 두 자산 폴더가 모두 준비된 뒤 가용성을 알린다. timeline/player/route 파일은 복사하지 않는다. 이 절차에는 업로드·배포·main 병합·유료 용량 생성이 없다. 복사 후에도 §6 명령으로 원래 출력에 대한 검사를 다시 수행할 수 있다. 전체 사이트 파일 수는 교체될 경로를 중복 계산하지 않도록 합집합 기준으로 센다.
+기존 Cloudflare 검증 산출물은 정확한 파일 집합과 바이트를 `publication.json`에 연결한다. 빌드된 원본 디렉터리에 나중에 미디어를 추가하면 그 배포 검증 식별자가 맞지 않는다. P1c-B는 이 최종 산출물을 그대로 보존한다. 빌드 뒤 저장소 `dist/`의 별도 로컬 사본을 만들고 그 사본에만 미디어를 설치해 검사한다. 최종 Cloudflare 자산 디렉터리의 사본을 사용하지 않는다. 로컬 하네스는 원래 `/bitcoin-cycle-atlas` 경로와 매니페스트의 `dist` 파일 수 계약을 검사하기 때문이다. 따라서 이 결과는 Cloudflare 패키지 바이트·publication 유효성·배포된 응답을 검증한 것이 아니다. publication 값을 수동 갱신해 배포 검증을 통과시키지 않는다. 자세한 순서·명령·복원 확인은 P1c-B 절차에 둔다.
 
 ## 8. 용량 상한과 재현성 범위
 
@@ -219,6 +218,6 @@ node scripts/prepare-conference-media.mjs \
 
 ## 9. 이번 계약 문서로 닫히지 않는 항목
 
-실제 잠긴 PDF/MP3의 전체 생성, 547장·15오디오의 실제 바이트와 해시, 생성/검사 소요 시간, macOS에서의 도구체인 일치 여부는 사용자 로컬 실행 뒤 기록해야 한다. 테스트용 작은 PDF/오디오의 성공을 이 실제 산출물의 측정값으로 표시하지 않는다.
+사용자가 제공한 macOS 실제 생성·검사 수치와 이 환경의 Linux 테스트는 [P1c-B 영수증](P1C_B_MEDIA_VERIFICATION_20261112.md)에 출처와 실행 범위를 나눠 기록한다. 작은 합성 PDF/오디오 테스트의 성공을 547장·15오디오 전체 생성이나 실제 장표의 시각 품질로 표시하지 않는다. 기존 padding 픽스처의 macOS exit 1과 실제 패키지 생성·`--check` 성공도 서로 다른 결과다.
 
-이번 작업에서는 브라우저를 실행하지 않았다. 실제 장표의 시각 품질, 재생·탐색·세션 경계, Range/206 응답, A-9의 4G 2,500ms·페이지 전환 150ms, 1시간 재생 메모리, 사람의 직접 청취·10지점 동기화 검수는 새로 측정하지 않았다. 매니페스트의 사람 검수 상태는 `pending`으로 남는다.
+실제 미디어를 설치한 브라우저의 재생·탐색·Range/206 검증, A-9 재측정 여부는 해당 실행의 영수증을 기준으로 한다. 이전 P1b A-9 통과나 새 하네스의 명시적 skip을 실제 미디어 브라우저 통과로 바꾸어 적지 않는다. 사람의 직접 청취·10지점 동기화, 실제 장표 내용의 시각 검수, 1시간 재생 메모리는 별도이며 매니페스트의 사람 검수 상태는 `pending`이다.

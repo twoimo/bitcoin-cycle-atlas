@@ -110,6 +110,38 @@ const toolAvailability = [
 ].map(([command, args]) => ({command, result: spawnSync(command, args, {stdio: 'ignore'})}));
 const unavailable = toolAvailability.filter(item => item.result.status !== 0).map(item => item.command);
 
+function overstateMp3FrameCount(original) {
+  // Deliberately inconsistent duration metadata makes the fixture independent
+  // of whether ffprobe includes or subtracts the encoder's normal padding.
+  // Only the first MPEG-1 Layer III frame's Xing/Info frame count is changed;
+  // all encoded audio frames and the original fixture remain untouched.
+  let frameStart = 0;
+  if (original.toString('ascii', 0, 3) === 'ID3') {
+    const sizeBytes = [...original.subarray(6, 10)];
+    assert.equal(sizeBytes.length, 4); assert.ok(sizeBytes.every(value => value < 128));
+    const tagBytes = sizeBytes.reduce((value, byte) => (value << 7) | byte, 0);
+    frameStart = 10 + tagBytes + (original[3] === 4 && (original[5] & 0x10) ? 10 : 0);
+  }
+  assert.ok(original.length >= frameStart + 4, 'Fixture must contain an MPEG frame');
+  const header = original.readUInt32BE(frameStart);
+  assert.equal((header >>> 21) & 0x7ff, 0x7ff, 'Fixture frame sync');
+  assert.equal((header >>> 19) & 3, 3, 'Fixture must use MPEG-1');
+  assert.equal((header >>> 17) & 3, 1, 'Fixture must use Layer III');
+  assert.equal((header >>> 16) & 1, 1, 'Fixture must omit the optional frame CRC');
+  assert.equal((header >>> 10) & 3, 1, 'Fixture must use the MPEG-1 48 kHz sample rate');
+  const mono = ((header >>> 6) & 3) === 3;
+  const markerOffset = frameStart + 4 + (mono ? 17 : 32);
+  assert.ok(original.length >= markerOffset + 12);
+  const marker = original.toString('ascii', markerOffset, markerOffset + 4);
+  assert.ok(marker === 'Info' || marker === 'Xing', 'Fixture requires an explicit Xing/Info duration header');
+  assert.ok(original.readUInt32BE(markerOffset + 4) & 1, 'Xing/Info header must declare a frame count');
+  const originalFrames = original.readUInt32BE(markerOffset + 8), declaredFrames = 64;
+  assert.ok(originalFrames > 0 && originalFrames < declaredFrames, 'Fixture must overstate its original one-second frame count');
+  const bytes = Buffer.from(original);
+  bytes.writeUInt32BE(declaredFrames, markerOffset + 8);
+  return {bytes, marker, originalFrames, declaredFrames};
+}
+
 async function syntheticInputs(temporary) {
   const sources = join(temporary, 'sources'), siteDist = join(temporary, 'site');
   await mkdir(sources); await mkdir(join(siteDist, 'conference'), {recursive: true});
@@ -231,16 +263,36 @@ test('real temporary PDF/MP3 fixtures build deterministic WebP/AAC, verify probe
         await assert.rejects(() => stat(target), {code: 'ENOENT'});
       });
 
-      await t.test('MP3 container padding cannot substitute for missing decoded source samples', async () => {
+      await t.test('overstated MP3 duration cannot substitute for missing decoded source samples', async subtest => {
         const policy = clone(fixture.policy), data = clone(fixture.data);
-        // This generated MP3 reports 1.032s including encoder padding, but
-        // gapless decoding contains exactly 48,000 samples. A 1.01s declared
-        // interval passes the container probe and must fail the PCM check.
-        policy.audio[1].t1 = 3.01; data.audio[1].durationSec = 1.01;
-        data.talks[2].t1 = 3.01; data.event.clockEnd = '12:33:03.01';
+        const altered = overstateMp3FrameCount(await readFile(fixture.audio[1]));
+        const source = join(dirname(fixture.audio[1]), 'overstated-duration.mp3');
+        await writeFile(source, altered.bytes);
+        const requiredDurationSec = 1.25, requiredSamples = requiredDurationSec * 48000;
+        const {stdout: probeText} = await execute('ffprobe', ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', source]);
+        const probe = JSON.parse(probeText), stream = probe.streams.find(item => item.codec_type === 'audio');
+        assert.equal(stream?.codec_name, 'mp3'); assert.equal(Number(stream.sample_rate), 48000);
+        const probeDurationSec = Number(stream.duration ?? probe.format?.duration);
+        // Prove that the production duration probe will pass before asking the
+        // sample-count check to reject. No expected padding duration is baked in.
+        assert.ok(Number.isFinite(probeDurationSec) && probeDurationSec >= requiredDurationSec
+          && probeDurationSec - requiredDurationSec <= 1, 'Fixture must pass the unchanged input duration probe');
+        const {stdout: pcm} = await execute('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-nostdin', '-threads', '1',
+          '-i', source, '-map', '0:a:0', '-vn', '-sn', '-dn', '-ac', '1', '-ar', '48000', '-c:a', 'pcm_s16le', '-f', 's16le', 'pipe:1'],
+        {encoding: 'buffer', maxBuffer: 1024 * 1024});
+        assert.equal(pcm.length % 2, 0);
+        const decodedSamples = pcm.length / 2;
+        assert.ok(decodedSamples > 0 && decodedSamples < requiredSamples, 'Fixture must contain fewer decoded samples than its nominal interval');
+        subtest.diagnostic('MP3_SHORT_SOURCE_FIXTURE ' + JSON.stringify({marker: altered.marker,
+          originalFrames: altered.originalFrames, declaredFrames: altered.declaredFrames,
+          probeDurationSec, decodedSamples, requiredDurationSec, requiredSamples}));
+        policy.audio[1].bytes = altered.bytes.length; policy.audio[1].sha256 = hash(altered.bytes);
+        policy.audio[1].t1 = 3.25; data.audio[1].durationSec = requiredDurationSec;
+        data.talks[2].t1 = 3.25; data.event.clockEnd = '12:33:03.25';
         const timeline = join(temporary, 'short-audio-timeline.json'); await writeFile(timeline, pretty(data));
         const target = join(temporary, 'short-audio-output');
-        await assert.rejects(() => prepareConferenceMedia({...options, policy, timeline, out: target}), /Decoded source does not cover its complete declared event interval/);
+        await assert.rejects(() => prepareConferenceMedia({...options, policy, timeline, audio: [fixture.audio[0], source], out: target}),
+          /Decoded source does not cover its complete declared event interval/);
         await assert.rejects(() => stat(target), {code: 'ENOENT'});
       });
 
