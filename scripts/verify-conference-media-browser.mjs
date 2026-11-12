@@ -7,7 +7,7 @@ import {createHash} from 'node:crypto';
 import {access, mkdir, mkdtemp, readFile, rm, writeFile} from 'node:fs/promises';
 import {constants} from 'node:fs';
 import {tmpdir} from 'node:os';
-import {resolve} from 'node:path';
+import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {headlessWindowArgument, verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
 import {createConferenceMediaServer, inspectInstalledConferenceMedia, auditConferenceMediaHttp,
@@ -336,6 +336,9 @@ export async function verifyConferenceMediaBrowser(options) {
   }
   let preflight;
   try {
+    // Create missing parents, but reserve the receipt directory exclusively:
+    // reruns must never overwrite evidence from an earlier invocation.
+    await mkdir(dirname(out), {recursive:true});
     await mkdir(out, {recursive:false}); outputCreated = true;
     report.harnessSources = Object.fromEntries(await Promise.all(['scripts/verify-conference-media-browser.mjs',
       'scripts/conference-media-browser-contract.mjs', 'scripts/conference-media-server.mjs', 'scripts/headless-browser-window.mjs',
@@ -485,7 +488,8 @@ export async function verifyConferenceMediaBrowser(options) {
       await writeFile(resolve(out, 'report.json'), JSON.stringify(report, null, 2) + '\n');
     }
     console.log(JSON.stringify({status:report.status, ...report.counts, failures:report.failures.length,
-      browserLaunched:report.browserLaunched, reason:report.skipReason, exitCode:report.exitCode, output:out}));
+      browserLaunched:report.browserLaunched, reason:report.skipReason || report.failures[0]?.error || null,
+      exitCode:report.exitCode, output:out}));
   }
   return report;
 }

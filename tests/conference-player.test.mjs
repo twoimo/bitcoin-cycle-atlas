@@ -5,6 +5,7 @@ import {readFile} from 'node:fs/promises';
 import {parseHTML} from 'linkedom';
 import {mountConferencePlayer, formatConferenceTime, conferenceSegmentIndex, conferenceMappedPage} from '../dist/conference/player.js';
 import {assertConferenceMediaManifest, CONFERENCE_MEDIA_LIMITS, CONFERENCE_MEDIA_SETTINGS} from '../dist/conference/media.js';
+import {assertConferenceSeekEvidence} from '../scripts/conference-media-browser-contract.mjs';
 
 const fixtureTimeline = JSON.parse(await readFile(new URL('./fixtures/conference/timeline.synthetic.json', import.meta.url)));
 const settle = () => new Promise(resolve => setImmediate(resolve));
@@ -117,6 +118,49 @@ function readyMediaManifest(timeline) {
   return manifest;
 }
 
+// Model native setter requests separately from read-back/events. In particular,
+// a decoder clock just before t0 can still round to t0 in the displayed dataset.
+// No real audio is decoded by this unit fixture.
+function observeNativeSeeks(f) {
+  let clock = Number(f.media.currentTime);
+  const requests = [];
+  f.media.readyState = 4; f.media.seeking = false; f.media.error = null;
+  Object.defineProperty(f.media, 'currentSrc', {get:() => f.media.src});
+  Object.defineProperty(f.media, 'currentTime', {
+    get:() => clock,
+    set(value) {
+      clock = Number(value); f.media.seeking = true;
+      requests.push({currentTime:clock, src:f.media.src, accepted:true});
+    },
+  });
+  const emit = type => f.media.dispatchEvent(new f.window.Event(type));
+  return {requests,
+    settle(value = clock) {
+      emit('seeking'); clock = value;
+      emit('timeupdate'); f.media.seeking = false; emit('seeked'); emit('timeupdate');
+    },
+    advance(value) { clock = value; f.media.seeking = false; emit('timeupdate'); },
+  };
+}
+
+function assertNativeSeekContract(f, observer, manifest, eventTime, requestStart = 0) {
+  const session = manifest.audio.find(clip => eventTime >= clip.t0 && eventTime < clip.t1);
+  assert.ok(session, 'target belongs to a real session');
+  return assertConferenceSeekEvidence({
+    snapshot:{state:{...f.host.querySelector('.conference-player').dataset}, h1Count:f.document.querySelectorAll('h1').length,
+      audio:{currentSrc:f.media.currentSrc, currentTime:f.media.currentTime, error:null,
+        seeking:f.media.seeking, paused:f.media.paused, readyState:f.media.readyState}},
+    requests:observer.requests.slice(requestStart), session, eventTime, settings:manifest.settings,
+  });
+}
+
+function assertVisibleSlide(f, page) {
+  const image = f.host.querySelector('.conference-slide-image');
+  assert.match(image.src, new RegExp('/' + String(page).padStart(4, '0') + '\\.webp$'));
+  assert.equal(image.hidden, false, 'the mapped image must remain visible, not only retain its src');
+  assert.equal(f.host.querySelector('.conference-stage-message').hidden, true, 'the stage message must not cover the mapped image');
+}
+
 test('conference time and last-segment lookup keep fractional and hour boundaries explicit', () => {
   assert.equal(formatConferenceTime(3725.8), '1:02:05');
   assert.equal(formatConferenceTime(59.99), '0:59');
@@ -180,6 +224,9 @@ test('one live owner changes only when the current source segment changes', asyn
   const f = fixture();
   try {
     await f.controller.load();
+    // Native progression requires playback; paused seek read-back keeps its
+    // requested source segment until the clock actually advances in playback.
+    f.click('play'); await settle();
     const live = f.host.querySelector('.conference-live'), text = live.textContent;
     assert.equal(f.host.querySelectorAll('[aria-live="polite"]').length, 1);
     let mutations = 0;
@@ -214,6 +261,7 @@ test('two distinct subtitle sources with identical text each receive one live-re
   const f = fixture({response:async () => ({ok:true,status:200,json:async () => repeated})});
   try {
     await f.controller.load();
+    f.click('play'); await settle();
     const live = f.host.querySelector('.conference-live');
     let mutations = 0;
     const observer = new f.window.MutationObserver(records => { mutations += records.length; });
@@ -841,4 +889,249 @@ test('a manifest from an obsolete load cannot replace the current unavailable pa
     assert.equal(f.media.src, '');
     assert.equal(f.counts().playCalls, 0);
   } finally {f.controller.destroy();}
+});
+
+test('all 14 real session approaches keep exact URL seeks across their own pageshow echo', async () => {
+  const timeline = JSON.parse(await readFile(new URL('../dist/conference/timeline.json', import.meta.url)));
+  const manifest = readyMediaManifest(timeline);
+  const f = fixture({response:async url => jsonResponse(url.endsWith('/timeline.json') ? timeline : manifest)});
+  const native = observeNativeSeeks(f);
+  try {
+    assert.equal(await f.controller.load(), true); assert.equal(await f.controller.whenMediaSettled(), true);
+    native.settle();
+    assert.equal(manifest.audio.length - 1, 14);
+    for (const next of manifest.audio.slice(1)) {
+      const eventTime = next.t0 - 1.5, requestStart = native.requests.length;
+      f.navigate('?page=conference&t=' + eventTime + '&deck=final-290');
+      native.settle();
+      assert.equal(Number(new URL(f.view.location.href).searchParams.get('t')), eventTime, 'lossless URL at ' + eventTime);
+      const afterRequest = native.requests.length;
+      f.view.dispatchEvent(new f.window.Event('pageshow'));
+      assert.equal(native.requests.length, afterRequest, 'self-written URL cannot issue another native seek at ' + eventTime);
+      assert.equal(f.controller.getState().time, eventTime);
+      assertNativeSeekContract(f, native, manifest, eventTime, requestStart);
+    }
+    // A genuinely changed URL must still navigate, including within one tenth.
+    const eventTime = 2401.74, requestStart = native.requests.length;
+    f.navigate('?page=conference&t=' + eventTime + '&deck=final-290'); native.settle();
+    assertNativeSeekContract(f, native, manifest, eventTime, requestStart);
+    const newStart = native.requests.length;
+    f.navigate('?page=conference&t=2401.73&deck=final-290'); native.settle();
+    assertNativeSeekContract(f, native, manifest, 2401.73, newStart);
+    assert.equal(f.controller.getState().segment, 341);
+    assert.equal(f.controller.getState().page, 2);
+  } finally {f.controller.destroy();}
+});
+
+test('real final page 6 and r17 page 2 retain their target caption and page while the native clock reports seek read-back', async t => {
+  const timeline = JSON.parse(await readFile(new URL('../dist/conference/timeline.json', import.meta.url)));
+  const manifest = readyMediaManifest(timeline);
+  for (const expected of [
+    {time:2401.74, deck:'final-290', page:6, segment:342},
+    {time:2239.5, deck:'r17-clean-257', page:2, segment:290},
+  ].flatMap(expected => [1 / CONFERENCE_MEDIA_SETTINGS.audioSampleRate, 0.02, -0.02].map(readbackDelta => ({...expected, readbackDelta})))) {
+    await t.test(expected.deck + ' at ' + expected.time + ' minus ' + expected.readbackDelta, async () => {
+      const f = fixture({href:'https://atlas.test/?page=conference&t=' + expected.time + '&deck=' + expected.deck,
+        response:async url => jsonResponse(url.endsWith('/timeline.json') ? timeline : manifest)});
+      const native = observeNativeSeeks(f);
+      try {
+        assert.equal(await f.controller.load(), true); assert.equal(await f.controller.whenMediaSettled(), true);
+        assert.equal(f.controller.getState().segment, expected.segment);
+        const session = manifest.audio.find(clip => clip.t0 <= expected.time && expected.time < clip.t1);
+        native.settle(expected.time - session.t0 - expected.readbackDelta);
+        assertNativeSeekContract(f, native, manifest, expected.time);
+        assert.equal(f.controller.getState().segment, expected.segment, 'native read-back must not apply the preceding null segment');
+        assert.equal(f.controller.getState().page, expected.page);
+        assert.equal(f.role('page-status').hidden, true);
+        assert.equal(f.host.querySelector('.conference-caption-text').textContent, timeline.segments[expected.segment].text);
+        assertVisibleSlide(f, expected.page);
+        assert.equal(Number(new URL(f.view.location.href).searchParams.get('t')), expected.time);
+        const requests = native.requests.length;
+        f.view.dispatchEvent(new f.window.Event('pageshow'));
+        assert.equal(native.requests.length, requests);
+        assert.equal(f.controller.getState().segment, expected.segment);
+        assertVisibleSlide(f, expected.page);
+        const otherDeck = timeline.decks.find(deck => deck.id !== expected.deck).id;
+        f.controller.setDeck(otherDeck); f.controller.setDeck(expected.deck);
+        assert.equal(native.requests.length, requests, 'deck changes do not re-seek the native read-back value');
+        assert.equal(f.controller.getState().page, expected.page);
+        assert.equal(f.controller.getState().segment, expected.segment);
+        // A real playback clock must leave that target when it advances normally.
+        f.click('play'); await settle();
+        native.settle(expected.time - session.t0 - 0.02);
+        assert.equal(f.controller.getState().segment, expected.segment, 'first playback read-back before t0 keeps the exact target');
+        native.advance(expected.time - session.t0 - 0.001);
+        assert.equal(f.controller.getState().segment, expected.segment, 'playback has not yet reached t0');
+        const nextTime = timeline.segments[expected.segment + 1].t0 + 0.001;
+        native.advance(nextTime - session.t0);
+        assert.equal(f.controller.getState().segment, expected.segment + 1);
+        assert.equal(f.host.querySelector('.conference-caption-text').textContent, timeline.segments[expected.segment + 1].text);
+        assert.equal(f.controller.getState().playing, true);
+      } finally {f.controller.destroy();}
+    });
+  }
+});
+
+test('all 200 real mapped pages survive fractional deep links and keyboard slide navigation', async () => {
+  const timeline = JSON.parse(await readFile(new URL('../dist/conference/timeline.json', import.meta.url)));
+  const manifest = readyMediaManifest(timeline);
+  const f = fixture({response:async url => jsonResponse(url.endsWith('/timeline.json') ? timeline : manifest)});
+  const native = observeNativeSeeks(f), counts = {};
+  const checkPage = (deck, page, time, requestStart) => {
+    const session = manifest.audio.find(clip => clip.t0 <= time && time < clip.t1);
+    const localTime = time - session.t0;
+    native.settle(Math.max(0, localTime - 1 / CONFERENCE_MEDIA_SETTINGS.audioSampleRate));
+    assertNativeSeekContract(f, native, manifest, time, requestStart);
+    const expectedIndex = timeline.segments.findLastIndex(segment => segment.t0 <= time);
+    const state = f.controller.getState();
+    assert.equal(state.segment, expectedIndex, deck + ':' + page + ' target segment');
+    assert.equal(state.page, page, deck + ':' + page + ' selected page');
+    assert.equal(f.role('page-status').hidden, Number.isInteger(timeline.segments[expectedIndex].page?.[deck]),
+      deck + ':' + page + ' source mapping state, including equal-start null retention');
+    assert.equal(f.host.querySelector('.conference-caption-text').textContent, timeline.segments[expectedIndex].text);
+    assertVisibleSlide(f, page);
+    const afterRequest = native.requests.length;
+    f.view.dispatchEvent(new f.window.Event('pageshow'));
+    assert.equal(native.requests.length, afterRequest, deck + ':' + page + ' echo cannot re-seek');
+    assertVisibleSlide(f, page);
+  };
+  try {
+    await f.controller.load(); assert.equal(await f.controller.whenMediaSettled(), true); native.settle();
+    for (const deck of timeline.decks) {
+      // Independent first-occurrence oracle over the committed source rows.
+      const firstTimes = new Map();
+      for (const segment of timeline.segments) {
+        const page = segment.page?.[deck.id];
+        if (Number.isInteger(page) && !firstTimes.has(page)) firstTimes.set(page, segment.t0);
+      }
+      const steps = [...firstTimes].sort((a, b) => a[0] - b[0]); counts[deck.id] = steps.length;
+      for (const [page, time] of steps) {
+        const start = native.requests.length;
+        f.navigate('?page=conference&t=' + time + '&deck=' + deck.id);
+        checkPage(deck.id, page, time, start);
+      }
+      // Return to the first mapped page, then use the exact same ] input as the
+      // real media harness. Each step must use the original fractional t0.
+      let start = native.requests.length;
+      f.navigate('?page=conference&t=' + steps[0][1] + '&deck=' + deck.id);
+      checkPage(deck.id, ...steps[0], start);
+      start = native.requests.length;
+      f.click('slide'); checkPage(deck.id, ...steps[0], start);
+      for (const [page, time] of steps.slice(1)) {
+        start = native.requests.length;
+        assert.equal(f.key(']').defaultPrevented, true);
+        checkPage(deck.id, page, time, start);
+      }
+      // Backward stepping also uses page first times, not the rounded URL.
+      for (const [page, time] of steps.slice(0, -1).reverse()) {
+        start = native.requests.length;
+        assert.equal(f.key('[').defaultPrevented, true);
+        checkPage(deck.id, page, time, start);
+      }
+    }
+    assert.deepEqual(counts, {'final-290':73, 'r17-clean-257':127});
+  } finally {f.controller.destroy();}
+});
+
+test('intentional deep links one microsecond before a mapped boundary remain in the previous source segment', async () => {
+  const timeline = JSON.parse(await readFile(new URL('../dist/conference/timeline.json', import.meta.url)));
+  const manifest = readyMediaManifest(timeline);
+  const f = fixture({response:async url => jsonResponse(url.endsWith('/timeline.json') ? timeline : manifest)});
+  const native = observeNativeSeeks(f);
+  try {
+    await f.controller.load(); assert.equal(await f.controller.whenMediaSettled(), true); native.settle();
+    for (const expected of [
+      {boundary:2401.74, deck:'final-290', segment:341, page:2},
+      {boundary:2239.5, deck:'r17-clean-257', segment:289, page:null},
+    ]) {
+      const time = expected.boundary - 0.000001, requestStart = native.requests.length;
+      f.navigate('?page=conference&t=' + time + '&deck=' + expected.deck); native.settle();
+      assertNativeSeekContract(f, native, manifest, time, requestStart);
+      assert.equal(f.controller.getState().segment, expected.segment, 'no global rounding or nearest-boundary snapping');
+      assert.equal(f.controller.getState().page, expected.page);
+      assert.equal(f.role('page-status').hidden, false);
+      assert.equal(f.host.querySelector('.conference-caption-text').textContent, timeline.segments[expected.segment].text);
+      assert.equal(Number(new URL(f.view.location.href).searchParams.get('t')), time);
+    }
+  } finally {f.controller.destroy();}
+});
+
+test('reloading at a self-written URL rebuilds native media ownership and restores the exact mapped target', async () => {
+  const timeline = JSON.parse(await readFile(new URL('../dist/conference/timeline.json', import.meta.url)));
+  const manifest = readyMediaManifest(timeline), time = 2401.74;
+  const f = fixture({href:'https://atlas.test/?page=conference&t=' + time + '&deck=final-290',
+    response:async url => jsonResponse(url.endsWith('/timeline.json') ? timeline : manifest)});
+  const native = observeNativeSeeks(f);
+  try {
+    await f.controller.load(); assert.equal(await f.controller.whenMediaSettled(), true);
+    const session = manifest.audio.find(clip => clip.t0 <= time && time < clip.t1);
+    native.settle(time - session.t0 - 0.02);
+    assert.equal(Number(new URL(f.view.location.href).searchParams.get('t')), time);
+    const source = f.media.src, loads = f.counts().loads, requestStart = native.requests.length;
+    assert.equal(await f.controller.load(), true);
+    assert.equal(await f.controller.whenMediaSettled(), true);
+    assert.ok(f.counts().loads > loads, 'reload must initialize the new native source even when the URL is unchanged');
+    assert.equal(f.media.src, source);
+    native.settle(time - session.t0 - 0.02);
+    assertNativeSeekContract(f, native, manifest, time, requestStart);
+    assert.equal(f.controller.getState().segment, 342);
+    assert.equal(f.controller.getState().page, 6);
+    assert.equal(f.role('page-status').hidden, true);
+    assert.equal(f.controller.getState().playing, false);
+  } finally {f.controller.destroy();}
+});
+
+test('external A to B to A navigation cannot reuse a stale self-written URL marker', async () => {
+  const f = fixture(), native = observeNativeSeeks(f);
+  try {
+    await f.controller.load(); native.settle();
+    const timeA = 18.125, timeB = 3725.875;
+    f.controller.seek(timeA); native.settle();
+    const urlA = f.view.location.href, start = native.requests.length, writes = f.writes.length;
+    f.navigate('?page=conference&t=' + timeB + '&deck=final-290');
+    assert.equal(f.controller.getState().time, timeB);
+    // No native clock event or URL write occurs between the two external
+    // navigations. The old own-write marker for A must already be invalidated.
+    f.navigate(urlA);
+    assert.equal(f.writes.length, writes);
+    assert.equal(f.controller.getState().time, timeA);
+    assert.deepEqual(native.requests.slice(start).map(request => request.currentTime), [5.875, timeA]);
+    assert.match(native.requests[start].src, /fixture-2\.wav$/);
+    assert.match(native.requests[start + 1].src, /fixture-1\.wav$/);
+    assert.equal(f.controller.getState().segment, conferenceSegmentIndex(fixtureTimeline.segments, timeA));
+  } finally {f.controller.destroy();}
+});
+
+test('r17 first-image visibility survives preload completion on either side of native seek read-back', async t => {
+  const timeline = JSON.parse(await readFile(new URL('../dist/conference/timeline.json', import.meta.url)));
+  const manifest = readyMediaManifest(timeline), time = 2239.5, deck = 'r17-clean-257';
+  for (const order of ['image-before-readback', 'image-after-readback']) await t.test(order, async () => {
+    const f = fixture({href:'https://atlas.test/?page=conference&t=' + time + '&deck=' + deck,
+      response:async url => jsonResponse(url.endsWith('/timeline.json') ? timeline : manifest)});
+    const native = observeNativeSeeks(f), images = [];
+    // Controlled Image lifecycle only: these unit tests perform no WebP decoding.
+    f.view.Image = class {
+      complete = false; naturalWidth = 0;
+      constructor() { images.push(this); }
+      finish() { this.complete = true; this.naturalWidth = 1800; this.onload?.(); }
+    };
+    try {
+      await f.controller.load(); assert.equal(await f.controller.whenMediaSettled(), true);
+      const prepared = images.find(image => image.src.endsWith('/0002.webp'));
+      assert.ok(prepared, 'the exact first r17 image is preloaded');
+      assert.equal(f.host.querySelector('.conference-slide-image').hidden, true);
+      if (order === 'image-before-readback') { await settle(); prepared.finish(); assertVisibleSlide(f, 2); }
+      const session = manifest.audio.find(clip => clip.t0 <= time && time < clip.t1);
+      native.settle(time - session.t0 - 1 / CONFERENCE_MEDIA_SETTINGS.audioSampleRate);
+      assertNativeSeekContract(f, native, manifest, time);
+      const requests = native.requests.length;
+      f.view.dispatchEvent(new f.window.Event('pageshow'));
+      assert.equal(native.requests.length, requests);
+      if (order === 'image-after-readback') { await settle(); prepared.finish(); }
+      assert.equal(f.controller.getState().segment, 290);
+      assert.equal(f.controller.getState().page, 2);
+      assert.equal(f.role('page-status').hidden, true);
+      assertVisibleSlide(f, 2);
+    } finally {f.controller.destroy();}
+  });
 });

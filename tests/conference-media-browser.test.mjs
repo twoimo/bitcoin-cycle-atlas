@@ -80,6 +80,8 @@ for (const [name, manifest] of [['invalid-json', '{invalid'], ['broken-ready', J
       assert.equal(report.preflight.skipped, false); assert.equal(report.preflight.passed, false);
       assert.ok(report.preflight.errors.length > 0); assert.ok(report.failures.length > 0);
       assert.equal(report.skipReason, null); assert.equal(report.counts.passed, 0);
+      assert.equal(JSON.parse(result.stdout.trim()).reason, report.failures[0].error,
+        'Preflight failure details must be printed as well as retained in report.json');
     } finally { await rm(f.directory, {recursive:true, force:true}); }
   });
 }
@@ -91,8 +93,40 @@ test('media receipt directory is append-only; a retry cannot overwrite earlier e
     await writeFile(join(f.out, 'report.json'), previous);
     const result = await run(f);
     assert.equal(result.exitCode, 1); assert.match(result.stdout, /"status":"failed"/);
+    const summary = JSON.parse(result.stdout.trim());
+    assert.equal(summary.failures, 1); assert.match(summary.reason, /EEXIST/);
+    assert.ok(summary.reason.includes(f.out), 'The failed output path is printed even without a new report');
     assert.equal(await readFile(join(f.out, 'report.json'), 'utf8'), previous);
     assert.equal(resolve(f.out), f.out);
+  } finally { await rm(f.directory, {recursive:true, force:true}); }
+});
+
+test('missing output parents are created and absent media still writes a skip receipt with exit 2', async () => {
+  const f = await fixture(unavailable);
+  f.out = join(f.directory, 'new-parent', 'nested-parent', 'receipt');
+  try {
+    const result = await run(f), report = JSON.parse(await readFile(join(f.out, 'report.json')));
+    const summary = JSON.parse(result.stdout.trim());
+    assert.equal(result.exitCode, 2); assert.equal(report.exitCode, 2); assert.equal(summary.exitCode, 2);
+    assert.equal(report.status, 'skipped'); assert.match(summary.reason, /declares unavailable/);
+    assert.equal(report.browserLaunched, false); assert.equal(report.cases.length, 0);
+    assert.equal(report.failures.length, 0); assert.equal(summary.failures, 0);
+    assert.equal(await readFile(join(f.out, 'chrome.stderr.log'), 'utf8'), '');
+  } finally { await rm(f.directory, {recursive:true, force:true}); }
+});
+
+test('an unusable output parent prints the filesystem cause and preserves the conflicting file', async () => {
+  const f = await fixture(unavailable), parent = join(f.directory, 'blocked-parent');
+  const previous = 'keep this file\n';
+  f.out = join(parent, 'nested', 'receipt');
+  try {
+    await writeFile(parent, previous);
+    const result = await run(f), summary = JSON.parse(result.stdout.trim());
+    assert.equal(result.exitCode, 1); assert.equal(summary.status, 'failed'); assert.equal(summary.exitCode, 1);
+    assert.equal(summary.failures, 1); assert.match(summary.reason, /ENOTDIR|EEXIST/);
+    assert.ok(summary.reason.includes(parent), 'The failed parent path is printed when report.json cannot exist');
+    assert.equal(summary.browserLaunched, false); assert.equal(summary.cases, 0);
+    assert.equal(await readFile(parent, 'utf8'), previous);
   } finally { await rm(f.directory, {recursive:true, force:true}); }
 });
 

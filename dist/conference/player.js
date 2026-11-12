@@ -80,7 +80,7 @@ export function mountConferencePlayer(host, options = {}) {
   const state = {status:'loading', time:0, duration:0, deck:null, page:null, segment:-1,
     playing:false, playPending:false, follow:true, auto:true, rate:1, transcript:false, settings:false, zoom:false};
   let timeline = null, destroyed = false, loadVersion = 0, abort = null, playVersion = 0;
-  let audioIndex = -1, pendingSeek = null, lastAnnouncement = null, lastUrlKey = null;
+  let audioIndex = -1, pendingSeek = null, seekTarget = null, lastAnnouncement = null, lastUrlKey = null, lastWrittenUrl = null;
   let transcriptOpener = null, transcriptMode = null, imageVersion = 0, imageKey = null;
   let imagePreload = null, resizeObserver = null, mediaError = false;
   let mediaLoad = Promise.resolve(false);
@@ -175,14 +175,18 @@ export function mountConferencePlayer(host, options = {}) {
     const seconds = Number(url.searchParams.get('t'));
     return {time:Number.isFinite(seconds) && seconds >= 0 ? seconds : 0, deck:url.searchParams.get('deck')};
   }
+  // A navigation target owns its caption/page until playback reaches it.
+  // Native read-back remains the event clock, but may land just before a
+  // segment boundary even when the currentTime setter received the exact time.
+  function presentationTime() { return seekTarget?.time ?? state.time; }
   function writeUrl(force = false) {
     if (!active() || !timeline || !view?.history?.replaceState || !view?.location?.href) return;
-    const time = Math.round(state.time * 10) / 10, key = Math.floor(time) + ':' + state.deck;
+    const time = presentationTime(), key = Math.floor(time) + ':' + state.deck;
     if (!force && key === lastUrlKey) return;
     const url = new URL(view.location.href);
     if (url.searchParams.get('page') !== 'conference') return;
     url.searchParams.set('t', String(time)); url.searchParams.set('deck', state.deck);
-    view.history.replaceState(view.history.state, '', url.href); lastUrlKey = key;
+    view.history.replaceState(view.history.state, '', url.href); lastUrlKey = key; lastWrittenUrl = url.href;
   }
   function currentDeck() {
     const deck = timeline?.decks.find(item => item.id === state.deck);
@@ -195,8 +199,9 @@ export function mountConferencePlayer(host, options = {}) {
     return null;
   }
   function currentTalk() {
-    return timeline?.talks.find(talk => talk.t0 <= state.time && state.time < talk.t1) ||
-      timeline?.talks.filter(talk => talk.t0 <= state.time).at(-1);
+    const time = presentationTime();
+    return timeline?.talks.find(talk => talk.t0 <= time && time < talk.t1) ||
+      timeline?.talks.filter(talk => talk.t0 <= time).at(-1);
   }
   function audioClipIndex(time) {
     const found = clips.findIndex(clip => time >= clip.offset && time < clip.offset + clip.durationSec);
@@ -208,14 +213,14 @@ export function mountConferencePlayer(host, options = {}) {
   }
   function ensureAudio(time) {
     const index = audioClipIndex(time);
-    if (index < 0) { pause(); notice('이 시각의 오디오가 없습니다.'); return false; }
+    if (index < 0) { seekTarget = null; pause(); notice('이 시각의 오디오가 없습니다.'); return false; }
     const clip = clips[index], localTime = clamp(time - clip.offset, 0, clip.durationSec);
     if (clip.available === false) {
-      audioIndex = index; pendingSeek = null; mediaError = false; pause();
+      audioIndex = index; pendingSeek = null; seekTarget = null; mediaError = false; pause();
       if (audio.hasAttribute?.('src')) { audio.removeAttribute('src'); audio.load?.(); }
       notice(); return false;
     }
-    pendingSeek = localTime;
+    seekTarget = {time, audioIndex:index}; pendingSeek = localTime;
     if (index !== audioIndex) {
       audioIndex = index; mediaError = false;
       audio.src = assetUrl(clip.file, clip.assetBase);
@@ -230,9 +235,9 @@ export function mountConferencePlayer(host, options = {}) {
   }
   async function play() {
     if (!timeline || state.status !== 'ready' || !active()) return;
-    if (state.time >= state.duration) seek(0);
+    if (presentationTime() >= state.duration) seek(0);
     const version = ++playVersion;
-    if (!ensureAudio(state.time)) return;
+    if (!ensureAudio(presentationTime())) return;
     state.playPending = true; renderPlayback(); notice();
     try {
       await audio.play();
@@ -340,7 +345,7 @@ export function mountConferencePlayer(host, options = {}) {
     if (!timeline) return;
     role('timeline').max = String(state.duration); role('timeline').value = String(state.time);
     role('timeline').setAttribute('aria-valuetext', formatConferenceTime(state.time) + ' / ' + formatConferenceTime(state.duration));
-    state.segment = conferenceSegmentIndex(timeline.segments, state.time);
+    state.segment = conferenceSegmentIndex(timeline.segments, presentationTime());
     const segment = timeline.segments[state.segment], talk = currentTalk();
     setText(role('talk-title'), talk?.title || '');
     if (talk) role('talk-select').value = talk.id;
@@ -510,7 +515,8 @@ export function mountConferencePlayer(host, options = {}) {
   }
   function clearContent() {
     pause(); closeTranscript({restoreFocus:false}); timeline = null; state.duration = 0; state.page = null; state.segment = -1;
-    clips.length = 0; audioIndex = -1; pendingSeek = null; imageVersion++; imageKey = null; imageCache.clear();
+    clips.length = 0; audioIndex = -1; pendingSeek = null; seekTarget = null;
+    lastUrlKey = null; lastWrittenUrl = null; imageVersion++; imageKey = null; imageCache.clear();
     mediaDecks.clear(); mediaLoad = Promise.resolve(false);
     pageIndexes.clear(); transcriptRows.length = 0; transcriptSearch.length = 0; highlightedRow = -1; list.replaceChildren();
     role('transcript-search').value = ''; list.hidden = false; root.querySelector('.conference-search-empty').hidden = true;
@@ -606,6 +612,10 @@ export function mountConferencePlayer(host, options = {}) {
   function syncFromUrl() {
     if (destroyed) return;
     const pending = readUrl(); pause();
+    // pageshow may echo our own replaceState after native media has settled.
+    // It is a lifecycle pause, not a new seek request or a new mapping input.
+    if (lastWrittenUrl === view?.location?.href) { render(true); return; }
+    lastWrittenUrl = null;
     state.time = timeline ? clamp(pending.time, 0, state.duration) : pending.time;
     if (timeline) {
       state.deck = resolveDeck(pending.deck) || timeline.decks[0].id;
@@ -624,8 +634,8 @@ export function mountConferencePlayer(host, options = {}) {
     if (name === 'retry') { void load(); return; }
     if (!timeline) return;
     if (name === 'play') togglePlayback();
-    if (name === 'backward') seek(state.time - 10);
-    if (name === 'forward') seek(state.time + 10);
+    if (name === 'backward') seek(presentationTime() - 10);
+    if (name === 'forward') seek(presentationTime() + 10);
     if (name === 'previous-slide') stepSlide(-1);
     if (name === 'next-slide') stepSlide(1);
     if (name === 'previous-talk') stepTalk(-1);
@@ -669,8 +679,8 @@ export function mountConferencePlayer(host, options = {}) {
     if (event.key === ' ' && event.target?.closest?.('button,summary,a[href]')) return;
     let handled = true;
     if (event.key === ' ') { if (!event.repeat) togglePlayback(); }
-    else if (event.key === 'ArrowLeft') seek(state.time - (event.shiftKey ? 30 : 5));
-    else if (event.key === 'ArrowRight') seek(state.time + (event.shiftKey ? 30 : 5));
+    else if (event.key === 'ArrowLeft') seek(presentationTime() - (event.shiftKey ? 30 : 5));
+    else if (event.key === 'ArrowRight') seek(presentationTime() + (event.shiftKey ? 30 : 5));
     else if (event.key === '[') stepSlide(-1);
     else if (event.key === ']') stepSlide(1);
     else if (event.key.toLowerCase() === 'f') { state.follow = !state.follow; render(); }
@@ -698,18 +708,26 @@ export function mountConferencePlayer(host, options = {}) {
   on(view, 'pagehide', () => { if (timeline) writeUrl(true); pause(); });
   on(view, 'pageshow', () => { if (active()) syncFromUrl(); });
   on(audio, 'loadedmetadata', applyPendingSeek);
-  on(audio, 'timeupdate', () => {
-    if (!timeline || audioIndex < 0 || clips[audioIndex].available === false || pendingSeek !== null || destroyed) return;
+  function updateAudioTime() {
+    if (!timeline || audioIndex < 0 || clips[audioIndex].available === false || pendingSeek !== null || audio.seeking || destroyed) return;
     const localTime = Number(audio.currentTime);
     if (!Number.isFinite(localTime)) return;
     const clip = clips[audioIndex];
+    if (audio.readyState === 0 || audio.currentSrc && audio.currentSrc !== assetUrl(clip.file, clip.assetBase)) return;
     // Encoder padding must not move the event clock beyond this session's
     // original endpoint. The next session starts at its own explicit offset.
     state.time = clamp(clip.offset + localTime, clip.offset, Math.min(state.duration, clip.offset + clip.durationSec));
+    // Settled, paused seeks retain the exact requested mapping independently
+    // of native clock quantization. Once playback reaches that target, normal
+    // clock-driven captions and slides resume without rounding any boundary.
+    if (seekTarget && seekTarget.audioIndex === audioIndex && state.playing && !audio.paused && state.time >= seekTarget.time) seekTarget = null;
     render(); writeUrl();
-  });
+  }
+  on(audio, 'timeupdate', updateAudioTime);
+  on(audio, 'seeked', updateAudioTime);
   on(audio, 'ended', () => {
     if (!timeline || destroyed || clips[audioIndex]?.available === false) return;
+    seekTarget = null;
     const next = clips[audioIndex + 1], resume = state.playing;
     if (next) { seek(next.offset, {keepPlaying:false}); if (resume) void play(); }
     else { state.time = state.duration; pause(); render(true); writeUrl(true); }
