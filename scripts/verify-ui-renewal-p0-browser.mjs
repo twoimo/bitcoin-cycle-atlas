@@ -13,6 +13,7 @@ import {fileURLToPath,pathToFileURL} from 'node:url';
 import {SITE_STYLE_SOURCES} from './build-site-styles.mjs';
 import {ensureOwnedVisibleForPaint} from './browser-paint-readiness.mjs';
 import {headlessWindowArgument,verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
+import {verifyP0TextInk} from './ui-renewal-p0-text-hit.mjs';
 import {
   inspectP0CssSources,inspectP0TokenPairs,p0Cases,p0FinalStatus,p0FontCss,p0FontFamily,p0PaintSamples,
   p0SampleCoverage,p0ThemeStorageKey,p0TokenPairs,validateP0FontEvidence,validateP0Paint,validateP0PaintRole,validateP0Typography,
@@ -67,7 +68,7 @@ export async function readP0Sources(projectRoot=root) {
   }
   const files = [...new Set([...cssFiles,'dist/vendor/skullet/styles.css','dist/site-before-shell.css','dist/site-after-shell.css','dist/index.html','apps/web/index.html',
     ...jsFiles,fontManifestFile,...fontFiles.map(entry => entry.file),'dist/data/btc-daily.json','dist/data/eth-ohlc.json',
-    'scripts/ui-renewal-p0-contract.mjs','scripts/verify-ui-renewal-p0-browser.mjs','scripts/build-site-styles.mjs',
+    'scripts/ui-renewal-p0-contract.mjs','scripts/verify-ui-renewal-p0-browser.mjs','scripts/ui-renewal-p0-text-hit.mjs','scripts/build-site-styles.mjs',
     'scripts/browser-paint-readiness.mjs','scripts/headless-browser-window.mjs'])].sort();
   const hashes = Object.fromEntries(await Promise.all(files.map(async file => [file,sha256(await readFile(resolve(projectRoot,file)))])));
   return {audit:{...audit,tokens:Object.fromEntries(audit.tokens)},tokenPairs:pairs,hashes,
@@ -151,7 +152,11 @@ export function inspectP0Page(spec,stage,sampleSpecs,tokenNames) {
     if (!node) return {...sample,visible:false,reason:nodes.length ? 'fixed element is outside visible paint' : 'fixed element is absent'};
     const r = box(node), owner = node.closest('button,a,select,label') || node, x = Math.max(0,Math.min(innerWidth-1,r.left+r.width/2)), y = Math.max(0,Math.min(innerHeight-1,r.top+r.height/2));
     const hit = document.elementFromPoint(x,y), paint = styleEvidence(node,sample.kind);
-    if (!hit || !(node === hit || node.contains(hit) || owner === hit || owner.contains(hit))) paint.issues.push('native sample centre is covered by another element');
+    // The described H1 inherits pointer-events:none and its block is wider
+    // than its text. Keep the empty-box hit as a diagnostic; only the native
+    // text-owner proof below can satisfy this fixed sample's visibility gate.
+    if (sample.id === 'page-heading' && sample.kind === 'text') paint.issues.push('native heading text ink hit evidence pending');
+    else if (!hit || !(node === hit || node.contains(hit) || owner === hit || owner.contains(hit))) paint.issues.push('native sample centre is covered by another element');
     return {...sample,visible:true,rect:r,actualSelector:nodePath(node),text:node.textContent.trim().slice(0,240),nativeHit:hit ? nodePath(hit) : null,...paint};
   });
   const typography = node => ({selector:nodePath(node),visible:visible(node),fontSize:Number.parseFloat(getComputedStyle(node).fontSize),fontFamily:getComputedStyle(node).fontFamily,text:node.textContent.trim().slice(0,160)});
@@ -177,6 +182,29 @@ export function inspectP0Page(spec,stage,sampleSpecs,tokenNames) {
       visibleInk:Boolean(fontPaint && inkRects.some(r => r.width>0 && r.height>0) && !fontPaint.issues.length),inkRects,overflow,
       faces:[...document.fonts].map(face => ({family:face.family,status:face.status,weight:face.weight})),status:document.fonts.status},
     themeControl:fontNode ? {pressed:fontNode.getAttribute('aria-pressed'),label:fontNode.getAttribute('aria-label')} : null};
+}
+
+/** A geometry-only collector is deliberately insufficient for the H1. The
+ * CDP proof honours paint order while including pointer-events:none nodes,
+ * and must finish before contrast/coverage can accept the heading sample. */
+export async function inspectP0Snapshot(cdp,spec,stage,sampleSpecs,tokenNames) {
+  const snapshot = await evaluate(cdp,inspectP0Page,spec,stage,sampleSpecs,tokenNames);
+  for (const sample of snapshot.samples) {
+    if (sample.id !== 'page-heading' || sample.kind !== 'text') continue;
+    if (!sample.visible) {sample.nativeTextHit = {status:'failed',reason:sample.reason || 'heading has no visible text geometry'};continue;}
+    try {sample.nativeTextHit = await verifyP0TextInk(cdp,sample.actualSelector);}
+    catch (error) {sample.nativeTextHit = {status:'unverified',reason:`native text ink evidence error: ${error.message}`};}
+    const proof = sample.nativeTextHit;
+    // A layout or text change between the two read-only observations is not
+    // success at an old location. Keep the raw coordinates in both receipts.
+    if (proof.status === 'passed' && (proof.geometry?.text?.trim() !== sample.text ||
+      ['left','top','right','bottom'].some(key => proof.geometry?.rect?.[key] !== sample.rect[key]))) {
+      proof.status = 'unverified';proof.reason = 'heading text/geometry changed during native hit verification';
+    }
+    sample.issues = sample.issues.filter(issue => issue !== 'native heading text ink hit evidence pending');
+    if (proof.status !== 'passed') sample.issues.push(`native heading text ink ${proof.status}: ${proof.reason || 'complete native hit evidence is missing'}`);
+  }
+  return snapshot;
 }
 
 /** Read the existing reader's scroll port and a native wheel target. An
@@ -252,6 +280,7 @@ export async function verifyUiRenewalP0Browser(argv=process.argv.slice(2)) {
   const report = {schemaVersion:1,kind:'atlas-ui-renewal-p0',recordedAt:new Date().toISOString(),status:'unverified',qualifiesP0Verification:false,qualifiesFullVerification:false,
     methodology:{source:'all 41 root CSS sources except unchanged third-party Skullet, apps/web/src CSS and both entry inline boot styles; colour literals and global paint aliases only in one styles.css :root token block',
       contrast:'20 fixed actual product text/icon IDs in each theme; exact sRGB relative luminance and alpha compositing over proven solid native backgrounds; text 4.5 and icons 3',
+      headingVisibility:'non-whitespace grapheme Range bounds and intersecting paint candidates; read-only CDP text-owner hits with ignorePointerEventsNone; empty block centre is diagnostic only; missing or unsupported evidence never passes',
       font:'local WOFF2 responses plus FontFaceSet plus native CDP glyph ownership; separate induced local-font failure cases',
       typography:'body/prose 15/16/17; existing dense navigation/chart controls and numerical axes recorded separately for P1/P2',
       isolation:'native inputs and actual product state only; no product DOM/style/font override; local static origin; no installs; independent R17/A9 unchanged'},cases:[],failures:[]};
@@ -305,10 +334,10 @@ export async function verifyUiRenewalP0Browser(argv=process.argv.slice(2)) {
         result.requestedUrl = `${base}?symbol=${spec.symbol}`;await cdp.send('Page.navigate',{url:result.requestedUrl});await observedReady(cdp,spec.symbol);
         const initial = await evaluate(cdp,() => ({theme:document.documentElement.dataset.theme,stored:localStorage.getItem('atlas-ui-theme')}));result.initialPreference = initial;
         if (initial.theme !== spec.theme) result.failures.push(`initial product theme ${initial.theme} did not honour ${spec.theme === 'light' ? 'clean light default' : 'saved dark preference'}`);
-        const chart = await evaluate(cdp,inspectP0Page,spec,'chart',p0PaintSamples,tokenNames);result.snapshots.push(chart);result.screenshots.push(await screenshot(cdp,settings.out,`${spec.id}-chart.png`));
+        const chart = await inspectP0Snapshot(cdp,spec,'chart',p0PaintSamples,tokenNames);result.snapshots.push(chart);result.screenshots.push(await screenshot(cdp,settings.out,`${spec.id}-chart.png`));
         await openSettings(cdp);await settle(cdp);
         const settingsScan = await collectP0Settings({spec,
-          readSnapshot:() => evaluate(cdp,inspectP0Page,spec,'settings',p0PaintSamples,tokenNames),readScroll:() => evaluate(cdp,readP0ReaderScroll),
+          readSnapshot:() => inspectP0Snapshot(cdp,spec,'settings',p0PaintSamples,tokenNames),readScroll:() => evaluate(cdp,readP0ReaderScroll),
           wheel:gesture => cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',...gesture}),
           settle:async () => {await delay(120);await settle(cdp);},capture:id => screenshot(cdp,settings.out,`${spec.id}-${id}.png`)});
         result.snapshots.push(...settingsScan.snapshots);result.screenshots.push(...settingsScan.screenshots);
@@ -324,7 +353,9 @@ export async function verifyUiRenewalP0Browser(argv=process.argv.slice(2)) {
         for (const snapshot of result.snapshots) {
           if (snapshot.overflow !== 0) result.failures.push(`${snapshot.stage}: horizontal overflow ${snapshot.overflow}px`);
           if (snapshot.theme !== spec.theme || snapshot.colorScheme !== spec.theme) result.failures.push(`${snapshot.stage}: actual colour scheme differs from ${spec.theme}`);
-          for (const sample of snapshot.samples.filter(value => value.visible)) {
+          // Unlike dense controls that are intentionally disclosed at one
+          // width, the H1 must be visible in every case, including fallback.
+          for (const sample of snapshot.samples.filter(value => value.visible || value.id === 'page-heading')) {
             sample.check = validateP0Paint(sample);sample.roleCheck = validateP0PaintRole(sample,new Map(Object.entries(report.sourceAudit.tokens)),spec.theme);
             if (sample.check.status !== 'passed') result.failures.push(`${snapshot.stage}/${sample.id}: ${sample.check.reason || `contrast ${sample.check.ratio} below ${sample.check.threshold}`}`);
             if (sample.roleCheck.status !== 'passed') result.failures.push(`${snapshot.stage}/${sample.id}: ${sample.roleCheck.reason}`);

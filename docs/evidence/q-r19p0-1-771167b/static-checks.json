@@ -1,0 +1,29 @@
+[
+  {
+    "command": [
+      "npm",
+      "run",
+      "verify:static"
+    ],
+    "exitCode": 0,
+    "output": "npm warn Unknown env config \"http-proxy\". This will stop working in the next major version of npm.\n\n> bitcoin-cycle-atlas@1.36.1 verify:static\n> node scripts/verify-static.mjs\n\n{\"status\":\"ok\",\"files\":1064,\"checkedScripts\":220,\"checkedReferences\":1068,\"basePath\":\"/bitcoin-cycle-atlas/\",\"standalone\":null}\n"
+  },
+  {
+    "command": [
+      "node",
+      "scripts/build-site-styles.mjs",
+      "--check"
+    ],
+    "exitCode": 0,
+    "output": "{\"status\":\"ok\",\"mode\":\"check\",\"sourceStylesheets\":41,\"files\":[{\"file\":\"site-before-shell.css\",\"bytes\":384283,\"sha256\":\"c1dad9cfaa4356a14d1b39b9c1ba27071f88d8ca5861c77fbc457c5b8dbc0824\"},{\"file\":\"site-after-shell.css\",\"bytes\":163360,\"sha256\":\"66a311f602f6e9afd78bab6345d6aef1855007d7a37d5e12ba63b25a7a1d1f41\"}]}\n"
+  },
+  {
+    "command": [
+      "node",
+      "scripts/build-site-preloads.mjs",
+      "--check"
+    ],
+    "exitCode": 0,
+    "output": "{\"status\":\"ok\",\"mode\":\"check\",\"moduleUrls\":56,\"uniqueModuleFiles\":54,\"conferenceModulePreloads\":55,\"sharedModulePreloads\":1,\"staticImportEdges\":82,\"maxShortestImportDepth\":6,\"moduleBytesByUrl\":763144,\"timeline\":{\"url\":\"./conference/timeline.json\",\"file\":\"conference/timeline.json\",\"bytes\":1044921,\"sha256\":\"fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad\",\"rel\":\"preload\",\"as\":\"fetch\",\"crossorigin\":\"anonymous\",\"fetchpriority\":\"high\"},\"manifestSha256\":\"abdc153ba496dcbcab9c601d141ccdf69499511d1f02f69b1b93c149df243d28\"}\n"
+  }
+]

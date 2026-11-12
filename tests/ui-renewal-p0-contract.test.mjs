@@ -331,6 +331,22 @@ test('actual collector survives CDP-style serialization with no imported helper 
   assert.equal(result.rootTokens['--text'],'#191f28');assert.equal(result.themeControl.pressed,'false');
 });
 
+test('a full-width non-interactive heading remains unverified until native text-owner evidence arrives', () => {
+  const model = collectorModel(), body = model.document.body, button = body.children[0];body.id = 'main';
+  const heading = {...button,tagName:'H1',id:'atlas-page-heading',textContent:'가격 차트',parentElement:body,
+    style:{...button.style,pointerEvents:'none'},
+    getBoundingClientRect:() => ({left:8,right:312,top:57,bottom:71,width:304,height:14})};
+  body.children.push(heading);
+  const original = model.document.querySelectorAll;
+  model.document.querySelectorAll = selector => selector === '#atlas-page-heading' ? [heading] : selector === 'body *' ? [button,heading] : original(selector);
+  model.document.elementFromPoint = () => body;
+  const result = runInNewContext(p0EvaluationExpression(inspectP0Page,[p0Cases[0],'chart',[p0PaintSamples[0]],[]]),model);
+  const sample = result.samples[0];assert.equal(sample.visible,true);assert.equal(sample.rect.width,304);
+  assert.equal(sample.nativeHit,'#main','keep the original empty-block hit as a diagnostic');
+  assert.deepEqual([...sample.issues],['native heading text ink hit evidence pending']);
+  assert.equal(validateP0Paint(sample).status,'unverified','removing the wrong centre assertion must not itself pass the heading');
+});
+
 test('collector never turns unsupported group opacity into a passing colour sample or real-ink proof', () => {
   const result = runInNewContext(p0EvaluationExpression(inspectP0Page,[p0Cases[0],'settings',[p0PaintSamples[7]],[]]),collectorModel({opacity:'.5'}));
   assert.equal(validateP0Paint(result.samples[0]).status,'unverified');assert.match(result.samples[0].issues.join(' '),/group opacity/);

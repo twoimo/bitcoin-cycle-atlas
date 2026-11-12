@@ -1,0 +1,400 @@
+TAP version 13
+# Subtest: matrix fixes both instruments, both themes, both widths and separate fallback cases
+ok 1 - matrix fixes both instruments, both themes, both widths and separate fallback cases
+  ---
+  duration_ms: 1.975244
+  type: 'test'
+  ...
+# Subtest: twenty token pairs and twenty painted elements are distinct fixed inventories
+ok 2 - twenty token pairs and twenty painted elements are distinct fixed inventories
+  ---
+  duration_ms: 0.373464
+  type: 'test'
+  ...
+# Subtest: relative luminance has exact white/black and equal-colour anchors
+ok 3 - relative luminance has exact white/black and equal-colour anchors
+  ---
+  duration_ms: 0.909404
+  type: 'test'
+  ...
+# Subtest: sRGB parser preserves alpha and rejects unsupported or out-of-range colour spaces
+ok 4 - sRGB parser preserves alpha and rejects unsupported or out-of-range colour spaces
+  ---
+  duration_ms: 0.803433
+  type: 'test'
+  ...
+# Subtest: alpha colours are composited against actual opaque backing, never silently against white
+ok 5 - alpha colours are composited against actual opaque backing, never silently against white
+  ---
+  duration_ms: 0.240082
+  type: 'test'
+  ...
+# Subtest: balanced CSS inventory respects nested media, vendor properties, quoted delimiters and comments
+ok 6 - balanced CSS inventory respects nested media, vendor properties, quoted delimiters and comments
+  ---
+  duration_ms: 0.62236
+  type: 'test'
+  ...
+# Subtest: colour literals include fallbacks, modern constructors and named paint but exclude token names and resources
+ok 7 - colour literals include fallbacks, modern constructors and named paint but exclude token names and resources
+  ---
+  duration_ms: 0.909083
+  type: 'test'
+  ...
+# Subtest: only canonical root custom-property literals pass source ownership
+ok 8 - only canonical root custom-property literals pass source ownership
+  ---
+  duration_ms: 2.057884
+  type: 'test'
+  ...
+# Subtest: hardcoded component, theme override, root fallback and boot colours fail with source locations
+ok 9 - hardcoded component, theme override, root fallback and boot colours fail with source locations
+  ---
+  duration_ms: 1.461007
+  type: 'test'
+  ...
+# Subtest: multiple canonical colour root blocks, duplicate tokens and malformed CSS cannot report zero as success
+ok 10 - multiple canonical colour root blocks, duplicate tokens and malformed CSS cannot report zero as success
+  ---
+  duration_ms: 2.865448
+  type: 'test'
+  ...
+# Subtest: global paint aliases cannot override the canonical root even when the override has no literal colour
+ok 11 - global paint aliases cannot override the canonical root even when the override has no literal colour
+  ---
+  duration_ms: 3.189849
+  type: 'test'
+  ...
+# Subtest: valid responsive type aliases and geometry are not misclassified as global paint overrides
+ok 12 - valid responsive type aliases and geometry are not misclassified as global paint overrides
+  ---
+  duration_ms: 1.174905
+  type: 'test'
+  ...
+# Subtest: all canonical paint aliases resolve in each theme, including shadows; cycles cannot disappear as geometry
+ok 13 - all canonical paint aliases resolve in each theme, including shadows; cycles cannot disappear as geometry
+  ---
+  duration_ms: 1.671746
+  type: 'test'
+  ...
+# Subtest: light-dark aliases and nested variable fallbacks resolve separately with provenance
+ok 14 - light-dark aliases and nested variable fallbacks resolve separately with provenance
+  ---
+  duration_ms: 0.528628
+  type: 'test'
+  ...
+# Subtest: the agreed accessible palette passes all forty exact token pairs; old subtle and dark accent fail
+ok 15 - the agreed accessible palette passes all forty exact token pairs; old subtle and dark accent fail
+  ---
+  duration_ms: 3.675663
+  type: 'test'
+  ...
+# Subtest: actual BTC observed line/isolated point and ETH close line use theme ink with at least 3:1 plot contrast
+ok 16 - actual BTC observed line/isolated point and ETH close line use theme ink with at least 3:1 plot contrast
+  ---
+  duration_ms: 66.568607
+  type: 'test'
+  ...
+# Subtest: native paint checks composite ancestry and retain unsupported backgrounds as unverified
+ok 17 - native paint checks composite ancestry and retain unsupported backgrounds as unverified
+  ---
+  duration_ms: 0.703392
+  type: 'test'
+  ...
+# Subtest: paint thresholds are applied without rounding a sub-threshold observation up
+ok 18 - paint thresholds are applied without rounding a sub-threshold observation up
+  ---
+  duration_ms: 0.209787
+  type: 'test'
+  ...
+# Subtest: computed UI ink must match the active canonical role palette even when a preserved literal has enough contrast
+ok 19 - computed UI ink must match the active canonical role palette even when a preserved literal has enough contrast
+  ---
+  duration_ms: 0.43029
+  type: 'test'
+  ...
+# Subtest: fixed coverage needs every ID in both themes and never substitutes repeated passing samples
+ok 20 - fixed coverage needs every ID in both themes and never substitutes repeated passing samples
+  ---
+  duration_ms: 2.879119
+  type: 'test'
+  ...
+# Subtest: body/prose size contract records dense controls separately without treating them as body exceptions
+ok 21 - body/prose size contract records dense controls separately without treating them as body exceptions
+  ---
+  duration_ms: 0.233342
+  type: 'test'
+  ...
+# Subtest: font success requires same-origin bytes, a loaded face and actual custom-font glyph ownership
+ok 22 - font success requires same-origin bytes, a loaded face and actual custom-font glyph ownership
+  ---
+  duration_ms: 0.641559
+  type: 'test'
+  ...
+# Subtest: fallback evidence needs induced local failure plus real system glyphs and visible Korean text
+ok 23 - fallback evidence needs induced local failure plus real system glyphs and visible Korean text
+  ---
+  duration_ms: 0.209086
+  type: 'test'
+  ...
+# Subtest: a blocked or absent browser cannot qualify P0 even with all static checks passing
+ok 24 - a blocked or absent browser cannot qualify P0 even with all static checks passing
+  ---
+  duration_ms: 1.611965
+  type: 'test'
+  ...
+# Subtest: matching totals alone cannot replace complete unique token, paint or browser evidence
+ok 25 - matching totals alone cannot replace complete unique token, paint or browser evidence
+  ---
+  duration_ms: 1.073501
+  type: 'test'
+  ...
+# Subtest: CLI requires a concrete new output directory and rejects unknown/incomplete options
+ok 26 - CLI requires a concrete new output directory and rejects unknown/incomplete options
+  ---
+  duration_ms: 0.303328
+  type: 'test'
+  ...
+# Subtest: actual collector survives CDP-style serialization with no imported helper globals
+ok 27 - actual collector survives CDP-style serialization with no imported helper globals
+  ---
+  duration_ms: 3.035906
+  type: 'test'
+  ...
+# Subtest: a full-width non-interactive heading remains unverified until native text-owner evidence arrives
+ok 28 - a full-width non-interactive heading remains unverified until native text-owner evidence arrives
+  ---
+  duration_ms: 1.988284
+  type: 'test'
+  ...
+# Subtest: collector never turns unsupported group opacity into a passing colour sample or real-ink proof
+ok 29 - collector never turns unsupported group opacity into a passing colour sample or real-ink proof
+  ---
+  duration_ms: 2.033662
+  type: 'test'
+  ...
+# Subtest: a control inside the viewport but outside its reader scroll clip is not counted as visible ink
+ok 30 - a control inside the viewport but outside its reader scroll clip is not counted as visible ink
+  ---
+  duration_ms: 1.617843
+  type: 'test'
+  ...
+# Subtest: the restored price-axis explanation participates in the P0 prose floor
+ok 31 - the restored price-axis explanation participates in the P0 prose floor
+  ---
+  duration_ms: 2.084614
+  type: 'test'
+  ...
+# Subtest: reader scrolling uses native wheel geometry and never treats overflow:hidden as user-scrollable
+ok 32 - reader scrolling uses native wheel geometry and never treats overflow:hidden as user-scrollable
+  ---
+  duration_ms: 1.521769
+  type: 'test'
+  ...
+# Subtest: native settings scan retains both scroll positions, fixed IDs, screenshots and earlier failed observations
+ok 33 - native settings scan retains both scroll positions, fixed IDs, screenshots and earlier failed observations
+  ---
+  duration_ms: 0.849283
+  type: 'test'
+  ...
+# Subtest: a reader that cannot scroll or does not advance leaves missing samples unverified without fabricated exposure
+ok 34 - a reader that cannot scroll or does not advance leaves missing samples unverified without fabricated exposure
+  ---
+  duration_ms: 0.334566
+  type: 'test'
+  ...
+# Subtest: current authored CSS and pinned local font bytes satisfy the source contract without claiming a browser pass
+ok 35 - current authored CSS and pinned local font bytes satisfy the source contract without claiming a browser pass
+  ---
+  duration_ms: 443.712021
+  type: 'test'
+  ...
+# Subtest: a real CLI preflight failure creates missing parents, records the reason, and never overwrites its receipt
+ok 36 - a real CLI preflight failure creates missing parents, records the reason, and never overwrites its receipt
+  ---
+  duration_ms: 934.224448
+  type: 'test'
+  ...
+# Subtest: 320px full-width heading samples its four Korean glyphs, including pointer-events:none
+ok 37 - 320px full-width heading samples its four Korean glyphs, including pointer-events:none
+  ---
+  duration_ms: 25.684409
+  type: 'test'
+  ...
+# Subtest: 320px full-width heading samples its four Korean glyphs, including pointer-events:none
+ok 38 - 320px full-width heading samples its four Korean glyphs, including pointer-events:none
+  ---
+  duration_ms: 6.900213
+  type: 'test'
+  ...
+# Subtest: 1440px full-width heading samples its four Korean glyphs, including pointer-events:none
+ok 39 - 1440px full-width heading samples its four Korean glyphs, including pointer-events:none
+  ---
+  duration_ms: 2.614639
+  type: 'test'
+  ...
+# Subtest: the precise text owner and text backend are accepted; a parent or another same-looking element is rejected
+ok 40 - the precise text owner and text backend are accepted; a parent or another same-looking element is rejected
+  ---
+  duration_ms: 5.176379
+  type: 'test'
+  ...
+# Subtest: external painted glyph overlay remains a failure
+ok 41 - external painted glyph overlay remains a failure
+  ---
+  duration_ms: 4.867263
+  type: 'test'
+  ...
+# Subtest: internal painted glyph overlay remains a failure
+ok 42 - internal painted glyph overlay remains a failure
+  ---
+  duration_ms: 3.682073
+  type: 'test'
+  ...
+# Subtest: pointer-events-none painted glyph overlay remains a failure
+ok 43 - pointer-events-none painted glyph overlay remains a failure
+  ---
+  duration_ms: 3.721522
+  type: 'test'
+  ...
+# Subtest: a one-pixel partial stripe is probed rather than overlooked by the glyph centre
+ok 44 - a one-pixel partial stripe is probed rather than overlooked by the glyph centre
+  ---
+  duration_ms: 4.47476
+  type: 'test'
+  ...
+# Subtest: a positive 0.2px occlusion with no integer probe is unverified, never rounded away
+ok 45 - a positive 0.2px occlusion with no integer probe is unverified, never rounded away
+  ---
+  duration_ms: 5.420337
+  type: 'test'
+  ...
+# Subtest: a distant opaque positioned pseudo uses its native quad without invalidating unrelated text
+ok 46 - a distant opaque positioned pseudo uses its native quad without invalidating unrelated text
+  ---
+  duration_ms: 4.200265
+  type: 'test'
+  ...
+# Subtest: an empty transparent hit-area pseudo adds no painted candidate or unsupported geometry
+ok 47 - an empty transparent hit-area pseudo adds no painted candidate or unsupported geometry
+  ---
+  duration_ms: 5.070705
+  type: 'test'
+  ...
+# Subtest: pseudo native quads expose a one-pixel stripe even when the owning element is far away
+ok 48 - pseudo native quads expose a one-pixel stripe even when the owning element is far away
+  ---
+  duration_ms: 7.000505
+  type: 'test'
+  ...
+# Subtest: a visible one-pixel child overlay remains paint evidence under a visibility-hidden ancestor
+ok 49 - a visible one-pixel child overlay remains paint evidence under a visibility-hidden ancestor
+  ---
+  duration_ms: 4.697816
+  type: 'test'
+  ...
+# Subtest: a one-pixel replaced image has paint evidence without a CSS background or border
+ok 50 - a one-pixel replaced image has paint evidence without a CSS background or border
+  ---
+  duration_ms: 5.146884
+  type: 'test'
+  ...
+# Subtest: empty text cannot become passing native text-ink evidence
+ok 51 - empty text cannot become passing native text-ink evidence
+  ---
+  duration_ms: 1.424521
+  type: 'test'
+  ...
+# Subtest: whitespace only cannot become passing native text-ink evidence
+ok 52 - whitespace only cannot become passing native text-ink evidence
+  ---
+  duration_ms: 1.532094
+  type: 'test'
+  ...
+# Subtest: zero glyph rect cannot become passing native text-ink evidence
+ok 53 - zero glyph rect cannot become passing native text-ink evidence
+  ---
+  duration_ms: 1.19848
+  type: 'test'
+  ...
+# Subtest: zero heading rect cannot become passing native text-ink evidence
+ok 54 - zero heading rect cannot become passing native text-ink evidence
+  ---
+  duration_ms: 1.300094
+  type: 'test'
+  ...
+# Subtest: viewport clipped glyph cannot become passing native text-ink evidence
+ok 55 - viewport clipped glyph cannot become passing native text-ink evidence
+  ---
+  duration_ms: 1.647259
+  type: 'test'
+  ...
+# Subtest: hidden cannot become passing native text-ink evidence
+ok 56 - hidden cannot become passing native text-ink evidence
+  ---
+  duration_ms: 1.0659
+  type: 'test'
+  ...
+# Subtest: display none cannot become passing native text-ink evidence
+ok 57 - display none cannot become passing native text-ink evidence
+  ---
+  duration_ms: 1.193854
+  type: 'test'
+  ...
+# Subtest: transparent text cannot become passing native text-ink evidence
+ok 58 - transparent text cannot become passing native text-ink evidence
+  ---
+  duration_ms: 1.566877
+  type: 'test'
+  ...
+# Subtest: zero opacity cannot become passing native text-ink evidence
+ok 59 - zero opacity cannot become passing native text-ink evidence
+  ---
+  duration_ms: 1.153162
+  type: 'test'
+  ...
+# Subtest: unsupported clip geometry cannot become passing native text-ink evidence
+ok 60 - unsupported clip geometry cannot become passing native text-ink evidence
+  ---
+  duration_ms: 1.871387
+  type: 'test'
+  ...
+# Subtest: missing geometry, missing hit evidence and CDP errors cannot qualify a heading
+ok 61 - missing geometry, missing hit evidence and CDP errors cannot qualify a heading
+  ---
+  duration_ms: 10.999985
+  type: 'test'
+  ...
+# Subtest: replaced or missing TEXT_NODE evidence cannot be substituted by its old element owner
+ok 62 - replaced or missing TEXT_NODE evidence cannot be substituted by its old element owner
+  ---
+  duration_ms: 6.710176
+  type: 'test'
+  ...
+# Subtest: main snapshot integration removes only the pending sentinel after actual helper proof
+ok 63 - main snapshot integration removes only the pending sentinel after actual helper proof
+  ---
+  duration_ms: 4.389201
+  type: 'test'
+  ...
+# Subtest: main integration never clears a missing, occluded, changed-text or changed-rect proof into a pass
+ok 64 - main integration never clears a missing, occluded, changed-text or changed-rect proof into a pass
+  ---
+  duration_ms: 8.841096
+  type: 'test'
+  ...
+# Subtest: main integration retains a hidden heading as failed evidence instead of dropping the required sample
+ok 65 - main integration retains a hidden heading as failed evidence instead of dropping the required sample
+  ---
+  duration_ms: 0.289527
+  type: 'test'
+  ...
+1..65
+# tests 65
+# suites 0
+# pass 65
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1669.088886

@@ -1,0 +1,13 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "tests/price-axis-browser-contract.test.mjs",
+    "tests/price-axis-browser-clip.test.mjs",
+    "tests/page-heading-browser-contract.test.mjs",
+    "tests/page-heading-and-touch-floor.test.mjs",
+    "tests/ui-theme.test.mjs"
+  ],
+  "exitCode": 0
+}
