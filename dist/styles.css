@@ -47,6 +47,11 @@
   --nav-active-bg: var(--accent-soft);
   --nav-active-text: var(--accent-ink);
   --workbench-gutter: var(--surface-raised);
+  /* Financial canvases retain a dark working field. The frame is distinct
+     from action/settings cards, which still follow the user's UI theme. */
+  --workbench-frame: #17171c;
+  --workbench-frame-ink: #f2f2f4;
+  --workbench-frame-muted: #b0b0ba;
   --replay-picker: light-dark(#315d8f, #8db2ff);
   --skullet-highlight: light-dark(#191f2814, #f2f2f414);
   --indicator-label-bg: var(--bg);
