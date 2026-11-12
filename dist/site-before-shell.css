@@ -1196,10 +1196,14 @@ body[data-shell=dashboard] .workspace.atlas-details-layout[data-details-open]{
 @media(max-width:620px),(max-height:500px){.workspace-dialog{position:fixed;inset:var(--dialog-viewport-top,0px) 0 auto;margin:8px auto;max-height:calc(var(--dialog-viewport-height,100dvh) - 16px)}.workspace-dialog-header button,.workspace-dialog-tabs button{min-height:44px}.workspace-dialog-header button{width:44px}.workspace-command-results{min-height:0;flex:1}.workspace-command-pane{flex:1}.workspace-command-pane>.workspace-hint{flex:none}}
 
 
-/* Source: chart-workspace-controls.css; SHA-256: 5f295a4fa2439c9cbf4dbca060a7494b4b2ec2e96a6ada196dff77f5541537c4 */
+/* Source: chart-workspace-controls.css; SHA-256: 6fae05d4c8e4742466935714fc1bb0f5f6f01effb8ce4f2960a19019b7e69013 */
 .workspace-history-controls{display:flex;align-items:center;gap:0;flex:none;margin-inline:2px;border-inline:1px solid var(--chart-workspace-controls-rule);padding-inline:2px}
 .workspace-history-controls .workbench-icon{width:30px;min-width:30px}
 .workspace-history-controls .workbench-icon:disabled{opacity:.3;cursor:not-allowed}
+/* Native HTML annotations share the renderer's measured axis gutter. Their
+   own scrolling/wrapping keeps all controls available on narrow charts. */
+.atlas-plot>.instrument-indicator-manager{max-width:min(360px,calc(100% - var(--plot-right-gap,71px) - 12px));box-sizing:border-box}
+.atlas-plot>.eth-forecast-note{right:var(--plot-right-gap,71px);max-width:calc(100% - var(--plot-right-gap,71px) - 13px);box-sizing:border-box;white-space:normal;overflow-wrap:anywhere}
 .chart-touch-tracking-hint{position:absolute;left:50%;bottom:32px;transform:translateX(-50%);max-width:calc(100% - 100px);z-index:12;white-space:nowrap;padding:8px 12px;border:1px solid var(--chart-workspace-controls-rule-2);border-radius:16px;background:var(--chart-workspace-controls-surface);color:var(--chart-workspace-controls-ink);font:11px/1.35 var(--font-system-basic);box-shadow:0 3px 14px var(--chart-workspace-controls-shadow);cursor:pointer}
 .chart-touch-tracking-hint[hidden]{display:none}
 .chart-go-to-dialog{width:min(560px,calc(100% - 24px));max-height:calc(100dvh - 24px);margin:auto;padding:20px;border:1px solid var(--chart-workspace-controls-rule-3);border-radius:10px;background:var(--analysis-dock-surface-6);color:var(--chart-workspace-controls-ink-2);box-shadow:none;font:13px/1.6 var(--font-system-basic);overflow:auto;box-sizing:border-box}

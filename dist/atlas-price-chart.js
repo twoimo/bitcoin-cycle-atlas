@@ -197,7 +197,10 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   const timingSeries=cycleCalibration?.series||[],visibleTiming=showCycleTiming?dateWindow(timingSeries,start,end):[];
   const clip=`${svg.id}-clip`,priceClip=`${svg.id}-price-clip`,axisClip=`${svg.id}-price-axis-clip`,fullHistory=span>3000;
   let s=`<title>${historical?'실제 비트코인 가격':'실제 비트코인 가격과 미래 가정'}</title><desc>가격 실선은 실제 관측, 금색 가격 점선은 미래 가정입니다. 색 원과 기간선의 실선은 사후 기준, 점선은 잠정 또는 가정 기준입니다. 그래프를 누르면 값을 고정해 읽을 수 있습니다. 미래 음영은 보정된 확률 구간이 아닙니다.</desc><defs><clipPath id="${clip}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${bottom-T}"/></clipPath><clipPath id="${priceClip}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${priceBottom-T}"/></clipPath><clipPath id="${axisClip}"><rect x="${W-R}" y="${T}" width="${R}" height="${priceBottom-T}"/></clipPath></defs>`;
-  for(const price of priceScale.ticks){const yy=y(price),label=axisLabels.tick(price);s+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="#28323f"/><text x="${W-R+axisText.inset}" y="${yy+4}" text-anchor="start" ${axisText.attributes(label)} fill="#b0bbca" font-size="${axisText.fontSize}">${esc(label)}</text>`;}
+  // The complete frame adds paint, not a larger DOM budget. Batch identical
+  // grid strokes while retaining every original tick coordinate and label.
+  s+=`<path class="price-axis-grid" d="${priceScale.ticks.map(price=>`M${L},${y(price)}H${W-R}`).join('')}" fill="none" stroke="#28323f"/>`;
+  for(const price of priceScale.ticks){const yy=y(price),label=axisLabels.tick(price);s+=`<text x="${W-R+axisText.inset}" y="${yy+4}" text-anchor="start" ${axisText.attributes(label)} fill="#b0bbca" font-size="${axisText.fontSize}">${esc(label)}</text>`;}
   let months=span>5000?(small?60:24):span>3000?(small?36:24):span>1100?(small?12:6):span>550?(small?6:3):span>270?3:1;
   if(Number.isFinite(dateTickMinSpacing)&&dateTickMinSpacing>0){
     const capacity=Math.max(1,Math.floor(Math.max(1,W-L-R)/dateTickMinSpacing));
@@ -359,7 +362,9 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   }
   if(milestoneLayer){if(milestoneLayer.markers.length||activeCycleInterval)s+=`<g data-indicator-layer="cycle-landmarks">${milestoneLayer.markup}</g>`;svg.dataset.cycleMarkerCount=String(milestoneLayer.markers.length);svg.dataset.cycleMarkerLabelCount=String(milestoneLayer.labelCount);}
 
-  const latest=originalVisible.find(p=>p.date===split);
+  // The active candle source owns its displayed close. Keep the cutoff date,
+  // but do not put the underlying daily-line quote on a venue candle chart.
+  const latest=observed.find(p=>p.date===split);
   if(latest&&latest.price>=min&&latest.price<=max){const yy=y(latest.price),labelTop=Math.max(T,Math.min(priceBottom-18,yy-9)),label=axisLabels.price(latest.price);s+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="#7da89c" stroke-dasharray="2 5" opacity=".5"/><g class="chart-latest-price-tag" pointer-events="none"><rect x="${W-R}" y="${labelTop}" width="${R-3}" height="18" rx="2" fill="#2b6558"/><text x="${W-R+axisText.inset}" y="${labelTop+13}" ${axisText.attributes(label,{badge:true,kind:'latest'})} fill="#edf8f3" font-size="${axisText.badgeFontSize}">${esc(label)}</text></g>`;}
   const annotations=researchAnnotationsMarkup({annotations:researchAnnotations,start,end,x:({date:value})=>xday(typeof value==='number'?value/86400:value.length>10?Date.parse(value)/86400000:dayOf(value)),y,left:L,right:W-R,top:T,bottom:priceBottom,clipId:priceClip,activeId:selectedAnnotation,scenarioId});
   s+=annotations.markup;svg.dataset.researchAnnotationCount=String(annotations.visibleCount);
@@ -369,7 +374,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
 
   s+=`<g id="${svg.id}-cross" pointer-events="none"><line class="cross-time" y1="${T}" y2="${bottom}" stroke="#afc4dd" stroke-dasharray="3 3" opacity=".6"/><line class="cross-price" clip-path="url(#${priceClip})" x1="${L}" x2="${W-R}" stroke="#afc4dd" stroke-dasharray="3 3" opacity=".6"/><circle clip-path="url(#${priceClip})" r="4" fill="#10151c" stroke="#f4dcac" stroke-width="1.5"/><g class="cross-price-tag" clip-path="url(#${axisClip})"><rect x="${W-R}" width="${R-3}" height="18" rx="2" fill="#465366"/><text x="${W-R+axisText.inset}" fill="#edf2f9" font-size="${axisText.badgeFontSize}"></text></g><g class="cross-date-tag"><rect width="80" height="18" rx="2" fill="#39485b"/><text fill="#edf2f9" font-size="10" text-anchor="middle"></text></g></g>`;
   s+=measurementOverlayMarkup(priceClip);
-  s+=priceAxisMarkup({left:W-R,right:W,top:T,bottom:priceBottom})+timeAxisMarkup({left:L,right:W-R,top:bottom+8,bottom:H});
+  s+=priceAxisMarkup({left:W-R,right:W,top:T,bottom:priceBottom,surfaceBottom:H})+timeAxisMarkup({left:L,right:W-R,top:bottom+8,bottom:H});
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.dataset.plotLeft=String(L);svg.dataset.plotRight=String(W-R);svg.dataset.plotTop=String(T);svg.dataset.plotBottom=String(bottom);svg.dataset.priceBottom=String(priceBottom);svg.parentElement?.style.setProperty('--plot-bottom-gap',`${H-bottom+6}px`);svg.parentElement?.style.setProperty('--plot-right-gap',`${R+7}px`);svg.dataset.scale=effectiveScale;svg.dataset.unit=unit;svg.dataset.invertScale=String(Boolean(invertScale));svg.dataset.timeAxisTop=String(bottom+8);svg.dataset.tool=tool;svg.dataset.chartType=chartType;svg.dataset.visiblePointCount=String(visible.length);svg.dataset.observedCandleCount=String(candleRows.length);svg.dataset.candleRendering=denseCandles?'batched':'individual';svg.innerHTML=s;
   const cross=svg.querySelector('[id$="-cross"]'),crossLine=cross.querySelector('.cross-time'),crossPrice=cross.querySelector('.cross-price'),crossDot=cross.querySelector('circle'),priceTag=cross.querySelector('.cross-price-tag'),dateTag=cross.querySelector('.cross-date-tag'),stateByDate=new Map(dateWindow(states,start,end).map(p=>[p.date,p]));
   const updateAxisLabels=createPriceAxisLabelVisibility(svg,{cursorTag:priceTag});

@@ -725,8 +725,8 @@
     {
       "url": "./price-axis.js",
       "file": "price-axis.js",
-      "bytes": 13639,
-      "sha256": "dee046eec4431b14c3e73e973e8e1511fd5709712e2bebe1485ef04776870ee7",
+      "bytes": 16572,
+      "sha256": "3a06f852424066a412d2709a3dd0a9227f670a9345ed2ac8179cc0d8d387fb4b",
       "depth": 4,
       "imports": []
     },
@@ -791,8 +791,8 @@
     {
       "url": "./price-axis.js?v=1.29.0",
       "file": "price-axis.js",
-      "bytes": 13639,
-      "sha256": "dee046eec4431b14c3e73e973e8e1511fd5709712e2bebe1485ef04776870ee7",
+      "bytes": 16572,
+      "sha256": "3a06f852424066a412d2709a3dd0a9227f670a9345ed2ac8179cc0d8d387fb4b",
       "depth": 6,
       "imports": []
     },
@@ -878,6 +878,6 @@
     "sharedModulePreloads": 1,
     "staticImportEdges": 81,
     "maxShortestImportDepth": 6,
-    "moduleBytesByUrl": 751060
+    "moduleBytesByUrl": 756926
   }
 }

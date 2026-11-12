@@ -114,11 +114,41 @@ export function createPriceAxisFormatter({axis,display,layout}){
   return {tick:value=>format(value,false),price:value=>format(value,true),tickDigits};
 }
 
+/** Keep the axis paint after chart annotations without changing any price
+ * coordinates. The whole cursor group retains its lookup/export owner; only
+ * the separate interaction child is disposable when exporting the chart. */
+function mountPriceAxisPaint(svg,{ticks,latest,cursorTag}){
+  const layer=svg.querySelector?.('[data-price-axis-paint-layer]');
+  // String-only render fixtures do not have a mounted SVG tree.
+  if(!layer||layer.parentNode!==svg||!layer.appendChild)return null;
+  const viewBox=(svg.getAttribute('viewBox')||'').trim().split(/[\s,]+/).map(Number);
+  const height=viewBox.length===4&&viewBox.every(Number.isFinite)&&viewBox[3]>0?viewBox[3]:svg.clientHeight;
+  if(Number.isFinite(height)&&height>0){
+    for(const edge of layer.querySelectorAll('[data-price-axis-boundary]')){
+      if(edge.dataset.priceAxisBoundary==='axis')edge.setAttribute('y2',height);
+      if(edge.dataset.priceAxisBoundary==='bottom'){edge.setAttribute('y1',height);edge.setAttribute('y2',height);}
+    }
+  }
+  for(const tick of ticks){
+    // A text center can fall between glyphs or just outside the data inset.
+    // Its own painted box still belongs to the axis, not the chart below it.
+    tick.setAttribute('pointer-events','bounding-box');
+    tick.setAttribute('style','cursor:ns-resize;touch-action:none');
+  }
+  // Intraday quotes retain their source title and observed-price guide owner.
+  const quote=latest?.closest?.('.market-last-price')||latest;
+  for(const node of [...ticks,quote])if(node?.parentNode&&node.parentNode!==layer)layer.appendChild(node);
+  const cross=cursorTag?.closest?.('[id$="-cross"]');
+  if(cross?.parentNode&&cross.parentNode!==layer)layer.appendChild(cross);
+  return layer;
+}
+
 /** Reserve the painted badge rows, not a second price axis. Labels return as
  * soon as the live cursor leaves their vertical interval; values stay intact. */
 export function createPriceAxisLabelVisibility(svg,{cursorTag,padding=3}={}){
   const ticks=[...(svg.querySelectorAll?.('[data-price-axis-label="tick"]')||[])];
   const latest=svg.querySelector?.('.chart-latest-price-tag');
+  const paint=mountPriceAxisPaint(svg,{ticks,latest,cursorTag});
   const badgeBounds=tag=>{
     if(!tag||tag.getAttribute('visibility')==='hidden')return null;
     const rect=tag.querySelector('rect'),raw=rect?.getAttribute('y'),height=Number(rect?.getAttribute('height'));
@@ -127,6 +157,9 @@ export function createPriceAxisLabelVisibility(svg,{cursorTag,padding=3}={}){
   };
   const overlaps=(a,b)=>a&&b&&a.top<b.bottom+padding&&a.bottom+padding>b.top;
   return ()=>{
+    // Measurement/annotation layers can be attached after initial rendering.
+    // The axis owns its final paint order, including on retained hover updates.
+    if(paint?.parentNode===svg&&svg.lastElementChild!==paint)svg.appendChild(paint);
     const cursor=badgeBounds(cursorTag);
     if(latest)latest.setAttribute('visibility','visible');
     const current=badgeBounds(latest),hideLatest=overlaps(current,cursor);
@@ -134,7 +167,9 @@ export function createPriceAxisLabelVisibility(svg,{cursorTag,padding=3}={}){
     const badges=[cursor,...(hideLatest?[]:[current])].filter(Boolean);
     for(const tick of ticks){
       const y=Number(tick.getAttribute('y')),size=Number(tick.getAttribute('font-size'))||12;
-      tick.setAttribute('visibility',badges.some(badge=>overlaps({top:y-size,bottom:y+3},badge))?'hidden':'visible');
+      const hidden=badges.some(badge=>overlaps({top:y-size,bottom:y+3},badge));
+      tick.setAttribute('visibility',hidden?'hidden':'visible');
+      if(paint)tick.setAttribute('pointer-events',hidden?'none':'bounding-box');
     }
   };
 }
@@ -180,10 +215,13 @@ export function panPriceDomain(axis, fraction) {
   return normalizePriceDomain(result, { scale: axis.scale });
 }
 
-/** A narrow axis-only hit surface; no overlay receives price-plot gestures. */
-export function priceAxisMarkup({ left, right, top, bottom }) {
+/** The full SVG surface has a continuous axis/frame even where no nice tick
+ * exists. This visual extent never changes the T..priceBottom price mapping.
+ * The input surface remains the original narrow price-axis rectangle. */
+export function priceAxisMarkup({ left, right, top, bottom, surfaceBottom='100%' }) {
   if (![left, right, top, bottom].every(Number.isFinite) || right <= left || bottom <= top) return '';
-  return `<g class="price-axis-interaction" data-price-axis="true"><title>가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤</title><rect x="${left}" y="${top}" width="${right - left}" height="${bottom - top}" fill="transparent" pointer-events="all" style="cursor:ns-resize;touch-action:none"/></g>`;
+  if(surfaceBottom!=='100%'&&(!Number.isFinite(surfaceBottom)||surfaceBottom<bottom))return '';
+  return `<g data-price-axis-paint-layer="true" pointer-events="none"><g class="price-axis-interaction" data-price-axis="true"><title>가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤</title><rect x="${left}" y="${top}" width="${right - left}" height="${bottom - top}" fill="transparent" pointer-events="all" style="cursor:ns-resize;touch-action:none"/></g><line data-price-axis-boundary="axis" x1="${left}" x2="${left}" y1="0" y2="${surfaceBottom}" stroke="var(--border,#333333)" vector-effect="non-scaling-stroke"/><line data-price-axis-boundary="top" x1="0" x2="${left}" y1="0" y2="0" stroke="var(--grid,#242424)" vector-effect="non-scaling-stroke"/><line data-price-axis-boundary="bottom" x1="0" x2="${left}" y1="${surfaceBottom}" y2="${surfaceBottom}" stroke="var(--grid,#242424)" vector-effect="non-scaling-stroke"/></g>`;
 }
 
 export function timeAxisMarkup({ left, right, top, bottom }) {

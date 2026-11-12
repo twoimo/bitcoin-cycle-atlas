@@ -1,5 +1,5 @@
 import { createPriceScale } from './chart-math.js?v=1.29.0';
-import { normalizePriceDomain, priceAxisMarkup, timeAxisMarkup, createPriceAxisLayout, createPriceAxisFormatter } from './price-axis.js?v=1.29.0';
+import { normalizePriceDomain, priceAxisMarkup, timeAxisMarkup, createPriceAxisLayout, createPriceAxisFormatter, createPriceAxisLabelVisibility } from './price-axis.js?v=1.29.0';
 import { createPriceDisplay } from './price-display.js?v=1.29.0';
 import { clearChartHover } from './chart-hover.js?v=1.29.0';
 import { researchAnnotationsMarkup } from './research-annotations.js?v=1.29.0';
@@ -30,16 +30,17 @@ export function renderEmptyPriceViewport({svg,layout,axisText=null,width:W,heigh
   }
   markup+=`<text class="chart-empty-message" x="${L+(W-L-R)/2}" y="${T+(B-T)/2}" text-anchor="middle" fill="#9eb2ca" font-size="11"><tspan x="${L+(W-L-R)/2}">${esc(message)}</tspan><tspan x="${L+(W-L-R)/2}" dy="18">빈 영역 · 드래그로 이동하거나 기본 범위로 복원</tspan></text>`;
   const annotations=researchAnnotationsMarkup({annotations:researchAnnotations,start,end,x,y:axis.y,left:L,right:W-R,top:T,bottom:B,clipId:clip,activeId:activeResearchAnnotationId,scenarioId});
-  markup+=annotations.markup+priceAxisMarkup({left:W-R,right:W,top:T,bottom:B})+timeAxisMarkup({left:L,right:W-R,top:bottom+8,bottom:H});
+  markup+=annotations.markup+priceAxisMarkup({left:W-R,right:W,top:T,bottom:B,surfaceBottom:H})+timeAxisMarkup({left:L,right:W-R,top:bottom+8,bottom:H});
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
   svg.parentElement?.style.setProperty('--plot-bottom-gap',`${H-bottom+6}px`);svg.parentElement?.style.setProperty('--plot-right-gap',`${R+7}px`);
   Object.assign(svg.dataset,{plotLeft:String(L),plotRight:String(W-R),plotTop:String(T),plotBottom:String(bottom),priceBottom:String(B),timeAxisTop:String(bottom+8),scale:axis.scale,unit,invertScale:String(Boolean(invertScale)),visiblePointCount:'0',observedCandleCount:'0',cycleIntervalCount:'0',cycleIntervalLabelCount:'0',cycleMarkerCount:'0',cycleMarkerLabelCount:'0',researchAnnotationCount:String(annotations.visibleCount),tool});
   delete svg.dataset.cycleIntervalBandTop;delete svg.dataset.cycleIntervalBandBottom;
   svg.innerHTML=markup;
+  createPriceAxisLabelVisibility(svg)();
   const activate=event=>{const item=event.target?.closest?.('[data-research-annotation]');if(item){onResearchAnnotation(item.dataset.researchAnnotation,{user:true});return true;}return false;};
   svg.onclick=activate;svg.onpointermove=svg.onpointerleave=svg.onkeyup=svg.onblur=null;
   svg.onkeydown=event=>{if(['Enter',' '].includes(event.key)&&activate(event)){event.preventDefault();event.stopPropagation();}};
   onHover({date:seconds?new Date(start*1000).toISOString():start,kind:'unavailable',completed:false,price:NaN,volume:NaN,displayedPrice:null,display:display.metadata,source,frequency});
-  const activeMarkup=markup;
+  const activeMarkup=svg.innerHTML;
   return {getPriceScale:()=>({...axis,left:L,right:W-R,display:display.metadata}),previewPointer:()=>false,clearPreview:()=>false,getDate:()=>null,getSelection:()=>null,hasPrevious:()=>false,hasNext:()=>false,selectDate(){},previous(){},next(){},updateCycleOverlayObstacles:()=>svg.innerHTML===activeMarkup?{changed:false,visibleCount:0,labelCount:0}:null};
 }
