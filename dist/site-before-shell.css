@@ -1605,7 +1605,7 @@ button.symbol-selector-trigger:hover,button.symbol-selector-trigger[aria-expande
 @media(min-width:621px){.symbol-search-dialog{max-height:calc(var(--dialog-viewport-height,100dvh) - 12vh - 16px)}}
 
 
-/* Source: eth-view.css; SHA-256: d18db82f6ec4d1b891a596309c842130312bedc5a9f53e752b75a4c30418e1fe */
+/* Source: eth-view.css; SHA-256: 73b7d0f7995200b4ec37b236736ee9fe9308284e4ad2df4a4205bc818db997cd */
 body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface);overflow:clip;height:100dvh;min-height:0;color:var(--equity-view-ink)}
 .eth-app{display:grid!important;grid-template-columns:44px minmax(0,1fr);grid-template-rows:42px minmax(0,1fr) 35px;width:100%;height:100dvh;padding:0!important;margin:0!important;max-width:none!important;font-family:var(--font,system-ui);overflow:hidden}
 .eth-app [hidden],.eth-data-dialog [hidden]{display:none!important}
@@ -1681,7 +1681,9 @@ body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface
   .eth-topbar .workbench-symbol{font-size:12px;padding:4px 8px}
   .eth-app .eth-icon{height:34px;width:33px;padding:8px}
   .eth-divider{margin:0 1px}.eth-top-spacer{min-width:0}
-  .eth-readout{top:7px;left:9px;max-width:calc(100% - 18px)}.eth-readout-line{flex-wrap:wrap;row-gap:1px}.eth-readout-source{top:48px;left:9px}.eth-readout-name{display:none}.eth-readout-line>strong{font-size:16px}
+  /* Reserve the measured price gutter plus its 7px gap; wrap complete values
+     and the date before the axis instead of clipping the readout. */
+  .eth-readout{top:7px;left:9px;max-width:calc(100% - var(--plot-right-gap,71px) - 9px)}.eth-readout-line{flex-wrap:wrap;row-gap:1px}.eth-readout-source{top:48px;left:9px}.eth-readout-name{display:none}.eth-readout-line>strong{font-size:16px}
   .eth-ohlc{gap:12px;font-size:11px}.eth-venue{font-size:11px}#eth-bar-time{font-size:11px}
   .eth-bottom{gap:1px;padding:0 4px env(safe-area-inset-bottom,0px)}.eth-periods{display:none}#eth-period-select{display:block;max-width:66px;font-size:11px;padding:4px 4px}
   #eth-status{padding:0 4px;font-size:11px}.eth-timezone{padding:0 4px;font-size:11px}.eth-bottom button{padding:4px 8px}

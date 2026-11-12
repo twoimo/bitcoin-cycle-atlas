@@ -73,7 +73,9 @@ body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface
   .eth-topbar .workbench-symbol{font-size:12px;padding:4px 8px}
   .eth-app .eth-icon{height:34px;width:33px;padding:8px}
   .eth-divider{margin:0 1px}.eth-top-spacer{min-width:0}
-  .eth-readout{top:7px;left:9px;max-width:calc(100% - 18px)}.eth-readout-line{flex-wrap:wrap;row-gap:1px}.eth-readout-source{top:48px;left:9px}.eth-readout-name{display:none}.eth-readout-line>strong{font-size:16px}
+  /* Reserve the measured price gutter plus its 7px gap; wrap complete values
+     and the date before the axis instead of clipping the readout. */
+  .eth-readout{top:7px;left:9px;max-width:calc(100% - var(--plot-right-gap,71px) - 9px)}.eth-readout-line{flex-wrap:wrap;row-gap:1px}.eth-readout-source{top:48px;left:9px}.eth-readout-name{display:none}.eth-readout-line>strong{font-size:16px}
   .eth-ohlc{gap:12px;font-size:11px}.eth-venue{font-size:11px}#eth-bar-time{font-size:11px}
   .eth-bottom{gap:1px;padding:0 4px env(safe-area-inset-bottom,0px)}.eth-periods{display:none}#eth-period-select{display:block;max-width:66px;font-size:11px;padding:4px 4px}
   #eth-status{padding:0 4px;font-size:11px}.eth-timezone{padding:0 4px;font-size:11px}.eth-bottom button{padding:4px 8px}
