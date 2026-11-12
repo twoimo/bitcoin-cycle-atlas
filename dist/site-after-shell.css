@@ -3471,7 +3471,7 @@ body .research-reader :is(a,button):focus-visible {
 }
 
 
-/* Source: relay-room.css; SHA-256: 51807ceb5eb98eaa513115ab1a55f79169cc893c077748d13a8efb36ba854de6 */
+/* Source: relay-room.css; SHA-256: 26429da0ee31a8b35101d0eff411c4faac3d462eef37607565580fb54461cbc8 */
 /* 릴레이 콘텐츠 방(Relay room) — 아틀라스 토큰 위에 텔레그램 웹의 채널 목록·대화 구조를 얹는다. */
 #relay-view[hidden]{display:none!important}
 body[data-page="relay"]{overflow:hidden}
@@ -3844,6 +3844,8 @@ body[data-page="relay"]{overflow:hidden}
 .relay-room .relay-detail .relay-detail-body{
   min-width:0;padding:16px 16px 32px;background:var(--surface-raised);
   border-radius:0 0 var(--card-radius-md) var(--card-radius-md);
+  /* Scrolled message paint stays inside this pane, below the page heading. */
+  clip-path:inset(0);
   overscroll-behavior:contain;
 }
 .relay-room .relay-empty{

@@ -370,6 +370,8 @@ body[data-page="relay"]{overflow:hidden}
 .relay-room .relay-detail .relay-detail-body{
   min-width:0;padding:16px 16px 32px;background:var(--surface-raised);
   border-radius:0 0 var(--card-radius-md) var(--card-radius-md);
+  /* Scrolled message paint stays inside this pane, below the page heading. */
+  clip-path:inset(0);
   overscroll-behavior:contain;
 }
 .relay-room .relay-empty{
