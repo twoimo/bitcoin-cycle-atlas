@@ -1,0 +1,36 @@
+{
+  "kind": "a9-boot-path-macos",
+  "measuredAt": "2026-11-12T11:12:56+09:00",
+  "sourceCommit": "6108910090a68bdbcf2f6eb0265a5da40d9a0159",
+  "implementationCommit": "ee6faf9f4a05decb55b3e6dbe32841897294083b",
+  "workingChanges": "",
+  "sourceIntegrity": "unchangedDuringRun",
+  "browserVersion": "Chrome/157.0.8103.79 (headless)",
+  "profile": "Fast 4G: latency 165ms, downlink 1012500B/s, upload 168750B/s, cacheDisabled, gzip, cpu 1",
+  "budgetMs": 2500,
+  "initialReadyMs": {
+    "390x844": 3197.1,
+    "320x740": 3261.6,
+    "768x1024": 3161.8,
+    "1024x768": 3216.5,
+    "1440x900": 3267.6,
+    "1920x1080": 3245.2
+  },
+  "initialPass": "0/6",
+  "functionalPass": "6/6",
+  "previousRun": {"commit": "8487b26", "initialReadyMs": "4542.6~4893.0", "initialPass": "0/6"},
+  "conferenceRegression": {"cases": 14, "passed": 14, "failures": 0, "status": "passed"},
+  "css": {"linksBefore": 41, "linksAfter": 4, "gzipBytesBefore": 142004, "gzipBytesAfter": 121311, "styleCheck": "ok (41 sources, 2 bundles, bytes+sha256 match)"},
+  "waterfall1440x900": {
+    "levelStartTimesMs": [175, 564, 748, 922, 1115, 1203, 1382, 1560, 1766, 2175, 2331, 2497, 2691, 2871],
+    "timelineJsonStartMs": 2871,
+    "timelineJsonDurationMs": 356,
+    "requests": 70,
+    "transferBytesTotal": 771686,
+    "scriptRequests": 55,
+    "scriptTransferBytes": 270379,
+    "cssRequests": 4,
+    "cssTransferBytes": 122511
+  },
+  "verdict": "A-9 open. CSS consolidation cut ~1.4s but the acceptance gate still fails; residual cost is module-graph depth (one RTT per import level) plus late timeline.json discovery."
+}
