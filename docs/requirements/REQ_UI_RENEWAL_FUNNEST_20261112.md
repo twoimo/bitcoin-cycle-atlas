@@ -1,6 +1,6 @@
 # 요구사항 — Funnest Charts UI/UX로 전면 리뉴얼 (초안)
 
-작성 2026-11-12. 상태: **P0는 `b787935` Mac에서 10/10·커버리지 40/40·`qualifiesP0Verification` true**. settings-icon 라이트·다크가 관측됐다. 표본과 4.5/3.0은 유지한다. **P1은 `ab1ce69`·`7589543`로 구현됐으나 닫지 않음**. `Q-R19P1-2`: 검증기 루트 404, market-us-768 알약 실패. [P1 구현·차단 영수증](../evidence/ui-renewal-p1/README.md). [구현·미충족 근거](../evidence/ui-renewal-p0/README.md) · [이전 Mac 영수증](../evidence/qa-r19p0-20261112/p0-f86ba0a.json) · [b787935 Mac 영수증](../evidence/qa-r19p1-20261112/mac-b787935.json). 대상 `twoimo/bitcoin-cycle-atlas`.
+작성 2026-11-12. 상태: **P0는 `b787935` Mac에서 10/10·커버리지 40/40·`qualifiesP0Verification` true**. settings-icon 라이트·다크가 관측됐다. 표본과 4.5/3.0은 유지한다. **P1은 `ab1ce69`·`7589543`로 구현됐으나 닫지 않음**. `Q-R19P1-2`의 루트 404·누락된 시장 P1 스타일은 `e2aaa93`·`fbe74b8`로 수정했다. 루트 HTTP200과 CSS 해석 radius999px/height44px는 확인했으며 네이티브 수용은 Mac 동일 게이트 재검증 대기다. [수정 근거](../evidence/qa-r19p1-2-f958db5/README.md). [P1 구현·차단 영수증](../evidence/ui-renewal-p1/README.md). [구현·미충족 근거](../evidence/ui-renewal-p0/README.md) · [이전 Mac 영수증](../evidence/qa-r19p0-20261112/p0-f86ba0a.json) · [b787935 Mac 영수증](../evidence/qa-r19p1-20261112/mac-b787935.json). 대상 `twoimo/bitcoin-cycle-atlas`.
 참조 저장소: `funnest-xyz/funnest-charts` (Apache-2.0, `main` @ `39cb29ae250448d520384c12de555b1c00727883`, 2026-11-12). 홈페이지 `https://charts.funnest.xyz`.
 방법: 저장소 소스(`apps/site/app/globals.css`, README)와 실제 홈페이지(1440×900)를 함께 읽고, `ui-ux-pro-max`로 방향을 대조했다. 참조 스크린샷은 `docs/evidence/funnest-ui-20261112/home-1440.png`.
 

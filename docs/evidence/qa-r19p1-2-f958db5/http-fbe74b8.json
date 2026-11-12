@@ -1,0 +1,210 @@
+{
+  "request": "Q-R19P1-2-f958db5",
+  "kind": "actual-p1-server-http",
+  "recordedAt": "2026-11-12T13:21:12.437Z",
+  "testedHead": "fbe74b8f03393595f504c46c94bd2425c1154741",
+  "testedTree": "9cd3d7bd818206b8058f69541e121c03609c5f54",
+  "workingTree": [],
+  "browserUsed": false,
+  "html": [
+    {
+      "path": "/bitcoin-cycle-atlas/",
+      "file": "index.html",
+      "status": 200,
+      "redirected": false,
+      "contentType": "text/html;charset=utf-8",
+      "cacheControl": "no-store",
+      "bytes": 57006,
+      "sha256": "f0f94d3e68e6cbcfbfa0fbfb8b34c76f08b95548d8a7b52cd9d9059540ff0769",
+      "matchesFileBytes": true,
+      "startsWithDoctype": true
+    },
+    {
+      "path": "/bitcoin-cycle-atlas/index.html",
+      "file": "index.html",
+      "status": 200,
+      "redirected": false,
+      "contentType": "text/html;charset=utf-8",
+      "cacheControl": "no-store",
+      "bytes": 57006,
+      "sha256": "f0f94d3e68e6cbcfbfa0fbfb8b34c76f08b95548d8a7b52cd9d9059540ff0769",
+      "matchesFileBytes": true,
+      "startsWithDoctype": true
+    },
+    {
+      "path": "/bitcoin-cycle-atlas/?page=outlook&symbol=BTCUSD",
+      "file": "index.html",
+      "status": 200,
+      "redirected": false,
+      "contentType": "text/html;charset=utf-8",
+      "cacheControl": "no-store",
+      "bytes": 57006,
+      "sha256": "f0f94d3e68e6cbcfbfa0fbfb8b34c76f08b95548d8a7b52cd9d9059540ff0769",
+      "matchesFileBytes": true,
+      "startsWithDoctype": true
+    },
+    {
+      "path": "/bitcoin-cycle-atlas/?page=evidence",
+      "file": "index.html",
+      "status": 200,
+      "redirected": false,
+      "contentType": "text/html;charset=utf-8",
+      "cacheControl": "no-store",
+      "bytes": 57006,
+      "sha256": "f0f94d3e68e6cbcfbfa0fbfb8b34c76f08b95548d8a7b52cd9d9059540ff0769",
+      "matchesFileBytes": true,
+      "startsWithDoctype": true
+    },
+    {
+      "path": "/bitcoin-cycle-atlas/?page=data",
+      "file": "index.html",
+      "status": 200,
+      "redirected": false,
+      "contentType": "text/html;charset=utf-8",
+      "cacheControl": "no-store",
+      "bytes": 57006,
+      "sha256": "f0f94d3e68e6cbcfbfa0fbfb8b34c76f08b95548d8a7b52cd9d9059540ff0769",
+      "matchesFileBytes": true,
+      "startsWithDoctype": true
+    },
+    {
+      "path": "/bitcoin-cycle-atlas/?page=ipo",
+      "file": "index.html",
+      "status": 200,
+      "redirected": false,
+      "contentType": "text/html;charset=utf-8",
+      "cacheControl": "no-store",
+      "bytes": 57006,
+      "sha256": "f0f94d3e68e6cbcfbfa0fbfb8b34c76f08b95548d8a7b52cd9d9059540ff0769",
+      "matchesFileBytes": true,
+      "startsWithDoctype": true
+    },
+    {
+      "path": "/bitcoin-cycle-atlas/?page=relay",
+      "file": "index.html",
+      "status": 200,
+      "redirected": false,
+      "contentType": "text/html;charset=utf-8",
+      "cacheControl": "no-store",
+      "bytes": 57006,
+      "sha256": "f0f94d3e68e6cbcfbfa0fbfb8b34c76f08b95548d8a7b52cd9d9059540ff0769",
+      "matchesFileBytes": true,
+      "startsWithDoctype": true
+    },
+    {
+      "path": "/bitcoin-cycle-atlas/?page=conference",
+      "file": "index.html",
+      "status": 200,
+      "redirected": false,
+      "contentType": "text/html;charset=utf-8",
+      "cacheControl": "no-store",
+      "bytes": 57006,
+      "sha256": "f0f94d3e68e6cbcfbfa0fbfb8b34c76f08b95548d8a7b52cd9d9059540ff0769",
+      "matchesFileBytes": true,
+      "startsWithDoctype": true
+    },
+    {
+      "path": "/bitcoin-cycle-atlas/market-lab/",
+      "file": "market-lab/index.html",
+      "status": 200,
+      "redirected": false,
+      "contentType": "text/html;charset=utf-8",
+      "cacheControl": "no-store",
+      "bytes": 57073,
+      "sha256": "96a50b9c7bf246ee9612f2f463095c64d5117ae397a233f60db17273c9b2c3b5",
+      "matchesFileBytes": true,
+      "startsWithDoctype": true
+    },
+    {
+      "path": "/bitcoin-cycle-atlas/market-lab/us/",
+      "file": "market-lab/us/index.html",
+      "status": 200,
+      "redirected": false,
+      "contentType": "text/html;charset=utf-8",
+      "cacheControl": "no-store",
+      "bytes": 57100,
+      "sha256": "7f2b97dbc970a235c963ae0d29b0aab2eaaac87308879ab10c9245623c01ef8b",
+      "matchesFileBytes": true,
+      "startsWithDoctype": true
+    }
+  ],
+  "stylesheets": [
+    {
+      "entry": "/bitcoin-cycle-atlas/market-lab/",
+      "path": "/bitcoin-cycle-atlas/styles.css?v=f01eb99a89ce",
+      "file": "styles.css",
+      "status": 200,
+      "bytes": 79180,
+      "sha256": "f01eb99a89ceb1ed81ab9d58e96c12973d351f50dbeef31d05dee8f38c498aa5",
+      "matchesFileBytes": true
+    },
+    {
+      "entry": "/bitcoin-cycle-atlas/market-lab/",
+      "path": "/bitcoin-cycle-atlas/site-before-shell.css?v=c6031ebb25d3",
+      "file": "site-before-shell.css",
+      "status": 200,
+      "bytes": 384477,
+      "sha256": "c6031ebb25d37b7a00a57ab119c262a69ba1443628aedd3a1d338efb349ce853",
+      "matchesFileBytes": true
+    },
+    {
+      "entry": "/bitcoin-cycle-atlas/market-lab/",
+      "path": "/bitcoin-cycle-atlas/atlas-shell.css?v=4fb8d682f7b8",
+      "file": "atlas-shell.css",
+      "status": 200,
+      "bytes": 50129,
+      "sha256": "4fb8d682f7b8a610a49fdd3792b89e5840df5e41302025e1818d83e8fd715e08",
+      "matchesFileBytes": true
+    },
+    {
+      "entry": "/bitcoin-cycle-atlas/market-lab/",
+      "path": "/bitcoin-cycle-atlas/site-after-shell.css?v=8910918e453a",
+      "file": "site-after-shell.css",
+      "status": 200,
+      "bytes": 170054,
+      "sha256": "8910918e453aca6262f1fd8edfbed940f0614c33965e461b18e1e2e227727b08",
+      "matchesFileBytes": true,
+      "includesExactP1Source": true,
+      "p1SourceSha256": "ac7fdce828317cbc493c49e3e8c8f1d04feb387e13a1202ef79f9bf55bf78584"
+    },
+    {
+      "entry": "/bitcoin-cycle-atlas/market-lab/us/",
+      "path": "/bitcoin-cycle-atlas/styles.css?v=f01eb99a89ce",
+      "file": "styles.css",
+      "status": 200,
+      "bytes": 79180,
+      "sha256": "f01eb99a89ceb1ed81ab9d58e96c12973d351f50dbeef31d05dee8f38c498aa5",
+      "matchesFileBytes": true
+    },
+    {
+      "entry": "/bitcoin-cycle-atlas/market-lab/us/",
+      "path": "/bitcoin-cycle-atlas/site-before-shell.css?v=c6031ebb25d3",
+      "file": "site-before-shell.css",
+      "status": 200,
+      "bytes": 384477,
+      "sha256": "c6031ebb25d37b7a00a57ab119c262a69ba1443628aedd3a1d338efb349ce853",
+      "matchesFileBytes": true
+    },
+    {
+      "entry": "/bitcoin-cycle-atlas/market-lab/us/",
+      "path": "/bitcoin-cycle-atlas/atlas-shell.css?v=4fb8d682f7b8",
+      "file": "atlas-shell.css",
+      "status": 200,
+      "bytes": 50129,
+      "sha256": "4fb8d682f7b8a610a49fdd3792b89e5840df5e41302025e1818d83e8fd715e08",
+      "matchesFileBytes": true
+    },
+    {
+      "entry": "/bitcoin-cycle-atlas/market-lab/us/",
+      "path": "/bitcoin-cycle-atlas/site-after-shell.css?v=8910918e453a",
+      "file": "site-after-shell.css",
+      "status": 200,
+      "bytes": 170054,
+      "sha256": "8910918e453aca6262f1fd8edfbed940f0614c33965e461b18e1e2e227727b08",
+      "matchesFileBytes": true,
+      "includesExactP1Source": true,
+      "p1SourceSha256": "ac7fdce828317cbc493c49e3e8c8f1d04feb387e13a1202ef79f9bf55bf78584"
+    }
+  ],
+  "status": "passed"
+}
