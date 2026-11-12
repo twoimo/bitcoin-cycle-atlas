@@ -1,6 +1,6 @@
 # 요구사항 — Funnest Charts UI/UX로 전면 리뉴얼 (초안)
 
-작성 2026-11-12. 현재 상태: **P0는 `b787935` Mac에서 10/10·커버리지 40/40·`qualifiesP0Verification:true`로 닫혔다. P1은 `67125bd` Mac에서 레이아웃 28/28·내비 56/56·차트 복귀 8/8·오버플로 0·failures 0·`qualifiesP1Verification:true`로 닫혔다.** 표본과 4.5/3.0은 유지한다. 다음 한 건 `P2A0-6ffbdda`의 임시 페이지·Datafeed·검증기는 `cefc568`·`b0cf985`에 구현했다. Mac `1c8f0c3`에서 startup 6/6·features 7/7·touch 4/4·keyboard 0/4·qualifier false였다. `Q-P2A0-1-15e9e7b` 수정 후보 `a4485e6`은 타깃·대비·검색 모달 키보드를 보완했다. **P2a-0은 `72d3aa1` Mac에서 startup 6/6·features 7/7·keyboard 4/4·touch 4/4·qualifier true로 닫혔다.** **P2 차트 크롬 후보 `0cf36d8`을 구현했으며 Mac 네이티브 검증 대기다.** 기존 엔진과 하이브리드 소유권을 유지한다. 같은 Linux 게이트는 ETH 0/53 시도·반응형 0/44·축 0/16으로 시작이 차단됐고 통과는 모두 0이다. P2를 닫지 않으며 P2b·P3·P4·P5·배포는 미착수다. [P2 구현·원본 영수증](../evidence/ui-renewal-p2/README.md). [P1 Mac 정본 영수증](../evidence/qa-r19p1-20261112/mac-67125bd.json) · [P0 Mac 영수증](../evidence/qa-r19p1-20261112/mac-b787935.json) · [P2a-0 구현·측정 한계](../evidence/p2a0-6ffbdda/README.md). 이전 P1 발견과 수정 이력은 [체크리스트 Q-R19P1-2~4](../LAUNCH_CHECKLIST_20261110.md)에 보존한다. 대상 `twoimo/bitcoin-cycle-atlas`.
+작성 2026-11-12. 현재 상태: **P0는 `b787935` Mac에서 10/10·커버리지 40/40·`qualifiesP0Verification:true`로 닫혔다. P1은 `67125bd` Mac에서 레이아웃 28/28·내비 56/56·차트 복귀 8/8·오버플로 0·failures 0·`qualifiesP1Verification:true`로 닫혔다.** 표본과 4.5/3.0은 유지한다. 다음 한 건 `P2A0-6ffbdda`의 임시 페이지·Datafeed·검증기는 `cefc568`·`b0cf985`에 구현했다. Mac `1c8f0c3`에서 startup 6/6·features 7/7·touch 4/4·keyboard 0/4·qualifier false였다. `Q-P2A0-1-15e9e7b` 수정 후보 `a4485e6`은 타깃·대비·검색 모달 키보드를 보완했다. **P2a-0은 `72d3aa1` Mac에서 startup 6/6·features 7/7·keyboard 4/4·touch 4/4·qualifier true로 닫혔다.** **P2 차트 크롬 후보 `0cf36d8`의 Mac 게이트는 ETH 17/53, 반응형 44/44, 축 16/16이다. P2는 닫지 않는다.** 기존 엔진과 하이브리드 소유권을 유지한다. 같은 Linux 게이트는 ETH 0/53 시도·반응형 0/44·축 0/16으로 시작이 차단됐고 통과는 모두 0이다. P2를 닫지 않으며 P2b·P3·P4·P5·배포는 미착수다. [P2 구현·원본 영수증](../evidence/ui-renewal-p2/README.md). [P1 Mac 정본 영수증](../evidence/qa-r19p1-20261112/mac-67125bd.json) · [P0 Mac 영수증](../evidence/qa-r19p1-20261112/mac-b787935.json) · [P2a-0 구현·측정 한계](../evidence/p2a0-6ffbdda/README.md). 이전 P1 발견과 수정 이력은 [체크리스트 Q-R19P1-2~4](../LAUNCH_CHECKLIST_20261110.md)에 보존한다. 대상 `twoimo/bitcoin-cycle-atlas`.
 참조 저장소: `funnest-xyz/funnest-charts` (Apache-2.0, `main` @ `39cb29ae250448d520384c12de555b1c00727883`, 2026-11-12). 홈페이지 `https://charts.funnest.xyz`.
 방법: 저장소 소스(`apps/site/app/globals.css`, README)와 실제 홈페이지(1440×900)를 함께 읽고, `ui-ux-pro-max`로 방향을 대조했다. 참조 스크린샷은 `docs/evidence/funnest-ui-20261112/home-1440.png`.
 
@@ -59,7 +59,7 @@ Atlas의 현재 다크·골드·hairlines 편집 톤을 **Funnest Charts의 밝�
   - `getBars` ← 각 자산의 원본 OHLCV·시장 컨트롤러. P2a-0은 `dist/data/btc-volume.json`의 완료 BTC 일봉만 연결하며 원본에 없는 시간 단위를 합성하지 않는다.
   - `subscribeBars` ← 정적 사이트에서는 no-op, 리플레이·라이브는 별도
   - `searchSymbols` ← 기존 심볼 선택기, `getSparkline` ← 최근 종가
-- 유지: 정확한 `0.6.16`에는 좌표 변환·`addOverlay`, 기본 bar replay와 종목 compare가 있다. Atlas의 예측 밴드·역사 사건·고정 예측/시점 증거 replay·사이클 정렬 compare와의 패리티는 별도다. P2a-0의 API/계약 대조 결과 해당 네 기능은 **하이브리드로 기존 엔진 유지**를 선택했다(§3.3.2). 네이티브 수용은 Mac `1c8f0c3`에서 keyboard 0/4로 실패했고, `72d3aa1`에서 keyboard 4/4·qualifier true로 닫혔다. 현재 한 건은 P2 차트 크롬 후보 `0cf36d8`의 Mac 검증이다(§4.1).
+- 유지: 정확한 `0.6.16`에는 좌표 변환·`addOverlay`, 기본 bar replay와 종목 compare가 있다. Atlas의 예측 밴드·역사 사건·고정 예측/시점 증거 replay·사이클 정렬 compare와의 패리티는 별도다. P2a-0의 API/계약 대조 결과 해당 네 기능은 **하이브리드로 기존 엔진 유지**를 선택했다(§3.3.2). 네이티브 수용은 Mac `1c8f0c3`에서 keyboard 0/4로 실패했고, `72d3aa1`에서 keyboard 4/4·qualifier true로 닫혔다. 현재 한 건은 P2 차트 크롬 후보 `0cf36d8`의 Mac ETH 17/53 실패다(§4.1, Q-P2CHROME-1).
 - 테마: `colorScheme:'system'`을 Atlas 토큰(라이트/다크)과 맞추고, 빨강 상승/파랑 하락은 패키지 기본값을 따른다.
 - 라이선스: Apache-2.0. 번들·NOTICE에 출처 표기, 브랜드 로고·이름은 사용하지 않는다.
 
@@ -189,6 +189,8 @@ Atlas의 현재 다크·골드·hairlines 편집 톤을 **Funnest Charts의 밝�
 깨끗한 후보에서 7개 원래 게이트를 순차 실행했으나 Linux Chromium의 `socket() failed: Operation not permitted`로 제품 케이스에 진입하지 못했다. 원본 보고서 상태는 모두 failed, 종료 코드 1이다. 스크린샷 0장·오버플로/축 오차 미측정이다. 전체 소스 1,454개 전후 해시가 동일해 `sourceStable:true`이며, `complete:false`, `qualifies:false`다. **0시도를 통과로 쓰지 않고 P2를 Mac 검증 대기로 둔다.**
 
 집중 단위·계약 **286/286**, typecheck·Pages build/verify(**104파일·9경로**)·static(**1,159파일·221스크립트·847참조**)는 통과했다. 원래 토큰 표본 **40/40**, 6개 렌더러의 색 문자열 외 바이트 동일, 보호/하네스/소유권 파일 **22/22 동일**을 기록했다. CSS 요청 4개 유지, gzip-9 합계 +1,734B이며 A-9 시간 영향 0ms를 주장하지 않는다. P1과 P2a-0은 닫힌 상태로 보존하고 P2b·P3·P4·P5·배포는 시작하지 않았다. [상세·Mac 재현 명령](../evidence/ui-renewal-p2/README.md) · [수치](../evidence/ui-renewal-p2/summary.json).
+
+**Mac 재검증(2026-11-13 02:58:03–03:16:29 KST, Chrome 157.0.8103.79, HEAD `4b66980`)** — 제품 `0cf36d8`과 문서 HEAD 사이 제품 경로 차이는 없다. ETH 53시도·17통과·36실패. 반응형 44/44. 축 16/16, `qualifiesPriceAxisVerification:true`. A-9 6/6, painted 2,171.3–2,207.7ms. `sourceStable:true`, runner `complete:true`, `qualifies:false`. 실패 서명은 data 식별 10, `dark()` 22, 제목 이동 3, 리서치 밀도 1이다. 검사기와 채널 90·44px·2px·4.5/3.0·축 ±2px·2,500ms는 유지했다. 짝 비교가 없어 A-9 0ms 영향은 주장하지 않는다. P2는 열림이다. [Mac 영수증](../evidence/qa-p2-chrome-mac-4b66980/README.md).
 
 ## 5. 수용 기준
 
