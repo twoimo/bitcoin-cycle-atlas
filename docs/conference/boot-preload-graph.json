@@ -1,0 +1,883 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-conference-boot-preloads",
+  "route": "conference",
+  "generator": {
+    "file": "scripts/build-site-preloads.mjs",
+    "sha256": "1ded164871db255509410c58f7d6708f2bcabc6d05a72f75fe967c6e5f71c8fb"
+  },
+  "roots": [
+    "./site-entry.js?v=1.37.8",
+    "./app.js?v=1.37.8",
+    "./conference/player.js?v=1.0.0"
+  ],
+  "sharedModulePreload": "./site-entry.js?v=1.37.8",
+  "modules": [
+    {
+      "url": "./site-entry.js?v=1.37.8",
+      "file": "site-entry.js",
+      "bytes": 1775,
+      "sha256": "9d384923ce3d16cf8d9a5dad24eb342ece823563ddcda5e9ab442d3ee91baaf8",
+      "depth": 0,
+      "imports": [
+        {
+          "specifier": "./loading-surfaces.js",
+          "url": "./loading-surfaces.js"
+        },
+        {
+          "specifier": "./atlas-shell.js?v=1.36.1",
+          "url": "./atlas-shell.js?v=1.36.1"
+        },
+        {
+          "specifier": "./atlas-navigation.js?v=1.36.1",
+          "url": "./atlas-navigation.js?v=1.36.1"
+        },
+        {
+          "specifier": "./atlas-navigation.js?v=1.36.1",
+          "url": "./atlas-navigation.js?v=1.36.1"
+        },
+        {
+          "specifier": "./journal-entry.js?v=1.29.0",
+          "url": "./journal-entry.js?v=1.29.0"
+        },
+        {
+          "specifier": "./performance-diagnostics.js?v=1.29.0",
+          "url": "./performance-diagnostics.js?v=1.29.0"
+        }
+      ]
+    },
+    {
+      "url": "./app.js?v=1.37.8",
+      "file": "app.js",
+      "bytes": 55926,
+      "sha256": "a3f543eae01f9bc945f2e3234a170007a5de68176d62a6f1b87c8fa707a8d04f",
+      "depth": 0,
+      "imports": [
+        {
+          "specifier": "./site-paths.js",
+          "url": "./site-paths.js"
+        },
+        {
+          "specifier": "./cycle-engine.js?v=1.29.0",
+          "url": "./cycle-engine.js?v=1.29.0"
+        },
+        {
+          "specifier": "./data-source.js?v=1.29.0",
+          "url": "./data-source.js?v=1.29.0"
+        },
+        {
+          "specifier": "./published-data.js?v=1.29.0",
+          "url": "./published-data.js?v=1.29.0"
+        },
+        {
+          "specifier": "./compare-shell-host.js?v=1.37.8",
+          "url": "./compare-shell-host.js?v=1.37.8"
+        },
+        {
+          "specifier": "./comparison-url-state.js?v=1.37.8",
+          "url": "./comparison-url-state.js?v=1.37.8"
+        },
+        {
+          "specifier": "./btc-refresh-status.js?v=1.29.0",
+          "url": "./btc-refresh-status.js?v=1.29.0"
+        },
+        {
+          "specifier": "./cycle-timing.js?v=1.29.0",
+          "url": "./cycle-timing.js?v=1.29.0"
+        },
+        {
+          "specifier": "./timing-view.js?v=1.29.0",
+          "url": "./timing-view.js?v=1.29.0"
+        },
+        {
+          "specifier": "./peak-zones.js?v=1.29.0",
+          "url": "./peak-zones.js?v=1.29.0"
+        },
+        {
+          "specifier": "./forecast-engine.js?v=1.29.0",
+          "url": "./forecast-engine.js?v=1.29.0"
+        },
+        {
+          "specifier": "./peak-view.js?v=1.29.0",
+          "url": "./peak-view.js?v=1.29.0"
+        },
+        {
+          "specifier": "./forecast-view.js?v=1.29.0",
+          "url": "./forecast-view.js?v=1.29.0"
+        },
+        {
+          "specifier": "./daily-data-view.js?v=1.32.1",
+          "url": "./daily-data-view.js?v=1.32.1"
+        },
+        {
+          "specifier": "./relay-room.js?v=1.37.8",
+          "url": "./relay-room.js?v=1.37.8"
+        },
+        {
+          "specifier": "./conference/route.js?v=1.0.0",
+          "url": "./conference/route.js?v=1.0.0"
+        },
+        {
+          "specifier": "./asset-comparison-source.js?v=1.32.1",
+          "url": "./asset-comparison-source.js?v=1.32.1"
+        },
+        {
+          "specifier": "./ipo-view.js?v=1.32.1",
+          "url": "./ipo-view.js?v=1.32.1"
+        },
+        {
+          "specifier": "./market-lab-view.js?v=1.31.3",
+          "url": "./market-lab-view.js?v=1.31.3"
+        }
+      ]
+    },
+    {
+      "url": "./conference/player.js?v=1.0.0",
+      "file": "conference/player.js",
+      "bytes": 41138,
+      "sha256": "5c57643f1ae8463a66f6acee712e8a9f218c88d180f88f1ab44ece528ba8b837",
+      "depth": 0,
+      "imports": [
+        {
+          "specifier": "./timeline.js",
+          "url": "./conference/timeline.js"
+        }
+      ]
+    },
+    {
+      "url": "./loading-surfaces.js",
+      "file": "loading-surfaces.js",
+      "bytes": 8287,
+      "sha256": "f62d142df3ee3ae00ae10f63373d0421d785c253e7fc71acb8231714340e07cb",
+      "depth": 1,
+      "imports": [
+        {
+          "specifier": "./vendor/skullet/skullet.js",
+          "url": "./vendor/skullet/skullet.js"
+        },
+        {
+          "specifier": "./rsi-chart-layout.js",
+          "url": "./rsi-chart-layout.js"
+        }
+      ]
+    },
+    {
+      "url": "./atlas-shell.js?v=1.36.1",
+      "file": "atlas-shell.js",
+      "bytes": 12004,
+      "sha256": "c6b033c026bf835293a565f6ecc6992159519af87b4a9a47701c9349e8ecd226",
+      "depth": 1,
+      "imports": [
+        {
+          "specifier": "./site-paths.js",
+          "url": "./site-paths.js"
+        },
+        {
+          "specifier": "./atlas-navigation.js?v=1.36.1",
+          "url": "./atlas-navigation.js?v=1.36.1"
+        },
+        {
+          "specifier": "./atlas-shell-state.js",
+          "url": "./atlas-shell-state.js"
+        },
+        {
+          "specifier": "./center-workbench.js?v=1.36.1",
+          "url": "./center-workbench.js?v=1.36.1"
+        },
+        {
+          "specifier": "./ui/shell-slots.js",
+          "url": "./ui/shell-slots.js"
+        },
+        {
+          "specifier": "./ui/page-description.js",
+          "url": "./ui/page-description.js"
+        },
+        {
+          "specifier": "./content-shell.js?v=1.38.0",
+          "url": "./content-shell.js?v=1.38.0"
+        }
+      ]
+    },
+    {
+      "url": "./atlas-navigation.js?v=1.36.1",
+      "file": "atlas-navigation.js",
+      "bytes": 7243,
+      "sha256": "070b8ea1f27834ac53182065341b5ed208a0ebcb8cfa91725671f9b577dbc46b",
+      "depth": 1,
+      "imports": [
+        {
+          "specifier": "./workspace-instruments.js",
+          "url": "./workspace-instruments.js"
+        }
+      ]
+    },
+    {
+      "url": "./journal-entry.js?v=1.29.0",
+      "file": "journal-entry.js",
+      "bytes": 2840,
+      "sha256": "a758cf9b43c704f68d372664e54a49168aa13a33c9a8566a30781b1268fddbf0",
+      "depth": 1,
+      "imports": []
+    },
+    {
+      "url": "./performance-diagnostics.js?v=1.29.0",
+      "file": "performance-diagnostics.js",
+      "bytes": 8318,
+      "sha256": "30a2a0cadcfda3f6f782b86ced0b2e1a6833d344ffc53f948ac3150b617419ac",
+      "depth": 1,
+      "imports": []
+    },
+    {
+      "url": "./site-paths.js",
+      "file": "site-paths.js",
+      "bytes": 1283,
+      "sha256": "98591cd5f4d2770a6b30abd5606ba68f4538bf82252db28bda13e88eb2cece86",
+      "depth": 1,
+      "imports": []
+    },
+    {
+      "url": "./cycle-engine.js?v=1.29.0",
+      "file": "cycle-engine.js",
+      "bytes": 14793,
+      "sha256": "f6b88a839f22b96c72306e87bd4760337d259a3190830325b570520472c84346",
+      "depth": 1,
+      "imports": []
+    },
+    {
+      "url": "./data-source.js?v=1.29.0",
+      "file": "data-source.js",
+      "bytes": 8903,
+      "sha256": "1cde9df18712feb1373d1cd77362437e7fc59e2dfee9165d461170f55953e60b",
+      "depth": 1,
+      "imports": [
+        {
+          "specifier": "./cycle-engine.js?v=1.29.0",
+          "url": "./cycle-engine.js?v=1.29.0"
+        }
+      ]
+    },
+    {
+      "url": "./published-data.js?v=1.29.0",
+      "file": "published-data.js",
+      "bytes": 3441,
+      "sha256": "48fb43d2b39b31ac755b41dffa2907620f1c622a0c7ca4cd3adf90ed15747010",
+      "depth": 1,
+      "imports": [
+        {
+          "specifier": "./data-source.js?v=1.29.0",
+          "url": "./data-source.js?v=1.29.0"
+        }
+      ]
+    },
+    {
+      "url": "./compare-shell-host.js?v=1.37.8",
+      "file": "compare-shell-host.js",
+      "bytes": 4570,
+      "sha256": "017c029fe04ded93556e21ad71c6d42e54fa4b9014996a6f69048bcd7dd0f5d1",
+      "depth": 1,
+      "imports": []
+    },
+    {
+      "url": "./comparison-url-state.js?v=1.37.8",
+      "file": "comparison-url-state.js",
+      "bytes": 3489,
+      "sha256": "5c8d26ca71fd5b145b946f6dbc26526732087e790f0739de24b4b95bcec82a4c",
+      "depth": 1,
+      "imports": []
+    },
+    {
+      "url": "./btc-refresh-status.js?v=1.29.0",
+      "file": "btc-refresh-status.js",
+      "bytes": 4947,
+      "sha256": "90bf073c462c7c97a995ee15cd9157f1c908535fa27f8ae7785576a546100e70",
+      "depth": 1,
+      "imports": []
+    },
+    {
+      "url": "./cycle-timing.js?v=1.29.0",
+      "file": "cycle-timing.js",
+      "bytes": 21604,
+      "sha256": "fc5d26727e4f4dec162340aceca89274d42739f1c00889acbf7c8c8e0281d518",
+      "depth": 1,
+      "imports": [
+        {
+          "specifier": "./cycle-engine.js?v=1.29.0",
+          "url": "./cycle-engine.js?v=1.29.0"
+        }
+      ]
+    },
+    {
+      "url": "./timing-view.js?v=1.29.0",
+      "file": "timing-view.js",
+      "bytes": 13890,
+      "sha256": "e47f6f69db210f7cc3086ab7717c1f4231faaca8ec4506467a8ae019677dadba",
+      "depth": 1,
+      "imports": []
+    },
+    {
+      "url": "./peak-zones.js?v=1.29.0",
+      "file": "peak-zones.js",
+      "bytes": 14438,
+      "sha256": "20e17c4f54bf238b90657d3bf5f8c90bacd6b55a9929fed40bd88f1e1ca7fd99",
+      "depth": 1,
+      "imports": [
+        {
+          "specifier": "./cycle-engine.js?v=1.29.0",
+          "url": "./cycle-engine.js?v=1.29.0"
+        },
+        {
+          "specifier": "./cycle-timing.js?v=1.29.0",
+          "url": "./cycle-timing.js?v=1.29.0"
+        }
+      ]
+    },
+    {
+      "url": "./forecast-engine.js?v=1.29.0",
+      "file": "forecast-engine.js",
+      "bytes": 33795,
+      "sha256": "e3b22730e99ca3a636b825fd84dff898cf20c784f546c483c0a77b6d30867d6f",
+      "depth": 1,
+      "imports": [
+        {
+          "specifier": "./cycle-engine.js?v=1.29.0",
+          "url": "./cycle-engine.js?v=1.29.0"
+        },
+        {
+          "specifier": "./cycle-timing.js?v=1.29.0",
+          "url": "./cycle-timing.js?v=1.29.0"
+        }
+      ]
+    },
+    {
+      "url": "./peak-view.js?v=1.29.0",
+      "file": "peak-view.js",
+      "bytes": 10647,
+      "sha256": "9e12550a63b65097ee612b73e5afee488f7e75059cd5d41aa4feedc34a4c798c",
+      "depth": 1,
+      "imports": [
+        {
+          "specifier": "./cycle-engine.js?v=1.29.0",
+          "url": "./cycle-engine.js?v=1.29.0"
+        }
+      ]
+    },
+    {
+      "url": "./forecast-view.js?v=1.29.0",
+      "file": "forecast-view.js",
+      "bytes": 35888,
+      "sha256": "5cf9fc72e9e7f8a5f811aa434e27526e83b33e19d99621af8c120b3139a560d8",
+      "depth": 1,
+      "imports": [
+        {
+          "specifier": "./cycle-engine.js?v=1.29.0",
+          "url": "./cycle-engine.js?v=1.29.0"
+        }
+      ]
+    },
+    {
+      "url": "./daily-data-view.js?v=1.32.1",
+      "file": "daily-data-view.js",
+      "bytes": 36347,
+      "sha256": "c20f197801abdcd5265c5e15f5a6d2ed08ef8c9d778145876029e40c69a6133e",
+      "depth": 1,
+      "imports": [
+        {
+          "specifier": "./loading-surfaces.js",
+          "url": "./loading-surfaces.js"
+        },
+        {
+          "specifier": "./asset-comparison.js?v=1.32.1",
+          "url": "./asset-comparison.js?v=1.32.1"
+        },
+        {
+          "specifier": "./asset-judgment-history-view.js?v=1.32.1",
+          "url": "./asset-judgment-history-view.js?v=1.32.1"
+        }
+      ]
+    },
+    {
+      "url": "./relay-room.js?v=1.37.8",
+      "file": "relay-room.js",
+      "bytes": 28427,
+      "sha256": "b001b38bbbfd562ac42736e8b1564a3ad20b0732cdebdda5c8a9d4b22d752482",
+      "depth": 1,
+      "imports": []
+    },
+    {
+      "url": "./conference/route.js?v=1.0.0",
+      "file": "conference/route.js",
+      "bytes": 1488,
+      "sha256": "2211cfbaba16f187a51d0e8e7f2c8849a7f6e02185cc0f02345895173eef145d",
+      "depth": 1,
+      "imports": []
+    },
+    {
+      "url": "./asset-comparison-source.js?v=1.32.1",
+      "file": "asset-comparison-source.js",
+      "bytes": 812,
+      "sha256": "4ec4ac85a0ce67687e2d39f3fb22a67319b6d45da31c2b9daa282b4cab3b34f6",
+      "depth": 1,
+      "imports": []
+    },
+    {
+      "url": "./ipo-view.js?v=1.32.1",
+      "file": "ipo-view.js",
+      "bytes": 9759,
+      "sha256": "4f6c0041ddc7b767648cca030068badeccec1dc349603505ff46f23835ec6508",
+      "depth": 1,
+      "imports": [
+        {
+          "specifier": "./loading-surfaces.js",
+          "url": "./loading-surfaces.js"
+        },
+        {
+          "specifier": "./ipo-month-calendar.js?v=1.32.1",
+          "url": "./ipo-month-calendar.js?v=1.32.1"
+        }
+      ]
+    },
+    {
+      "url": "./market-lab-view.js?v=1.31.3",
+      "file": "market-lab-view.js",
+      "bytes": 33762,
+      "sha256": "df6ea7a5bf9be5fe490ad1e276eaf6cd054f121c775512748316d9c94d703432",
+      "depth": 1,
+      "imports": [
+        {
+          "specifier": "./loading-surfaces.js",
+          "url": "./loading-surfaces.js"
+        },
+        {
+          "specifier": "./market-lab-math.js?v=1.31.3",
+          "url": "./market-lab-math.js?v=1.31.3"
+        }
+      ]
+    },
+    {
+      "url": "./conference/timeline.js",
+      "file": "conference/timeline.js",
+      "bytes": 11439,
+      "sha256": "f5b17340ab5b3ac220045eba2d5d9f8b034e15de61c5bb87b3ca8bf222a50818",
+      "depth": 1,
+      "imports": []
+    },
+    {
+      "url": "./vendor/skullet/skullet.js",
+      "file": "vendor/skullet/skullet.js",
+      "bytes": 53659,
+      "sha256": "159653b71266900bcff7df3403c1e04cf34d1822074431a131716eedda15e71c",
+      "depth": 2,
+      "imports": []
+    },
+    {
+      "url": "./rsi-chart-layout.js",
+      "file": "rsi-chart-layout.js",
+      "bytes": 1074,
+      "sha256": "5ab7f81690f01803c232ba0755496d6ebf2379a522415c810d6a6c82abf29052",
+      "depth": 2,
+      "imports": []
+    },
+    {
+      "url": "./atlas-shell-state.js",
+      "file": "atlas-shell-state.js",
+      "bytes": 483,
+      "sha256": "9c420fcb99ce1a344adb4fb38313339fd5c1f16f1a987e92e6aad56a85c8aa12",
+      "depth": 2,
+      "imports": []
+    },
+    {
+      "url": "./center-workbench.js?v=1.36.1",
+      "file": "center-workbench.js",
+      "bytes": 26059,
+      "sha256": "2decc81ec9db604edb6dd95b6beb92a9582b25e76f60f8c65b2506a6ffaa8f6c",
+      "depth": 2,
+      "imports": [
+        {
+          "specifier": "./site-paths.js",
+          "url": "./site-paths.js"
+        },
+        {
+          "specifier": "./atlas-navigation.js?v=1.36.1",
+          "url": "./atlas-navigation.js?v=1.36.1"
+        },
+        {
+          "specifier": "./workspace-instruments.js",
+          "url": "./workspace-instruments.js"
+        },
+        {
+          "specifier": "./legacy-workspace-toolbar.js",
+          "url": "./legacy-workspace-toolbar.js"
+        },
+        {
+          "specifier": "./rsi-workbench-controls.js?v=1.36.1",
+          "url": "./rsi-workbench-controls.js?v=1.36.1"
+        },
+        {
+          "specifier": "./ui/center-loading.js",
+          "url": "./ui/center-loading.js"
+        }
+      ]
+    },
+    {
+      "url": "./ui/shell-slots.js",
+      "file": "ui/shell-slots.js",
+      "bytes": 11359,
+      "sha256": "837decee5ee5356da35f54934c85c365fe4e21b87dbe4127236aa8c2820023ab",
+      "depth": 2,
+      "imports": [
+        {
+          "specifier": "./mobile-shell-heading.js",
+          "url": "./ui/mobile-shell-heading.js"
+        }
+      ]
+    },
+    {
+      "url": "./ui/page-description.js",
+      "file": "ui/page-description.js",
+      "bytes": 8873,
+      "sha256": "f9407527f597fe42c863bc1b2a4334d9cd36fb84067552b7f3a1099f864fe70c",
+      "depth": 2,
+      "imports": []
+    },
+    {
+      "url": "./content-shell.js?v=1.38.0",
+      "file": "content-shell.js",
+      "bytes": 8414,
+      "sha256": "f24f49ce8dcfebe7cd9adb8f2f305fce34e7d445c6823aaa28c31ab42b9eb633",
+      "depth": 2,
+      "imports": []
+    },
+    {
+      "url": "./workspace-instruments.js",
+      "file": "workspace-instruments.js",
+      "bytes": 2028,
+      "sha256": "e0c63c6e4c0cc308c8aacf93220a3c4b5fc0d558fccdfdc79fa2d8e39fcddf2b",
+      "depth": 2,
+      "imports": [
+        {
+          "specifier": "./rsi-instruments.js",
+          "url": "./rsi-instruments.js"
+        }
+      ]
+    },
+    {
+      "url": "./asset-comparison.js?v=1.32.1",
+      "file": "asset-comparison.js",
+      "bytes": 15117,
+      "sha256": "d0112fae4ff80de80dd3acce787f83159ddc3c1834ac8f3663e6427060b30c85",
+      "depth": 2,
+      "imports": [
+        {
+          "specifier": "./cycle-engine.js?v=1.29.0",
+          "url": "./cycle-engine.js?v=1.29.0"
+        }
+      ]
+    },
+    {
+      "url": "./asset-judgment-history-view.js?v=1.32.1",
+      "file": "asset-judgment-history-view.js",
+      "bytes": 22459,
+      "sha256": "631f432ef93f363de2b156c9abc7822d310231d6af5921b25df509841573e0c8",
+      "depth": 2,
+      "imports": [
+        {
+          "specifier": "./loading-surfaces.js",
+          "url": "./loading-surfaces.js"
+        },
+        {
+          "specifier": "./cycle-engine.js?v=1.29.0",
+          "url": "./cycle-engine.js?v=1.29.0"
+        },
+        {
+          "specifier": "./asset-judgment-history.js?v=1.32.1",
+          "url": "./asset-judgment-history.js?v=1.32.1"
+        },
+        {
+          "specifier": "./asset-judgment-records.js?v=1.32.1",
+          "url": "./asset-judgment-records.js?v=1.32.1"
+        }
+      ]
+    },
+    {
+      "url": "./ipo-month-calendar.js?v=1.32.1",
+      "file": "ipo-month-calendar.js",
+      "bytes": 7756,
+      "sha256": "b660ac3f549d0d37c6d21e0658227a9c90d04aeb641b35c3089b9a06acab50f7",
+      "depth": 2,
+      "imports": []
+    },
+    {
+      "url": "./market-lab-math.js?v=1.31.3",
+      "file": "market-lab-math.js",
+      "bytes": 18450,
+      "sha256": "fbf92300b64e3e5e320386c7ddacc9d533cff5d7447620b3d6a365d66cdc2579",
+      "depth": 2,
+      "imports": []
+    },
+    {
+      "url": "./legacy-workspace-toolbar.js",
+      "file": "legacy-workspace-toolbar.js",
+      "bytes": 18539,
+      "sha256": "8ee5c721cef1714c3749e22e73486db710101ab28d4c7206e126fe6b3769a204",
+      "depth": 3,
+      "imports": []
+    },
+    {
+      "url": "./rsi-workbench-controls.js?v=1.36.1",
+      "file": "rsi-workbench-controls.js",
+      "bytes": 21619,
+      "sha256": "5cbb494715fa1fe9829d968b4bb5b1f0304c82b72834a06d3086d1a0407feee1",
+      "depth": 3,
+      "imports": [
+        {
+          "specifier": "./workspace-instruments.js",
+          "url": "./workspace-instruments.js"
+        },
+        {
+          "specifier": "./ui/shell-slots.js",
+          "url": "./ui/shell-slots.js"
+        },
+        {
+          "specifier": "./ui/chart-url-state.js",
+          "url": "./ui/chart-url-state.js"
+        },
+        {
+          "specifier": "./price-axis.js",
+          "url": "./price-axis.js"
+        }
+      ]
+    },
+    {
+      "url": "./ui/center-loading.js",
+      "file": "ui/center-loading.js",
+      "bytes": 3811,
+      "sha256": "2c6ae05d85ae27c1665da154d94640acce1e650eaad5e41d136dccf7a00abe54",
+      "depth": 3,
+      "imports": [
+        {
+          "specifier": "../loading-surfaces.js",
+          "url": "./loading-surfaces.js"
+        }
+      ]
+    },
+    {
+      "url": "./ui/mobile-shell-heading.js",
+      "file": "ui/mobile-shell-heading.js",
+      "bytes": 6468,
+      "sha256": "b13d9612749a74c6649edccbda1853bc86c27b278dcdbb7e9f6f055ad736b303",
+      "depth": 3,
+      "imports": []
+    },
+    {
+      "url": "./rsi-instruments.js",
+      "file": "rsi-instruments.js",
+      "bytes": 1082,
+      "sha256": "019ea9bac6ff5ad792cc9ed070bd37c55290dae3e2374f5ea38ef25dad4cb6a2",
+      "depth": 3,
+      "imports": []
+    },
+    {
+      "url": "./asset-judgment-history.js?v=1.32.1",
+      "file": "asset-judgment-history.js",
+      "bytes": 9464,
+      "sha256": "190be9550616f51ad0ea64c449d6fa68fd7ce4804a39cb799e199927392745cf",
+      "depth": 3,
+      "imports": [
+        {
+          "specifier": "./cycle-engine.js?v=1.29.0",
+          "url": "./cycle-engine.js?v=1.29.0"
+        },
+        {
+          "specifier": "./asset-comparison.js?v=1.32.1",
+          "url": "./asset-comparison.js?v=1.32.1"
+        }
+      ]
+    },
+    {
+      "url": "./asset-judgment-records.js?v=1.32.1",
+      "file": "asset-judgment-records.js",
+      "bytes": 12232,
+      "sha256": "affba5194c81e2046bb0917c258123788136a64a038e9915b899521300c0ece1",
+      "depth": 3,
+      "imports": []
+    },
+    {
+      "url": "./ui/chart-url-state.js",
+      "file": "ui/chart-url-state.js",
+      "bytes": 3482,
+      "sha256": "9446c9ebe6ec9f1acd7cc33a0ed7f1306019d72d54f00f2bb857cc4b59cfeabf",
+      "depth": 4,
+      "imports": [
+        {
+          "specifier": "../ohlc-data.js",
+          "url": "./ohlc-data.js"
+        },
+        {
+          "specifier": "../workspace-state.js",
+          "url": "./workspace-state.js"
+        },
+        {
+          "specifier": "../price-axis.js",
+          "url": "./price-axis.js"
+        }
+      ]
+    },
+    {
+      "url": "./price-axis.js",
+      "file": "price-axis.js",
+      "bytes": 13639,
+      "sha256": "dee046eec4431b14c3e73e973e8e1511fd5709712e2bebe1485ef04776870ee7",
+      "depth": 4,
+      "imports": []
+    },
+    {
+      "url": "./ohlc-data.js",
+      "file": "ohlc-data.js",
+      "bytes": 9968,
+      "sha256": "b2a5104c22b0fced11d747cae9fd7797a876b0c7de4e30492376acae791e7f5d",
+      "depth": 5,
+      "imports": []
+    },
+    {
+      "url": "./workspace-state.js",
+      "file": "workspace-state.js",
+      "bytes": 6717,
+      "sha256": "797a61ef67ae093cc817d4e6c7b428033821228398c2590b3669d1fc137b6851",
+      "depth": 5,
+      "imports": [
+        {
+          "specifier": "./cycle-engine.js?v=1.29.0",
+          "url": "./cycle-engine.js?v=1.29.0"
+        },
+        {
+          "specifier": "./ohlc-data.js?v=1.29.0",
+          "url": "./ohlc-data.js?v=1.29.0"
+        },
+        {
+          "specifier": "./intraday-history.js?v=1.29.0",
+          "url": "./intraday-history.js?v=1.29.0"
+        },
+        {
+          "specifier": "./price-axis.js?v=1.29.0",
+          "url": "./price-axis.js?v=1.29.0"
+        },
+        {
+          "specifier": "./price-display.js?v=1.29.0",
+          "url": "./price-display.js?v=1.29.0"
+        }
+      ]
+    },
+    {
+      "url": "./ohlc-data.js?v=1.29.0",
+      "file": "ohlc-data.js",
+      "bytes": 9968,
+      "sha256": "b2a5104c22b0fced11d747cae9fd7797a876b0c7de4e30492376acae791e7f5d",
+      "depth": 6,
+      "imports": []
+    },
+    {
+      "url": "./intraday-history.js?v=1.29.0",
+      "file": "intraday-history.js",
+      "bytes": 4738,
+      "sha256": "7bec4f8c3f31571d4494801cfe22286fe9a87f0434c031eca1fd27f1f9e556f2",
+      "depth": 6,
+      "imports": [
+        {
+          "specifier": "./ohlc-data.js?v=1.29.0",
+          "url": "./ohlc-data.js?v=1.29.0"
+        }
+      ]
+    },
+    {
+      "url": "./price-axis.js?v=1.29.0",
+      "file": "price-axis.js",
+      "bytes": 13639,
+      "sha256": "dee046eec4431b14c3e73e973e8e1511fd5709712e2bebe1485ef04776870ee7",
+      "depth": 6,
+      "imports": []
+    },
+    {
+      "url": "./price-display.js?v=1.29.0",
+      "file": "price-display.js",
+      "bytes": 2350,
+      "sha256": "7558e6e6f56825f66c4268a6939808abe21b731bf0fbe3fa8c5766d1b8e87179",
+      "depth": 6,
+      "imports": []
+    }
+  ],
+  "timeline": {
+    "url": "./conference/timeline.json",
+    "file": "conference/timeline.json",
+    "bytes": 1044921,
+    "sha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad",
+    "rel": "preload",
+    "as": "fetch",
+    "crossorigin": "anonymous",
+    "fetchpriority": "high"
+  },
+  "modulePreloads": [
+    "./conference/timeline.js",
+    "./app.js?v=1.37.8",
+    "./conference/player.js?v=1.0.0",
+    "./loading-surfaces.js",
+    "./atlas-shell.js?v=1.36.1",
+    "./atlas-navigation.js?v=1.36.1",
+    "./journal-entry.js?v=1.29.0",
+    "./performance-diagnostics.js?v=1.29.0",
+    "./site-paths.js",
+    "./cycle-engine.js?v=1.29.0",
+    "./data-source.js?v=1.29.0",
+    "./published-data.js?v=1.29.0",
+    "./compare-shell-host.js?v=1.37.8",
+    "./comparison-url-state.js?v=1.37.8",
+    "./btc-refresh-status.js?v=1.29.0",
+    "./cycle-timing.js?v=1.29.0",
+    "./timing-view.js?v=1.29.0",
+    "./peak-zones.js?v=1.29.0",
+    "./forecast-engine.js?v=1.29.0",
+    "./peak-view.js?v=1.29.0",
+    "./forecast-view.js?v=1.29.0",
+    "./daily-data-view.js?v=1.32.1",
+    "./relay-room.js?v=1.37.8",
+    "./conference/route.js?v=1.0.0",
+    "./asset-comparison-source.js?v=1.32.1",
+    "./ipo-view.js?v=1.32.1",
+    "./market-lab-view.js?v=1.31.3",
+    "./vendor/skullet/skullet.js",
+    "./rsi-chart-layout.js",
+    "./atlas-shell-state.js",
+    "./center-workbench.js?v=1.36.1",
+    "./ui/shell-slots.js",
+    "./ui/page-description.js",
+    "./content-shell.js?v=1.38.0",
+    "./workspace-instruments.js",
+    "./asset-comparison.js?v=1.32.1",
+    "./asset-judgment-history-view.js?v=1.32.1",
+    "./ipo-month-calendar.js?v=1.32.1",
+    "./market-lab-math.js?v=1.31.3",
+    "./legacy-workspace-toolbar.js",
+    "./rsi-workbench-controls.js?v=1.36.1",
+    "./ui/center-loading.js",
+    "./ui/mobile-shell-heading.js",
+    "./rsi-instruments.js",
+    "./asset-judgment-history.js?v=1.32.1",
+    "./asset-judgment-records.js?v=1.32.1",
+    "./ui/chart-url-state.js",
+    "./price-axis.js",
+    "./ohlc-data.js",
+    "./workspace-state.js",
+    "./ohlc-data.js?v=1.29.0",
+    "./intraday-history.js?v=1.29.0",
+    "./price-axis.js?v=1.29.0",
+    "./price-display.js?v=1.29.0"
+  ],
+  "summary": {
+    "moduleUrls": 55,
+    "uniqueModuleFiles": 53,
+    "conferenceModulePreloads": 54,
+    "sharedModulePreloads": 1,
+    "staticImportEdges": 81,
+    "maxShortestImportDepth": 6,
+    "moduleBytesByUrl": 744700
+  }
+}

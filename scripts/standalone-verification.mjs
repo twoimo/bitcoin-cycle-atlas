@@ -10,6 +10,8 @@ import { PROJECT_REPLAY_ORIGIN,parseProjectReplayBaseline } from '../dist/projec
 
 export async function verifyStandaloneArtifact(html, dist) {
   assert(!/id="atlas-(?:optional-fonts|fonts-script)"/.test(html), 'Standalone must not request external font stylesheets');
+  assert(!/id=["']atlas-boot-preloads["']/.test(html), 'Standalone must not retain HTTP preload generation');
+  assert(!/<link\b[^>]*\brel=["'](?:modulepreload|preload)["']/i.test(html), 'Standalone must not retain HTTP preload links');
   const maps = [...html.matchAll(/<script\b[^>]*type=["']importmap["'][^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(maps.length, 1, 'Standalone requires exactly one import map');
   const map = JSON.parse(maps[0][1]);

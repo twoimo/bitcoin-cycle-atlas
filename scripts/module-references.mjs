@@ -119,7 +119,7 @@ function stringValue(token) {
     });
 }
 
-export function javascriptModuleReferences(source) {
+export function javascriptModuleReferences(source, {includeDynamic = true} = {}) {
   const tokens = codeTokens(source), specifiers = [];
   function afterBraces(start) {
     let depth = 0;
@@ -142,7 +142,8 @@ export function javascriptModuleReferences(source) {
       if (tokens[cursor]?.value === '(') {
         // Computed imports remain intentionally unresolved, as in the original
         // verifier. A literal argument may be followed by import attributes.
-        if ([')', ','].includes(tokens[cursor + 2]?.value)) add(tokens[cursor + 1]);
+        // Preload graphs opt out: a lazy import is not a static dependency.
+        if (includeDynamic && [')', ','].includes(tokens[cursor + 2]?.value)) add(tokens[cursor + 1]);
         continue;
       }
       if (tokens[cursor]?.type === 'word') {
@@ -160,6 +161,6 @@ export function javascriptModuleReferences(source) {
   return specifiers;
 }
 
-export function javascriptModuleSpecifiers(source) {
-  return javascriptModuleReferences(source).map(reference => reference.specifier);
+export function javascriptModuleSpecifiers(source, options) {
+  return javascriptModuleReferences(source, options).map(reference => reference.specifier);
 }

@@ -124,6 +124,14 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   const html = await readFile(first, 'utf8');
   assert.equal(await readFile(second, 'utf8'), html);
   const verification = await verifyStandaloneArtifact(html, isolated.dist);
+  assert.doesNotMatch(html, /id=["']atlas-boot-preloads["']|<link\b[^>]*\brel=["'](?:modulepreload|preload)["']/i);
+  for (const preload of [
+    '<script id="atlas-boot-preloads">/* HTTP hint generation must be stripped */</script>',
+    '<link rel="modulepreload" href="https://atlas.invalid/site-entry.js">',
+    '<link rel="preload" as="fetch" crossorigin="anonymous" href="https://atlas.invalid/conference/timeline.json">',
+  ]) {
+    await assert.rejects(verifyStandaloneArtifact(html.replace('</head>', preload + '</head>'), isolated.dist), /Standalone must not retain HTTP preload/);
+  }
   t.diagnostic(JSON.stringify({standaloneBytes:Buffer.byteLength(html),buildMilliseconds:Math.round(buildMilliseconds),relayImages:verification.relayImages,relayImageBytes:verification.relayImageBytes}));
   const bundle = await standaloneModuleMap(isolated.dist);
   assert.equal(verification.modules, Object.keys(bundle.imports).length);
