@@ -7,7 +7,7 @@ import {tmpdir} from 'node:os';
 import {join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parseConferenceMediaArguments, CONFERENCE_MEDIA_EXIT,
-  assertConferenceBrowserMediaResponses} from '../scripts/verify-conference-media-browser.mjs';
+  assertConferenceBrowserMediaResponses, assertConferenceSlideReceipt} from '../scripts/verify-conference-media-browser.mjs';
 
 const execute = promisify(execFile);
 const root = fileURLToPath(new URL('..', import.meta.url));
@@ -39,7 +39,7 @@ test('media browser CLI cannot override the viewport, 150ms budget, source data,
   assert.deepEqual(CONFERENCE_MEDIA_EXIT, {passed:0, failed:1, skipped:2});
   const values = parseConferenceMediaArguments(['--dist', 'copy', '--out', 'receipt', '--browser', 'chrome'], '/tmp/base');
   assert.deepEqual(values, {dist:'/tmp/base/copy', out:'/tmp/base/receipt', browser:'/tmp/base/chrome'});
-  for (const name of ['--budget', '--threshold', '--timeline', '--skip-is-pass', '--fixture', '--viewport']) {
+  for (const name of ['--budget', '--threshold', '--timeline', '--skip-is-pass', '--fixture', '--viewport', '--seek-budget', '--readback-frames']) {
     assert.throws(() => parseConferenceMediaArguments([name, '1']), /Unknown option/);
   }
   assert.throws(() => parseConferenceMediaArguments(['--dist']), /Missing value/);
@@ -59,6 +59,11 @@ for (const [name, manifest, reason] of [
     assert.equal(report.preflight.passed, false); assert.equal(report.preflight.skipped, true);
     assert.ok(report.unexecuted.includes('installed-media HTTP Range/206'));
     assert.equal(report.http, undefined); assert.equal(report.browserVersion, undefined);
+    assert.equal(report.budgets.pageTransitionMs, 150); assert.equal(report.budgets.nativeSeekReadbackMs, 64);
+    assert.equal(report.budgets.exactSeekRequest, true); assert.equal(report.budgets.playerNativeClockRoundingMs, 1);
+    for (const file of ['conference-media-observation.mjs', 'conference-media-slide-observer.mjs', 'conference-media-seek-observer.mjs']) {
+      assert.match(report.harnessSources['scripts/' + file], /^[a-f0-9]{64}$/);
+    }
     assert.equal(await readFile(join(f.out, 'chrome.stderr.log'), 'utf8'), '');
     assert.match(result.stdout, /"status":"skipped"/);
     assert.equal(await readFile(join(f.dist, 'conference/timeline.json'), 'utf8'), timeline.toString());
@@ -116,4 +121,54 @@ test('fallback HTTP evidence allows only the intended manifest404 and never hide
   const image = {method:'GET', url:'/bitcoin-cycle-atlas/conference/pages/final/0001.webp', path:'conference/pages/final/0001.webp', status:404};
   assert.throws(() => assertConferenceBrowserMediaResponses([missing, image], 'missing', null), /absent media must not be requested/);
   assert.throws(() => assertConferenceBrowserMediaResponses([{...image, status:null, aborted:true}], 'unavailable', null), /absent media must not be requested/);
+});
+
+function slideReceipt(mode = 'transition') {
+  const src = 'http://127.0.0.1:1234/bitcoin-cycle-atlas/conference/pages/r17/0002.webp';
+  return {armed:{token:1, mode},
+    measured:{token:1, mode, page:2, file:'pages/r17/0002.webp', deck:'r17-clean-257', decoded:true,
+      requestedSrc:src, currentSrc:src, width:1800, height:1012,
+      milliseconds:mode === 'baseline' ? null : 150, trusted:mode === 'baseline' ? null : true},
+    snapshot:{state:{deck:'r17-clean-257', page:'2'}, h1Count:1,
+      image:{visible:true, complete:true, requestedSrc:src, currentSrc:src, width:1800, height:1012},
+      seekEvidence:{passed:true, requestedEventTime:2239.5}},
+    step:{page:2, file:'pages/r17/0002.webp', t0:2239.5}, asset:{width:1800, height:1012}, deckId:'r17-clean-257'};
+}
+
+test('an already-selected first page has a decoded baseline, never an invented zero-ms transition', () => {
+  assert.doesNotThrow(() => assertConferenceSlideReceipt(slideReceipt('baseline')));
+  for (const changed of [{milliseconds:0}, {trusted:true}, {mode:'transition'}, {decoded:false}]) {
+    const input = slideReceipt('baseline'); Object.assign(input.measured, changed);
+    assert.throws(() => assertConferenceSlideReceipt(input));
+  }
+});
+
+test('the actual slide receipt keeps 150ms including stale-decode retries and requires trusted input', () => {
+  assert.doesNotThrow(() => assertConferenceSlideReceipt(slideReceipt()));
+  for (const milliseconds of [150.000001, 164, null, NaN, Infinity, -1]) {
+    const input = slideReceipt(); input.measured.milliseconds = milliseconds;
+    assert.throws(() => assertConferenceSlideReceipt(input), /exceeds 150ms/);
+  }
+  const untrusted = slideReceipt(); untrusted.measured.trusted = false;
+  assert.throws(() => assertConferenceSlideReceipt(untrusted));
+});
+
+test('a baseline or transition cannot hide a wrong event mapping, changed current image, or extra h1', () => {
+  for (const mode of ['baseline', 'transition']) {
+    for (const mutate of [
+      input => { input.snapshot.seekEvidence.requestedEventTime += 0.01; },
+      input => { delete input.snapshot.seekEvidence; },
+      input => { input.snapshot.state.page = '6'; },
+      input => { input.snapshot.image.requestedSrc += '?new-source'; },
+      input => { input.snapshot.image.currentSrc += '?changed-after-baseline'; },
+      input => { input.snapshot.image.complete = false; },
+      input => { input.snapshot.h1Count = 2; },
+      input => { input.measured.token = 0; },
+      input => { input.measured.error = 'EncodingError: The source image cannot be decoded.'; },
+      input => { input.measured.requestedSrc += '?stale'; },
+    ]) {
+      const input = slideReceipt(mode); mutate(input);
+      assert.throws(() => assertConferenceSlideReceipt(input));
+    }
+  }
 });

@@ -4,12 +4,28 @@
 // certify what a person hears, visual correctness, or production delivery.
 import assert from 'node:assert/strict';
 import {assertConferenceTimeline} from '../dist/conference/timeline.js';
-import {validateConferenceMediaManifest} from '../dist/conference/media.js';
+import {CONFERENCE_MEDIA_SETTINGS, validateConferenceMediaManifest} from '../dist/conference/media.js';
 
 const finite = value => typeof value === 'number' && Number.isFinite(value);
 const rounded = value => Math.round(value * 1e9) / 1e9;
 const interruptedEvents = new Set(['waiting', 'stalled', 'seeking', 'seeked', 'ended', 'error',
   'abort', 'emptied', 'loadstart', 'pause']);
+
+// A requested seek and the browser's subsequent clock read-back are separate
+// observations. The supplied macOS readings differ from their intended targets
+// by 10–50ms; they do not record native setter requests or establish the cause.
+// Three AAC-LC frames are the smallest whole-frame budget covering that maximum:
+// ceil(50 / (1024/48000*1000))=3. This 64ms read-back policy applies only AFTER
+// independent setter evidence proves every requested local time was exact.
+// It is not an AAC/browser timing guarantee or a mapping budget; app/native
+// coherence retains 1ms, and a changed request cannot spend the frame allowance.
+export const CONFERENCE_SEEK_READBACK = Object.freeze({
+  aacFrameSamples:1024,
+  sampleRate:CONFERENCE_MEDIA_SETTINGS.audioSampleRate,
+  readbackFrames:3,
+  readbackSeconds:3 * 1024 / CONFERENCE_MEDIA_SETTINGS.audioSampleRate,
+  stateRoundingSeconds:0.001,
+});
 
 export function buildConferenceMediaPlaybackPlan({timeline, manifest}) {
   assertConferenceTimeline(timeline);
@@ -83,6 +99,61 @@ function sourceMatchesFile(src, file) {
     const parsed = new URL(src, 'http://evidence.invalid/');
     return ['http:', 'https:'].includes(parsed.protocol) && parsed.pathname.endsWith('/' + file);
   } catch { return false; }
+}
+
+export function assertConferenceSeekEvidence({snapshot, requests, session, eventTime, settings}) {
+  assert.equal(settings?.audioCodec, 'aac', 'Seek clock policy requires the locked AAC encoding');
+  assert.equal(settings?.audioSampleRate, CONFERENCE_SEEK_READBACK.sampleRate,
+    'Seek clock policy requires the locked 48 kHz sample rate');
+  assert.ok(session && finite(session.t0) && session.t0 >= 0 && finite(session.t1) && session.t1 > session.t0,
+    'Seek evidence requires a valid session interval');
+  assert.ok(finite(eventTime) && eventTime >= session.t0 && eventTime < session.t1,
+    'Requested event time must belong to the expected session');
+  const expectedLocalTime = eventTime - session.t0;
+  assert.ok(Array.isArray(requests) && requests.length > 0, 'Seek evidence requires the observed native setter attempts');
+  const accepted = [];
+  for (const request of requests) {
+    assert.ok(request && finite(request.currentTime), 'Seek evidence requires the observed native setter request');
+    assert.ok(sourceMatchesFile(request.src, session.file), 'Native seek request source differs from the expected session');
+    assert.equal(request.currentTime, expectedLocalTime, 'Requested native time must exactly equal event time minus session offset');
+    assert.equal(typeof request.accepted, 'boolean', 'Seek attempt must record whether the native setter accepted it');
+    if (request.accepted) accepted.push(request);
+  }
+  assert.ok(accepted.length > 0, 'Seek evidence requires at least one successful native setter attempt');
+  const request = accepted.at(-1);
+
+  assert.equal(snapshot?.state?.state, 'ready'); assert.equal(snapshot?.h1Count, 1);
+  const audio = snapshot?.audio;
+  assert.ok(audio && sourceMatchesFile(audio.currentSrc, session.file), 'Native read-back source differs from the expected session');
+  assert.equal(audio.error, null, 'Native seek read-back has a media error');
+  assert.equal(audio.seeking, false, 'Native seek has not settled');
+  assert.equal(audio.paused, true, 'Seek read-back must precede playback advancement');
+  assert.ok(Number.isInteger(audio.readyState) && audio.readyState >= 1 && audio.readyState <= 4,
+    'Seek read-back requires native metadata');
+  assert.ok(finite(audio.currentTime) && audio.currentTime >= 0, 'Native seek read-back must be a finite nonnegative time');
+  const stateValue = snapshot.state.time;
+  assert.ok((typeof stateValue === 'string' && stateValue.trim() !== '' || finite(stateValue))
+    && finite(Number(stateValue)), 'Player event clock must be present and finite');
+  const stateEventTime = Number(stateValue), nativeEventTime = session.t0 + audio.currentTime;
+  const nativeDifferenceSeconds = audio.currentTime - expectedLocalTime;
+  // At multi-hour offsets, subtracting doubles can slightly exceed an exact
+  // mathematical boundary. This numerical allowance is a few ULPs only, not
+  // an extra audio frame, clock granularity, or application timing tolerance.
+  const arithmeticRoundoffSeconds = 4 * Number.EPSILON * Math.max(1, Math.abs(audio.currentTime), Math.abs(expectedLocalTime));
+  assert.ok(Math.abs(nativeDifferenceSeconds) <= CONFERENCE_SEEK_READBACK.readbackSeconds + arithmeticRoundoffSeconds,
+    'Native seek read-back exceeds the three-frame AAC budget (64ms)');
+  assert.ok(Math.abs(stateEventTime - nativeEventTime) <= CONFERENCE_SEEK_READBACK.stateRoundingSeconds,
+    'Player event clock must follow session offset plus native read-back within 1ms');
+  return {passed:true, sessionId:session.id, file:session.file, requestedEventTime:eventTime,
+    expectedLocalTime, requestedLocalTime:request.currentTime, observedLocalTime:audio.currentTime,
+    requestCount:requests.length, acceptedRequestCount:accepted.length,
+    observedNativeEventTime:nativeEventTime, observedPlayerEventTime:stateEventTime,
+    nativeDifferenceMs:rounded(nativeDifferenceSeconds * 1000),
+    playerNativeDifferenceMs:rounded((stateEventTime - nativeEventTime) * 1000),
+    frameSamples:CONFERENCE_SEEK_READBACK.aacFrameSamples, sampleRate:CONFERENCE_SEEK_READBACK.sampleRate,
+    readbackFrames:CONFERENCE_SEEK_READBACK.readbackFrames,
+    readbackBudgetMs:CONFERENCE_SEEK_READBACK.readbackSeconds * 1000,
+    stateRoundingBudgetMs:CONFERENCE_SEEK_READBACK.stateRoundingSeconds * 1000};
 }
 
 export function assertConferenceSourceJoinEvidence({samples, events}, join) {

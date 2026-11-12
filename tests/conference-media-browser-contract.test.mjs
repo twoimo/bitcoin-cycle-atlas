@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
-import {buildConferenceMediaPlaybackPlan, assertConferenceSourceJoinEvidence} from '../scripts/conference-media-browser-contract.mjs';
+import {buildConferenceMediaPlaybackPlan, assertConferenceSourceJoinEvidence,
+  CONFERENCE_SEEK_READBACK, assertConferenceSeekEvidence} from '../scripts/conference-media-browser-contract.mjs';
 import {CONFERENCE_MEDIA_SETTINGS, CONFERENCE_MEDIA_LIMITS, assertConferenceMediaManifest} from '../dist/conference/media.js';
 import {conferenceSegmentIndex, conferenceMappedPage} from '../dist/conference/player.js';
 
@@ -134,6 +135,163 @@ test('locked timeline yields all 200 mapped pages, 15 sessions, 14 boundaries an
     assert.equal(conferenceMappedPage(timeline.segments,selected,deck.id).page,step.page);
     assert.equal(timeline.segments[step.index].t0,step.t0);
     assert.equal(timeline.segments[step.index].page[deck.id],step.page);
+  }
+});
+
+function seekEvidence({offset=2116.38, duration=1165.96, localTime=100, difference=0}={}) {
+  const session={id:'session-01',talkId:'01',file:'audio/session-01.m4a',t0:offset,t1:offset+duration};
+  const eventTime=offset+localTime, expectedLocalTime=eventTime-offset;
+  const currentTime=expectedLocalTime+difference;
+  const src='http://127.0.0.1:43210/bitcoin-cycle-atlas/conference/'+session.file;
+  return {session,eventTime,settings:{...CONFERENCE_MEDIA_SETTINGS},requests:[{src,currentTime:expectedLocalTime,accepted:true}],
+    snapshot:{h1Count:1,state:{state:'ready',time:String(Math.round((offset+currentTime)*1000)/1000)},
+      audio:{currentSrc:src,currentTime,readyState:1,seeking:false,paused:true,error:null}}};
+}
+
+test('seek read-back uses exactly three locked AAC frames while requested time stays exact',()=>{
+  assert.deepEqual(CONFERENCE_SEEK_READBACK,{aacFrameSamples:1024,sampleRate:48000,
+    readbackFrames:3,readbackSeconds:.064,stateRoundingSeconds:.001});
+  assert.equal(Object.isFrozen(CONFERENCE_SEEK_READBACK),true);
+  const captured=seekEvidence({difference:.05}),before=JSON.stringify(captured);
+  const result=assertConferenceSeekEvidence(captured);
+  assert.equal(result.passed,true);assert.equal(result.expectedLocalTime,captured.eventTime-captured.session.t0);
+  assert.equal(result.requestedLocalTime,result.expectedLocalTime);assert.equal(result.nativeDifferenceMs,50);
+  assert.equal(result.readbackBudgetMs,64);assert.equal(Math.abs(result.playerNativeDifferenceMs),0);
+  assert.equal(result.stateRoundingBudgetMs,1);assert.equal(JSON.stringify(captured),before);
+});
+
+test('the eleven supplied macOS readings fit the frame policy when unit inputs independently supply exact setter requests',async()=>{
+  const mac=JSON.parse(await readFile(new URL('../docs/conference/P1C_B_MACOS_HARNESS_20261112.json',import.meta.url),'utf8'));
+  const timeline=JSON.parse(await readFile(new URL('../dist/conference/timeline.json',import.meta.url),'utf8'));
+  const failures=mac.boundarySeekDetail.filter(row=>row.status==='failed');assert.equal(failures.length,11);
+  for(const row of failures){
+    const id=row.id.match(/^boundary-(\d+)-/)[1],talk=timeline.talks.find(talk=>talk.id===id);
+    const eventTime=talk.t1-1.5,requestedLocalTime=eventTime-talk.t0;
+    assert.ok(Math.abs(requestedLocalTime-row.requestedLocalTime)<1e-9,'Recorded intended target agrees with the unchanged program arithmetic');
+    // The original report contains intended targets and final readings, not
+    // native setter captures. Exact requests here are constructed unit inputs;
+    // this does not establish what was requested or caused the Mac differences.
+    const captured=seekEvidence({offset:talk.t0,duration:talk.t1-talk.t0,localTime:requestedLocalTime});
+    captured.session.id='session-'+id;captured.session.talkId=id;captured.session.file='audio/session-'+id+'.m4a';
+    captured.eventTime=eventTime;captured.requests[0].currentTime=eventTime-talk.t0;
+    captured.requests[0].src='http://127.0.0.1:43210/bitcoin-cycle-atlas/conference/'+captured.session.file;
+    captured.snapshot.audio.currentSrc=captured.requests[0].src;
+    captured.snapshot.audio.currentTime=row.observedCurrentTime;
+    captured.snapshot.state.time=String(Math.round((talk.t0+row.observedCurrentTime)*1000)/1000);
+    const result=assertConferenceSeekEvidence(captured);
+    assert.equal(result.requestedLocalTime,eventTime-talk.t0);
+    assert.ok(Math.abs(result.nativeDifferenceMs)>1,'These read-backs were rejected by the old1ms native assertion');
+    assert.ok(Math.abs(result.nativeDifferenceMs)<=64);
+    assert.ok(Math.abs(result.playerNativeDifferenceMs)<=1);
+  }
+});
+
+test('clock-aligned samples still use the same request/read-back path; the Mac JSON explicitly lists three passing boundaries',async()=>{
+  const mac=JSON.parse(await readFile(new URL('../docs/conference/P1C_B_MACOS_HARNESS_20261112.json',import.meta.url),'utf8'));
+  const aligned=mac.boundarySeekDetail.filter(row=>row.status==='passed');
+  // The accompanying prose calls these four, but its case inventory and JSON
+  // list three. Do not invent a fourth raw read-back or change the20-case count.
+  assert.deepEqual(aligned.map(row=>row.id),['boundary-04-05','boundary-05-06','boundary-06-07']);
+  for(const row of aligned){
+    assert.equal(row.observedCurrentTime,null,'The source did not record an aligned read-back value');
+    const captured=seekEvidence({localTime:row.requestedLocalTime,duration:row.requestedLocalTime+2});
+    const result=assertConferenceSeekEvidence(captured);
+    assert.equal(result.nativeDifferenceMs,0,'This is an aligned unit sample, not a fabricated Mac measurement');
+  }
+});
+
+test('native read-back accepts the64ms frame edge and rejects drift beyond it in either direction',()=>{
+  for(const difference of [-.064,.064]){
+    const result=assertConferenceSeekEvidence(seekEvidence({offset:17956.51,localTime:2084.81,duration:2086.31,difference}));
+    assert.ok(Math.abs(Math.abs(result.nativeDifferenceMs)-64)<1e-8);
+  }
+  for(const difference of [-.064001,.064001,-.08,.08]){
+    assert.throws(()=>assertConferenceSeekEvidence(seekEvidence({difference})),/three-frame AAC budget/);
+  }
+});
+
+test('an incorrect requested seek cannot be hidden by a correct or in-budget native read-back',()=>{
+  for(const drift of [.000000001,.001,.05]){
+    const captured=seekEvidence();captured.requests[0].currentTime+=drift;
+    assert.throws(()=>assertConferenceSeekEvidence(captured),/Requested native time must exactly equal/);
+  }
+  const wrongTarget=seekEvidence({difference:.02});wrongTarget.eventTime+=.02;
+  assert.throws(()=>assertConferenceSeekEvidence(wrongTarget),/Requested native time must exactly equal/);
+  const wrongOffset=seekEvidence({difference:.02});wrongOffset.session.t0+=.02;
+  assert.throws(()=>assertConferenceSeekEvidence(wrongOffset),/Requested native time must exactly equal/);
+});
+
+test('every setter attempt belongs to the exact operation, and a successful retry cannot hide a wrong request',()=>{
+  const captured=seekEvidence({difference:.02});
+  captured.requests.unshift({...captured.requests[0],accepted:false,error:'InvalidStateError before metadata'});
+  const result=assertConferenceSeekEvidence(captured);
+  assert.equal(result.requestCount,2);assert.equal(result.acceptedRequestCount,1);
+  const wrongRetry=clone(captured);wrongRetry.requests[0].currentTime+=.02;
+  assert.throws(()=>assertConferenceSeekEvidence(wrongRetry),/Requested native time must exactly equal/);
+  const wrongLater=clone(captured);wrongLater.requests.push({...captured.requests[1],currentTime:captured.requests[1].currentTime+.02});
+  assert.throws(()=>assertConferenceSeekEvidence(wrongLater),/Requested native time must exactly equal/);
+  const failed=clone(captured);failed.requests.forEach(request=>{request.accepted=false;});
+  assert.throws(()=>assertConferenceSeekEvidence(failed),/at least one successful/);
+});
+
+test('a later request derived from a rounded URL fails even when its final read-back fits the64ms policy',async()=>{
+  const mac=JSON.parse(await readFile(new URL('../docs/conference/P1C_B_MACOS_HARNESS_20261112.json',import.meta.url),'utf8'));
+  const timeline=JSON.parse(await readFile(new URL('../dist/conference/timeline.json',import.meta.url),'utf8'));
+  const failures=mac.boundarySeekDetail.filter(row=>row.status==='failed');assert.equal(failures.length,11);
+  for(const row of failures){
+    const id=row.id.match(/^boundary-(\d+)-/)[1],talk=timeline.talks.find(talk=>talk.id===id);
+    const eventTime=talk.t1-1.5,localTime=eventTime-talk.t0;
+    const roundedEventTime=Math.round(eventTime*10)/10,roundedLocalTime=roundedEventTime-talk.t0;
+    assert.notEqual(roundedLocalTime,localTime);
+    // This is a possible writeUrl -> syncFromUrl mechanism, not evidence that
+    // the original browser execution dispatched those events in this order.
+    const captured=seekEvidence({offset:talk.t0,duration:talk.t1-talk.t0,localTime});
+    captured.eventTime=eventTime;captured.requests[0].currentTime=localTime;
+    captured.snapshot.audio.currentTime=roundedLocalTime;
+    captured.snapshot.state.time=String(roundedEventTime);
+    const inBudget=assertConferenceSeekEvidence(captured);
+    assert.ok(Math.abs(inBudget.nativeDifferenceMs)<=64);
+    captured.requests.push({...captured.requests[0],currentTime:roundedLocalTime});
+    assert.throws(()=>assertConferenceSeekEvidence(captured),/Requested native time must exactly equal/,
+      'An exact first request cannot hide the changed second request at '+row.id);
+  }
+});
+
+test('the app must follow the observed native event clock within1ms instead of spending the native frame budget on mapping errors',()=>{
+  const rounded=seekEvidence({difference:.0504});assert.equal(assertConferenceSeekEvidence(rounded).passed,true);
+  for(const difference of [-.05,.05]){
+    const captured=seekEvidence({difference});captured.snapshot.state.time=String(captured.eventTime);
+    assert.throws(()=>assertConferenceSeekEvidence(captured),/Player event clock must follow/);
+  }
+  const wrongApp=seekEvidence();wrongApp.snapshot.state.time=String(Number(wrongApp.snapshot.state.time)+.0011);
+  assert.throws(()=>assertConferenceSeekEvidence(wrongApp),/within 1ms/);
+});
+
+test('seek evidence rejects unfinished, moving, unready, malformed or wrong-source observations',()=>{
+  for(const update of [
+    value=>{delete value.requests;},
+    value=>{value.requests=[];},
+    value=>{value.requests[0].currentTime=NaN;},
+    value=>{value.requests[0].currentTime=String(value.requests[0].currentTime);},
+    value=>{value.requests[0].src=value.requests[0].src.replace('session-01','session-02');},
+    value=>{delete value.requests[0].accepted;},
+    value=>{value.snapshot.audio.currentSrc=value.requests[0].src.replace('session-01','session-02');},
+    value=>{value.snapshot.audio.currentTime=Infinity;},
+    value=>{value.snapshot.audio.seeking=true;},
+    value=>{value.snapshot.audio.paused=false;},
+    value=>{value.snapshot.audio.readyState=0;},
+    value=>{value.snapshot.audio.error=3;},
+    value=>{value.snapshot.state.time=null;},
+    value=>{value.snapshot.state.time='';},
+    value=>{value.snapshot.h1Count=2;},
+    value=>{value.snapshot.state.state='loading';},
+    value=>{value.eventTime=NaN;},
+    value=>{value.eventTime=value.session.t1;},
+    value=>{value.session.t0=value.session.t1;},
+    value=>{value.settings.audioSampleRate=44100;},
+    value=>{value.settings.audioCodec='opus';},
+  ]){
+    const captured=seekEvidence();update(captured);assert.throws(()=>assertConferenceSeekEvidence(captured));
   }
 });
 

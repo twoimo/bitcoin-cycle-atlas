@@ -12,7 +12,11 @@ import {fileURLToPath} from 'node:url';
 import {headlessWindowArgument, verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
 import {createConferenceMediaServer, inspectInstalledConferenceMedia, auditConferenceMediaHttp,
   parseConferenceByteRange, CONFERENCE_MEDIA_PREFIX} from './conference-media-server.mjs';
-import {buildConferenceMediaPlaybackPlan, assertConferenceSourceJoinEvidence} from './conference-media-browser-contract.mjs';
+import {buildConferenceMediaPlaybackPlan, assertConferenceSourceJoinEvidence, assertConferenceSeekEvidence,
+  CONFERENCE_SEEK_READBACK} from './conference-media-browser-contract.mjs';
+import {inspectOptionalManifestSettlement, classifyOptionalManifestNetworkFailures} from './conference-media-observation.mjs';
+import {armConferenceSlideObservation} from './conference-media-slide-observer.mjs';
+import {installConferenceNativeSeekObserver} from './conference-media-seek-observer.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const delay = ms => new Promise(accept => setTimeout(accept, ms));
@@ -73,19 +77,21 @@ async function until(read, label, timeout = 30000) {
 async function settled(cdp) {
   await evaluate(cdp, async () => { await document.fonts.ready; await new Promise(accept => requestAnimationFrame(() => requestAnimationFrame(accept))); });
 }
-function inspect() {
+function inspect(finishSeek = false) {
   const player = document.querySelector('.conference-player'), audio = player?.querySelector('audio'), image = player?.querySelector('.conference-slide-image');
+  const capture = window.__conferenceNativeSeek, operation = capture?.currentId();
   return {state:player ? {...player.dataset} : null, h1Count:document.querySelectorAll('h1').length,
     stateTitle:player?.querySelector('[data-role=state-title]')?.textContent,
     notice:player?.querySelector('[data-role=notice]')?.textContent,
     stageVisible:Boolean(player?.querySelector('.conference-stage')?.checkVisibility()),
     captionEnabled:player?.querySelector('.conference-caption')?.disabled === false,
     playDisabled:player?.querySelector('[data-action=play]')?.disabled,
-    image:image ? {src:image.getAttribute('src'), currentSrc:image.currentSrc, complete:image.complete,
+    image:image ? {src:image.getAttribute('src'), requestedSrc:image.src, currentSrc:image.currentSrc, complete:image.complete,
       width:image.naturalWidth, height:image.naturalHeight, visible:!image.hidden && image.checkVisibility()} : null,
     audio:audio ? {src:audio.getAttribute('src'), currentSrc:audio.currentSrc, currentTime:audio.currentTime,
       duration:audio.duration, paused:audio.paused, ended:audio.ended, seeking:audio.seeking,
-      readyState:audio.readyState, error:audio.error?.code || null} : null};
+      readyState:audio.readyState, error:audio.error?.code || null} : null,
+    seekOperation:operation == null ? null : finishSeek ? capture.finish(operation) : capture.peek(operation)};
 }
 async function click(cdp, selector) {
   const locate = async block => {
@@ -112,29 +118,6 @@ async function click(cdp, selector) {
   await cdp.send('Input.dispatchMouseEvent', {type:'mouseReleased', x:point.x, y:point.y, button:'left', clickCount:1});
   const observed = await evaluate(cdp, () => window.__conferenceLastClick);
   assert.equal(observed?.trusted, true, 'The player must receive a trusted native click');
-}
-function armSlideMeasurement(expected) {
-  window.__conferenceSlideMeasurement = null;
-  window.addEventListener('keydown', function start(event) {
-    if (event.key !== ']') return;
-    window.removeEventListener('keydown', start, true);
-    const started = performance.now(), trusted = event.isTrusted;
-    const ready = async () => {
-      const player = document.querySelector('.conference-player'), image = player?.querySelector('.conference-slide-image');
-      if (player?.dataset.page !== String(expected.page) || !image?.complete || !image.naturalWidth || image.hidden
-          || !image.currentSrc.endsWith('/conference/' + expected.file)) { requestAnimationFrame(ready); return; }
-      try { await image.decode(); }
-      catch (error) { window.__conferenceSlideMeasurement = {page:expected.page, trusted, error:String(error), milliseconds:performance.now() - started}; return; }
-      if (player.dataset.page !== String(expected.page) || image.hidden || !image.currentSrc.endsWith('/conference/' + expected.file)) {
-        requestAnimationFrame(ready); return;
-      }
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        window.__conferenceSlideMeasurement = {page:expected.page, milliseconds:performance.now() - started, trusted,
-          currentSrc:image.currentSrc, width:image.naturalWidth, height:image.naturalHeight};
-      }));
-    };
-    requestAnimationFrame(ready);
-  }, true);
 }
 function beginAudioProbe(sessions) {
   const audio = document.querySelector('.conference-audio'), evidence = {samples:[], events:[]};
@@ -165,12 +148,51 @@ function assetFile(src) {
   if (!src) return null;
   return new URL(src).pathname.split('/conference/')[1] || null;
 }
-function assertSeek(snapshot, session, time) {
-  assert.equal(snapshot.state.state, 'ready'); assert.equal(snapshot.h1Count, 1);
-  assert.equal(assetFile(snapshot.audio.currentSrc), session.file);
-  assert.equal(snapshot.audio.error, null); assert.equal(snapshot.audio.seeking, false);
-  assert.ok(Math.abs(snapshot.audio.currentTime - (time - session.t0)) <= 0.001, 'Native session seek must match event time to 1ms');
-  assert.ok(Math.abs(Number(snapshot.state.time) - time) <= 0.001, 'Player event time must match the requested seek');
+async function beginSeek(cdp, label) {
+  return evaluate(cdp, label => window.__conferenceNativeSeek.begin(label), label);
+}
+async function finishSeek(page, session, eventTime, settings) {
+  const {cdp, entry} = page;
+  await until(async () => {
+    const snapshot = await evaluate(cdp, inspect);
+    return assetFile(snapshot.audio?.currentSrc) === session.file && snapshot.audio.readyState >= 1
+      && !snapshot.audio.seeking && snapshot.audio.paused && snapshot;
+  }, 'settled native session seek ' + session.id);
+  await settled(cdp);
+  const snapshot = await evaluate(cdp, inspect, true), operation = snapshot.seekOperation;
+  // Preserve the actual requests even when a later assertion rejects them.
+  // A second URL-rounded request must never disappear behind the final clock.
+  (entry.seekObservations ||= []).push({sessionId:session.id, eventTime, snapshot});
+  assert.ok(operation?.closed, 'Seek request evidence must belong to this completed operation');
+  assert.deepEqual(operation.observationErrors, [], 'Native seek request observation must remain complete');
+  snapshot.seekEvidence = assertConferenceSeekEvidence({snapshot, requests:operation.requests, session, eventTime, settings});
+  return snapshot;
+}
+
+export function assertConferenceSlideReceipt({armed, measured, snapshot, asset, step, deckId}) {
+  assert.equal(measured.token, armed.token, 'Only this step owns the decode result');
+  assert.equal(measured.mode, armed.mode); assert.equal(measured.page, step.page);
+  assert.equal(measured.file, step.file); assert.equal(measured.deck, deckId);
+  assert.equal(measured.error, undefined, 'Actual WebP decode must succeed'); assert.equal(measured.decoded, true);
+  assert.equal(measured.requestedSrc, measured.currentSrc, 'Decoded source is the requested current image');
+  assert.equal(assetFile(measured.currentSrc), step.file);
+  assert.equal(snapshot.state.deck, deckId); assert.equal(Number(snapshot.state.page), step.page);
+  // Requested mapping time stays exact. The separate seek receipt validates
+  // native read-back and app/native coherence, without changing the mapping.
+  assert.equal(snapshot.seekEvidence?.passed, true, 'Mapped page requires completed exact seek evidence');
+  assert.equal(snapshot.seekEvidence.requestedEventTime, step.t0, 'Page uses its original mapping event time');
+  assert.equal(snapshot.image.visible, true); assert.equal(snapshot.image.complete, true);
+  assert.equal(snapshot.image.requestedSrc, snapshot.image.currentSrc, 'Current source must still match after the seek settles');
+  assert.equal(snapshot.image.currentSrc, measured.currentSrc, 'The measured image remains current after the seek settles');
+  assert.equal(measured.width, asset.width); assert.equal(measured.height, asset.height);
+  assert.equal(snapshot.image.width, asset.width); assert.equal(snapshot.image.height, asset.height); assert.equal(snapshot.h1Count, 1);
+  if (armed.mode === 'baseline') {
+    assert.equal(measured.milliseconds, null, 'A baseline is not a zero-ms transition'); assert.equal(measured.trusted, null);
+  } else {
+    assert.equal(armed.mode, 'transition'); assert.equal(measured.trusted, true);
+    assert.ok(Number.isFinite(measured.milliseconds) && measured.milliseconds >= 0 && measured.milliseconds <= 150,
+      'Decoded page transition ' + measured.milliseconds + 'ms exceeds 150ms');
+  }
 }
 
 export function assertConferenceBrowserMediaResponses(requests, mode, manifest) {
@@ -205,7 +227,10 @@ export async function verifyConferenceMediaBrowser(options) {
     workingChanges:execFileSync('git', ['status', '--porcelain'], {cwd:root, encoding:'utf8'}).trim(),
     dist, syntheticFixture:false, productionDeployment:false, humanListening:'not-performed',
     browserLaunched:false, viewport, network:{local:true, cacheDisabled:true, encoding:'identity', cpuThrottling:1, throttled:false},
-    budgets:{pageTransitionMs:150, initialLoad:'not-measured; use unchanged A-9 fast4g harness'},
+    budgets:{pageTransitionMs:150, initialLoad:'not-measured; use unchanged A-9 fast4g harness',
+      nativeSeekReadbackMs:CONFERENCE_SEEK_READBACK.readbackSeconds * 1000,
+      nativeSeekReadbackFrames:CONFERENCE_SEEK_READBACK.readbackFrames,
+      exactSeekRequest:true, playerNativeClockRoundingMs:CONFERENCE_SEEK_READBACK.stateRoundingSeconds * 1000},
     cases:[], failures:[], skipReason:null};
   let outputCreated = false, child, browserCdp, browserProfile, stderr = '', spawnError;
   const servers = new Map(); let debugOrigin;
@@ -216,37 +241,60 @@ export async function verifyConferenceMediaBrowser(options) {
   }
   async function createPage(entry) {
     const {browserContextId} = await browserCdp.send('Target.createBrowserContext');
+    let cdp;
+    try {
     const {targetId} = await browserCdp.send('Target.createTarget', {url:'about:blank', browserContextId});
     const target = await until(async () => (await (await fetch(debugOrigin + '/json/list')).json()).find(item => item.id === targetId), 'isolated media target');
-    const cdp = await Cdp.connect(target.webSocketDebuggerUrl), network = {responses:[], failures:[], finished:new Set()};
+    cdp = await Cdp.connect(target.webSocketDebuggerUrl);
+    const network = {requests:[], responses:[], failures:[], cancellations:[], finished:new Set()};
     cdp.on('Runtime.exceptionThrown', event => entry.runtimeErrors.push(event.exceptionDetails));
     cdp.on('Runtime.consoleAPICalled', event => { if (event.type === 'error') entry.consoleErrors.push(event.args); });
+    cdp.on('Network.requestWillBeSent', event => network.requests.push({requestId:event.requestId, url:event.request.url, method:event.request.method}));
     cdp.on('Network.responseReceived', event => network.responses.push({requestId:event.requestId, url:event.response.url,
       status:event.response.status, mimeType:event.response.mimeType, headers:event.response.headers}));
     cdp.on('Network.loadingFinished', event => network.finished.add(event.requestId));
-    cdp.on('Network.loadingFailed', event => { if (!event.canceled) network.failures.push(event); });
+    cdp.on('Network.loadingFailed', event => {
+      if (event.canceled) network.cancellations.push(event);
+      const request = network.requests.findLast(item => item.requestId === event.requestId);
+      // Native audio switches may cancel their old downloads. A canceled
+      // manifest fetch must still fail, even if its server finished writing.
+      if (!event.canceled || request?.url === network.manifestUrl) network.failures.push(event);
+    });
     await cdp.send('Page.enable'); await cdp.send('Runtime.enable'); await cdp.send('Network.enable');
     entry.nativeWindow = await verifyHeadlessWindowEnvelope(cdp, viewport);
     await cdp.send('Emulation.setDeviceMetricsOverride', {...viewport, deviceScaleFactor:1});
     await cdp.send('Network.setCacheDisabled', {cacheDisabled:true});
-    return {cdp, network, async dispose() { cdp.close(); await browserCdp.send('Target.disposeBrowserContext', {browserContextId}); }};
+    await cdp.send('Page.addScriptToEvaluateOnNewDocument', {source:`(${installConferenceNativeSeekObserver.toString()})()`});
+    return {cdp, network, entry, async dispose() { cdp.close(); await browserCdp.send('Target.disposeBrowserContext', {browserContextId}); }};
+    } catch (error) {
+      cdp?.close();
+      await browserCdp.send('Target.disposeBrowserContext', {browserContextId}).catch(() => {});
+      throw error;
+    }
   }
   async function navigate(page, server, time, deck, session) {
     const url = server.origin + CONFERENCE_MEDIA_PREFIX + '/?page=conference&t=' + time + '&deck=' + encodeURIComponent(deck);
+    const observation = {serverRequestStart:server.receipts.length, cdpResponseStart:page.network.responses.length,
+      cdpRequestStart:page.network.requests.length, expectedUrl:server.origin + CONFERENCE_MEDIA_PREFIX + '/conference/media-manifest.json'};
+    page.entry.navigation = {url, requestedEventTime:time, requestedDeck:deck, ...observation};
+    page.manifestObservation = observation;
+    page.network.manifestUrl = observation.expectedUrl;
     const result = await page.cdp.send('Page.navigate', {url}); assert.ok(!result.errorText, result.errorText);
     await until(() => evaluate(page.cdp, () => document.querySelector('.conference-player')?.dataset.state === 'ready'), 'real timeline ready');
     // First-load pageshow owns a URL synchronization/pause. Start interaction
     // after that document lifecycle, as in the unchanged R13 harness.
     await until(() => evaluate(page.cdp, () => document.readyState === 'complete' && document.fonts.status === 'loaded'), 'document load and fonts before native media input');
-    await until(() => page.network.responses.some(item => item.url.endsWith('/conference/media-manifest.json') && page.network.finished.has(item.requestId)), 'optional manifest response settled');
-    if (session) await until(async () => {
-      const snapshot = await evaluate(page.cdp, inspect);
-      return assetFile(snapshot.audio?.currentSrc) === session.file && snapshot.audio.readyState >= 1 && !snapshot.audio.seeking && snapshot;
-    }, 'installed native audio ready');
+    observation.settlement = await until(() => {
+      const observed = inspectOptionalManifestSettlement({receipts:server.receipts, requestStart:observation.serverRequestStart,
+        expectedUrl:observation.expectedUrl, mode:page.entry.mode, network:page.network, responseStart:observation.cdpResponseStart});
+      page.entry.navigation.manifest = observed;
+      assert.notEqual(observed.status, 'failed', observed.reason);
+      return observed.settled && observed;
+    }, 'optional manifest response settled');
     await settled(page.cdp);
-    const snapshot = await evaluate(page.cdp, inspect);
+    const snapshot = session ? await finishSeek(page, session, time, preflight.manifest.settings) : await evaluate(page.cdp, inspect, true);
     assert.equal(snapshot.h1Count, 1); assert.equal(snapshot.state.state, 'ready'); assert.equal(snapshot.stageVisible, true);
-    if (session) assertSeek(snapshot, session, time);
+    page.entry.navigation.snapshot = snapshot;
     return snapshot;
   }
   async function runCase(id, mode, operation) {
@@ -263,12 +311,18 @@ export async function verifyConferenceMediaBrowser(options) {
     } finally {
       try {
         if (page) {
+          entry.responses = page.network.responses; entry.networkFailures = page.network.failures;
+          entry.networkRequests = page.network.requests; entry.networkCancellations = page.network.cancellations;
+          try { entry.unownedSeekRequests = await evaluate(page.cdp, () => window.__conferenceNativeSeek?.unowned()); }
+          catch (error) { entry.failures.push('Cannot retain unowned seek observations: ' + String(error)); }
           await page.dispose();
           await until(() => server.receipts.slice(firstRequest).every(item => item.complete || item.aborted), 'final HTTP receipts after context disposal', 5000);
-          entry.responses = page.network.responses; entry.networkFailures = page.network.failures;
           assert.deepEqual(entry.runtimeErrors, [], 'No unhandled browser exceptions');
           assert.deepEqual(entry.consoleErrors, [], 'No console errors from player execution');
-          assert.deepEqual(entry.networkFailures, [], 'No unexpected browser network failures');
+          entry.manifestHttpErrors = classifyOptionalManifestNetworkFailures({failures:entry.networkFailures,
+            requests:page.network.requests, requestStart:page.manifestObservation?.cdpRequestStart ?? 0,
+            settlement:page.manifestObservation?.settlement});
+          assert.deepEqual(entry.manifestHttpErrors.unexpected, [], 'No unexpected browser network failures');
           entry.requests = server.receipts.slice(firstRequest);
           entry.browserHttp = assertConferenceBrowserMediaResponses(entry.requests, mode, preflight.manifest);
         }
@@ -284,7 +338,8 @@ export async function verifyConferenceMediaBrowser(options) {
   try {
     await mkdir(out, {recursive:false}); outputCreated = true;
     report.harnessSources = Object.fromEntries(await Promise.all(['scripts/verify-conference-media-browser.mjs',
-      'scripts/conference-media-browser-contract.mjs', 'scripts/conference-media-server.mjs', 'scripts/headless-browser-window.mjs']
+      'scripts/conference-media-browser-contract.mjs', 'scripts/conference-media-server.mjs', 'scripts/headless-browser-window.mjs',
+      'scripts/conference-media-observation.mjs', 'scripts/conference-media-slide-observer.mjs', 'scripts/conference-media-seek-observer.mjs']
       .map(async file => [file, digest(await readFile(resolve(root, file)))])));
     preflight = await inspectInstalledConferenceMedia({dist});
     const {manifest, timeline, ...receipt} = preflight; report.preflight = receipt;
@@ -323,39 +378,61 @@ export async function verifyConferenceMediaBrowser(options) {
     debugOrigin = new URL(endpoint).origin.replace('ws:', 'http:'); browserCdp = await Cdp.connect(endpoint);
     report.browserVersion = await browserCdp.send('Browser.getVersion');
     for (const deck of plan.decks) await runCase('slides-' + deck.id, 'installed', async (page, server, entry) => {
-      await navigate(page, server, 0, deck.id, plan.sessions[0]); entry.transitions = [];
+      await navigate(page, server, 0, deck.id, plan.sessions[0]); entry.transitions = []; entry.baselines = [];
       await evaluate(page.cdp, () => document.activeElement?.blur());
-      for (const step of deck.steps) {
-        await evaluate(page.cdp, armSlideMeasurement, step);
-        await page.cdp.send('Input.dispatchKeyEvent', {type:'keyDown', key:']', code:'BracketRight', windowsVirtualKeyCode:221});
-        await page.cdp.send('Input.dispatchKeyEvent', {type:'keyUp', key:']', code:'BracketRight', windowsVirtualKeyCode:221});
-        const measured = await until(() => evaluate(page.cdp, () => window.__conferenceSlideMeasurement), 'decoded mapped page ' + step.file);
-        entry.transitions.push({...step, ...measured}); assert.equal(measured.trusted, true);
+      for (let i = 0; i < deck.steps.length; i++) {
+        const step = deck.steps[i], session = plan.sessions.find(item => step.t0 >= item.t0 && step.t0 < item.t1);
+        assert.ok(session, 'Every mapped page uses its original event-time session');
+        let armed = await evaluate(page.cdp, armConferenceSlideObservation, {expected:{...step, deckId:deck.id}, mode:i === 0 ? 'entry' : 'transition'});
+        const record = {...step, observation:armed};
+        (armed.mode === 'baseline' ? entry.baselines : entry.transitions).push(record);
+        await beginSeek(page.cdp, 'page-' + deck.id + '-' + step.page);
+        if (armed.mode === 'baseline') {
+          // Already-selected first pages are decoded as a baseline. Re-seek
+          // that same mapped page through its real control to verify the exact
+          // event target without sending ] and skipping the first step.
+          await click(page.cdp, '[data-action=slide]');
+        } else {
+          await page.cdp.send('Input.dispatchKeyEvent', {type:'keyDown', key:']', code:'BracketRight', windowsVirtualKeyCode:221});
+          await page.cdp.send('Input.dispatchKeyEvent', {type:'keyUp', key:']', code:'BracketRight', windowsVirtualKeyCode:221});
+        }
+        let measured = await until(() => evaluate(page.cdp, () => window.__conferenceSlideMeasurement), 'decoded mapped page ' + step.file);
+        Object.assign(record, measured);
         assert.equal(measured.error, undefined, 'Actual WebP decode must succeed');
-        const snapshot = await evaluate(page.cdp, inspect), asset = manifest.assets.find(asset => asset.file === step.file);
-        assert.equal(snapshot.state.deck, deck.id); assert.equal(Number(snapshot.state.page), step.page);
-        assert.ok(Math.abs(Number(snapshot.state.time) - step.t0) <= 0.001, 'Page uses original mapping event time');
-        assert.equal(snapshot.image.visible, true); assert.equal(snapshot.image.currentSrc.endsWith('/conference/' + step.file), true);
-        assert.equal(measured.width, asset.width); assert.equal(measured.height, asset.height); assert.equal(snapshot.h1Count, 1);
-        assert.ok(measured.milliseconds <= 150, 'Decoded page transition ' + measured.milliseconds + 'ms exceeds 150ms');
+        const snapshot = await finishSeek(page, session, step.t0, manifest.settings), asset = manifest.assets.find(asset => asset.file === step.file);
+        if (armed.mode === 'baseline') {
+          // The first baseline may finish while click() positions the pointer.
+          // Decode the post-click generation too, including a same-URL image
+          // replacement, instead of reusing a pre-input decode receipt.
+          record.initialBaselineDecode = measured;
+          armed = await evaluate(page.cdp, armConferenceSlideObservation, {expected:{...step, deckId:deck.id}, mode:'baseline'});
+          record.postSeekObservation = armed;
+          measured = await until(() => evaluate(page.cdp, () => window.__conferenceSlideMeasurement), 'decoded baseline after exact page seek ' + step.file);
+          Object.assign(record, measured);
+        }
+        assertConferenceSlideReceipt({armed, measured, snapshot, asset, step, deckId:deck.id});
       }
-      entry.mappedPages = entry.transitions.length;
+      entry.mappedPages = entry.baselines.length + entry.transitions.length;
+      assert.equal(entry.mappedPages, deck.steps.length, 'Every mapped page has baseline or transition evidence');
     });
     await runCase('session-seek-and-play', 'installed', async (page, server, entry) => {
-      await navigate(page, server, 0, plan.decks[0].id, plan.sessions[0]); entry.sessions = [];
+      const initial = await navigate(page, server, 0, plan.decks[0].id, plan.sessions[0]); entry.sessions = [];
       for (let i = 0; i < plan.sessions.length; i++) {
-        const session = plan.sessions[i]; if (i) await click(page.cdp, '[data-action=next-talk]');
-        const sought = await until(async () => { const state = await evaluate(page.cdp, inspect);
-          return assetFile(state.audio.currentSrc) === session.file && !state.audio.seeking && state.audio.readyState >= 1 && state; }, 'native program seek ' + session.id);
-        assertSeek(sought, session, session.t0); const played = await playAndAdvance(page.cdp);
+        const session = plan.sessions[i]; let sought = initial;
+        if (i) {
+          await beginSeek(page.cdp, 'next-program-' + session.id);
+          await click(page.cdp, '[data-action=next-talk]');
+          sought = await finishSeek(page, session, session.t0, manifest.settings);
+        }
+        const played = await playAndAdvance(page.cdp);
         await click(page.cdp, '[data-action=play]');
         assert.equal((await evaluate(page.cdp, inspect)).audio.paused, true);
         entry.sessions.push({id:session.id, sought, played});
       }
       // A backward program seek must also reset the explicit session offset.
-      await click(page.cdp, '[data-action=previous-talk]'); const previous = plan.sessions.at(-2);
-      await until(async () => { const state = await evaluate(page.cdp, inspect); return assetFile(state.audio.currentSrc) === previous.file && !state.audio.seeking && state.audio.readyState >= 1; }, 'backward native program seek');
-      entry.backwardSeek = await evaluate(page.cdp, inspect); assertSeek(entry.backwardSeek, previous, previous.t0);
+      const previous = plan.sessions.at(-2); await beginSeek(page.cdp, 'previous-program-' + previous.id);
+      await click(page.cdp, '[data-action=previous-talk]');
+      entry.backwardSeek = await finishSeek(page, previous, previous.t0, manifest.settings);
     });
     for (const boundary of plan.boundaries) await runCase('boundary-' + boundary.from.talkId + '-' + boundary.to.talkId, 'installed', async (page, server, entry) => {
       await navigate(page, server, boundary.eventTime - 1.5, plan.decks[0].id, boundary.from);
