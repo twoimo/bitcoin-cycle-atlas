@@ -21,7 +21,7 @@ WP-B 결정 D1은 Cloudflare Vectorize + D1이었으나, 사용자가 **유료 �
 - **검색**: 두 경로 중 선택.
   (a) **클라이언트 검색**: 인덱스를 1회 내려받아 Web Worker에서 코사인. Worker CPU 0, 오프라인 재검색 가능.
   (b) **Worker 검색**: Worker에서 top-k. 무료 100k 요청/일·10ms CPU/호출. 청크 수백 개 규모에서는 10ms 안쪽으로 예상.
-- **생성**: Workers AI 무료 LLM(예: `@cf/meta/llama-3.1-8b-instruct`, 300 req/min) 또는 기존 OpenAI 키. 무료 neurons를 아끼기 위해 **기본은 추출형 답변(상위 구절+인용)** 으로 시작하고, LLM 답변은 무료 잔량이 있을 때만 켠다.
+- **생성**: 기본은 **Workers AI 무료 LLM**(예: `@cf/meta/llama-3.1-8b-instruct`, 300 req/min) 또는 **추출형 답변**(상위 구절+인용). **OpenAI API 키는 무료 설계에 포함되지 않는다** — API는 ChatGPT 구독과 별도 과금이고, 키 발급·사용에는 결제 수단과 토큰 비용이 필요하다. OpenAI 경로는 (a) 이미 보유한 크레딧이 확인되거나 (b) 사용자가 유료 사용을 명시 승인한 경우에만 선택적 폴백으로 둔다.
 - **캐시**: Worker Cache API(무료) 또는 Workers KV 무료(100k reads/일, 1GB). 별도 DB 없음.
 - **신선도**: 릴레이 데이터 갱신 시 인덱스를 다시 만들고 파일명에 content hash를 넣는다. Worker는 manifest의 최신 hash만 읽는다.
 - **Vercel/GitHub**: Vercel은 프리뷰·데모 호스팅 선택지, GitHub은 소스·릴리스의 정본. 프로덕션 경로는 Cloudflare Workers Builds(무료)로 유지한다.
@@ -36,6 +36,7 @@ WP-B 결정 D1은 Cloudflare Vectorize + D1이었으나, 사용자가 **유료 �
 | KV(선택) | 100k reads/일, 1GB | 답변·질의 캐시 |
 
 - 무료 한도 초과 시: **자동 유료 전환 금지.** LLM 답변을 끄고 추출형 답변+인용으로 폴백하며 화면에 이유를 표시한다.
+- **OpenAI API 경로는 기본 비활성**이다. ChatGPT Pro 구독은 API 크레딧을 포함하지 않으며, 키를 쓰려면 별도 결제·한도 설정과 사용자 승인이 선행한다. 승인 전에는 코드·환경변수에 OpenAI 키를 요구하지 않는다(빌드·CI 포함).
 - 품질 비교: bge-m3 vs `text-embedding-3-small`(유료)을 골든셋 Recall@10·nDCG@10로 비교하되, 유료 전환은 사용자 승인 후에만.
 
 ## 4. 수용 기준
