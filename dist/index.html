@@ -100,6 +100,21 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
       };
     })();
   </script>
+  <!-- Fetch modules during CSS loading; execution still belongs to site-entry. -->
+  <link rel="modulepreload" href="./site-entry.js?v=1.37.8">
+  <script id="atlas-boot-preloads">
+    (() => {
+      // Hints only: the existing router retains import, mount and error ownership.
+      // Other entry routes do not download the conference-only player.
+      if (new URLSearchParams(location.search).get('page') !== 'conference') return;
+      for (const href of ['./app.js?v=1.37.8', './conference/player.js?v=1.0.0']) {
+        const link = document.createElement('link');
+        link.rel = 'modulepreload';
+        link.href = href;
+        document.head.append(link);
+      }
+    })();
+  </script>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link id="atlas-optional-fonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&amp;family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&amp;display=swap" media="print">
   <script id="atlas-fonts-script">
@@ -111,46 +126,9 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
     })();
   </script>
   <link rel="stylesheet" href="./styles.css?v=1.30.1">
-  <link rel="stylesheet" href="./compact.css?v=1.29.0">
-  <link rel="stylesheet" href="./outlook.css?v=1.29.0">
-  <link rel="stylesheet" href="./lab.css?v=1.29.0">
-  <link rel="stylesheet" href="./atlas.css?v=1.29.0">
-  <link rel="stylesheet" href="./viewport.css?v=1.29.0">
-  <link rel="stylesheet" href="./chart-details-panel.css?v=1.29.0">
-  <link rel="stylesheet" href="./analysis-dock.css?v=1.29.0">
-  <link rel="stylesheet" href="./chart-magnet.css?v=1.29.0">
-  <link rel="stylesheet" href="./mobile-workspace.css?v=1.29.0">
-  <link rel="stylesheet" href="./workspace-tools.css?v=1.29.0">
-  <link rel="stylesheet" href="./chart-workspace-controls.css?v=1.29.0">
-  <link rel="stylesheet" href="./research-annotations.css?v=1.29.0">
-  <link rel="stylesheet" href="./chart-export-workbench.css?v=1.29.0">
-  <link rel="stylesheet" href="./cycle-milestones.css?v=1.31.3">
-  <link rel="stylesheet" href="./compact-chart-layout.css?v=1.29.0">
-  <link rel="stylesheet" href="./chart-bottom-bar.css?v=1.29.0">
-  <link rel="stylesheet" href="./symbol-selector.css?v=1.32.1">
-  <link rel="stylesheet" href="./eth-view.css?v=1.36.1">
-  <link rel="stylesheet" href="./equity-view.css?v=1.29.0">
-  <link rel="stylesheet" href="./research-reader.css?v=1.29.0">
-  <link rel="stylesheet" href="./ethereum-history.css?v=1.29.0">
-  <link rel="stylesheet" href="./daily-data.css?v=1.32.1">
-  <link rel="stylesheet" href="./forecast-journal.css?v=1.29.0">
-  <link rel="stylesheet" href="./chart-replay.css?v=1.36.1">
-  <link rel="stylesheet" href="./monthly-backtest.css">
-  <link rel="stylesheet" href="./ipo-view.css?v=1.32.1">
-  <link rel="stylesheet" href="./market-lab.css?v=1.31.3">
+  <link rel="stylesheet" href="./site-before-shell.css?v=b17ddf417afe">
   <link rel="stylesheet" href="./atlas-shell.css?v=1.36.1">
-  <link rel="stylesheet" href="./compact-toolbar.css?v=1.36.1">
-  <link rel="stylesheet" href="./ui/rsi-simulation.css?v=1.36.1">
-  <link rel="stylesheet" href="./legacy-workspace-toolbar.css?v=1.32.1">
-  <link rel="stylesheet" href="./vendor/skullet/styles.css?v=0.0.3">
-  <link rel="stylesheet" href="./loading-surfaces.css?v=20261103">
-  <link rel="stylesheet" href="./editorial-system.css?v=1.35.0">
-  <link rel="stylesheet" href="./editorial-panels.css?v=1.35.0">
-  <link rel="stylesheet" href="./editorial-ledgers.css?v=1.35.0">
-  <link rel="stylesheet" href="./relay-room.css?v=1.37.8">
-  <link rel="stylesheet" href="./conference/player.css?v=1.0.0">
-  <link rel="stylesheet" href="./ui/chart-legend.css?v=1.36.1">
-  <link rel="stylesheet" href="./ui/quote-hud.css?v=1.36.1">
+  <link rel="stylesheet" href="./site-after-shell.css?v=634aca3d71a9">
 </head>
 <body>
   <div id="atlas-boot-shell">

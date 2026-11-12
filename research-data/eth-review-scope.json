@@ -231,6 +231,8 @@
     "dist/site-entry.js",
     "dist/site-paths.js",
     "dist/structure-evidence.js",
+    "dist/site-before-shell.css",
+    "dist/site-after-shell.css",
     "dist/styles.css",
     "dist/symbol-selector.css",
     "dist/symbol-selector.js",

@@ -2,6 +2,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { standaloneModuleMap } from './standalone-modules.mjs';
+import { inlineSiteStyles } from './build-site-styles.mjs';
 import {readRelayStandaloneAssets} from './relay-standalone-assets.mjs';
 import {validateSnapshot as validateMarketLabSnapshot} from '../dist/market-lab-math.js';
 import { validateSavedJudgmentIndex, validateSavedJudgmentRecord, judgmentRecordSha256 } from '../dist/asset-judgment-records.js';
@@ -18,13 +19,11 @@ let html = await readFile(resolve(dist, 'index.html'), 'utf8');
 // The downloadable file uses local fallback fonts and needs no external CSS.
 html = html.replace(/\s*<link\b[^>]*id="atlas-optional-fonts"[^>]*>/, '')
   .replace(/\s*<script\b[^>]*id="atlas-fonts-script"[^>]*>[\s\S]*?<\/script>/, '');
-for (const file of ['styles.css', 'compact.css', 'outlook.css', 'lab.css', 'atlas.css', 'viewport.css', 'chart-details-panel.css', 'analysis-dock.css', 'chart-magnet.css', 'mobile-workspace.css', 'workspace-tools.css', 'chart-workspace-controls.css', 'research-annotations.css', 'chart-export-workbench.css', 'cycle-milestones.css', 'compact-chart-layout.css', 'chart-bottom-bar.css', 'symbol-selector.css', 'eth-view.css', 'ethereum-history.css', 'equity-view.css', 'research-reader.css', 'daily-data.css', 'forecast-journal.css', 'chart-replay.css', 'monthly-backtest.css', 'ipo-view.css', 'market-lab.css', 'atlas-shell.css', 'compact-toolbar.css', 'ui/rsi-simulation.css', 'legacy-workspace-toolbar.css', 'vendor/skullet/styles.css', 'loading-surfaces.css', 'editorial-system.css', 'editorial-panels.css', 'editorial-ledgers.css', 'relay-room.css', 'conference/player.css', 'ui/chart-legend.css', 'ui/quote-hud.css']) {
-  // Font URLs contain semicolons in their weight lists. Consume the complete
-  // url(...) before its terminating semicolon so :root stays valid CSS.
-  const css = (await readFile(resolve(dist, file), 'utf8')).replace(/@import\s+url\(\s*(?:"[^"]*"|'[^']*'|[^)]*)\s*\)\s*;/g, '');
-  const stylesheet = new RegExp(`<link rel="stylesheet" href="\\./${file.replaceAll('.', '\\.')}(?:\\?[^"\\s]*)?">`);
-  html = html.replace(stylesheet, `<style>\n${css}\n</style>`);
-}
+// Preload hints are only transport scheduling. Offline imports come from the
+// exact embedded module map, and must never request their former HTTP URLs.
+html = html.replace(/\s*<script\b[^>]*id="atlas-boot-preloads"[^>]*>[\s\S]*?<\/script>/, '')
+  .replace(/\s*<link\b(?=[^>]*\brel=["']modulepreload["'])[^>]*>/gi, '');
+html = await inlineSiteStyles(html, dist);
 const favicon = Buffer.from(await readFile(resolve(dist, 'favicon.svg'))).toString('base64');
 html = html.replace('href="./favicon.svg"', `href="data:image/svg+xml;base64,${favicon}"`);
 const data = (await readFile(resolve(dist, 'data/btc-daily.json'), 'utf8')).replaceAll('<', '\\u003c');

@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { resolve, dirname, relative, sep } from 'node:path';
 import { javascriptModuleReferences, javascriptModuleSpecifiers } from './module-references.mjs';
 import { readForecastArchive } from './build-forecast-ledger.mjs';
+import { siteStylesheetEntries } from './build-site-styles.mjs';
 import { checkPublication } from './build-publication.mjs';
 import {readRelayStandaloneAssets} from './relay-standalone-assets.mjs';
 import { PROJECT_REPLAY_ORIGIN,parseProjectReplayBaseline } from '../dist/project-replay-baseline.js';
@@ -97,10 +98,15 @@ export async function verifyStandaloneArtifact(html, dist) {
   await checkPublication(publication,{directory});
   assert.deepEqual(embeddedJson('atlas-publication'),publication,'Changed embedded publication manifest');
   const index = await readFile(resolve(directory, 'index.html'), 'utf8');
-  const stylesheets = [...index.matchAll(/<link rel="stylesheet" href="\.\/([^"?]+)(?:\?[^"\s]*)?">/g)];
-  for (const [, file] of stylesheets) {
-    const css = (await readFile(resolve(directory, file), 'utf8')).replace(/@import\s+url\(\s*(?:"[^"]*"|'[^']*'|[^)]*)\s*\)\s*;/g, '');
-    assert(html.includes(`<style>\n${css}\n</style>`), `Missing or changed stylesheet: ${file}`);
+  const stylesheets = siteStylesheetEntries(index).flatMap(entry => entry.sources);
+  let previousStylePosition = -1;
+  for (const file of stylesheets) {
+    const css = await readFile(resolve(directory, file), 'utf8');
+    const block = `<style>\n${css}\n</style>`;
+    assert.equal(html.split(block).length - 1, 1, `Missing or changed stylesheet: ${file}`);
+    const position = html.indexOf(block);
+    assert(position > previousStylePosition, `Changed stylesheet order: ${file}`);
+    previousStylePosition = position;
   }
   const favicon = (await readFile(resolve(directory, 'favicon.svg'))).toString('base64');
   assert(html.includes(`href="data:image/svg+xml;base64,${favicon}"`), 'Changed embedded favicon');
