@@ -1,0 +1,996 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-r16-heading-verification",
+  "recordedAt": "2026-11-12T07:09:20.425355+00:00",
+  "status": "implementation-complete-browser-blocked",
+  "qualifiesFullVerification": false,
+  "productionDeployment": false,
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "branch": "fix/tradingview-responsive-20261110",
+  "requestedHead": "cf49682",
+  "parentCommit": "05a81be34d98b3b8e5b3068074063189f154313e",
+  "testedCodeCommit": "386376591428fb0a9badc4dfef750ee70ef802d2",
+  "source": {
+    "schemaVersion": 1,
+    "kind": "atlas-wp6-candidate-source",
+    "productionDeployment": false,
+    "verifiedTrackedDistClean": true,
+    "sourceCommit": "386376591428fb0a9badc4dfef750ee70ef802d2",
+    "sourceTree": "cb0b19e6f1d7d4a1b8cd1756c41c210db33c11ed",
+    "distTreeSha256": "347428204e794dd2442dbd7f636ffd1c1f3d18b225ae17d0dc57a1992c92ac07"
+  },
+  "sourceAndHarnessesUnchangedAfterRun": true,
+  "scope": "R16 / REQ_WP_ABC_20261110 A-5.2(1) only; R17 axes and R18/R19 renewal unchanged.",
+  "implementation": {
+    "placement": "22px normal-flow label above the plot, outside the toolbar and ticker row",
+    "chartViewportHeightChangePx": -22,
+    "comparePlacementChanged": false,
+    "symbolControlCodeChanged": false,
+    "priceAxisImplementationChanged": false,
+    "productAndTestFiles": [
+      "dist/atlas-shell.css",
+      "dist/index.html",
+      "dist/ui/page-description.js",
+      "docs/conference/boot-preload-graph.json",
+      "scripts/page-heading-browser-contract.mjs",
+      "scripts/verify-page-heading-browser.mjs",
+      "tests/page-description.test.mjs",
+      "tests/page-heading-and-touch-floor.test.mjs",
+      "tests/page-heading-browser-contract.test.mjs"
+    ]
+  },
+  "acceptance": {
+    "viewportWidths": [
+      320,
+      390,
+      768,
+      1440
+    ],
+    "visibleH1Count": 1,
+    "allowedH1SymbolIntersectionPx2": 0,
+    "actualBrowserIntersectionPx2": null,
+    "actualBrowserVisibleH1Count": null,
+    "geometryMeasuredInBrowser": false,
+    "regressionFixtureIntersectionPx2": 1680,
+    "regressionFixtureSource": "User-supplied historical ETHUSD 1440 rectangles, not a new browser measurement",
+    "fractionalPositiveIntersectionRejected": true
+  },
+  "validation": {
+    "unitAndContract": {
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/page-description.test.mjs",
+        "tests/page-heading-and-touch-floor.test.mjs",
+        "tests/page-heading-browser-contract.test.mjs",
+        "tests/mobile-shell-heading.test.mjs",
+        "tests/compare-shell-host.dom.test.mjs",
+        "tests/compare-shell-route.test.mjs",
+        "tests/symbol-selector.test.mjs",
+        "tests/shell-slots.test.mjs",
+        "tests/shell-flat-chrome.test.mjs",
+        "tests/responsive-workspace.test.mjs",
+        "tests/boot-shell.test.mjs",
+        "tests/boot-preloads.test.mjs",
+        "tests/site-preloads.test.mjs",
+        "tests/site-styles.test.mjs",
+        "tests/static-module-references.test.mjs",
+        "tests/wp6-browser-evidence.test.mjs"
+      ],
+      "exitCode": 0,
+      "files": 16,
+      "tests": 148,
+      "passed": 148,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "durationMs": 2070.248715,
+      "directHeadingTests": 16,
+      "headingHarnessContractTests": 17,
+      "tapSha256": "de48f9f29e0326ad38eba653c1f5c052163c2e0dedd0819d96f9e9e0af3fe608",
+      "tapFooter": [
+        "1..148",
+        "# tests 148",
+        "# suites 0",
+        "# pass 148",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 2070.248715"
+      ]
+    },
+    "typecheck": {
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "typescriptErrors": 0,
+      "log": "npm warn Unknown env config \"http-proxy\". This will stop working in the next major version of npm.\n\n> bitcoin-cycle-atlas@1.36.1 typecheck\n> tsc --noEmit\n\n"
+    },
+    "static": {
+      "command": [
+        "npm",
+        "run",
+        "verify:static"
+      ],
+      "exitCode": 0,
+      "result": {
+        "status": "ok",
+        "files": 968,
+        "checkedScripts": 219,
+        "checkedReferences": 972,
+        "basePath": "/bitcoin-cycle-atlas/",
+        "standalone": null
+      }
+    },
+    "preloads": {
+      "regenerated": true,
+      "generator": "buildSitePreloads() exported by scripts/build-site-preloads.mjs",
+      "checkCommand": [
+        "node",
+        "scripts/build-site-preloads.mjs",
+        "--check"
+      ],
+      "exitCode": 0,
+      "result": {
+        "status": "ok",
+        "mode": "check",
+        "moduleUrls": 55,
+        "uniqueModuleFiles": 53,
+        "conferenceModulePreloads": 54,
+        "sharedModulePreloads": 1,
+        "staticImportEdges": 81,
+        "maxShortestImportDepth": 6,
+        "moduleBytesByUrl": 751060,
+        "timeline": {
+          "url": "./conference/timeline.json",
+          "file": "conference/timeline.json",
+          "bytes": 1044921,
+          "sha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad",
+          "rel": "preload",
+          "as": "fetch",
+          "crossorigin": "anonymous",
+          "fetchpriority": "high"
+        },
+        "manifestSha256": "f759fb28726698f15064187251e356823ac22eb81c9cc838f730eaec35d21fa3"
+      }
+    },
+    "styles": {
+      "command": [
+        "node",
+        "scripts/build-site-styles.mjs",
+        "--check"
+      ],
+      "exitCode": 0,
+      "result": {
+        "status": "ok",
+        "mode": "check",
+        "sourceStylesheets": 41,
+        "files": [
+          {
+            "file": "site-before-shell.css",
+            "bytes": 383868,
+            "sha256": "b17ddf417afeedc6413fd5d6e47021e5b77fc3f97427839155f1bd0a656784b5"
+          },
+          {
+            "file": "site-after-shell.css",
+            "bytes": 166998,
+            "sha256": "88c36117bd2f6fc4fb01e4d8492b86c844600cdd7ce3e1dde237e4ad51529adc"
+          }
+        ]
+      }
+    },
+    "syntax": {
+      "command": "node --check for dist/ui/page-description.js, scripts/page-heading-browser-contract.mjs and scripts/verify-page-heading-browser.mjs",
+      "exitCode": 0
+    },
+    "diffWhitespace": {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0
+    },
+    "fullNpmTest": {
+      "executed": false,
+      "reason": "Focused 16-file unit/contract suite executed for the requested R16 scope."
+    }
+  },
+  "browser": {
+    "status": "blocked-before-first-case",
+    "binary": "/usr/lib/chromium/chromium",
+    "executedCases": 0,
+    "passedCases": 0,
+    "screenshots": 0,
+    "blocker": "Chromium SIGABRT: process_singleton_posix.cc:297 socket() failed: Operation not permitted (1). Heading/responsive report the subsequent DevTools port timeout; compare/chart-qa retain the launch stderr.",
+    "heading": {
+      "command": [
+        "node",
+        "scripts/verify-page-heading-browser.mjs",
+        "--out",
+        "build/r16/candidate-heading"
+      ],
+      "exitCode": 1,
+      "plannedMainCases": 15,
+      "plannedSupplementalCases": 9,
+      "plannedLayoutShiftCases": 2,
+      "actualMainCases": 0,
+      "actualSupplementalCases": 0,
+      "actualLayoutShiftCases": 0,
+      "raw": {
+        "originalPath": "build/r16/candidate-heading/report.json",
+        "bytes": 2587,
+        "sha256": "f31b35a7e8a2fe9ffafd672fa34234e18f744cd22356cda47dde00273834e1de",
+        "report": {
+          "schemaVersion": 2,
+          "kind": "atlas-page-heading-browser",
+          "qualifiesFullVerification": false,
+          "recordedAt": "2026-11-12T07:04:19.590Z",
+          "testedHead": "386376591428fb0a9badc4dfef750ee70ef802d2",
+          "sourceFiles": {
+            "dist/atlas-shell.css": "74096ebf5081076ac153645c7c9998c5b99e3e369e2aa1ebc016b4a90c0b01ca",
+            "dist/ui/page-description.js": "a3ea1350945329c98db494aa929255cce4b9ffd68a27c24af1ef31f6991dacd0",
+            "dist/index.html": "92eef3a8129edbf926f2683211a05a383970805e2d3cab0cc9fa41fba4dc01fb",
+            "dist/app.js": "a3f543eae01f9bc945f2e3234a170007a5de68176d62a6f1b87c8fa707a8d04f",
+            "dist/btc-refresh-status.js": "90bf073c462c7c97a995ee15cd9157f1c908535fa27f8ae7785576a546100e70",
+            "dist/daily-data-view.js": "c20f197801abdcd5265c5e15f5a6d2ed08ef8c9d778145876029e40c69a6133e",
+            "dist/daily-data.css": "9e5d3a410bf92171f268bb502cb991c0c5d7a38382db91c7ae6c9437c11b1e67",
+            "dist/research-reader.js": "2e1cb92676692b0b904df5fabcaed924423a5e61fbeb51a87ef4eef1db0a2b42",
+            "dist/research-reader.css": "a413a8e60bb00ba0d0816343796444b45d3884625a8307ef06f815883fa97892",
+            "dist/editorial-ledgers.css": "514e4e62689e62cbf5197b74f40ad6e2b8cd9164d050c910500e91d9f00f11ae",
+            "dist/relay-room.js": "b001b38bbbfd562ac42736e8b1564a3ad20b0732cdebdda5c8a9d4b22d752482",
+            "dist/relay-room.css": "83e8074affbc443abfffc6772263373b71fa973bdfb7dbe765abf123b0652510",
+            "scripts/verify-page-heading-browser.mjs": "80667a6d589cada3ecb308f250e21a953cba9a7f907e12b537d4268e8053bdef",
+            "scripts/page-heading-browser-contract.mjs": "83ad77cd421ee9508adaa6bc7317edf3e79ccb2018c2addf2fe14ba79b41427e",
+            "dist/conference/route.js": "2211cfbaba16f187a51d0e8e7f2c8849a7f6e02185cc0f02345895173eef145d",
+            "dist/conference/player.js": "f398e0bc60dbb883a87f09513a7d6a6e3936cbdeb8302d36a0d455baee7edcd6",
+            "dist/conference/player.css": "82e3c19726dfed781dfe4ffbc143b6b6350cc9876659716948d156baab8dba0a"
+          },
+          "chrome": null,
+          "baseline": null,
+          "cases": [],
+          "supplementalCases": [],
+          "layoutShiftCases": [],
+          "failures": [
+            "harness: Error: Timed out: Chrome debugging port\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-page-heading-browser.mjs:68:9)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-page-heading-browser.mjs:230:16"
+          ],
+          "status": "failed",
+          "counts": {
+            "cases": {
+              "total": 0,
+              "passed": 0
+            },
+            "supplementalCases": {
+              "total": 0,
+              "passed": 0
+            },
+            "layoutShiftCases": {
+              "total": 0,
+              "passed": 0
+            }
+          }
+        }
+      }
+    },
+    "compare": {
+      "command": [
+        "node",
+        "scripts/verify-compare-shell-browser.mjs",
+        "--out",
+        "build/r16/candidate-compare"
+      ],
+      "exitCode": 1,
+      "plannedInventoryRoutes": 16,
+      "plannedViewportCases": 9,
+      "actualInventoryRoutes": 0,
+      "actualViewportCases": 0,
+      "actualInteractionGroups": 0,
+      "raw": {
+        "originalPath": "build/r16/candidate-compare/compare-shell-verify.json",
+        "bytes": 2312,
+        "sha256": "efaf2fec09acf93fd731d980ad96df88bd492c4b311f1a8f5139d65df86b095e",
+        "report": {
+          "schemaVersion": 1,
+          "kind": "atlas-wp-c-compare-shell-browser",
+          "qualifiesFullVerification": false,
+          "scope": "Route inventory (C-1b), viewport contract 320-1920 (C-5), real user input for the compare route (C-1, C-2, C-3, C-4, C-6) in isolated headless Chrome. No build, deploy or release claim.",
+          "testedHead": "386376591428fb0a9badc4dfef750ee70ef802d2",
+          "chrome": null,
+          "base": "http://127.0.0.1:35187/bitcoin-cycle-atlas/",
+          "recordedAt": "2026-11-12T07:04:19.608Z",
+          "inventory": [],
+          "widths": [],
+          "interactions": {},
+          "failures": [
+            "harness: no debugging port: [17:17:1112/160419.691207:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/160419.691398:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[24:24:0100/000000.742833:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n[1:1:0100/000000.771926:ERROR:content/zygote/zygote_main_linux.cc:197] Failed sending zygote boot message: Broken pipe (32)\n"
+          ],
+          "findings": [],
+          "assertions": {},
+          "status": "ERROR",
+          "stack": "Error: no debugging port: [17:17:1112/160419.691207:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/160419.691398:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[24:24:0100/000000.742833:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n[1:1:0100/000000.771926:ERROR:content/zygote/zygote_main_linux.cc:197] Failed sending zygote boot message: Broken pipe (32)\n\n    at main (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-compare-shell-browser.mjs:195:22)",
+          "stderr": "[17:17:1112/160419.691207:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/160419.691398:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[24:24:0100/000000.742833:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n[1:1:0100/000000.771926:ERROR:content/zygote/zygote_main_linux.cc:197] Failed sending zygote boot message: Broken pipe (32)\n"
+        }
+      }
+    },
+    "existingGates": {
+      "command": [
+        "node",
+        "build/r16/run-r16-browser-gates.mjs",
+        ".",
+        "386376591428fb0a9badc4dfef750ee70ef802d2",
+        "build/r16/browser-gates"
+      ],
+      "exitCode": 1,
+      "responsivePlannedCases": 44,
+      "responsiveActualCases": 0,
+      "chartQaPlannedCases": 12,
+      "chartQaActualCases": 0,
+      "rawBundle": {
+        "originalPath": "build/r16/browser-gates/summary.json",
+        "bytes": 7467,
+        "sha256": "86d69869af1c465ade357acf889efe8410eec7fe1653a57e2d682dbaf90cfc6a",
+        "report": {
+          "kind": "r16-local-candidate-ui-gates",
+          "productionDeployment": false,
+          "sourceCommit": "386376591428fb0a9badc4dfef750ee70ef802d2",
+          "startedAt": "2026-11-12T07:04:19.584Z",
+          "status": "failed",
+          "gates": [
+            {
+              "id": "responsive-BTCUSD",
+              "expectedCases": 11,
+              "startedAt": "2026-11-12T07:04:20.062Z",
+              "status": "failed",
+              "exit": {
+                "code": 1,
+                "signal": null
+              },
+              "timedOut": false,
+              "actualCases": 0,
+              "nativeStatus": "failed",
+              "failures": [
+                {
+                  "error": "Error: Timed out: Chromium DevToolsActivePort\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:119:9)\n    at async launch (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:758:16)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:797:6"
+                }
+              ],
+              "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n\n    at runJob (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/build/r16/run-r16-browser-gates.mjs:80:75)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/build/r16/run-r16-browser-gates.mjs:128:86",
+              "finishedAt": "2026-11-12T07:04:45.522Z"
+            },
+            {
+              "id": "responsive-ETHUSD",
+              "expectedCases": 11,
+              "startedAt": "2026-11-12T07:04:45.524Z",
+              "status": "failed",
+              "exit": {
+                "code": 1,
+                "signal": null
+              },
+              "timedOut": false,
+              "actualCases": 0,
+              "nativeStatus": "failed",
+              "failures": [
+                {
+                  "error": "Error: Timed out: Chromium DevToolsActivePort\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:119:9)\n    at async launch (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:758:16)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:797:6"
+                }
+              ],
+              "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n\n    at runJob (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/build/r16/run-r16-browser-gates.mjs:80:75)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/build/r16/run-r16-browser-gates.mjs:128:86",
+              "finishedAt": "2026-11-12T07:05:10.991Z"
+            },
+            {
+              "id": "responsive-MSTR",
+              "expectedCases": 11,
+              "startedAt": "2026-11-12T07:05:10.992Z",
+              "status": "failed",
+              "exit": {
+                "code": 1,
+                "signal": null
+              },
+              "timedOut": false,
+              "actualCases": 0,
+              "nativeStatus": "failed",
+              "failures": [
+                {
+                  "error": "Error: Timed out: Chromium DevToolsActivePort\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:119:9)\n    at async launch (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:758:16)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:797:6"
+                }
+              ],
+              "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n\n    at runJob (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/build/r16/run-r16-browser-gates.mjs:80:75)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/build/r16/run-r16-browser-gates.mjs:128:86",
+              "finishedAt": "2026-11-12T07:05:36.472Z"
+            },
+            {
+              "id": "responsive-BMNR",
+              "expectedCases": 11,
+              "startedAt": "2026-11-12T07:05:36.472Z",
+              "status": "failed",
+              "exit": {
+                "code": 1,
+                "signal": null
+              },
+              "timedOut": false,
+              "actualCases": 0,
+              "nativeStatus": "failed",
+              "failures": [
+                {
+                  "error": "Error: Timed out: Chromium DevToolsActivePort\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:119:9)\n    at async launch (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:758:16)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:797:6"
+                }
+              ],
+              "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n\n    at runJob (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/build/r16/run-r16-browser-gates.mjs:80:75)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/build/r16/run-r16-browser-gates.mjs:128:86",
+              "finishedAt": "2026-11-12T07:06:01.938Z"
+            },
+            {
+              "id": "chart-qa",
+              "expectedCases": 12,
+              "startedAt": "2026-11-12T07:06:01.938Z",
+              "status": "failed",
+              "exit": {
+                "code": 1,
+                "signal": null
+              },
+              "timedOut": false,
+              "actualCases": 0,
+              "nativeStatus": "FAIL",
+              "failures": [],
+              "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n\n    at runJob (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/build/r16/run-r16-browser-gates.mjs:80:75)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/build/r16/run-r16-browser-gates.mjs:128:86",
+              "finishedAt": "2026-11-12T07:06:03.879Z"
+            }
+          ],
+          "harnessBefore": {
+            "scripts/verify-responsive-workbench-browser.mjs": "63efc03c19f76bfdb40d665d117f21366375b46828bdb7c98973e0345165b4f5",
+            "scripts/verify-wp6-browser.mjs": "0ce6b6a5b0c2122d8b6ad16dd768d41efddbbd8041c4f7ebee611b90d39471a2",
+            "scripts/verify-wp6-cloudflare.mjs": "6c15c7985928ec14a95628e4b56b7605bba70f96f1c5015dc1176381efc71be9",
+            "scripts/verify-chart-qa-metrics.mjs": "23627b9fcc4acfb6aba2a10b3501312d0d75ddb690d1885676f29522c7536174"
+          },
+          "sourceBefore": {
+            "schemaVersion": 1,
+            "kind": "atlas-wp6-candidate-source",
+            "productionDeployment": false,
+            "verifiedTrackedDistClean": true,
+            "sourceCommit": "386376591428fb0a9badc4dfef750ee70ef802d2",
+            "sourceTree": "cb0b19e6f1d7d4a1b8cd1756c41c210db33c11ed",
+            "distTreeSha256": "347428204e794dd2442dbd7f636ffd1c1f3d18b225ae17d0dc57a1992c92ac07"
+          },
+          "origin": "http://127.0.0.1:46701",
+          "pid": 5,
+          "sourceAfter": {
+            "schemaVersion": 1,
+            "kind": "atlas-wp6-candidate-source",
+            "productionDeployment": false,
+            "verifiedTrackedDistClean": true,
+            "sourceCommit": "386376591428fb0a9badc4dfef750ee70ef802d2",
+            "sourceTree": "cb0b19e6f1d7d4a1b8cd1756c41c210db33c11ed",
+            "distTreeSha256": "347428204e794dd2442dbd7f636ffd1c1f3d18b225ae17d0dc57a1992c92ac07"
+          },
+          "harnessAfter": {
+            "scripts/verify-responsive-workbench-browser.mjs": "63efc03c19f76bfdb40d665d117f21366375b46828bdb7c98973e0345165b4f5",
+            "scripts/verify-wp6-browser.mjs": "0ce6b6a5b0c2122d8b6ad16dd768d41efddbbd8041c4f7ebee611b90d39471a2",
+            "scripts/verify-wp6-cloudflare.mjs": "6c15c7985928ec14a95628e4b56b7605bba70f96f1c5015dc1176381efc71be9",
+            "scripts/verify-chart-qa-metrics.mjs": "23627b9fcc4acfb6aba2a10b3501312d0d75ddb690d1885676f29522c7536174"
+          },
+          "finishedAt": "2026-11-12T07:06:04.146Z",
+          "durationMs": 104562
+        }
+      },
+      "rawReports": {
+        "responsive-BTCUSD": {
+          "originalPath": "build/r16/browser-gates/responsive-BTCUSD/report.json",
+          "bytes": 3687,
+          "sha256": "e8e98806c8b745f03c6b91bdd89bd274517539d859b6b9f36c16dbf18b14a19b",
+          "report": {
+            "schemaVersion": 1,
+            "kind": "atlas-responsive-workbench-browser",
+            "status": "failed",
+            "startedAt": "2026-11-12T07:04:20.138Z",
+            "base": "http://127.0.0.1:46701/bitcoin-cycle-atlas/",
+            "query": "?legacy=1&page=outlook&symbol=BTCUSD",
+            "url": "http://127.0.0.1:46701/bitcoin-cycle-atlas/?legacy=1&page=outlook&symbol=BTCUSD",
+            "headingAnchor": "bottom",
+            "viewports": [
+              {
+                "label": "phone-320x568",
+                "width": 320,
+                "height": 568,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "phone-390x844",
+                "width": 390,
+                "height": 844,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "phone-456x800",
+                "width": 456,
+                "height": 800,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "phone-620x900",
+                "width": 620,
+                "height": 900,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "tablet-768x1024",
+                "width": 768,
+                "height": 1024,
+                "touch": true,
+                "band": "tablet"
+              },
+              {
+                "label": "desktop-1024x768",
+                "width": 1024,
+                "height": 768,
+                "touch": false,
+                "band": "desktop"
+              },
+              {
+                "label": "desktop-1440x900",
+                "width": 1440,
+                "height": 900,
+                "touch": false,
+                "band": "desktop"
+              },
+              {
+                "label": "phone-320x430-short",
+                "width": 320,
+                "height": 430,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "phone-390x430-short",
+                "width": 390,
+                "height": 430,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "tablet-900x430-short",
+                "width": 900,
+                "height": 430,
+                "touch": true,
+                "band": "tablet"
+              }
+            ],
+            "cases": [],
+            "failures": [
+              {
+                "error": "Error: Timed out: Chromium DevToolsActivePort\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:119:9)\n    at async launch (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:758:16)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:797:6"
+              }
+            ],
+            "screenshots": [],
+            "scope": "Independent headless Chrome process against the owned local build. No Aside tab, user browser profile, deployment, Safari or physical-device claim.",
+            "target": {
+              "url": "http://127.0.0.1:46701/bitcoin-cycle-atlas/?legacy=1&page=outlook&symbol=BTCUSD",
+              "ok": true,
+              "status": 200,
+              "bytes": 57323
+            },
+            "browser": {
+              "binary": "/usr/lib/chromium/chromium",
+              "pid": 53,
+              "profile": "/tmp/atlas-responsive-workbench-UZcRuk"
+            },
+            "error": "Error: Timed out: Chromium DevToolsActivePort\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:119:9)\n    at async launch (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:758:16)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:797:6",
+            "finishedAt": "2026-11-12T07:04:45.507Z",
+            "chromeStderrTail": "[53:53:1112/160420.274547:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/160420.275264:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[57:57:0100/000000.338364:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n[61:61:0100/000000.346464:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n"
+          }
+        },
+        "responsive-ETHUSD": {
+          "originalPath": "build/r16/browser-gates/responsive-ETHUSD/report.json",
+          "bytes": 3687,
+          "sha256": "7c748db30e607860c7f6c94d25cfbd17113e32fbc2f7cd122d4f8033249b0456",
+          "report": {
+            "schemaVersion": 1,
+            "kind": "atlas-responsive-workbench-browser",
+            "status": "failed",
+            "startedAt": "2026-11-12T07:04:45.635Z",
+            "base": "http://127.0.0.1:46701/bitcoin-cycle-atlas/",
+            "query": "?legacy=1&page=outlook&symbol=ETHUSD",
+            "url": "http://127.0.0.1:46701/bitcoin-cycle-atlas/?legacy=1&page=outlook&symbol=ETHUSD",
+            "headingAnchor": "bottom",
+            "viewports": [
+              {
+                "label": "phone-320x568",
+                "width": 320,
+                "height": 568,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "phone-390x844",
+                "width": 390,
+                "height": 844,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "phone-456x800",
+                "width": 456,
+                "height": 800,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "phone-620x900",
+                "width": 620,
+                "height": 900,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "tablet-768x1024",
+                "width": 768,
+                "height": 1024,
+                "touch": true,
+                "band": "tablet"
+              },
+              {
+                "label": "desktop-1024x768",
+                "width": 1024,
+                "height": 768,
+                "touch": false,
+                "band": "desktop"
+              },
+              {
+                "label": "desktop-1440x900",
+                "width": 1440,
+                "height": 900,
+                "touch": false,
+                "band": "desktop"
+              },
+              {
+                "label": "phone-320x430-short",
+                "width": 320,
+                "height": 430,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "phone-390x430-short",
+                "width": 390,
+                "height": 430,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "tablet-900x430-short",
+                "width": 900,
+                "height": 430,
+                "touch": true,
+                "band": "tablet"
+              }
+            ],
+            "cases": [],
+            "failures": [
+              {
+                "error": "Error: Timed out: Chromium DevToolsActivePort\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:119:9)\n    at async launch (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:758:16)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:797:6"
+              }
+            ],
+            "screenshots": [],
+            "scope": "Independent headless Chrome process against the owned local build. No Aside tab, user browser profile, deployment, Safari or physical-device claim.",
+            "target": {
+              "url": "http://127.0.0.1:46701/bitcoin-cycle-atlas/?legacy=1&page=outlook&symbol=ETHUSD",
+              "ok": true,
+              "status": 200,
+              "bytes": 57323
+            },
+            "browser": {
+              "binary": "/usr/lib/chromium/chromium",
+              "pid": 74,
+              "profile": "/tmp/atlas-responsive-workbench-9BE67I"
+            },
+            "error": "Error: Timed out: Chromium DevToolsActivePort\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:119:9)\n    at async launch (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:758:16)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:797:6",
+            "finishedAt": "2026-11-12T07:05:10.981Z",
+            "chromeStderrTail": "[74:74:1112/160445.731213:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/160445.731391:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[82:82:0100/000000.780397:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n[78:78:0100/000000.780615:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n"
+          }
+        },
+        "responsive-MSTR": {
+          "originalPath": "build/r16/browser-gates/responsive-MSTR/report.json",
+          "bytes": 3683,
+          "sha256": "da1eb320cd3107c403c1e634203f91a4a3e737ff3bbda64ab3532844224b471e",
+          "report": {
+            "schemaVersion": 1,
+            "kind": "atlas-responsive-workbench-browser",
+            "status": "failed",
+            "startedAt": "2026-11-12T07:05:11.043Z",
+            "base": "http://127.0.0.1:46701/bitcoin-cycle-atlas/",
+            "query": "?legacy=1&page=outlook&symbol=MSTR",
+            "url": "http://127.0.0.1:46701/bitcoin-cycle-atlas/?legacy=1&page=outlook&symbol=MSTR",
+            "headingAnchor": "bottom",
+            "viewports": [
+              {
+                "label": "phone-320x568",
+                "width": 320,
+                "height": 568,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "phone-390x844",
+                "width": 390,
+                "height": 844,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "phone-456x800",
+                "width": 456,
+                "height": 800,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "phone-620x900",
+                "width": 620,
+                "height": 900,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "tablet-768x1024",
+                "width": 768,
+                "height": 1024,
+                "touch": true,
+                "band": "tablet"
+              },
+              {
+                "label": "desktop-1024x768",
+                "width": 1024,
+                "height": 768,
+                "touch": false,
+                "band": "desktop"
+              },
+              {
+                "label": "desktop-1440x900",
+                "width": 1440,
+                "height": 900,
+                "touch": false,
+                "band": "desktop"
+              },
+              {
+                "label": "phone-320x430-short",
+                "width": 320,
+                "height": 430,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "phone-390x430-short",
+                "width": 390,
+                "height": 430,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "tablet-900x430-short",
+                "width": 900,
+                "height": 430,
+                "touch": true,
+                "band": "tablet"
+              }
+            ],
+            "cases": [],
+            "failures": [
+              {
+                "error": "Error: Timed out: Chromium DevToolsActivePort\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:119:9)\n    at async launch (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:758:16)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:797:6"
+              }
+            ],
+            "screenshots": [],
+            "scope": "Independent headless Chrome process against the owned local build. No Aside tab, user browser profile, deployment, Safari or physical-device claim.",
+            "target": {
+              "url": "http://127.0.0.1:46701/bitcoin-cycle-atlas/?legacy=1&page=outlook&symbol=MSTR",
+              "ok": true,
+              "status": 200,
+              "bytes": 57323
+            },
+            "browser": {
+              "binary": "/usr/lib/chromium/chromium",
+              "pid": 95,
+              "profile": "/tmp/atlas-responsive-workbench-b2ZQxQ"
+            },
+            "error": "Error: Timed out: Chromium DevToolsActivePort\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:119:9)\n    at async launch (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:758:16)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:797:6",
+            "finishedAt": "2026-11-12T07:05:36.460Z",
+            "chromeStderrTail": "[95:95:1112/160511.106277:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/160511.106471:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[99:99:0100/000000.145482:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n[103:103:0100/000000.145481:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n"
+          }
+        },
+        "responsive-BMNR": {
+          "originalPath": "build/r16/browser-gates/responsive-BMNR/report.json",
+          "bytes": 3688,
+          "sha256": "de92392a8f5492f9d747e99d2f79798b52ee7a14fa8f48b1b93df199e60bcb6f",
+          "report": {
+            "schemaVersion": 1,
+            "kind": "atlas-responsive-workbench-browser",
+            "status": "failed",
+            "startedAt": "2026-11-12T07:05:36.519Z",
+            "base": "http://127.0.0.1:46701/bitcoin-cycle-atlas/",
+            "query": "?legacy=1&page=outlook&symbol=BMNR",
+            "url": "http://127.0.0.1:46701/bitcoin-cycle-atlas/?legacy=1&page=outlook&symbol=BMNR",
+            "headingAnchor": "bottom",
+            "viewports": [
+              {
+                "label": "phone-320x568",
+                "width": 320,
+                "height": 568,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "phone-390x844",
+                "width": 390,
+                "height": 844,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "phone-456x800",
+                "width": 456,
+                "height": 800,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "phone-620x900",
+                "width": 620,
+                "height": 900,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "tablet-768x1024",
+                "width": 768,
+                "height": 1024,
+                "touch": true,
+                "band": "tablet"
+              },
+              {
+                "label": "desktop-1024x768",
+                "width": 1024,
+                "height": 768,
+                "touch": false,
+                "band": "desktop"
+              },
+              {
+                "label": "desktop-1440x900",
+                "width": 1440,
+                "height": 900,
+                "touch": false,
+                "band": "desktop"
+              },
+              {
+                "label": "phone-320x430-short",
+                "width": 320,
+                "height": 430,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "phone-390x430-short",
+                "width": 390,
+                "height": 430,
+                "touch": true,
+                "band": "phone"
+              },
+              {
+                "label": "tablet-900x430-short",
+                "width": 900,
+                "height": 430,
+                "touch": true,
+                "band": "tablet"
+              }
+            ],
+            "cases": [],
+            "failures": [
+              {
+                "error": "Error: Timed out: Chromium DevToolsActivePort\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:119:9)\n    at async launch (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:758:16)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:797:6"
+              }
+            ],
+            "screenshots": [],
+            "scope": "Independent headless Chrome process against the owned local build. No Aside tab, user browser profile, deployment, Safari or physical-device claim.",
+            "target": {
+              "url": "http://127.0.0.1:46701/bitcoin-cycle-atlas/?legacy=1&page=outlook&symbol=BMNR",
+              "ok": true,
+              "status": 200,
+              "bytes": 57323
+            },
+            "browser": {
+              "binary": "/usr/lib/chromium/chromium",
+              "pid": 116,
+              "profile": "/tmp/atlas-responsive-workbench-c5310d"
+            },
+            "error": "Error: Timed out: Chromium DevToolsActivePort\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:119:9)\n    at async launch (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:758:16)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-responsive-workbench-browser.mjs:797:6",
+            "finishedAt": "2026-11-12T07:06:01.928Z",
+            "chromeStderrTail": "[116:116:1112/160536.578122:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/160536.578309:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[124:124:0100/000000.641196:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n[123:123:0100/000000.641210:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n"
+          }
+        },
+        "chart-qa": {
+          "originalPath": "build/r16/browser-gates/chart-qa/report.json",
+          "bytes": 3415,
+          "sha256": "2fed0aa6a17e4bac4e52972e0121e7f667a3b759f0fe2e2bdfdf01ff0d39083e",
+          "report": {
+            "schemaVersion": 1,
+            "kind": "atlas-wp6-native-browser-evidence",
+            "qualifiesFullVerification": false,
+            "suite": "chart-qa",
+            "phase": "candidate",
+            "origin": "http://127.0.0.1:46701",
+            "startedAt": "2026-11-12T07:06:01.994Z",
+            "status": "FAIL",
+            "cases": [],
+            "failures": [],
+            "scope": "Five instruments and six explicit CSS viewports in isolated headless Chrome contexts. Native clicks and keyboard for replay and dialogs. Local or public origin is explicitly recorded; no Safari/physical-device or forecast-validity claim.",
+            "inspector": {
+              "sourceCommit": "386376591428fb0a9badc4dfef750ee70ef802d2",
+              "sourceTree": "cb0b19e6f1d7d4a1b8cd1756c41c210db33c11ed",
+              "workingChanges": ""
+            },
+            "candidateSourceBefore": {
+              "schemaVersion": 1,
+              "kind": "atlas-wp6-candidate-source",
+              "productionDeployment": false,
+              "verifiedTrackedDistClean": true,
+              "sourceCommit": "386376591428fb0a9badc4dfef750ee70ef802d2",
+              "sourceTree": "cb0b19e6f1d7d4a1b8cd1756c41c210db33c11ed",
+              "distTreeSha256": "347428204e794dd2442dbd7f636ffd1c1f3d18b225ae17d0dc57a1992c92ac07",
+              "sha256": "bf118080c894332d42a1a8375b937e734e6d6545277359a296b6e93f45caefbd",
+              "checkedAt": "2026-11-12T07:06:02.256Z"
+            },
+            "browserBinary": "/usr/lib/chromium/chromium",
+            "koreanFonts": [
+              "/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc: Noto Serif CJK SC:style=Bold",
+              "/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc: Noto Serif CJK TC:style=Bold",
+              "/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc: Noto Serif CJK JP:style=Bold",
+              "/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc: Noto Serif CJK HK:style=Bold",
+              "/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc: Noto Serif CJK KR:style=Bold",
+              "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc: Noto Sans CJK JP:style=Regular",
+              "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc: Noto Sans CJK HK:style=Regular",
+              "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc: Noto Sans CJK KR:style=Regular"
+            ],
+            "error": "Error: Chrome launch failed (SIGABRT): [164:164:1112/160602.325470:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/160602.325678:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[172:172:0100/000000.360191:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n[171:171:0100/000000.365993:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n\n    at file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-wp6-browser.mjs:312:127\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-wp6-browser.mjs:32:125)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-wp6-browser.mjs:312:16",
+            "chromeStderr": "[164:164:1112/160602.325470:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/160602.325678:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[172:172:0100/000000.360191:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n[171:171:0100/000000.365993:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n",
+            "finishedAt": "2026-11-12T07:06:02.369Z"
+          }
+        }
+      }
+    },
+    "environment": {
+      "ATLAS_BROWSER_PATH": "/usr/lib/chromium/chromium"
+    },
+    "runner": {
+      "path": "docs/evidence/r16-heading-20261112/run-browser-gates.mjs",
+      "sha256": "7573ea3f139158e4fc5787d803db62278a469e986ea07adb17c675b1250918d2",
+      "copiedByteForByteFromExecutedRunner": true,
+      "derivedFrom": "docs/evidence/chart-h1-20261112/r10-browser-gates.mjs",
+      "changes": "Select the four requested responsive runs and candidate chart-qa; omit the separate WP6 suite; change receipt kind/default output. Existing harnesses, assertions, source identity and screenshot checks unchanged."
+    }
+  },
+  "remaining": [
+    "Real browser acceptance: h1 exactly 1 and intersection 0 with symbol/ticker at widths 320/390/768/1440 for BTCUSD, ETHUSD, MSTR and BMNR.",
+    "Compare 320/390 visible-h1, ancestor resize/restore and symbol accessibility/keyboard interaction; all requested browser harness gates.",
+    "Use current candidate contract mode without the old pre-R16 geometry baseline: the new label intentionally reserves 22px from plot height. The existing strict --baseline comparison was not changed.",
+    "Pre-existing heading harness conference supplemental readiness requires player state empty; canonical data may now report ready. These four unrelated cases were not reached; their readiness logic is unchanged and is not an R16 pass claim."
+  ],
+  "preserved": {
+    "protectedFiles": [
+      "dist/equity-view.js",
+      "dist/eth-view.js",
+      "dist/instrument-indicator-overlay.js",
+      "scripts/verify-eth-candidate-browser.mjs"
+    ],
+    "mediaFilesCommitted": false,
+    "existingMacReceiptsModified": false,
+    "thresholdsRelaxed": false,
+    "mainPushMergeDeployForcePush": false,
+    "installedTools": false
+  },
+  "evidenceParentCommit": "427d2dbc00aae2a9ab057ffed3aa25875d30433f",
+  "preservedInterveningDocsCommit": "427d2dbc00aae2a9ab057ffed3aa25875d30433f"
+}
