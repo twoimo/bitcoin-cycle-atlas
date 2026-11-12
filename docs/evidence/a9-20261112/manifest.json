@@ -1,0 +1,1109 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-a9-boot-verification",
+  "status": "incomplete-browser-blocked",
+  "recordedAt": "2026-11-12T02:10:02.245839+00:00",
+  "baseCommit": "2d35d2c58be8224012fa0df8f365df963a17e70e",
+  "sourceCommit": "ee6faf9f4a05decb55b3e6dbe32841897294083b",
+  "implementationFiles": [
+    {
+      "path": "dist/index.html",
+      "mode": "100644",
+      "bytes": 54648,
+      "sha256": "47cb0fef4ceac4777e68c90824daede0fe6f1586ba3509dd8662de5d2651af4b",
+      "blob": "4b0ed697fc63b7d39f3b11fdd8a40caec7ee614b"
+    },
+    {
+      "path": "dist/site-after-shell.css",
+      "mode": "100644",
+      "bytes": 165922,
+      "sha256": "634aca3d71a9435599547c72c93bddc6d1bec4c209301832b0538dde7dca6bf1",
+      "blob": "fdb5b1a501123e71f7f11456473ef5c4683dc322"
+    },
+    {
+      "path": "dist/site-before-shell.css",
+      "mode": "100644",
+      "bytes": 383868,
+      "sha256": "b17ddf417afeedc6413fd5d6e47021e5b77fc3f97427839155f1bd0a656784b5",
+      "blob": "841bf14057ef2868a39510da7e452a88089e0ae6"
+    },
+    {
+      "path": "research-data/eth-review-scope.json",
+      "mode": "100644",
+      "bytes": 42157,
+      "sha256": "24cd4a5005fa4b6e13faf9c173545de7f9b12e0a6eb69ed43ae02d9f78f9e527",
+      "blob": "f9f94f0affa58cefd22ae4b31e8a634a86c9a957"
+    },
+    {
+      "path": "scripts/build-site-styles.mjs",
+      "mode": "100644",
+      "bytes": 5234,
+      "sha256": "f737452376d5ecd6c12354acb8015da9535a2c970ead260b9ab6d79f24cc897c",
+      "blob": "6a3a9ccc4eda6712143e8dbcb75435254c691f04"
+    },
+    {
+      "path": "scripts/build-standalone.mjs",
+      "mode": "100644",
+      "bytes": 8650,
+      "sha256": "834dff6ccd96faaf00ffa766bd7ec1e73a196ff2a5c774cd232c5667b5a67040",
+      "blob": "5a83ff31e4f896c4b28a8f51b5b50f1acd479513"
+    },
+    {
+      "path": "scripts/standalone-verification.mjs",
+      "mode": "100644",
+      "bytes": 8436,
+      "sha256": "7d94696bcc9ad079515f3a4ab4d4910c9c988b6ad6b0ac13b7ea53227f645764",
+      "blob": "e77f57a4d9a68318057258a43f87c89ebeec72e2"
+    },
+    {
+      "path": "tests/boot-preloads.test.mjs",
+      "mode": "100644",
+      "bytes": 2507,
+      "sha256": "2c036ec773735ade62a0dfcb79fe83f7d24eed16a20c6971b5608c340e444403",
+      "blob": "e9c70fecb797a46434635b69773eb3e8f6c9ff02"
+    },
+    {
+      "path": "tests/site-styles.test.mjs",
+      "mode": "100644",
+      "bytes": 5481,
+      "sha256": "26e60cabc1078b1d82119bc8919d529e07f2d8218f7e657feb4b54121e5f40d4",
+      "blob": "12325932c35df359fa93072e16356f9d8263c765"
+    }
+  ],
+  "environment": {
+    "platform": "linux",
+    "architecture": "x64",
+    "requiredGateNode": "v24.22.2",
+    "installedBrowser": "Chromium 156.0.8078.79",
+    "browserPath": "/usr/bin/chromium",
+    "cdpStarted": false
+  },
+  "commands": {
+    "compare": {
+      "command": [
+        "node",
+        "scripts/verify-compare-shell-browser.mjs",
+        "--out",
+        "build/a9/compare"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T02:06:30.612Z",
+      "node": "v24.22.2",
+      "sourceCommit": "ee6faf9f4a05decb55b3e6dbe32841897294083b",
+      "workingChanges": "",
+      "complete": true,
+      "exit": 1,
+      "signal": null,
+      "elapsedMs": 21243.819602,
+      "finishedAt": "2026-11-12T02:06:51.881Z"
+    },
+    "conference-14": {
+      "command": [
+        "node",
+        "scripts/verify-conference-browser.mjs",
+        "--out",
+        "build/a9/conference-14"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T02:06:30.578Z",
+      "node": "v24.22.2",
+      "sourceCommit": "ee6faf9f4a05decb55b3e6dbe32841897294083b",
+      "workingChanges": "",
+      "complete": true,
+      "exit": 1,
+      "signal": null,
+      "elapsedMs": 30553.716664,
+      "finishedAt": "2026-11-12T02:07:01.153Z"
+    },
+    "data-fast4g": {
+      "command": [
+        "node",
+        "scripts/verify-conference-data-browser.mjs",
+        "--profile",
+        "fast4g",
+        "--encoding",
+        "gzip",
+        "--out",
+        "build/a9/data-fast4g"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T02:04:09.542Z",
+      "node": "v24.22.2",
+      "sourceCommit": "ee6faf9f4a05decb55b3e6dbe32841897294083b",
+      "workingChanges": "",
+      "complete": true,
+      "exit": 1,
+      "signal": null,
+      "elapsedMs": 121585.335167,
+      "finishedAt": "2026-11-12T02:06:11.146Z"
+    },
+    "npm-test": {
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "--test-concurrency=4"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T01:59:14.695Z",
+      "node": "v24.22.2",
+      "sourceCommit": "2d35d2c58be8224012fa0df8f365df963a17e70e",
+      "workingChanges": "M dist/index.html\n M research-data/eth-review-scope.json\n M scripts/build-standalone.mjs\n M scripts/standalone-verification.mjs\n?? dist/site-after-shell.css\n?? dist/site-before-shell.css\n?? scripts/build-site-styles.mjs\n?? tests/boot-preloads.test.mjs\n?? tests/site-styles.test.mjs",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 235146.95111,
+      "finishedAt": "2026-11-12T02:03:09.857Z"
+    },
+    "pages": {
+      "command": [
+        "npm",
+        "run",
+        "verify:pages"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T01:58:49.853Z",
+      "node": "v24.22.2",
+      "sourceCommit": "2d35d2c58be8224012fa0df8f365df963a17e70e",
+      "workingChanges": "M dist/index.html\n M research-data/eth-review-scope.json\n M scripts/build-standalone.mjs\n M scripts/standalone-verification.mjs\n?? dist/site-after-shell.css\n?? dist/site-before-shell.css\n?? scripts/build-site-styles.mjs\n?? tests/boot-preloads.test.mjs\n?? tests/site-styles.test.mjs",
+      "complete": true,
+      "exit": 1,
+      "signal": null,
+      "elapsedMs": 1354.544522,
+      "finishedAt": "2026-11-12T01:58:51.225Z"
+    },
+    "static": {
+      "command": [
+        "npm",
+        "run",
+        "verify:static"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T01:58:49.828Z",
+      "node": "v24.22.2",
+      "sourceCommit": "2d35d2c58be8224012fa0df8f365df963a17e70e",
+      "workingChanges": "M dist/index.html\n M research-data/eth-review-scope.json\n M scripts/build-standalone.mjs\n M scripts/standalone-verification.mjs\n?? dist/site-after-shell.css\n?? dist/site-before-shell.css\n?? scripts/build-site-styles.mjs\n?? tests/boot-preloads.test.mjs\n?? tests/site-styles.test.mjs",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 3461.499855,
+      "finishedAt": "2026-11-12T01:58:53.313Z"
+    },
+    "styles-check": {
+      "command": [
+        "node",
+        "scripts/build-site-styles.mjs",
+        "--check"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T02:08:31.053Z",
+      "node": "v24.22.2",
+      "sourceCommit": "ee6faf9f4a05decb55b3e6dbe32841897294083b",
+      "workingChanges": "",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 98.34115699999998,
+      "finishedAt": "2026-11-12T02:08:31.170Z"
+    },
+    "timeline": {
+      "command": [
+        "node",
+        "scripts/verify-conference-timeline.mjs",
+        "--timeline",
+        "dist/conference/timeline.json",
+        "--sources",
+        "docs/conference/source-segments.json",
+        "--out",
+        "build/a9/timeline-coverage.json"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T01:58:49.211Z",
+      "node": "v24.22.2",
+      "sourceCommit": "2d35d2c58be8224012fa0df8f365df963a17e70e",
+      "workingChanges": "M dist/index.html\n M research-data/eth-review-scope.json\n M scripts/build-standalone.mjs\n M scripts/standalone-verification.mjs\n?? dist/site-after-shell.css\n?? dist/site-before-shell.css\n?? scripts/build-site-styles.mjs\n?? tests/boot-preloads.test.mjs\n?? tests/site-styles.test.mjs",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 119.88743199999999,
+      "finishedAt": "2026-11-12T01:58:49.345Z"
+    },
+    "typecheck": {
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T01:58:49.843Z",
+      "node": "v24.22.2",
+      "sourceCommit": "2d35d2c58be8224012fa0df8f365df963a17e70e",
+      "workingChanges": "M dist/index.html\n M research-data/eth-review-scope.json\n M scripts/build-standalone.mjs\n M scripts/standalone-verification.mjs\n?? dist/site-after-shell.css\n?? dist/site-before-shell.css\n?? scripts/build-site-styles.mjs\n?? tests/boot-preloads.test.mjs\n?? tests/site-styles.test.mjs",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 1049.70297,
+      "finishedAt": "2026-11-12T01:58:50.911Z"
+    },
+    "ui-gates": {
+      "command": [
+        "node",
+        "docs/evidence/chart-h1-20261112/r10-browser-gates.mjs",
+        "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+        "ee6faf9f4a05decb55b3e6dbe32841897294083b",
+        "build/a9/ui-gates"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T02:06:30.597Z",
+      "node": "v24.22.2",
+      "sourceCommit": "ee6faf9f4a05decb55b3e6dbe32841897294083b",
+      "workingChanges": "",
+      "complete": true,
+      "exit": 1,
+      "signal": null,
+      "elapsedMs": 106136.85171999999,
+      "finishedAt": "2026-11-12T02:08:16.756Z"
+    }
+  },
+  "npmTest": {
+    "complete": true,
+    "tests": 3464,
+    "pass": 3464,
+    "fail": 0,
+    "skipped": 0,
+    "batches": 1
+  },
+  "timeline": {
+    "schemaVersion": 1,
+    "kind": "atlas-conference-timeline-verification",
+    "recordedAt": "2026-11-12T01:58:49.335Z",
+    "status": "passed",
+    "valid": true,
+    "syntheticFixture": false,
+    "timeline": {
+      "file": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/dist/conference/timeline.json",
+      "bytes": 1044921,
+      "sha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad"
+    },
+    "sources": {
+      "file": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/docs/conference/source-segments.json",
+      "bytes": 985201,
+      "sha256": "894bbd9598e7766d0790f92ae74f9274ef891fcdda71abdc58dd2c04ed5a35a6"
+    },
+    "summary": {
+      "audioDurationSec": 20400,
+      "segmentCount": 9168,
+      "talkCount": 15,
+      "deckCount": 2,
+      "lastSegmentT1": 20396.7,
+      "coverage": {
+        "checked": true,
+        "expectedCount": 9168,
+        "missing": [],
+        "unexpected": [],
+        "duplicates": [],
+        "changed": []
+      }
+    },
+    "errors": []
+  },
+  "css": {
+    "sourceCommit": "ee6faf9f4a05decb55b3e6dbe32841897294083b",
+    "base": "2d35d2c58be8224012fa0df8f365df963a17e70e",
+    "sourceCssBytesUnchanged": true,
+    "before": {
+      "requests": 41,
+      "bytes": 665335,
+      "gzipBytes": 142004,
+      "files": [
+        {
+          "path": "styles.css",
+          "bytes": 69421,
+          "gzip": 15806,
+          "sha256": "da82c60ef93b7e0bee81bb882c5e572a21ad58c2ca7a785facc4921fde538bd5"
+        },
+        {
+          "path": "compact.css",
+          "bytes": 18903,
+          "gzip": 3890,
+          "sha256": "b053d7db784d53b9143465994396460153e1efcda59e4fafe1a45a65918a5d5e"
+        },
+        {
+          "path": "outlook.css",
+          "bytes": 14932,
+          "gzip": 3176,
+          "sha256": "4597e59bf9ab28f8db2457c89658f3e95c5559faaa45c59d49398730a4c39be7"
+        },
+        {
+          "path": "lab.css",
+          "bytes": 11394,
+          "gzip": 2603,
+          "sha256": "0048af46f7cedfeeffc1405e46299028f75c14803570fb4f6b8559ecf12ea2c1"
+        },
+        {
+          "path": "atlas.css",
+          "bytes": 17984,
+          "gzip": 3757,
+          "sha256": "48b590d347ac4120971927ed3e7dd6117949b50cf80f91b153fe18e7c32e36b6"
+        },
+        {
+          "path": "viewport.css",
+          "bytes": 26901,
+          "gzip": 5342,
+          "sha256": "3d7073ed61bbe380dae52e8d998d8ab6f24208f734a22c17017ca0b010a09c83"
+        },
+        {
+          "path": "chart-details-panel.css",
+          "bytes": 37751,
+          "gzip": 7018,
+          "sha256": "5edec71fb2f6c725dbd6eba7cf7ca4ed2310097cbf76f32a9f8dd9a58a671613"
+        },
+        {
+          "path": "analysis-dock.css",
+          "bytes": 29983,
+          "gzip": 5741,
+          "sha256": "1572e261f7dd1e5508384457d2558896a7269b909fa087dc29fdfb5d0544eeea"
+        },
+        {
+          "path": "chart-magnet.css",
+          "bytes": 2183,
+          "gzip": 804,
+          "sha256": "e2e1194702545645f04d48e305548bfd0aa426b744a0c6e6c6f5dee2d32c3021"
+        },
+        {
+          "path": "mobile-workspace.css",
+          "bytes": 16612,
+          "gzip": 3720,
+          "sha256": "6ab01d2a86e0673276a86d166a1b31c8ffa7469ec65551541462aa3c67dd9016"
+        },
+        {
+          "path": "workspace-tools.css",
+          "bytes": 5924,
+          "gzip": 1521,
+          "sha256": "f7529cbd0c64b1d695033706b44395e21b97322e951d697c5885632717b708b1"
+        },
+        {
+          "path": "chart-workspace-controls.css",
+          "bytes": 5497,
+          "gzip": 1393,
+          "sha256": "5f295a4fa2439c9cbf4dbca060a7494b4b2ec2e96a6ada196dff77f5541537c4"
+        },
+        {
+          "path": "research-annotations.css",
+          "bytes": 3450,
+          "gzip": 949,
+          "sha256": "18319d5fd93cbc25d249de0570accabffb244d002934ed6705ae624dfb48ffdd"
+        },
+        {
+          "path": "chart-export-workbench.css",
+          "bytes": 3560,
+          "gzip": 1040,
+          "sha256": "cc75c4bee60dd01bddd75b177061123dce8b25e0afef70d527eaac6d0295f636"
+        },
+        {
+          "path": "cycle-milestones.css",
+          "bytes": 14705,
+          "gzip": 3573,
+          "sha256": "9b0ab20a9ee8970a4d843acad296bea977f7aa3f52466595bed4e71d796f36ca"
+        },
+        {
+          "path": "compact-chart-layout.css",
+          "bytes": 7084,
+          "gzip": 1710,
+          "sha256": "f39461eeed0c4aa9c1997d98205480897b373f47ac16a1b5340cb4ac3500cb43"
+        },
+        {
+          "path": "chart-bottom-bar.css",
+          "bytes": 8773,
+          "gzip": 1902,
+          "sha256": "359e6d5473279150c9b8181369aede6be6b412df03661fa38011287a3aef99de"
+        },
+        {
+          "path": "symbol-selector.css",
+          "bytes": 7370,
+          "gzip": 1763,
+          "sha256": "fd8dd668f238c57840b8759b0f77bc4be44e322ee14eb18bd31145a6a67f6cc3"
+        },
+        {
+          "path": "eth-view.css",
+          "bytes": 17579,
+          "gzip": 4125,
+          "sha256": "d18db82f6ec4d1b891a596309c842130312bedc5a9f53e752b75a4c30418e1fe"
+        },
+        {
+          "path": "equity-view.css",
+          "bytes": 7750,
+          "gzip": 1956,
+          "sha256": "312d7363ef1bef9e769b940c5552d13eae8d6556c8bb312d3f3ab9088f424a8d"
+        },
+        {
+          "path": "research-reader.css",
+          "bytes": 11973,
+          "gzip": 2831,
+          "sha256": "a413a8e60bb00ba0d0816343796444b45d3884625a8307ef06f815883fa97892"
+        },
+        {
+          "path": "ethereum-history.css",
+          "bytes": 11498,
+          "gzip": 2380,
+          "sha256": "6201f4f255571ea22c4d968367fef7a9ca4d9e3437bcca43b7b5a24c818f03d1"
+        },
+        {
+          "path": "daily-data.css",
+          "bytes": 36626,
+          "gzip": 6115,
+          "sha256": "9e5d3a410bf92171f268bb502cb991c0c5d7a38382db91c7ae6c9437c11b1e67"
+        },
+        {
+          "path": "forecast-journal.css",
+          "bytes": 8877,
+          "gzip": 2076,
+          "sha256": "e1022cf360430f2d730a46686cb1fb3a86739973f36d95aefb4476f49ecf07c1"
+        },
+        {
+          "path": "chart-replay.css",
+          "bytes": 15649,
+          "gzip": 3681,
+          "sha256": "5893616eefc9c29a1296ce666b5e4d45e6f4750cd8c1ec751903de9c8ca9d33e"
+        },
+        {
+          "path": "monthly-backtest.css",
+          "bytes": 5524,
+          "gzip": 1447,
+          "sha256": "f362616f7f7f07d73dae55317a81380f50187b624803764c291bbdba96a55908"
+        },
+        {
+          "path": "ipo-view.css",
+          "bytes": 14168,
+          "gzip": 3237,
+          "sha256": "ca62a1be1fa264d9e0b62bdcd68e56885e0a32db04cff6f1258301bae5853284"
+        },
+        {
+          "path": "market-lab.css",
+          "bytes": 18166,
+          "gzip": 3893,
+          "sha256": "68e9b99aeaa189540f919c464eb0bf5e7a307195c0544dad384b53580a9b1637"
+        },
+        {
+          "path": "atlas-shell.css",
+          "bytes": 50624,
+          "gzip": 9632,
+          "sha256": "0c8f41d4dc9cfef5b8f770a5407dfd7b4111148d0de890fb32d63a8765fa82b8"
+        },
+        {
+          "path": "compact-toolbar.css",
+          "bytes": 9978,
+          "gzip": 2314,
+          "sha256": "53295313312c109d89650f7128b5fe8fdf610801a9df66e0807c940d045ee322"
+        },
+        {
+          "path": "ui/rsi-simulation.css",
+          "bytes": 8428,
+          "gzip": 2097,
+          "sha256": "5e2d8d999ca578b5fdbc37a925eeb4085e1c05cb4614d2c38489c57cb5514c35"
+        },
+        {
+          "path": "legacy-workspace-toolbar.css",
+          "bytes": 6485,
+          "gzip": 1778,
+          "sha256": "735cbefcee14b838229b2af6608a0366e5f34525f59f728f2a3b2548febc5f9f"
+        },
+        {
+          "path": "vendor/skullet/styles.css",
+          "bytes": 1504,
+          "gzip": 722,
+          "sha256": "e534dbfda1efba19fba2b5f2895d895f191b3857e8be3c1cde1e9d9e82022f4e"
+        },
+        {
+          "path": "loading-surfaces.css",
+          "bytes": 6499,
+          "gzip": 1796,
+          "sha256": "033d3256e4fe171c10daf16f355e31dbbb6641f8641f89b9b8e64bdc5acf5a3b"
+        },
+        {
+          "path": "editorial-system.css",
+          "bytes": 28298,
+          "gzip": 5490,
+          "sha256": "482221d393972d025c5ca8f79100e6431f0a2b216514e9e1534614631f4a0668"
+        },
+        {
+          "path": "editorial-panels.css",
+          "bytes": 33211,
+          "gzip": 5342,
+          "sha256": "7b8b329adace6fa0f0e93b77ba0c4cc3fc233dcd27def214df2850d2b92b29b7"
+        },
+        {
+          "path": "editorial-ledgers.css",
+          "bytes": 22940,
+          "gzip": 4155,
+          "sha256": "514e4e62689e62cbf5197b74f40ad6e2b8cd9164d050c910500e91d9f00f11ae"
+        },
+        {
+          "path": "relay-room.css",
+          "bytes": 22452,
+          "gzip": 5124,
+          "sha256": "83e8074affbc443abfffc6772263373b71fa973bdfb7dbe765abf123b0652510"
+        },
+        {
+          "path": "conference/player.css",
+          "bytes": 13626,
+          "gzip": 2868,
+          "sha256": "468b6222fa5299ce6918fc6f554d7dc3fb7454c751ce4b83763fcf8d6fbd71ab"
+        },
+        {
+          "path": "ui/chart-legend.css",
+          "bytes": 7075,
+          "gzip": 1893,
+          "sha256": "98ffb0745f2dac141888f700038f8e0e1c90b8fa11beaebd2f40c9a29aca126c"
+        },
+        {
+          "path": "ui/quote-hud.css",
+          "bytes": 3978,
+          "gzip": 1344,
+          "sha256": "1d79cbd0beb68742483635e98e4549f3f700a2621c01efd177a2d804f58de287"
+        }
+      ]
+    },
+    "after": {
+      "requests": 4,
+      "bytes": 669835,
+      "gzipBytes": 121311,
+      "files": [
+        {
+          "path": "styles.css",
+          "bytes": 69421,
+          "gzip": 15806,
+          "sha256": "da82c60ef93b7e0bee81bb882c5e572a21ad58c2ca7a785facc4921fde538bd5"
+        },
+        {
+          "path": "site-before-shell.css",
+          "bytes": 383868,
+          "gzip": 65462,
+          "sha256": "b17ddf417afeedc6413fd5d6e47021e5b77fc3f97427839155f1bd0a656784b5"
+        },
+        {
+          "path": "atlas-shell.css",
+          "bytes": 50624,
+          "gzip": 9632,
+          "sha256": "0c8f41d4dc9cfef5b8f770a5407dfd7b4111148d0de890fb32d63a8765fa82b8"
+        },
+        {
+          "path": "site-after-shell.css",
+          "bytes": 165922,
+          "gzip": 30411,
+          "sha256": "634aca3d71a9435599547c72c93bddc6d1bec4c209301832b0538dde7dca6bf1"
+        }
+      ]
+    }
+  },
+  "preservation": {
+    "sourceCommit": "ee6faf9f4a05decb55b3e6dbe32841897294083b",
+    "base": "2d35d2c58be8224012fa0df8f365df963a17e70e",
+    "sourceFiles": [
+      {
+        "path": "dist/index.html",
+        "matchesTestedSource": true,
+        "matchesCommit": true
+      },
+      {
+        "path": "dist/site-after-shell.css",
+        "matchesTestedSource": true,
+        "matchesCommit": true
+      },
+      {
+        "path": "dist/site-before-shell.css",
+        "matchesTestedSource": true,
+        "matchesCommit": true
+      },
+      {
+        "path": "research-data/eth-review-scope.json",
+        "matchesTestedSource": true,
+        "matchesCommit": true
+      },
+      {
+        "path": "scripts/build-site-styles.mjs",
+        "matchesTestedSource": true,
+        "matchesCommit": true
+      },
+      {
+        "path": "scripts/build-standalone.mjs",
+        "matchesTestedSource": true,
+        "matchesCommit": true
+      },
+      {
+        "path": "scripts/standalone-verification.mjs",
+        "matchesTestedSource": true,
+        "matchesCommit": true
+      },
+      {
+        "path": "tests/boot-preloads.test.mjs",
+        "matchesTestedSource": true,
+        "matchesCommit": true
+      },
+      {
+        "path": "tests/site-styles.test.mjs",
+        "matchesTestedSource": true,
+        "matchesCommit": true
+      }
+    ],
+    "protectedFiles": [
+      {
+        "path": "dist/conference/timeline.json",
+        "unchanged": true,
+        "sha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad"
+      },
+      {
+        "path": "dist/conference/player.js",
+        "unchanged": true,
+        "sha256": "5c57643f1ae8463a66f6acee712e8a9f218c88d180f88f1ab44ece528ba8b837"
+      },
+      {
+        "path": "dist/conference/player.css",
+        "unchanged": true,
+        "sha256": "468b6222fa5299ce6918fc6f554d7dc3fb7454c751ce4b83763fcf8d6fbd71ab"
+      },
+      {
+        "path": "dist/conference/route.js",
+        "unchanged": true,
+        "sha256": "2211cfbaba16f187a51d0e8e7f2c8849a7f6e02185cc0f02345895173eef145d"
+      },
+      {
+        "path": "dist/site-entry.js",
+        "unchanged": true,
+        "sha256": "9d384923ce3d16cf8d9a5dad24eb342ece823563ddcda5e9ab442d3ee91baaf8"
+      },
+      {
+        "path": "dist/app.js",
+        "unchanged": true,
+        "sha256": "a3f543eae01f9bc945f2e3234a170007a5de68176d62a6f1b87c8fa707a8d04f"
+      },
+      {
+        "path": "dist/atlas-shell.css",
+        "unchanged": true,
+        "sha256": "0c8f41d4dc9cfef5b8f770a5407dfd7b4111148d0de890fb32d63a8765fa82b8"
+      },
+      {
+        "path": "scripts/verify-conference-browser.mjs",
+        "unchanged": true,
+        "sha256": "2f07bb91d2dbd804bc6d1eee597491676363007ea1981591e75641bc7c32b3ed"
+      },
+      {
+        "path": "scripts/verify-conference-data-browser.mjs",
+        "unchanged": true,
+        "sha256": "45fb940df434f5452e02d3fa611041c4ff40ef2aa7834ea8094f92d6b68a5b3a"
+      },
+      {
+        "path": "scripts/verify-page-heading-browser.mjs",
+        "unchanged": true,
+        "sha256": "509bed53e777ac9dfc83174fab37740eab8decc1be408ad5019e633f81acff01"
+      },
+      {
+        "path": "scripts/native-input-keyboard.mjs",
+        "unchanged": true,
+        "sha256": "204f82ed7637d635dc47c1c2e4e4582867da924765f417bc405567baea622429"
+      },
+      {
+        "path": "scripts/native-select-keyboard.mjs",
+        "unchanged": true,
+        "sha256": "0de644c0a61b173874668764295b211c17c7a5730bd98c010296ad4572c141e9"
+      },
+      {
+        "path": "scripts/verify-compare-shell-browser.mjs",
+        "unchanged": true,
+        "sha256": "5a0425bb9b750a77c481204c1e921ab1ff99ac4599a6cad39fbc3755a4b57ed4"
+      },
+      {
+        "path": "scripts/verify-responsive-workbench-browser.mjs",
+        "unchanged": true,
+        "sha256": "63efc03c19f76bfdb40d665d117f21366375b46828bdb7c98973e0345165b4f5"
+      },
+      {
+        "path": "scripts/verify-wp6-browser.mjs",
+        "unchanged": true,
+        "sha256": "0ce6b6a5b0c2122d8b6ad16dd768d41efddbbd8041c4f7ebee611b90d39471a2"
+      },
+      {
+        "path": "scripts/verify-chart-qa-metrics.mjs",
+        "unchanged": true,
+        "sha256": "23627b9fcc4acfb6aba2a10b3501312d0d75ddb690d1885676f29522c7536174"
+      }
+    ]
+  },
+  "performance": {
+    "status": "unmeasured",
+    "reason": "Chromium Unix socket creation denied before CDP startup",
+    "configuredNetwork": {
+      "label": "Chrome DevTools Fast 4G",
+      "offline": false,
+      "latency": 165,
+      "downloadThroughput": 1012500,
+      "uploadThroughput": 168750,
+      "connectionType": "cellular4g",
+      "serverEncoding": "gzip",
+      "cacheDisabled": true,
+      "cpuThrottling": 1
+    },
+    "budgets": {
+      "initialPaintedReadyMs": 2500,
+      "pageTransitionMs": 150
+    },
+    "observedCases": 0,
+    "cases": [
+      {
+        "width": 390,
+        "height": 844,
+        "paintedReadyMs": null,
+        "timelineStartMs": null,
+        "timelineDurationMs": null,
+        "status": "not-run-browser-startup-blocked"
+      },
+      {
+        "width": 320,
+        "height": 740,
+        "paintedReadyMs": null,
+        "timelineStartMs": null,
+        "timelineDurationMs": null,
+        "status": "not-run-browser-startup-blocked"
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "paintedReadyMs": null,
+        "timelineStartMs": null,
+        "timelineDurationMs": null,
+        "status": "not-run-browser-startup-blocked"
+      },
+      {
+        "width": 1024,
+        "height": 768,
+        "paintedReadyMs": null,
+        "timelineStartMs": null,
+        "timelineDurationMs": null,
+        "status": "not-run-browser-startup-blocked"
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "paintedReadyMs": null,
+        "timelineStartMs": null,
+        "timelineDurationMs": null,
+        "status": "not-run-browser-startup-blocked"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "paintedReadyMs": null,
+        "timelineStartMs": null,
+        "timelineDurationMs": null,
+        "status": "not-run-browser-startup-blocked"
+      }
+    ],
+    "pageTransitionsMeasured": 0
+  },
+  "browserRegressions": {
+    "conference": {
+      "expected": 14,
+      "observed": 0
+    },
+    "compare": {
+      "observedRoutes": 0,
+      "observedViewports": 0
+    },
+    "uiGates": [
+      {
+        "id": "responsive-BTCUSD",
+        "expected": 11,
+        "observed": 0,
+        "exit": 1
+      },
+      {
+        "id": "responsive-ETHUSD",
+        "expected": 11,
+        "observed": 0,
+        "exit": 1
+      },
+      {
+        "id": "responsive-MSTR",
+        "expected": 11,
+        "observed": 0,
+        "exit": 1
+      },
+      {
+        "id": "responsive-BMNR",
+        "expected": 11,
+        "observed": 0,
+        "exit": 1
+      },
+      {
+        "id": "wp6",
+        "expected": 30,
+        "observed": 0,
+        "exit": 1
+      },
+      {
+        "id": "chart-qa",
+        "expected": 12,
+        "observed": 0,
+        "exit": 1
+      }
+    ]
+  },
+  "archive": {
+    "file": "verification.tar.gz",
+    "bytes": 325041,
+    "sha256": "24b06798d3465fbf59c5010001fee2a1794642c182f2861058196ff72652af1f",
+    "originalFileCount": 50,
+    "members": [
+      {
+        "path": "baseline-390.log",
+        "bytes": 160,
+        "sha256": "9e91e277e4532212981272d399f8c8a8c24a03adef2261aa82f63eaf3222022b"
+      },
+      {
+        "path": "baseline-390/chrome.stderr.log",
+        "bytes": 544,
+        "sha256": "00a3267e71d8cafffe7d43aca903d4224c8e3f1ba23ea97a15bd1beae723d39a"
+      },
+      {
+        "path": "baseline-390/report.json",
+        "bytes": 112040,
+        "sha256": "034ce7776c4b3a7c38340bd570db98fbf22ca74635f8a981bbae255722e9c3bc"
+      },
+      {
+        "path": "boot-focused.log",
+        "bytes": 2123,
+        "sha256": "d1a2c2d32c26a99c9114f2da61e1d90f858af8623c12ed0258496ac5016b0284"
+      },
+      {
+        "path": "chrome-launch-check.log",
+        "bytes": 326,
+        "sha256": "5552f5da84c2cd60af751caee2b279b1ac97e5a97329a568ff0022e942608d94"
+      },
+      {
+        "path": "compare/compare-shell-verify.json",
+        "bytes": 2486,
+        "sha256": "a67efd682f018f5c8484865bb8283404543d4394ba8e360833622d737128c77d"
+      },
+      {
+        "path": "conference-14/chrome.stderr.log",
+        "bytes": 544,
+        "sha256": "934b924bab3fdacddc0ee7d23b8d2f651b89f9b2c614a91dc4ba21a5c9796c7d"
+      },
+      {
+        "path": "conference-14/report.json",
+        "bytes": 112283,
+        "sha256": "ce079936dd1483024b483b29924c49bb9437b063b4280403e617f4b1d30f8f66"
+      },
+      {
+        "path": "css-receipt.json",
+        "bytes": 8710,
+        "sha256": "0df91cae3711397c61a5ab28a49d06ab195050b2ffa2468b5be810a50496bc49"
+      },
+      {
+        "path": "data-fast4g/chrome.stderr.log",
+        "bytes": 544,
+        "sha256": "32b38492832c0980282a1ca3c34651245f69aa6aae9d1bc353c60808afc63068"
+      },
+      {
+        "path": "data-fast4g/report.json",
+        "bytes": 112243,
+        "sha256": "f6931ad82cc5e983cd209fd18520d33cc5f3b76b95aba1202dddc9d4f7189a15"
+      },
+      {
+        "path": "preservation.json",
+        "bytes": 3975,
+        "sha256": "95406dcb10c5f5ccd5ec4ffd80da5f5dc995cfc201fad7e614c434cdf44ead5a"
+      },
+      {
+        "path": "results/compare.json",
+        "bytes": 458,
+        "sha256": "1b089426942a75db7aa551f5f34d5767a40098243c9fc921d5da67b597c10369"
+      },
+      {
+        "path": "results/compare.log",
+        "bytes": 771,
+        "sha256": "ef271fda4403ef1f006ef6a2a0dbb6a7bd1eb7738eed449bbbced36522cab3f1"
+      },
+      {
+        "path": "results/conference-14.json",
+        "bytes": 461,
+        "sha256": "a0fac65640bbfc114c100902687a78e876d1011315156dc63e57ef7234d1c4c5"
+      },
+      {
+        "path": "results/conference-14.log",
+        "bytes": 140,
+        "sha256": "879cb25c50d1e968633f27508bfea3308280240c29d90606e869d07ffecdbe35"
+      },
+      {
+        "path": "results/data-fast4g.json",
+        "bytes": 526,
+        "sha256": "e78fd4b9392b979e8639c82131b9f61cdfeb95cd84f3206f03b90646ca6fd92a"
+      },
+      {
+        "path": "results/data-fast4g.log",
+        "bytes": 159,
+        "sha256": "f27bc71261986749a76c377782feaa3ecc23b1a46d34604cdbb8c33364b6a906"
+      },
+      {
+        "path": "results/npm-test.json",
+        "bytes": 711,
+        "sha256": "31a254212e7be5a08611707ca7268c5143c50f11d13bc769d8799e2ae6985615"
+      },
+      {
+        "path": "results/npm-test.log",
+        "bytes": 832041,
+        "sha256": "6e2a23b60c4921c030a1f0a247c21b12f2d8f5e512e14fbb7fde05f10837b913"
+      },
+      {
+        "path": "results/pages.json",
+        "bytes": 691,
+        "sha256": "dc09e0f78ab481bd57f0647ecc9c009bbe3198950e99967caf495ea820454028"
+      },
+      {
+        "path": "results/pages.log",
+        "bytes": 5116,
+        "sha256": "28d4da3d410d20df8f46d4c32968b9d3d2aa9c9c868d88a43ad32b062933c5f9"
+      },
+      {
+        "path": "results/static.json",
+        "bytes": 692,
+        "sha256": "9e1d5ec01828f4ab326cb7ae6af78ba293490799c9f1ea15f07c90c09a633a3b"
+      },
+      {
+        "path": "results/static.log",
+        "bytes": 354,
+        "sha256": "55454dd26b1517b20899ff3431a462871b2269e968e88e8666e52e6800bea23e"
+      },
+      {
+        "path": "results/styles-check.json",
+        "bytes": 430,
+        "sha256": "3e9d25e881d2105a35eb216e4b18aee14eeb602aa9c648cd52ea98a86e15a63a"
+      },
+      {
+        "path": "results/styles-check.log",
+        "bytes": 311,
+        "sha256": "69ff4d89dd698aa12969fe6aac73a160692cad620b42cc604f3e19021b88723d"
+      },
+      {
+        "path": "results/timeline.json",
+        "bytes": 882,
+        "sha256": "f63791154da7ed96ab74cf5cc212d75b1c867152f47f0ea679315b504b8eaaeb"
+      },
+      {
+        "path": "results/timeline.log",
+        "bytes": 965,
+        "sha256": "cc93ed06f7417db6a605e1d998ced301252b8a3db8875b71c0ad5dd0ed76fef0"
+      },
+      {
+        "path": "results/typecheck.json",
+        "bytes": 687,
+        "sha256": "70f153b5ce64874bec58c5b261872f8b8d69e5c0afc7446ba840a228e6905fde"
+      },
+      {
+        "path": "results/typecheck.log",
+        "bytes": 206,
+        "sha256": "d9185066952b9395d37541b6167aa9e7b4bb93fd4f5a9ec49f0afba63fa3697d"
+      },
+      {
+        "path": "results/ui-gates.json",
+        "bytes": 572,
+        "sha256": "74d7af50ebb58033704096c88aa00ad7b72b83c044e7fa8c443c6df255e0cdf9"
+      },
+      {
+        "path": "results/ui-gates.log",
+        "bytes": 9340,
+        "sha256": "2b1146befea159c5bcdc8d973f183ad2db81785006e7843b15b2d0a332c44b53"
+      },
+      {
+        "path": "run-command.mjs",
+        "bytes": 1517,
+        "sha256": "f9486e42ee78e842f71294293e79c1d655389908c41f58db4b5faed1a37d832f"
+      },
+      {
+        "path": "site-styles-focused.log",
+        "bytes": 612,
+        "sha256": "36425620abf63d9a669d97909290bfda62063fbb93f9a4e0ca3a2a9c62d9a663"
+      },
+      {
+        "path": "source-manifest.json",
+        "bytes": 2338,
+        "sha256": "b427ab6f2b458cdc88590ab2f52278d05ff8a73a5413e81afffb88bd1b76e910"
+      },
+      {
+        "path": "standalone-packaging.log",
+        "bytes": 897,
+        "sha256": "6d3b2153e15f3021207aa85e1636c5078ac433781d2d2591ceffeb693f3f2c52"
+      },
+      {
+        "path": "timeline-coverage.json",
+        "bytes": 965,
+        "sha256": "cc93ed06f7417db6a605e1d998ced301252b8a3db8875b71c0ad5dd0ed76fef0"
+      },
+      {
+        "path": "ui-gates/chart-qa/report.json",
+        "bytes": 3332,
+        "sha256": "8d98bd5c00fcd6095b5e2250223ea567dcb6a8b1e6b9b95e924d3b824cc31f49"
+      },
+      {
+        "path": "ui-gates/chart-qa/run.log",
+        "bytes": 303,
+        "sha256": "46bb01ab97a40c176c6dac3d60f4f207657e8b8bd4b3d366acb76dfbb1c2d523"
+      },
+      {
+        "path": "ui-gates/responsive-BMNR/report.json",
+        "bytes": 3737,
+        "sha256": "1aa60187ee6f71054cfd0d7a9810f3f3c658dc12263b50bfb301948cc80542c8"
+      },
+      {
+        "path": "ui-gates/responsive-BMNR/run.log",
+        "bytes": 402,
+        "sha256": "3144490d184109c3da80b4dfab4d3343b060ffc96dace7959797993b1ac4002b"
+      },
+      {
+        "path": "ui-gates/responsive-BTCUSD/report.json",
+        "bytes": 3736,
+        "sha256": "d24dfd570c9baba650baaab473169d64ba970135bca6fb3c6bf6bf8ecf431afb"
+      },
+      {
+        "path": "ui-gates/responsive-BTCUSD/run.log",
+        "bytes": 406,
+        "sha256": "d38b045bdc2091232dfd76724256bf99c914b6c27c737060a877d2d9be1a1b05"
+      },
+      {
+        "path": "ui-gates/responsive-ETHUSD/report.json",
+        "bytes": 3743,
+        "sha256": "2aaa84c39dbc677d5f51a807e1e57a027dab7550ca9a601815a8c77615d1b202"
+      },
+      {
+        "path": "ui-gates/responsive-ETHUSD/run.log",
+        "bytes": 406,
+        "sha256": "3e247e71a5be96af1cf24aff094088cbf1ad4e2725d0ec7962c46043120098a0"
+      },
+      {
+        "path": "ui-gates/responsive-MSTR/report.json",
+        "bytes": 3737,
+        "sha256": "eb45a453dc3e2d6d2e22da2be2b1c5924f89b0adaf0a3925500321f8f7101dc9"
+      },
+      {
+        "path": "ui-gates/responsive-MSTR/run.log",
+        "bytes": 402,
+        "sha256": "13402b0bfd6a3911de46cb041db67f82629850dc370ccfe07973c7a717864785"
+      },
+      {
+        "path": "ui-gates/summary.json",
+        "bytes": 8366,
+        "sha256": "02c535ba29e81086c2818645164e69c9d9a76aff1bc153b798944717d1a04d13"
+      },
+      {
+        "path": "ui-gates/wp6/report.json",
+        "bytes": 3327,
+        "sha256": "0c57707d080bef398bc2e58b32939750b0b40642bfe25926ed334218c09b49bf"
+      },
+      {
+        "path": "ui-gates/wp6/run.log",
+        "bytes": 298,
+        "sha256": "aad11b81aa49f85f1f73c1c514203ba611840aeee537af614372b2ca914a1791"
+      }
+    ]
+  }
+}
