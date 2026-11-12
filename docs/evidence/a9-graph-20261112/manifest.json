@@ -1,0 +1,457 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-conference-a9-graph-verification",
+  "recordedAt": "2026-11-12T02:37:15.875286+00:00",
+  "baseCommit": "6108910090a68bdbcf2f6eb0265a5da40d9a0159",
+  "sourceCommit": "cedf65e40c313bd4a685301f71d5c80af3e79de0",
+  "sourceTree": "20ef1fb4a026d2bb59bd01fcdc323586f8f68620",
+  "browser": {
+    "attempted": false,
+    "measuredCases": 0,
+    "acceptancePassed": null,
+    "reason": "User explicitly assigned browser measurements to the next macOS run; no browser launch or approval requested."
+  },
+  "timelineStartEstimate": {
+    "metric": "ResourceTiming.startTime",
+    "milliseconds": 200,
+    "rangeMs": [
+      175,
+      400
+    ],
+    "measured": false,
+    "basis": "User baseline HTML/first-resource discovery around175ms; inline JSON hint precedes CSS and module fan-out; added669 gzip bytes."
+  },
+  "commands": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/boot-preloads.test.mjs",
+        "tests/site-preloads.test.mjs",
+        "tests/module-references-static.test.mjs",
+        "tests/site-styles.test.mjs"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T02:30:57.328Z",
+      "node": "v24.22.2",
+      "sourceCommit": "cedf65e40c313bd4a685301f71d5c80af3e79de0",
+      "workingChanges": "",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 806.791227,
+      "finishedAt": "2026-11-12T02:30:58.162Z",
+      "label": "focused",
+      "totals": {
+        "tests": 23,
+        "pass": 23,
+        "fail": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "--test-concurrency=4"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T02:31:45.035Z",
+      "node": "v24.22.2",
+      "sourceCommit": "cedf65e40c313bd4a685301f71d5c80af3e79de0",
+      "workingChanges": "",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 234481.80096999998,
+      "finishedAt": "2026-11-12T02:35:39.536Z",
+      "label": "npm-test",
+      "totals": {
+        "complete": true,
+        "tests": 3479,
+        "pass": 3479,
+        "fail": 0,
+        "skipped": 0,
+        "batches": 1
+      }
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "verify:pages"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T02:30:57.321Z",
+      "node": "v24.22.2",
+      "sourceCommit": "cedf65e40c313bd4a685301f71d5c80af3e79de0",
+      "workingChanges": "",
+      "complete": true,
+      "exit": 1,
+      "signal": null,
+      "elapsedMs": 1470.876754,
+      "finishedAt": "2026-11-12T02:30:58.820Z",
+      "label": "pages"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/build-site-preloads.mjs",
+        "--check"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T02:30:57.515Z",
+      "node": "v24.22.2",
+      "sourceCommit": "cedf65e40c313bd4a685301f71d5c80af3e79de0",
+      "workingChanges": "",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 396.065842,
+      "finishedAt": "2026-11-12T02:30:57.942Z",
+      "label": "preloads"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "verify:static"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T02:30:57.495Z",
+      "node": "v24.22.2",
+      "sourceCommit": "cedf65e40c313bd4a685301f71d5c80af3e79de0",
+      "workingChanges": "",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 3506.379198,
+      "finishedAt": "2026-11-12T02:31:01.028Z",
+      "label": "static"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/build-site-styles.mjs",
+        "--check"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T02:30:57.316Z",
+      "node": "v24.22.2",
+      "sourceCommit": "cedf65e40c313bd4a685301f71d5c80af3e79de0",
+      "workingChanges": "",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 213.16409199999998,
+      "finishedAt": "2026-11-12T02:30:57.564Z",
+      "label": "styles"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/verify-conference-timeline.mjs",
+        "--timeline",
+        "dist/conference/timeline.json",
+        "--sources",
+        "docs/conference/source-segments.json",
+        "--out",
+        "build/a9-graph/timeline-coverage.json"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T02:30:57.513Z",
+      "node": "v24.22.2",
+      "sourceCommit": "cedf65e40c313bd4a685301f71d5c80af3e79de0",
+      "workingChanges": "",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 260.06487200000004,
+      "finishedAt": "2026-11-12T02:30:57.800Z",
+      "label": "timeline"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T02:30:57.327Z",
+      "node": "v24.22.2",
+      "sourceCommit": "cedf65e40c313bd4a685301f71d5c80af3e79de0",
+      "workingChanges": "",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 1141.431203,
+      "finishedAt": "2026-11-12T02:30:58.496Z",
+      "label": "typecheck"
+    }
+  ],
+  "byteBudget": {
+    "baseCommit": "6108910090a68bdbcf2f6eb0265a5da40d9a0159",
+    "node": "v24.22.2",
+    "zlib": "1.3.2.1-motley-285e94b",
+    "htmlBefore": {
+      "raw": 54648,
+      "gzip9": 15020
+    },
+    "htmlAfter": {
+      "raw": 57317,
+      "gzip9": 15689
+    },
+    "modules": {
+      "urlCount": 55,
+      "uniqueFiles": 53,
+      "rawByURL": 744700,
+      "gzip9ByURL": 253879
+    },
+    "timeline": {
+      "raw": 1044921,
+      "gzip9": 187031
+    },
+    "htmlDelta": {
+      "raw": 2669,
+      "gzip9": 669
+    }
+  },
+  "preservation": {
+    "status": "ok",
+    "baseCommit": "6108910090a68bdbcf2f6eb0265a5da40d9a0159",
+    "sourceCommit": "cedf65e40c313bd4a685301f71d5c80af3e79de0",
+    "moduleFiles": 53,
+    "sourceStylesheets": 41,
+    "harnesses": 22,
+    "dataFiles": 2,
+    "matchedFiles": 118,
+    "changedDist": [
+      "dist/index.html"
+    ]
+  },
+  "independentGraph": {
+    "status": "ok",
+    "comparedCommit": "6108910090a68bdbcf2f6eb0265a5da40d9a0159",
+    "modules": 55,
+    "physicalFiles": 53,
+    "staticEdges": 81,
+    "sourceHashesMatched": 54,
+    "baseCases": 3,
+    "inactiveRoutes": 13,
+    "differences": []
+  },
+  "sourceFiles": [
+    {
+      "path": "dist/index.html",
+      "bytes": 57317,
+      "sha256": "07e1e7826fc05cd76f7cb896b506feea03a06f7a3aa7f07f84913cd589fd5a45"
+    },
+    {
+      "path": "docs/conference/boot-preload-graph.json",
+      "bytes": 25708,
+      "sha256": "ecf02792e53a1e93a2b64e43dfafb7f37863d11b426294ff46b6cade2edaa51d"
+    },
+    {
+      "path": "scripts/build-site-preloads.mjs",
+      "bytes": 9107,
+      "sha256": "1ded164871db255509410c58f7d6708f2bcabc6d05a72f75fe967c6e5f71c8fb"
+    },
+    {
+      "path": "scripts/module-references.mjs",
+      "bytes": 8166,
+      "sha256": "5803050b7ee41f61f3313982a7ab54053fcbf0918334dbe595764b0faf9bc001"
+    },
+    {
+      "path": "scripts/standalone-verification.mjs",
+      "bytes": 8673,
+      "sha256": "5185416aef998b4631f62c088d0542c4f4f4ab7a793804386a76ba67e5efd467"
+    },
+    {
+      "path": "tests/boot-preloads.test.mjs",
+      "bytes": 5059,
+      "sha256": "faac8ca6032d2ec9481070b3224de235d505cf20bcf8f5146be25152cb84fc01"
+    },
+    {
+      "path": "tests/module-references-static.test.mjs",
+      "bytes": 4698,
+      "sha256": "44c8008156852db2a3b794ebbbca806146e4828bfc799eef8c69c8530b1c62dd"
+    },
+    {
+      "path": "tests/site-preloads.test.mjs",
+      "bytes": 10542,
+      "sha256": "ba70edac1ccdfba8da89f9e00054672c5a4576c5585829ce2365e486ff72e26a"
+    },
+    {
+      "path": "tests/standalone-packaging.test.mjs",
+      "bytes": 18276,
+      "sha256": "dcb042efa4afe5af6b3e33a0681c2f8ca049d368fcc9ea0812ab693d014c9a76"
+    }
+  ],
+  "archive": {
+    "file": "verification.tar.gz",
+    "bytes": 189122,
+    "sha256": "a36ebfdab6259aba0801ff6a776285b9f9eca02890e6907c511f803280ccb1d1",
+    "fileCount": 24,
+    "files": [
+      {
+        "path": "audit-static-closure.mjs",
+        "bytes": 3978,
+        "sha256": "16b15e6f7ec4708bf7c13aef68893272bfbc1cd953727e7c0dd0ba6022516c6f"
+      },
+      {
+        "path": "byte-budget.json",
+        "bytes": 469,
+        "sha256": "e7b7927b6a8498e55e916a96eae48433ae47841f20a9de0cf7abab582c3bbd34"
+      },
+      {
+        "path": "compare-generated.mjs",
+        "bytes": 4792,
+        "sha256": "3dc9129e732795e769eb1d9101880e26e8156dca910d71e30abc521fa36b5ee8"
+      },
+      {
+        "path": "generated-comparison.json",
+        "bytes": 238,
+        "sha256": "12f7961fd1aea8505d9d7041aff3f5af6d6187a4fa0f3ca6d0c482a6d925852c"
+      },
+      {
+        "path": "protected-sources.json",
+        "bytes": 19437,
+        "sha256": "ea48e57d4bac85c640ba6fb1f1131bf337da628c7410d4dfa855a1fa0e49440b"
+      },
+      {
+        "path": "results/focused.json",
+        "bytes": 565,
+        "sha256": "43f958f748b600bc66e528aff75e433e6b561de9803b793777ecd520da407162"
+      },
+      {
+        "path": "results/focused.log",
+        "bytes": 5679,
+        "sha256": "ee8593369bf74bc40a19b0aa93b6161bebf99b22dd74fff793939b34e44c60ad"
+      },
+      {
+        "path": "results/npm-test.json",
+        "bytes": 428,
+        "sha256": "bf8e316fadb031be7f518bb4fe21a52c372360f7e775893ec5f244dd86eed223"
+      },
+      {
+        "path": "results/npm-test.log",
+        "bytes": 835701,
+        "sha256": "060390de6d6d1d8e7c88af04e574d90dad3b67c29012adbf05a77c8e195f445e"
+      },
+      {
+        "path": "results/pages.json",
+        "bytes": 402,
+        "sha256": "614672b8c024ab952f841b1e8460c6af1aa5e66de5fa1d547c38f9c63ef7506f"
+      },
+      {
+        "path": "results/pages.log",
+        "bytes": 5116,
+        "sha256": "2e565e5fcd9d874d6634c3b33f76e44fc3a5572f1f2cbb93e9d474775c497b7d"
+      },
+      {
+        "path": "results/preloads.json",
+        "bytes": 425,
+        "sha256": "339a7781ee31108d8b85935c59f578554dab71c4c355df31764f0a8a665363d5"
+      },
+      {
+        "path": "results/preloads.log",
+        "bytes": 537,
+        "sha256": "b5077da5f48203c23a47cbcd69e51638a829681457ae14e03bf25d4f1f988526"
+      },
+      {
+        "path": "results/static.json",
+        "bytes": 403,
+        "sha256": "ea5ebb454975acefa1b6b94bd57e1450521eae3ef1c18ba1815d48462c3e0c73"
+      },
+      {
+        "path": "results/static.log",
+        "bytes": 354,
+        "sha256": "55454dd26b1517b20899ff3431a462871b2269e968e88e8666e52e6800bea23e"
+      },
+      {
+        "path": "results/styles.json",
+        "bytes": 431,
+        "sha256": "9b0264c7782617d8dfc00321f82e6c0a3aeb695eda98eb560982fb4242be3ce4"
+      },
+      {
+        "path": "results/styles.log",
+        "bytes": 311,
+        "sha256": "69ff4d89dd698aa12969fe6aac73a160692cad620b42cc604f3e19021b88723d"
+      },
+      {
+        "path": "results/timeline.json",
+        "bytes": 599,
+        "sha256": "e14bd270404b7b19203e631a34bb8ad5a4076b0de3289c9db5418124b63617e1"
+      },
+      {
+        "path": "results/timeline.log",
+        "bytes": 965,
+        "sha256": "3a2d52c63c94b1224cee9eabab17ccec64a5e0e5078302ac89608dd2521dfae1"
+      },
+      {
+        "path": "results/typecheck.json",
+        "bytes": 399,
+        "sha256": "6917291a8c6573e7b46b2aa91481bf268a6720b847be6a39872db0e30090ffc7"
+      },
+      {
+        "path": "results/typecheck.log",
+        "bytes": 206,
+        "sha256": "d9185066952b9395d37541b6167aa9e7b4bb93fd4f5a9ec49f0afba63fa3697d"
+      },
+      {
+        "path": "run-command.mjs",
+        "bytes": 1523,
+        "sha256": "fec775a262e0ef7287d271683b91c65882db7af0fb5b7739da5a6e0fa2955783"
+      },
+      {
+        "path": "static-closure-audit.json",
+        "bytes": 74362,
+        "sha256": "7c17e2002f32ee3c8d53e2559cbd0ea5a50ff94f1c9b1d8dc0a1ebf8d8e6fcb4"
+      },
+      {
+        "path": "timeline-coverage.json",
+        "bytes": 965,
+        "sha256": "3a2d52c63c94b1224cee9eabab17ccec64a5e0e5078302ac89608dd2521dfae1"
+      }
+    ]
+  },
+  "integration": {
+    "remoteBaseCommit": "51358c36c8195e7535ae44d93b77902f58b60b8b",
+    "remoteBaseTree": "92a03aabfcb61ae54c0ed91992a2b633c036d00f",
+    "preservedRemoteCommits": [
+      "0abd8ff884bcff88545c68cc4b36515b9597f776",
+      "51358c36c8195e7535ae44d93b77902f58b60b8b"
+    ],
+    "preservedRemoteFiles": [
+      {
+        "file": "docs/LAUNCH_CHECKLIST_20261110.md",
+        "bytes": 94194,
+        "sha256": "3b661999b719d109f6657782392d38b9e1b4b5171da00300d96275acb88653be"
+      },
+      {
+        "file": "docs/conference/A9_MACOS_VERIFICATION_20261112.md",
+        "bytes": 6345,
+        "sha256": "681a21af938243d444dfa22373d81124be4fbd6c24ef3b1c66b79a14da470ddd"
+      },
+      {
+        "file": "docs/evidence/a9-macos-20261112/summary.json",
+        "bytes": 2774,
+        "sha256": "14fd239fe7930f030e2756930a3aaddfce85c8d4a9563fd64ccfdaba14008879"
+      },
+      {
+        "file": "docs/requirements/README.md",
+        "bytes": 7038,
+        "sha256": "da14888e42f2846fe8678f665901f8707d13a68b049e476ff320b1b403b1cc01"
+      }
+    ],
+    "implementationCommit": "1e0d0718ed2e31c34d87f426c8c64c22e42bf407",
+    "implementationTree": "a37587c4b740b22643df8d5c696aa220ee13dec4",
+    "testedCommit": "cedf65e40c313bd4a685301f71d5c80af3e79de0",
+    "testedTree": "20ef1fb4a026d2bb59bd01fcdc323586f8f68620",
+    "matchedImplementationFiles": 9,
+    "productOrTestCodeDifferences": 0,
+    "reason": "Concurrent remote documentation-only commits were retained before a non-force fast-forward push. Original test receipts remain unchanged."
+  }
+}
