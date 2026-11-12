@@ -1,0 +1,37 @@
+[
+  {
+    "name": "focused",
+    "cmd": "node --import tsx --test --test-reporter=tap tests/relay-standalone.test.mjs tests/site-styles.test.mjs tests/site-preloads.test.mjs tests/ui-renewal-p0-text-hit.test.mjs tests/ui-renewal-p1-browser.test.mjs tests/ui-renewal-p1-interception.test.mjs tests/ui-renewal-p1-server.test.mjs tests/r19p1-heading-clip.test.mjs tests/r19p1-shell.test.mjs tests/r19p1-served-shell.test.mjs tests/page-heading-and-touch-floor.test.mjs tests/static-module-references.test.mjs",
+    "exitCode": 0,
+    "log": "focused.log",
+    "verifiedProductTree": "8e483903e27dc434f0051394620a68fed36cca4e"
+  },
+  {
+    "name": "styles",
+    "cmd": "node scripts/build-site-styles.mjs --check",
+    "exitCode": 0,
+    "log": "styles.log",
+    "verifiedProductTree": "8e483903e27dc434f0051394620a68fed36cca4e"
+  },
+  {
+    "name": "preloads",
+    "cmd": "node scripts/build-site-preloads.mjs --check",
+    "exitCode": 0,
+    "log": "preloads.log",
+    "verifiedProductTree": "8e483903e27dc434f0051394620a68fed36cca4e"
+  },
+  {
+    "name": "static",
+    "cmd": "npm run verify:static",
+    "exitCode": 0,
+    "log": "static.log",
+    "verifiedProductTree": "8e483903e27dc434f0051394620a68fed36cca4e"
+  },
+  {
+    "name": "pages",
+    "cmd": "npm run verify:pages",
+    "exitCode": 0,
+    "log": "pages.log",
+    "verifiedProductTree": "8e483903e27dc434f0051394620a68fed36cca4e"
+  }
+]

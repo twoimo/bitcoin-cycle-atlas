@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "productCommit": "6e33d0fb8a6b489a1c7571d3aba254f84a54bb5b",
+  "recordedAt": "2026-11-13T06:47:48.722406+09:00",
+  "excludes": "manifest.json itself",
+  "files": [
+    {
+      "file": "README.md",
+      "bytes": 6360,
+      "sha256": "72fb0407213bfc53ac4a747b557bd9a4d68059b69e603bf4626bc328eb0fde07"
+    },
+    {
+      "file": "checks.json",
+      "bytes": 1398,
+      "sha256": "01ba9a05a846ac9af204892b071cb2ceeccca1f1cba9ece51c26f9beef8bba98"
+    },
+    {
+      "file": "raw/build-pages.log.gz",
+      "bytes": 2656,
+      "sha256": "aed0144321710320ce27477b7369fbc726b7685c07afb030ecfa2fbff0de6052"
+    },
+    {
+      "file": "raw/build-preloads.log.gz",
+      "bytes": 356,
+      "sha256": "9327b5a8c29bab6e5cd04fd05009e02feedeb901325e126f75fb0afb543fafbe"
+    },
+    {
+      "file": "raw/build-styles.log.gz",
+      "bytes": 225,
+      "sha256": "787d5d3424ad0f63fd7c0c8a849b2d53286b58cbc2162e92d387a277840ac662"
+    },
+    {
+      "file": "raw/focused.log.gz",
+      "bytes": 7410,
+      "sha256": "3463d931dbc0496098217c55f3f461ae5bc3c899499eee34c27ce3ae99392263"
+    },
+    {
+      "file": "raw/native-p1/report.json.gz",
+      "bytes": 109571,
+      "sha256": "3027e5e13ddca3a86da9033aae20b601b36de8e4981e4c5f222c890bd3e6626c"
+    },
+    {
+      "file": "raw/native-p1-exit.json.gz",
+      "bytes": 35,
+      "sha256": "496c716f4ad41f1c788d942286558f74cfdff0088052427801be2eecd0476ac5"
+    },
+    {
+      "file": "raw/native-p1.log.gz",
+      "bytes": 260,
+      "sha256": "e9f1a203b518305b69f59c80b6f21323c5ba5a61e131957bb20175b12cecb493"
+    },
+    {
+      "file": "raw/pages.log.gz",
+      "bytes": 2656,
+      "sha256": "4e31c94dfcb8b1f6388770936c82112b8c4cf0334807f402140839bf82b213a4"
+    },
+    {
+      "file": "raw/preloads.log.gz",
+      "bytes": 356,
+      "sha256": "a6c058896960911eb3fc4588a071ed5dca57eac0191e9b09fb591f5c5d9d5ecb"
+    },
+    {
+      "file": "raw/static.log.gz",
+      "bytes": 236,
+      "sha256": "1cdda36215977fc986cd89441f160e808dcdeb6a2ab2414ccf6f670df6172a88"
+    },
+    {
+      "file": "raw/styles.log.gz",
+      "bytes": 224,
+      "sha256": "c4dc5472216d8e81c721a94fa3da010cb65792f669d2da8b336d4b3aa473f807"
+    },
+    {
+      "file": "raw-manifest.json",
+      "bytes": 3482,
+      "sha256": "8c053c5a350b7e52722521fbe404877da86c8cca9b639486d27959c696b16787"
+    },
+    {
+      "file": "source-preservation.json.gz",
+      "bytes": 97252,
+      "sha256": "34480cfbf46e50ed66ea5d3234ac25150a36cd802e74291f4c688503664315fc"
+    },
+    {
+      "file": "summary.json",
+      "bytes": 4906,
+      "sha256": "6edf7ddd852afc0051d5ba8a48e8b420e93d348fcb5ecc026efd35df3b7bbf72"
+    }
+  ]
+}
