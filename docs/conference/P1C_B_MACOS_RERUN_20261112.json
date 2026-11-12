@@ -1,0 +1,405 @@
+{
+  "kind": "atlas-conference-p1c-b-macos-rerun",
+  "sourceCommit": "bee29b2b0044d27a74a8252818bfc58d7a9fd28d",
+  "reportSha256": "6e7d96c72a9ab4318f8a6e2969999b0d47f37edb37ed479c5768515741da8e01",
+  "counts": {
+    "cases": 20,
+    "passed": 7,
+    "failed": 13,
+    "skipped": 0
+  },
+  "exitCode": 1,
+  "preflight": {
+    "passed": true,
+    "assets": 562,
+    "manifestSha256": "3380d7d513dc81cd218ba9edad64dd88c258e32d7741aea3ea7e7dbf9266bb5e"
+  },
+  "http": {
+    "passed": true
+  },
+  "sourceIntegrity": {
+    "unchangedDuringRun": true
+  },
+  "cases": [
+    {
+      "id": "slides-final-290",
+      "status": "failed",
+      "failure": "Error: Timed out: decoded mapped page pages/final/0006.webp; last=null"
+    },
+    {
+      "id": "slides-r17-clean-257",
+      "status": "failed",
+      "failure": "Error: Timed out: decoded mapped page pages/r17/0002.webp; last=null"
+    },
+    {
+      "id": "session-seek-and-play",
+      "status": "passed",
+      "failure": null
+    },
+    {
+      "id": "boundary-00-01",
+      "status": "failed",
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-01-02",
+      "status": "failed",
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-02-03",
+      "status": "failed",
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-03-04",
+      "status": "failed",
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-04-05",
+      "status": "passed",
+      "failure": null
+    },
+    {
+      "id": "boundary-05-06",
+      "status": "passed",
+      "failure": null
+    },
+    {
+      "id": "boundary-06-07",
+      "status": "passed",
+      "failure": null
+    },
+    {
+      "id": "boundary-07-08",
+      "status": "failed",
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-08-09",
+      "status": "failed",
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-09-10",
+      "status": "failed",
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-10-11",
+      "status": "failed",
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-11-12",
+      "status": "failed",
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-12-13",
+      "status": "failed",
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-13-14",
+      "status": "failed",
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "source-join-session-13-18000",
+      "status": "passed",
+      "failure": null
+    },
+    {
+      "id": "missing-fallback",
+      "status": "passed",
+      "failure": null
+    },
+    {
+      "id": "unavailable-fallback",
+      "status": "passed",
+      "failure": null
+    }
+  ],
+  "boundarySeekRequests": [
+    {
+      "id": "boundary-00-01",
+      "status": "failed",
+      "requests": [
+        {
+          "currentTime": 2114.88,
+          "trigger": null,
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=2114.88&deck=final-290"
+        },
+        {
+          "currentTime": 2114.9,
+          "trigger": "pageshow",
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=2114.9&deck=final-290"
+        }
+      ],
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-01-02",
+      "status": "failed",
+      "requests": [
+        {
+          "currentTime": 1164.46,
+          "trigger": null,
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=3280.84&deck=final-290"
+        },
+        {
+          "currentTime": 1164.42,
+          "trigger": "pageshow",
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=3280.8&deck=final-290"
+        }
+      ],
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-02-03",
+      "status": "failed",
+      "requests": [
+        {
+          "currentTime": 1375.1999999999998,
+          "trigger": null,
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=4657.54&deck=final-290"
+        },
+        {
+          "currentTime": 1375.1599999999999,
+          "trigger": "pageshow",
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=4657.5&deck=final-290"
+        }
+      ],
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-03-04",
+      "status": "failed",
+      "requests": [
+        {
+          "currentTime": 1236.8100000000004,
+          "trigger": null,
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=5895.85&deck=final-290"
+        },
+        {
+          "currentTime": 1236.8599999999997,
+          "trigger": "pageshow",
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=5895.9&deck=final-290"
+        }
+      ],
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-04-05",
+      "status": "passed",
+      "requests": [
+        {
+          "currentTime": 1121.1499999999996,
+          "trigger": null,
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=7018.5&deck=final-290"
+        },
+        {
+          "currentTime": 1121.1499999999996,
+          "trigger": "pageshow",
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=7018.5&deck=final-290"
+        }
+      ],
+      "failure": null
+    },
+    {
+      "id": "boundary-05-06",
+      "status": "passed",
+      "requests": [
+        {
+          "currentTime": 1198.5,
+          "trigger": null,
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=8218.5&deck=final-290"
+        },
+        {
+          "currentTime": 1198.5,
+          "trigger": "pageshow",
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=8218.5&deck=final-290"
+        }
+      ],
+      "failure": null
+    },
+    {
+      "id": "boundary-06-07",
+      "status": "passed",
+      "requests": [
+        {
+          "currentTime": 1198.5,
+          "trigger": null,
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=9418.5&deck=final-290"
+        },
+        {
+          "currentTime": 1198.5,
+          "trigger": "pageshow",
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=9418.5&deck=final-290"
+        }
+      ],
+      "failure": null
+    },
+    {
+      "id": "boundary-07-08",
+      "status": "failed",
+      "requests": [
+        {
+          "currentTime": 1446.5200000000004,
+          "trigger": null,
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=10866.52&deck=final-290"
+        },
+        {
+          "currentTime": 1446.5,
+          "trigger": "pageshow",
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=10866.5&deck=final-290"
+        }
+      ],
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-08-09",
+      "status": "failed",
+      "requests": [
+        {
+          "currentTime": 1234.4899999999998,
+          "trigger": null,
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=12102.51&deck=final-290"
+        },
+        {
+          "currentTime": 1234.4799999999996,
+          "trigger": "pageshow",
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=12102.5&deck=final-290"
+        }
+      ],
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-09-10",
+      "status": "failed",
+      "requests": [
+        {
+          "currentTime": 831.119999999999,
+          "trigger": null,
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=12935.13&deck=final-290"
+        },
+        {
+          "currentTime": 831.0900000000001,
+          "trigger": "pageshow",
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=12935.1&deck=final-290"
+        }
+      ],
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-10-11",
+      "status": "failed",
+      "requests": [
+        {
+          "currentTime": 1447.5900000000001,
+          "trigger": null,
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=14384.22&deck=final-290"
+        },
+        {
+          "currentTime": 1447.5700000000015,
+          "trigger": "pageshow",
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=14384.2&deck=final-290"
+        }
+      ],
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-11-12",
+      "status": "failed",
+      "requests": [
+        {
+          "currentTime": 1132.17,
+          "trigger": null,
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=15517.89&deck=final-290"
+        },
+        {
+          "currentTime": 1132.1800000000003,
+          "trigger": "pageshow",
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=15517.9&deck=final-290"
+        }
+      ],
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-12-13",
+      "status": "failed",
+      "requests": [
+        {
+          "currentTime": 2435.619999999999,
+          "trigger": null,
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=17955.01&deck=final-290"
+        },
+        {
+          "currentTime": 2435.6100000000006,
+          "trigger": "pageshow",
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=17955&deck=final-290"
+        }
+      ],
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    },
+    {
+      "id": "boundary-13-14",
+      "status": "failed",
+      "requests": [
+        {
+          "currentTime": 2084.8100000000013,
+          "trigger": null,
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=20041.32&deck=final-290"
+        },
+        {
+          "currentTime": 2084.790000000001,
+          "trigger": "pageshow",
+          "url": "http://127.0.0.1:63809/bitcoin-cycle-atlas/?page=conference&t=20041.3&deck=final-290"
+        }
+      ],
+      "failure": "AssertionError [ERR_ASSERTION]: Requested native time must exactly equal event time minus session offset"
+    }
+  ],
+  "deepLinkProbe": [
+    {
+      "request": "?page=conference&t=2401.8&deck=final-290",
+      "stateTime": "2401.8",
+      "page": "6",
+      "expected": "6"
+    },
+    {
+      "request": "?page=conference&t=2401.74&deck=final-290",
+      "stateTime": "2401.74",
+      "urlRewritten": "t=2401.7",
+      "page": "2",
+      "expected": "6"
+    },
+    {
+      "request": "?page=conference&t=2239.5&deck=r17-clean-257",
+      "stateTime": "2239.5",
+      "page": "",
+      "expected": "2",
+      "pageStatus": "이 구간에 맞는 장표 없음"
+    },
+    {
+      "request": "?page=conference&t=3280.84&deck=final-290",
+      "stateTime": "3280.84",
+      "page": "7",
+      "expected": "7"
+    },
+    {
+      "request": "?page=conference&t=19000&deck=final-290",
+      "stateTime": "19000",
+      "page": "245",
+      "expected": "245"
+    }
+  ],
+  "discardedFalsePositive": "python3 -m http.server lacks Range support and serves audio/mp4a-latm; repo media server (206, audio/mp4) resolves the same deep links correctly",
+  "unexecuted": [
+    "human listening 0/10",
+    "A-10 one-hour playback memory",
+    "production Range/206"
+  ]
+}
