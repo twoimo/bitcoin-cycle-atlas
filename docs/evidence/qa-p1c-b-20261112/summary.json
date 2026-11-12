@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "kind": "p1c-b-five-axis-qa",
+  "observedAt": "2026-11-12T15:12:00+09:00",
+  "head": "f5470bf",
+  "productCommit": "31fea06",
+  "distIdenticalToProductCommit": true,
+  "media": {"pages": 547, "sessions": 15, "assets": 562, "manifestSha256Prefix": "3380d7d5"},
+  "axes": {
+    "functional": {
+      "harness": "20/20 (reused receipt at 31fea06, same dist)",
+      "receipt": "docs/conference/P1C_B_MACOS_PASS_20261112.md",
+      "passed": 20, "failed": 0, "skipped": 0
+    },
+    "visual": {
+      "viewports": ["320x740", "390x844", "768x1024", "1440x900"],
+      "screenshots": "build/qa-p1c-b-20261112/conf-*.png, mapped-*.png, stage-1440.png",
+      "horizontalOverflow": 0,
+      "renderedH1": 1,
+      "findings": ["Q-P1c-B-1"]
+    },
+    "accessibility": {
+      "tabStops": 13,
+      "focusRing": "2px solid rgb(144,178,255) on every stop",
+      "iconButtonsWithAriaLabel": 14,
+      "ariaPressedSample": "장표 확대 = false",
+      "conferenceControlsMinTargetPx": ">=44",
+      "reducedMotion": "transition 0s / animation 0s on play, status, slide, caption, controls",
+      "contrastSamples": {"eventTitle": 9.66, "pageField": 12.7, "noSlideChip": 8.86, "caption": 13.84, "minimum": 4.9}
+    },
+    "performance": {
+      "a9": {"cases": 6, "passed": 6, "budgetMs": 2500, "rangeMs": [2252, 2407], "profile": "Chrome Fast 4G",
+        "report": "build/qa-p1c-b-20261112/a9/report.json"}
+    },
+    "consistency": {
+      "gradients": 0, "boxShadows": 0, "backdropFilter": 0, "pillBadges": 0,
+      "glyphEmoji": 0, "fontBelow10px": 0,
+      "font11pxElements": 6,
+      "font11pxNote": "출처·법적 고지·페이지 설명뿐. R18 F3 타이포 범위로 이관",
+      "nonBrandBlue": {"value": "rgb(41,98,255)", "count": 4, "note": "R18 F2 액센트 범위로 이관"},
+      "accentToken": "#d8b56d",
+      "radii": {"2px": 7, "3px": 1, "4px": 14, "50%": 1}
+    }
+  },
+  "findings": [
+    {
+      "id": "Q-P1c-B-1",
+      "axis": "visual",
+      "severity": "medium",
+      "summary": "장표 크롬(도구·페이지 필드·'장표 없음' 배지)이 장표 표면 위를 덮는다",
+      "measurements": {
+        "320": {"slide": [266, 150], "tools": [164, 44, 99, 211], "badge": [122, 24, 5, 328]},
+        "390": {"slide": [336, 189], "tools": [164, 44, 169, 243], "badge": [122, 24, 5, 400]},
+        "768": {"slide": [638, 359], "tools": [196, 44, 511, 226], "badge": [140, 30, 85, 538]},
+        "1440": {"slide": [974, 548], "tools": [196, 44, 1089, 95], "badge": [140, 30, 327, 596]}
+      },
+      "note": "A-6 배지 자체는 계약대로. 문제는 배치가 A-5 '장표를 가리지 않는다' 원칙과 충돌하는 것",
+      "acceptance": "320/390/768/1440에서 크롬∩장표 = 0, 44px 타깃 유지, A-6 배지 유지"
+    }
+  ],
+  "notVerified": [
+    "사람 청취 0/10 (수동)",
+    "A-10 1시간 연속 재생 메모리 (수동)",
+    "Safari·실기기",
+    "전체 npm test (이번 회차 미실행)"
+  ]
+}
