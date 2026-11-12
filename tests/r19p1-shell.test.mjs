@@ -36,10 +36,14 @@ test('header pill host moves the one original nav and restores its exact owner a
   for (let pass=0;pass<3;pass++) {
     shell.setActive(true);
     assert.equal(document.querySelectorAll('.atlas-nav').length,1);
-    assert.equal(nav.parentElement.className,'atlas-dashboard-nav');
+    assert.ok(nav.parentElement.classList.contains('atlas-dashboard-nav'));
+    assert.equal(nav.parentElement,shell.rail,'the live content rail owns the original navigation');
+    assert.equal(document.querySelectorAll('.content-rail').length,1,'no empty or duplicate navigation identity');
     assert.equal(nav.closest('header'),document.querySelector('.atlas-dashboard-header'));
     assert.deepEqual([...nav.children],original);
-    assert.equal(shell.rail.hidden,true,'no empty sidebar/rail reservation');
+    assert.equal(shell.rail.hidden,false,'the header content rail is the actual visible navigation owner');
+    assert.equal(shell.rail.parentElement,document.querySelector('.atlas-dashboard-header'));
+    assert.equal(shell.rail.classList.contains('workbench-rail'),false,'header navigation cannot reserve a vertical chart rail');
     assert.equal(footer.parentElement,shell.bottom);
     assert.equal(document.querySelectorAll('h1').length,1,'header migration cannot clone the title');
     f.click('[data-atlas-page=relay]');
@@ -48,6 +52,7 @@ test('header pill host moves the one original nav and restores its exact owner a
     assert.equal(nav.nextElementSibling,next);
     assert.equal(footer.parentElement,document.getElementById('main'));
     assert.equal(document.querySelector('.atlas-dashboard-nav'),null);
+    assert.equal(document.querySelector('.content-rail'),null,'chart return releases the dashboard navigation owner');
     assert.equal(f.targets.size,0);
   }
   assert.equal(clicks,3);
@@ -73,6 +78,21 @@ test('pointer scroll controls expose both ends and disappear only when all nav c
   assert.equal(previous.disabled,true);assert.equal(next.disabled,false);
 });
 
+test('reconciling an active header does not detach or reinsert its navigation and footer',()=>{
+  const {document,window,shell,nav,footer}=fixture();shell.setActive(true);
+  const owner=nav.parentElement,header=owner.parentElement,bottom=footer.parentElement;
+  const observer=new window.MutationObserver(()=>{});
+  observer.observe(document.body,{childList:true,subtree:true});
+  try{
+    shell.setActive(true);shell.setActive(true);shell.setActive(true);
+    assert.equal(nav.parentElement,owner);assert.equal(owner.parentElement,header);assert.equal(footer.parentElement,bottom);
+    // Linkedom also reports attribute writes for a childList-only observer;
+    // this model checks actual node transfers, not ordinary state attributes.
+    const moves=observer.takeRecords().filter(record=>record.type==='childList');
+    assert.equal(moves.length,0,'owner reconciliation cannot detach/reinsert the active header or footer');
+  }finally{observer.disconnect();}
+});
+
 test('header nav migration preserves source readiness rather than enabling an empty sheet', () => {
   const {document,window,shell}=fixture();
   const source=document.querySelector('[data-method]');
@@ -92,7 +112,7 @@ test('P1 uses exact shared containers and appends only shell-scoped CSS after au
   assert.equal(tokens.get('--shell-container-wide'),'1280px');
   assert.equal(tokens.get('--pill-radius'),'999px');
   const source=readFileSync(new URL('../dist/ui/shell-layout.css',import.meta.url),'utf8');
-  assert.equal(SITE_STYLE_GROUPS.at(-1).sources.at(-1),'ui/shell-layout.css');
+  assert.deepEqual(SITE_STYLE_GROUPS.at(-1).sources.slice(-2),['ui/shell-layout.css','chart-chrome.css'],'P1 shell remains after authored surfaces, followed only by the approved P2 chart chrome');
   assert.match(source,/\[data-shell-width=wide\] #main \{ max-width: var\(--shell-container-wide\)/);
   assert.match(source,/border-radius: var\(--card-radius-md\)/);
   assert.match(source,/overflow-x: auto/);

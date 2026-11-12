@@ -554,8 +554,8 @@
     {
       "url": "./content-shell.js?v=1.38.0",
       "file": "content-shell.js",
-      "bytes": 12500,
-      "sha256": "051433d4a08f359e3a7c91ebe99ddb44b0b6feef4f52fe5fb9e2672624157bb4",
+      "bytes": 12973,
+      "sha256": "52fd98eac9c0039b2352ca642945a82d98a66db5078a18b5c78ca5d582eae3e6",
       "depth": 2,
       "imports": []
     },
@@ -891,6 +891,6 @@
     "sharedModulePreloads": 1,
     "staticImportEdges": 82,
     "maxShortestImportDepth": 6,
-    "moduleBytesByUrl": 768839
+    "moduleBytesByUrl": 769312
   }
 }

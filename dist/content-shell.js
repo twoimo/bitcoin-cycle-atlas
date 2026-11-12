@@ -1,6 +1,7 @@
 // Dashboard pages reuse the original service navigation in the header's
-// scrolling pill row. The fallback sidebar/rail still serves documents that
-// have not mounted the dashboard header. The footer retains its bottom owner.
+// scrolling pill row. The content rail is that same live navigation owner,
+// rather than an empty hidden sibling. Documents without the dashboard header
+// retain the sidebar/vertical-rail fallback. The footer keeps its bottom owner.
 // Nothing is cloned, so ids, listeners, dialogs and data owners stay with their
 // original element, and the chart frame keeps its own regions.
 export const CONTENT_SHELL_PAGES = Object.freeze(['evidence', 'data', 'ipo', 'relay', 'market', 'conference']);
@@ -41,8 +42,12 @@ export function createContentShell({ document }) {
     bottom.setAttribute('aria-label', '자료 출처와 이용 조건');
     const header = document.querySelector('.atlas-dashboard-header');
     if (header) {
-      navHost = document.createElement('div');
-      navHost.className = 'atlas-dashboard-nav';
+      // Keep the service-navigation identity on the actual rendered owner.
+      // Its placement is the header row, not the chart's vertical workbench
+      // rail; the one original nav and its controls still move into this node.
+      navHost = rail;
+      navHost.className = 'atlas-dashboard-nav content-rail';
+      navHost.dataset.shellRegion = 'top';
       for (const [direction, label, path] of [
         ['previous', '이전 페이지 메뉴 보기', 'm14 6-6 6 6 6'],
         ['next', '다음 페이지 메뉴 보기', 'm10 6 6 6-6 6'],
@@ -112,8 +117,11 @@ export function createContentShell({ document }) {
   function mount() {
     const workspace = document.querySelector('.workspace');
     if (!workspace) return;
-    if (rail.parentElement !== workspace) workspace.append(rail, bottom);
-    if (navHost && !navHost.isConnected) document.querySelector('.atlas-dashboard-header')?.append(navHost);
+    if (navHost) {
+      const header = document.querySelector('.atlas-dashboard-header');
+      if (header && navHost.parentElement !== header) header.append(navHost);
+    } else if (rail.parentElement !== workspace) workspace.append(rail);
+    if (bottom.parentElement !== workspace) workspace.append(bottom);
     // Visibility belongs to place() alone. Writing `hidden` here as well made
     // the two functions alternate the value, and the shell's mutation observer
     // re-entered sync() on every write.

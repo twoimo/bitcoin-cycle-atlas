@@ -6,7 +6,7 @@ import {parseHTML} from 'linkedom';
 import {createContentShell, CONTENT_SHELL_PAGES} from '../dist/content-shell.js';
 import {createCompareShellHost} from '../dist/compare-shell-host.js';
 import {mountMobileWorkspace} from '../dist/mobile-workspace.js';
-import {atlasNavigationId, atlasPages, labPageFromLocation} from '../dist/atlas-navigation.js';
+import {atlasNavigationId, atlasNavigationPages, atlasPages, labPageFromLocation} from '../dist/atlas-navigation.js';
 import {readP1RouteReadiness, isP1RouteReady} from '../scripts/verify-ui-renewal-p1-browser.mjs';
 
 const app = readFileSync(new URL('../dist/app.js', import.meta.url), 'utf8');
@@ -50,6 +50,10 @@ function fixture(t, width = 320) {
   const errors = [];
   document.addEventListener('atlas:boot-error', () => counts.bootErrors++);
   const workspace = document.querySelector('.workspace'), nav = document.querySelector('.atlas-nav');
+  for(const item of nav.children){
+    const page=atlasNavigationPages.find(page=>page.id===item.dataset.atlasPage);
+    item.setAttribute('aria-label',page.label);item.textContent=page.label;
+  }
   const contentShell = createContentShell({document}), compareShell = createCompareShellHost({document});
   let imports = {viewport:deferred(), lab:deferred()}, mobile = null, renderer = null;
   const modules = {
@@ -133,7 +137,7 @@ test('a ready dashboard cannot expose an undrawn first chart to the unchanged P1
   for (const width of [320, 1440]) await t.test(`DOM lifecycle with ${width}px media`, async t => {
     const f = fixture(t, width), {document, nav} = f;
     assert.equal(f.ready('relay'), true);
-    assert.equal(nav.parentElement.className, 'atlas-dashboard-nav');
+    assert.ok(nav.parentElement.matches('.atlas-dashboard-nav.content-rail'));
     f.navigate('outlook');
     assert.equal(document.documentElement.dataset.boot, 'ready', 'a route transition does not restart document boot');
     assert.equal(f.ready('outlook'), false);
@@ -157,7 +161,7 @@ test('a ready dashboard cannot expose an undrawn first chart to the unchanged P1
     }
     f.navigate('relay');
     assert.equal(f.ready('relay'), true);
-    assert.equal(nav.parentElement.className, 'atlas-dashboard-nav');
+    assert.ok(nav.parentElement.matches('.atlas-dashboard-nav.content-rail'));
     f.navigate('outlook');
     assert.equal(f.ready('outlook'), false, 'each visible chart return waits for its own draw');
     f.finishDraw('outlook');
@@ -166,6 +170,33 @@ test('a ready dashboard cannot expose an undrawn first chart to the unchanged P1
     assert.equal(document.querySelectorAll('#mobile-details-toggle').length, 1);
     assert.equal(document.querySelectorAll('.workbench-rail:not(.content-rail)').length, 1);
   });
+});
+
+test('the data dashboard exposes its one live navigation identity and original chart-return action',async t=>{
+  const f=fixture(t),{document,nav}=f,original=[...nav.children];
+  f.navigate('data');
+  const owner=document.querySelector('.content-rail');
+  assert.ok(owner?.matches('.atlas-dashboard-nav'));
+  assert.equal(owner.parentElement,document.querySelector('.atlas-dashboard-header'));
+  assert.equal(owner.hidden,false);assert.equal(document.querySelectorAll('.content-rail').length,1);
+  assert.equal(document.querySelectorAll('.atlas-nav').length,1);assert.deepEqual([...nav.children],original);
+  // These are the unchanged dataCase's actual service-owner queries. The
+  // rendered nav, not a hidden mirror or a fabricated marker, supplies them.
+  const activeData=document.querySelector('.atlas-sidebar [data-atlas-page="data"]')||document.querySelector('.content-rail [data-atlas-page="data"]');
+  const back=document.querySelector('.content-rail [data-atlas-page="outlook"]');
+  assert.equal(activeData,original.find(node=>node.dataset.atlasPage==='data'));
+  assert.equal(activeData.getAttribute('aria-current'),'page');
+  assert.equal(back,original.find(node=>node.dataset.atlasPage==='outlook'));
+  assert.equal(back.tagName,'BUTTON');assert.equal(back.getAttribute('aria-label'),'가격 차트');
+  let clicks=0;back.addEventListener('click',()=>{clicks++;f.navigate('outlook');});
+  back.click();assert.equal(clicks,1);assert.equal(document.body.dataset.page,'outlook');
+  assert.equal(document.querySelector('.content-rail'),null,'chart return releases the dashboard owner');
+  await f.resolveImports();f.finishDraw('outlook');
+  assert.equal(nav.parentElement.matches('.workbench-rail:not(.content-rail)'),true);
+  f.navigate('data');assert.equal(document.querySelector('.content-rail'),owner);
+  assert.deepEqual([...nav.children],original);assert.equal(activeData.getAttribute('aria-current'),'page');
+  assert.equal(document.querySelectorAll('.atlas-dashboard-header h1').length,1);
+  back.click();assert.equal(clicks,2,'the real original handler survives both owner transfers');
 });
 
 test('late chart imports cannot steal dashboard navigation, and a later chart visit mounts once', async t => {
