@@ -1,5 +1,6 @@
-/* Temporary evaluation page only. No .fnc-* overrides: native package control
-   sizes, focus, colors and touch behavior remain observable adoption risks. */
+/* Temporary evaluation page only. Q-P2A0-1 adapts the pinned package's
+   controls to Atlas target, contrast and focus contracts without changing
+   chart data, canvas gestures or the production engine. */
 :root { color-scheme: light dark; }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 var(--font); }
@@ -15,9 +16,54 @@ p { margin: 4px 0; }
 #spike-chart { position: relative; width: 100%; height: max(420px, calc(100dvh - 170px)); min-width: 0; }
 footer { margin-top: 12px; font-size: 15px; overflow-wrap: anywhere; }
 footer a { display: inline-flex; align-items: center; min-height: 44px; color: var(--accent-ink); }
+
+/* A 44px target needs room for the package's 2px outline + 1px offset.
+   Keep full controls present and let the toolbar take the height it needs. */
+#spike-chart .fnc-toolbar {
+  height: auto;
+  min-height: 56px;
+  flex-wrap: wrap;
+  padding: 6px 8px;
+}
+#spike-chart :is(.fnc-symbol, .fnc-btn, .fnc-chip) {
+  min-width: 44px;
+  min-height: 44px;
+}
+/* Primary control text is a readable role in both native package themes.
+   Do not change candle/indicator colors or lower the contrast threshold. */
+#spike-chart :is(.fnc-btn, .fnc-chip) { color: var(--fnc-text); }
+#spike-chart .fnc-intervals { padding: 4px; }
+#spike-chart .fnc-drawbar { width: 56px; padding: 8px 5px; }
+
+/* Keep the package's actual close action visible on phones as well. */
+#spike-chart .fnc-search-dialog .fnc-kbd-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--fnc-text);
+}
+#spike-chart .fnc-search-dialog .fnc-search {
+  height: auto;
+  min-height: 56px;
+  flex: none;
+  padding: 6px 8px 6px 16px;
+}
+#spike-chart .fnc-search-dialog .fnc-search input { height: 44px; }
+#spike-chart .fnc-search-dialog .fnc-search input:focus-visible {
+  outline: 2px solid var(--fnc-accent);
+  outline-offset: 1px;
+}
 @media (max-width: 640px) {
   body { font-size: 15px; }
   main { padding: 8px; }
   h1 { font-size: 20px; }
   #spike-chart { height: max(420px, calc(100dvh - 190px)); }
+  /* Symbol + interval, then the complete tool group/drawing/fullscreen row.
+     The existing empty spacer is a line break; no interactive item is hidden. */
+  #spike-chart .fnc-toolbar > .fnc-sep { display: none; }
+  #spike-chart .fnc-toolbar > .fnc-symbol { flex: 1 1 auto; max-width: none; }
+  #spike-chart .fnc-toolbar > .fnc-spacer { flex: 0 0 100%; min-width: 0; height: 0; }
 }

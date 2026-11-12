@@ -1,5 +1,6 @@
 import {createTradingChart} from '@funnest/charts-ui';
 import {createAtlasBtcDatafeed} from './atlas-datafeed.mjs';
+import {mountFunnestAccessibility} from './accessibility.mjs';
 
 // Replaced with exact committed snapshot identity by the isolated build.
 const source = Object.freeze(__SPIKE_DATASET__);
@@ -98,6 +99,8 @@ try {
     // A completed archive has no in-progress candle and no realtime countdown.
     settings:{countdown:false},
   });
+  const accessibility = mountFunnestAccessibility(mount);
+  cleanup.push(() => accessibility.destroy());
   for (const type of ['dataChange','symbolChange','settingsChange','indicatorsChange','drawingsChange','drawingToolChange','visibleRangeChange','crosshairMove']) {
     cleanup.push(widget.chart.on(type, detail => { record(type, detail); void finishPaint(); }));
   }
