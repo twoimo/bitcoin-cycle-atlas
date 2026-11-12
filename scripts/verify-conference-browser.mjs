@@ -11,6 +11,7 @@ import {resolve, relative, sep, extname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {headlessWindowArgument, verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
 import {selectNativeOptionByKeyboard} from './native-select-keyboard.mjs';
+import {replaceNativeInputText} from './native-input-keyboard.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url)), dist = resolve(root, 'dist');
 const args = process.argv.slice(2), option = (key, fallback) => args.includes(key) ? args[args.indexOf(key) + 1] : fallback;
@@ -36,7 +37,7 @@ const report = {schemaVersion:1, kind:'conference-p1a-real-browser', scope:onlyL
   cases:[],failures:[],screenshots:[],status:'failed'};
 
 async function sources() {
-  const files = execFileSync('git',['ls-files','--cached','--others','--exclude-standard','--','dist','scripts/verify-conference-browser.mjs','scripts/headless-browser-window.mjs','scripts/native-select-keyboard.mjs','tests/fixtures/conference'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean);
+  const files = execFileSync('git',['ls-files','--cached','--others','--exclude-standard','--','dist','scripts/verify-conference-browser.mjs','scripts/headless-browser-window.mjs','scripts/native-select-keyboard.mjs','scripts/native-input-keyboard.mjs','tests/fixtures/conference'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean);
   return Object.fromEntries(await Promise.all([...new Set(files)].sort().map(async file => {
     try { return [file,sha(await readFile(resolve(root,file)))]; }
     catch (error) { if(error.code==='ENOENT')return [file,null];throw error; }
@@ -130,7 +131,11 @@ async function key(cdp,name,{shift=false,control=false}={}) {
 }
 async function focus(cdp,selector){await evaluate(cdp,selector=>{const node=document.querySelector(selector);if(!node)throw Error('Missing '+selector);node.focus({preventScroll:true});},selector);}
 async function blur(cdp){await evaluate(cdp,()=>document.activeElement?.blur());}
-async function type(cdp,selector,text){await focus(cdp,selector);await key(cdp,'a',{control:true});await cdp.send('Input.insertText',{text});await delay(35);}
+async function type(cdp,selector,text,entry){
+  const receipt=await replaceNativeInputText({cdp,evaluate,context:cdp,settled,until,selector,text});
+  (entry.nativeTextInputs??=[]).push(receipt);
+  return receipt;
+}
 async function select(cdp,selector,value,entry){
   // Touch emulation is independent: createPage uses desktop device metrics at
   // every width, so the helper must restore mobile:false on macOS too.
@@ -230,10 +235,10 @@ async function coreInteractions(cdp,entry,viewport){
   await click(cdp,'.conference-caption');await until(()=>evaluate(cdp,()=>document.querySelector('.conference-transcript').open),'transcript open');
   const panel=(await evaluate(cdp,inspect)).panel;assert.equal(panel.mode,viewport.width>=1024?'dock':'sheet');if(viewport.width<1024)assert.equal(panel.modal,true);
   assert.ok(panel.rect.left>=-.5&&panel.rect.right<=viewport.width+.5&&panel.rect.bottom<=viewport.height+.5,'Transcript in viewport');
-  await type(cdp,'[data-role=transcript-search]','3725초');
+  await type(cdp,'[data-role=transcript-search]','3725초',entry);
   const rows=await evaluate(cdp,()=>[...document.querySelectorAll('.conference-transcript-row')].filter(row=>!row.hidden).map(row=>({index:row.dataset.segment,text:row.textContent})));assert.equal(rows.length,1);assert.ok(rows[0].text.includes('3725초'));
   time=await stateTime(cdp);const deck=await evaluate(cdp,()=>document.querySelector('.conference-player').dataset.deck);await key(cdp,'f');await key(cdp,'d');await key(cdp,'ArrowLeft');assert.ok(Math.abs(await stateTime(cdp)-time)<.1,'Editable keys do not seek');assert.equal(await evaluate(cdp,()=>document.querySelector('.conference-player').dataset.deck),deck,'Editable D does not switch decks');
-  await type(cdp,'[data-role=transcript-search]','3725초');await click(cdp,'.conference-transcript-row:not([hidden])');assert.ok(Math.abs(await stateTime(cdp)-3725)<.1,'Transcript row seeks');
+  await type(cdp,'[data-role=transcript-search]','3725초',entry);await click(cdp,'.conference-transcript-row:not([hidden])');assert.ok(Math.abs(await stateTime(cdp)-3725)<.1,'Transcript row seeks');
   entry.transcript=await evaluate(cdp,inspect);assertLayout(entry.transcript,viewport);entry.transcriptScreenshot=await screenshot(cdp,entry.id+'-transcript');
   entry.transcriptCloseClick=await click(cdp,'[data-action=close-transcript]');assert.equal(await evaluate(cdp,()=>document.activeElement?.classList.contains('conference-caption')),true,'Transcript restores opener focus');
   if(viewport.width<=767){
@@ -272,7 +277,7 @@ async function keyboardInteractions(cdp,entry){
 async function timelineInteractions(cdp,entry){
   await navigate(cdp,'t=18&deck=r17-257');let state=await evaluate(cdp,inspect);assert.equal(state.state.page,'1');assert.match(state.pageStatus,/이 덱에 해당 장표 없음/);assert.equal(state.captionStyle.lineClamp,'2');assert.ok(state.captionStyle.height<=state.captionStyle.lineHeight*2+.5);entry.longCaption=state.captionStyle;
   await click(cdp,'[data-action=next-talk]');assert.equal(await stateTime(cdp),260);await click(cdp,'[data-action=previous-talk]');assert.equal(await stateTime(cdp),0);
-  await type(cdp,'[data-role=page]','2');await key(cdp,'Tab');assert.equal(await stateTime(cdp),260,'Page number seeks its first mapped source');
+  await type(cdp,'[data-role=page]','2',entry);await key(cdp,'Tab');assert.equal(await stateTime(cdp),260,'Page number seeks its first mapped source');
   await click(cdp,'[data-action=zoom]');assert.equal(await evaluate(cdp,()=>document.querySelector('.conference-stage').classList.contains('conference-zoomed')),true);await click(cdp,'[data-action=zoom]');
   await navigate(cdp,'t=3719&deck=final-290');await click(cdp,'[data-action=play]');await until(async()=>await stateTime(cdp)>=3720.15,'real media clip boundary',10000);await click(cdp,'[data-action=play]');state=await evaluate(cdp,inspect);assert.match(state.audio.src,/fixture-2\.wav/);assert.ok(Number(state.state.time)>=3720&&Number(state.state.time)<3724);assert.equal(state.state.page,'3');entry.audioBoundary={time:state.state.time,src:state.audio.src,paused:state.audio.paused};
   await navigate(cdp,'t=17&deck=final-290');await click(cdp,'[data-action=auto]');await click(cdp,'[data-action=play]');await until(async()=>await stateTime(cdp)>=18.15,'automatic slide off at a real segment boundary',10000);await click(cdp,'[data-action=play]');assert.equal((await evaluate(cdp,inspect)).state.page,'1','Automatic slide off holds the current page');await click(cdp,'[data-action=auto]');assert.equal((await evaluate(cdp,inspect)).state.page,'2','Automatic slide on catches up');entry.automaticSlideToggle=true;
