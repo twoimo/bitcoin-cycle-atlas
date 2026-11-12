@@ -1,6 +1,6 @@
 # 요구사항 — Funnest Charts UI/UX로 전면 리뉴얼 (초안)
 
-작성 2026-11-12. 현재 상태: **P0는 `b787935` Mac에서 10/10·커버리지 40/40·`qualifiesP0Verification:true`로 닫혔다. P1은 `67125bd` Mac에서 레이아웃 28/28·내비 56/56·차트 복귀 8/8·오버플로 0·failures 0·`qualifiesP1Verification:true`로 닫혔다.** 표본과 4.5/3.0은 유지한다. 다음 한 건 `P2A0-6ffbdda`의 임시 페이지·Datafeed·검증기는 `cefc568`·`b0cf985`에 구현했다. Mac `1c8f0c3`에서 startup 6/6·features 7/7·touch 4/4·keyboard 0/4·qualifier false다. **P2a-0은 Q-P2A0-1로 열려 있다.** 기존 엔진 유지, P2 차트 크롬·P3·P2b·배포 미착수. [P1 Mac 정본 영수증](../evidence/qa-r19p1-20261112/mac-67125bd.json) · [P0 Mac 영수증](../evidence/qa-r19p1-20261112/mac-b787935.json) · [P2a-0 구현·측정 한계](../evidence/p2a0-6ffbdda/README.md). 이전 P1 발견과 수정 이력은 [체크리스트 Q-R19P1-2~4](../LAUNCH_CHECKLIST_20261110.md)에 보존한다. 대상 `twoimo/bitcoin-cycle-atlas`.
+작성 2026-11-12. 현재 상태: **P0는 `b787935` Mac에서 10/10·커버리지 40/40·`qualifiesP0Verification:true`로 닫혔다. P1은 `67125bd` Mac에서 레이아웃 28/28·내비 56/56·차트 복귀 8/8·오버플로 0·failures 0·`qualifiesP1Verification:true`로 닫혔다.** 표본과 4.5/3.0은 유지한다. 다음 한 건 `P2A0-6ffbdda`의 임시 페이지·Datafeed·검증기는 `cefc568`·`b0cf985`에 구현했다. Mac `1c8f0c3`에서 startup 6/6·features 7/7·touch 4/4·keyboard 0/4·qualifier false다. **P2a-0은 Q-P2A0-1로 열려 있다.** `Q-P2A0-1-15e9e7b` 수정 후보 `a4485e6`은 타깃·대비·검색 모달 키보드를 보완했다. 같은 게이트의 Linux 실행은 Chromium 시작 차단으로 0시도이며 Mac 재검증 대기다. 기존 엔진 유지, P2 차트 크롬·P3·P2b·배포 미착수. [P1 Mac 정본 영수증](../evidence/qa-r19p1-20261112/mac-67125bd.json) · [P0 Mac 영수증](../evidence/qa-r19p1-20261112/mac-b787935.json) · [P2a-0 구현·측정 한계](../evidence/p2a0-6ffbdda/README.md). 이전 P1 발견과 수정 이력은 [체크리스트 Q-R19P1-2~4](../LAUNCH_CHECKLIST_20261110.md)에 보존한다. 대상 `twoimo/bitcoin-cycle-atlas`.
 참조 저장소: `funnest-xyz/funnest-charts` (Apache-2.0, `main` @ `39cb29ae250448d520384c12de555b1c00727883`, 2026-11-12). 홈페이지 `https://charts.funnest.xyz`.
 방법: 저장소 소스(`apps/site/app/globals.css`, README)와 실제 홈페이지(1440×900)를 함께 읽고, `ui-ux-pro-max`로 방향을 대조했다. 참조 스크린샷은 `docs/evidence/funnest-ui-20261112/home-1440.png`.
 
@@ -135,6 +135,32 @@ Atlas의 현재 다크·골드·hairlines 편집 톤을 **Funnest Charts의 밝�
 기존 엔진은 삭제·교체하지 않았다. 보호 4파일·`dist/price-axis.js`·`minRight=64`, 기존 P0/P1·A-9 검사와 표본/임계값을 보존했다. Apache LICENSE/NOTICE·내장 Preact MIT·Pretendard OFL을 생성 페이지에서 제공하고 유료 도구는 추가하지 않았다. 재현 명령·raw 영수증·압축 해시는 [P2a-0 증거](../evidence/p2a0-6ffbdda/README.md)와 [summary.json](../evidence/p2a0-6ffbdda/summary.json)에 있다. **실제 기능·키보드·터치와 A-9 확인 전에는 P2a-0을 닫거나 기존 엔진을 제거하지 않는다.**
 
 **Mac 재검증(2026-11-13 01:26–01:32 KST, Chrome 157.0.8103.79, HEAD `1c8f0c3`)** — startup 6/6, 초기 페인트 1,080.1–1,125.6ms. features 7/7. touch 4/4. keyboard 0/4, failures 28, `qualifiesP2a0NativeVerification:false`. indicators·tools 텍스트 대비 4.440810712577725. Enter 뒤 심볼 대화상자는 45초 타임아웃이다. 대화상자 포커스·Tab·Escape는 미측정이다. 기존 컨퍼런스 A-9는 같은 HEAD에서 6/6, painted 2,170–2,208.2ms, 예산 2,500, 실패 0이다. 기준 `6ffbdda` 별도 비교는 없으므로 시간 차이 0ms를 주장하지 않는다. 장표·오디오 파일 부재는 미디어 준비 완료가 아니다. P2a-0을 닫지 않고 P2 차트 크롬을 시작하지 않는다. [영수증](../evidence/qa-p2a0-mac-1c8f0c3/README.md).
+
+#### Q-P2A0-1-15e9e7b 수정 후보 — Mac 재검증 대기
+
+원격 `15e9e7b`를 다시 읽은 뒤 **`a4485e69ab2d38266dd5a813e6a2b456e9e3c64b`**에 임시 스파이크의 접근성 수정만 반영했다. P1 닫힘과 네 기능의 하이브리드/기존 엔진 유지 결정을 바꾸지 않는다. [수정·원본 영수증](../evidence/q-p2a0-1-15e9e7b/README.md).
+
+| 항목 | 수정과 검증 상태 |
+|---|---|
+| 16개 작은 타깃 | 원래 symbol/button/chip 최소 **44×44px**. 도구줄은 자동 높이·최소 56px·상하 6px 패딩, 그리기 영역은 56px·좌우 5px 패딩으로 **2px 링 + 1px offset** 여유를 둔다. 모바일은 원래 빈 spacer로 두 행을 만들며 컨트롤을 숨기지 않는다. 이는 소스 선언이며 후보의 native 계산 크기는 미측정이다. |
+| 8개 텍스트 대비 실패 | 기존 패키지의 본문 역할 `--fnc-text`를 컨트롤에 사용한다. 색 리터럴·표본 삭제·4.5/3.0 완화·캔들 의미색 변경 없음. 후보 native 대비는 미측정이다. |
+| Enter 검색창 타임아웃 | 실제 기존 버튼 click 경로에 Enter keydown/Space keyup을 연결하고 default 중복 실행을 막는다. 정확한 패키지는 onClick만 있고 전역 Enter 취소 근거는 없다. 측정된 rawKeyDown/keyUp 활성화 공백을 보완했다. |
+| 모달 키보드 | 원래 검색창의 포커스 소유, 현재 보이는 enabled Tab stop 양방향 가두기, 실제 모달 제거 후 opener 복귀를 처리한다. 모달 버튼 Enter가 엉뚱하게 검색 결과를 선택하지 않도록 하고 combobox 선택은 원래 경로를 유지한다. 모바일의 실제 닫기 버튼도 노출한다. |
+| 집중/빌드 | **35/35**, 실패/skip 0. 새 DOM/handler 회귀 11 + 기존 24. 빌드·동일 바이트 `--check`·CSS 구문 검사 통과. static **1,065/220/753**. DOM 모델 검사는 native 증거가 아니다. |
+| 같은 게이트 | 검증기 SHA-256 `2e1037e0c0251acd7cb441bf005e7dab8b8f77f6893559b143bf7d5b88135fce` 기준/후보 동일. **6/7/4/4, 44px, 2px, 4.5/3.0, 45초, checkVisibility, 표본과 실격 조건 보존**. |
+
+깨끗한 `a4485e6`의 실제 실행은 Chromium `socket() failed: Operation not permitted (1)`로 케이스 시작 전에 종료했다.
+
+| 그룹 | 필수 | 시도 | 통과 |
+|---|---:|---:|---:|
+| startup | 6 | **0** | **0** |
+| features | 7 | **0** | **0** |
+| keyboard | 4 | **0** | **0** |
+| touch | 4 | **0** | **0** |
+
+`sourceStable:true`, `complete:false`, `qualifiesP2a0NativeVerification:false`. 초기 페인트·오버플로 `null`, 스크린샷 0. 수정 전 Mac의 startup 6/6·features 7/7·touch 4/4를 이 후보의 통과로 재사용하지 않는다. **Q-P2A0-1은 같은 Mac 한 실행의 6/6·7/7·4/4·4/4·qualifier true 전까지 열림이다.**
+
+후보 JS는 **237,474B / gzip 74,745B / Brotli 64,490B**, 이전 대비 +2,863B/+1,024B/+848B다. 패키지 0.6.16·데이터는 그대로이며 새 의존성은 없다. 기존 A-9의 Mac `1c8f0c3` **6/6·2,170–2,208.2ms**는 보존한다. 제품 소스·A-9 게이트는 동일하고 이번에는 재실행하지 않았다. 기준 worktree 비교가 없으므로 **시간 영향은 미측정**이며 0ms로 쓰지 않는다. 보호 4파일·가격 축/minRight64·기존 엔진·P0/P1과 이전 Mac 영수증은 바이트 동일하다. P2 차트 크롬·P3·P2b·배포 미착수. [수치·해시](../evidence/q-p2a0-1-15e9e7b/summary.json).
 
 ## 4. 단계
 

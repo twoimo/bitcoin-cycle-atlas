@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "request": "Q-P2A0-1-15e9e7b",
+  "status": "fix-implemented-native-reverification-pending",
+  "qClosed": false,
+  "baseline": "15e9e7bb823f958d9c368b36b4151d8c58bf8a17",
+  "testedCandidate": "a4485e69ab2d38266dd5a813e6a2b456e9e3c64b",
+  "previousMac": {
+    "testedHead": "1c8f0c3a55b35d8fb08d8fa8aafbc514e8fbc16f",
+    "browser": "Chrome/157.0.8103.79",
+    "counts": {
+      "startup": {
+        "required": 6,
+        "attempted": 6,
+        "passed": 6,
+        "failed": 0
+      },
+      "features": {
+        "required": 7,
+        "attempted": 7,
+        "passed": 7,
+        "failed": 0
+      },
+      "keyboard": {
+        "required": 4,
+        "attempted": 4,
+        "passed": 0,
+        "failed": 4
+      },
+      "touch": {
+        "required": 4,
+        "attempted": 4,
+        "passed": 4,
+        "failed": 0
+      }
+    },
+    "failures": 28,
+    "qualifiesP2a0NativeVerification": false,
+    "startupPaintedMs": {
+      "min": 1080.1,
+      "max": 1125.6
+    },
+    "receipt": "../qa-p2a0-mac-1c8f0c3/report.json.gz"
+  },
+  "changes": {
+    "scope": "isolated spike only",
+    "targetMinimumCssPx": 44,
+    "nativeTargetGeometry": null,
+    "focusOutlinePx": 2,
+    "focusOutlineOffsetPx": 1,
+    "controlTextRole": "existing --fnc-text",
+    "nativeContrast": null,
+    "symbolKeyboard": "Enter keydown / Space keyup activates original button click once",
+    "modal": "original dialog; dynamic visible/enabled Tab containment and restore after actual removal",
+    "newDependencies": [],
+    "packageVersionUnchanged": "0.6.16"
+  },
+  "native": {
+    "report": "native-a4485e6.json.gz",
+    "testedHead": "a4485e69ab2d38266dd5a813e6a2b456e9e3c64b",
+    "workingTree": [],
+    "counts": {
+      "startup": {
+        "required": 6,
+        "attempted": 0,
+        "passed": 0,
+        "failed": 0
+      },
+      "features": {
+        "required": 7,
+        "attempted": 0,
+        "passed": 0,
+        "failed": 0
+      },
+      "keyboard": {
+        "required": 4,
+        "attempted": 0,
+        "passed": 0,
+        "failed": 0
+      },
+      "touch": {
+        "required": 4,
+        "attempted": 0,
+        "passed": 0,
+        "failed": 0
+      }
+    },
+    "status": "unverified",
+    "complete": false,
+    "sourceStable": true,
+    "qualifiesP2a0NativeVerification": false,
+    "blockedAt": "Chromium launch",
+    "failures": 1,
+    "initialPaintedReadyMs": null,
+    "horizontalOverflowPx": null,
+    "screenshots": 0,
+    "blocker": "Chromium socket() failed: Operation not permitted (1); SIGABRT before any case"
+  },
+  "sameGate": {
+    "file": "scripts/verify-funnest-p2a0-browser.mjs",
+    "sha256": "2e1037e0c0251acd7cb441bf005e7dab8b8f77f6893559b143bf7d5b88135fce",
+    "unchanged": true,
+    "required": {
+      "startup": 6,
+      "features": 7,
+      "keyboard": 4,
+      "touch": 4
+    },
+    "budgets": {
+      "initialPaintedReadyMs": 2500,
+      "pageTransitionMs": 150,
+      "targetPx": 44,
+      "focusRingPx": 2,
+      "textContrast": 4.5,
+      "iconContrast": 3
+    },
+    "timeoutMs": 45000,
+    "checkVisibilityPreserved": true,
+    "samplesRemoved": 0
+  },
+  "validation": {
+    "focused": {
+      "tests": 35,
+      "passed": 35,
+      "failed": 0,
+      "skipped": 0,
+      "newDomHandlerTests": 11,
+      "nativeEvidence": false
+    },
+    "build": "passed",
+    "buildCheck": "passed",
+    "cssSyntax": {
+      "status": "passed",
+      "warnings": 0
+    },
+    "productionStatic": {
+      "status": "ok",
+      "files": 1065,
+      "checkedScripts": 220,
+      "checkedReferences": 753
+    }
+  },
+  "bundle": {
+    "rawBytes": 237474,
+    "gzipBytes": 74745,
+    "brotliBytes": 64490,
+    "sha256": "da11f751f36c93ab7c5f5d48f036138c2c00260b554d793dcbac3c297823f1e9"
+  },
+  "previousBundle": {
+    "rawBytes": 234611,
+    "gzipBytes": 73721,
+    "brotliBytes": 63642
+  },
+  "bundleDelta": {
+    "rawBytes": 2863,
+    "gzipBytes": 1024,
+    "brotliBytes": 848
+  },
+  "wrapperCss": {
+    "rawBytes": 3207,
+    "gzipBytes": 1219,
+    "brotliBytes": 990,
+    "sha256": "60869e6ebb6f485ac209cffd09930a07f1502d75cb859493efba4f12dead1218"
+  },
+  "productionIntegrated": false,
+  "a9": {
+    "gateUnchanged": true,
+    "productionSourceUnchanged": true,
+    "previousMac": {
+      "testedHead": "1c8f0c3a55b35d8fb08d8fa8aafbc514e8fbc16f",
+      "required": 6,
+      "attempted": 6,
+      "passed": 6,
+      "failures": 0,
+      "paintedMs": {
+        "min": 2170,
+        "max": 2208.2
+      },
+      "baselineWorktreeComparison": false,
+      "receipt": "../qa-p2a0-mac-1c8f0c3/a9-report.json.gz"
+    },
+    "rerunForThisCandidate": false,
+    "measuredImpactMs": null
+  },
+  "preserved": {
+    "files": 22,
+    "record": "source-preservation.json",
+    "existingEngineRetained": true,
+    "minRight": 64,
+    "p1Status": "closed at Mac 67125bd, not reopened",
+    "protectedFourUnchanged": true,
+    "priceAxisUnchanged": true,
+    "p0p1A9GatesUnchanged": true
+  },
+  "scope": {
+    "p2ChartChromeStarted": false,
+    "p3Started": false,
+    "p2bStarted": false,
+    "deployment": false,
+    "mainPush": false,
+    "forcePush": false,
+    "paidToolsAdded": false
+  },
+  "artifacts": {
+    "native-a4485e6.json.gz": {
+      "bytes": 7326,
+      "sha256": "0efb65373a1a0eee1c70096ce27c57db570d6ebd58e0c4c8fa21681045aa17dd",
+      "rawBytes": 46869,
+      "rawSha256": "402715f192f523728b93b060a1386fd93db01e22c833219fa6bcc97ca87b8315",
+      "gzip": true
+    },
+    "bundle-report.json.gz": {
+      "bytes": 10281,
+      "sha256": "81f69fca98fdc6b5587df0aca6420d579104b54f5e999921236f315177f9e9e5",
+      "rawBytes": 64116,
+      "rawSha256": "25e77428314cbfd6bda4ac51e91fc2095ad1cd6098d966d95140d55ffd2209e9",
+      "gzip": true
+    },
+    "focused-tests.tap": {
+      "bytes": 8697,
+      "sha256": "b1adc550696f28735df4b0d7f3c71b7131278997ae7b9c6350709d637651ce5d",
+      "rawBytes": 8697,
+      "rawSha256": "b1adc550696f28735df4b0d7f3c71b7131278997ae7b9c6350709d637651ce5d",
+      "gzip": false
+    }
+  }
+}
