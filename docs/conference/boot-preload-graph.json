@@ -53,8 +53,8 @@
     {
       "url": "./app.js?v=1.37.8",
       "file": "app.js",
-      "bytes": 55958,
-      "sha256": "62ec52842f6ec6b61c99437b99824df0fedba43037712056f00e1ffd1eee823a",
+      "bytes": 57128,
+      "sha256": "7a9dd50b29487f155c31e9a04dfdf576b4f4fd2f33098246b459cf2747bc29a7",
       "depth": 0,
       "imports": [
         {
@@ -891,6 +891,6 @@
     "sharedModulePreloads": 1,
     "staticImportEdges": 82,
     "maxShortestImportDepth": 6,
-    "moduleBytesByUrl": 767669
+    "moduleBytesByUrl": 768839
   }
 }

@@ -5,7 +5,10 @@ import { runInNewContext } from 'node:vm';
 import { parseComparisonUrl } from '../dist/comparison-url-state.js';
 
 const source = await readFile(new URL('../dist/app.js', import.meta.url), 'utf8');
-const persistSource = source.slice(source.indexOf('function persistUrl() {'), source.indexOf("document.documentElement.dataset.theme = 'dark';"));
+// Isolate the actual URL owner; the former theme-assignment delimiter no
+// longer exists and would accidentally execute unrelated DOM initialization.
+const persistSource = source.match(/^function persistUrl\(\) \{[\s\S]*?^\}/m)?.[0];
+assert.ok(persistSource, 'the real URL persistence function is present');
 const initialStateSource = source.slice(source.indexOf('const urlState = parseComparisonUrl(location.search);'), source.indexOf('let toastTimer;'));
 
 function appUrl(search = '', overrides = {}) {

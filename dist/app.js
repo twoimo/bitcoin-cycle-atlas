@@ -123,10 +123,22 @@ function onInitialPageReady(event) {
 }
 document.addEventListener('atlas:page-ready', onInitialPageReady);
 let outlookController = null, workspacePromise = null, evidencePromise = null, evidenceModule = null;
+// A dashboard document has already completed its one-shot boot when the chart
+// is first requested. Its static chart section is not ready until the lazy
+// frame (including mobile navigation) has mounted and its renderer has drawn.
+document.addEventListener('atlas:page-ready', event => {
+  const page = event.detail?.page;
+  if (!outlookController || !['outlook','compare'].includes(page) ||
+      page !== state.view || document.body.dataset.page !== page) return;
+  for (const view of ['outlook','compare']) document.getElementById(`${view}-view`).removeAttribute('aria-busy');
+});
 function ensureWorkspace() {
   if (!workspacePromise) workspacePromise = Promise.all([
     import('./viewport-workspace.js?v=1.36.1'), import('./lab-view.js?v=1.36.1'),
   ]).then(([workspace, lab]) => {
+    // Imports may finish after a second navigation. Leave that dashboard's
+    // original navigation owner intact; cached modules can mount next visit.
+    if (!['outlook','compare'].includes(state.view)) { workspacePromise = null; return null; }
     workspace.initViewportWorkspace(icon);
     outlookController = lab.initLabView();
     if (state.dataset) outlookController.setDataset(state.dataset);
@@ -185,6 +197,11 @@ const dailyDataController = initDailyDataView({
 const compareShell = createCompareShellHost({ document });
 function hostCompareCenter(active) { compareShell.setActive(active); }
 function syncPage() {
+  if (['outlook','compare'].includes(state.view)) {
+    // Compare is hosted inside the Outlook frame, so both outer sections share
+    // this pending boundary. Publish it before exposing either chart route.
+    for (const view of ['outlook','compare']) document.getElementById(`${view}-view`).setAttribute('aria-busy', 'true');
+  }
   document.body.dataset.page=state.view; if(state.view!=='market'){const slot=document.getElementById('market-header-slot'); if(slot){slot.hidden=true; slot.replaceChildren();}}
   btcRefreshStatus.update({page:['ipo','market','conference'].includes(state.view)?'data':state.view});
   document.title = state.view === 'compare' ? '사이클 비교 · Bitcoin Cycle Atlas' : state.view === 'market' ? '세 축 연구실 · Bitcoin Cycle Atlas' : state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : state.view === 'ipo' ? '공모주 캘린더 · Bitcoin Cycle Atlas' : state.view === 'relay' ? '릴레이 콘텐츠 · Bitcoin Cycle Atlas' : state.view === 'conference' ? '컨퍼런스 복습 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
