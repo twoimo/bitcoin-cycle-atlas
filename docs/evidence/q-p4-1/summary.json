@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "task": "Q-P4-1",
+  "status": "implemented-native-browser-blocked-P4-open",
+  "baseCommit": "5b63c0c0d8c59bae5811594611c329baec45c663",
+  "previousProductCommit": "fcb941dcf880491a8e0e1cb211381810bd320aa2",
+  "productCommit": "12f070363b65f7c5bd8272f2d786fd8348df3533",
+  "productTree": "0b8eb76c57c56b96a5cf101d3ff2a6467a077f60",
+  "branch": "fix/tradingview-responsive-20261110",
+  "nativeBrowser": {
+    "required": 14,
+    "attempted": 0,
+    "passed": 0,
+    "caseFailures": 0,
+    "harnessFailures": 1,
+    "totalFailures": 1,
+    "exitCode": 1,
+    "status": "failed",
+    "startedAt": "2026-11-12T22:57:46.621Z",
+    "finishedAt": "2026-11-12T22:58:17.058Z",
+    "sourceCommit": "12f070363b65f7c5bd8272f2d786fd8348df3533",
+    "cleanBefore": true,
+    "cleanAfter": true,
+    "browser": "Chromium 156.0.8078.79 on Linux",
+    "reason": "ProcessSingleton socket() failed: Operation not permitted (1); Chrome CDP timed out",
+    "nativeSourceIntegrity": null,
+    "independentPostRunSourceRecheck": {
+      "checkedFiles": 1166,
+      "changedSources": 0
+    },
+    "native1024": {
+      "stageWidthPx": null,
+      "visualWidthPx": null,
+      "differencePx": null,
+      "horizontalOverflowPx": null,
+      "h1Count": null,
+      "playWidthPx": null,
+      "playHeightPx": null
+    }
+  },
+  "supportingModel": {
+    "nativeEvidence": false,
+    "counts": {
+      "required": 26,
+      "attempted": 26,
+      "passed": 26,
+      "failed": 0
+    },
+    "sourceStable": true,
+    "case1024": {
+      "stageWidthPx": 742,
+      "stageHeightPx": 417.375,
+      "visualWidthPx": 742,
+      "differencePx": 0
+    },
+    "limitations": [
+      "Linkedom does not render CSS or text. Widths/heights, wrapping thresholds, and computed styles are explicit model inputs.",
+      "No native focus, paint, viewport overflow, media decode, scroll, or font behavior is proved.",
+      "Synthetic fixture data and a media element stub exercise the real controller only."
+    ]
+  },
+  "focused": {
+    "passed": 117,
+    "failed": 0,
+    "skipped": 0
+  },
+  "preservation": {
+    "protectedFour": {
+      "files": 4,
+      "changed": 0
+    },
+    "priceAxis": {
+      "files": 1,
+      "changed": 0
+    },
+    "scripts": {
+      "files": 217,
+      "changed": 0
+    },
+    "tests": {
+      "files": 424,
+      "changed": 0
+    },
+    "conferenceDataAndMedia": {
+      "files": 5,
+      "changed": 0
+    },
+    "sharedShell": {
+      "files": 4,
+      "changed": 0
+    },
+    "tokens": {
+      "files": 1,
+      "changed": 0
+    },
+    "dependencies": {
+      "files": 2,
+      "changed": 0
+    }
+  },
+  "cssPreservation": {
+    "newScopedRules": 8,
+    "selectors": [
+      "body[data-shell=dashboard][data-page=conference]",
+      "body[data-shell=dashboard][data-page=conference] .atlas-dashboard-header.atlas-canvas-heading",
+      "body[data-shell=dashboard][data-page=conference] .atlas-dashboard-nav",
+      "body[data-shell=dashboard][data-page=conference] .atlas-dashboard-nav>.atlas-nav",
+      "body[data-shell=dashboard][data-page=conference] .atlas-dashboard-nav .atlas-nav :is(a,button)",
+      "body[data-shell=dashboard][data-page=conference] .workspace,\n  body[data-shell=dashboard][data-page=conference] #root>.workspace",
+      "body[data-shell=dashboard][data-page=conference] #main>#conference-view",
+      "body[data-shell=dashboard][data-page=conference] .content-bottom-bar"
+    ],
+    "allExistingRulesUnchanged": true,
+    "scope": "only conference/dashboard at 1024–1279px"
+  },
+  "playerDomTemplateUnchanged": true,
+  "media": {
+    "runOnThisCandidate": false,
+    "canonicalManifestChanged": false,
+    "canonicalManifestSha256": "ff3e3f2b16f4435e71c5e9f07740a9a2af2b9e9fe46aaf013f70972a658d0088",
+    "assetsWritten": 0,
+    "syntheticReplacement": false,
+    "userMacPriorReceipt": {
+      "assetHashesMatched": 562,
+      "assetHashesRequired": 562,
+      "siteFileCountObserved": 1721,
+      "siteFileCountRequired": 1530,
+      "browserStarted": false,
+      "receipt": "../ui-renewal-p4/mac-fcb941d.md"
+    }
+  },
+  "acceptance": {
+    "browser14of14": false,
+    "media20of20": false,
+    "p4Closed": false,
+    "qP41Closed": false
+  },
+  "thresholdsChanged": false,
+  "checkerChanged": false,
+  "mainPushed": false,
+  "deployed": false,
+  "forcePushed": false,
+  "resetUsed": false
+}

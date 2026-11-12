@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "productCommit": "12f070363b65f7c5bd8272f2d786fd8348df3533",
+  "files": [
+    {
+      "file": "raw/native-browser.report.json.gz",
+      "source": "build/q-p4-1/native-browser-12f0703/report.json",
+      "originalBytes": 140709,
+      "originalSha256": "61bb5ca55a8ae6ed6aa49afb13c1ee3880bb30eddc8616ca476faad4bca3f464",
+      "gzipBytes": 54858,
+      "gzipSha256": "409218013032ffe49f136bc1b426e702219790e749407dea159852b7d9b36bb1"
+    },
+    {
+      "file": "raw/chrome.stderr.log.gz",
+      "source": "build/q-p4-1/native-browser-12f0703/chrome.stderr.log",
+      "originalBytes": 544,
+      "originalSha256": "271d2bf5f2335b7a67ef42b7d7acb179b64c0f4d6375a7fe6dd76ada569d8ff1",
+      "gzipBytes": 333,
+      "gzipSha256": "b6e8e9e3bdab46289354ca328ae4e3d8dc41de2cbb141361d1607ce45a809894"
+    },
+    {
+      "file": "raw/source-preservation.json.gz",
+      "source": "build/q-p4-1/work/source-preservation.json",
+      "originalBytes": 111780,
+      "originalSha256": "9a07b131d0798b0470816e790d6bf3119d52e452305191049cecda925a9179bb",
+      "gzipBytes": 33707,
+      "gzipSha256": "543730bc65993f030f7080b5bf44ddea5c7c6da71e36b4c9340cb9a956283a18"
+    },
+    {
+      "file": "raw/layout-model.json.gz",
+      "source": "build/q-p4-1/work/layout-model.json",
+      "originalBytes": 29258,
+      "originalSha256": "ad02f40710ad7574320800fa847ee081ba967fd81334e9aa5cfc59312c5cb2a3",
+      "gzipBytes": 2078,
+      "gzipSha256": "e5c7f39898006bbee2e3c83a626c26beb4af31042d06413460342e4085ac97ed"
+    },
+    {
+      "file": "raw/checks-and-model.tar.gz",
+      "bytes": 15848,
+      "sha256": "a2709ab7e057dc3ca7d95e479d7285fe097a9f312ba304cc4f51cbd74d3c1574",
+      "members": [
+        {
+          "file": "build-styles.log",
+          "bytes": 311,
+          "sha256": "aaad93f2c98daf6cde2e51973f54adcc893bff3321d87fc41cc7e1ae08d735af"
+        },
+        {
+          "file": "build-preloads.log",
+          "bytes": 537,
+          "sha256": "92a0f0442cde092b521a8647da9bb3a9e991616673f40f4c300db4b24b8836b5"
+        },
+        {
+          "file": "build-pages.log",
+          "bytes": 10810,
+          "sha256": "d1f4a28ee89939f409656aa586c7b1a89a4ba04f4565389bca9f670fe21ef422"
+        },
+        {
+          "file": "focused.log",
+          "bytes": 12390,
+          "sha256": "faf6ade2859d71017dd12204953a2484f094e4cb6f04106ecff2865bc95bacea"
+        },
+        {
+          "file": "styles.log",
+          "bytes": 311,
+          "sha256": "ebbfc923ef3efcc53a5307b27f67b9b1941923b623b099d1344462f9dc6e1dbf"
+        },
+        {
+          "file": "preloads.log",
+          "bytes": 537,
+          "sha256": "2233ceea6ad1df39608b01e2fe413b8a56745857cd3cb2c888146a890653c09f"
+        },
+        {
+          "file": "static.log",
+          "bytes": 304,
+          "sha256": "2bb95e7ca8abe8c6466117f87d41a38b21ec0dff659502d1ae3838d36937c9d1"
+        },
+        {
+          "file": "pages.log",
+          "bytes": 10822,
+          "sha256": "2b0702e1aff37c8a1c6ac1c90df86b6daae1b50f35f58fc5008912846607bf4c"
+        },
+        {
+          "file": "native-browser.log",
+          "bytes": 153,
+          "sha256": "81290944177d1e75328c47e360d05cbb7004d9bf32b0d2ecc35172e54d78d955"
+        },
+        {
+          "file": "native-browser-invocation.json",
+          "bytes": 510,
+          "sha256": "2da1b6d806bfe401a9eece37fd351998847dde5e0e8ee63e9adee324e4dba3d9"
+        },
+        {
+          "file": "layout-model.log",
+          "bytes": 168,
+          "sha256": "6589503f44bd69caf0788130cdc82b4aefc7afe7bda24e7f2ce1fc1c4e08ac61"
+        },
+        {
+          "file": "layout-model.mjs",
+          "bytes": 18694,
+          "sha256": "7b45011f8517f7608c93bb70563006ba1c54be2470dbef4a8d455ad1e7014f07"
+        },
+        {
+          "file": "post-run-source-recheck.json",
+          "bytes": 1320,
+          "sha256": "87b4fa8c938b9d69c9aa6151bbae95695d64c644d65a59a97d332e5740965ce9"
+        },
+        {
+          "file": "product-staged.json",
+          "bytes": 2858,
+          "sha256": "744a6959d5ee2112a34bca01bf8a136b88c92e4db312178b697c9b5f5aa27843"
+        }
+      ]
+    }
+  ]
+}

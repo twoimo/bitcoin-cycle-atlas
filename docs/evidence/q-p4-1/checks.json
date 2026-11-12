@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "productCommit": "12f070363b65f7c5bd8272f2d786fd8348df3533",
+  "productTree": "0b8eb76c57c56b96a5cf101d3ff2a6467a077f60",
+  "note": "Focused/build/model checks ran before commit creation on the exact staged product bytes; tree/blob identity matched at publication. Native browser invocation ran on the clean product commit. Model results do not replace native acceptance.",
+  "focused": {
+    "command": [
+      "node",
+      "--test",
+      "tests/conference-player.test.mjs",
+      "tests/conference-route.test.mjs",
+      "tests/conference-media-browser-contract.test.mjs",
+      "tests/site-styles.test.mjs",
+      "tests/site-preloads.test.mjs",
+      "tests/r19p1-shell.test.mjs",
+      "tests/content-shell-navigation-reveal.test.mjs"
+    ],
+    "tests": 117,
+    "passed": 117,
+    "failed": 0,
+    "skipped": 0,
+    "exitCode": 0
+  },
+  "model": {
+    "command": [
+      "node",
+      "build/q-p4-1/work/layout-model.mjs"
+    ],
+    "counts": {
+      "required": 26,
+      "attempted": 26,
+      "passed": 26,
+      "failed": 0
+    },
+    "nativeEvidence": false,
+    "exitCode": 0
+  },
+  "styles": {
+    "command": [
+      "node",
+      "scripts/build-site-styles.mjs",
+      "--check"
+    ],
+    "sourceStylesheets": 43,
+    "bundles": 2,
+    "exitCode": 0
+  },
+  "preloads": {
+    "command": [
+      "node",
+      "scripts/build-site-preloads.mjs",
+      "--check"
+    ],
+    "exitCode": 0
+  },
+  "static": {
+    "command": [
+      "npm",
+      "run",
+      "verify:static"
+    ],
+    "files": 1159,
+    "checkedScripts": 221,
+    "checkedReferences": 847,
+    "exitCode": 0
+  },
+  "buildPages": {
+    "command": [
+      "npm",
+      "run",
+      "build:pages"
+    ],
+    "files": 104,
+    "routes": 9,
+    "exitCode": 0
+  },
+  "pages": {
+    "command": [
+      "npm",
+      "run",
+      "verify:pages"
+    ],
+    "files": 104,
+    "routes": 9,
+    "exitCode": 0
+  },
+  "nativeInvocation": {
+    "command": [
+      "node",
+      "scripts/verify-conference-browser.mjs",
+      "--out",
+      "build/q-p4-1/native-browser-12f0703"
+    ],
+    "cwd": "/workspace/scratch/48482dcbb79e/bitcoin-cycle-atlas",
+    "environment": {
+      "ATLAS_BROWSER_PATH": "/usr/bin/chromium"
+    },
+    "sourceCommit": "12f070363b65f7c5bd8272f2d786fd8348df3533",
+    "workingChangesBefore": "",
+    "startedAt": "2026-11-12T22:57:46.529472+00:00",
+    "exitCode": 1,
+    "finishedAt": "2026-11-12T22:58:17.077284+00:00",
+    "workingChangesAfter": ""
+  },
+  "fullNpmTest": {
+    "rerun": false,
+    "existing17Failures": "Held for the pre-merge gate as instructed; not changed or fixed."
+  },
+  "media20": {
+    "rerun": false,
+    "reason": "User reports real-media preflight siteFileCount1721 versus manifest1530. Canonical unavailable manifest and pages/audio must remain untouched; no synthetic substitution."
+  },
+  "a9": {
+    "rerun": false,
+    "thresholdMs": 2500,
+    "nativePaintedMs": null,
+    "reason": "Browser startup is blocked; no new timing claim."
+  }
+}

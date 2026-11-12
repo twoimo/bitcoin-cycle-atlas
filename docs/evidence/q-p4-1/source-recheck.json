@@ -1,0 +1,53 @@
+{
+  "kind": "independent-post-run-source-recheck",
+  "productCommit": "12f070363b65f7c5bd8272f2d786fd8348df3533",
+  "nativeGateReportedSourceIntegrity": null,
+  "note": "The original gate stopped before its final sourceIntegrity step. This is an independent byte comparison, not a native pass or qualifier.",
+  "browserSourceFilesChecked": 1166,
+  "changedSources": [],
+  "sourceStableInIndependentRecheck": true,
+  "sourcePreservationGroups": {
+    "protectedFour": {
+      "files": 4,
+      "changedSinceRecordedAudit": 0,
+      "paths": []
+    },
+    "priceAxis": {
+      "files": 1,
+      "changedSinceRecordedAudit": 0,
+      "paths": []
+    },
+    "scripts": {
+      "files": 217,
+      "changedSinceRecordedAudit": 0,
+      "paths": []
+    },
+    "tests": {
+      "files": 424,
+      "changedSinceRecordedAudit": 0,
+      "paths": []
+    },
+    "conferenceDataAndMedia": {
+      "files": 5,
+      "changedSinceRecordedAudit": 0,
+      "paths": []
+    },
+    "sharedShell": {
+      "files": 4,
+      "changedSinceRecordedAudit": 0,
+      "paths": []
+    },
+    "tokens": {
+      "files": 1,
+      "changedSinceRecordedAudit": 0,
+      "paths": []
+    },
+    "dependencies": {
+      "files": 2,
+      "changedSinceRecordedAudit": 0,
+      "paths": []
+    }
+  },
+  "modelSourceChanged": [],
+  "workingChanges": ""
+}
