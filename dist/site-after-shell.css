@@ -3790,13 +3790,17 @@ body[data-page="relay"]{overflow:hidden}
 }
 
 
-/* Source: ui/shell-layout.css; SHA-256: ac7fdce828317cbc493c49e3e8c8f1d04feb387e13a1202ef79f9bf55bf78584 */
+/* Source: ui/shell-layout.css; SHA-256: 019a1a60aea4da772455040421af8391305abb0c277cda44387896b8ccb456ab */
 /* R19 P1: the shared page frame, original navigation and outer sections.
  * Chart coordinates and the independent content scroll owners stay local.
  * P0 owns the palette; later stages own chart chrome and section internals. */
 body[data-shell=dashboard] {
   --app-sidebar-width: 0px;
   --app-header-height: 112px;
+  --shell-card-shadow: 0 2px 8px var(--shadow-color);
+  /* Keep the workspace's header reservation inside the viewport-sized body.
+     overflow:clip alone lets its top margin collapse past the fixed heading. */
+  display: flow-root;
   background: var(--surface-raised);
 }
 body[data-shell=dashboard] :is(.atlas-sidebar, #root > .atlas-sidebar) {
@@ -3967,7 +3971,9 @@ body[data-shell=dashboard] #main > :is(#evidence-view, #ipo-view, #data-view, #m
   border: 1px solid var(--border);
   border-radius: var(--card-radius-md);
   background: var(--surface);
-  box-shadow: var(--shadow);
+  /* Outer-card paint stays below the header while source popovers retain
+     their own overflow/scroll owners. */
+  box-shadow: var(--shell-card-shadow);
   /* Each section keeps its own scroll/overlay contract. In particular the
      IPO source disclosure must be able to extend beyond a short card. */
   box-sizing: border-box;

@@ -4,6 +4,10 @@
 body[data-shell=dashboard] {
   --app-sidebar-width: 0px;
   --app-header-height: 112px;
+  --shell-card-shadow: 0 2px 8px var(--shadow-color);
+  /* Keep the workspace's header reservation inside the viewport-sized body.
+     overflow:clip alone lets its top margin collapse past the fixed heading. */
+  display: flow-root;
   background: var(--surface-raised);
 }
 body[data-shell=dashboard] :is(.atlas-sidebar, #root > .atlas-sidebar) {
@@ -174,7 +178,9 @@ body[data-shell=dashboard] #main > :is(#evidence-view, #ipo-view, #data-view, #m
   border: 1px solid var(--border);
   border-radius: var(--card-radius-md);
   background: var(--surface);
-  box-shadow: var(--shadow);
+  /* Outer-card paint stays below the header while source popovers retain
+     their own overflow/scroll owners. */
+  box-shadow: var(--shell-card-shadow);
   /* Each section keeps its own scroll/overlay contract. In particular the
      IPO source disclosure must be able to extend beyond a short card. */
   box-sizing: border-box;
