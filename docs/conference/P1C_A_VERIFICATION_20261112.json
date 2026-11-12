@@ -1,0 +1,468 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-conference-media-verification",
+  "recordedAt": "2026-11-12T03:40:27.874Z",
+  "startingHead": "f35d7945713b339bd7d72742a64f0d2cbd3cd339",
+  "integratedUpstreamHead": "6fa1c50496e3d29afe252a4aa8af2e6f8992041d",
+  "implementationCommit": "79f16664bf6d8beae81ad97b1ff45764f07a8c53",
+  "implementationTree": "2910115ab60180b737856a244c96067fd89892b8",
+  "verificationScope": "Final Linux unit/static rerun on restored working-tree sources. The generator, renderer and player were recovered byte-for-byte against SHA-256 values recorded before an execution-environment reset; all listed verification was repeated afterward. No browser or locked-original media execution.",
+  "sources": [
+    {
+      "file": ".gitignore",
+      "bytes": 298,
+      "sha256": "8977aa8d01a8ca5d00c911d2de952411fcecd3fdbdd9f993a69c2bf3c25ac5aa"
+    },
+    {
+      "file": "dist/conference/media-manifest.json",
+      "bytes": 167,
+      "sha256": "ff3e3f2b16f4435e71c5e9f07740a9a2af2b9e9fe46aaf013f70972a658d0088"
+    },
+    {
+      "file": "dist/conference/media.js",
+      "bytes": 15734,
+      "sha256": "2c43d1ccc695da10e17ebd66a78d4827b4c69432711e189fc1f8d59c17797346"
+    },
+    {
+      "file": "dist/conference/player.js",
+      "bytes": 44745,
+      "sha256": "df33d737cdf954f340e85950097d0200b77e1037f2f07c0d46eb16d029359e42"
+    },
+    {
+      "file": "dist/index.html",
+      "bytes": 57317,
+      "sha256": "a87de468a07b1c01f7375d4876c1bd2af045663dbf3786ead55f778fcff05856"
+    },
+    {
+      "file": "docs/conference/boot-preload-graph.json",
+      "bytes": 25708,
+      "sha256": "d3424f224e9066bc0c38ba605c3faa5774aeba2fa90a34bd568574548db67d24"
+    },
+    {
+      "file": "scripts/conference/render-media.py",
+      "bytes": 5156,
+      "sha256": "79c234933d64db9a650f21e35aada499091a770265a61b4eda9b6dd6922af97e"
+    },
+    {
+      "file": "scripts/conference/requirements.txt",
+      "bytes": 180,
+      "sha256": "36319f96cdf12f58e66d120a70646c9982062573f22df7b1059cb6f75cab7d49"
+    },
+    {
+      "file": "scripts/prepare-conference-media.mjs",
+      "bytes": 30596,
+      "sha256": "d28fddb270f0c699ca060789678ae6d40ac03cd6764856dc63ab1a8dea40da03"
+    },
+    {
+      "file": "tests/conference-media-build.test.mjs",
+      "bytes": 25424,
+      "sha256": "2cb32c53b924447e5a9d3a9a49d407632df7d79ea78a03b2002aaab15b815a8c"
+    },
+    {
+      "file": "tests/conference-media.test.mjs",
+      "bytes": 10685,
+      "sha256": "72afeb6d8d543e21fbd7390330f02f823ab2eb141f1489d0a027fc13d2068e1a"
+    },
+    {
+      "file": "tests/conference-player.test.mjs",
+      "bytes": 47918,
+      "sha256": "d1f195d792b4310bcaf74136a387a0f76b2b597d087c4a7b34aa381f61de6804"
+    }
+  ],
+  "toolchain": {
+    "node": "v24.22.2",
+    "platform": "linux",
+    "architecture": "x64",
+    "renderer": {
+      "python": "3.12.14",
+      "platform": "linux",
+      "architecture": "x86_64",
+      "pymupdf": "1.26.6",
+      "mupdf": "1.26.11",
+      "pillow": "13.0.0",
+      "libwebp": "1.6.0"
+    },
+    "ffmpeg": {
+      "version": "ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers",
+      "fingerprint": "4547fdef74c94fa23665e88c9644e91e5346effd620d3cf530e4650dde5fc308"
+    },
+    "ffprobe": {
+      "version": "ffprobe version 7.1.5-0+deb13u1 Copyright (c) 2007-2026 the FFmpeg developers",
+      "fingerprint": "f4b07e703a1385d0c4db87f1ab18c594e0e188dd7bf511501a7476d36ee0f3cb"
+    },
+    "generator": {
+      "file": "scripts/prepare-conference-media.mjs",
+      "bytes": 30596,
+      "sha256": "d28fddb270f0c699ca060789678ae6d40ac03cd6764856dc63ab1a8dea40da03"
+    },
+    "rendererScript": {
+      "file": "scripts/conference/render-media.py",
+      "bytes": 5156,
+      "sha256": "79c234933d64db9a650f21e35aada499091a770265a61b4eda9b6dd6922af97e"
+    },
+    "determinism": {
+      "threads": 1,
+      "filterThreads": 1,
+      "filterComplexThreads": 1,
+      "ffmpegBitexact": true,
+      "metadata": "strip source metadata and chapters; fixed UTC creation_time; no copied image metadata",
+      "creationTime": "1970-01-01T00:00:00Z",
+      "resampler": "swr",
+      "dither": "none",
+      "intermediate": "mono 48000Hz signed 16-bit little-endian PCM; sample-index trims; concatenate before one AAC encode",
+      "webp": "RGB, PDF annotations included, lossless=false, quality=80, method=6, exact=true, EXIF/ICC/XMP empty",
+      "reproducibility": "Identical inputs, generator, settings and exact toolchain; cross-version bit equality is not claimed."
+    }
+  },
+  "commands": [
+    {
+      "name": "styles",
+      "command": [
+        "node",
+        "scripts/build-site-styles.mjs",
+        "--check"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T03:36:02.661Z",
+      "node": "v24.22.2",
+      "sourceCommit": "6fa1c50496e3d29afe252a4aa8af2e6f8992041d",
+      "workingChanges": "M .gitignore\n M dist/conference/player.js\n M dist/index.html\n M docs/conference/boot-preload-graph.json\n M tests/conference-player.test.mjs\n?? dist/conference/media-manifest.json\n?? dist/conference/media.js\n?? docs/conference/P1C_A_MEDIA_CONTRACT_20261112.md\n?? scripts/conference/\n?? scripts/prepare-conference-media.mjs\n?? tests/conference-media-build.test.mjs\n?? tests/conference-media.test.mjs",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 298.092488,
+      "finishedAt": "2026-11-12T03:36:03.003Z",
+      "log": {
+        "file": "build/p1c-a/results/styles.log",
+        "bytes": 311,
+        "sha256": "69ff4d89dd698aa12969fe6aac73a160692cad620b42cc604f3e19021b88723d"
+      }
+    },
+    {
+      "name": "preloads",
+      "command": [
+        "node",
+        "scripts/build-site-preloads.mjs",
+        "--check"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T03:36:02.496Z",
+      "node": "v24.22.2",
+      "sourceCommit": "6fa1c50496e3d29afe252a4aa8af2e6f8992041d",
+      "workingChanges": "M .gitignore\n M dist/conference/player.js\n M dist/index.html\n M docs/conference/boot-preload-graph.json\n M tests/conference-player.test.mjs\n?? dist/conference/media-manifest.json\n?? dist/conference/media.js\n?? docs/conference/P1C_A_MEDIA_CONTRACT_20261112.md\n?? scripts/conference/\n?? scripts/prepare-conference-media.mjs\n?? tests/conference-media-build.test.mjs\n?? tests/conference-media.test.mjs",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 827.512881,
+      "finishedAt": "2026-11-12T03:36:03.353Z",
+      "log": {
+        "file": "build/p1c-a/results/preloads.log",
+        "bytes": 537,
+        "sha256": "a529392f341946677be9b34006f722e7537da7e4492e8e80d6fd5bdf80e1f32f"
+      }
+    },
+    {
+      "name": "timeline",
+      "command": [
+        "node",
+        "scripts/verify-conference-timeline.mjs",
+        "--timeline",
+        "dist/conference/timeline.json",
+        "--sources",
+        "docs/conference/source-segments.json",
+        "--out",
+        "build/p1c-a/timeline-verification.json"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T03:36:02.690Z",
+      "node": "v24.22.2",
+      "sourceCommit": "6fa1c50496e3d29afe252a4aa8af2e6f8992041d",
+      "workingChanges": "M .gitignore\n M dist/conference/player.js\n M dist/index.html\n M docs/conference/boot-preload-graph.json\n M tests/conference-player.test.mjs\n?? dist/conference/media-manifest.json\n?? dist/conference/media.js\n?? docs/conference/P1C_A_MEDIA_CONTRACT_20261112.md\n?? scripts/conference/\n?? scripts/prepare-conference-media.mjs\n?? tests/conference-media-build.test.mjs\n?? tests/conference-media.test.mjs",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 196.460144,
+      "finishedAt": "2026-11-12T03:36:02.909Z",
+      "log": {
+        "file": "build/p1c-a/results/timeline.log",
+        "bytes": 965,
+        "sha256": "de50740cbcf5f62295c75c75c8559049a251c7c08968fae3ee05db2bd437a27e"
+      }
+    },
+    {
+      "name": "unit",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T03:36:29.691Z",
+      "node": "v24.22.2",
+      "sourceCommit": "6fa1c50496e3d29afe252a4aa8af2e6f8992041d",
+      "workingChanges": "M .gitignore\n M dist/conference/player.js\n M dist/index.html\n M docs/conference/boot-preload-graph.json\n M tests/conference-player.test.mjs\n?? dist/conference/media-manifest.json\n?? dist/conference/media.js\n?? docs/conference/P1C_A_MEDIA_CONTRACT_20261112.md\n?? scripts/conference/\n?? scripts/prepare-conference-media.mjs\n?? tests/conference-media-build.test.mjs\n?? tests/conference-media.test.mjs",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 207405.10186,
+      "finishedAt": "2026-11-12T03:39:57.113Z",
+      "log": {
+        "file": "build/p1c-a/results/unit.log",
+        "bytes": 845786,
+        "sha256": "1404aaef758071e5eedb9d02ac4eed85033d4344adab7e39eebf6acc2e778d40"
+      }
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T03:36:02.483Z",
+      "node": "v24.22.2",
+      "sourceCommit": "6fa1c50496e3d29afe252a4aa8af2e6f8992041d",
+      "workingChanges": "M .gitignore\n M dist/conference/player.js\n M dist/index.html\n M docs/conference/boot-preload-graph.json\n M tests/conference-player.test.mjs\n?? dist/conference/media-manifest.json\n?? dist/conference/media.js\n?? docs/conference/P1C_A_MEDIA_CONTRACT_20261112.md\n?? scripts/conference/\n?? scripts/prepare-conference-media.mjs\n?? tests/conference-media-build.test.mjs\n?? tests/conference-media.test.mjs",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 2860.8918639999997,
+      "finishedAt": "2026-11-12T03:36:05.371Z",
+      "log": {
+        "file": "build/p1c-a/results/typecheck.log",
+        "bytes": 206,
+        "sha256": "d9185066952b9395d37541b6167aa9e7b4bb93fd4f5a9ec49f0afba63fa3697d"
+      }
+    },
+    {
+      "name": "static",
+      "command": [
+        "npm",
+        "run",
+        "verify:static"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T03:36:02.503Z",
+      "node": "v24.22.2",
+      "sourceCommit": "6fa1c50496e3d29afe252a4aa8af2e6f8992041d",
+      "workingChanges": "M .gitignore\n M dist/conference/player.js\n M dist/index.html\n M docs/conference/boot-preload-graph.json\n M tests/conference-player.test.mjs\n?? dist/conference/media-manifest.json\n?? dist/conference/media.js\n?? docs/conference/P1C_A_MEDIA_CONTRACT_20261112.md\n?? scripts/conference/\n?? scripts/prepare-conference-media.mjs\n?? tests/conference-media-build.test.mjs\n?? tests/conference-media.test.mjs",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 4316.121693,
+      "finishedAt": "2026-11-12T03:36:06.838Z",
+      "log": {
+        "file": "build/p1c-a/results/static.log",
+        "bytes": 354,
+        "sha256": "20bb18326d53d16da3dedefaf95bbcc89dcf5cadd6a752e203ed095a53fa296b"
+      }
+    },
+    {
+      "name": "pages",
+      "command": [
+        "npm",
+        "run",
+        "verify:pages"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T03:36:02.708Z",
+      "node": "v24.22.2",
+      "sourceCommit": "6fa1c50496e3d29afe252a4aa8af2e6f8992041d",
+      "workingChanges": "M .gitignore\n M dist/conference/player.js\n M dist/index.html\n M docs/conference/boot-preload-graph.json\n M tests/conference-player.test.mjs\n?? dist/conference/media-manifest.json\n?? dist/conference/media.js\n?? docs/conference/P1C_A_MEDIA_CONTRACT_20261112.md\n?? scripts/conference/\n?? scripts/prepare-conference-media.mjs\n?? tests/conference-media-build.test.mjs\n?? tests/conference-media.test.mjs",
+      "complete": true,
+      "exit": 1,
+      "signal": null,
+      "elapsedMs": 2081.813795,
+      "finishedAt": "2026-11-12T03:36:04.819Z",
+      "log": {
+        "file": "build/p1c-a/results/pages.log",
+        "bytes": 5116,
+        "sha256": "14f8029049afda28664cf15d8046b88ac14c775055484197fa1aa1fd3ef921d8"
+      }
+    },
+    {
+      "name": "player-schema",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/conference-media.test.mjs",
+        "tests/conference-player.test.mjs",
+        "tests/conference-route.test.mjs"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T03:36:02.499Z",
+      "node": "v24.22.2",
+      "sourceCommit": "6fa1c50496e3d29afe252a4aa8af2e6f8992041d",
+      "workingChanges": "M .gitignore\n M dist/conference/player.js\n M dist/index.html\n M docs/conference/boot-preload-graph.json\n M tests/conference-player.test.mjs\n?? dist/conference/media-manifest.json\n?? dist/conference/media.js\n?? docs/conference/P1C_A_MEDIA_CONTRACT_20261112.md\n?? scripts/conference/\n?? scripts/prepare-conference-media.mjs\n?? tests/conference-media-build.test.mjs\n?? tests/conference-media.test.mjs",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 1815.071344,
+      "finishedAt": "2026-11-12T03:36:04.333Z",
+      "log": {
+        "file": "build/p1c-a/results/player-schema.log",
+        "bytes": 13542,
+        "sha256": "1b753540162f6a51d50c303e869d47abc8c89a23e513ac8063591dbb1f593045"
+      }
+    },
+    {
+      "name": "media-build",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/conference-media-build.test.mjs"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T03:36:29.689Z",
+      "node": "v24.22.2",
+      "sourceCommit": "6fa1c50496e3d29afe252a4aa8af2e6f8992041d",
+      "workingChanges": "M .gitignore\n M dist/conference/player.js\n M dist/index.html\n M docs/conference/boot-preload-graph.json\n M tests/conference-player.test.mjs\n?? dist/conference/media-manifest.json\n?? dist/conference/media.js\n?? docs/conference/P1C_A_MEDIA_CONTRACT_20261112.md\n?? scripts/conference/\n?? scripts/prepare-conference-media.mjs\n?? tests/conference-media-build.test.mjs\n?? tests/conference-media.test.mjs",
+      "complete": true,
+      "exit": 0,
+      "signal": null,
+      "elapsedMs": 26354.763646,
+      "finishedAt": "2026-11-12T03:36:56.063Z",
+      "log": {
+        "file": "build/p1c-a/results/media-build.log",
+        "bytes": 4585,
+        "sha256": "fd83f53be328ac595546cf74f6c9a3bc4805b4a4a54910d346a9704c1a11ce46"
+      }
+    }
+  ],
+  "results": {
+    "unit": {
+      "complete": true,
+      "tests": 3521,
+      "pass": 3521,
+      "fail": 0,
+      "skipped": 0,
+      "batches": 1
+    },
+    "playerRouteAndSchema": {
+      "tests": 56,
+      "pass": 56,
+      "fail": 0,
+      "skipped": 0,
+      "duration_ms": 1719.818285,
+      "exit": 0
+    },
+    "syntheticMedia": {
+      "tests": 18,
+      "pass": 18,
+      "fail": 0,
+      "skipped": 0,
+      "duration_ms": 26269.320976,
+      "exit": 0,
+      "built": {
+        "pages": 3,
+        "audio": 3,
+        "filesIncludingManifest": 7,
+        "eventDurationSec": 3
+      },
+      "twoBuildsByteIdentical": true,
+      "checkReadOnly": true,
+      "crossingSignalHz": [
+        440,
+        880
+      ],
+      "rejected": {
+        "pdfDeclared3Actual2": true,
+        "nominalAudio1_01SecDecoded48000Samples": true,
+        "siteFiles20001": true
+      },
+      "coveredMp3InputStripped": true
+    },
+    "static": {
+      "files": 968,
+      "checkedScripts": 219,
+      "checkedReferences": 972,
+      "exit": 0
+    },
+    "typecheck": {
+      "exit": 0
+    },
+    "pages": {
+      "exit": 1,
+      "status": "known existing failure; preserved",
+      "reason": "Pages artifact file coverage changed: retained market-lab JS/CSS hashed filenames differ from the locally rebuilt artifacts."
+    },
+    "timeline": {
+      "schemaVersion": 1,
+      "kind": "atlas-conference-timeline-verification",
+      "recordedAt": "2026-11-12T03:36:02.870Z",
+      "status": "passed",
+      "valid": true,
+      "syntheticFixture": false,
+      "timeline": {
+        "file": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/dist/conference/timeline.json",
+        "bytes": 1044921,
+        "sha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad"
+      },
+      "sources": {
+        "file": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/docs/conference/source-segments.json",
+        "bytes": 985201,
+        "sha256": "894bbd9598e7766d0790f92ae74f9274ef891fcdda71abdc58dd2c04ed5a35a6"
+      },
+      "summary": {
+        "audioDurationSec": 20400,
+        "segmentCount": 9168,
+        "talkCount": 15,
+        "deckCount": 2,
+        "lastSegmentT1": 20396.7,
+        "coverage": {
+          "checked": true,
+          "expectedCount": 9168,
+          "missing": [],
+          "unexpected": [],
+          "duplicates": [],
+          "changed": []
+        }
+      },
+      "errors": []
+    },
+    "contracts": {
+      "status": "passed",
+      "base": "f35d7945713b339bd7d72742a64f0d2cbd3cd339",
+      "preservedFiles": 73,
+      "browserAndNativeHarnessFiles": 19,
+      "cssFiles": 44,
+      "boot": {
+        "moduleUrls": 55,
+        "conferenceModulePreloads": 54,
+        "sharedModulePreloads": 1,
+        "staticImportEdges": 81,
+        "urlsAndOrderUnchanged": true,
+        "indexChange": "generated provenance comment only",
+        "newValidator": "dynamic import after ready manifest only"
+      },
+      "binaryMediaChanged": [],
+      "timelineSha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad"
+    },
+    "standalone": {
+      "styleBlocks": 41,
+      "httpPreloads": 0,
+      "bytes": 53695325,
+      "runtimeParserLinker": "passed in npm test"
+    }
+  },
+  "productionPlan": {
+    "pageCount": 547,
+    "audioCount": 15,
+    "assetCount": 562,
+    "fileCount": 563,
+    "durationSec": 20400,
+    "existingSiteFileCount": 967,
+    "siteFileCount": 1530,
+    "rendered": false,
+    "assetBytes": null,
+    "maxFileBytes": null
+  },
+  "unperformed": [
+    "locked original PDF/MP3 render and original-package --check",
+    "actual 547-page/15-audio output byte totals and hashes",
+    "macOS/browser regression and A-9 performance after this change",
+    "human visual/listening review, 10-point synchronization check and A-10 memory measurement"
+  ]
+}
