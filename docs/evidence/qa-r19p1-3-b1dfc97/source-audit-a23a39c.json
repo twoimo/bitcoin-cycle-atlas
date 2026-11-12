@@ -1,0 +1,1388 @@
+{
+  "kind": "unchanged-p0-source-audit",
+  "testedHead": "a23a39c8ff2ad540e42f64e929d8f252bdd38a16",
+  "nativeP0Rerun": false,
+  "scopeFiles": 48,
+  "audit": "passed",
+  "issues": [],
+  "literalViolations": [],
+  "globalTokenViolations": [],
+  "rootPaintTokens": "passed",
+  "rootPaintTokenRows": 1838,
+  "tokenPairs": [
+    {
+      "id": "text-on-bg",
+      "foreground": {
+        "value": "#191f28",
+        "chain": [
+          "--text"
+        ],
+        "color": [
+          25,
+          31,
+          40,
+          1
+        ]
+      },
+      "background": {
+        "value": "#ffffff",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "light",
+      "foregroundToken": "--text",
+      "backgroundToken": "--bg",
+      "ratio": 16.56191305377113,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "text-on-surface",
+      "foreground": {
+        "value": "#191f28",
+        "chain": [
+          "--text"
+        ],
+        "color": [
+          25,
+          31,
+          40,
+          1
+        ]
+      },
+      "background": {
+        "value": "#ffffff",
+        "chain": [
+          "--surface"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "light",
+      "foregroundToken": "--text",
+      "backgroundToken": "--surface",
+      "ratio": 16.56191305377113,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "text-on-surface-raised",
+      "foreground": {
+        "value": "#191f28",
+        "chain": [
+          "--text"
+        ],
+        "color": [
+          25,
+          31,
+          40,
+          1
+        ]
+      },
+      "background": {
+        "value": "#f2f4f6",
+        "chain": [
+          "--surface-raised"
+        ],
+        "color": [
+          242,
+          244,
+          246,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "light",
+      "foregroundToken": "--text",
+      "backgroundToken": "--surface-raised",
+      "ratio": 15.02125034783696,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "muted-on-bg",
+      "foreground": {
+        "value": "#4e5968",
+        "chain": [
+          "--muted"
+        ],
+        "color": [
+          78,
+          89,
+          104,
+          1
+        ]
+      },
+      "background": {
+        "value": "#ffffff",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "light",
+      "foregroundToken": "--muted",
+      "backgroundToken": "--bg",
+      "ratio": 7.1119253402872324,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "muted-on-surface",
+      "foreground": {
+        "value": "#4e5968",
+        "chain": [
+          "--muted"
+        ],
+        "color": [
+          78,
+          89,
+          104,
+          1
+        ]
+      },
+      "background": {
+        "value": "#ffffff",
+        "chain": [
+          "--surface"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "light",
+      "foregroundToken": "--muted",
+      "backgroundToken": "--surface",
+      "ratio": 7.1119253402872324,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "muted-on-surface-raised",
+      "foreground": {
+        "value": "#4e5968",
+        "chain": [
+          "--muted"
+        ],
+        "color": [
+          78,
+          89,
+          104,
+          1
+        ]
+      },
+      "background": {
+        "value": "#f2f4f6",
+        "chain": [
+          "--surface-raised"
+        ],
+        "color": [
+          242,
+          244,
+          246,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "light",
+      "foregroundToken": "--muted",
+      "backgroundToken": "--surface-raised",
+      "ratio": 6.450342460121478,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "subtle-on-bg",
+      "foreground": {
+        "value": "#596574",
+        "chain": [
+          "--subtle"
+        ],
+        "color": [
+          89,
+          101,
+          116,
+          1
+        ]
+      },
+      "background": {
+        "value": "#ffffff",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "light",
+      "foregroundToken": "--subtle",
+      "backgroundToken": "--bg",
+      "ratio": 5.934831470738994,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "subtle-on-surface",
+      "foreground": {
+        "value": "#596574",
+        "chain": [
+          "--subtle"
+        ],
+        "color": [
+          89,
+          101,
+          116,
+          1
+        ]
+      },
+      "background": {
+        "value": "#ffffff",
+        "chain": [
+          "--surface"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "light",
+      "foregroundToken": "--subtle",
+      "backgroundToken": "--surface",
+      "ratio": 5.934831470738994,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "subtle-on-surface-raised",
+      "foreground": {
+        "value": "#596574",
+        "chain": [
+          "--subtle"
+        ],
+        "color": [
+          89,
+          101,
+          116,
+          1
+        ]
+      },
+      "background": {
+        "value": "#f2f4f6",
+        "chain": [
+          "--surface-raised"
+        ],
+        "color": [
+          242,
+          244,
+          246,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "light",
+      "foregroundToken": "--subtle",
+      "backgroundToken": "--surface-raised",
+      "ratio": 5.382747089950024,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "accent-ink-on-bg",
+      "foreground": {
+        "value": "#5a3bf0",
+        "chain": [
+          "--accent-ink"
+        ],
+        "color": [
+          90,
+          59,
+          240,
+          1
+        ]
+      },
+      "background": {
+        "value": "#ffffff",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "light",
+      "foregroundToken": "--accent-ink",
+      "backgroundToken": "--bg",
+      "ratio": 6.328023345669202,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "accent-ink-on-surface",
+      "foreground": {
+        "value": "#5a3bf0",
+        "chain": [
+          "--accent-ink"
+        ],
+        "color": [
+          90,
+          59,
+          240,
+          1
+        ]
+      },
+      "background": {
+        "value": "#ffffff",
+        "chain": [
+          "--surface"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "light",
+      "foregroundToken": "--accent-ink",
+      "backgroundToken": "--surface",
+      "ratio": 6.328023345669202,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "on-accent-on-accent",
+      "foreground": {
+        "value": "#ffffff",
+        "chain": [
+          "--on-accent"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "background": {
+        "value": "#6c4dff",
+        "chain": [
+          "--accent"
+        ],
+        "color": [
+          108,
+          77,
+          255,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "light",
+      "foregroundToken": "--on-accent",
+      "backgroundToken": "--accent",
+      "ratio": 5.068570630375775,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "on-accent-on-accent-hover",
+      "foreground": {
+        "value": "#ffffff",
+        "chain": [
+          "--on-accent"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "background": {
+        "value": "#5a3bf0",
+        "chain": [
+          "--accent-hover"
+        ],
+        "color": [
+          90,
+          59,
+          240,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "light",
+      "foregroundToken": "--on-accent",
+      "backgroundToken": "--accent-hover",
+      "ratio": 6.328023345669202,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "positive-ink-on-bg",
+      "foreground": {
+        "value": "#097354",
+        "chain": [
+          "--positive-ink"
+        ],
+        "color": [
+          9,
+          115,
+          84,
+          1
+        ]
+      },
+      "background": {
+        "value": "#ffffff",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "light",
+      "foregroundToken": "--positive-ink",
+      "backgroundToken": "--bg",
+      "ratio": 5.846443101635576,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "negative-ink-on-bg",
+      "foreground": {
+        "value": "#b3324b",
+        "chain": [
+          "--negative-ink"
+        ],
+        "color": [
+          179,
+          50,
+          75,
+          1
+        ]
+      },
+      "background": {
+        "value": "#ffffff",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "light",
+      "foregroundToken": "--negative-ink",
+      "backgroundToken": "--bg",
+      "ratio": 6.043892501994452,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "data-gold-ink-on-bg",
+      "foreground": {
+        "value": "#836110",
+        "chain": [
+          "--data-gold-ink"
+        ],
+        "color": [
+          131,
+          97,
+          16,
+          1
+        ]
+      },
+      "background": {
+        "value": "#ffffff",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "light",
+      "foregroundToken": "--data-gold-ink",
+      "backgroundToken": "--bg",
+      "ratio": 5.702773593931196,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "icon-icon-on-bg",
+      "foreground": {
+        "value": "#191f28",
+        "chain": [
+          "--icon",
+          "--text"
+        ],
+        "color": [
+          25,
+          31,
+          40,
+          1
+        ]
+      },
+      "background": {
+        "value": "#ffffff",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "kind": "icon",
+      "theme": "light",
+      "foregroundToken": "--icon",
+      "backgroundToken": "--bg",
+      "ratio": 16.56191305377113,
+      "threshold": 3,
+      "status": "passed"
+    },
+    {
+      "id": "icon-muted-icon-on-bg",
+      "foreground": {
+        "value": "#4e5968",
+        "chain": [
+          "--icon-muted",
+          "--muted"
+        ],
+        "color": [
+          78,
+          89,
+          104,
+          1
+        ]
+      },
+      "background": {
+        "value": "#ffffff",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "kind": "icon",
+      "theme": "light",
+      "foregroundToken": "--icon-muted",
+      "backgroundToken": "--bg",
+      "ratio": 7.1119253402872324,
+      "threshold": 3,
+      "status": "passed"
+    },
+    {
+      "id": "focus-icon-on-bg",
+      "foreground": {
+        "value": "#5a3bf0",
+        "chain": [
+          "--focus",
+          "--accent-ink"
+        ],
+        "color": [
+          90,
+          59,
+          240,
+          1
+        ]
+      },
+      "background": {
+        "value": "#ffffff",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "kind": "icon",
+      "theme": "light",
+      "foregroundToken": "--focus",
+      "backgroundToken": "--bg",
+      "ratio": 6.328023345669202,
+      "threshold": 3,
+      "status": "passed"
+    },
+    {
+      "id": "accent-ink-icon-on-bg",
+      "foreground": {
+        "value": "#5a3bf0",
+        "chain": [
+          "--accent-ink"
+        ],
+        "color": [
+          90,
+          59,
+          240,
+          1
+        ]
+      },
+      "background": {
+        "value": "#ffffff",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "kind": "icon",
+      "theme": "light",
+      "foregroundToken": "--accent-ink",
+      "backgroundToken": "--bg",
+      "ratio": 6.328023345669202,
+      "threshold": 3,
+      "status": "passed"
+    },
+    {
+      "id": "text-on-bg",
+      "foreground": {
+        "value": "#f2f2f4",
+        "chain": [
+          "--text"
+        ],
+        "color": [
+          242,
+          242,
+          244,
+          1
+        ]
+      },
+      "background": {
+        "value": "#101013",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          16,
+          16,
+          19,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "dark",
+      "foregroundToken": "--text",
+      "backgroundToken": "--bg",
+      "ratio": 16.98937498761537,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "text-on-surface",
+      "foreground": {
+        "value": "#f2f2f4",
+        "chain": [
+          "--text"
+        ],
+        "color": [
+          242,
+          242,
+          244,
+          1
+        ]
+      },
+      "background": {
+        "value": "#17171c",
+        "chain": [
+          "--surface"
+        ],
+        "color": [
+          23,
+          23,
+          28,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "dark",
+      "foregroundToken": "--text",
+      "backgroundToken": "--surface",
+      "ratio": 15.97491029671796,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "text-on-surface-raised",
+      "foreground": {
+        "value": "#f2f2f4",
+        "chain": [
+          "--text"
+        ],
+        "color": [
+          242,
+          242,
+          244,
+          1
+        ]
+      },
+      "background": {
+        "value": "#1b1b21",
+        "chain": [
+          "--surface-raised"
+        ],
+        "color": [
+          27,
+          27,
+          33,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "dark",
+      "foregroundToken": "--text",
+      "backgroundToken": "--surface-raised",
+      "ratio": 15.32854900713123,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "muted-on-bg",
+      "foreground": {
+        "value": "#b0b0ba",
+        "chain": [
+          "--muted"
+        ],
+        "color": [
+          176,
+          176,
+          186,
+          1
+        ]
+      },
+      "background": {
+        "value": "#101013",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          16,
+          16,
+          19,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "dark",
+      "foregroundToken": "--muted",
+      "backgroundToken": "--bg",
+      "ratio": 8.832865192921577,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "muted-on-surface",
+      "foreground": {
+        "value": "#b0b0ba",
+        "chain": [
+          "--muted"
+        ],
+        "color": [
+          176,
+          176,
+          186,
+          1
+        ]
+      },
+      "background": {
+        "value": "#17171c",
+        "chain": [
+          "--surface"
+        ],
+        "color": [
+          23,
+          23,
+          28,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "dark",
+      "foregroundToken": "--muted",
+      "backgroundToken": "--surface",
+      "ratio": 8.30543967760935,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "muted-on-surface-raised",
+      "foreground": {
+        "value": "#b0b0ba",
+        "chain": [
+          "--muted"
+        ],
+        "color": [
+          176,
+          176,
+          186,
+          1
+        ]
+      },
+      "background": {
+        "value": "#1b1b21",
+        "chain": [
+          "--surface-raised"
+        ],
+        "color": [
+          27,
+          27,
+          33,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "dark",
+      "foregroundToken": "--muted",
+      "backgroundToken": "--surface-raised",
+      "ratio": 7.969393051938638,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "subtle-on-bg",
+      "foreground": {
+        "value": "#9a9aa5",
+        "chain": [
+          "--subtle"
+        ],
+        "color": [
+          154,
+          154,
+          165,
+          1
+        ]
+      },
+      "background": {
+        "value": "#101013",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          16,
+          16,
+          19,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "dark",
+      "foregroundToken": "--subtle",
+      "backgroundToken": "--bg",
+      "ratio": 6.8197335408272055,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "subtle-on-surface",
+      "foreground": {
+        "value": "#9a9aa5",
+        "chain": [
+          "--subtle"
+        ],
+        "color": [
+          154,
+          154,
+          165,
+          1
+        ]
+      },
+      "background": {
+        "value": "#17171c",
+        "chain": [
+          "--surface"
+        ],
+        "color": [
+          23,
+          23,
+          28,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "dark",
+      "foregroundToken": "--subtle",
+      "backgroundToken": "--surface",
+      "ratio": 6.412515565855128,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "subtle-on-surface-raised",
+      "foreground": {
+        "value": "#9a9aa5",
+        "chain": [
+          "--subtle"
+        ],
+        "color": [
+          154,
+          154,
+          165,
+          1
+        ]
+      },
+      "background": {
+        "value": "#1b1b21",
+        "chain": [
+          "--surface-raised"
+        ],
+        "color": [
+          27,
+          27,
+          33,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "dark",
+      "foregroundToken": "--subtle",
+      "backgroundToken": "--surface-raised",
+      "ratio": 6.153058595289688,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "accent-ink-on-bg",
+      "foreground": {
+        "value": "#b4a4ff",
+        "chain": [
+          "--accent-ink"
+        ],
+        "color": [
+          180,
+          164,
+          255,
+          1
+        ]
+      },
+      "background": {
+        "value": "#101013",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          16,
+          16,
+          19,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "dark",
+      "foregroundToken": "--accent-ink",
+      "backgroundToken": "--bg",
+      "ratio": 8.769235849261575,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "accent-ink-on-surface",
+      "foreground": {
+        "value": "#b4a4ff",
+        "chain": [
+          "--accent-ink"
+        ],
+        "color": [
+          180,
+          164,
+          255,
+          1
+        ]
+      },
+      "background": {
+        "value": "#17171c",
+        "chain": [
+          "--surface"
+        ],
+        "color": [
+          23,
+          23,
+          28,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "dark",
+      "foregroundToken": "--accent-ink",
+      "backgroundToken": "--surface",
+      "ratio": 8.24560975108477,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "on-accent-on-accent",
+      "foreground": {
+        "value": "#ffffff",
+        "chain": [
+          "--on-accent"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "background": {
+        "value": "#6c4dff",
+        "chain": [
+          "--accent"
+        ],
+        "color": [
+          108,
+          77,
+          255,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "dark",
+      "foregroundToken": "--on-accent",
+      "backgroundToken": "--accent",
+      "ratio": 5.068570630375775,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "on-accent-on-accent-hover",
+      "foreground": {
+        "value": "#ffffff",
+        "chain": [
+          "--on-accent"
+        ],
+        "color": [
+          255,
+          255,
+          255,
+          1
+        ]
+      },
+      "background": {
+        "value": "#5a3bf0",
+        "chain": [
+          "--accent-hover"
+        ],
+        "color": [
+          90,
+          59,
+          240,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "dark",
+      "foregroundToken": "--on-accent",
+      "backgroundToken": "--accent-hover",
+      "ratio": 6.328023345669202,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "positive-ink-on-bg",
+      "foreground": {
+        "value": "#66c3ab",
+        "chain": [
+          "--positive-ink"
+        ],
+        "color": [
+          102,
+          195,
+          171,
+          1
+        ]
+      },
+      "background": {
+        "value": "#101013",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          16,
+          16,
+          19,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "dark",
+      "foregroundToken": "--positive-ink",
+      "backgroundToken": "--bg",
+      "ratio": 9.008220798279893,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "negative-ink-on-bg",
+      "foreground": {
+        "value": "#ec8190",
+        "chain": [
+          "--negative-ink"
+        ],
+        "color": [
+          236,
+          129,
+          144,
+          1
+        ]
+      },
+      "background": {
+        "value": "#101013",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          16,
+          16,
+          19,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "dark",
+      "foregroundToken": "--negative-ink",
+      "backgroundToken": "--bg",
+      "ratio": 7.3351608972828375,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "data-gold-ink-on-bg",
+      "foreground": {
+        "value": "#d8b56d",
+        "chain": [
+          "--data-gold-ink"
+        ],
+        "color": [
+          216,
+          181,
+          109,
+          1
+        ]
+      },
+      "background": {
+        "value": "#101013",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          16,
+          16,
+          19,
+          1
+        ]
+      },
+      "kind": "text",
+      "theme": "dark",
+      "foregroundToken": "--data-gold-ink",
+      "backgroundToken": "--bg",
+      "ratio": 9.72379752118038,
+      "threshold": 4.5,
+      "status": "passed"
+    },
+    {
+      "id": "icon-icon-on-bg",
+      "foreground": {
+        "value": "#f2f2f4",
+        "chain": [
+          "--icon",
+          "--text"
+        ],
+        "color": [
+          242,
+          242,
+          244,
+          1
+        ]
+      },
+      "background": {
+        "value": "#101013",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          16,
+          16,
+          19,
+          1
+        ]
+      },
+      "kind": "icon",
+      "theme": "dark",
+      "foregroundToken": "--icon",
+      "backgroundToken": "--bg",
+      "ratio": 16.98937498761537,
+      "threshold": 3,
+      "status": "passed"
+    },
+    {
+      "id": "icon-muted-icon-on-bg",
+      "foreground": {
+        "value": "#b0b0ba",
+        "chain": [
+          "--icon-muted",
+          "--muted"
+        ],
+        "color": [
+          176,
+          176,
+          186,
+          1
+        ]
+      },
+      "background": {
+        "value": "#101013",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          16,
+          16,
+          19,
+          1
+        ]
+      },
+      "kind": "icon",
+      "theme": "dark",
+      "foregroundToken": "--icon-muted",
+      "backgroundToken": "--bg",
+      "ratio": 8.832865192921577,
+      "threshold": 3,
+      "status": "passed"
+    },
+    {
+      "id": "focus-icon-on-bg",
+      "foreground": {
+        "value": "#b4a4ff",
+        "chain": [
+          "--focus",
+          "--accent-ink"
+        ],
+        "color": [
+          180,
+          164,
+          255,
+          1
+        ]
+      },
+      "background": {
+        "value": "#101013",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          16,
+          16,
+          19,
+          1
+        ]
+      },
+      "kind": "icon",
+      "theme": "dark",
+      "foregroundToken": "--focus",
+      "backgroundToken": "--bg",
+      "ratio": 8.769235849261575,
+      "threshold": 3,
+      "status": "passed"
+    },
+    {
+      "id": "accent-ink-icon-on-bg",
+      "foreground": {
+        "value": "#b4a4ff",
+        "chain": [
+          "--accent-ink"
+        ],
+        "color": [
+          180,
+          164,
+          255,
+          1
+        ]
+      },
+      "background": {
+        "value": "#101013",
+        "chain": [
+          "--bg"
+        ],
+        "color": [
+          16,
+          16,
+          19,
+          1
+        ]
+      },
+      "kind": "icon",
+      "theme": "dark",
+      "foregroundToken": "--accent-ink",
+      "backgroundToken": "--bg",
+      "ratio": 8.769235849261575,
+      "threshold": 3,
+      "status": "passed"
+    }
+  ],
+  "font": {
+    "manifest": "dist/fonts/pretendard/PROVENANCE.json",
+    "family": "Pretendard Variable",
+    "faces": 92,
+    "bytes": 2957724,
+    "issues": [],
+    "status": "passed"
+  }
+}

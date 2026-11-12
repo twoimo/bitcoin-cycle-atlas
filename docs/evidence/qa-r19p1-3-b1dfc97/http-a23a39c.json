@@ -1,0 +1,57 @@
+{
+  "kind": "actual-dist-http",
+  "receipts": [
+    {
+      "path": "/bitcoin-cycle-atlas/",
+      "status": 200,
+      "bytes": 57006,
+      "sha256": "a2e9165df98d45ce1e1980aa0642b065d4fd040a17197e65e5cce0d12b73d032"
+    },
+    {
+      "path": "/bitcoin-cycle-atlas/index.html",
+      "status": 200,
+      "bytes": 57006,
+      "sha256": "a2e9165df98d45ce1e1980aa0642b065d4fd040a17197e65e5cce0d12b73d032"
+    },
+    {
+      "path": "/bitcoin-cycle-atlas/?page=outlook&symbol=BTCUSD",
+      "status": 200,
+      "bytes": 57006,
+      "sha256": "a2e9165df98d45ce1e1980aa0642b065d4fd040a17197e65e5cce0d12b73d032"
+    },
+    {
+      "path": "/bitcoin-cycle-atlas/?page=evidence",
+      "status": 200,
+      "bytes": 57006,
+      "sha256": "a2e9165df98d45ce1e1980aa0642b065d4fd040a17197e65e5cce0d12b73d032"
+    },
+    {
+      "path": "/bitcoin-cycle-atlas/?page=data",
+      "status": 200,
+      "bytes": 57006,
+      "sha256": "a2e9165df98d45ce1e1980aa0642b065d4fd040a17197e65e5cce0d12b73d032"
+    },
+    {
+      "path": "/bitcoin-cycle-atlas/?page=ipo",
+      "status": 200,
+      "bytes": 57006,
+      "sha256": "a2e9165df98d45ce1e1980aa0642b065d4fd040a17197e65e5cce0d12b73d032"
+    },
+    {
+      "path": "/bitcoin-cycle-atlas/?page=relay",
+      "status": 200,
+      "bytes": 57006,
+      "sha256": "a2e9165df98d45ce1e1980aa0642b065d4fd040a17197e65e5cce0d12b73d032"
+    },
+    {
+      "path": "/bitcoin-cycle-atlas/?page=conference",
+      "status": 200,
+      "bytes": 57006,
+      "sha256": "a2e9165df98d45ce1e1980aa0642b065d4fd040a17197e65e5cce0d12b73d032"
+    }
+  ],
+  "testedProductHead": "a23a39c8ff2ad540e42f64e929d8f252bdd38a16",
+  "browserUsed": false,
+  "sourceLog": "checks.log.tar.gz/qr19p1-3-focused-final.tap",
+  "note": "Actual production P1 server regression on the final product bytes; the tests ran before the product commit was published."
+}

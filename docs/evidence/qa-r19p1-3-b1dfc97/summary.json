@@ -1,0 +1,323 @@
+{
+  "request": "Q-R19P1-3",
+  "recordedAt": "2026-11-12T14:19:29.890395+00:00",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "branch": "fix/tradingview-responsive-20261110",
+  "baselineCommit": "b1dfc97ee3868b58fe3b5e31ea7c6071cf6d662e",
+  "commits": {
+    "heading": "36f3a589b3da75eccf0088d11d59d18dbc3fe041",
+    "navigationAndP0TokenOwnership": "a23a39c8ff2ad540e42f64e929d8f252bdd38a16"
+  },
+  "testedHead": "a23a39c8ff2ad540e42f64e929d8f252bdd38a16",
+  "testedTree": "b607b2fb6f88d014f9a1b91f0b1eddfbdb3a2dd6",
+  "testedDistTree": "2eeabcc3010d6e9359c348f43086fa47180559c0",
+  "workingTreeAtNativeRun": [],
+  "sourceStable": true,
+  "status": "product-fixes-pushed-mac-native-rerun-pending",
+  "qualifiesP1Verification": false,
+  "p1Closed": false,
+  "native": {
+    "status": "unverified",
+    "blockedAt": "Chromium launch",
+    "recordedAt": "2026-11-12T14:17:31.803Z",
+    "command": "node scripts/verify-ui-renewal-p1-browser.mjs --out build/qr19p1-3/native-a23a39c",
+    "counts": {
+      "requiredLayouts": 28,
+      "attemptedLayouts": 0,
+      "passedLayouts": 0,
+      "requiredNavigationActivations": 56,
+      "attemptedNavigationActivations": 0,
+      "passedNavigationActivations": 0,
+      "requiredChartReturns": 8,
+      "attemptedChartReturns": 0,
+      "passedChartReturns": 0
+    },
+    "screenshots": 0,
+    "layouts": 0,
+    "journeys": 0,
+    "failure": "Chromium launch: Error: Chromium exited null/SIGABRT: /usr/bin/chromium: 9: [: 5225713664: unexpected operator\n[45:45:1112/231732.227494:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/231732.227755:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[67:67:0100/000000.299165:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n[1:1:0100/000000.306648:ERROR:content/zygote/zygote_main_linux.cc:197] Failed sending zygote boot message: Broken pipe (32)\n\n    at file:///workspace/scratch/4561734af651/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p1-browser.mjs:294:129\n    at until (file:///workspace/scratch/4561734af651/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p1-browser.mjs:149:120)\n    at async verifyUiRenewalP1Browser (file:///workspace/scratch/4561734af651/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p1-browser.mjs:294:16)\n    at async file:///workspace/scratch/4561734af651/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p1-browser.mjs:330:86",
+    "viewportOverflowPx": {
+      "320": null,
+      "390": null,
+      "768": null,
+      "1440": null
+    },
+    "nativeHeadingInkMeasurements": 0,
+    "nativeNavigationMeasurements": 0
+  },
+  "macBaseline": {
+    "receipt": "../qa-r19p1-20261112/mac-026e416.json",
+    "testedHead": "026e416ca38df16003013c783133ba7f22a82f23",
+    "browser": "Chrome/157.0.8103.79",
+    "counts": {
+      "requiredLayouts": 28,
+      "attemptedLayouts": 28,
+      "passedLayouts": 8,
+      "requiredNavigationActivations": 56,
+      "attemptedNavigationActivations": 56,
+      "passedNavigationActivations": 48,
+      "requiredChartReturns": 8,
+      "attemptedChartReturns": 8,
+      "passedChartReturns": 8
+    },
+    "qualifiesP1Verification": false,
+    "horizontalOverflow": "0 on all 28 layouts",
+    "note": "Historical Mac baseline only; not verification of the changed product."
+  },
+  "productFixes": {
+    "heading": {
+      "dashboardFormattingContext": "flow-root",
+      "headerHeightPx": 112,
+      "cardShadow": "0 2px 8px var(--shadow-color)",
+      "globalShadowTokenUnchanged": true,
+      "newPaintAliases": 0,
+      "newAncestorClips": 0,
+      "nativeProof": null
+    },
+    "navigation": {
+      "physicalInlinePaddingPx": 4,
+      "boxSizing": "border-box",
+      "focusReveal": "synchronous local whole-target reveal plus one guarded microtask recheck",
+      "resizeReveal": true,
+      "restoresOriginalNav": true,
+      "changesFocus": false,
+      "nativeProof": null
+    }
+  },
+  "checks": {
+    "focused": {
+      "tests": 168,
+      "passed": 168,
+      "failed": 0,
+      "skipped": 0,
+      "newHeadingModelTests": 8,
+      "newNavigationModelTests": 9,
+      "nativeEvidence": false
+    },
+    "initialFocused": {
+      "tests": 168,
+      "passed": 166,
+      "failed": 2,
+      "cause": "The new dashboard shadow alias violated the unchanged P0 root paint-token ownership audit. Removed the alias and used the original --shadow-color directly in the card property; no audit change."
+    },
+    "static": {
+      "status": "passed",
+      "files": 1065,
+      "scripts": 220,
+      "references": 753
+    },
+    "styleBundle": {
+      "status": "passed",
+      "sourceStylesheets": 42
+    },
+    "preloadGraph": {
+      "status": "passed",
+      "moduleUrls": 56,
+      "uniqueModuleFiles": 54,
+      "staticImportEdges": 82
+    },
+    "outerEntries": {
+      "exactDerivationMatched": 9,
+      "fullPagesBuildClaimed": false,
+      "embeddedAppChanged": false
+    },
+    "actualServerHttp": {
+      "status": "passed",
+      "passed": 8,
+      "total": 8,
+      "rootStatus": 200,
+      "rootBytes": 57006,
+      "rootSha256": "a2e9165df98d45ce1e1980aa0642b065d4fd040a17197e65e5cce0d12b73d032",
+      "receipt": "http-a23a39c.json",
+      "browserUsed": false
+    },
+    "p0SourceAudit": {
+      "status": "passed",
+      "scopeFiles": 48,
+      "rootPaintTokenRows": 1838,
+      "staticTokenPairsPassed": 40,
+      "fontStatus": "passed",
+      "nativeP0Rerun": false,
+      "receipt": "source-audit-a23a39c.json"
+    }
+  },
+  "preservedMacP0": {
+    "receipt": "../qa-r19p1-20261112/mac-b787935.json",
+    "qualifiesP0Verification": true,
+    "counts": {
+      "required": 10,
+      "attempted": 10,
+      "passed": 10,
+      "failed": 0,
+      "unattempted": 0
+    },
+    "sampleCoverage": {
+      "required": 40,
+      "observed": 40,
+      "passed": 40,
+      "status": "passed"
+    },
+    "settingsIconObservations": {
+      "light": 2,
+      "dark": 2
+    },
+    "nativeP0RerunThisTask": false
+  },
+  "invariants": {
+    "files": [
+      {
+        "file": "dist/equity-view.js",
+        "sha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5",
+        "unchangedVsBaseline": true
+      },
+      {
+        "file": "dist/eth-view.js",
+        "sha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4",
+        "unchangedVsBaseline": true
+      },
+      {
+        "file": "dist/instrument-indicator-overlay.js",
+        "sha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a",
+        "unchangedVsBaseline": true
+      },
+      {
+        "file": "scripts/verify-eth-candidate-browser.mjs",
+        "sha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e",
+        "unchangedVsBaseline": true
+      },
+      {
+        "file": "dist/price-axis.js",
+        "sha256": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2",
+        "unchangedVsBaseline": true
+      },
+      {
+        "file": "scripts/verify-ui-renewal-p0-browser.mjs",
+        "sha256": "d31fda26f00111f8d3b949e64bad629395af009cb516ac46c2e0165ad90eea26",
+        "unchangedVsBaseline": true
+      },
+      {
+        "file": "scripts/ui-renewal-p0-contract.mjs",
+        "sha256": "d34d2644e93f3a8805b0e4043f3c31bf4fcfee4eb3b5bb46bf3bca0f47324f39",
+        "unchangedVsBaseline": true
+      },
+      {
+        "file": "scripts/ui-renewal-p0-text-hit.mjs",
+        "sha256": "ea481867cdf818d1cd41a1979467152c5a4a1230eed40e75bf1306a102078f64",
+        "unchangedVsBaseline": true
+      },
+      {
+        "file": "scripts/verify-ui-renewal-p1-browser.mjs",
+        "sha256": "69bfeda5b9cc3d6186228fdf0b3b69f52b185ec7f34c57fd601ab821c48036b2",
+        "unchangedVsBaseline": true
+      },
+      {
+        "file": "dist/styles.css",
+        "sha256": "f01eb99a89ceb1ed81ab9d58e96c12973d351f50dbeef31d05dee8f38c498aa5",
+        "unchangedVsBaseline": true
+      },
+      {
+        "file": "dist/atlas-navigation.js",
+        "sha256": "070b8ea1f27834ac53182065341b5ed208a0ebcb8cfa91725671f9b577dbc46b",
+        "unchangedVsBaseline": true
+      },
+      {
+        "file": "docs/evidence/qa-r19p1-20261112/mac-026e416.json",
+        "sha256": "058045d5c95e4de0c38fcb3a346248282fca50d87d422c1b09948d62c4e17918",
+        "unchangedVsBaseline": true
+      },
+      {
+        "file": "docs/evidence/qa-r19p1-20261112/mac-b787935.json",
+        "sha256": "e906a90abab488a5beb27021da536651f86279971a1b2eb4ff29cf3c7d27492a",
+        "unchangedVsBaseline": true
+      }
+    ],
+    "minRight": 64,
+    "p1GateByteIdentical": true,
+    "p0HarnessByteIdentical": true,
+    "textContrastThreshold": 4.5,
+    "iconContrastThreshold": 3.0,
+    "samplesRemoved": 0,
+    "timeoutChanged": false,
+    "checkVisibilityRemoved": false,
+    "pillThresholdChanged": false,
+    "unsupportedClipAccepted": false,
+    "embeddedAppTreeUnchanged": true,
+    "mainPushed": false,
+    "forcePushed": false,
+    "deployed": false,
+    "p2a0Started": false
+  },
+  "artifacts": {
+    "rawNativeReports": [
+      {
+        "file": "p1-a23a39c.report.json.gz",
+        "compressedBytes": 106054,
+        "sha256": "9576e2a2717f391a0f6e8bcea292616d022b2995596b7319b4306b2f62aead87",
+        "uncompressedBytes": 254497,
+        "uncompressedSha256": "5357bd4afa96e2952afea957966a651a62b56ac3a146fb86b6985adf45c1cc75"
+      },
+      {
+        "file": "p1-b1dfc97.report.json.gz",
+        "compressedBytes": 105823,
+        "sha256": "02905b86ae7fa1f019c845faa5e63e4a7f55067fd29f9ce314fd90bc7752697c",
+        "uncompressedBytes": 254061,
+        "uncompressedSha256": "f5508bb115fae59a47d2a8227a34885c3b363397a04ab89dcaa9bde45b5aece7"
+      }
+    ],
+    "sourceAuditSha256": "ab2222e505137902b5f092e142ee342334841dc3831a6fbda4663a84f1716b13",
+    "httpSha256": "feddcd98293e6e511041b4d337e0d4bf8cef9223d6e2cb94ee4b286032b7e48a",
+    "logArchive": {
+      "file": "checks.log.tar.gz",
+      "sha256": "959be2a82538c1bea888d28ca2d0b7ea9fbac303190d29f71b6a4b7cc51808c0",
+      "entries": [
+        {
+          "file": "qr19p1-3-baseline.log",
+          "bytes": 438,
+          "sha256": "8a95eebe75b67e011a133b3ac5342c06017ade648523ac216f219a9bae6fba56"
+        },
+        {
+          "file": "qr19p1-3-heading-existing.tap",
+          "bytes": 5580,
+          "sha256": "44d9846673ae363cc6d885ab760534a39b6d99c72c3490705978223c7670edcb"
+        },
+        {
+          "file": "qr19p1-3-heading.tap",
+          "bytes": 5553,
+          "sha256": "7cc190a8b9c608ae7bffcbc22459539877481532cf6c0e3a989691ac9ad71a44"
+        },
+        {
+          "file": "qr19p1-3-focused.tap",
+          "bytes": 20538,
+          "sha256": "226df7885dbad5f7f5ae91c57ceb48989899d551dc5f3781919c19042e405aa1"
+        },
+        {
+          "file": "qr19p1-3-focused-final.tap",
+          "bytes": 18835,
+          "sha256": "6f3bfae2e83e2b177b0d076d539d746c6a8e55a32c0c7844da29891c7ca9e0ed"
+        },
+        {
+          "file": "qr19p1-3-static.log",
+          "bytes": 304,
+          "sha256": "f59549507c79346e3f4de0a98d3948df0f300045b02d8f843ede3aac1cee1be8"
+        },
+        {
+          "file": "qr19p1-3-styles.log",
+          "bytes": 311,
+          "sha256": "a07e66ece46c2dde07b704553a1c7e689efe5e62b21e02162790dd09d8bb7e54"
+        },
+        {
+          "file": "qr19p1-3-preloads.log",
+          "bytes": 537,
+          "sha256": "768dceeb512b2fcdfbf49c7f12d809f58fa27c78465d846890822feab3293784"
+        },
+        {
+          "file": "qr19p1-3-native-final.log",
+          "bytes": 436,
+          "sha256": "ae5b78a0ebc0c390cc7ff394839da02d5a52b676fba46dc1dd1e8008c54da295"
+        }
+      ]
+    }
+  },
+  "macRerun": "node scripts/verify-ui-renewal-p1-browser.mjs --out build/qa-r19p1-3-mac-a23a39c",
+  "closureRequires": "Same unchanged Mac gate: layouts28/28, navigation56/56, chartReturns8/8, qualifiesP1Verification:true. Four-width overflow and title/pill paint remain native-unmeasured for this candidate."
+}
