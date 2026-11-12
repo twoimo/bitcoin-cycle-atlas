@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-conference-stage-chrome-qa",
+  "item": "Q-P1c-B-1",
+  "date": "2026-11-12",
+  "timeKst": "15:52",
+  "sourceCommit": "07ba36d",
+  "productFix": "c1377c3",
+  "site": {
+    "path": "/tmp/atlas-q-p1cb-c1377c3/site",
+    "files": 1530,
+    "mediaSource": "build/p1c-media-20261112",
+    "assets": 562,
+    "audio": 15,
+    "manifestBytes": 163622,
+    "manifestStatus": "ready"
+  },
+  "axes": {
+    "functional": {
+      "mediaHarness": {
+        "script": "scripts/verify-conference-media-browser.mjs",
+        "cases": 20,
+        "passed": 20,
+        "failed": 0,
+        "skipped": 0,
+        "exitCode": 0
+      },
+      "layoutHarness": {
+        "script": "scripts/verify-conference-browser.mjs",
+        "cases": 14,
+        "passed": 14,
+        "failures": 0
+      },
+      "pageMapping": {
+        "t2401.74": "final/0006.webp",
+        "t3283": "page:null (배지 이 구간에 맞는 장표 없음, 직전 7쪽 유지)",
+        "t2239.5": "final-290 null / r17-clean-257 2 → final 덱에서 '이 덱에 해당 장표 없음'이 정상"
+      }
+    },
+    "visual": {
+      "viewports": [
+        "320x740",
+        "390x844",
+        "768x1024",
+        "1440x900"
+      ],
+      "overlap": {
+        "toolsSlide": 0,
+        "badgeSlide": 0,
+        "toolsStage": 0,
+        "toolsImage": 0,
+        "badgeImage": 0
+      },
+      "measured": {
+        "320": {
+          "slide": "266x148.8",
+          "tools": "163.6x44",
+          "badge": "88.4x32"
+        },
+        "390": {
+          "slide": "336x188.1",
+          "tools": "163.6x44"
+        },
+        "768": {
+          "slide": "638x358",
+          "tools": "195.8x44"
+        },
+        "1440": {
+          "slide": "942x529",
+          "tools": "195.8x44"
+        }
+      },
+      "horizontalOverflow": 0,
+      "screenshots": "build/qa-q-p1cb-1-20261112/unmapped-{320,390,768,1440}-3283.png, mapped-{320,768,1440}-2401_74.png, mapped-1024-2401_74.png",
+      "regression1024x768": {
+        "slide": "746x418.8",
+        "overlap": 0,
+        "status": "pass"
+      },
+      "findings": [
+        "Q-P1c-B-2"
+      ]
+    },
+    "a11y": {
+      "focusRing": "2px solid rgb(144,178,255) offset -2px (3/3 controls)",
+      "targets": [
+        "장표 확대 44x44",
+        "장표 전체화면 44x44",
+        "장표 페이지 44x44 (768+ 56x44)"
+      ],
+      "ariaPressed": "확대 false / 전체화면 false",
+      "hitTest": "elementFromPoint 3/3 controls reachable at 320/390/768",
+      "reducedMotion": "transition 0s, animation 0s",
+      "icons": "SVG 2/2 aria-hidden=true, 이름은 버튼 aria-label"
+    },
+    "performance": {
+      "harness": "scripts/verify-conference-data-browser.mjs (A-9)",
+      "cases": 6,
+      "passed": 6,
+      "readyMsMin": 2258.6,
+      "readyMsMax": 2317.8,
+      "budgetMs": 2500,
+      "exitCode": 0
+    },
+    "consistency": {
+      "gradient": 0,
+      "boxShadow": 0,
+      "backdropFilter": 0,
+      "emoji": 0,
+      "fontBelow9px": 0,
+      "radius": "4px x3 (도구 버튼)",
+      "h1Count": 1
+    }
+  },
+  "newFindings": [
+    {
+      "id": "Q-P1c-B-2",
+      "title": "장표 없음 배지가 320에서 단어 중간에서 줄바꿈",
+      "measured": {
+        "viewport": "320x740",
+        "badgeRect": "88.4x32",
+        "fontSize": "11px",
+        "overflowWrap": "anywhere",
+        "lines": [
+          "이 구간에 맞는 장",
+          "표 없음"
+        ],
+        "method": "문자 단위 Range y좌표"
+      },
+      "disposition": "보류 — R19 P5 타이포 축으로 이관",
+      "reason": "같은 파일·같은 타이포 토큰을 R19 P5(D-1~D-8, F3 9–12px)가 함께 처리한다",
+      "resume": "R19 P5 착수 시 word-break:keep-all + 12px 하한 적용 후 320 Range 재측정"
+    }
+  ],
+  "verification": {
+    "reviewedAt": "2026-11-12T06:52Z",
+    "reviewer": "atlas driver routine s3YAL919SDJ183nn",
+    "evidenceIsInstalledSite": true,
+    "distStubManifestNote": "worktree dist의 media-manifest.json은 167B unavailable 스텁이므로 QA는 build/p1c-media-20261112를 설치한 사이트에서 수행"
+  }
+}
