@@ -44,6 +44,31 @@ export function conferenceMappedPage(segments, index, deck) {
   return {page:null, mapped:false};
 }
 
+function indexPages(segments, deck) {
+  const retained = new Float64Array(segments.length);
+  const nextMapped = new Int32Array(segments.length).fill(-1);
+  const nextDifferent = new Int32Array(segments.length).fill(-1);
+  const firstTime = new Map();
+  let previous = 0, next = -1;
+  for (let i = 0; i < segments.length; i++) {
+    const page = segments[i].page?.[deck];
+    if (Number.isInteger(page)) {
+      previous = page;
+      if (!firstTime.has(page)) firstTime.set(page, segments[i].t0);
+    }
+    retained[i] = previous;
+  }
+  for (let i = segments.length - 1; i >= 0; i--) {
+    nextMapped[i] = next;
+    const page = segments[i].page?.[deck];
+    if (!Number.isInteger(page)) continue;
+    nextDifferent[i] = next < 0 || segments[next].page[deck] !== page ? next : nextDifferent[next];
+    next = i;
+  }
+  return {retained, nextMapped, nextDifferent, firstTime, firstMapped:next,
+    pages:[...firstTime.keys()].sort((a,b) => a-b)};
+}
+
 // The shell owns the sole H1 and all other destinations. This player only owns
 // its mounted host, native media, transcript dialog and scoped keyboard input.
 export function mountConferencePlayer(host, options = {}) {
@@ -57,7 +82,8 @@ export function mountConferencePlayer(host, options = {}) {
   let audioIndex = -1, pendingSeek = null, lastAnnouncement = null, lastUrlKey = null;
   let transcriptOpener = null, transcriptMode = null, imageVersion = 0, imageKey = null;
   let imagePreload = null, resizeObserver = null, mediaError = false;
-  const disposers = [], transcriptRows = [], imageCache = new Map();
+  let noticeText = '', highlightedRow = -1;
+  const disposers = [], transcriptRows = [], transcriptSearch = [], imageCache = new Map(), pageIndexes = new Map();
 
   host.innerHTML = [
     '<section class="conference-player" data-state="loading" aria-label="컨퍼런스 플레이어">',
@@ -135,7 +161,12 @@ export function mountConferencePlayer(host, options = {}) {
     return !destroyed && host.isConnected && !host.hidden &&
       (!document.body.dataset.page || document.body.dataset.page === 'conference');
   }
-  function notice(text = '') { setText(role('notice'), text); role('notice').hidden = !text; }
+  function renderNotice() {
+    const unavailable = timeline && clips[audioClipIndex(state.time)]?.available === false;
+    const text = [unavailable ? '오디오 없음' : '', noticeText].filter(Boolean).join(' · ');
+    setText(role('notice'), text); role('notice').hidden = !text;
+  }
+  function notice(text = '') { noticeText = text; renderNotice(); }
   function assetUrl(path) { return new URL(path, timelineUrl).href; }
   function readUrl() {
     const url = new URL(view?.location?.href || timelineUrl);
@@ -152,6 +183,12 @@ export function mountConferencePlayer(host, options = {}) {
     view.history.replaceState(view.history.state, '', url.href); lastUrlKey = key;
   }
   function currentDeck() { return timeline?.decks.find(deck => deck.id === state.deck); }
+  function resolveDeck(id) {
+    if (timeline?.decks.some(deck => deck.id === id)) return id;
+    // Existing deep links used the short ID before the locked input bundle.
+    if (id === 'r17-257' && timeline?.decks.some(deck => deck.id === 'r17-clean-257')) return 'r17-clean-257';
+    return null;
+  }
   function currentTalk() {
     return timeline?.talks.find(talk => talk.t0 <= state.time && state.time < talk.t1) ||
       timeline?.talks.filter(talk => talk.t0 <= state.time).at(-1);
@@ -168,6 +205,11 @@ export function mountConferencePlayer(host, options = {}) {
     const index = audioClipIndex(time);
     if (index < 0) { pause(); notice('이 시각의 오디오가 없습니다.'); return false; }
     const clip = clips[index], localTime = clamp(time - clip.offset, 0, clip.durationSec);
+    if (clip.available === false) {
+      audioIndex = index; pendingSeek = null; mediaError = false; pause();
+      if (audio.hasAttribute?.('src')) { audio.removeAttribute('src'); audio.load?.(); }
+      notice(); return false;
+    }
     pendingSeek = localTime;
     if (index !== audioIndex) {
       audioIndex = index; mediaError = false;
@@ -203,6 +245,7 @@ export function mountConferencePlayer(host, options = {}) {
   function togglePlayback() { if (state.playing || state.playPending) pause(); else void play(); }
   function renderPlayback() {
     const button = action('play'), label = state.playing || state.playPending ? '일시정지' : '재생';
+    button.disabled = !timeline || state.status !== 'ready' || clips[audioClipIndex(state.time)]?.available === false;
     if (button.getAttribute('aria-label') !== label) {
       button.setAttribute('aria-label', label); button.innerHTML = icon(state.playing || state.playPending ? 'pause' : 'play');
     }
@@ -222,7 +265,9 @@ export function mountConferencePlayer(host, options = {}) {
   }
   function renderPage(force = false) {
     if (!timeline) return;
-    const deck = currentDeck(), mapping = conferenceMappedPage(timeline.segments, state.segment, state.deck);
+    const deck = currentDeck(), index = pageIndexes.get(state.deck);
+    const mapping = {page:state.segment < 0 ? null : index.retained[state.segment] || null,
+      mapped:Number.isInteger(timeline.segments[state.segment]?.page?.[state.deck])};
     const selected = force || state.auto ? mapping.page : state.page;
     const mapped = mapping.mapped;
     state.page = selected;
@@ -233,7 +278,14 @@ export function mountConferencePlayer(host, options = {}) {
     const status = !mapped ? (timeline.segments[state.segment]?.page === null ? '이 구간에 맞는 장표 없음' : '이 덱에 해당 장표 없음') : '';
     setText(role('page-status'), status); role('page-status').hidden = !status;
     action('slide').disabled = selected === null;
-    action('zoom').disabled = selected === null;
+    action('zoom').disabled = selected === null || deck.imagesAvailable === false;
+    action('fullscreen').disabled = deck.imagesAvailable === false;
+    if (deck.imagesAvailable === false) {
+      imageKey = null; imageVersion++; image.removeAttribute('src'); image.hidden = true; message.hidden = false;
+      setText(role('state-title'), '장표 이미지 없음');
+      setText(role('state-detail'), selected === null ? status : deck.label + ' · ' + selected + '쪽');
+      return;
+    }
     if (selected === null) {
       imageKey = null; imageVersion++; image.hidden = true; message.hidden = false;
       setText(role('state-title'), '표시할 장표가 없습니다.');
@@ -266,8 +318,9 @@ export function mountConferencePlayer(host, options = {}) {
         }
       } else show();
     }
-    const next = timeline.segments.slice(state.segment + 1).find(segment => Number.isInteger(segment.page?.[state.deck]) && segment.page[state.deck] !== selected);
-    if (next) imagePreload = preloadPage(deck, next.page[state.deck]);
+    let next = state.segment < 0 ? index.firstMapped : index.nextMapped[state.segment];
+    if (next >= 0 && timeline.segments[next].page[state.deck] === selected) next = index.nextDifferent[next];
+    if (next >= 0) imagePreload = preloadPage(deck, timeline.segments[next].page[state.deck]);
   }
   function render(forceSlide = false) {
     root.dataset.state = state.status;
@@ -278,7 +331,7 @@ export function mountConferencePlayer(host, options = {}) {
     setText(role('total-time'), timeline ? formatConferenceTime(state.duration) : '—:—');
     action('follow').setAttribute('aria-pressed', String(state.follow));
     action('auto').setAttribute('aria-pressed', String(state.auto));
-    renderPlayback();
+    renderPlayback(); renderNotice();
     if (!timeline) return;
     role('timeline').max = String(state.duration); role('timeline').value = String(state.time);
     role('timeline').setAttribute('aria-valuetext', formatConferenceTime(state.time) + ' / ' + formatConferenceTime(state.duration));
@@ -294,10 +347,9 @@ export function mountConferencePlayer(host, options = {}) {
       // Distinct source segments may repeat identical words. Each source
       // transition gets exactly one update, even when the text is unchanged.
       live.textContent = segment?.text || ''; lastAnnouncement = announcement;
-      for (let i = 0; i < transcriptRows.length; i++) {
-        if (i === state.segment) transcriptRows[i].setAttribute('aria-current', 'true');
-        else transcriptRows[i].removeAttribute('aria-current');
-      }
+      transcriptRows[highlightedRow]?.removeAttribute('aria-current');
+      transcriptRows[state.segment]?.setAttribute('aria-current', 'true');
+      highlightedRow = state.segment;
       if (state.follow && state.transcript && transcriptRows[state.segment] && !transcriptRows[state.segment].hidden) {
         transcriptRows[state.segment].scrollIntoView?.({block:'nearest'});
       }
@@ -315,18 +367,19 @@ export function mountConferencePlayer(host, options = {}) {
     if (state.time >= state.duration) pause();
   }
   function setDeck(id) {
-    if (!timeline?.decks.some(deck => deck.id === id) || destroyed) return;
-    state.deck = id; role('deck').value = id; render(true); writeUrl(true);
+    const deck = resolveDeck(id);
+    if (!deck || destroyed) return;
+    state.deck = deck; role('deck').value = deck; render(true); writeUrl(true);
   }
   function stepSlide(direction) {
-    const pages = [...new Set(timeline.segments.map(segment => segment.page?.[state.deck]).filter(Number.isInteger))].sort((a,b) => a-b);
+    const pages = pageIndexes.get(state.deck).pages;
     const next = direction > 0 ? pages.find(page => state.page === null || page > state.page) : pages.filter(page => page < (state.page ?? Infinity)).at(-1);
     if (next !== undefined) seekPage(next);
   }
   function seekPage(page) {
-    const value = Number(page), segment = timeline?.segments.find(item => item.page?.[state.deck] === value);
-    if (!segment) { notice('이 장표에 연결된 자막이 없습니다.'); render(); return; }
-    notice(); seek(segment.t0);
+    const time = pageIndexes.get(state.deck)?.firstTime.get(Number(page));
+    if (time === undefined) { notice('이 장표에 연결된 자막이 없습니다.'); render(); return; }
+    notice(); seek(time);
   }
   function stepTalk(direction) {
     const talks = timeline.talks;
@@ -372,6 +425,7 @@ export function mountConferencePlayer(host, options = {}) {
   }
   function openTranscript(opener) {
     if (!timeline) return;
+    buildTranscript();
     transcriptOpener = opener || document.activeElement;
     state.transcript = true; state.settings = false;
     root.classList.add('conference-transcript-open');
@@ -401,20 +455,16 @@ export function mountConferencePlayer(host, options = {}) {
     const query = role('transcript-search').value.trim().toLocaleLowerCase();
     let visible = 0;
     transcriptRows.forEach((row, i) => {
-      row.hidden = query !== '' && !timeline.segments[i].text.toLocaleLowerCase().includes(query);
+      row.hidden = query !== '' && !transcriptSearch[i].includes(query);
       if (!row.hidden) visible++;
     });
     root.querySelector('.conference-search-empty').hidden = visible > 0;
     list.hidden = visible === 0;
   }
-  function buildTimeline() {
-    role('deck').replaceChildren(); role('talk-select').replaceChildren(); list.replaceChildren(); transcriptRows.length = 0;
-    for (const deck of timeline.decks) {
-      const option = document.createElement('option'); option.value = deck.id; option.textContent = deck.label; role('deck').append(option);
-    }
-    for (const talk of timeline.talks) {
-      const option = document.createElement('option'); option.value = talk.id; option.textContent = talk.title; role('talk-select').append(option);
-    }
+  function buildTranscript() {
+    if (transcriptRows.length) return;
+    // The complete source is ready for captions/seeking immediately. Its full
+    // transcript DOM is only needed when the reader opens the existing panel.
     const fragment = document.createDocumentFragment();
     for (const [index, segment] of timeline.segments.entries()) {
       const button = document.createElement('button'); button.type = 'button'; button.className = 'conference-transcript-row';
@@ -422,8 +472,22 @@ export function mountConferencePlayer(host, options = {}) {
       const stamp = document.createElement('span'); stamp.className = 'conference-transcript-time'; stamp.textContent = formatConferenceTime(segment.t0);
       const text = document.createElement('span'); text.className = 'conference-transcript-text'; text.textContent = segment.text;
       button.append(stamp, text); fragment.append(button); transcriptRows.push(button);
+      transcriptSearch.push(segment.text.toLocaleLowerCase());
     }
     list.append(fragment);
+    highlightedRow = state.segment;
+    transcriptRows[highlightedRow]?.setAttribute('aria-current', 'true');
+    filterTranscript();
+  }
+  function buildTimeline() {
+    role('deck').replaceChildren(); role('talk-select').replaceChildren();
+    for (const deck of timeline.decks) {
+      pageIndexes.set(deck.id, indexPages(timeline.segments, deck.id));
+      const option = document.createElement('option'); option.value = deck.id; option.textContent = deck.label; role('deck').append(option);
+    }
+    for (const talk of timeline.talks) {
+      const option = document.createElement('option'); option.value = talk.id; option.textContent = talk.title; role('talk-select').append(option);
+    }
     const markers = root.querySelector('.conference-markers'); markers.replaceChildren();
     for (const talk of timeline.talks) {
       const marker = document.createElement('span');
@@ -442,6 +506,8 @@ export function mountConferencePlayer(host, options = {}) {
   function clearContent() {
     pause(); closeTranscript({restoreFocus:false}); timeline = null; state.duration = 0; state.page = null; state.segment = -1;
     clips.length = 0; audioIndex = -1; pendingSeek = null; imageVersion++; imageKey = null; imageCache.clear();
+    pageIndexes.clear(); transcriptRows.length = 0; transcriptSearch.length = 0; highlightedRow = -1; list.replaceChildren();
+    role('transcript-search').value = ''; list.hidden = false; root.querySelector('.conference-search-empty').hidden = true;
     audio.removeAttribute?.('src'); audio.load?.();
     image.removeAttribute('src'); image.hidden = true; message.hidden = false;
     role('page-status').hidden = true;
@@ -477,7 +543,7 @@ export function mountConferencePlayer(host, options = {}) {
       let offset = 0;
       for (const clip of timeline.audio) { clips.push({...clip, offset}); offset += clip.durationSec; }
       state.status = 'ready';
-      state.deck = timeline.decks.some(deck => deck.id === pending.deck) ? pending.deck : timeline.decks[0].id;
+      state.deck = resolveDeck(pending.deck) || timeline.decks[0].id;
       state.time = clamp(pending.time, 0, state.duration);
       buildTimeline(); render(true); return true;
     } catch (error) {
@@ -493,7 +559,7 @@ export function mountConferencePlayer(host, options = {}) {
     const pending = readUrl(); pause();
     state.time = timeline ? clamp(pending.time, 0, state.duration) : pending.time;
     if (timeline) {
-      state.deck = timeline.decks.some(deck => deck.id === pending.deck) ? pending.deck : timeline.decks[0].id;
+      state.deck = resolveDeck(pending.deck) || timeline.decks[0].id;
       role('deck').value = state.deck; ensureAudio(state.time);
     } else state.deck = pending.deck;
     lastUrlKey = null; render(true);
@@ -584,20 +650,20 @@ export function mountConferencePlayer(host, options = {}) {
   on(view, 'pageshow', () => { if (active()) syncFromUrl(); });
   on(audio, 'loadedmetadata', applyPendingSeek);
   on(audio, 'timeupdate', () => {
-    if (!timeline || audioIndex < 0 || pendingSeek !== null || destroyed) return;
+    if (!timeline || audioIndex < 0 || clips[audioIndex].available === false || pendingSeek !== null || destroyed) return;
     const localTime = Number(audio.currentTime);
     if (!Number.isFinite(localTime)) return;
     state.time = clamp(clips[audioIndex].offset + localTime, 0, state.duration);
     render(); writeUrl();
   });
   on(audio, 'ended', () => {
-    if (!timeline || destroyed) return;
+    if (!timeline || destroyed || clips[audioIndex]?.available === false) return;
     const next = clips[audioIndex + 1], resume = state.playing;
     if (next) { seek(next.offset, {keepPlaying:false}); if (resume) void play(); }
     else { state.time = state.duration; pause(); render(true); writeUrl(true); }
   });
   on(audio, 'error', () => {
-    if (!timeline || destroyed || mediaError) return;
+    if (!timeline || destroyed || mediaError || clips[audioIndex]?.available === false) return;
     mediaError = true; pause(); notice('오디오를 불러오지 못했습니다. 자료 연결을 확인해 주세요.');
   });
   on(audio, 'pause', () => { if (!audio.ended && state.playing) { state.playing = false; renderPlayback(); } });

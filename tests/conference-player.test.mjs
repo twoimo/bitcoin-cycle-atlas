@@ -375,3 +375,158 @@ test('an already failed image preload renders an error instead of waiting for an
     assert.equal(f.host.querySelector('.conference-slide-image').hidden, true);
   } finally {f.controller.destroy();}
 });
+
+test('declared absent media stays honest without fetching missing assets or disabling text navigation', async () => {
+  const data = structuredClone(fixtureTimeline);
+  for (const clip of data.audio) clip.available = false;
+  for (const deck of data.decks) deck.imagesAvailable = false;
+  const f = fixture({response:async () => ({ok:true,status:200,json:async () => data})});
+  let imageRequests = 0;
+  f.view.Image = class { set src(_value) { imageRequests++; } };
+  try {
+    assert.equal(await f.controller.load(), true);
+    assert.equal(f.controller.getState().status, 'ready');
+    assert.equal(f.host.querySelectorAll('.conference-transcript-row').length, 0);
+    assert.equal(f.role('state-title').textContent, '장표 이미지 없음');
+    assert.equal(f.role('notice').textContent, '오디오 없음');
+    assert.equal(f.host.querySelector('[data-action="play"]').disabled, true);
+    assert.equal(f.host.querySelector('[data-action="zoom"]').disabled, true);
+    assert.equal(f.host.querySelector('[data-action="forward"]').disabled, false);
+    assert.equal(f.host.querySelector('.conference-slide-image').getAttribute('src'), null);
+    f.key(' '); f.click('forward'); await settle();
+    assert.equal(f.controller.getState().time, 10);
+    f.controller.seek(18); f.controller.setDeck('r17-257');
+    assert.equal(f.controller.getState().time, 18);
+    assert.equal(f.controller.getState().page, 1);
+    assert.equal(f.role('page-status').textContent, '이 덱에 해당 장표 없음');
+    assert.equal(f.role('state-title').textContent, '장표 이미지 없음');
+    f.controller.seek(12);
+    assert.equal(f.role('page-status').textContent, '이 구간에 맞는 장표 없음');
+    f.click('transcript');
+    f.host.querySelector('[data-segment="22"]').dispatchEvent(new f.window.Event('click', {bubbles:true}));
+    assert.equal(f.controller.getState().time, 3850);
+    assert.equal(f.role('notice').textContent, '오디오 없음');
+    assert.equal(f.media.src, ''); assert.equal(f.counts().playCalls, 0);
+    assert.equal(imageRequests, 0); assert.equal(f.counts().loads, 1);
+    assert.equal(f.document.querySelectorAll('h1').length, 1);
+  } finally {f.controller.destroy();}
+});
+
+test('available and absent audio intervals switch without a stale media event moving the source clock', async () => {
+  const data = structuredClone(fixtureTimeline); data.audio[0].available = false;
+  const f = fixture({response:async () => ({ok:true,status:200,json:async () => data})});
+  try {
+    await f.controller.load();
+    assert.equal(f.media.src, '');
+    f.controller.seek(3725);
+    assert.equal(f.role('notice').hidden, true);
+    assert.equal(f.host.querySelector('[data-action="play"]').disabled, false);
+    assert.match(f.media.src, /fixture-2\.wav$/);
+    f.click('play'); await settle(); assert.equal(f.controller.getState().playing, true);
+    f.controller.seek(18); await settle();
+    assert.equal(f.controller.getState().playing, false); assert.equal(f.media.src, '');
+    f.tick(99); f.media.dispatchEvent(new f.window.Event('ended')); f.media.dispatchEvent(new f.window.Event('error'));
+    assert.equal(f.controller.getState().time, 18);
+    assert.equal(f.role('notice').textContent, '오디오 없음');
+    assert.equal(f.host.querySelector('[data-action="play"]').disabled, true);
+  } finally {f.controller.destroy();}
+});
+
+test('locked deck IDs accept legacy links without changing fixture IDs or the event clock', async () => {
+  const data = structuredClone(fixtureTimeline), oldId = 'r17-257', newId = 'r17-clean-257';
+  data.decks.find(deck => deck.id === oldId).id = newId;
+  for (const talk of data.talks) { talk.pageRange[newId] = talk.pageRange[oldId]; delete talk.pageRange[oldId]; }
+  for (const segment of data.segments) if (segment.page) { segment.page[newId] = segment.page[oldId]; delete segment.page[oldId]; }
+  const f = fixture({href:'https://atlas.test/?page=conference&t=3740&deck=r17-257',
+    response:async () => ({ok:true,status:200,json:async () => data})});
+  try {
+    assert.equal(await f.controller.load(), true);
+    assert.equal(f.controller.getState().time, 3740); assert.equal(f.controller.getState().deck, newId);
+    assert.equal(f.controller.getState().page, 1);
+    assert.equal(f.role('page-status').textContent, '이 덱에 해당 장표 없음');
+    f.controller.setDeck('final-290'); f.controller.setDeck(oldId);
+    assert.equal(f.controller.getState().time, 3740); assert.equal(f.controller.getState().deck, newId);
+    assert.equal(new URL(f.writes.at(-1)).searchParams.get('deck'), newId);
+    f.navigate('?page=conference&t=18&deck=r17-257');
+    assert.equal(f.controller.getState().time, 18); assert.equal(f.controller.getState().deck, newId);
+  } finally {f.controller.destroy();}
+});
+
+test('indexed mappings preserve null retention, equal-start overlaps, boundaries and first-page seek times', async () => {
+  const data = structuredClone(fixtureTimeline);
+  data.segments.splice(1, 0, {...data.segments[0],source:'fixture-overlap#1',page:{'final-290':3,'r17-257':2}});
+  const f = fixture({response:async () => ({ok:true,status:200,json:async () => data})});
+  try {
+    assert.equal(await f.controller.load(), true);
+    for (const deck of data.decks) {
+      f.controller.setDeck(deck.id);
+      for (const segment of data.segments) {
+        for (const time of [segment.t0, segment.t1]) {
+          f.controller.seek(time);
+          const index = conferenceSegmentIndex(data.segments, time);
+          const expected = conferenceMappedPage(data.segments, index, deck.id);
+          assert.equal(f.controller.getState().segment, index);
+          assert.equal(f.controller.getState().page, expected.page, deck.id + ' at ' + time);
+          assert.equal(f.role('page-status').hidden, expected.mapped);
+        }
+      }
+      const pages = [...new Set(data.segments.map(segment => segment.page?.[deck.id]).filter(Number.isInteger))];
+      for (const page of pages) {
+        f.role('page').value = String(page); f.role('page').dispatchEvent(new f.window.Event('change'));
+        assert.equal(f.controller.getState().time, data.segments.find(segment => segment.page?.[deck.id] === page).t0);
+      }
+    }
+  } finally {f.controller.destroy();}
+});
+
+test('page preloading skips repeated and null mappings while retaining the next different page', async () => {
+  const data = structuredClone(fixtureTimeline);
+  data.segments[2].page['final-290'] = 1; data.segments[3].page = null;
+  const f = fixture({response:async () => ({ok:true,status:200,json:async () => data})});
+  const requests = [];
+  f.view.Image = class { complete = true; naturalWidth = 16; set src(value) { requests.push(value); } };
+  try {
+    await f.controller.load();
+    assert.deepEqual(requests.map(value => value.split('/').at(-1)), ['0001.webp', '0002.webp']);
+    f.click('auto'); f.controller.seek(18, {forceSlide:false});
+    assert.equal(f.controller.getState().page, 1); assert.equal(requests.length, 2);
+    f.click('next-slide');
+    assert.equal(f.controller.getState().time, 260); assert.equal(f.controller.getState().page, 2);
+    assert.deepEqual(requests.map(value => value.split('/').at(-1)), ['0001.webp', '0002.webp', '0003.webp']);
+  } finally {f.controller.destroy();}
+});
+
+test('a full-size transcript defers DOM until opened and retains every source row, search and final seek', async () => {
+  const data = structuredClone(fixtureTimeline), count = 9168;
+  for (const clip of data.audio) clip.available = false;
+  for (const deck of data.decks) deck.imagesAvailable = false;
+  data.segments = Array.from({length:count}, (_, index) => {
+    const t0 = index * 4000 / count, t1 = (index + 1) * 4000 / count;
+    return {t0,t1,text:'전체 크기 검증 자막 ' + String(index).padStart(5, '0'),source:'size-fixture#' + (index + 1),
+      talk:data.talks.find(talk => t0 >= talk.t0 && t0 < talk.t1).id,
+      page:index % 13 ? {'final-290':index % 3 + 1,'r17-257':index % 2 + 1} : null};
+  });
+  const f = fixture({response:async () => ({ok:true,status:200,json:async () => data})});
+  try {
+    assert.equal(await f.controller.load(), true);
+    assert.equal(f.host.querySelectorAll('.conference-transcript-row').length, 0);
+    f.controller.seek(data.segments.at(-1).t0);
+    assert.equal(f.host.querySelector('.conference-caption-text').textContent, data.segments.at(-1).text);
+    f.click('transcript');
+    const rows = [...f.host.querySelectorAll('.conference-transcript-row')];
+    assert.equal(rows.length, count);
+    assert.deepEqual(rows.map(row => Number(row.dataset.segment)), Array.from({length:count}, (_, index) => index));
+    assert.deepEqual(rows.map(row => row.querySelector('.conference-transcript-text').textContent), data.segments.map(segment => segment.text));
+    assert.equal(f.host.querySelectorAll('.conference-transcript-row[aria-current="true"]').length, 1);
+    assert.equal(rows.at(-1).getAttribute('aria-current'), 'true');
+    f.role('transcript-search').value = '09167'; f.role('transcript-search').dispatchEvent(new f.window.Event('input'));
+    assert.equal(f.host.querySelectorAll('.conference-transcript-row:not([hidden])').length, 1);
+    f.controller.seek(0);
+    rows.at(-1).dispatchEvent(new f.window.Event('click', {bubbles:true}));
+    assert.equal(f.controller.getState().time, data.segments.at(-1).t0);
+    assert.equal(rows[0].hasAttribute('aria-current'), false); assert.equal(rows.at(-1).getAttribute('aria-current'), 'true');
+    f.click('close-transcript'); f.click('transcript');
+    assert.equal(f.host.querySelectorAll('.conference-transcript-row').length, count);
+    assert.equal(f.host.querySelector('.conference-transcript-row'), rows[0]);
+  } finally {f.controller.destroy();}
+});
