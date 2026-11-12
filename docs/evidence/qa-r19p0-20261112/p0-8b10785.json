@@ -1,0 +1,79 @@
+{
+  "id": "Q-R19P0-3",
+  "date": "2026-11-12",
+  "timeKst": "19:56",
+  "commit": "8b10785662b17c3e721091a8cc3c71e5339af34d",
+  "productHead": "48c314cc2729b156dcf2450727387b6de75039bc",
+  "branch": "fix/tradingview-responsive-20261110",
+  "command": "CHROME_PATH=/Applications/Google Chrome.app/Contents/MacOS/Google Chrome node scripts/verify-ui-renewal-p0-browser.mjs --out build/qa-r19p0-20261112/p0-8b10785",
+  "chrome": "157.0.8103.79",
+  "status": "failed",
+  "qualifiesP0Verification": false,
+  "counts": {
+    "required": 10,
+    "attempted": 10,
+    "passed": 9,
+    "failed": 1,
+    "unattempted": 0
+  },
+  "soleFailure": "ETHUSD-1440-light: chart/chart-scale and chart/chart-auto-scale used ink is outside the canonical text/icon role palette",
+  "headingProof": {
+    "status": "passed",
+    "cases": "10/10",
+    "note": "The Q-R19P0-2 clip-path unverified failure did not recur. Heading role matched on every case, including the failed ETH case."
+  },
+  "ink": {
+    "source": "getComputedStyle color or webkitTextFillColor, not a raster sample",
+    "ETHUSD-1440-light": {
+      "chart-scale": {
+        "selector": "#workbench-scale",
+        "text": "로그",
+        "foreground": "rgb(90, 59, 238)",
+        "contrast": 5.191129784605817,
+        "roleCheck": "failed"
+      },
+      "chart-auto-scale": {
+        "selector": "#workbench-auto-scale",
+        "text": "자동",
+        "foreground": "rgb(26, 32, 41)",
+        "contrast": 13.336278555278021,
+        "roleCheck": "failed"
+      },
+      "buttonBackground": "rgba(229, 232, 235, 0.984)"
+    },
+    "BTCUSD-1440-light": {
+      "chart-scale": "rgb(90, 59, 240)",
+      "chart-auto-scale": "rgb(25, 31, 40)",
+      "buttonBackground": "rgb(229, 232, 235)",
+      "roleCheck": "passed"
+    },
+    "tokens": {
+      "accentInkLight": "#5a3bf0 = rgb(90, 59, 240)",
+      "textLight": "#191f28 = rgb(25, 31, 40)",
+      "chain": "--chrome-active -> --ui-link -> --accent-ink"
+    }
+  },
+  "passedBesidesRole": {
+    "staticTokens": 40,
+    "fontChecks": "10/10",
+    "fontProvenance": "Pretendard Variable, 92 faces, 2957724 bytes",
+    "contrastPassedSamples": 116,
+    "contrastMinimum": 5.1449,
+    "contrastThresholds": [4.5, 3],
+    "sampleCoverage": {"required": 40, "observed": 38, "passed": 38, "status": "unverified"},
+    "bodyFontPx": {"320": 15, "1440": 17},
+    "horizontalOverflow": 0
+  },
+  "protectedUnchanged": [
+    {"path": "dist/equity-view.js", "sha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5"},
+    {"path": "dist/eth-view.js", "sha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4"},
+    {"path": "dist/instrument-indicator-overlay.js", "sha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a"},
+    {"path": "scripts/verify-eth-candidate-browser.mjs", "sha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e"}
+  ],
+  "priceAxisGeometry": "minRight=64 unchanged; product dist bytes match 48c314c",
+  "thresholdsRelaxed": false,
+  "clipPathWholesaleIgnored": false,
+  "screenshots": "build/qa-r19p0-20261112/p0-8b10785/ (20 PNG)",
+  "rawReport": "build/qa-r19p0-20261112/p0-8b10785/report.json",
+  "disposition": "P0 remains open. Do not start P1. Q-R19P0-3 asks for the ETH 1440 light used colors to match a canonical role token exactly. Do not add channel tolerance or a new off-by-one token."
+}
