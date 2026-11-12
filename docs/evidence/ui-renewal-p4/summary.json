@@ -1,0 +1,315 @@
+{
+  "schemaVersion": 1,
+  "kind": "r19-p4-conference-style-candidate",
+  "recordedAt": "2026-11-13T07:16:46.007704+09:00",
+  "baselineCommit": "88f11024f122cb50c002e63672c1f9523a6fe12c",
+  "productCommit": "fcb941dcf880491a8e0e1cb211381810bd320aa2",
+  "productTree": "c379fa6cb4b50a267e98a813988782b820e82fad",
+  "branch": "fix/tradingview-responsive-20261110",
+  "status": "implemented; original native gates blocked; P4 remains open",
+  "acceptanceVerified": false,
+  "productChange": {
+    "authoredCssFiles": 1,
+    "authoredFile": "dist/conference/player.css",
+    "generatedProductFiles": 11,
+    "bodyPx": 15,
+    "metaPx": 13,
+    "mobileFilterPx": 16,
+    "geometryAndOtherDeclarationsPreserved": 402,
+    "geometryDeclarationsChanged": 0,
+    "playerBehaviorChanged": false
+  },
+  "environment": {
+    "platform": "Linux",
+    "node": "v24.22.1",
+    "browserExecutable": "/usr/bin/chromium",
+    "browserExecutableVersion": "156.0.8078.79",
+    "nativeBrowserVersion": null
+  },
+  "media": {
+    "required": 20,
+    "attempted": 0,
+    "passed": 0,
+    "caseFailures": 0,
+    "preflightSkipped": 1,
+    "status": "skipped",
+    "browserLaunched": false,
+    "exitCode": 2,
+    "reason": "media manifest declares unavailable; real media checks were not run",
+    "manifest": {
+      "file": "conference/media-manifest.json",
+      "bytes": 167,
+      "sha256": "ff3e3f2b16f4435e71c5e9f07740a9a2af2b9e9fe46aaf013f70972a658d0088"
+    },
+    "availablePages": 0,
+    "availableAudio": 0,
+    "sourceCommit": "fcb941dcf880491a8e0e1cb211381810bd320aa2",
+    "complete": false
+  },
+  "browser": {
+    "required": 14,
+    "attempted": 0,
+    "passed": 0,
+    "caseFailures": 0,
+    "harnessFailures": 1,
+    "status": "failed",
+    "exitCode": 1,
+    "sourceCommit": "fcb941dcf880491a8e0e1cb211381810bd320aa2",
+    "complete": false,
+    "blocker": "Chromium socket() failed: Operation not permitted (1); original harness timed out waiting for CDP",
+    "nativeSourceIntegrity": null,
+    "postRunSourceRecheck": {
+      "method": "independent post-run SHA-256 comparison to original harness sourceHashes",
+      "checkedFiles": 1166,
+      "changedSources": [],
+      "stable": true,
+      "nativeSourceIntegrityField": null
+    }
+  },
+  "a9": {
+    "required": 6,
+    "attempted": 0,
+    "passed": 0,
+    "harnessFailures": 1,
+    "status": "failed",
+    "exitCode": 1,
+    "sourceCommit": "fcb941dcf880491a8e0e1cb211381810bd320aa2",
+    "complete": false,
+    "network": {
+      "label": "Chrome DevTools Fast 4G",
+      "offline": false,
+      "latency": 165,
+      "downloadThroughput": 1012500,
+      "uploadThroughput": 168750,
+      "connectionType": "cellular4g",
+      "serverEncoding": "gzip",
+      "cacheDisabled": true,
+      "cpuThrottling": 1
+    },
+    "budgets": {
+      "initialPaintedReadyMs": 2500,
+      "pageTransitionMs": 150
+    },
+    "initialPaintedReadyMs": null,
+    "pageTransitionMs": null,
+    "timeImpactMs": null,
+    "postRunSourceRecheck": {
+      "method": "independent post-run SHA-256 comparison to original harness sourceHashes",
+      "checkedFiles": 1163,
+      "changedSources": [],
+      "stable": true,
+      "nativeSourceIntegrityField": null
+    }
+  },
+  "nativeMeasurements": {
+    "horizontalOverflowPx": null,
+    "paintedH1Count": null,
+    "touchTargetPx": null,
+    "focusRingPx": null,
+    "textContrast": null,
+    "iconContrast": null,
+    "priceAxisErrorPx": null,
+    "screenshots": 0
+  },
+  "checks": {
+    "focused": {
+      "command": [
+        "node",
+        "--test",
+        "tests/conference-player.test.mjs",
+        "tests/conference-route.test.mjs",
+        "tests/conference-media-browser-contract.test.mjs",
+        "tests/site-styles.test.mjs",
+        "tests/site-preloads.test.mjs"
+      ],
+      "tests": 103,
+      "passed": 103,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    "styles": {
+      "command": [
+        "node",
+        "scripts/build-site-styles.mjs",
+        "--check"
+      ],
+      "sourceStylesheets": 43,
+      "bundles": 2,
+      "exitCode": 0
+    },
+    "preloads": {
+      "command": [
+        "node",
+        "scripts/build-site-preloads.mjs",
+        "--check"
+      ],
+      "exitCode": 0
+    },
+    "static": {
+      "command": [
+        "npm",
+        "run",
+        "verify:static"
+      ],
+      "files": 1159,
+      "checkedScripts": 221,
+      "checkedReferences": 847,
+      "exitCode": 0
+    },
+    "buildPages": {
+      "command": [
+        "npm",
+        "run",
+        "build:pages"
+      ],
+      "files": 104,
+      "routes": 9,
+      "exitCode": 0
+    },
+    "pages": {
+      "command": [
+        "npm",
+        "run",
+        "verify:pages"
+      ],
+      "files": 104,
+      "routes": 9,
+      "exitCode": 0
+    }
+  },
+  "sourceTokenContrast": {
+    "passed": 26,
+    "total": 26,
+    "minimum": 4.825266537959948,
+    "nativeMeasurement": false
+  },
+  "preservation": {
+    "protectedFour": {
+      "files": 4,
+      "same": 4,
+      "changed": []
+    },
+    "priceAxis": {
+      "files": 1,
+      "same": 1,
+      "changed": []
+    },
+    "scripts": {
+      "files": 217,
+      "same": 217,
+      "changed": []
+    },
+    "tests": {
+      "files": 424,
+      "same": 424,
+      "changed": []
+    },
+    "runtimeJavaScript": {
+      "files": 221,
+      "same": 221,
+      "changed": []
+    },
+    "conferenceRuntimeAndData": {
+      "files": 6,
+      "same": 6,
+      "changed": []
+    },
+    "rootTokensAndShell": {
+      "files": 4,
+      "same": 4,
+      "changed": []
+    },
+    "appsAndPackages": {
+      "files": 76,
+      "same": 76,
+      "changed": []
+    },
+    "dependencies": {
+      "files": 2,
+      "same": 2,
+      "changed": []
+    },
+    "existingEvidence": {
+      "files": 721,
+      "same": 721,
+      "changed": []
+    }
+  },
+  "transferSize": [
+    {
+      "path": "dist/conference/player.css",
+      "before": {
+        "bytes": 14448,
+        "gzipBytes": 3074,
+        "brotliBytes": 2637
+      },
+      "after": {
+        "bytes": 15024,
+        "gzipBytes": 3161,
+        "brotliBytes": 2716
+      },
+      "delta": {
+        "bytes": 576,
+        "gzipBytes": 87,
+        "brotliBytes": 79
+      }
+    },
+    {
+      "path": "dist/site-after-shell.css",
+      "before": {
+        "bytes": 197632,
+        "gzipBytes": 36495,
+        "brotliBytes": 30360
+      },
+      "after": {
+        "bytes": 198208,
+        "gzipBytes": 36536,
+        "brotliBytes": 30336
+      },
+      "delta": {
+        "bytes": 576,
+        "gzipBytes": 41,
+        "brotliBytes": -24
+      }
+    }
+  ],
+  "fullNpmTest": {
+    "rerun": false,
+    "existing17Failures": "held for pre-merge gate as instructed; not fixed in P4"
+  },
+  "acceptanceRequired": {
+    "mediaPassed": 20,
+    "browserPassed": 14,
+    "initialPaintedReadyMsMax": 2500,
+    "pageTransitionMsMax": 150,
+    "touchTargetPxMin": 44,
+    "focusRingPxMin": 2,
+    "textContrastMin": 4.5,
+    "iconContrastMin": 3.0,
+    "h1Count": 1,
+    "horizontalOverflowPx": 0,
+    "priceAxisErrorPxMax": 2
+  },
+  "publication": {
+    "parentCommit": "88f11024f122cb50c002e63672c1f9523a6fe12c",
+    "force": false,
+    "localUpdate": "fetch then merge --ff-only",
+    "resetUsed": false,
+    "mainPush": false,
+    "deployment": false,
+    "P2b": false,
+    "P5": false,
+    "D1ToD8": false
+  },
+  "evidence": {
+    "checks": "checks.json",
+    "sourcePreservation": "source-preservation.json",
+    "tokenContrast": "token-contrast.json",
+    "sizeAndScope": "size-and-scope.json",
+    "rawManifest": "raw-manifest.json",
+    "mediaReport": "raw/native-media/report.json.gz",
+    "browserReport": "raw/native-browser/report.json.gz",
+    "a9Report": "raw/native-a9/report.json.gz"
+  }
+}

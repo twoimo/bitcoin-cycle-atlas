@@ -1,0 +1,275 @@
+{
+  "kind": "r19-p4-source-token-contrast",
+  "nativeMeasurement": false,
+  "excludes": [
+    "disabled states",
+    "media pixels",
+    "browser compositing",
+    "focus visibility geometry"
+  ],
+  "passed": 26,
+  "total": 26,
+  "minimum": 4.825266537959948,
+  "cases": [
+    {
+      "theme": "light",
+      "fg": "--text",
+      "bg": "--bg",
+      "foreground": "#191f28",
+      "background": "#ffffff",
+      "ratio": 16.56191305377113,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--text",
+      "bg": "--surface",
+      "foreground": "#191f28",
+      "background": "#ffffff",
+      "ratio": 16.56191305377113,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--text",
+      "bg": "--surface-hover",
+      "foreground": "#191f28",
+      "background": "#e5e8eb",
+      "ratio": 13.465528929840518,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--text",
+      "bg": "--accent-soft",
+      "foreground": "#191f28",
+      "background": "#f0ecff",
+      "ratio": 14.312043456265815,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--muted",
+      "bg": "--bg",
+      "foreground": "#4e5968",
+      "background": "#ffffff",
+      "ratio": 7.1119253402872324,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--muted",
+      "bg": "--surface",
+      "foreground": "#4e5968",
+      "background": "#ffffff",
+      "ratio": 7.1119253402872324,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--subtle",
+      "bg": "--surface",
+      "foreground": "#596574",
+      "background": "#ffffff",
+      "ratio": 5.934831470738994,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--subtle",
+      "bg": "--surface-hover",
+      "foreground": "#596574",
+      "background": "#e5e8eb",
+      "ratio": 4.825266537959948,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--subtle",
+      "bg": "--accent-soft",
+      "foreground": "#596574",
+      "background": "#f0ecff",
+      "ratio": 5.1286083702443905,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--accent-ink",
+      "bg": "--accent-soft",
+      "foreground": "#5a3bf0",
+      "background": "#f0ecff",
+      "ratio": 5.468386702758363,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--accent-ink",
+      "bg": "--surface-hover",
+      "foreground": "#5a3bf0",
+      "background": "#e5e8eb",
+      "ratio": 5.144947999253779,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--on-ui-primary",
+      "bg": "--ui-primary",
+      "foreground": "#ffffff",
+      "background": "#6c4dff",
+      "ratio": 5.068570630375775,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--on-ui-primary",
+      "bg": "--ui-primary-hover",
+      "foreground": "#ffffff",
+      "background": "#5a3bf0",
+      "ratio": 6.328023345669202,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--text",
+      "bg": "--bg",
+      "foreground": "#f2f2f4",
+      "background": "#101013",
+      "ratio": 16.98937498761537,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--text",
+      "bg": "--surface",
+      "foreground": "#f2f2f4",
+      "background": "#17171c",
+      "ratio": 15.97491029671796,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--text",
+      "bg": "--surface-hover",
+      "foreground": "#f2f2f4",
+      "background": "#272730",
+      "ratio": 13.235084828362837,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--text",
+      "bg": "--accent-soft",
+      "foreground": "#f2f2f4",
+      "background": "#28203e",
+      "ratio": 13.746191375674616,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--muted",
+      "bg": "--bg",
+      "foreground": "#b0b0ba",
+      "background": "#101013",
+      "ratio": 8.832865192921577,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--muted",
+      "bg": "--surface",
+      "foreground": "#b0b0ba",
+      "background": "#17171c",
+      "ratio": 8.30543967760935,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--subtle",
+      "bg": "--surface",
+      "foreground": "#9a9aa5",
+      "background": "#17171c",
+      "ratio": 6.412515565855128,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--subtle",
+      "bg": "--surface-hover",
+      "foreground": "#9a9aa5",
+      "background": "#272730",
+      "ratio": 5.312717624131279,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--subtle",
+      "bg": "--accent-soft",
+      "foreground": "#9a9aa5",
+      "background": "#28203e",
+      "ratio": 5.517881761492389,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--accent-ink",
+      "bg": "--accent-soft",
+      "foreground": "#b4a4ff",
+      "background": "#28203e",
+      "ratio": 7.095234185498169,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--accent-ink",
+      "bg": "--surface-hover",
+      "foreground": "#b4a4ff",
+      "background": "#272730",
+      "ratio": 6.831421428363432,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--on-ui-primary",
+      "bg": "--ui-primary",
+      "foreground": "#ffffff",
+      "background": "#6c4dff",
+      "ratio": 5.068570630375775,
+      "threshold": 4.5,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--on-ui-primary",
+      "bg": "--ui-primary-hover",
+      "foreground": "#ffffff",
+      "background": "#5a3bf0",
+      "ratio": 6.328023345669202,
+      "threshold": 4.5,
+      "pass": true
+    }
+  ]
+}

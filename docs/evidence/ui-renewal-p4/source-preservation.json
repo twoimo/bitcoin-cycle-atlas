@@ -1,0 +1,120 @@
+{
+  "kind": "r19-p4-source-preservation",
+  "base": "88f11024f122cb50c002e63672c1f9523a6fe12c",
+  "nativeMeasurement": false,
+  "playerCss": {
+    "beforeSha256": "b562d3d33f41b70ce5bd063fd6fa6a5efaa15680b6d7ab0703756864b12753f7",
+    "afterSha256": "96ee6f3b315c0cdd18732c0dac81fd06507163fd30f2c59118f63c93f66f6327",
+    "allowedChangedProperties": [
+      "font",
+      "font-size",
+      "border-radius",
+      "background",
+      "border-color",
+      "color",
+      "box-shadow",
+      "filter"
+    ],
+    "geometryAndOtherDeclarationsBefore": 402,
+    "geometryAndOtherDeclarationsAfter": 402,
+    "identical": true
+  },
+  "protectedFiles": [
+    {
+      "path": "dist/equity-view.js",
+      "sha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5",
+      "unchanged": true
+    },
+    {
+      "path": "dist/eth-view.js",
+      "sha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4",
+      "unchanged": true
+    },
+    {
+      "path": "dist/instrument-indicator-overlay.js",
+      "sha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/verify-eth-candidate-browser.mjs",
+      "sha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e",
+      "unchanged": true
+    },
+    {
+      "path": "dist/price-axis.js",
+      "sha256": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2",
+      "unchanged": true
+    }
+  ],
+  "checkerAndTestChanges": 0,
+  "conferenceJsDataMediaChanges": 0,
+  "productCommit": "fcb941dcf880491a8e0e1cb211381810bd320aa2",
+  "gitGroups": {
+    "protectedFour": {
+      "files": 4,
+      "same": 4,
+      "changed": []
+    },
+    "priceAxis": {
+      "files": 1,
+      "same": 1,
+      "changed": []
+    },
+    "scripts": {
+      "files": 217,
+      "same": 217,
+      "changed": []
+    },
+    "tests": {
+      "files": 424,
+      "same": 424,
+      "changed": []
+    },
+    "runtimeJavaScript": {
+      "files": 221,
+      "same": 221,
+      "changed": []
+    },
+    "conferenceRuntimeAndData": {
+      "files": 6,
+      "same": 6,
+      "changed": []
+    },
+    "rootTokensAndShell": {
+      "files": 4,
+      "same": 4,
+      "changed": []
+    },
+    "appsAndPackages": {
+      "files": 76,
+      "same": 76,
+      "changed": []
+    },
+    "dependencies": {
+      "files": 2,
+      "same": 2,
+      "changed": []
+    },
+    "existingEvidence": {
+      "files": 721,
+      "same": 721,
+      "changed": []
+    }
+  },
+  "nativePostRunSourceRechecks": {
+    "browser": {
+      "method": "independent post-run SHA-256 comparison to original harness sourceHashes",
+      "checkedFiles": 1166,
+      "changedSources": [],
+      "stable": true,
+      "nativeSourceIntegrityField": null
+    },
+    "a9": {
+      "method": "independent post-run SHA-256 comparison to original harness sourceHashes",
+      "checkedFiles": 1163,
+      "changedSources": [],
+      "stable": true,
+      "nativeSourceIntegrityField": null
+    }
+  }
+}
