@@ -11,6 +11,13 @@
   color: var(--asset-ink); color-scheme: dark;
 }
 #data-view[hidden] { display: none !important; }
+/* The direct asset board fills the working area down to the fixed footer.
+   Keep the dashboard's top/side card gutters, but do not reserve a second
+   bottom gutter above that footer. Embedded boards retain their own owner. */
+body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) .workspace,
+body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #root > .workspace {
+  padding-bottom: var(--content-bottom-height);
+}
 #data-view button { font: inherit; }
 #data-view button:focus-visible, #data-view [tabindex]:focus-visible, #data-view a:focus-visible, #data-view summary:focus-visible { outline: 2px solid var(--asset-sign); outline-offset: -2px; }
 #data-view .daily-heading { display: flex; flex: none; align-items: center; gap: 8px; min-width: 0; min-height: 46px; padding: 4px 8px; background: var(--surface); border-bottom: 1px solid var(--asset-grid); }
@@ -351,4 +358,26 @@ body[data-embedded=true] #data-view .daily-heading { position: relative; inset: 
 
 @media (pointer:coarse) {
   #data-view .asset-filters input, #data-view .asset-filters select, #data-view .asset-filter-reset { min-height:44px; }
+}
+
+/* On wide screens the original action and filter rows share one toolbar.
+   Reclaim outer whitespace, not table rows or touch targets, so the twenty
+   retained assets fit in a tall workbench. Status keeps its own row when
+   loading or an error is visible; narrow/embedded boards retain their flow. */
+@media (min-width: 1280px) {
+  body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) .workspace,
+  body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #root > .workspace {
+    padding-top: 4px;
+  }
+  body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #data-view.daily-workspace {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto auto minmax(0, 1fr);
+    grid-template-areas: "actions filters" "summary summary" "status status" "table table";
+  }
+  body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #data-view > .daily-heading { grid-area: actions; }
+  body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #data-view > .asset-filters { grid-area: filters; }
+  body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #data-view > .asset-table-summary { grid-area: summary; padding-bottom: 4px; }
+  body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #data-view > .asset-context { grid-area: status; }
+  body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #data-view > .asset-table-panel { grid-area: table; }
 }

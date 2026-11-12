@@ -93,6 +93,8 @@ test('direct research removes duplicated vertical insets without affecting the e
   const controlsRule=rules.find(rule=>rule.selectorText?.includes('.evidence-controls')&&parseFloat(rule.style?.getPropertyValue('margin-bottom'))===0);
   assert.ok(insetRule&&controlsRule);
   assert.ok(view.matches(insetRule.selectorText));assert.ok(controls.matches(controlsRule.selectorText));
+  assert.equal(insetRule.style.getPropertyValue('overflow'),'auto','the short card owns real scrolling for its complete row and pager');
+  assert.match(insetRule.style.getPropertyValue('grid-template-rows'),/^auto minmax\(var\(--evidence-table-min-height,/,'the measured row minimum belongs to the grid track so the pager follows the row without overlap');
   // Two independent scoping attributes outrank atlas-shell's direct-route
   // physical padding and margin shorthand, even though that file loads later.
   assert.match(normalized(insetRule.selectorText),/\[data-shell=dashboard\]\[data-page=evidence\]/);

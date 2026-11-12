@@ -1607,7 +1607,7 @@ button.symbol-selector-trigger:hover,button.symbol-selector-trigger[aria-expande
 @media(min-width:621px){.symbol-search-dialog{max-height:calc(var(--dialog-viewport-height,100dvh) - 12vh - 16px)}}
 
 
-/* Source: eth-view.css; SHA-256: 463d3a8e3c951616da630210b7e27cde8579a5d371dece751a80ecd9a3443bb2 */
+/* Source: eth-view.css; SHA-256: d230d0c33ef3d0d21e0be34e67068dfef23c733d8935467b695a0c4080f0dcbc */
 body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface);overflow:clip;height:100dvh;min-height:0;color:var(--equity-view-ink)}
 .eth-app{display:grid!important;grid-template-columns:44px minmax(0,1fr);grid-template-rows:42px minmax(0,1fr) 35px;width:100%;height:100dvh;padding:0!important;margin:0!important;max-width:none!important;font-family:var(--font,system-ui);overflow:hidden}
 .eth-app [hidden],.eth-data-dialog [hidden]{display:none!important}
@@ -1684,8 +1684,9 @@ body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface
   .eth-app .eth-icon{height:34px;width:33px;padding:8px}
   .eth-divider{margin:0 1px}.eth-top-spacer{min-width:0}
   /* Reserve the measured price gutter plus its 7px gap; wrap complete values
-     and the date before the axis instead of clipping the readout. */
-  .eth-readout{top:7px;left:9px;max-width:calc(100% - var(--plot-right-gap,71px) - 9px)}.eth-readout-line{flex-wrap:wrap;row-gap:1px}.eth-readout-source{top:48px;left:9px}.eth-readout-name{display:none}.eth-readout-line>strong{font-size:16px}
+     and the date before the axis instead of clipping the readout. The source
+     starts after the 7px inset and the full 44px two-line readout budget. */
+  .eth-readout{top:7px;left:9px;max-width:calc(100% - var(--plot-right-gap,71px) - 9px)}.eth-readout-line{flex-wrap:wrap;row-gap:1px}.eth-readout-source{top:52px;left:9px}.eth-readout-name{display:none}.eth-readout-line>strong{font-size:16px}
   .eth-ohlc{gap:12px;font-size:11px}.eth-venue{font-size:11px}#eth-bar-time{font-size:11px}
   .eth-bottom{gap:1px;padding:0 4px env(safe-area-inset-bottom,0px)}.eth-periods{display:none}#eth-period-select{display:block;max-width:66px;font-size:11px;padding:4px 4px}
   #eth-status{padding:0 4px;font-size:11px}.eth-timezone{padding:0 4px;font-size:11px}.eth-bottom button{padding:4px 8px}
@@ -1695,7 +1696,7 @@ body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface
 @media(max-width:360px){.eth-topbar{gap:4px}.eth-app .eth-icon{width:30px}.eth-chart-types{gap:0}.eth-ohlc{gap:8px}#eth-status{font-size:11px}}
 @media(max-height:420px){.eth-readout{top:3px}.eth-readout-source{top:24px}.eth-readout-name{display:none}.eth-readout-line>strong{font-size:14px}.eth-ohlc{font-size:11px}.eth-plot .chart-navigation{bottom:43px}}
 .eth-forecast-note{position:absolute;left:13px;right:12px;top:54px;display:flex;flex-wrap:wrap;gap:4px 12px;line-height:1.25;font-size:11px;color:var(--equity-view-ink-8);pointer-events:none;white-space:nowrap;overflow:hidden}.eth-forecast-note .eth-sample-key,.eth-forecast-note .eth-envelope-key,#eth-kind{color:var(--equity-view-ink-9)}.eth-forecast-note .eth-baseline-key{color:var(--eth-view-ink-28)}.eth-forecast-note .eth-sample-key{flex-basis:100%}#eth-kind{font-size:11px}.eth-forecast-controls{display:grid;gap:12px;font-size:12px}.eth-forecast-controls select{min-width:0;width:100%;padding:8px;background:var(--equity-view-surface-6);color:var(--equity-view-ink-18);border:1px solid var(--equity-view-rule-2);border-radius:5px;font:inherit}.eth-data-dialog [data-open-forecast-journal]{font:inherit;font-size:12px;padding:8px;border:1px solid var(--equity-view-rule-2);background:var(--equity-view-surface-5);color:var(--equity-view-ink-12);border-radius:5px;cursor:pointer}.eth-data-dialog select:focus-visible,.eth-data-dialog [data-open-forecast-journal]:focus-visible{outline:2px solid var(--equity-view-rule-3);outline-offset:2px}.eth-plot .equity-forecast-evidence{cursor:pointer}.eth-plot .equity-forecast-evidence:focus-visible circle{stroke:var(--chart-details-panel-rule-8);stroke-width:3}
-@media(max-width:620px){body[data-market="ETHUSD"] .eth-topbar .eth-icon{width:29px;padding:8px}.eth-forecast-note{top:68px;left:10px;gap:4px 12px;font-size:11px}#eth-kind{font-size:11px}}
+@media(max-width:620px){body[data-market="ETHUSD"] .eth-topbar .eth-icon{width:29px;padding:8px}.eth-forecast-note{top:72px;left:10px;gap:4px 12px;font-size:11px}#eth-kind{font-size:11px}}
 @media(max-width:360px){body[data-market="ETHUSD"] .eth-topbar .eth-icon{width:25px;padding:4px}body[data-market="ETHUSD"] .eth-divider{display:none}body[data-market="ETHUSD"] .eth-topbar{gap:2px}}
 
 /* ETH and equities occupy the same shell as BTC. Asset-specific chart/model
@@ -1753,6 +1754,12 @@ body[data-shell=chart] .native-chart-workbench .workbench-update :is(#eth-status
   .native-command-search input,.native-date-form :is(input,select){min-height:44px}
 }
 @media(max-height:420px){.eth-forecast-note{top:42px}}
+/* Short phones retain the two-line budget even when the wide landscape
+   rule above moves the one-line source to 24px. Keep the next note below it. */
+@media(max-width:620px) and (max-height:420px){
+  .eth-readout-source{top:48px}
+  .eth-forecast-note{top:68px}
+}
 
 .eth-data-dialog p { font-size: var(--copy-size); line-height: var(--copy-leading); }
 
@@ -1811,7 +1818,7 @@ body[data-market="MSTR"],body[data-market="BMNR"]{margin:0;display:block;backgro
 }
 
 
-/* Source: research-reader.css; SHA-256: 2d55ccdf129f342a2e4f0e93fbba1d56796bfb356a892a68dc45535f72935a1c */
+/* Source: research-reader.css; SHA-256: 8c5931c953b1b03cf9696839bf27370db791ede2e690d24f3660092b4273a00c */
 
 .research-reader{--reader-surface:var(--surface,var(--research-reader-state));--reader-raised:var(--surface-raised,var(--research-reader-state-2));--reader-hover:var(--surface-hover,var(--research-reader-state-3));--reader-border:var(--border,var(--research-reader-state-4));--reader-text:var(--text,var(--research-reader-state-5));--reader-muted:var(--muted,var(--research-reader-state-6));--reader-accent:var(--accent,var(--research-reader-state-7));--reader-confirmed:var(--green,var(--research-reader-state-8));--reader-risk:var(--red,var(--research-reader-state-9));--reader-warning-surface:var(--accent-soft,var(--research-reader-state-10));--reader-risk-surface:var(--research-reader-state-11);color-scheme:inherit;width:min(1000px,calc(100% - 48px));max-width:100%;height:min(920px,calc(100dvh - 48px));max-height:calc(100dvh - 48px);padding:0;border:1px solid var(--reader-border);border-radius:14px;background:var(--reader-surface);color:var(--reader-text);box-shadow:none;overflow:hidden}.research-reader::backdrop{background:var(--research-reader-surface);backdrop-filter:none}.research-reader[open]{display:flex;flex-direction:column}.research-reader-nav{height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:1px solid var(--reader-border);font:600 11px/1.5 var(--font,system-ui);letter-spacing:normal}.research-reader-nav>div{display:flex;align-items:center;gap:16px}.research-wordmark{font-weight:850;font-size:16px;letter-spacing:1px}.research-nav-divider{color:var(--reader-muted)}.research-reader-actions{letter-spacing:0}.research-reader-actions button{color:var(--reader-text);background:transparent;border:1px solid var(--reader-border);border-radius:22px;padding:8px 12px;font:500 12px/1.3 var(--font,system-ui);cursor:pointer}.research-reader-actions button:hover{background:var(--reader-hover)}.research-reader-actions button[hidden]{display:none}.research-reader-scroll{min-height:0;overflow:auto;overscroll-behavior:contain;scroll-behavior:smooth}.research-article{max-width:724px;padding:52px 32px 72px;margin:auto;font-size:17px;line-height:1.95;letter-spacing:-.16px;word-break:keep-all;overflow-wrap:anywhere}.research-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}.research-tags span{font:600 11px/1.5 var(--font,system-ui);letter-spacing:normal;padding:4px 8px;border-radius:4px;background:var(--reader-raised);color:var(--reader-muted)}.research-article #research-reader-title{font-size:clamp(26px,3.5vw,39px);line-height:1.34;letter-spacing:-1.1px;margin:0 0 16px;font-weight:780;color:var(--reader-text);scroll-margin-top:20px}.research-deck{font-size:17px;color:var(--reader-muted);line-height:1.6;margin:0 0 24px}.research-byline{display:flex;gap:12px;align-items:center;font:14px/1.5 var(--font,system-ui)}.research-avatar{height:40px;width:40px;flex:none;display:grid;place-items:center;border-radius:50%;background:var(--reader-raised);color:var(--reader-accent);font:700 16px var(--font,system-ui)}.research-byline>div{display:grid;gap:4px}.research-byline strong{font-size:13px;font-weight:600}.research-byline>div>span{font-size:11px;color:var(--reader-muted)}.research-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:20px 0 20px;margin-bottom:24px;border-bottom:1px solid var(--reader-border);font:11px/1.5 var(--font,system-ui);color:var(--reader-muted)}.research-meta a{margin-left:auto}.research-article a{color:var(--reader-accent);text-decoration:underline;text-underline-offset:4px}.research-provenance{background:var(--reader-raised);border-left:2px solid var(--reader-accent);border-radius:0 4px 4px 0;padding:12px 16px;font-size:12px;line-height:1.8;color:var(--reader-muted);margin:28px 0 40px}.research-article h2{font-size:23px;letter-spacing:-.6px;margin:40px 0 16px;line-height:1.45}.research-article h3{font-size:18px;line-height:1.65;margin:12px 0;font-weight:680}.research-article p{margin:16px 0}.research-lead{font-size:19px;line-height:1.95}.research-article ul{padding-left:24px}.research-article li{padding-left:4px;margin:12px 0}.research-claim{padding:24px 0 28px;border-bottom:1px solid var(--reader-border)}.research-verdict{font:600 11px var(--font,system-ui);letter-spacing:.25px;border-radius:4px;padding:4px 8px;background:var(--reader-raised);color:var(--reader-confirmed)}.research-verdict[data-status="conditional"]{background:var(--reader-warning-surface);color:var(--reader-accent)}.research-verdict[data-status="unverified"],.research-verdict[data-status="contradicted"]{background:var(--reader-risk-surface);color:var(--reader-risk)}.research-crosslinks{margin-top:20px;display:grid;gap:8px}.research-crosslinks>span{font:600 11px var(--font,system-ui);color:var(--reader-muted)}.research-related{border:0;background:var(--reader-raised);color:var(--reader-text);display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;font:500 12px/1.7 var(--font,system-ui);padding:12px 16px;border-radius:5px;cursor:pointer}.research-related:hover{background:var(--reader-hover)}.research-source-grid{font-size:12px;display:grid;gap:16px}.research-source-grid>div{display:grid;grid-template-columns:120px minmax(0,1fr);gap:16px}.research-source-grid dt{color:var(--reader-muted)}.research-source-grid dd{margin:0;overflow-wrap:anywhere}.research-hash{font:11px/1.7 monospace;color:var(--reader-muted)}.research-media-list{list-style:none;padding:0!important;border-top:1px solid var(--reader-border)}.research-media-list li{display:grid;gap:4px;padding:16px 0;border-bottom:1px solid var(--reader-border);font-size:13px}.research-media-list small,.research-small{color:var(--reader-muted);font-size:12px;line-height:1.85}.research-media-kind{font:600 11px var(--font,system-ui);color:var(--reader-muted)}.research-article-footer{margin-top:44px;padding-top:24px;border-top:1px solid var(--reader-border);font-size:11px;color:var(--reader-muted)}.research-reading-progress{position:absolute;left:0;top:0;height:3px;width:100%;z-index:2}.research-reading-progress span{display:block;width:0;height:100%;background:var(--reader-accent)}.research-caveat{font-size:12px;color:var(--research-reader-ink)}.research-kicker{font-size:11px;letter-spacing:normal}.evidence-title button.research-open{color:inherit;text-align:left;background:none;border:0;font:inherit;cursor:pointer;padding:0;width:100%;display:flex;align-items:center;gap:12px}.evidence-title button.research-open:hover{color:var(--research-reader-ink-2)}.evidence-controls{flex-wrap:wrap}.evidence-controls select{max-width:180px}.research-row-meta{font-size:11px;color:var(--research-reader-ink-3);white-space:nowrap}.evidence-grade .research-summary-badge{font-size:11px;border:1px solid var(--research-reader-rule);border-radius:4px;padding:4px 4px;background:var(--research-reader-surface-2);color:var(--research-reader-ink-4)}
 @media(max-width:640px){.research-reader{width:100%;max-width:100vw;height:100dvh;max-height:100dvh;border:0;border-radius:0;margin:0}.research-reader-nav{height:58px;padding:0 16px;letter-spacing:normal}.research-reader-nav>div{gap:8px}.research-reader-actions button{padding:8px 12px;font-size:11px}.research-article{padding:32px 24px 52px;font-size:16px;line-height:1.95}.research-deck{font-size:14px}.research-lead{font-size:17px}.research-article h2{font-size:21px}.research-source-grid>div{grid-template-columns:95px minmax(0,1fr);gap:8px}.research-meta{gap:8px;font-size:11px}.research-meta a{margin-left:0}.research-reader-nav .research-nav-divider{display:none}.research-reader-nav>div:first-child>span:last-child{font-size:11px}.research-article #research-reader-title{font-size:29px}.evidence-controls select{max-width:120px}}
@@ -1844,8 +1851,12 @@ body[data-shell=dashboard] #evidence-view{grid-template-rows:auto minmax(0,1fr) 
    Give the direct research list the remaining height; a second large inset
    and filter margin otherwise take space from its paginated table. Hosted
    research keeps the parent-owned toolbar and its existing zero inset. */
-body[data-shell=dashboard][data-page=evidence]:not([data-embedded=true]) #evidence-view{padding-block:8px}
+body[data-shell=dashboard][data-page=evidence]:not([data-embedded=true]) #evidence-view{padding-block:8px;overflow:auto;overscroll-behavior:contain;grid-template-rows:auto minmax(var(--evidence-table-min-height,calc(var(--evidence-row-height) + 80px)),1fr) auto}
 body[data-shell=dashboard][data-page=evidence]:not([data-embedded=true]) #evidence-view .evidence-controls{margin-bottom:0}
+/* Keep a complete source row when the header, notice and filters exhaust a
+   short viewport. The card scrolls to the same restored title/grade action;
+   normal-height pagination keeps its existing flexible table allocation. */
+body[data-shell=dashboard][data-page=evidence]:not([data-embedded=true]) #evidence-view [data-evidence-detail]{scroll-margin-block:4px}
 @media(max-width:640px){
   body[data-shell=dashboard] #evidence-view .evidence-controls{flex-wrap:nowrap;gap:8px;margin-bottom:4px;padding:4px;overflow-y:hidden}
   body[data-shell=dashboard] #evidence-view .evidence-controls>*{flex:none}
@@ -1955,7 +1966,7 @@ body[data-shell=dashboard][data-page=evidence]:not([data-embedded=true]) #eviden
 .eth-history-detail p { font-size: var(--copy-size); line-height: var(--copy-leading); }
 
 
-/* Source: daily-data.css; SHA-256: 9e5d3a410bf92171f268bb502cb991c0c5d7a38382db91c7ae6c9437c11b1e67 */
+/* Source: daily-data.css; SHA-256: 925f3bd1efa83ad356e3bdf402238c1cb69c1d60141ee295f1b046b70dcd7236 */
 /* Compact comparison workspace shares the chart palette and toolbar rhythm. */
 #data-view.daily-workspace {
   --asset-paper: var(--bg);
@@ -1969,6 +1980,13 @@ body[data-shell=dashboard][data-page=evidence]:not([data-embedded=true]) #eviden
   color: var(--asset-ink); color-scheme: dark;
 }
 #data-view[hidden] { display: none !important; }
+/* The direct asset board fills the working area down to the fixed footer.
+   Keep the dashboard's top/side card gutters, but do not reserve a second
+   bottom gutter above that footer. Embedded boards retain their own owner. */
+body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) .workspace,
+body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #root > .workspace {
+  padding-bottom: var(--content-bottom-height);
+}
 #data-view button { font: inherit; }
 #data-view button:focus-visible, #data-view [tabindex]:focus-visible, #data-view a:focus-visible, #data-view summary:focus-visible { outline: 2px solid var(--asset-sign); outline-offset: -2px; }
 #data-view .daily-heading { display: flex; flex: none; align-items: center; gap: 8px; min-width: 0; min-height: 46px; padding: 4px 8px; background: var(--surface); border-bottom: 1px solid var(--asset-grid); }
@@ -2309,6 +2327,28 @@ body[data-embedded=true] #data-view .daily-heading { position: relative; inset: 
 
 @media (pointer:coarse) {
   #data-view .asset-filters input, #data-view .asset-filters select, #data-view .asset-filter-reset { min-height:44px; }
+}
+
+/* On wide screens the original action and filter rows share one toolbar.
+   Reclaim outer whitespace, not table rows or touch targets, so the twenty
+   retained assets fit in a tall workbench. Status keeps its own row when
+   loading or an error is visible; narrow/embedded boards retain their flow. */
+@media (min-width: 1280px) {
+  body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) .workspace,
+  body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #root > .workspace {
+    padding-top: 4px;
+  }
+  body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #data-view.daily-workspace {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto auto minmax(0, 1fr);
+    grid-template-areas: "actions filters" "summary summary" "status status" "table table";
+  }
+  body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #data-view > .daily-heading { grid-area: actions; }
+  body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #data-view > .asset-filters { grid-area: filters; }
+  body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #data-view > .asset-table-summary { grid-area: summary; padding-bottom: 4px; }
+  body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #data-view > .asset-context { grid-area: status; }
+  body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #data-view > .asset-table-panel { grid-area: table; }
 }
 
 

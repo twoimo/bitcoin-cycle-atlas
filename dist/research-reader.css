@@ -30,8 +30,12 @@ body[data-shell=dashboard] #evidence-view{grid-template-rows:auto minmax(0,1fr) 
    Give the direct research list the remaining height; a second large inset
    and filter margin otherwise take space from its paginated table. Hosted
    research keeps the parent-owned toolbar and its existing zero inset. */
-body[data-shell=dashboard][data-page=evidence]:not([data-embedded=true]) #evidence-view{padding-block:8px}
+body[data-shell=dashboard][data-page=evidence]:not([data-embedded=true]) #evidence-view{padding-block:8px;overflow:auto;overscroll-behavior:contain;grid-template-rows:auto minmax(var(--evidence-table-min-height,calc(var(--evidence-row-height) + 80px)),1fr) auto}
 body[data-shell=dashboard][data-page=evidence]:not([data-embedded=true]) #evidence-view .evidence-controls{margin-bottom:0}
+/* Keep a complete source row when the header, notice and filters exhaust a
+   short viewport. The card scrolls to the same restored title/grade action;
+   normal-height pagination keeps its existing flexible table allocation. */
+body[data-shell=dashboard][data-page=evidence]:not([data-embedded=true]) #evidence-view [data-evidence-detail]{scroll-margin-block:4px}
 @media(max-width:640px){
   body[data-shell=dashboard] #evidence-view .evidence-controls{flex-wrap:nowrap;gap:8px;margin-bottom:4px;padding:4px;overflow-y:hidden}
   body[data-shell=dashboard] #evidence-view .evidence-controls>*{flex:none}

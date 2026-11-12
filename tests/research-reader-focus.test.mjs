@@ -5,14 +5,17 @@ import {parseHTML} from 'linkedom';
 
 const {version}=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8'));
 let fixtureId=0;
-async function fixture(t){
+async function fixture(t,{captionHeight=12,headHeight=12,rowHeight=56,actualRowHeight=rowHeight}={}){
  const {document,window}=parseHTML('<html><body><button id="outside">다른 작업</button><section id="evidence-view"><div class="evidence-table-shell"><table><caption><span id="evidence-total"></span></caption><thead><tr><th>자료</th></tr></thead><tbody id="evidence-body"></tbody><tfoot><tr><td><button id="evidence-more">다음</button><span id="evidence-progress"></span><span id="evidence-end"></span></td></tr></tfoot></table></div></section></body></html>');
- let active=document.body,room=24+4+56*8,nextFrame=0;
- const frames=new Map(),closeEvents=[],focusCalls=[];
+ let active=document.body,room=captionHeight+headHeight+4+rowHeight*8,nextFrame=0;
+ const frames=new Map(),closeEvents=[],focusCalls=[],revealCalls=[];
  Object.defineProperty(document,'activeElement',{get:()=>active.isConnected?active:document.body});
  const elementPrototype=window.HTMLElement.prototype,selectPrototype=window.HTMLSelectElement.prototype;
  const originalFocus=Object.getOwnPropertyDescriptor(elementPrototype,'focus'),originalValue=Object.getOwnPropertyDescriptor(selectPrototype,'value');
+ const originalRect=Object.getOwnPropertyDescriptor(elementPrototype,'getBoundingClientRect'),originalScroll=Object.getOwnPropertyDescriptor(elementPrototype,'scrollIntoView');
  Object.defineProperty(elementPrototype,'focus',{configurable:true,value:function(){if(this.isConnected){active=this;focusCalls.push(this);}}});
+ Object.defineProperty(elementPrototype,'getBoundingClientRect',{configurable:true,writable:true,value:function(){return this.parentElement?.id==='evidence-body'?{height:actualRowHeight}:originalRect?.value.call(this)||{height:0};}});
+ Object.defineProperty(elementPrototype,'scrollIntoView',{configurable:true,value:function(options){revealCalls.push({target:this,options});}});
  const selectValues=new WeakMap();
  Object.defineProperty(selectPrototype,'value',{configurable:true,get(){return selectValues.get(this)??originalValue.get.call(this);},set(value){selectValues.set(this,String(value));}});
  const createElement=document.createElement.bind(document);
@@ -29,15 +32,17 @@ async function fixture(t){
  Object.defineProperties(shell,{clientHeight:{get:()=>room},clientWidth:{get:()=>390}});
  const caption=table.querySelector('caption'),head=table.querySelector('thead');
  Object.defineProperties(table,{caption:{value:caption},tHead:{value:head}});
- caption.getBoundingClientRect=head.getBoundingClientRect=()=>({height:12});
- table.getBoundingClientRect=()=>({height:24+body.children.length*56});
+ caption.getBoundingClientRect=()=>({height:captionHeight});head.getBoundingClientRect=()=>({height:headHeight});
+ table.getBoundingClientRect=()=>({height:captionHeight+headHeight+body.children.length*actualRowHeight});
  const location=new URL('https://example.test/bitcoin-cycle-atlas/?page=evidence');
- const globals={document,window,location,history:{replaceState(_state,_title,url){location.href=String(url);}},CustomEvent:window.CustomEvent,getComputedStyle:()=>({getPropertyValue:()=> '56px'}),requestAnimationFrame:callback=>{frames.set(++nextFrame,callback);return nextFrame;},cancelAnimationFrame:id=>frames.delete(id)};
+ const globals={document,window,location,history:{replaceState(_state,_title,url){location.href=String(url);}},CustomEvent:window.CustomEvent,getComputedStyle:()=>({getPropertyValue:()=> `${rowHeight}px`}),requestAnimationFrame:callback=>{frames.set(++nextFrame,callback);return nextFrame;},cancelAnimationFrame:id=>frames.delete(id)};
  const originals=new Map(Object.keys(globals).map(key=>[key,Object.getOwnPropertyDescriptor(globalThis,key)]));
  for(const [key,value]of Object.entries(globals))Object.defineProperty(globalThis,key,{configurable:true,writable:true,value});
  t.after(()=>{
   document.body.replaceChildren();
   if(originalFocus)Object.defineProperty(elementPrototype,'focus',originalFocus);else delete elementPrototype.focus;
+  if(originalRect)Object.defineProperty(elementPrototype,'getBoundingClientRect',originalRect);else delete elementPrototype.getBoundingClientRect;
+  if(originalScroll)Object.defineProperty(elementPrototype,'scrollIntoView',originalScroll);else delete elementPrototype.scrollIntoView;
   Object.defineProperty(selectPrototype,'value',originalValue);
   for(const [key,descriptor]of originals)if(descriptor)Object.defineProperty(globalThis,key,descriptor);else delete globalThis[key];
  });
@@ -48,14 +53,33 @@ async function fixture(t){
  evidence.initEvidenceView();evidence.showEvidenceView(true);flush();
  const button=(id,action='title')=>[...body.querySelectorAll(action==='title'?'.research-open':'.evidence-grade button')].find(node=>node.dataset.evidenceDetail===id);
  const click=node=>{node.focus();node.dispatchEvent(new window.Event('click',{bubbles:true}));};
- const resize=(capacity,{pending=false}={})=>{room=24+4+56*capacity;window.dispatchEvent(new window.Event('resize'));if(!pending)flush();};
+ const resize=(capacity,{pending=false}={})=>{room=captionHeight+headHeight+4+rowHeight*capacity;window.dispatchEvent(new window.Event('resize'));if(!pending)flush();};
  const filter=(selector,value)=>{const select=document.querySelector(selector);select.value=value;select.dispatchEvent(new window.Event('change',{bubbles:true}));flush();};
- return {document,window,location,reader,evidence,body,button,click,resize,filter,flush,flushClose,focusCalls,
+ return {document,window,location,reader,evidence,body,button,click,resize,filter,flush,flushClose,focusCalls,revealCalls,
   get dialog(){return document.querySelector('#research-reader');},
   close(){this.dialog.close();flushClose();},
   ids(){return [...body.children].map(row=>row.dataset.evidenceId);},
  };
 }
+
+for(const action of ['title','grade'])test(`Short research card allocates a full measured row and reveals the restored ${action} action`,async t=>{
+ const geometry={captionHeight:39.5,headHeight:32,rowHeight:64,actualRowHeight:74.25};
+ const f=await fixture(t,geometry),id=f.ids().at(-1),original=f.button(id,action);
+ f.click(original);f.resize(0);
+ assert.equal(original.isConnected,false);assert.equal(f.button(id,action),undefined);
+ const revealsWhileModal=f.revealCalls.length;
+ f.close();
+ const target=f.button(id,action);assert.equal(f.document.activeElement,target);
+ assert.ok(f.revealCalls.length>revealsWhileModal,'modal close must reveal the actual replacement row, not merely focus a clipped node');
+ assert.equal(f.revealCalls.at(-1).target,target);
+ assert.deepEqual(f.revealCalls.at(-1).options,{behavior:'instant',block:'nearest',inline:'nearest'});
+ const floor=parseFloat(f.document.querySelector('#evidence-view').style.getPropertyValue('--evidence-table-min-height'));
+ assert.ok(floor>=geometry.captionHeight+geometry.headHeight+geometry.actualRowHeight+8,'real header/row geometry and focus clearance must fit the scrollable table allocation');
+ assert.ok(floor>geometry.captionHeight+geometry.headHeight+geometry.rowHeight+8,'wrapped row height must not be replaced with a smaller nominal estimate');
+ const beforeGrowth=target;f.resize(8);
+ assert.equal(beforeGrowth.isConnected,false);assert.equal(f.document.activeElement,f.button(id,action));
+ assert.equal(f.revealCalls.at(-1).target,f.document.activeElement,'subsequent resize reveals the current equivalent action too');
+});
 
 for(const action of ['title','grade'])test(`Reader close reconnects the ${action} action after resize replaces its row`,async t=>{
  const f=await fixture(t),id=f.ids()[1],original=f.button(id,action);f.click(original);

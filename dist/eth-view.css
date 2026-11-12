@@ -74,8 +74,9 @@ body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface
   .eth-app .eth-icon{height:34px;width:33px;padding:8px}
   .eth-divider{margin:0 1px}.eth-top-spacer{min-width:0}
   /* Reserve the measured price gutter plus its 7px gap; wrap complete values
-     and the date before the axis instead of clipping the readout. */
-  .eth-readout{top:7px;left:9px;max-width:calc(100% - var(--plot-right-gap,71px) - 9px)}.eth-readout-line{flex-wrap:wrap;row-gap:1px}.eth-readout-source{top:48px;left:9px}.eth-readout-name{display:none}.eth-readout-line>strong{font-size:16px}
+     and the date before the axis instead of clipping the readout. The source
+     starts after the 7px inset and the full 44px two-line readout budget. */
+  .eth-readout{top:7px;left:9px;max-width:calc(100% - var(--plot-right-gap,71px) - 9px)}.eth-readout-line{flex-wrap:wrap;row-gap:1px}.eth-readout-source{top:52px;left:9px}.eth-readout-name{display:none}.eth-readout-line>strong{font-size:16px}
   .eth-ohlc{gap:12px;font-size:11px}.eth-venue{font-size:11px}#eth-bar-time{font-size:11px}
   .eth-bottom{gap:1px;padding:0 4px env(safe-area-inset-bottom,0px)}.eth-periods{display:none}#eth-period-select{display:block;max-width:66px;font-size:11px;padding:4px 4px}
   #eth-status{padding:0 4px;font-size:11px}.eth-timezone{padding:0 4px;font-size:11px}.eth-bottom button{padding:4px 8px}
@@ -85,7 +86,7 @@ body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface
 @media(max-width:360px){.eth-topbar{gap:4px}.eth-app .eth-icon{width:30px}.eth-chart-types{gap:0}.eth-ohlc{gap:8px}#eth-status{font-size:11px}}
 @media(max-height:420px){.eth-readout{top:3px}.eth-readout-source{top:24px}.eth-readout-name{display:none}.eth-readout-line>strong{font-size:14px}.eth-ohlc{font-size:11px}.eth-plot .chart-navigation{bottom:43px}}
 .eth-forecast-note{position:absolute;left:13px;right:12px;top:54px;display:flex;flex-wrap:wrap;gap:4px 12px;line-height:1.25;font-size:11px;color:var(--equity-view-ink-8);pointer-events:none;white-space:nowrap;overflow:hidden}.eth-forecast-note .eth-sample-key,.eth-forecast-note .eth-envelope-key,#eth-kind{color:var(--equity-view-ink-9)}.eth-forecast-note .eth-baseline-key{color:var(--eth-view-ink-28)}.eth-forecast-note .eth-sample-key{flex-basis:100%}#eth-kind{font-size:11px}.eth-forecast-controls{display:grid;gap:12px;font-size:12px}.eth-forecast-controls select{min-width:0;width:100%;padding:8px;background:var(--equity-view-surface-6);color:var(--equity-view-ink-18);border:1px solid var(--equity-view-rule-2);border-radius:5px;font:inherit}.eth-data-dialog [data-open-forecast-journal]{font:inherit;font-size:12px;padding:8px;border:1px solid var(--equity-view-rule-2);background:var(--equity-view-surface-5);color:var(--equity-view-ink-12);border-radius:5px;cursor:pointer}.eth-data-dialog select:focus-visible,.eth-data-dialog [data-open-forecast-journal]:focus-visible{outline:2px solid var(--equity-view-rule-3);outline-offset:2px}.eth-plot .equity-forecast-evidence{cursor:pointer}.eth-plot .equity-forecast-evidence:focus-visible circle{stroke:var(--chart-details-panel-rule-8);stroke-width:3}
-@media(max-width:620px){body[data-market="ETHUSD"] .eth-topbar .eth-icon{width:29px;padding:8px}.eth-forecast-note{top:68px;left:10px;gap:4px 12px;font-size:11px}#eth-kind{font-size:11px}}
+@media(max-width:620px){body[data-market="ETHUSD"] .eth-topbar .eth-icon{width:29px;padding:8px}.eth-forecast-note{top:72px;left:10px;gap:4px 12px;font-size:11px}#eth-kind{font-size:11px}}
 @media(max-width:360px){body[data-market="ETHUSD"] .eth-topbar .eth-icon{width:25px;padding:4px}body[data-market="ETHUSD"] .eth-divider{display:none}body[data-market="ETHUSD"] .eth-topbar{gap:2px}}
 
 /* ETH and equities occupy the same shell as BTC. Asset-specific chart/model
@@ -143,6 +144,12 @@ body[data-shell=chart] .native-chart-workbench .workbench-update :is(#eth-status
   .native-command-search input,.native-date-form :is(input,select){min-height:44px}
 }
 @media(max-height:420px){.eth-forecast-note{top:42px}}
+/* Short phones retain the two-line budget even when the wide landscape
+   rule above moves the one-line source to 24px. Keep the next note below it. */
+@media(max-width:620px) and (max-height:420px){
+  .eth-readout-source{top:48px}
+  .eth-forecast-note{top:68px}
+}
 
 .eth-data-dialog p { font-size: var(--copy-size); line-height: var(--copy-leading); }
 
