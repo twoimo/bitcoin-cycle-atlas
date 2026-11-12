@@ -1,0 +1,30 @@
+[
+  {
+    "name": "@funnest/charts-ui",
+    "version": "0.6.16",
+    "license": "Apache-2.0",
+    "tarballBytes": 64944,
+    "tarballSha512": "fa8ee139569d2832b31dc280911bda7a72f67f72a6d0408ed3449632af6d3b3dfbab0e194faf0b1b11bafca05d90167e46177eafc012a8b7dfa6c16328dac656",
+    "distJsBytes": 206739,
+    "distJsGzipLevel9Bytes": 48804,
+    "distJsSha256": "e00e8539e7ef1557b310d14867a6184efdb9b5caecc6498acf4bdabffb0b02ad",
+    "noticeSha256": "fcb4553686d98b754d696d56afdbce5e389bab431ede2d742cefbf2f459fd691",
+    "licenseSha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "dependencies": {
+      "@funnest/charts": "0.6.16"
+    }
+  },
+  {
+    "name": "@funnest/charts",
+    "version": "0.6.16",
+    "license": "Apache-2.0",
+    "tarballBytes": 78297,
+    "tarballSha512": "b12093a5f5012a0fa51cc23f6c6f7086dc2b87b47fa9b0d8c9a1136e9c5a818f1dc2d5c4366ced98280fb904da3f509f8d8f14275b2ad78cc52042fdbc21e045",
+    "distJsBytes": 176056,
+    "distJsGzipLevel9Bytes": 46890,
+    "distJsSha256": "1246d9b35f98bebb984e17207b2f32d6f467d2c0f76c94325c8aa52a0302bf9b",
+    "noticeSha256": "fcb4553686d98b754d696d56afdbce5e389bab431ede2d742cefbf2f459fd691",
+    "licenseSha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "dependencies": {}
+  }
+]

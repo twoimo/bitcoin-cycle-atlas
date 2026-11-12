@@ -1,6 +1,6 @@
 # 요구사항 — Funnest Charts UI/UX로 전면 리뉴얼 (초안)
 
-작성 2026-11-12. 상태: **P0는 `b787935` Mac에서 10/10·커버리지 40/40·`qualifiesP0Verification` true**. settings-icon 라이트·다크가 관측됐다. 표본과 4.5/3.0은 유지한다. **P1은 `ab1ce69`·`7589543`로 구현됐으나 닫지 않음**. `Q-R19P1-2`의 루트 404·누락된 시장 P1 스타일은 `e2aaa93`·`fbe74b8`로 수정했다. Mac `026e416` 게이트는 레이아웃 8/28·내비 48/56·복귀 8/8이다. 루트 404와 768 알약 실패는 재현되지 않았고, 남은 제목 잉크·내비 클립 `Q-R19P1-3`은 `36f3a58`·`a23a39c`에서 제품 수정했다. 집중 168/168·기존 P0 소스 감사는 통과했지만 같은 P1 네이티브 실행은 Chromium socket EPERM으로 레이아웃·내비·복귀 모두 0시도다. Mac `c56775d` 1회는 28/28·56/56·8/8이나 qualifier false(인터셉션 경합 3건)이고, 2회는 복귀 6/8이다. **P1은 `67125bd` Mac에서 28/28·56/56·8/8·qualifier true로 닫았다. 큐 맨 앞은 P2a-0 `@funnest/charts-ui@0.6.16` 스파이크다.** [수정·검증 한계](../evidence/qa-r19p1-3-b1dfc97/README.md). [수정 근거](../evidence/qa-r19p1-2-f958db5/README.md). [P1 구현·차단 영수증](../evidence/ui-renewal-p1/README.md). [구현·미충족 근거](../evidence/ui-renewal-p0/README.md) · [이전 Mac 영수증](../evidence/qa-r19p0-20261112/p0-f86ba0a.json) · [b787935 Mac 영수증](../evidence/qa-r19p1-20261112/mac-b787935.json). 대상 `twoimo/bitcoin-cycle-atlas`.
+작성 2026-11-12. 현재 상태: **P0는 `b787935` Mac에서 10/10·커버리지 40/40·`qualifiesP0Verification:true`로 닫혔다. P1은 `67125bd` Mac에서 레이아웃 28/28·내비 56/56·차트 복귀 8/8·오버플로 0·failures 0·`qualifiesP1Verification:true`로 닫혔다.** 표본과 4.5/3.0은 유지한다. 다음 한 건 `P2A0-6ffbdda`의 임시 페이지·Datafeed·검증기는 `cefc568`·`b0cf985`에 구현했다. Chromium 시작 차단으로 실제 기능·키보드·터치·A-9는 0시도이며 **P2a-0 수용 대기**다. 기존 엔진 유지, P2 차트 크롬·P3·P2b·배포 미착수. [P1 Mac 정본 영수증](../evidence/qa-r19p1-20261112/mac-67125bd.json) · [P0 Mac 영수증](../evidence/qa-r19p1-20261112/mac-b787935.json) · [P2a-0 구현·측정 한계](../evidence/p2a0-6ffbdda/README.md). 이전 P1 발견과 수정 이력은 [체크리스트 Q-R19P1-2~4](../LAUNCH_CHECKLIST_20261110.md)에 보존한다. 대상 `twoimo/bitcoin-cycle-atlas`.
 참조 저장소: `funnest-xyz/funnest-charts` (Apache-2.0, `main` @ `39cb29ae250448d520384c12de555b1c00727883`, 2026-11-12). 홈페이지 `https://charts.funnest.xyz`.
 방법: 저장소 소스(`apps/site/app/globals.css`, README)와 실제 홈페이지(1440×900)를 함께 읽고, `ui-ux-pro-max`로 방향을 대조했다. 참조 스크린샷은 `docs/evidence/funnest-ui-20261112/home-1440.png`.
 
@@ -56,16 +56,16 @@ Atlas의 현재 다크·골드·hairlines 편집 톤을 **Funnest Charts의 밝�
 - 패키지: `@funnest/charts-ui@0.6.16` (Apache-2.0, framework-free). `createTradingChart(container, {datafeed, symbol, resolution, colorScheme})`, 슬롯 `toolbar`·`toolbarEnd`·`belowToolbar`·`footer`, `save()`/`load()` 레이아웃 JSON.
 - 데이터 연결: Atlas 자산을 `Datafeed`로 어댑트한다.
   - `resolveSymbol` ← 종목 메타(이름·통화·거래소·틱)
-  - `getBars` ← `dist/data/*-ohlc.json`·시장 컨트롤러(일/주/분)
+  - `getBars` ← 각 자산의 원본 OHLCV·시장 컨트롤러. P2a-0은 `dist/data/btc-volume.json`의 완료 BTC 일봉만 연결하며 원본에 없는 시간 단위를 합성하지 않는다.
   - `subscribeBars` ← 정적 사이트에서는 no-op, 리플레이·라이브는 별도
   - `searchSymbols` ← 기존 심볼 선택기, `getSparkline` ← 최근 종가
-- 유지: Atlas의 예측 밴드·역사 사건 라벨·리플레이·compare는 패키지 기본 기능이 아니다. **오버레이 레이어**(차트 좌표 동기화)로 얹거나, 해당 화면만 기존 엔진을 유지하는 하이브리드 중에서 스파이크 결과로 결정한다.
+- 유지: 정확한 `0.6.16`에는 좌표 변환·`addOverlay`, 기본 bar replay와 종목 compare가 있다. Atlas의 예측 밴드·역사 사건·고정 예측/시점 증거 replay·사이클 정렬 compare와의 패리티는 별도다. P2a-0의 API/계약 대조 결과 해당 네 기능은 **하이브리드로 기존 엔진 유지**를 선택했다(§3.3.2). 네이티브 수용은 아직 대기다.
 - 테마: `colorScheme:'system'`을 Atlas 토큰(라이트/다크)과 맞추고, 빨강 상승/파랑 하락은 패키지 기본값을 따른다.
 - 라이선스: Apache-2.0. 번들·NOTICE에 출처 표기, 브랜드 로고·이름은 사용하지 않는다.
 
 ### 3.3.1 기능 패리티 매트릭스 (스파이크에서 확정)
 
-| 기능 | Funnest | Atlas 필요 | 계획 |
+| 기능 | Funnest 0.6.16 소스 확인 | Atlas 필요 | 계획 |
 |---|---|---|---|
 | 캔들·라인·거래량 | 지원 | 필수 | 그대로 |
 | 선형/로그/% 축 | 지원(`PriceScaleMode`) | 필수 | 그대로 |
@@ -73,10 +73,10 @@ Atlas의 현재 다크·골드·hairlines 편집 톤을 **Funnest Charts의 밝�
 | 심볼 검색·미니 라인 | 지원 | 필수 | Datafeed 어댑터 |
 | 레이아웃 저장/복원 | 지원 | 권장 | `save/load` |
 | 한국식 색·KST | 지원 | 필수 | 그대로 |
-| 예측 밴드·가설 경로 | 미확인 | 필수 | 오버레이 레이어 또는 하이브리드 |
-| 역사 사건 라벨 | 미확인 | 필수 | 오버레이/마커 |
-| 리플레이·compare | 미확인 | 필수 | 하이브리드 후보 |
-| 접근성·키보드 | 미확인 | 필수 | 스파이크에서 측정 |
+| 예측 밴드·가설 경로 | render-only overlay·좌표 변환 지원, 예측을 autoscale 도메인에 넣는 계약 없음 | 필수 | 하이브리드, Atlas 엔진 유지 |
+| 역사 사건 라벨 | 사용자 overlay·거래 실행 마커 지원, Atlas 사건의 키보드/출처 계약은 별도 | 필수 | 하이브리드, Atlas 사건 레이어 유지 |
+| 리플레이·compare | bar replay·다른 종목 종가의 기준점 % 비교 지원 | 필수 | Atlas 고정 예측·사이클 정렬은 하이브리드 |
+| 접근성·키보드 | 32/36px 컨트롤 및 모달 포커스 위험 확인, 네이티브 미검증 | 필수 | 44px·포커스·4.5/3.0 유지, 재검증 대기 |
 
 ### 3.3.2 스파이크 게이트 (P2a-0)
 
@@ -85,6 +85,54 @@ Atlas의 현재 다크·골드·hairlines 편집 톤을 **Funnest Charts의 밝�
 3. 번들 크기, A-9 초기 로드 영향, 키보드 접근성, 모바일 터치를 측정한다.
 4. 예측 밴드·사건·리플레이·compare의 대체 경로(오버레이 vs 하이브리드)를 결정한다.
 5. 결과를 이 문서에 표로 남기고, 통과 전에는 기존 엔진을 제거하지 않는다.
+
+#### P2A0-6ffbdda 결과 — 구현 후보, 네이티브 수용 대기
+
+수정 전 원격 `6ffbdda618ad67df6aa47d62bf52f8ce7fc159ba`를 다시 읽고 시작했다. 구현은 `cefc568`, 검증기와 실제 실행 후보는 `b0cf985`다. 별도 `spikes/funnest-p2a0/`의 UI/core **0.6.16**과 esbuild **0.28.2**를 lockfile로 고정했고, 산출물은 `build/p2a0/site/`에만 생성한다. **P1은 `67125bd` Mac의 28/28·56/56·8/8·qualifier true로 닫힌 상태를 유지한다. P2a-0은 아직 통과하지 않았고 다음 단계도 시작하지 않는다.** [원본 영수증·명령·해시](../evidence/p2a0-6ffbdda/README.md).
+
+| 구현/측정 | 결과 | 해석 |
+|---|---|---|
+| BTC Datafeed | Bitstamp BTC-USD 완료 일봉 **5,560개**, 2011-08-18–2026-11-06 UTC | 기존 `dist/data/btc-volume.json` OHLCV 그대로, 초→밀리초만 변환. 보간 0, 원본 0거래량 33행 보존, 실시간 연결 없음 |
+| 소스 검증 | 기존 `parseVolumeSnapshot` + 원본 SHA-256 검증, 어댑터 검사 **10/10** | 종가로 OHLC를 합성하지 않음. 검색은 보유한 BTC 메타만 반환 |
+| 실제 사이트 HTTP | 루트·JS·favicon·데이터·NOTICE **5/5 HTTP 200**, gzip 복원 바이트 동일 | 서버 검증이며 실제 화면 입력 통과가 아님 |
+| 캔들·로그·%·MA·추세선·심볼 검색·한국식 색 | 필수 **7**, 시도 **0**, 통과 **0** | Chromium 시작 차단, 실제 입력 미검증 |
+| 키보드 320/390/768/1440 | 필수 **4**, 시도 **0**, 통과 **0** | 도달·44px·2px 포커스·4.5/3.0·모달 복귀 미측정 |
+| 모바일 touch pan/pinch 320/390 | 필수 **4**, 시도 **0**, 통과 **0** | 터치 입력 미측정 |
+| 스파이크 native 자격 | `sourceStable:true`, `complete:false`, `qualifiesP2a0NativeVerification:false` | 스크린샷 0, 오버플로 실측 `null`. 0시도는 통과가 아님 |
+| 집중 검사·제품 정적 검사 | **24/24**, 실패/skip 0; **1,065파일·220스크립트·753참조** 통과 | 새 어댑터·프로토콜/HTTP 검사 24개이며 P1 게이트를 대체하지 않음 |
+
+연결 브라우저는 originating browser context가 없어 초기화되지 않았고, 로컬 Chromium은 `socket() failed: Operation not permitted (1)`에서 `SIGABRT`로 종료했다. 네이티브 검사기는 실제 CDP 포인터·키·터치만 사용한다. 검색 선택의 실제 Datafeed 재호출, 상승/하락 캔들 hover의 원본 OHLCV·범례·가격 pane 픽셀까지 확인하도록 준비했지만 이 환경에서는 실행되지 않았다. 임시 wrapper는 패키지의 컨트롤 CSS·포커스 동작을 덮어쓰지 않는다.
+
+**번들 크기** — 원본 파일 및 gzip level 9/Brotli quality 11 산출값이다. 전체 브라우저 전송량·시간과 구분한다. 폰트/CSS/데이터는 별도이며 실제 초기 요청은 native 재검증에서 측정한다. [전체 입력·산출물 해시](../evidence/p2a0-6ffbdda/bundle-report.json.gz).
+
+| 산출물 | 원본 B | gzip B | Brotli B |
+|---|---:|---:|---:|
+| UI/core만 `createTradingChart` 번들 | 220,669 | 68,385 | 59,164 |
+| 실제 임시 페이지 JS — 패키지 + Datafeed + 읽기 전용 관측 | **234,611** | **73,721** | **63,642** |
+| 원본 BTC OHLCV JSON | 864,273 | 222,328 | 159,069 |
+
+**A-9 영향** — 기존 `verify-conference-data-browser.mjs`는 바이트 동일하다. 깨끗한 기준 worktree와 후보의 기존 제품 경로를 같은 Fast 4G, gzip, cache off, CPU 1×로 실행했다. 초기 **2,500ms**, 전환 **150ms** 예산을 유지한다.
+
+| 실행 | 필수 | 시도 | 통과 | 초기 페인트/전환 시간 |
+|---|---:|---:|---:|---|
+| 기존 A-9 기준 `6ffbdda` | 6 | **0** | **0** | `null` / `null` |
+| 기존 A-9 후보 `b0cf985` | 6 | **0** | **0** | `null` / `null` |
+| 임시 페이지 초기 페인트, 같은 여섯 크기·Fast 4G | 6 | **0** | **0** | `null`; 컨퍼런스 전환 검사는 별도 |
+
+두 기존 A-9 실행의 입력 **1,069파일 해시가 동일**하며 제품의 `dist`·`apps`·`packages`·루트 의존성·빌드 진입점에 스파이크 추가가 없다. 따라서 제품 진입 그래프에 추가 요청 **0개·0B**지만, **A-9 시간 차이는 미측정(`null`)**이다. 이전 Mac 시간을 이번 후보의 시간으로 대체하거나 0ms 영향으로 기록하지 않는다.
+
+**키보드 접근성 소스 검토** — 정확한 버전의 [styles.ts](https://github.com/funnest-xyz/funnest-charts/blob/39cb29ae250448d520384c12de555b1c00727883/packages/ui/src/styles.ts)는 아이콘/심볼 컨트롤 36px, chip·모바일 컨트롤 32px을 선언한다. [symbol-search.tsx](https://github.com/funnest-xyz/funnest-charts/blob/39cb29ae250448d520384c12de555b1c00727883/packages/ui/src/components/symbol-search.tsx)와 [pane.tsx](https://github.com/funnest-xyz/funnest-charts/blob/39cb29ae250448d520384c12de555b1c00727883/packages/ui/src/pane.tsx)의 검색 모달에는 Tab 가두기·닫기 후 트리거 포커스 복귀 경로가 없다. 이는 **소스에서 확인한 44px·포커스 계약 위험**이며 실제 계산 크기·대비·키보드 통과 증거가 아니다. 패키지나 검사를 이 스파이크에서 약화하지 않았고 미달은 다음 native 실행에서 실패로 남긴다.
+
+**네 기능의 대체 경로 결정** — 아래는 공개 API와 Atlas 계약을 비교한 설계 판단이다. API가 존재한다는 사실을 Atlas 네이티브 패리티 통과로 간주하지 않는다.
+
+| Atlas 기능 | 결정 | 정확한 0.6.16 지원과 유지해야 할 차이 | Atlas 유지 경로 |
+|---|---|---|---|
+| 예측 밴드·가설 경로 | **하이브리드** | `ChartOverlay.render`·시간/가격 좌표 변환은 있다. overlay의 예측 경로가 autoscale Y 도메인에 기여하는 인터페이스는 없다. 관측/가정 분리, 실제 UTC 간격·가격/지수 기준, 예측까지 포함하는 도메인을 보존해야 한다. [overlay 계약](https://github.com/funnest-xyz/funnest-charts/blob/39cb29ae250448d520384c12de555b1c00727883/packages/core/src/objects/types.ts), [autoScale/addOverlay](https://github.com/funnest-xyz/funnest-charts/blob/39cb29ae250448d520384c12de555b1c00727883/packages/core/src/chart.ts) | `dist/atlas-price-chart.js` |
+| 역사 사건 | **하이브리드** | overlay로 그릴 수 있고 거래 실행 마커도 있으나, render-only 계약이 사건 hit-test·키보드 포커스·ARIA·출처/날짜 정밀도·라벨 충돌 처리를 대신하지 않는다. [ChartOverlay/PaneCoords](https://github.com/funnest-xyz/funnest-charts/blob/39cb29ae250448d520384c12de555b1c00727883/packages/core/src/objects/types.ts) | `dist/atlas-price-chart.js`의 사건·키보드 레이어 |
+| 리플레이 | **하이브리드** | 기본 `startReplay/replayStep/replayPlay`는 있다. 캔들 cutoff와 진행 제어만으로 Atlas의 고정 예측·as-of/해시 증거·미래 캔들/사건/축 도메인 누출 금지가 입증되지 않는다. [replay 구현](https://github.com/funnest-xyz/funnest-charts/blob/39cb29ae250448d520384c12de555b1c00727883/packages/core/src/chart.ts) | `dist/chart-replay-atlas.js` |
+| compare | **하이브리드** | `addCompare`는 다른 종목의 종가를 첫 가시 바 기준 %로 재기준화한다. Atlas 반감기·저점·고점·돌파 정렬, 단위/기준점·기간·시나리오 URL 계약과 다르다. [compare 구현](https://github.com/funnest-xyz/funnest-charts/blob/39cb29ae250448d520384c12de555b1c00727883/packages/core/src/chart.ts) | `dist/comparison-url-state.js`, `dist/compare-shell-host.js` |
+
+기존 엔진은 삭제·교체하지 않았다. 보호 4파일·`dist/price-axis.js`·`minRight=64`, 기존 P0/P1·A-9 검사와 표본/임계값을 보존했다. Apache LICENSE/NOTICE·내장 Preact MIT·Pretendard OFL을 생성 페이지에서 제공하고 유료 도구는 추가하지 않았다. 재현 명령·raw 영수증·압축 해시는 [P2a-0 증거](../evidence/p2a0-6ffbdda/README.md)와 [summary.json](../evidence/p2a0-6ffbdda/summary.json)에 있다. **실제 기능·키보드·터치와 A-9 확인 전에는 P2a-0을 닫거나 기존 엔진을 제거하지 않는다.**
 
 ## 4. 단계
 

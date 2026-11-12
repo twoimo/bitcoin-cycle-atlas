@@ -1,0 +1,154 @@
+TAP version 13
+# Subtest: P2a0 requires a fresh evidence destination without configurable acceptance thresholds
+ok 1 - P2a0 requires a fresh evidence destination without configurable acceptance thresholds
+  ---
+  duration_ms: 2.64208
+  type: 'test'
+  ...
+# Subtest: fixed six-case Fast4G contract retains 2500/150ms, 44px, 2px, 4.5/3.0
+ok 2 - fixed six-case Fast4G contract retains 2500/150ms, 44px, 2px, 4.5/3.0
+  ---
+  duration_ms: 0.347925
+  type: 'test'
+  ...
+# Subtest: zero native attempts remain unverified with exact required counts
+ok 3 - zero native attempts remain unverified with exact required counts
+  ---
+  duration_ms: 0.431832
+  type: 'test'
+  ...
+# Subtest: protocol model requires every unique native case and every attempted flag
+ok 4 - protocol model requires every unique native case and every attempted flag
+  ---
+  duration_ms: 1.623061
+  type: 'test'
+  ...
+# Subtest: actual case failure, unsupported/unverified observation, source drift and harness errors disqualify
+ok 5 - actual case failure, unsupported/unverified observation, source drift and harness errors disqualify
+  ---
+  duration_ms: 1.196086
+  type: 'test'
+  ...
+# Subtest: startup accepts the exact budget boundary but rejects slow or unmeasured paint
+ok 6 - startup accepts the exact budget boundary but rejects slow or unmeasured paint
+  ---
+  duration_ms: 0.538143
+  type: 'test'
+  ...
+# Subtest: constructor readiness, blank positive-size canvas and stale source metadata are insufficient
+ok 7 - constructor readiness, blank positive-size canvas and stale source metadata are insufficient
+  ---
+  duration_ms: 0.400585
+  type: 'test'
+  ...
+# Subtest: actual candle identity, UTC data boundaries and contiguous count are required
+ok 8 - actual candle identity, UTC data boundaries and contiguous count are required
+  ---
+  duration_ms: 0.281775
+  type: 'test'
+  ...
+# Subtest: native observer must preserve exact first/last OHLCV values, not only counts
+ok 9 - native observer must preserve exact first/last OHLCV values, not only counts
+  ---
+  duration_ms: 0.758125
+  type: 'test'
+  ...
+# Subtest: native target evidence rejects covering, clipping, disabled state and invalid geometry
+ok 10 - native target evidence rejects covering, clipping, disabled state and invalid geometry
+  ---
+  duration_ms: 2.859419
+  type: 'test'
+  ...
+# Subtest: small upstream controls may be measured functionally but do not pass accessibility
+ok 11 - small upstream controls may be measured functionally but do not pass accessibility
+  ---
+  duration_ms: 0.290008
+  type: 'test'
+  ...
+# Subtest: the actual spike server serves root index before bounds checks and gzip preserves source bytes
+ok 12 - the actual spike server serves root index before bounds checks and gzip preserves source bytes
+  ---
+  duration_ms: 40.445473
+  type: 'test'
+  ...
+# Subtest: server refuses malformed, encoded sibling traversal, missing files and mutation methods
+ok 13 - server refuses malformed, encoded sibling traversal, missing files and mutation methods
+  ---
+  duration_ms: 8.919461
+  type: 'test'
+  ...
+# Subtest: in-scope symlinks cannot expose an outside file, directory or rewritten root index
+ok 14 - in-scope symlinks cannot expose an outside file, directory or rewritten root index
+  ---
+  duration_ms: 6.246114
+  type: 'test'
+  ...
+# Subtest: the shipped native daily archive retains every OHLCV value and converts seconds to UTC milliseconds exactly
+ok 15 - the shipped native daily archive retains every OHLCV value and converts seconds to UTC milliseconds exactly
+  ---
+  duration_ms: 54.197473
+  type: 'test'
+  ...
+# Subtest: concurrent first requests share one lazy snapshot load and expose copied inspection metadata
+ok 16 - concurrent first requests share one lazy snapshot load and expose copied inspection metadata
+  ---
+  duration_ms: 14.893744
+  type: 'test'
+  ...
+# Subtest: countBack precedes from while the inclusive to boundary and older-history flag follow actual rows
+ok 17 - countBack precedes from while the inclusive to boundary and older-history flag follow actual rows
+  ---
+  duration_ms: 11.917779
+  type: 'test'
+  ...
+# Subtest: range-only requests do not extrapolate outside saved dates or fill missing days
+ok 18 - range-only requests do not extrapolate outside saved dates or fill missing days
+  ---
+  duration_ms: 0.835382
+  type: 'test'
+  ...
+# Subtest: symbol search is real BTC metadata in Korean or English with no invented assets or live quote
+ok 19 - symbol search is real BTC metadata in Korean or English with no invented assets or live quote
+  ---
+  duration_ms: 0.468708
+  type: 'test'
+  ...
+# Subtest: unsupported symbols and resolutions fail before fetching data
+ok 20 - unsupported symbols and resolutions fail before fetching data
+  ---
+  duration_ms: 1.143807
+  type: 'test'
+  ...
+# Subtest: invalid request bounds and countBack are rejected rather than coerced
+ok 21 - invalid request bounds and countBack are rejected rather than coerced
+  ---
+  duration_ms: 0.570131
+  type: 'test'
+  ...
+# Subtest: static subscription returns idempotent cleanup and never fabricates a bar, reset, or live connection
+ok 22 - static subscription returns idempotent cleanup and never fabricates a bar, reset, or live connection
+  ---
+  duration_ms: 0.290158
+  type: 'test'
+  ...
+# Subtest: malformed snapshot metadata and OHLC fail through the unchanged Atlas parser
+ok 23 - malformed snapshot metadata and OHLC fail through the unchanged Atlas parser
+  ---
+  duration_ms: 66.373222
+  type: 'test'
+  ...
+# Subtest: failed snapshot loading stays an explicit error and never returns a passing empty series
+ok 24 - failed snapshot loading stays an explicit error and never returns a passing empty series
+  ---
+  duration_ms: 0.712006
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 339.404463

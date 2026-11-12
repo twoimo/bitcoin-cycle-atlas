@@ -1,0 +1,297 @@
+{
+  "schemaVersion": 1,
+  "request": "P2A0-6ffbdda",
+  "status": "native-verification-pending",
+  "p2a0Accepted": false,
+  "baseline": "6ffbdda618ad67df6aa47d62bf52f8ce7fc159ba",
+  "implementationCommit": "cefc5686d272b01fe7b956eb6d145ee538528804",
+  "testedCandidate": "b0cf9853728ade2b560721e8df9e193b909afb1e",
+  "p1": {
+    "status": "closed",
+    "acceptedCandidate": "67125bd",
+    "receipt": "../qa-r19p1-20261112/mac-67125bd.json",
+    "reopened": false
+  },
+  "package": {
+    "ui": "0.6.16",
+    "core": "0.6.16",
+    "esbuild": "0.28.2"
+  },
+  "bundle": {
+    "rawBytes": 234611,
+    "gzipBytes": 73721,
+    "brotliBytes": 63642,
+    "sha256": "1266798b6412f78372f4a00a2b40ec9683dd78bafa3c56f559609906742af93d"
+  },
+  "packageOnlyBundle": {
+    "rawBytes": 220669,
+    "gzipBytes": 68385,
+    "brotliBytes": 59164,
+    "sha256": "9ca312a710d5186275854dc7b52525676ba5781234b64e12a3a590d359cd1dbf"
+  },
+  "dataset": {
+    "file": "data/btc-volume.json",
+    "archivePath": "dist/data/btc-volume.json",
+    "sha256": "a602ba904b78284138684377ea559598173063ee435350ce281de430150a9993",
+    "barCount": 5560,
+    "rows": 5560,
+    "firstTime": 1313625600000,
+    "lastTime": 1793923200000,
+    "firstDate": "2011-08-18",
+    "lastDate": "2026-11-06",
+    "source": "Bitstamp",
+    "product": "BTC-USD",
+    "retrievedAt": "2026-11-07T05:58:52.729Z",
+    "completedOnly": true,
+    "size": {
+      "rawBytes": 864273,
+      "gzipBytes": 222328,
+      "brotliBytes": 159069,
+      "sha256": "a602ba904b78284138684377ea559598173063ee435350ce281de430150a9993"
+    },
+    "imputedBars": 0,
+    "sourceZeroVolumeBars": 33,
+    "realtime": false
+  },
+  "compression": {
+    "gzipLevel": 9,
+    "brotliQuality": 11,
+    "note": "Artifact sizes; not a complete browser transfer measurement. CSS/fonts/data are separate."
+  },
+  "productionIsolation": {
+    "baseline": "6ffbdda618ad67df6aa47d62bf52f8ce7fc159ba",
+    "checkedScopes": [
+      "dist",
+      "apps",
+      "packages",
+      "package.json",
+      "package-lock.json",
+      "scripts/build-site-preloads.mjs",
+      "scripts/build-site-styles.mjs",
+      "scripts/build-pages.mjs"
+    ],
+    "changed": [],
+    "untracked": [],
+    "method": "Exact Git diff and untracked inventory; no browser timing claim",
+    "addedSpikeResources": 0,
+    "addedSpikeBytes": 0,
+    "a9MeasuredImpactMs": null
+  },
+  "native": {
+    "report": "native-b0cf985.json.gz",
+    "status": "unverified",
+    "counts": {
+      "startup": {
+        "required": 6,
+        "attempted": 0,
+        "passed": 0,
+        "failed": 0
+      },
+      "features": {
+        "required": 7,
+        "attempted": 0,
+        "passed": 0,
+        "failed": 0
+      },
+      "keyboard": {
+        "required": 4,
+        "attempted": 0,
+        "passed": 0,
+        "failed": 0
+      },
+      "touch": {
+        "required": 4,
+        "attempted": 0,
+        "passed": 0,
+        "failed": 0
+      }
+    },
+    "sourceStable": true,
+    "workingTree": [],
+    "blockedAt": "Chromium launch",
+    "qualifiesP2a0NativeVerification": false,
+    "initialPaintedReadyMs": null,
+    "screenshots": 0,
+    "horizontalOverflowPx": null
+  },
+  "a9": {
+    "gate": "scripts/verify-conference-data-browser.mjs",
+    "gateUnchanged": true,
+    "baseline": {
+      "head": "6ffbdda618ad67df6aa47d62bf52f8ce7fc159ba",
+      "workingChanges": "",
+      "required": 6,
+      "attempted": 0,
+      "passed": 0,
+      "status": "failed",
+      "initialPaintedReadyMs": null,
+      "pageTransitionMs": null
+    },
+    "candidate": {
+      "head": "b0cf9853728ade2b560721e8df9e193b909afb1e",
+      "workingChanges": "",
+      "required": 6,
+      "attempted": 0,
+      "passed": 0,
+      "status": "failed",
+      "initialPaintedReadyMs": null,
+      "pageTransitionMs": null
+    },
+    "sameSourceInventory": true,
+    "sourceInventoryFiles": 1069,
+    "network": {
+      "label": "Chrome DevTools Fast 4G",
+      "offline": false,
+      "latency": 165,
+      "downloadThroughput": 1012500,
+      "uploadThroughput": 168750,
+      "connectionType": "cellular4g",
+      "serverEncoding": "gzip",
+      "cacheDisabled": true,
+      "cpuThrottling": 1
+    },
+    "budgets": {
+      "initialPaintedReadyMs": 2500,
+      "pageTransitionMs": 150
+    },
+    "measuredImpactMs": null,
+    "blocker": "Chromium process singleton socket() EPERM; original gate reports Chrome CDP timeout before any case"
+  },
+  "sourceOnlyAccessibilityRisks": {
+    "nativeMeasured": false,
+    "controlDeclarationsPx": [
+      32,
+      36
+    ],
+    "requiredTargetPx": 44,
+    "modalFocusContainment": "not implemented in inspected search handler",
+    "modalFocusReturn": "not implemented in inspected close paths",
+    "contrastThresholds": {
+      "text": 4.5,
+      "icon": 3
+    },
+    "contrastMeasured": false
+  },
+  "decisions": {
+    "forecastBands": "hybrid",
+    "historicalEvents": "hybrid",
+    "replay": "hybrid",
+    "compare": "hybrid",
+    "basis": "Public 0.6.16 contracts versus Atlas data/domain/provenance/accessibility/alignment requirements; native acceptance pending"
+  },
+  "validation": {
+    "focused": {
+      "tests": 24,
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0
+    },
+    "isolatedBuild": "passed",
+    "deterministicBuildCheck": "passed",
+    "actualSiteHttp": {
+      "checked": 5,
+      "passed": 5,
+      "nativeEvidence": false
+    },
+    "productionStatic": {
+      "status": "ok",
+      "files": 1065,
+      "checkedScripts": 220,
+      "checkedReferences": 753
+    },
+    "sourcePreservation": "source-preservation.json"
+  },
+  "blockers": [
+    "Native browser launch is unavailable in this environment; all 21 native spike cases remain unattempted.",
+    "A-9 baseline/candidate timing and transition impact are unmeasured.",
+    "Exact package source has 32/36px controls and modal focus risks; acceptance cannot assume these meet 44px/focus contracts."
+  ],
+  "scope": {
+    "existingEngineRetained": true,
+    "productionIntegration": false,
+    "p2ChartChromeStarted": false,
+    "p3Started": false,
+    "p2bStarted": false,
+    "deployed": false,
+    "paidToolsAdded": false
+  },
+  "artifacts": {
+    "bundle-report.json.gz": {
+      "bytes": 10187,
+      "sha256": "7ae9aeabcb497f18da97ac19d921f17b3ccf805771d99b60f2fe79a620b99889",
+      "rawBytes": 63476,
+      "rawSha256": "97e1a3efb329f628455737397479a48b3bd5e8449d6574a9db0c277e2134bf45",
+      "gzip": true
+    },
+    "native-b0cf985.json.gz": {
+      "bytes": 7324,
+      "sha256": "4e119f44c0db3d0f471a3c890ce994ca670b6e0336a5faf0fd814f960a94c9f9",
+      "rawBytes": 46869,
+      "rawSha256": "806fbe89da3f0b2d36d6137f2841388075cf159a4b7674dbb48f7d6a6f88983e",
+      "gzip": true
+    },
+    "a9-baseline-6ffbdda.json.gz": {
+      "bytes": 53030,
+      "sha256": "e59a28f1747276f10cc1f9483b65275ba479d804fe0d8219cffd221af9666f39",
+      "rawBytes": 127073,
+      "rawSha256": "a094612471547f8a4776e217283170f300d4a7b9d8c81e96d7b8c34e7bcedc5c",
+      "gzip": true
+    },
+    "a9-baseline-chrome.stderr.log": {
+      "bytes": 544,
+      "sha256": "e548e941b81f598612ac8f66aa6c08adfae33d0b4497c0b0fc0790c5fb8bca09",
+      "rawBytes": 544,
+      "rawSha256": "e548e941b81f598612ac8f66aa6c08adfae33d0b4497c0b0fc0790c5fb8bca09",
+      "gzip": false
+    },
+    "a9-candidate-b0cf985.json.gz": {
+      "bytes": 53028,
+      "sha256": "27e92d75515d8f1da87e901f4382dc3a3037278a2af3ed42b67ef04012320656",
+      "rawBytes": 127051,
+      "rawSha256": "302b940ca5c6798738256d20a9bd8600b456a48c69a700d5213bd1d25b28b489",
+      "gzip": true
+    },
+    "a9-candidate-chrome.stderr.log": {
+      "bytes": 544,
+      "sha256": "7c6e45b5fbb1d0b64095b21c66168b1996c17d77c8d5466f94f31b145218b5fa",
+      "rawBytes": 544,
+      "rawSha256": "7c6e45b5fbb1d0b64095b21c66168b1996c17d77c8d5466f94f31b145218b5fa",
+      "gzip": false
+    },
+    "http-b0cf985.json": {
+      "bytes": 2446,
+      "sha256": "d0aca23477116d0b39c7814a9ef84088e371e9a900e290762621c2923dd0b88e",
+      "rawBytes": 2446,
+      "rawSha256": "d0aca23477116d0b39c7814a9ef84088e371e9a900e290762621c2923dd0b88e",
+      "gzip": false
+    },
+    "focused-tests.tap": {
+      "bytes": 5859,
+      "sha256": "0a35c3d0070f69c0f16226b65d4a6b930194ab9f2448e13d6e5d3350cc45a6d8",
+      "rawBytes": 5859,
+      "rawSha256": "0a35c3d0070f69c0f16226b65d4a6b930194ab9f2448e13d6e5d3350cc45a6d8",
+      "gzip": false
+    },
+    "upstream-package-audit.json": {
+      "bytes": 1295,
+      "sha256": "31548831a0e729812fd86b0766bcf167b1958e88478a115eeed3eedd98d9ff89",
+      "rawBytes": 1295,
+      "rawSha256": "31548831a0e729812fd86b0766bcf167b1958e88478a115eeed3eedd98d9ff89",
+      "gzip": false
+    },
+    "npm-provenance-summary.json": {
+      "bytes": 2029,
+      "sha256": "f5bd4db68e68c093b69b85f9ef526c2d7ff5fa9a6b4feba46cdb0955036c2718",
+      "rawBytes": 2029,
+      "rawSha256": "f5bd4db68e68c093b69b85f9ef526c2d7ff5fa9a6b4feba46cdb0955036c2718",
+      "gzip": false
+    },
+    "npm-attestations.json.gz": {
+      "bytes": 8058,
+      "sha256": "31add6c84ef913e4719281fdd9b3f2629c59ea0c5f89fdcffca61cfaa1b1b0e8",
+      "rawBytes": 14637,
+      "rawSha256": "203a6bfda6b280ffdf43c87989a69305a93178cde5b5bc453dc0ab1262adc12a",
+      "gzip": true
+    }
+  }
+}
