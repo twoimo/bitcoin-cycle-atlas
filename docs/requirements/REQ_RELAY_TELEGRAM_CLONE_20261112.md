@@ -22,6 +22,20 @@
 | 메시지 영역 | `.bubbles-inner` x=560, **폭 696**, 상단 바 48, 입력창 y=836 48 | 전체 폭 390, 입력창 x=8 폭 374 |
 | 전환 | 목록과 대화가 나란히 | 목록 ↔ 대화 단일 전환, 뒤로 가기 |
 
+## 2.1 Pro가 따르는 스킬 원본 (2026-11-12 확인)
+
+R23 구현은 ChatGPT 웹 Pro가 한다. Pro는 로컬 스킬 파일을 읽지 못하므로, 저장소 원본을 직접 읽고 그 절차를 따른다.
+
+- 저장소: `JCodesMore/ai-website-cloner-template`, 확인 커밋 `5426e0e2ec35dbc173a7a18f47a3dfe2a765313e`(2026-11-10). 구현 시작 전에 `git ls-remote`로 최신 커밋을 다시 확인하고, 달라졌으면 최신을 읽는다.
+- 읽을 파일 3개:
+  1. `.agents/skills/clone-website/SKILL.md`
+  2. `.agents/skills/clone-website/references/inspection-guide.md`
+  3. `.agents/skills/clone-website/references/framer-and-motion.md`
+- raw URL: `https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/<커밋>/.agents/skills/clone-website/SKILL.md` (references도 같은 경로).
+- 2026-11-12 대조: 로컬 설치본과 원본은 본문이 같다. 차이는 로컬 frontmatter의 `icon` 한 줄뿐이라 절차에 영향이 없다. 참조 두 파일은 해시가 같다(`3538dec2…`, `dc852cd1…`).
+- 순서: 스킬 3개 파일을 읽는다 → 소스(`web.telegram.org/k/`)를 1440·390에서 직접 관찰한다 → 관찰 브리프를 저장소 `docs/evidence/relay-telegram-clone-<날짜>/`에 남긴다 → 구현한다 → 같은 뷰포트·같은 상태로 비교해 고친다. 스크린샷·iframe·번들 복사는 구현이 아니다.
+- 스킬의 템플릿 경로(`src/app/`, `src/components/sites/`)는 쓰지 않는다. Atlas는 `dist/`의 기존 릴레이 라우트 하나를 수정한다.
+
 ## 3. 클론 계약 (clone-website 절차)
 
 1. 소스 화면을 1440·390에서 스크린샷으로 남기고(`docs/evidence/relay-telegram-clone-20261112/`), 섹션 순서·치수·상태를 브리프에 적는다.
