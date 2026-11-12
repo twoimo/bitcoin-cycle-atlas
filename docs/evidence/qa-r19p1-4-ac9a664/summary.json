@@ -1,0 +1,152 @@
+{
+  "kind": "atlas-q-r19p1-4-candidate-receipt",
+  "request": "Q-R19P1-4",
+  "recordedAt": "2026-11-12T14:54:31.167276+00:00",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "branch": "fix/tradingview-responsive-20261110",
+  "startingRemoteHead": "ac9a6642fe28274fbf71ab33bca360cc289a2136",
+  "harnessCommit": "98e60d3aa71365f4c2f38cb4a21a0014790f6e5b",
+  "productCommit": "848f9cafb6806d3c5d851c309353f44fc2cbf820",
+  "candidateTree": "3002b061058c7dff82749f12471b1a3bc85b8efb",
+  "status": "awaiting-mac-reverification",
+  "p1Closed": false,
+  "qualifiesP1Verification": false,
+  "priorMacReceipt": "../qa-r19p1-20261112/mac-c56775d.json",
+  "nativeRun": {
+    "command": [
+      "node",
+      "scripts/verify-ui-renewal-p1-browser.mjs",
+      "--out",
+      "build/qr19p1-4/native-848f9ca"
+    ],
+    "platform": "linux",
+    "exitCode": 1,
+    "recordedAt": "2026-11-12T14:53:11.541Z",
+    "testedHead": "848f9cafb6806d3c5d851c309353f44fc2cbf820",
+    "workingTree": [],
+    "status": "unverified",
+    "blockedAt": "Chromium launch",
+    "sourceStable": true,
+    "complete": false,
+    "qualifiesP1Verification": false,
+    "counts": {
+      "requiredLayouts": 28,
+      "attemptedLayouts": 0,
+      "passedLayouts": 0,
+      "requiredNavigationActivations": 56,
+      "attemptedNavigationActivations": 0,
+      "passedNavigationActivations": 0,
+      "requiredChartReturns": 8,
+      "attemptedChartReturns": 0,
+      "passedChartReturns": 0
+    },
+    "screenshots": 0,
+    "failure": "Chromium launch: Error: Chromium exited null/SIGABRT: /usr/bin/chromium: 9: [: 5225713664: unexpected operator\n[40:40:1112/235312.064004:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/235312.064363:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[62:62:0100/000000.136449:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n[1:1:0100/000000.136525:ERROR:content/zygote/zygote_main_linux.cc:197] Failed sending zygote boot message: Broken pipe (32)\n\n    at file:///workspace/scratch/4561734af651/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p1-browser.mjs:368:129\n    at until (file:///workspace/scratch/4561734af651/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p1-browser.mjs:223:120)\n    at async verifyUiRenewalP1Browser (file:///workspace/scratch/4561734af651/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p1-browser.mjs:368:16)\n    at async file:///workspace/scratch/4561734af651/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p1-browser.mjs:405:86",
+    "horizontalOverflowByWidth": {
+      "320": null,
+      "390": null,
+      "768": null,
+      "1440": null
+    },
+    "mobileDetails320NativeReach": "unmeasured",
+    "relay1440NativeTopmost": "unmeasured",
+    "requestInterceptionDiagnostics": 0
+  },
+  "supportingChecks": {
+    "focusedSuite": {
+      "tests": 147,
+      "passed": 147,
+      "failed": 0,
+      "skipped": 0,
+      "nativeEvidence": false,
+      "newInterceptionTests": 11,
+      "newWorkspaceReadinessTestResults": 7
+    },
+    "interceptionAndP1ServerSuite": {
+      "tests": 35,
+      "passed": 35,
+      "failed": 0,
+      "includedInFocusedSuite": true,
+      "nativeEvidence": false
+    },
+    "priorUrlFixtureFailure": {
+      "baseline": "ac9a664",
+      "tests": 4,
+      "passed": 0,
+      "failed": 4,
+      "cause": "removed theme delimiter made fixture execute unrelated DOM initialization",
+      "semanticAssertionsChanged": false,
+      "includedInFinalFocusedPass": true
+    },
+    "static": {
+      "status": "passed",
+      "files": 1065,
+      "checkedScripts": 220,
+      "checkedReferences": 753
+    },
+    "preloads": {
+      "status": "passed",
+      "moduleUrls": 56,
+      "uniqueModuleFiles": 54,
+      "modulePreloads": 55,
+      "manifestSha256": "7f824f7adf5574b9d6f6c2826165601e36abd87adbd7c61f36c8a461febfd7d2"
+    },
+    "styles": {
+      "status": "passed",
+      "sourceStylesheets": 42,
+      "productCssChanged": false
+    },
+    "marketOuterEntries": {
+      "exactRootRewriteCount": 9,
+      "innerAppTree": "74f00ae2fa566b3c39ac4ee3041d82e506861959",
+      "innerAppUnchanged": true,
+      "fullPagesBuildClaimed": false
+    },
+    "sourcePreservation": {
+      "status": "passed",
+      "unchangedFiles": 21,
+      "unchangedP1Functions": 21,
+      "protectedFiles": 5,
+      "minRight": 64,
+      "textContrast": 4.5,
+      "iconContrast": 3.0,
+      "fixedPaintSampleThemePairs": 40
+    }
+  },
+  "artifacts": {
+    "nativeReport": {
+      "file": "native-848f9ca.report.json.gz",
+      "rawBytes": 254526,
+      "rawSha256": "d4e8a789fd3ab7f762f01067d8416ab667035020cf495e42cea0439f3c9d9690",
+      "gzipBytes": 106067,
+      "gzipSha256": "7a9cfbaa398a5519eb17c2799e227a39e5ca98ee745bc9d127227c79807e8f12"
+    },
+    "sourceAudit": {
+      "file": "source-audit.json",
+      "sha256": "70891ac6f8ebe2d1b140506b7d24de889f0170d06b7830aa171641b54b38b9cb"
+    },
+    "checksArchive": {
+      "file": "checks-848f9ca.tar.gz",
+      "sha256": "192dbf2207826f69d89722cc15f407669110998891b59133766e1f49a2e4272f",
+      "members": [
+        "interception-checks.log",
+        "focused-tests.log",
+        "baseline-url-test.log",
+        "focused-checks-final.log",
+        "focused-checks-final.command.json",
+        "static.log",
+        "preloads-check.log",
+        "styles-check.log"
+      ]
+    }
+  },
+  "acceptanceStillRequired": {
+    "platform": "Mac",
+    "gate": "scripts/verify-ui-renewal-p1-browser.mjs",
+    "singleCleanRun": true,
+    "layouts": 28,
+    "navigationActivations": 56,
+    "chartReturns": 8,
+    "qualifiesP1Verification": true
+  }
+}
