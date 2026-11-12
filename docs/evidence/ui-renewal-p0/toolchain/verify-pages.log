@@ -1,0 +1,30 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.36.1 verify:pages
+> npm run verify:domain && npm run verify:skullet && node scripts/build-pages.mjs --check
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.36.1 verify:domain
+> node scripts/sync-market-domain.mjs --check
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.36.1 verify:skullet
+> node scripts/sync-skullet.mjs --check
+
+node:internal/fs/promises:1345
+  return new FileHandle(await PromisePrototypeThen(
+                        ^
+
+Error: ENOENT: no such file or directory, open '/workspace/scratch/577747000761/bitcoin-cycle-atlas/node_modules/skullet/package.json'
+    at async open (node:internal/fs/promises:1345:25)
+    at async readFile (node:internal/fs/promises:2003:14)
+    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/sync-skullet.mjs:9:22 {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/workspace/scratch/577747000761/bitcoin-cycle-atlas/node_modules/skullet/package.json'
+}
+
+Node.js v24.22.1

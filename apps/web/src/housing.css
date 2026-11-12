@@ -1,4 +1,4 @@
-.housing-workbench{--housing-price:var(--accent);--housing-above:var(--green);--housing-below:var(--red);--housing-neutral:var(--muted);color:var(--text);background:var(--bg);min-width:0;font-size:12px;padding:0 0 16px}
+.housing-workbench{--housing-price:var(--data-gold);--housing-above:var(--green);--housing-below:var(--red);--housing-neutral:var(--muted);color:var(--text);background:var(--bg);min-width:0;font-size:12px;padding:0 0 16px}
 .housing-workbench :is(button,select,input){font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:3px;min-height:32px;padding:4px 8px}
 .housing-workbench button{cursor:pointer}.housing-workbench :is(button,select,input,summary,svg,.housing-table-scroll):focus-visible{outline:2px solid var(--focus);outline-offset:-2px}.housing-workbench button:hover{background:var(--surface-hover)}
 .housing-toolbar{display:flex;align-items:end;gap:8px;flex-wrap:wrap;padding:8px 12px;border-bottom:1px solid var(--border)}.housing-toolbar label{display:grid;gap:4px;color:var(--muted)}.housing-toolbar select{min-width:80px}.housing-toolbar>button:first-of-type{margin-left:auto}

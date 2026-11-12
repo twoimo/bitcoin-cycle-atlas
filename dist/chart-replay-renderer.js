@@ -106,14 +106,14 @@ function drawObservedViewport({svg,rows,candles,start,end,frequency,scale,domain
   let markup=`<title>${escape(symbol)} · 봉 리플레이</title><desc>현재 공개된 실제 관측 가격과 축입니다. 빈 날짜는 채우지 않습니다.</desc><defs><clipPath id="${clipId}"><rect x="${left}" y="${top}" width="${Math.max(0,right-left)}" height="${Math.max(0,bottom-top)}"/></clipPath></defs>`;
   for(const tick of axis.ticks){
     const y=axis.y(tick),label=labels.tick(tick);
-    markup+=`<line class="replay-price-grid" x1="${left}" x2="${right}" y1="${y}" y2="${y}" stroke="var(--border,#26323e)"/><text x="${right+axisText.inset}" y="${y+4}" ${axisText.attributes(label)} fill="var(--muted)" font-size="${axisText.fontSize}">${escape(label)}</text>`;
+    markup+=`<line class="replay-price-grid" x1="${left}" x2="${right}" y1="${y}" y2="${y}" stroke="var(--border)"/><text x="${right+axisText.inset}" y="${y+4}" ${axisText.attributes(label)} fill="var(--muted)" font-size="${axisText.fontSize}">${escape(label)}</text>`;
   }
   const tickCount=Math.max(2,Math.min(8,Math.floor(Math.max(1,right-left)/90)+1));
   const dates=new Set(Array.from({length:tickCount},(_,index)=>fromDay(Math.round(first+(utcDay(end)-first)*index/(tickCount-1)))));
   let dateIndex=0;
   for(const date of dates){
     const at=x(date),label=span>1095?date.slice(0,7):span>365?date.slice(2,7):date.slice(5);
-    markup+=`<line class="replay-time-grid" x1="${at}" x2="${at}" y1="${top}" y2="${bottom}" stroke="var(--border,#26323e)"/><text class="replay-time-label" x="${at}" y="${layout.axisY}" text-anchor="${dateIndex===0?'start':dateIndex===dates.size-1?'end':'middle'}" fill="var(--muted)" font-size="11">${label}</text>`;dateIndex++;
+    markup+=`<line class="replay-time-grid" x1="${at}" x2="${at}" y1="${top}" y2="${bottom}" stroke="var(--border)"/><text class="replay-time-label" x="${at}" y="${layout.axisY}" text-anchor="${dateIndex===0?'start':dateIndex===dates.size-1?'end':'middle'}" fill="var(--muted)" font-size="11">${label}</text>`;dateIndex++;
   }
   markup+=`<g class="replay-observed-series" clip-path="url(#${clipId})">`;
   const runs=continuousRuns(lineRows).map(run=>pixelExtrema(run,x));

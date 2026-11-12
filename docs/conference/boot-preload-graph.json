@@ -16,10 +16,14 @@
     {
       "url": "./site-entry.js?v=1.37.8",
       "file": "site-entry.js",
-      "bytes": 1775,
-      "sha256": "9d384923ce3d16cf8d9a5dad24eb342ece823563ddcda5e9ab442d3ee91baaf8",
+      "bytes": 1832,
+      "sha256": "2a3d474c69079e742e4890bb0522633009c11e2c989a5315c88ed37e0ea0ce75",
       "depth": 0,
       "imports": [
+        {
+          "specifier": "./ui/theme.js",
+          "url": "./ui/theme.js"
+        },
         {
           "specifier": "./loading-surfaces.js",
           "url": "./loading-surfaces.js"
@@ -49,8 +53,8 @@
     {
       "url": "./app.js?v=1.37.8",
       "file": "app.js",
-      "bytes": 55926,
-      "sha256": "a3f543eae01f9bc945f2e3234a170007a5de68176d62a6f1b87c8fa707a8d04f",
+      "bytes": 55958,
+      "sha256": "62ec52842f6ec6b61c99437b99824df0fedba43037712056f00e1ffd1eee823a",
       "depth": 0,
       "imports": [
         {
@@ -143,6 +147,14 @@
           "url": "./conference/timeline.js"
         }
       ]
+    },
+    {
+      "url": "./ui/theme.js",
+      "file": "ui/theme.js",
+      "bytes": 6140,
+      "sha256": "59f678846f2c1ce322f2f37cb7c8c7378d7b3d67cae30b35677d3468bf79e810",
+      "depth": 1,
+      "imports": []
     },
     {
       "url": "./loading-surfaces.js",
@@ -364,8 +376,8 @@
     {
       "url": "./forecast-view.js?v=1.29.0",
       "file": "forecast-view.js",
-      "bytes": 35888,
-      "sha256": "5cf9fc72e9e7f8a5f811aa434e27526e83b33e19d99621af8c120b3139a560d8",
+      "bytes": 35911,
+      "sha256": "dbf2ce842de77d64fe65007a80c4c478df66678e64dfb04a82b643476a35bd3f",
       "depth": 1,
       "imports": [
         {
@@ -725,8 +737,8 @@
     {
       "url": "./price-axis.js",
       "file": "price-axis.js",
-      "bytes": 16572,
-      "sha256": "3a06f852424066a412d2709a3dd0a9227f670a9345ed2ac8179cc0d8d387fb4b",
+      "bytes": 16555,
+      "sha256": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2",
       "depth": 4,
       "imports": []
     },
@@ -791,8 +803,8 @@
     {
       "url": "./price-axis.js?v=1.29.0",
       "file": "price-axis.js",
-      "bytes": 16572,
-      "sha256": "3a06f852424066a412d2709a3dd0a9227f670a9345ed2ac8179cc0d8d387fb4b",
+      "bytes": 16555,
+      "sha256": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2",
       "depth": 6,
       "imports": []
     },
@@ -819,6 +831,7 @@
     "./conference/timeline.js",
     "./app.js?v=1.37.8",
     "./conference/player.js?v=1.0.0",
+    "./ui/theme.js",
     "./loading-surfaces.js",
     "./atlas-shell.js?v=1.36.1",
     "./atlas-navigation.js?v=1.36.1",
@@ -872,12 +885,12 @@
     "./price-display.js?v=1.29.0"
   ],
   "summary": {
-    "moduleUrls": 55,
-    "uniqueModuleFiles": 53,
-    "conferenceModulePreloads": 54,
+    "moduleUrls": 56,
+    "uniqueModuleFiles": 54,
+    "conferenceModulePreloads": 55,
     "sharedModulePreloads": 1,
-    "staticImportEdges": 81,
+    "staticImportEdges": 82,
     "maxShortestImportDepth": 6,
-    "moduleBytesByUrl": 756926
+    "moduleBytesByUrl": 763144
   }
 }

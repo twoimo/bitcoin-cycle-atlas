@@ -12,7 +12,7 @@ test('RSI legend follows real indicator toggles and preserves crossings versus e
   const options={symbol:'TQQQ',unit:'USD',prices,bars,rows,view};
   let document=parse(instrumentChartLegendMarkup(options));
   assert.deepEqual(labels(document),['실제 가격','RSI14','SMA9','29.5 / 33.5 / 40 / 43','Buy / Sell']);
-  assert.equal(document.querySelector('.instrument-legend-price path').getAttribute('stroke'),'var(--accent)');
+  assert.equal(document.querySelector('.instrument-legend-price path').getAttribute('stroke'),'var(--data-gold)');
   assert.match(document.querySelectorAll('.instrument-legend-indicator')[3].title,/시뮬레이션의 체결과 구분/);
   document=parse(instrumentChartLegendMarkup({...options,view:{...view,showRsi:false,showCrossings:false,showVolume:true,chartType:'candles'}}));
   assert.deepEqual(labels(document),['관측 캔들','거래량']);assert.equal(document.querySelectorAll('.instrument-legend-price rect').length,2);

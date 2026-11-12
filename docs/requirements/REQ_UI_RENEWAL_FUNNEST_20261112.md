@@ -1,6 +1,6 @@
 # 요구사항 — Funnest Charts UI/UX로 전면 리뉴얼 (초안)
 
-작성 2026-11-12. 상태: **요구사항 정리 완료·구현 전**. 대상 `twoimo/bitcoin-cycle-atlas`.
+작성 2026-11-12. 상태: **요구사항 정리 완료·P0 구현 후보, 수용 미완료**. `R19P0-c8b06c5`의 [구현·미충족 근거](../evidence/ui-renewal-p0/README.md). 대상 `twoimo/bitcoin-cycle-atlas`.
 참조 저장소: `funnest-xyz/funnest-charts` (Apache-2.0, `main` @ `39cb29ae250448d520384c12de555b1c00727883`, 2026-11-12). 홈페이지 `https://charts.funnest.xyz`.
 방법: 저장소 소스(`apps/site/app/globals.css`, README)와 실제 홈페이지(1440×900)를 함께 읽고, `ui-ux-pro-max`로 방향을 대조했다. 참조 스크린샷은 `docs/evidence/funnest-ui-20261112/home-1440.png`.
 

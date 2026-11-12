@@ -52,7 +52,7 @@ body[data-instrument-workbench=true] #ml-panel {
   cursor: inherit;
   touch-action: inherit;
 }
-.instrument-workbench .rsi-price-text { fill: var(--on-accent); }
+.instrument-workbench .rsi-price-text { fill: var(--on-data-gold); }
 .instrument-workbench .rsi-date-text { fill: var(--text); }
 .instrument-volume-label {
   paint-order: stroke;

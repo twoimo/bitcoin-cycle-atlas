@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {readP0RootTokens,resolveP0Token} from '../scripts/ui-renewal-p0-contract.mjs';
 
 // Launch-cleanup guards for the shell chrome owned by dist/atlas-shell.css and
 // dist/styles.css. These assert the flat research-workbench direction: rules
@@ -58,7 +59,10 @@ test('the outer dashboard header stays one compact row', () => {
 
 test('page-context chrome keeps its compact size while prose keeps a reading size', () => {
   assert.match(shell, /\.atlas-page-description\{margin:0;color:var\(--muted\);font:11px\/14px var\(--font\)/);
-  assert.match(base, /p:not\(\.atlas-page-description\)\{\n {2}font-size:max\(12px,1em\);line-height:1\.6;/);
+  assert.match(base, /p:not\(\.atlas-page-description\)\{\n {2}font-size:var\(--copy-size\);line-height:1\.6;/);
+  const tokens = readP0RootTokens(base);
+  assert.equal(tokens.get('--copy-size'), 'var(--body-size)');
+  assert.deepEqual(['--type-body-sm','--type-body-md','--type-body-lg'].map(name => tokens.get(name)), ['15px','16px','17px']);
 });
 
 test('no decorative gradients, blur or large shadows enter the shell', () => {
@@ -77,11 +81,15 @@ test('the data heading keeps its dark opaque sticky surface', () => {
   const heading = rule(shell, 'body[data-shell=dashboard] #data-view .daily-heading');
   assert.doesNotMatch(heading, /background:(?:transparent|none)/, 'the data heading may not become transparent');
   assert.match(heading, /background:var\(--surface\)/, 'the heading paints the canvas surface token');
-  const tokens = readFileSync(new URL('../dist/editorial-system.css', import.meta.url), 'utf8');
-  const surface = tokens.match(/--surface:\s*#([0-9a-fA-F]{6})/);
-  assert.ok(surface, '--surface stays an explicit hex token');
-  const channels = surface[1].match(/../g).map(pair => parseInt(pair, 16));
-  assert.ok(channels.every(value => value < 90), `--surface must stay dark, got ${surface[1]}`);
+  const editorial = readFileSync(new URL('../dist/editorial-system.css', import.meta.url), 'utf8');
+  const paintedHeading = rule(editorial, 'body[data-shell=dashboard] #data-view .daily-heading');
+  assert.match(paintedHeading, /background:var\(--ledger-sticky-bg\)/);
+  const tokens = readP0RootTokens(base);
+  for (const theme of ['light','dark']) {
+    const [red,green,blue,alpha] = resolveP0Token(tokens,'--ledger-sticky-bg',theme).color;
+    assert.equal(alpha,1, `${theme}: the sticky header must remain opaque`);
+    assert.ok([red,green,blue].every(value => value < 90), `${theme}: the sticky header remains dark`);
+  }
 });
 
 test('the requested phone perimeter is one bottom dock with 44px controls', () => {

@@ -23,12 +23,12 @@ export function renderEmptyPriceViewport({svg,layout,axisText=null,width:W,heigh
   const dateCoordinate=value=>typeof value==='number'?seconds?value:value/86400:seconds?Date.parse(value)/1000:value.length>10?Date.parse(value)/86400000:utcDay(value);
   const a=dateCoordinate(start),b=dateCoordinate(end),x=({date})=>L+(dateCoordinate(date)-a)/Math.max(1,b-a)*(W-L-R),clip=`${svg.id}-empty-price`;
   let markup=`<title>자료가 없는 표시 범위 · UTC</title><desc>조회하거나 관측하지 않은 봉과 미래 가격을 만들어 채우지 않습니다. 빈 영역에서도 시간축과 가격축을 이동할 수 있습니다.</desc><defs><clipPath id="${clip}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${B-T}"/></clipPath></defs>`;
-  for(const value of axis.ticks){const yy=axis.y(value),label=axisLabels.tick(value);markup+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="#26323e"/><text x="${W-R+axisText.inset}" y="${yy+4}" ${axisText.attributes(label)} fill="#acbacb" font-size="${axisText.fontSize}">${esc(label)}</text>`;}
+  for(const value of axis.ticks){const yy=axis.y(value),label=axisLabels.tick(value);markup+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="var(--grid)"/><text x="${W-R+axisText.inset}" y="${yy+4}" ${axisText.attributes(label)} fill="var(--chart-axis-ink)" font-size="${axisText.fontSize}">${esc(label)}</text>`;}
   for(let index=0;index<4;index++){
     const fraction=index/3,coordinate=a+(b-a)*fraction,xx=L+fraction*(W-L-R),date=new Date(coordinate*(seconds?1000:86400000)).toISOString(),label=seconds?date.slice(0,16).replace('T',' '):date.slice(0,10);
-    markup+=`<line x1="${xx}" x2="${xx}" y1="${T}" y2="${bottom}" stroke="#212c37"/><text x="${xx}" y="${axisY}" text-anchor="${index===0?'start':index===3?'end':'middle'}" fill="#aebaca" font-size="9">${label}</text>`;
+    markup+=`<line x1="${xx}" x2="${xx}" y1="${T}" y2="${bottom}" stroke="var(--grid)"/><text x="${xx}" y="${axisY}" text-anchor="${index===0?'start':index===3?'end':'middle'}" fill="var(--chart-axis-ink)" font-size="9">${label}</text>`;
   }
-  markup+=`<text class="chart-empty-message" x="${L+(W-L-R)/2}" y="${T+(B-T)/2}" text-anchor="middle" fill="#9eb2ca" font-size="11"><tspan x="${L+(W-L-R)/2}">${esc(message)}</tspan><tspan x="${L+(W-L-R)/2}" dy="18">빈 영역 · 드래그로 이동하거나 기본 범위로 복원</tspan></text>`;
+  markup+=`<text class="chart-empty-message" x="${L+(W-L-R)/2}" y="${T+(B-T)/2}" text-anchor="middle" fill="var(--muted)" font-size="11"><tspan x="${L+(W-L-R)/2}">${esc(message)}</tspan><tspan x="${L+(W-L-R)/2}" dy="18">빈 영역 · 드래그로 이동하거나 기본 범위로 복원</tspan></text>`;
   const annotations=researchAnnotationsMarkup({annotations:researchAnnotations,start,end,x,y:axis.y,left:L,right:W-R,top:T,bottom:B,clipId:clip,activeId:activeResearchAnnotationId,scenarioId});
   markup+=annotations.markup+priceAxisMarkup({left:W-R,right:W,top:T,bottom:B,surfaceBottom:H})+timeAxisMarkup({left:L,right:W-R,top:bottom+8,bottom:H});
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);

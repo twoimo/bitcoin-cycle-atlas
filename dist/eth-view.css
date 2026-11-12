@@ -37,7 +37,7 @@ body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface
 .eth-ohlc-details>summary::-webkit-details-marker{display:none}
 .eth-ohlc-details>summary::before{content:"";position:absolute;inset:-13px -6px}
 .eth-ohlc-details>summary:focus-visible{outline:2px solid var(--eth-view-rule);outline-offset:2px}
-.eth-ohlc{position:absolute;top:calc(100% + 5px);left:0;display:flex;gap:14px;padding:5px 8px;background:var(--atlas-surface);border:1px solid var(--eth-view-rule-3);border-radius:2px;font-size:11px;color:var(--eth-view-ink-13);z-index:3;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+.eth-ohlc{position:absolute;top:calc(100% + 5px);left:0;display:flex;gap:14px;padding:5px 8px;background:var(--atlas-surface);border:1px solid var(--eth-view-rule-3);border-radius:2px;font-size:11px;color:var(--eth-view-ink-13);z-index:3;box-shadow:0 4px 12px var(--shadow-color)}
 .eth-ohlc-details:not([open])>.eth-ohlc{display:none}
 .eth-ohlc i{font-style:normal;color:var(--eth-view-ink-14);margin-right:2px}
 .eth-empty{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:var(--atlas-surface);color:var(--eth-view-ink-15);font-size:12px}
@@ -110,7 +110,7 @@ body[data-shell=chart] .native-chart-workbench .workbench-update :is(#eth-status
 .native-reader-action{display:block;box-sizing:border-box;width:100%;min-height:36px;margin:4px 0;padding:8px 12px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font:12px var(--font);text-align:left;text-decoration:none;cursor:pointer}
 .native-reader-action:hover{background:var(--surface-hover)}
 .native-command-search,.native-date-form>label{display:flex;flex-direction:column;gap:8px;margin:8px 0;font-size:12px;color:var(--muted)}
-.native-command-search input,.native-date-form :is(input,select){box-sizing:border-box;min-width:0;width:100%;min-height:36px;padding:8px;border:1px solid var(--border-strong);border-radius:4px;color:var(--text);background:var(--surface);font:12px var(--font);color-scheme:dark}
+.native-command-search input,.native-date-form :is(input,select){box-sizing:border-box;min-width:0;width:100%;min-height:36px;padding:8px;border:1px solid var(--border-strong);border-radius:4px;color:var(--text);background:var(--surface);font:12px var(--font);color-scheme:inherit}
 .native-chart-dialog{display:none;overflow:hidden;padding:16px;box-sizing:border-box;width:min(640px,calc(100% - 24px));max-height:calc(100dvh - 24px);background:var(--surface);color:var(--text)}
 .native-chart-dialog[open]{display:flex;flex-direction:column;gap:12px}
 .native-chart-dialog>header{flex:none;margin:0}.native-chart-dialog>.native-dialog-body{min-height:0;overflow:auto;overscroll-behavior:contain}

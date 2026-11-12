@@ -19,9 +19,9 @@ function colors() {
   const computed = getComputedStyle(document.documentElement);
   const read = (name, fallback) => computed.getPropertyValue(name).trim() || fallback;
   return {
-    background: read('--surface', '#12161d'), text: read('--text', '#f2f4f7'),
-    muted: read('--muted', '#8e98a8'), grid: read('--grid', '#242b35'),
-    gold: read('--accent', '#f2a84b'), future: '#70c7d7',
+    background: read('--surface', 'var(--surface)'), text: read('--text', 'var(--text)'),
+    muted: read('--muted', 'var(--muted)'), grid: read('--grid', 'var(--grid)'),
+    gold: read('--data-gold', '#d8b56d'), future: '#70c7d7',
     peak: '#d9a0c0', trough: '#71c6a6',
   };
 }

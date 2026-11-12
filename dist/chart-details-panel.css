@@ -11,7 +11,7 @@
 .chart-details-panel :focus-visible{outline:2px solid var(--focus,var(--chart-details-panel-rule-2));outline-offset:2px}
 .chart-detail-actions{display:flex;align-items:center;flex:none;gap:4px;height:32px;max-height:36px;min-width:0;margin:0;padding:0 0 4px;box-sizing:border-box;border-bottom:1px solid var(--chart-details-panel-rule-3)}
 .chart-detail-actions .atlas-date-input{display:block;margin:0 auto 0 0;min-width:0}
-.chart-detail-actions input{box-sizing:border-box;width:124px;max-width:124px;min-width:0;height:27px;padding:4px 2px;border:0;border-radius:3px;background:transparent;color:var(--chart-details-panel-ink-4);color-scheme:dark;font-family:var(--font);font-size:11px}
+.chart-detail-actions input{box-sizing:border-box;width:124px;max-width:124px;min-width:0;height:27px;padding:4px 2px;border:0;border-radius:3px;background:transparent;color:var(--chart-details-panel-ink-4);color-scheme:inherit;font-family:var(--font);font-size:11px}
 .chart-detail-actions button{display:grid;place-items:center;flex:none;width:28px;height:27px;min-width:0;min-height:0;margin:0;padding:4px;border:0;border-radius:3px;background:transparent;color:var(--chart-details-panel-ink-2);font-size:12px}
 .chart-detail-actions button:disabled{opacity:.35;cursor:not-allowed}
 .chart-details-panel .reader-body{flex:1;min-width:0;min-height:0;overflow:hidden;overflow-wrap:anywhere;font-size:12px;line-height:1.65}
@@ -55,7 +55,7 @@
 
 
 /* Five fixed regions: chart controls, tools, canvas, details, time/scale controls. */
-:root{--sidebar-width:44px;--rail-width:38px;--viewport-gap:0px;--chrome:#11161f;--chrome-border:#2a3240;--chrome-active:#8ebdff}
+:root{--sidebar-width:44px;--rail-width:38px;--viewport-gap:0px}
 .atlas-sidebar{width:var(--sidebar-width);padding:2px 4px;gap:0;background:var(--chrome);border-color:var(--chrome-border)}
 .atlas-brand{width:36px;height:38px;margin:0;flex:none;border-radius:3px}
 .atlas-brand>span{font-size:23px}

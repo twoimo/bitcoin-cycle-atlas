@@ -107,7 +107,7 @@ body:not([data-rsi-workbench=true]) main:not([data-loading-kind=rsi]) #market-vi
   border-color: var(--ui-primary);
   border-radius: 3px;
   background: var(--ui-primary);
-  color: var(--on-ui-primary, #fff);
+  color: var(--on-ui-primary);
   font-weight: 500;
 }
 #market-view .ml-primary:hover:not(:disabled) {
@@ -159,7 +159,7 @@ body:not([data-rsi-workbench=true]) main:not([data-loading-kind=rsi]) #market-vi
   white-space: normal;
 }
 #market-view .ml-warn {
-  border-left-color: var(--accent);
+  border-left-color: var(--accent-ink);
 }
 #market-view .ml-empty-copy {
   padding: 16px 0;
@@ -397,7 +397,7 @@ body:not([data-rsi-workbench=true]) main:not([data-loading-kind=rsi]) #market-vi
   min-height: 36px;
   border-color: var(--ui-primary);
   background: var(--ui-primary);
-  color: var(--on-ui-primary, #fff);
+  color: var(--on-ui-primary);
 }
 .rsi-backtest-form > button:hover:not(:disabled) {
   border-color: var(--ui-primary-hover, var(--ui-primary));

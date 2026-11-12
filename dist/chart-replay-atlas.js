@@ -178,7 +178,7 @@ export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line
   const boundary=(date,name,label,color)=>{if(date<start||date>end)return;const line=svgNode(svg,'line',{x1:x(date),x2:x(date),y1:axis.top,y2:axis.bottom,[name]:'true',stroke:color,'stroke-width':1,'stroke-dasharray':'3 5'});line.append(svgNode(svg,'title',{},label+' '+date));overlay.append(line);};
   if(!selectionPreview){
     boundary(origin,'data-replay-origin-boundary','봉 리플레이 시작 기준일','var(--muted)');
-    if(context.forecastOrigin!==origin)boundary(context.forecastOrigin,'data-replay-forecast-origin','현재 고정 가정의 입력 기준일','var(--accent)');
+    if(context.forecastOrigin!==origin)boundary(context.forecastOrigin,'data-replay-forecast-origin','현재 고정 가정의 입력 기준일','var(--data-gold)');
     boundary(cursorDate,'data-replay-cursor-line','실제 가격 공개일','var(--text)');
   }
   svg.append(overlay);

@@ -1,6 +1,6 @@
 .chart-replay-trigger{display:inline-flex;align-items:center;justify-content:center;flex:none;gap:4px;min-height:32px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font:600 12px var(--font,sans-serif);white-space:nowrap;cursor:pointer}
-.chart-replay-trigger[aria-pressed=true]{border-color:var(--accent);color:var(--accent)}
-.chart-replay-active{--replay-forecast:var(--accent);--replay-actual:var(--text);--replay-up:var(--green);--replay-down:var(--red);position:relative!important;overflow:hidden!important}
+.chart-replay-trigger[aria-pressed=true]{border-color:var(--accent-ink);color:var(--accent-ink)}
+.chart-replay-active{--replay-forecast:var(--data-gold);--replay-actual:var(--text);--replay-up:var(--green);--replay-down:var(--red);position:relative!important;overflow:hidden!important}
 .chart-replay-active>svg{height:100%!important;min-height:0!important;touch-action:none;cursor:crosshair}
 .chart-replay-active>:not(svg):not(.chart-replay-controls):not(.chart-replay-hud):not(.chart-replay-notice){display:none!important}
 .chart-replay-hud{position:absolute;top:8px;left:12px;right:84px;z-index:7;pointer-events:none;color:var(--text);font:12px var(--font,sans-serif)}
@@ -30,7 +30,7 @@
 .chart-replay-actions [data-cr=select-menu]{padding-inline:8px}
 .chart-replay-actions [data-cr=mode-badge]{display:block;max-width:calc(100% - 4px);overflow:hidden;text-overflow:ellipsis}
 .chart-replay-actions [data-cr=select-menu][aria-expanded=true],.chart-replay-actions [data-cr=pick][aria-pressed=true]{background:var(--surface-hover);color:var(--focus)}
-.chart-replay-actions [data-cr=play]{color:var(--accent);min-width:max(36px,var(--replay-control-size));font-weight:700}
+.chart-replay-actions [data-cr=play]{color:var(--accent-ink);min-width:max(36px,var(--replay-control-size));font-weight:700}
 .chart-replay-actions [data-cr=speed]{width:60px;font-variant-numeric:tabular-nums}
 .chart-replay-actions [data-cr=update-interval]{width:32px;appearance:none;text-align:center;opacity:1;color:var(--muted);cursor:not-allowed}
 .chart-replay-actions .chart-replay-live-label{display:none}
@@ -77,7 +77,7 @@
 .chart-replay-cadence{margin:8px 0;color:var(--muted);white-space:normal;overflow-wrap:anywhere}
 .chart-replay-progress{display:flex;flex-direction:column;align-items:stretch;gap:8px;min-width:0;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-variant-numeric:tabular-nums;color:var(--muted)}
 .chart-replay-progress output{min-width:0;color:var(--text);white-space:normal;overflow-wrap:anywhere}
-.chart-replay-progress input{width:100%;min-width:0;min-height:24px;margin:0;accent-color:var(--accent);cursor:pointer}
+.chart-replay-progress input{width:100%;min-width:0;min-height:24px;margin:0;accent-color:var(--accent-ink);cursor:pointer}
 .chart-replay-progress span{white-space:normal;overflow-wrap:anywhere}
 .chart-replay-details{position:static;width:auto;max-height:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);line-height:1.7;overflow-wrap:anywhere}
 .chart-replay-details strong{display:block}
@@ -87,9 +87,9 @@
 .chart-replay-choice strong{display:block;font-size:14px}
 .chart-replay-choice p{margin:8px 0;color:var(--muted);white-space:normal;overflow-wrap:anywhere}
 .chart-replay-choice>label{display:flex;align-items:center;gap:8px;margin:12px 0;min-height:var(--replay-control-size);cursor:pointer}
-.chart-replay-choice input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px;margin:0;flex:none}
+.chart-replay-choice input[type=checkbox]{accent-color:var(--accent-ink);width:16px;height:16px;margin:0;flex:none}
 .chart-replay-choice>div{position:sticky;bottom:-16px;display:flex;flex-wrap:wrap;gap:8px;margin:12px -16px -16px;padding:12px 16px;border-top:1px solid var(--border);background:var(--surface-raised)}
-.chart-replay-choice [data-cr=entry-continue],.chart-replay-choice [data-cr=exit-confirm]{border-color:var(--accent);color:var(--accent)}
+.chart-replay-choice [data-cr=entry-continue],.chart-replay-choice [data-cr=exit-confirm]{border-color:var(--accent-ink);color:var(--accent-ink)}
 
 .chart-replay-picker{stroke:var(--focus);stroke-width:2;stroke-dasharray:5 4;pointer-events:none}
 .chart-replay-picker-label{fill:var(--focus);stroke:var(--bg);stroke-width:4;paint-order:stroke;stroke-linejoin:round;font:600 12px var(--font,sans-serif);pointer-events:none}
@@ -133,13 +133,13 @@ html[data-chart-replay-active=true] .eth-interval-buttons,html[data-chart-replay
 @media(prefers-reduced-motion:reduce){.chart-replay-controls *{scroll-behavior:auto}}
 
 /* Actual overflow owns every affordance, for mouse, keyboard and touch alike. */
-.chart-replay-bar[data-scroll-left=true] .chart-replay-actions{mask-image:linear-gradient(to right,transparent,#000 12px)}
-.chart-replay-bar[data-scroll-right=true] .chart-replay-actions{mask-image:linear-gradient(to left,transparent,#000 12px)}
-.chart-replay-bar[data-scroll-left=true][data-scroll-right=true] .chart-replay-actions{mask-image:linear-gradient(to right,transparent,#000 12px,#000 calc(100% - 12px),transparent)}
+.chart-replay-bar[data-scroll-left=true] .chart-replay-actions{mask-image:linear-gradient(to right,transparent,var(--subtle) 12px)}
+.chart-replay-bar[data-scroll-right=true] .chart-replay-actions{mask-image:linear-gradient(to left,transparent,var(--subtle) 12px)}
+.chart-replay-bar[data-scroll-left=true][data-scroll-right=true] .chart-replay-actions{mask-image:linear-gradient(to right,transparent,var(--subtle) 12px,var(--subtle) calc(100% - 12px),transparent)}
 .chart-replay-scroll-hint{position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);max-width:100%;padding:0 4px;background:var(--surface);color:var(--muted);font:11px/1.5 var(--font,sans-serif);white-space:nowrap;pointer-events:none}
 
-:root{--replay-cutoff-ink:#74a7ee;--replay-retrospective-ink:#74a7ee}
-[data-theme="light"]{--replay-cutoff-ink:#315d8f;--replay-retrospective-ink:#315d8f}
+
+
 svg[data-replay-comparison-mode="cutoff-backtest"] [data-replay-forecast-path]{stroke:var(--replay-cutoff-ink)}
 svg[data-replay-comparison-mode="cutoff-backtest"] [data-replay-forecast-band]{fill:var(--replay-cutoff-ink)}
 .chart-replay-series-key{color:var(--muted);font-size:11px}

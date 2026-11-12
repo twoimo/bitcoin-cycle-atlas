@@ -20,7 +20,7 @@
 .atlas-plot>.atlas-quote-hud .quote-hud-source{pointer-events:auto}
 .atlas-plot>.atlas-quote-hud [data-tone=up]{color:var(--green)}
 .atlas-plot>.atlas-quote-hud [data-tone=down]{color:var(--red)}
-.atlas-plot>.atlas-quote-hud[data-quote-state=assumption] :is(.quote-hud-price,.quote-hud-kind){color:var(--accent)}
+.atlas-plot>.atlas-quote-hud[data-quote-state=assumption] :is(.quote-hud-price,.quote-hud-kind){color:var(--data-gold-ink)}
 .atlas-quote-hud .quote-hud-detail,.quote-hud-source-controls>#workbench-market-status{
   position:absolute!important;inset:auto!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;
   overflow:hidden!important;clip-path:inset(50%);white-space:normal!important;border:0!important;

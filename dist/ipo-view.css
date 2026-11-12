@@ -18,7 +18,7 @@
 .ipo-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
 .ipo-table caption { text-align: left; padding: 12px; font-size: 12px; color: var(--text); border-bottom: 1px solid var(--border); }
 .ipo-table caption span { display: block; font-size: 11px; color: var(--muted); margin-top: 4px; }
-.ipo-table caption .ipo-count { display: inline; margin: 0 8px; color: var(--accent); }
+.ipo-table caption .ipo-count { display: inline; margin: 0 8px; color: var(--accent-ink); }
 .ipo-table th { background: var(--surface); text-align: left; font-weight: 600; font-size: 11px; color: var(--muted); padding: 8px 12px; border-bottom: 1px solid var(--border); }
 .ipo-table td { padding: 8px 12px; border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent); vertical-align: top; }
 .ipo-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 7%, transparent); }
@@ -26,7 +26,7 @@
 .ipo-num { font-variant-numeric: tabular-nums; text-align: right; }
 .ipo-num::before { content: ''; }
 .ipo-badge { display: inline-block; padding: 4px 8px; border-radius: 999px; font-size: 11px; white-space: nowrap; }
-.ipo-badge-forecast { background: var(--accent-soft); color: var(--accent); }
+.ipo-badge-forecast { background: var(--accent-soft); color: var(--accent-ink); }
 .ipo-badge-subscribe { background: color-mix(in srgb, var(--green) 12%, var(--surface)); color: var(--green); }
 .ipo-badge-closed { background: var(--surface-raised); color: var(--muted); }
 .ipo-badge-unknown { background: var(--surface-raised); color: var(--muted); }
@@ -71,9 +71,9 @@
 .ipo-month-day.is-outside { background: var(--bg); }
 .ipo-month-day.is-outside .ipo-day-number { color: var(--muted); }
 .ipo-day-number { align-self: flex-start; min-width: 20px; min-height: 20px; font-size: 12px; line-height: 20px; text-align: center; font-variant-numeric: tabular-nums; }
-.ipo-month-day.is-today .ipo-day-number { outline: 1px solid var(--accent); border-radius: 4px; color: var(--accent); font-weight: 600; }
+.ipo-month-day.is-today .ipo-day-number { outline: 1px solid var(--accent); border-radius: 4px; color: var(--accent-ink); font-weight: 600; }
 .ipo-day-events { display: flex; flex-direction: column; gap: 4px; min-height: 0; }
-.ipo-cal-event { display: flex; align-items: baseline; gap: 4px; min-width: 0; font-size: 11px; line-height: 1.4; color: var(--accent); }
+.ipo-cal-event { display: flex; align-items: baseline; gap: 4px; min-width: 0; font-size: 11px; line-height: 1.4; color: var(--accent-ink); }
 .ipo-cal-event[data-kind=subscription], .ipo-cal-kind[data-kind=subscription] { color: var(--green); }
 .ipo-cal-event > span { flex: none; font-size: 10px; }
 .ipo-cal-event strong { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
@@ -89,7 +89,7 @@
 .ipo-date-event { padding: 12px 0; border-bottom: 1px solid var(--border); }
 .ipo-date-event h3 { font-size: 16px; font-weight: 600; margin: 4px 0; text-wrap: balance; }
 .ipo-date-event p, .ipo-day-dialog > p { color: var(--muted); font-size: 12px; line-height: 1.6; }
-.ipo-cal-kind { font-size: 12px; color: var(--accent); }
+.ipo-cal-kind { font-size: 12px; color: var(--accent-ink); }
 @media (max-width: 760px) {
   #ipo-view { padding: 8px 12px 12px; gap: 8px; }
   .ipo-back { min-height: 44px; }
@@ -149,7 +149,7 @@ body #ipo-view .ipo-month-controls { gap:8px; }
 body #ipo-view .ipo-month-controls button { width:36px; padding:0; font-size:24px; line-height:1; }
 body #ipo-view .ipo-page-label { min-width:148px; color:var(--text); font-size:18px; font-weight:600; }
 body #ipo-view .ipo-month-summary { margin-right:8px; color:var(--muted); font-size:11px; white-space:nowrap; }
-body #ipo-view .ipo-calendar-jumps button[aria-pressed=true] { color:var(--accent); border-color:var(--accent); }
+body #ipo-view .ipo-calendar-jumps button[aria-pressed=true] { color:var(--accent-ink); border-color:var(--accent-ink); }
 body #ipo-view .ipo-month-page { grid-template-rows:24px minmax(0,1fr); gap:4px; padding:0; }
 body #ipo-view .ipo-month-heading { position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
 body #ipo-view .ipo-source-panel { width:min(440px,100%); }

@@ -152,7 +152,7 @@ export function layoutHistoricalMarkers(anchors,bounds={}){
 
 function historicalLabelMarkup(anchor,box,label,color){
   const edge=labelEdge(anchor,box);
-  return `<path d="M${anchor.x},${anchor.y}L${edge.x},${edge.y}" fill="none" stroke="${color}" stroke-width=".8" opacity=".7"/><rect x="${box.x}" y="${box.y}" width="${box.width}" height="${box.height}" rx="4" fill="#142131" fill-opacity=".96" stroke="${color}" stroke-opacity=".65"/><text x="${box.x+box.width/2}" y="${box.y+15}" text-anchor="middle" fill="${color}" font-size="10">${esc(label)}</text>`;
+  return `<path d="M${anchor.x},${anchor.y}L${edge.x},${edge.y}" fill="none" stroke="${color}" stroke-width=".8" opacity=".7"/><rect x="${box.x}" y="${box.y}" width="${box.width}" height="${box.height}" rx="4" fill="var(--surface-raised)" fill-opacity=".96" stroke="${color}" stroke-opacity=".65"/><text x="${box.x+box.width/2}" y="${box.y+15}" text-anchor="middle" fill="${color}" font-size="10">${esc(label)}</text>`;
 }
 
 export function historicalMarkersMarkup(anchors,bounds={}){
@@ -162,7 +162,7 @@ export function historicalMarkersMarkup(anchors,bounds={}){
     const color=typeof override==='string'&&/^#(?:[\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})$/i.test(override)?override:EVENT_COLORS[event.category]||EVENT_COLORS.market;
     const note=typeof marker.anchorNote==='string'&&marker.anchorNote?` · ${marker.anchorNote}`:'';
     let content=box?historicalLabelMarkup(marker,box,label,color):'<circle cx="'+x+'" cy="'+y+'" r="10" fill="transparent"/>';
-    content+=`<circle cx="${x}" cy="${y}" r="4" fill="#111b27" stroke="${color}" stroke-width="1.5"/>`;
+    content+=`<circle cx="${x}" cy="${y}" r="4" fill="var(--bg)" stroke="${color}" stroke-width="1.5"/>`;
     if(preview)content+=`<g class="history-event-preview" visibility="hidden" pointer-events="none" aria-hidden="true">${historicalLabelMarkup(marker,preview.box,preview.label,color)}</g>`;
     return `<g class="history-event-marker${box?' has-label':''}${active?' is-active':''}" data-history-event="${esc(event.id)}" role="button" tabindex="0" aria-label="${esc(`${event.date} ${event.title} · 사건 원문 보기${note}`)}"><title>${esc(`${event.date} · ${event.title}${note}\n클릭하면 원문과 날짜 근거를 봅니다.`)}</title>${content}</g>`;
   }).join('');
@@ -183,9 +183,9 @@ export function cycleTimingMarkup({points=[],x,left,right,top,bottom,titleY=top-
   }
   const colors={shortened:'#df7c83',aligned:'#65c3a5',lengthened:'#74a7ee',insufficient:'#8290a3'};
   const labels={shortened:'단축 가정',aligned:'기준 범위',lengthened:'연장 가정',insufficient:'근거 부족'};
-  let markup=`<g class="cycle-timing-ribbon" data-indicator-layer="cycle-timing" data-cycle-observed-count="${valid.length}" role="img" aria-label="사이클 시계 · 관측 기반 보정 · 매매 신호 아님"><text x="${left}" y="${titleY}" fill="#a8b9ca" font-size="${titleFontSize}">사이클 시계 · 관측 보정</text>`;
+  let markup=`<g class="cycle-timing-ribbon" data-indicator-layer="cycle-timing" data-cycle-observed-count="${valid.length}" role="img" aria-label="사이클 시계 · 관측 기반 보정 · 매매 신호 아님"><text x="${left}" y="${titleY}" fill="var(--muted)" font-size="${titleFontSize}">사이클 시계 · 관측 보정</text>`;
   for(const segment of segments){const xx=x(segment.start),end=Math.min(observedRight,x(segment.end)+dayWidth),width=Math.max(0,end-xx),color=colors[segment.state]||colors.insufficient;markup+=`<rect x="${xx}" y="${top}" width="${width}" data-indicator-fill height="${Math.max(0,bottom-top)}" fill="${color}" data-cycle-state="${esc(segment.state)}" data-cycle-start="${segment.start.date}" data-cycle-end="${segment.end.date}"><title>${esc(`${segment.start.date}–${segment.end.date} UTC · ${labels[segment.state]||labels.insufficient} · 시계 이동 ${number(segment.low,1)}–${number(segment.high,1)}일. 각 날짜까지 확인된 자료로 계산한 보정이며 매매 신호·확률구간이 아닙니다.`)}</title></rect>`;}
-  if(!valid.length)markup+=`<text x="${left+8}" y="${top+(bottom-top)*.75}" fill="#8290a3" font-size="${Math.min(10,bottom-top)}">이 구간에는 완료된 관측 보정이 없습니다.</text>`;
+  if(!valid.length)markup+=`<text x="${left+8}" y="${top+(bottom-top)*.75}" fill="var(--muted)" font-size="${Math.min(10,bottom-top)}">이 구간에는 완료된 관측 보정이 없습니다.</text>`;
   markup+='</g>';return {markup,count:valid.length,segments};
 }
 
@@ -202,9 +202,9 @@ export function volumePaneMarkup({bars,x,left,right,top,bottom,barWidth=3,source
   const axisFontSize=Math.min(10,Math.max(1,(bottom-top)*.45)),messageY=top+(bottom-top)/2+axisFontSize*.3;
   let ticks=[0,max];
   if(scale==='log'&&bottom-top>=55){const candidates=[0];for(let power=1;10**power<max;power++)candidates.push(10**power);candidates.push(max);const count=Math.min(4,Math.max(2,Math.floor((bottom-top)/24)));ticks=[...new Set(Array.from({length:count},(_,i)=>candidates[Math.round(i*(candidates.length-1)/(count-1))]))];}
-  let markup=`<defs><clipPath id="${esc(clipId)}"><rect x="${left}" y="${top}" width="${right-left}" height="${Math.max(0,bottom-top)}"/></clipPath><pattern id="${esc(clipId)}-scenario" width="7" height="7" patternUnits="userSpaceOnUse"><path d="M0 7L7 0" stroke="#dfb06d" stroke-width=".65" opacity=".22"/></pattern></defs><g class="volume-pane" data-indicator-layer="volume" data-volume-unit="${esc(unit)}" data-volume-clock="${esc(clock)}" data-volume-scale="${scale}" data-volume-observed-count="${usable.length}" data-volume-rendering="${dense?'batched':'individual'}" data-volume-projection-count="${projected.length}"><line x1="${left}" x2="${right}" y1="${separatorY}" y2="${separatorY}" stroke="#2c3949"/><text x="${left}" y="${titleY}" class="volume-pane-title" fill="#9fb2c7" font-size="${titleFontSize}">거래량 · ${esc(unit)} · ${esc(source)}${scale==='log'?' · 로그':''}<title>${scale==='log'?`실제 ${esc(unit)} 수량을 log(1 + 거래량) 축에 표시합니다. 0도 보존합니다.`:`선형 ${esc(unit)} 수량 축입니다.`} 막대는 실제 거래량${projected.length?', 점선과 음영은 조건부 시나리오':''}입니다.</title></text>`;
-  for(const tick of ticks)markup+=`<text data-indicator-axis-label x="${right+7}" y="${Math.max(top+axisFontSize*.5,Math.min(bottom+axisFontSize*.3,y(tick)+axisFontSize*.3))}" fill="#91a5bc" font-size="${axisFontSize}">${high?formatBtcVolume(tick):tick===0?'0':'—'}</text>`;
-  markup+=`<line x1="${left}" x2="${right}" y1="${bottom}" y2="${bottom}" stroke="#2a3645"/><g class="volume-bars" clip-path="url(#${esc(clipId)})">`;
+  let markup=`<defs><clipPath id="${esc(clipId)}"><rect x="${left}" y="${top}" width="${right-left}" height="${Math.max(0,bottom-top)}"/></clipPath><pattern id="${esc(clipId)}-scenario" width="7" height="7" patternUnits="userSpaceOnUse"><path d="M0 7L7 0" stroke="#dfb06d" stroke-width=".65" opacity=".22"/></pattern></defs><g class="volume-pane" data-indicator-layer="volume" data-volume-unit="${esc(unit)}" data-volume-clock="${esc(clock)}" data-volume-scale="${scale}" data-volume-observed-count="${usable.length}" data-volume-rendering="${dense?'batched':'individual'}" data-volume-projection-count="${projected.length}"><line x1="${left}" x2="${right}" y1="${separatorY}" y2="${separatorY}" stroke="var(--grid)"/><text x="${left}" y="${titleY}" class="volume-pane-title" fill="var(--muted)" font-size="${titleFontSize}">거래량 · ${esc(unit)} · ${esc(source)}${scale==='log'?' · 로그':''}<title>${scale==='log'?`실제 ${esc(unit)} 수량을 log(1 + 거래량) 축에 표시합니다. 0도 보존합니다.`:`선형 ${esc(unit)} 수량 축입니다.`} 막대는 실제 거래량${projected.length?', 점선과 음영은 조건부 시나리오':''}입니다.</title></text>`;
+  for(const tick of ticks)markup+=`<text data-indicator-axis-label x="${right+7}" y="${Math.max(top+axisFontSize*.5,Math.min(bottom+axisFontSize*.3,y(tick)+axisFontSize*.3))}" fill="var(--chart-axis-ink)" font-size="${axisFontSize}">${high?formatBtcVolume(tick):tick===0?'0':'—'}</text>`;
+  markup+=`<line x1="${left}" x2="${right}" y1="${bottom}" y2="${bottom}" stroke="var(--grid)"/><g class="volume-bars" clip-path="url(#${esc(clipId)})">`;
   if(dense){
     // Every original rectangle is preserved as a path subshape. This reduces
     // thousands of DOM nodes to two paths without summing or averaging volume.
@@ -225,7 +225,7 @@ export function volumePaneMarkup({bars,x,left,right,top,bottom,barWidth=3,source
     const captionX=Math.max(left+8,Number.isFinite(futureX)?futureX+8:left+8);
     if(right-captionX>185)markup+=`<text class="volume-projection-caption" x="${captionX}" y="${top+axisFontSize+2}" fill="#d1ae79" font-size="${axisFontSize}">${esc(projectionLabel)}</text>`;
   }
-  if(!usable.length&&!projected.length)markup+=`<text x="${left+12}" y="${messageY}" fill="#7e94ac" font-size="${axisFontSize}">이 구간에는 검증된 거래량 자료가 없습니다.</text>`;
+  if(!usable.length&&!projected.length)markup+=`<text x="${left+12}" y="${messageY}" fill="var(--muted)" font-size="${axisFontSize}">이 구간에는 검증된 거래량 자료가 없습니다.</text>`;
   markup+='</g>';
   return {markup,count:usable.length,projectedCount:projected.length,rendering:dense?'batched':'individual',scale,max,y};
 }

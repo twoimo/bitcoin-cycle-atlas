@@ -1,0 +1,915 @@
+TAP version 13
+# Subtest: the initial HTML provides a visible loading status while unfinished controls stay inert
+ok 1 - the initial HTML provides a visible loading status while unfinished controls stay inert
+  ---
+  duration_ms: 24.091804
+  type: 'test'
+  ...
+# Subtest: render readiness releases the real workspace once and later errors cannot resurrect the skeleton
+ok 2 - render readiness releases the real workspace once and later errors cannot resurrect the skeleton
+  ---
+  duration_ms: 7.724956
+  type: 'test'
+  ...
+# Subtest: startup failures expose accessible recovery and a late ready event cannot reveal a broken page
+ok 3 - startup failures expose accessible recovery and a late ready event cannot reveal a broken page
+  ---
+  duration_ms: 33.822262
+  type: 'test'
+  ...
+# Subtest: a silent startup stalls for at most 20 seconds and exposes a working retry without releasing old content
+ok 4 - a silent startup stalls for at most 20 seconds and exposes a working retry without releasing old content
+  ---
+  duration_ms: 12.434409
+  type: 'test'
+  ...
+# Subtest: successful and failed startup both cancel the fallback deadline
+ok 5 - successful and failed startup both cancel the fallback deadline
+  ---
+  duration_ms: 7.343194
+  type: 'test'
+  ...
+# Subtest: optional resource failures do not abort boot while script and stylesheet failures do
+ok 6 - optional resource failures do not abort boot while script and stylesheet failures do
+  ---
+  duration_ms: 46.921915
+  type: 'test'
+  ...
+# Subtest: stylesheet failure during head parsing reaches recovery while early icon failure remains optional
+ok 7 - stylesheet failure during head parsing reaches recovery while early icon failure remains optional
+  ---
+  duration_ms: 18.392942
+  type: 'test'
+  ...
+# Subtest: optional webfonts cannot hold essential CSS or page boot behind a network request
+ok 8 - optional webfonts cannot hold essential CSS or page boot behind a network request
+  ---
+  duration_ms: 18.010225
+  type: 'test'
+  ...
+# Subtest: page=compare resolves to the compare view with and without the legacy alias
+ok 9 - page=compare resolves to the compare view with and without the legacy alias
+  ---
+  duration_ms: 9.066455
+  type: 'test'
+  ...
+# Subtest: the compare route keeps the price frame and replaces only its center
+ok 10 - the compare route keeps the price frame and replaces only its center
+  ---
+  duration_ms: 0.327955
+  type: 'test'
+  ...
+# Subtest: compare owns the chart shell and the single page heading
+ok 11 - compare owns the chart shell and the single page heading
+  ---
+  duration_ms: 0.536651
+  type: 'test'
+  ...
+# Subtest: the compare center hides price content without touching its own markup
+ok 12 - the compare center hides price content without touching its own markup
+  ---
+  duration_ms: 0.43736
+  type: 'test'
+  ...
+# Subtest: the compare toolbar is cached, moved and restored as the same node
+ok 13 - the compare toolbar is cached, moved and restored as the same node
+  ---
+  duration_ms: 0.587958
+  type: 'test'
+  ...
+# Subtest: price-only frame controls are locked with a reason and released by their own prior state
+ok 14 - price-only frame controls are locked with a reason and released by their own prior state
+  ---
+  duration_ms: 0.39729
+  type: 'test'
+  ...
+# Subtest: price-only controls leave the compare top row instead of staying inert
+ok 15 - price-only controls leave the compare top row instead of staying inert
+  ---
+  duration_ms: 0.443189
+  type: 'test'
+  ...
+# node:internal/modules/package_json_reader:331
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'linkedom' imported from /workspace/scratch/577747000761/bitcoin-cycle-atlas/tests/instrument-chart-legend.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+#     at packageResolve (node:internal/modules/esm/resolve:784:25)
+#     at moduleResolve (node:internal/modules/esm/resolve:873:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+#     at \#resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+#     at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+#     at \#resolve (node:internal/modules/esm/loader:687:17)
+#     at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+#     at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v24.22.1
+# Subtest: tests/instrument-chart-legend.test.mjs
+not ok 3 - tests/instrument-chart-legend.test.mjs
+  ---
+  duration_ms: 152.58146
+  type: 'test'
+  location: '/workspace/scratch/577747000761/bitcoin-cycle-atlas/tests/instrument-chart-legend.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# node:internal/modules/package_json_reader:331
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'linkedom' imported from /workspace/scratch/577747000761/bitcoin-cycle-atlas/tests/legacy-price-axis.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+#     at packageResolve (node:internal/modules/esm/resolve:784:25)
+#     at moduleResolve (node:internal/modules/esm/resolve:873:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+#     at \#resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+#     at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+#     at \#resolve (node:internal/modules/esm/loader:687:17)
+#     at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+#     at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v24.22.1
+# Subtest: tests/legacy-price-axis.test.mjs
+not ok 4 - tests/legacy-price-axis.test.mjs
+  ---
+  duration_ms: 136.313935
+  type: 'test'
+  location: '/workspace/scratch/577747000761/bitcoin-cycle-atlas/tests/legacy-price-axis.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# node:internal/modules/package_json_reader:331
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'linkedom' imported from /workspace/scratch/577747000761/bitcoin-cycle-atlas/tests/mobile-shell-heading.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+#     at packageResolve (node:internal/modules/esm/resolve:784:25)
+#     at moduleResolve (node:internal/modules/esm/resolve:873:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+#     at \#resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+#     at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+#     at \#resolve (node:internal/modules/esm/loader:687:17)
+#     at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+#     at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v24.22.1
+# Subtest: tests/mobile-shell-heading.test.mjs
+not ok 5 - tests/mobile-shell-heading.test.mjs
+  ---
+  duration_ms: 152.601911
+  type: 'test'
+  location: '/workspace/scratch/577747000761/bitcoin-cycle-atlas/tests/mobile-shell-heading.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: the IPO module keeps its title but does not add a second page-level H1
+ok 19 - the IPO module keeps its title but does not add a second page-level H1
+  ---
+  duration_ms: 1.859537
+  type: 'test'
+  ...
+# Subtest: the relay channel list label is a section heading, not a second H1
+ok 20 - the relay channel list label is a section heading, not a second H1
+  ---
+  duration_ms: 0.49008
+  type: 'test'
+  ...
+# Subtest: the page keeps exactly one shell heading owner and its visible titles
+ok 21 - the page keeps exactly one shell heading owner and its visible titles
+  ---
+  duration_ms: 0.514407
+  type: 'test'
+  ...
+# Subtest: the phone chart toolbar gives the reset control a 44px touch floor
+ok 22 - the phone chart toolbar gives the reset control a 44px touch floor
+  ---
+  duration_ms: 5.095161
+  type: 'test'
+  ...
+# Subtest: the price-chart h1 reserves a visible 22px normal-flow label row without symbol padding compensation
+ok 23 - the price-chart h1 reserves a visible 22px normal-flow label row without symbol padding compensation
+  ---
+  duration_ms: 9.794694
+  type: 'test'
+  ...
+# Subtest: the normal-flow label is visible outside the toolbar and plot with zero overlap area
+ok 24 - the normal-flow label is visible outside the toolbar and plot with zero overlap area
+  ---
+  duration_ms: 5.025666
+  type: 'test'
+  ...
+# Subtest: the historical 1680px² heading-on-button layout fails even when ticker glyphs do not overlap
+ok 25 - the historical 1680px² heading-on-button layout fails even when ticker glyphs do not overlap
+  ---
+  duration_ms: 0.505333
+  type: 'test'
+  ...
+# Subtest: touching an edge has zero area and remains valid, including label-to-plot contact
+ok 26 - touching an edge has zero area and remains valid, including label-to-plot contact
+  ---
+  duration_ms: 0.281405
+  type: 'test'
+  ...
+# Subtest: one pixel of button overlap fails using raw rectangles despite false summary flags
+ok 27 - one pixel of button overlap fails using raw rectangles despite false summary flags
+  ---
+  duration_ms: 0.449078
+  type: 'test'
+  ...
+# Subtest: positive subpixel overlap is not rounded away by the existing 0.01px coordinate tolerance
+ok 28 - positive subpixel overlap is not rounded away by the existing 0.01px coordinate tolerance
+  ---
+  duration_ms: 0.499173
+  type: 'test'
+  ...
+# Subtest: the symbol label rectangle is checked independently of its button and ticker text
+ok 29 - the symbol label rectangle is checked independently of its button and ticker text
+  ---
+  duration_ms: 1.221564
+  type: 'test'
+  ...
+# Subtest: actual ticker Range rectangles cannot overlap H1 Range rectangles
+ok 30 - actual ticker Range rectangles cannot overlap H1 Range rectangles
+  ---
+  duration_ms: 0.434927
+  type: 'test'
+  ...
+# Subtest: H1 glyph overhang cannot enter a symbol button or label even when the H1 box is clear
+ok 31 - H1 glyph overhang cannot enter a symbol button or label even when the H1 box is clear
+  ---
+  duration_ms: 0.603711
+  type: 'test'
+  ...
+# Subtest: only the normal-flow label, H1 and glyphs must clear the entire toolbar
+ok 32 - only the normal-flow label, H1 and glyphs must clear the entire toolbar
+  ---
+  duration_ms: 1.948691
+  type: 'test'
+  ...
+# Subtest: one pixel of label-row intrusion into the plot fails before the H1 itself touches the plot
+ok 33 - one pixel of label-row intrusion into the plot fails before the H1 itself touches the plot
+  ---
+  duration_ms: 0.659866
+  type: 'test'
+  ...
+# Subtest: the H1 box and its glyphs are checked separately against the plot
+ok 34 - the H1 box and its glyphs are checked separately against the plot
+  ---
+  duration_ms: 0.254414
+  type: 'test'
+  ...
+# Subtest: missing raw geometry and invalid numeric rectangles cannot masquerade as zero overlap
+ok 35 - missing raw geometry and invalid numeric rectangles cannot masquerade as zero overlap
+  ---
+  duration_ms: 0.625304
+  type: 'test'
+  ...
+# Subtest: the label must remain visible, in normal flow, outside the plot and in its shell-owned sibling
+ok 36 - the label must remain visible, in normal flow, outside the plot and in its shell-owned sibling
+  ---
+  duration_ms: 1.134562
+  type: 'test'
+  ...
+# Subtest: sole painted H1, duplicate-title, description, viewport, clipping and overlay checks remain strict
+ok 37 - sole painted H1, duplicate-title, description, viewport, clipping and overlay checks remain strict
+  ---
+  duration_ms: 1.777323
+  type: 'test'
+  ...
+# Subtest: compare retains the toolbar-owned fixed anchor and its unchanged 0.01px coordinate budget
+ok 38 - compare retains the toolbar-owned fixed anchor and its unchanged 0.01px coordinate budget
+  ---
+  duration_ms: 0.553175
+  type: 'test'
+  ...
+# Subtest: geometry preservation is applied only with an explicit prior state and remains 0.01px
+ok 39 - geometry preservation is applied only with an explicit prior state and remains 0.01px
+  ---
+  duration_ms: 0.889883
+  type: 'test'
+  ...
+# Subtest: conference retains its existing dashboard heading contract without adopting the chart label contract
+ok 40 - conference retains its existing dashboard heading contract without adopting the chart label contract
+  ---
+  duration_ms: 0.215585
+  type: 'test'
+  ...
+# Subtest: empty inset proof accepts only closed opposing sides, including valid CSS shorthand and zero lengths
+ok 41 - empty inset proof accepts only closed opposing sides, including valid CSS shorthand and zero lengths
+  ---
+  duration_ms: 2.085658
+  type: 'test'
+  ...
+# Subtest: decimal boundaries do not round a tiny positive clipping area into an empty one
+ok 42 - decimal boundaries do not round a tiny positive clipping area into an empty one
+  ---
+  duration_ms: 0.33765
+  type: 'test'
+  ...
+# Subtest: malformed, negative, nonzero lengths and unsupported clip grammars retain the strict path
+ok 43 - malformed, negative, nonzero lengths and unsupported clip grammars retain the strict path
+  ---
+  duration_ms: 1.771884
+  type: 'test'
+  ...
+# Subtest: serialized collector excludes proven-empty sr-only text and descendants while keeping a painted sibling
+ok 44 - serialized collector excludes proven-empty sr-only text and descendants while keeping a painted sibling
+  ---
+  duration_ms: 27.458376
+  type: 'test'
+  ...
+# Subtest: the same ID, aria-hidden, pointer-events:none and a 1px box cannot hide visible clock ink
+ok 45 - the same ID, aria-hidden, pointer-events:none and a 1px box cannot hide visible clock ink
+  ---
+  duration_ms: 20.506774
+  type: 'test'
+  ...
+# Subtest: an unknown descendant clip is irrelevant only when an ancestor box proves zero paint area
+ok 46 - an unknown descendant clip is irrelevant only when an ancestor box proves zero paint area
+  ---
+  duration_ms: 4.244547
+  type: 'test'
+  ...
+# Subtest: display:contents does not supply an empty clipping box for its visible descendants
+ok 47 - display:contents does not supply an empty clipping box for its visible descendants
+  ---
+  duration_ms: 7.475113
+  type: 'test'
+  ...
+# Subtest: empty clipping of a tick, latest badge or continuous boundary still fails its original paint contract
+ok 48 - empty clipping of a tick, latest badge or continuous boundary still fails its original paint contract
+  ---
+  duration_ms: 9.991751
+  type: 'test'
+  ...
+# Subtest: visible unsupported CSS clips remain explicit geometry failures
+ok 49 - visible unsupported CSS clips remain explicit geometry failures
+  ---
+  duration_ms: 30.883256
+  type: 'test'
+  ...
+# Subtest: nonrectangular SVG clip paths preserve the original unsupported-geometry failure
+ok 50 - nonrectangular SVG clip paths preserve the original unsupported-geometry failure
+  ---
+  duration_ms: 6.707675
+  type: 'test'
+  ...
+# Subtest: excluding the sr-only clock does not forgive a separate visible 13-square-pixel frame occlusion
+ok 51 - excluding the sr-only clock does not forgive a separate visible 13-square-pixel frame occlusion
+  ---
+  duration_ms: 2.273391
+  type: 'test'
+  ...
+# Subtest: independent source rows preserve BTC precision and select the candle source at the same cutoff
+ok 52 - independent source rows preserve BTC precision and select the candle source at the same cutoff
+  ---
+  duration_ms: 1.763762
+  type: 'test'
+  ...
+# Subtest: actual chart-owned hit surface and a continuous SVG frame satisfy the price-axis contract
+ok 53 - actual chart-owned hit surface and a continuous SVG frame satisfy the price-axis contract
+  ---
+  duration_ms: 3.144787
+  type: 'test'
+  ...
+# Subtest: price glyph ink is required even when a tag rectangle or axis hit surface remains visible
+ok 54 - price glyph ink is required even when a tag rectangle or axis hit surface remains visible
+  ---
+  duration_ms: 2.076274
+  type: 'test'
+  ...
+# Subtest: computed child visibility overrides a hidden ancestor while display and opacity suppress descendants
+ok 55 - computed child visibility overrides a hidden ancestor while display and opacity suppress descendants
+  ---
+  duration_ms: 6.292599
+  type: 'test'
+  ...
+# Subtest: actual CSS viewport must exactly match the requested matrix case
+ok 56 - actual CSS viewport must exactly match the requested matrix case
+  ---
+  duration_ms: 0.6888
+  type: 'test'
+  ...
+# Subtest: foreground paint cannot interrupt frame lines between labels, including a clipped half-stroke
+ok 57 - foreground paint cannot interrupt frame lines between labels, including a clipped half-stroke
+  ---
+  duration_ms: 1.796672
+  type: 'test'
+  ...
+# Subtest: direct label center hits are valid, but another chart or arbitrary overlay cannot own the hit
+ok 58 - direct label center hits are valid, but another chart or arbitrary overlay cannot own the hit
+  ---
+  duration_ms: 2.697431
+  type: 'test'
+  ...
+# Subtest: touching paint bounds pass, but every positive occlusion area fails without rounding
+ok 59 - touching paint bounds pass, but every positive occlusion area fails without rounding
+  ---
+  duration_ms: 0.900749
+  type: 'test'
+  ...
+# Subtest: legend, event, and forecast occlusions are all strict zero-area checks
+ok 60 - legend, event, and forecast occlusions are all strict zero-area checks
+  ---
+  duration_ms: 0.764264
+  type: 'test'
+  ...
+# Subtest: same-chart SVG underlap is recorded separately, but foreground paint blocks even without pointer events
+ok 61 - same-chart SVG underlap is recorded separately, but foreground paint blocks even without pointer events
+  ---
+  duration_ms: 4.937202
+  type: 'test'
+  ...
+# Subtest: overlay coverage distinguishes absent cases and requires actual paint somewhere in the matrix
+ok 62 - overlay coverage distinguishes absent cases and requires actual paint somewhere in the matrix
+  ---
+  duration_ms: 0.745225
+  type: 'test'
+  ...
+# Subtest: two painted labels cannot overlap even when center hits reach their shared layer
+ok 63 - two painted labels cannot overlap even when center hits reach their shared layer
+  ---
+  duration_ms: 0.242136
+  type: 'test'
+  ...
+# Subtest: the visible cursor can represent the hidden latest only for the same independent price and date
+ok 64 - the visible cursor can represent the hidden latest only for the same independent price and date
+  ---
+  duration_ms: 4.37246
+  type: 'test'
+  ...
+# Subtest: candles require the venue close and reject the old Coin Metrics latest label
+ok 65 - candles require the venue close and reject the old Coin Metrics latest label
+  ---
+  duration_ms: 0.385672
+  type: 'test'
+  ...
+# Subtest: correct rounded text does not hide a raw readout precision or source mismatch
+ok 66 - correct rounded text does not hide a raw readout precision or source mismatch
+  ---
+  duration_ms: 0.219421
+  type: 'test'
+  ...
+# Subtest: hidden or empty ticks, missing ownership, and clipping cannot count as a pass
+ok 67 - hidden or empty ticks, missing ownership, and clipping cannot count as a pass
+  ---
+  duration_ms: 0.448147
+  type: 'test'
+  ...
+# Subtest: frame lines must meet raw endpoints without gaps, dashes, or transparent paint
+ok 68 - frame lines must meet raw endpoints without gaps, dashes, or transparent paint
+  ---
+  duration_ms: 1.762109
+  type: 'test'
+  ...
+# Subtest: BTC/ETH alignment allows exactly 2 CSS pixels and rejects 2.001 without rounding
+ok 69 - BTC/ETH alignment allows exactly 2 CSS pixels and rejects 2.001 without rounding
+  ---
+  duration_ms: 0.467005
+  type: 'test'
+  ...
+# Subtest: the ±2 comparison allowance does not allow overflow or subpixel gutter intrusion
+ok 70 - the ±2 comparison allowance does not allow overflow or subpixel gutter intrusion
+  ---
+  duration_ms: 0.306763
+  type: 'test'
+  ...
+# Subtest: 64px axis measures real glyphs and fits full normal quotes without changing their numeric notation
+ok 71 - 64px axis measures real glyphs and fits full normal quotes without changing their numeric notation
+  ---
+  duration_ms: 4.351589
+  type: 'test'
+  ...
+# Subtest: font metric identity detects loaded glyphs even when the family name and gutter stay unchanged
+ok 72 - font metric identity detects loaded glyphs even when the family name and gutter stay unchanged
+  ---
+  duration_ms: 0.555238
+  type: 'test'
+  ...
+# Subtest: 390×844: native price/empty and RSI/loading layouts share a 64px gutter
+ok 73 - 390×844: native price/empty and RSI/loading layouts share a 64px gutter
+  ---
+  duration_ms: 23.081729
+  type: 'test'
+  ...
+# Subtest: 320×740: native price/empty and RSI/loading layouts share a 64px gutter
+ok 74 - 320×740: native price/empty and RSI/loading layouts share a 64px gutter
+  ---
+  duration_ms: 4.350987
+  type: 'test'
+  ...
+# Subtest: 768×1024: native price/empty and RSI/loading layouts share a 64px gutter
+ok 75 - 768×1024: native price/empty and RSI/loading layouts share a 64px gutter
+  ---
+  duration_ms: 5.308644
+  type: 'test'
+  ...
+# Subtest: 1024×768: native price/empty and RSI/loading layouts share a 64px gutter
+ok 76 - 1024×768: native price/empty and RSI/loading layouts share a 64px gutter
+  ---
+  duration_ms: 4.793605
+  type: 'test'
+  ...
+# Subtest: 1440×900: native price/empty and RSI/loading layouts share a 64px gutter
+ok 77 - 1440×900: native price/empty and RSI/loading layouts share a 64px gutter
+  ---
+  duration_ms: 2.654827
+  type: 'test'
+  ...
+# Subtest: 1920×1080: native price/empty and RSI/loading layouts share a 64px gutter
+ok 78 - 1920×1080: native price/empty and RSI/loading layouts share a 64px gutter
+  ---
+  duration_ms: 2.587055
+  type: 'test'
+  ...
+# Subtest: price ticks and current-price badge yield only the rows occupied by the live selection badge
+ok 79 - price ticks and current-price badge yield only the rows occupied by the live selection badge
+  ---
+  duration_ms: 0.770252
+  type: 'test'
+  ...
+# Subtest: daily mobile ticks, latest quotes and live cursor fit all units/scales without mutating OHLC or chart height
+ok 80 - daily mobile ticks, latest quotes and live cursor fit all units/scales without mutating OHLC or chart height
+  ---
+  duration_ms: 281.223946
+  type: 'test'
+  ...
+# Subtest: daily free pan into empty time/negative USD space preserves a stable right gutter and does not manufacture rows
+ok 81 - daily free pan into empty time/negative USD space preserves a stable right gutter and does not manufacture rows
+  ---
+  duration_ms: 1.328054
+  type: 'test'
+  ...
+# Subtest: intraday mobile ticks, latest quotes and live cursor fit all units/scales without mutating OHLC or chart height
+ok 82 - intraday mobile ticks, latest quotes and live cursor fit all units/scales without mutating OHLC or chart height
+  ---
+  duration_ms: 245.525952
+  type: 'test'
+  ...
+# Subtest: intraday free pan into empty time/negative USD space preserves a stable right gutter and does not manufacture rows
+ok 83 - intraday free pan into empty time/negative USD space preserves a stable right gutter and does not manufacture rows
+  ---
+  duration_ms: 1.335796
+  type: 'test'
+  ...
+# Subtest: very small prices stay nonzero and extremely narrow large-price ticks stay distinct
+ok 84 - very small prices stay nonzero and extremely narrow large-price ticks stay distinct
+  ---
+  duration_ms: 1.948071
+  type: 'test'
+  ...
+# Subtest: font and fitted bounds survive the actual SVG export and PNG input serialization while CSV retains raw precision
+ok 85 - font and fitted bounds survive the actual SVG export and PNG input serialization while CSV retains raw precision
+  ---
+  duration_ms: 7.209162
+  type: 'test'
+  ...
+# Subtest: glyph caches are document-scoped and composition falls back to raw when it drifts
+ok 86 - glyph caches are document-scoped and composition falls back to raw when it drifts
+  ---
+  duration_ms: 0.958537
+  type: 'test'
+  ...
+# Subtest: font completion updates hover fitting but preserves the previous render identity
+ok 87 - font completion updates hover fitting but preserves the previous render identity
+  ---
+  duration_ms: 0.581968
+  type: 'test'
+  ...
+# Subtest: equal sample totals cannot leak different digit widths across documents
+ok 88 - equal sample totals cannot leak different digit widths across documents
+  ---
+  duration_ms: 0.399093
+  type: 'test'
+  ...
+# Subtest: cross-draw exact-width caching avoids repeated probes but remains bounded
+ok 89 - cross-draw exact-width caching avoids repeated probes but remains bounded
+  ---
+  duration_ms: 24.942769
+  type: 'test'
+  ...
+# node:internal/modules/package_json_reader:331
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'linkedom' imported from /workspace/scratch/577747000761/bitcoin-cycle-atlas/tests/price-axis-overlay.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+#     at packageResolve (node:internal/modules/esm/resolve:784:25)
+#     at moduleResolve (node:internal/modules/esm/resolve:873:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+#     at \#resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+#     at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+#     at \#resolve (node:internal/modules/esm/loader:687:17)
+#     at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+#     at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v24.22.1
+# Subtest: tests/price-axis-overlay.test.mjs
+not ok 11 - tests/price-axis-overlay.test.mjs
+  ---
+  duration_ms: 78.954971
+  type: 'test'
+  location: '/workspace/scratch/577747000761/bitcoin-cycle-atlas/tests/price-axis-overlay.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: automatic daily log axes give narrow movement useful height and multiple distinct ticks
+ok 91 - automatic daily log axes give narrow movement useful height and multiple distinct ticks
+  ---
+  duration_ms: 1.853638
+  type: 'test'
+  ...
+# Subtest: manual price domains stay exact across data, unit labels and both scale types
+ok 92 - manual price domains stay exact across data, unit labels and both scale types
+  ---
+  duration_ms: 0.849342
+  type: 'test'
+  ...
+# Subtest: price-axis drag scales ratios in log space and distances in linear space
+ok 93 - price-axis drag scales ratios in log space and distances in linear space
+  ---
+  duration_ms: 0.436018
+  type: 'test'
+  ...
+# Subtest: price domains reject invalid values without silently changing the supplied scale
+ok 94 - price domains reject invalid values without silently changing the supplied scale
+  ---
+  duration_ms: 1.322637
+  type: 'test'
+  ...
+# Subtest: header returns are previous-close based while open-based change remains explicit
+ok 95 - header returns are previous-close based while open-based change remains explicit
+  ---
+  duration_ms: 0.43696
+  type: 'test'
+  ...
+# Subtest: subnormal and indistinguishable manual bounds recover without a tick-loop hang or NaN axis
+ok 96 - subnormal and indistinguishable manual bounds recover without a tick-loop hang or NaN axis
+  ---
+  duration_ms: 0.378341
+  type: 'test'
+  ...
+# node:internal/modules/package_json_reader:331
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'linkedom' imported from /workspace/scratch/577747000761/bitcoin-cycle-atlas/tests/quote-hud.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+#     at packageResolve (node:internal/modules/esm/resolve:784:25)
+#     at moduleResolve (node:internal/modules/esm/resolve:873:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+#     at \#resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+#     at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+#     at \#resolve (node:internal/modules/esm/loader:687:17)
+#     at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+#     at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v24.22.1
+# Subtest: tests/quote-hud.test.mjs
+not ok 13 - tests/quote-hud.test.mjs
+  ---
+  duration_ms: 99.768668
+  type: 'test'
+  location: '/workspace/scratch/577747000761/bitcoin-cycle-atlas/tests/quote-hud.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# node:internal/modules/package_json_reader:331
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'linkedom' imported from /workspace/scratch/577747000761/bitcoin-cycle-atlas/tests/responsive-reader.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+#     at packageResolve (node:internal/modules/esm/resolve:784:25)
+#     at moduleResolve (node:internal/modules/esm/resolve:873:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+#     at \#resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+#     at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+#     at \#resolve (node:internal/modules/esm/loader:687:17)
+#     at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+#     at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v24.22.1
+# Subtest: tests/responsive-reader.test.mjs
+not ok 14 - tests/responsive-reader.test.mjs
+  ---
+  duration_ms: 137.843489
+  type: 'test'
+  location: '/workspace/scratch/577747000761/bitcoin-cycle-atlas/tests/responsive-reader.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# node:internal/modules/package_json_reader:331
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'linkedom' imported from /workspace/scratch/577747000761/bitcoin-cycle-atlas/tests/responsive-workspace.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+#     at packageResolve (node:internal/modules/esm/resolve:784:25)
+#     at moduleResolve (node:internal/modules/esm/resolve:873:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+#     at \#resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+#     at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+#     at \#resolve (node:internal/modules/esm/loader:687:17)
+#     at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+#     at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v24.22.1
+# Subtest: tests/responsive-workspace.test.mjs
+not ok 15 - tests/responsive-workspace.test.mjs
+  ---
+  duration_ms: 122.66882
+  type: 'test'
+  location: '/workspace/scratch/577747000761/bitcoin-cycle-atlas/tests/responsive-workspace.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: dashboard navigation is a flat left-aligned list rather than centred pills
+ok 100 - dashboard navigation is a flat left-aligned list rather than centred pills
+  ---
+  duration_ms: 6.773965
+  type: 'test'
+  ...
+# Subtest: dashboard surfaces use rules and hairlines instead of rounded cards
+ok 101 - dashboard surfaces use rules and hairlines instead of rounded cards
+  ---
+  duration_ms: 3.785845
+  type: 'test'
+  ...
+# Subtest: the outer dashboard header stays one compact row
+ok 102 - the outer dashboard header stays one compact row
+  ---
+  duration_ms: 1.994761
+  type: 'test'
+  ...
+# Subtest: page-context chrome keeps its compact size while prose keeps a reading size
+ok 103 - page-context chrome keeps its compact size while prose keeps a reading size
+  ---
+  duration_ms: 49.919145
+  type: 'test'
+  ...
+# Subtest: no decorative gradients, blur or large shadows enter the shell
+ok 104 - no decorative gradients, blur or large shadows enter the shell
+  ---
+  duration_ms: 0.999358
+  type: 'test'
+  ...
+# Subtest: the data heading keeps its dark opaque sticky surface
+ok 105 - the data heading keeps its dark opaque sticky surface
+  ---
+  duration_ms: 45.252716
+  type: 'test'
+  ...
+# Subtest: the requested phone perimeter is one bottom dock with 44px controls
+ok 106 - the requested phone perimeter is one bottom dock with 44px controls
+  ---
+  duration_ms: 0.31176
+  type: 'test'
+  ...
+# Subtest: scoped panels and rows drop pill and card radii
+ok 107 - scoped panels and rows drop pill and card radii
+  ---
+  duration_ms: 1.348816
+  type: 'test'
+  ...
+# Subtest: scoped surfaces keep circular data dots and semantic media treatment
+ok 108 - scoped surfaces keep circular data dots and semantic media treatment
+  ---
+  duration_ms: 0.247714
+  type: 'test'
+  ...
+# Subtest: the data filter row keeps native horizontal access for clipped controls
+ok 109 - the data filter row keeps native horizontal access for clipped controls
+  ---
+  duration_ms: 1.037656
+  type: 'test'
+  ...
+# Subtest: dashboard return and navigation keep 44px targets on wide coarse-pointer screens
+ok 110 - dashboard return and navigation keep 44px targets on wide coarse-pointer screens
+  ---
+  duration_ms: 0.308766
+  type: 'test'
+  ...
+# Subtest: the default is light and only explicit light/dark preferences are accepted
+ok 111 - the default is light and only explicit light/dark preferences are accepted
+  ---
+  duration_ms: 1.137077
+  type: 'test'
+  ...
+# Subtest: initialization honors a saved choice and the early head fallback without writing storage
+ok 112 - initialization honors a saved choice and the early head fallback without writing storage
+  ---
+  duration_ms: 3.106288
+  type: 'test'
+  ...
+# Subtest: native settings buttons toggle and persist one choice while keeping focus and chart nodes intact
+ok 113 - native settings buttons toggle and persist one choice while keeping focus and chart nodes intact
+  ---
+  duration_ms: 1.242345
+  type: 'test'
+  ...
+# Subtest: reopening settings keeps the current choice when storage writes are blocked
+ok 114 - reopening settings keeps the current choice when storage writes are blocked
+  ---
+  duration_ms: 0.61572
+  type: 'test'
+  ...
+# Subtest: cross-tab preference changes update controls without re-persisting or accepting session storage
+ok 115 - cross-tab preference changes update controls without re-persisting or accepting session storage
+  ---
+  duration_ms: 0.756782
+  type: 'test'
+  ...
+# Subtest: document initialization is idempotent and teardown removes external listeners
+ok 116 - document initialization is idempotent and teardown removes external listeners
+  ---
+  duration_ms: 0.494045
+  type: 'test'
+  ...
+# Subtest: parent messages require both a matching origin and the actual parent window
+ok 117 - parent messages require both a matching origin and the actual parent window
+  ---
+  duration_ms: 0.815461
+  type: 'test'
+  ...
+# Subtest: a new child requests the parent choice before sending any fallback back to it
+ok 118 - a new child requests the parent choice before sending any fallback back to it
+  ---
+  duration_ms: 0.52313
+  type: 'test'
+  ...
+# Subtest: child requests receive the current theme at an exact origin, including late-loaded frames
+ok 119 - child requests receive the current theme at an exact origin, including late-loaded frames
+  ---
+  duration_ms: 0.673376
+  type: 'test'
+  ...
+# Subtest: a same-origin child choice reaches siblings without echoing or rewriting source data
+ok 120 - a same-origin child choice reaches siblings without echoing or rewriting source data
+  ---
+  duration_ms: 0.572735
+  type: 'test'
+  ...
+# Subtest: opaque-origin standalone documents keep local controls without sending wildcard messages
+ok 121 - opaque-origin standalone documents keep local controls without sending wildcard messages
+  ---
+  duration_ms: 0.374225
+  type: 'test'
+  ...
+# Subtest: applyTheme rejects malformed input and does not need a mounted control
+ok 122 - applyTheme rejects malformed input and does not need a mounted control
+  ---
+  duration_ms: 0.240683
+  type: 'test'
+  ...
+# Subtest: a shared manual USD price domain survives indexed units and preserves the independent time window
+ok 123 - a shared manual USD price domain survives indexed units and preserves the independent time window
+  ---
+  duration_ms: 4.013258
+  type: 'test'
+  ...
+# Subtest: invalid shared price ranges safely return to Auto and zero is accepted only on a linear axis
+ok 124 - invalid shared price ranges safely return to Auto and zero is accepted only on a linear axis
+  ---
+  duration_ms: 0.49688
+  type: 'test'
+  ...
+1..124
+# tests 124
+# suites 0
+# pass 117
+# fail 7
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 999.13976

@@ -1,3 +1,5 @@
+import { initTheme } from '../../../dist/ui/theme.js';
+import '../../../dist/fonts/pretendard/pretendard-variable.css';
 import { createRoot } from 'react-dom/client';
 import { MarketLabApp } from './app.js';
 import '../../../dist/styles.css';
@@ -20,5 +22,7 @@ import '../../../dist/editorial-panels.css';
 import './instrument-workbench.css';
 import '../../../dist/ui/chart-legend.css';
 import '../../../dist/ui/quote-hud.css';
+
+initTheme();
 
 createRoot(document.getElementById('root')!).render(<MarketLabApp embedded={new URLSearchParams(location.search).get('embedded')==='1'} />);

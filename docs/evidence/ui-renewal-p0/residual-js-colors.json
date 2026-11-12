@@ -1,0 +1,464 @@
+{
+  "request": "R19P0-c8b06c5",
+  "status": "not-zero",
+  "scope": "Literal inventory, not a count of UI defects: includes real legacy UI, semantic data, brand, vendor, and stale generated application output. This is not waived by the CSS scan.",
+  "files": [
+    {
+      "file": "dist/app.js",
+      "count": 10,
+      "values": [
+        "#a594df",
+        "#6a9fd4",
+        "#5fb8a4",
+        "#cf91aa",
+        "#f2aa4c",
+        "#d99b4d"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/asset-forecast-journal.js",
+      "count": 6,
+      "values": [
+        "#73b9eb",
+        "#cda65e",
+        "#e4bd71",
+        "#b7c7db",
+        "#f4d393",
+        "#111820"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/asset-judgment-history-view.js",
+      "count": 8,
+      "values": [
+        "#83ddbc",
+        "#3b9278",
+        "#b6a15c",
+        "#a96976",
+        "#f0a6b2",
+        "#4b5659",
+        "#c5a98a"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/atlas-analysis.js",
+      "count": 45,
+      "values": [
+        "#b7a3e8",
+        "#7caedc",
+        "#78c5b0",
+        "#d99cb4",
+        "#f2b15a",
+        "#dfe6ed",
+        "#aab7c8",
+        "#2a3442",
+        "#4c5664",
+        "#e8ba6d",
+        "#8394c9",
+        "#8f9ba8",
+        "#72b9ae",
+        "#b293ad",
+        "#6e9f87",
+        "#bd7e82",
+        "#617181",
+        "#d6e1ef",
+        "#10151c",
+        "#b6c9e5",
+        "#cb9299",
+        "#f0bac0",
+        "#0c171b",
+        "#171015",
+        "#202a36",
+        "#dce5f1",
+        "#758193",
+        "#cf969f",
+        "#7fc5b0",
+        "#e9eff6",
+        "#e5edf7"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/atlas-price-chart.js",
+      "count": 34,
+      "values": [
+        "#536173",
+        "#dfb567",
+        "#91a1ce",
+        "#93a1b1",
+        "#7ec5b7",
+        "#bc9bb7",
+        "#81b79b",
+        "#d28f94",
+        "#697c91",
+        "#e9b366",
+        "#87bde7",
+        "#efb45f",
+        "#b4a7d6",
+        "#c2b5e0",
+        "#dd7e8d",
+        "#62bca5",
+        "#74a7ee",
+        "#f2b960",
+        "#a7b8cd",
+        "#cba069",
+        "#e7bb73",
+        "#85bfdc",
+        "#10151c",
+        "#9bc8e8",
+        "#bca176",
+        "#c6ad88",
+        "#7da89c",
+        "#2b6558",
+        "#edf8f3",
+        "#a8c695"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/chart-magnet.js",
+      "count": 3,
+      "values": [
+        "#db9ba7",
+        "#8ac8b9",
+        "#93c3e8"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/chart-overlays.js",
+      "count": 19,
+      "values": [
+        "#d8b779",
+        "#aeb9ed",
+        "#79c6b6",
+        "#84bce5",
+        "#d3a5c5",
+        "#b6c2d3",
+        "#c5b08b",
+        "#df7c83",
+        "#65c3a5",
+        "#74a7ee",
+        "#8290a3",
+        "#dfb06d",
+        "#ab6374",
+        "#498f80",
+        "#e4b66f",
+        "#d1ae79"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/cryptocon-audit.js",
+      "count": 7,
+      "values": [
+        "#e1e8f0",
+        "#aab7c8",
+        "#2a3442",
+        "#edb66b",
+        "#82b9dc",
+        "#baace3",
+        "#bbcee8"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/cycle-calibration.js",
+      "count": 4,
+      "values": [
+        "#df7c83",
+        "#65c3a5",
+        "#74a7ee",
+        "#8290a3"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/cycle-engine.js",
+      "count": 5,
+      "values": [
+        "#a696ef",
+        "#67aafa",
+        "#49c8ae",
+        "#f0a956",
+        "#ef9154"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/cycle-milestones.js",
+      "count": 15,
+      "values": [
+        "#f27781",
+        "#6d9dff",
+        "#67c78f",
+        "#5bcbd8",
+        "#f3ae63",
+        "#b293ee",
+        "#c09be8",
+        "#8bdbe4"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/equity-forecast-chart.js",
+      "count": 10,
+      "values": [
+        "#c79b4b",
+        "#e2b66c",
+        "#70a8e8",
+        "#ba9bc5",
+        "#bc9bd7",
+        "#7bbfae"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/equity-view.js",
+      "count": 15,
+      "values": [
+        "#9eaff5",
+        "#b5a5df",
+        "#e6b66d",
+        "#ce94c7",
+        "#d8909e",
+        "#7dcbbb",
+        "#c4b2ed",
+        "#d0deee",
+        "#34465e",
+        "#28384c"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/eth-view.js",
+      "count": 3,
+      "values": [
+        "#bec7f9",
+        "#7d8abb",
+        "#a9b5ed"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/ethereum-events.js",
+      "count": 7,
+      "values": [
+        "#d8b779",
+        "#d3a5c5",
+        "#84bce5",
+        "#79c6b6",
+        "#e3b189",
+        "#a7b3ef",
+        "#dda0a6"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/forecast-journal.js",
+      "count": 1,
+      "values": [
+        "#68b5ff"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/forecast-view.js",
+      "count": 7,
+      "values": [
+        "#77b4ea",
+        "#b6a2eb",
+        "#6bc6ad",
+        "#d8b56d",
+        "#70c7d7",
+        "#d9a0c0",
+        "#71c6a6"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/intraday-chart.js",
+      "count": 9,
+      "values": [
+        "#dd7e8d",
+        "#62bca5",
+        "#2b6558",
+        "#823c4c",
+        "#74ab9e",
+        "#f0f5fa"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/lab-view.js",
+      "count": 15,
+      "values": [
+        "#4c5664",
+        "#e8ba6d",
+        "#8394c9",
+        "#8f9ba8",
+        "#72b9ae",
+        "#b293ad",
+        "#6e9f87",
+        "#bd7e82",
+        "#617181",
+        "#b8c9dc",
+        "#2a3442",
+        "#9aa8bb",
+        "#d1d9e4",
+        "#8796aa",
+        "#1b232e"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/market-lab/app/assets/index-ByyNTPeH.js",
+      "count": 48,
+      "values": [
+        "#fff",
+        "#3b82f6",
+        "#22c55e",
+        "#16a34a",
+        "#ef4444",
+        "#dc2626",
+        "#111",
+        "#000",
+        "#14171B",
+        "#F1F3F5",
+        "#A3ABB5",
+        "#5B636D",
+        "#D6FD70",
+        "#2A2F36",
+        "#22272D",
+        "#3A414A",
+        "#5F6772",
+        "#262B31",
+        "#1D2126",
+        "#FFFFFF",
+        "#5D6570",
+        "#B3B9C2",
+        "#0B8FD8",
+        "#006DA8",
+        "#E6E9ED",
+        "#F0F2F5",
+        "#D5DAE0",
+        "#9AA3AE",
+        "#EEF1F4",
+        "#F4F6F8",
+        "#ffffff",
+        "#000000",
+        "#00000000"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/outlook-view.js",
+      "count": 36,
+      "values": [
+        "#f2aa4c",
+        "#6cc4a8",
+        "#75a9d8",
+        "#d78aab",
+        "#aa9bd7",
+        "#e97872",
+        "#12161d",
+        "#df899b",
+        "#252c36",
+        "#8390a2",
+        "#778999",
+        "#b8c1cf",
+        "#8490a0",
+        "#c9d2df",
+        "#a3adbb",
+        "#778191",
+        "#707d90",
+        "#8d98a8",
+        "#f2f4f7",
+        "#8e98a8",
+        "#b1b9c6"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/peak-view.js",
+      "count": 14,
+      "values": [
+        "#a594df",
+        "#6a9fd4",
+        "#5fb8a4",
+        "#f2aa4c",
+        "#252d39",
+        "#8e98a8",
+        "#d5a46a",
+        "#12161d"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/price-legend.js",
+      "count": 12,
+      "values": [
+        "#e2eaf3",
+        "#62bca5",
+        "#cf7f89",
+        "#f2b960",
+        "#f2aa4c25",
+        "#b58748",
+        "#74a7ee"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/research-annotations.js",
+      "count": 5,
+      "values": [
+        "#84bfff",
+        "#f4c76b",
+        "#d7a1f9",
+        "#77d4b1",
+        "#f29da6"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/scenario-countdown.js",
+      "count": 9,
+      "values": [
+        "#65c3a5",
+        "#e6b46b",
+        "#df7c83",
+        "#91a4be",
+        "#74a7ee",
+        "#a899cd",
+        "#8290a3"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/symbol-selector.js",
+      "count": 1,
+      "values": [
+        "#fff"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    },
+    {
+      "file": "dist/vendor/skullet/skullet.js",
+      "count": 10,
+      "values": [
+        "#fff",
+        "#3b82f6",
+        "#22c55e",
+        "#16a34a",
+        "#ef4444",
+        "#dc2626",
+        "#111",
+        "#000"
+      ],
+      "disposition": "existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file"
+    }
+  ]
+}

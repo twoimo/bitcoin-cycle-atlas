@@ -2,166 +2,7 @@
  * Visual roles only. Financial series, data, toolbar ownership and scroll geometry remain with their original components.
  * Direction and skill provenance: design-system/bitcoin-cycle-atlas/MASTER.md.
  */
-:root {
-  --bg: #0f0f0f;
-  --sidebar: #000;
-  --surface: #191919;
-  --surface-raised: #222;
-  --surface-hover: #303030;
-  --border: #333;
-  --border-soft: #242424;
-  --border-strong: #555;
-  --text: #dbdbdb;
-  --muted: #b8b8b8;
-  --subtle: #949494;
-  --accent: #d8b56d;
-  --accent-soft: #d8b56d12;
-  --on-accent: #191919;
-  --focus: #90b2ff;
-  --replay-picker: #8db2ff;
-  --grid: #242424;
-  --ui-primary: #2962ff;
-  --ui-primary-hover: #1e53e5;
-  --on-ui-primary: #fff;
-  --ui-link: #90b2ff;
-  --nav-active-bg: #303030;
-  --nav-active-text: #fff;
-  --workbench-gutter: #222;
-  --workbench-top: 38px;
-  --workbench-gap: 4px;
-  --font: system-ui, -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, 'Noto Sans KR', 'Noto Sans CJK KR', sans-serif;
-  --chrome: var(--sidebar);
-  --chrome-bg: var(--sidebar);
-  --chrome-border: var(--border);
-  --chrome-active: var(--ui-link);
-  --control-radius: 4px;
-  --panel-radius: 8px;
-  --copy-size: 14px;
-  --copy-leading: 1.65;
-  --shadow: 0 4px 20px #0006;
-  --skullet-highlight: #94949433;
-  --dialog-backdrop: #0006;
-  --indicator-label-bg: #0f0f0fe6;
-
-  /* Existing chart chrome consumes these owner-specific roles. Series and
-     signal colors are deliberately owned by the original chart modules. */
-  --chart-bottom-bar-ink: var(--muted);
-  --chart-bottom-bar-ink-2: var(--text);
-  --chart-bottom-bar-ink-3: var(--text);
-  --chart-bottom-bar-ink-4: var(--ui-link);
-  --chart-bottom-bar-ink-5: var(--text);
-  --chart-bottom-bar-ink-6: var(--muted);
-  --chart-bottom-bar-ink-7: var(--text);
-  --chart-bottom-bar-ink-8: var(--text);
-  --chart-bottom-bar-ink-9: var(--text);
-  --chart-bottom-bar-ink-10: var(--muted);
-  --chart-bottom-bar-ink-11: var(--muted);
-  --chart-bottom-bar-ink-12: var(--ui-link);
-  --chart-bottom-bar-ink-13: var(--text);
-  --chart-bottom-bar-ink-14: var(--muted);
-  --chart-bottom-bar-ink-15: var(--text);
-  --chart-bottom-bar-surface: var(--surface-hover);
-  --chart-bottom-bar-surface-2: var(--nav-active-bg);
-  --chart-bottom-bar-surface-3: var(--surface-raised);
-  --chart-bottom-bar-surface-4: var(--surface-hover);
-  --chart-bottom-bar-surface-5: var(--surface-hover);
-  --chart-bottom-bar-surface-6: var(--surface);
-  --chart-bottom-bar-rule: var(--border);
-  --chart-bottom-bar-rule-2: var(--focus);
-  --chart-bottom-bar-rule-3: var(--border);
-  --chart-bottom-bar-rule-4: var(--focus);
-  --chart-bottom-bar-rule-5: var(--border-soft);
-
-  --symbol-selector-ink: var(--text);
-  --symbol-selector-ink-2: var(--subtle);
-  --symbol-selector-ink-3: var(--text);
-  --symbol-selector-ink-4: var(--muted);
-  --symbol-selector-ink-5: var(--muted);
-  --symbol-selector-ink-6: var(--text);
-  --symbol-selector-ink-7: var(--subtle);
-  --symbol-selector-ink-8: var(--ui-link);
-  --symbol-selector-ink-9: var(--muted);
-  --symbol-selector-ink-12: var(--muted);
-  --symbol-selector-ink-13: var(--text);
-  --symbol-selector-ink-14: var(--subtle);
-  --symbol-selector-ink-15: var(--muted);
-  --symbol-selector-ink-16: var(--muted);
-  --symbol-selector-ink-17: var(--subtle);
-  --symbol-selector-surface: var(--surface-hover);
-  --symbol-selector-surface-2: var(--surface);
-  --symbol-selector-surface-3: var(--dialog-backdrop);
-  --symbol-selector-surface-4: var(--surface-hover);
-  --symbol-selector-surface-5: var(--surface-raised);
-  --symbol-selector-surface-8: var(--accent-soft);
-  --symbol-selector-rule: var(--focus);
-  --symbol-selector-rule-2: var(--border-strong);
-  --symbol-selector-rule-3: var(--border);
-  --symbol-selector-rule-4: var(--border);
-  --symbol-selector-rule-5: var(--border-soft);
-  --symbol-selector-rule-6: var(--border);
-
-  --workspace-tools-surface: var(--surface);
-  --workspace-tools-surface-2: var(--surface-raised);
-  --workspace-tools-surface-3: var(--dialog-backdrop);
-  --workspace-tools-surface-4: var(--surface-hover);
-  --workspace-tools-surface-5: var(--nav-active-bg);
-  --workspace-tools-surface-6: var(--surface-raised);
-  --workspace-tools-ink: var(--text);
-  --workspace-tools-ink-2: var(--text);
-  --workspace-tools-ink-3: var(--muted);
-  --workspace-tools-ink-4: var(--text);
-  --workspace-tools-ink-5: var(--text);
-  --workspace-tools-ink-6: var(--muted);
-  --workspace-tools-ink-7: var(--subtle);
-  --workspace-tools-ink-8: var(--muted);
-  --workspace-tools-ink-9: var(--muted);
-  --workspace-tools-ink-10: var(--muted);
-  --workspace-tools-ink-11: var(--ui-link);
-  --workspace-tools-ink-12: var(--text);
-  --workspace-tools-ink-13: var(--muted);
-  --workspace-tools-rule: var(--border-strong);
-  --workspace-tools-rule-2: var(--border);
-  --workspace-tools-rule-3: var(--focus);
-  --workspace-tools-rule-4: var(--border);
-  --workspace-tools-rule-5: var(--border);
-  --workspace-tools-rule-6: var(--border-strong);
-  --workspace-tools-rule-7: var(--border);
-  --workspace-tools-rule-8: var(--border-strong);
-  --workspace-tools-rule-9: var(--border-soft);
-  --workspace-tools-rule-10: var(--border);
-
-  --chart-details-panel-surface: var(--surface);
-  --chart-details-panel-surface-2: var(--surface-hover);
-  --chart-details-panel-surface-3: var(--surface-raised);
-  --chart-details-panel-surface-4: var(--nav-active-bg);
-  --chart-details-panel-surface-5: var(--surface-hover);
-  --chart-details-panel-surface-6: var(--surface-hover);
-  --chart-details-panel-surface-7: var(--nav-active-bg);
-  --chart-details-panel-surface-8: var(--surface-raised);
-  --chart-details-panel-surface-12: var(--surface);
-  --chart-details-panel-ink: var(--text);
-  --chart-details-panel-ink-2: var(--muted);
-  --chart-details-panel-ink-3: var(--text);
-  --chart-details-panel-ink-4: var(--text);
-  --chart-details-panel-ink-5: var(--muted);
-  --chart-details-panel-ink-6: var(--text);
-  --chart-details-panel-ink-7: var(--ui-link);
-  --chart-details-panel-ink-8: var(--text);
-  --chart-details-panel-ink-9: var(--subtle);
-  --chart-details-panel-ink-10: var(--ui-link);
-  --chart-details-panel-ink-11: var(--muted);
-  --chart-details-panel-ink-12: var(--ui-link);
-  --chart-details-panel-ink-13: var(--text);
-  --chart-details-panel-ink-14: var(--text);
-  --chart-details-panel-ink-15: var(--text);
-  --chart-details-panel-ink-16: var(--muted);
-  --chart-details-panel-ink-17: var(--muted);
-  --chart-details-panel-ink-18: var(--muted);
-  --chart-details-panel-ink-20: var(--subtle);
-  --chart-details-panel-rule: var(--border);
-  --chart-details-panel-rule-2: var(--focus);
-  --chart-details-panel-rule-3: var(--border-soft);
-}
+:root { --workbench-top:38px; --workbench-gap:4px; }
 
 body { font-variant-numeric: tabular-nums; }
 ::selection { background: var(--ui-primary); color: var(--on-ui-primary); }
@@ -191,7 +32,7 @@ body :is(input, select, textarea) { accent-color: var(--ui-primary); }
 body[data-shell=chart] :is(.atlas-sidebar, .workbench-rail, .atlas-canvas-heading),
 .workbench-bottom.workbench-bottom-bar { background: var(--sidebar); }
 .atlas-page .atlas-workbench, .atlas-plot { background: var(--bg); }
-.atlas-sidebar .atlas-brand { color: var(--accent); border-radius: 0; }
+.atlas-sidebar .atlas-brand { color: var(--accent-ink); border-radius: 0; }
 .atlas-sidebar .atlas-brand > span { font-weight: 500; }
 .atlas-sidebar .workbench-icon,
 .workbench-rail .atlas-nav :is(a, button),
@@ -708,3 +549,32 @@ body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
   .workbench-rail .atlas-nav :is(a, button),
   .symbol-search-row, .workspace-command { transition: none; }
 }
+
+/* R19 P0 changes paint and reading type only. The existing shell geometry,
+   chart numbers, toolbar density and card composition belong to P1/P2/P3. */
+body { font-family:var(--font);font-size:var(--body-size);line-height:var(--copy-leading);letter-spacing:var(--type-tracking);word-break:keep-all; }
+body :is(.method-card,.reading-card,.research-reader,.research-reader-content,.native-chart-reader,.atlas-settings-body,.eth-data-dialog,.equity-detail-dialog,.forecast-journal-dialog) :is(p,li),
+body #chart-reader .reader-body :is(p,li) {
+  font-family:var(--font);font-size:var(--copy-size);line-height:var(--copy-leading);
+}
+:is(.dialog-lead,.reader-lead,.research-lead) {
+  font-family:var(--font);font-size:var(--type-body-sm);line-height:var(--copy-leading);
+}
+button.theme-setting { min-height:44px;padding:8px 12px;font:var(--type-body-sm)/var(--copy-leading) var(--font);border:1px solid var(--border-strong);border-radius:var(--control-radius);color:var(--text);background:var(--surface); }
+button.theme-setting[aria-pressed=true] { color:var(--accent-ink);background:var(--accent-soft); }
+button.theme-setting:focus-visible { outline:2px solid var(--focus);outline-offset:2px; }
+.symbol-selector-chevron { color:var(--icon-muted);opacity:1; }
+/* These are paint roles only: retain 64px gutter, fitted glyph coordinates,
+   tag rectangles, visibility priority and the final SVG paint owner. */
+.atlas-plot svg :is([data-price-axis-label="tick"],.market-time-label,.price-time-label,.chart-empty-message) { fill:var(--chart-axis-ink); }
+.atlas-plot svg :is(.cross-price-tag,.market-price-tag,.cross-date-tag,.market-date-tag)>rect { fill:var(--chart-tag-bg); }
+.atlas-plot svg :is(.cross-price-tag,.market-price-tag,.cross-date-tag,.market-date-tag)>text { fill:var(--chart-tag-ink); }
+/* The protected equity renderer supplies inline legacy paint. These exact
+   comparison-table roles may override that paint without changing its values. */
+table[data-equity-comparison-year]>caption { color:var(--text)!important; }
+table[data-equity-comparison-year] :is(th,td) { border-bottom-color:var(--border)!important; }
+/* The established data-sheet gate requires an opaque dark sticky header.
+   Pair its retained surface with its own ink in either surrounding theme. */
+body[data-shell=dashboard] #data-view .daily-heading { background:var(--ledger-sticky-bg);color:var(--ledger-sticky-ink); }
+body[data-shell=dashboard] #data-view .daily-heading :is(h1,h2,strong,button) { color:var(--ledger-sticky-ink); }
+body[data-shell=dashboard] #data-view .daily-heading :is(p,span,small) { color:var(--ledger-sticky-muted); }

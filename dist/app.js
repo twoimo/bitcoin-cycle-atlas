@@ -109,7 +109,7 @@ function persistUrl() {
     else history.replaceState(null, '', next);
   } catch { try { history.replaceState(null, '', next); } catch {} }
 }
-document.documentElement.dataset.theme = 'dark';
+// The shared head/site entry owns the saved light/dark presentation preference.
 let initialPageRendered = false;
 function finishInitialPage() {
   if (document.documentElement.dataset.boot !== 'loading' || (!state.dataset && !['data','ipo','market','relay','conference'].includes(state.view)) || !initialPageRendered) return;

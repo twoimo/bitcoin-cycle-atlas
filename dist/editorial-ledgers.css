@@ -124,7 +124,7 @@
 }
 #data-view .asset-selected-reason {
   padding: 0 0 8px 12px;
-  border-left-color: var(--accent);
+  border-left-color: var(--accent-ink);
   background: transparent;
 }
 #data-view .asset-reason-metrics {
