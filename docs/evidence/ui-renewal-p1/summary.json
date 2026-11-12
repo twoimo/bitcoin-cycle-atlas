@@ -1,0 +1,346 @@
+{
+  "request": "HANDOFF-R19P1-1-595c365",
+  "recordedAt": "2026-11-12T12:23:04.128Z",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "branch": "fix/tradingview-responsive-20261110",
+  "baselineCommit": "595c365230f19d064b1af41b65a3ec6a02d3f7b5",
+  "productCommits": [
+    "c1a3a0c50c0c8e77e3ff6e0ea014c42cbe263ad9",
+    "ab1ce6941c1bc560416cd4f901bad21e3da998bb"
+  ],
+  "testedHead": "758954336cd50c28bd726b7d6dd619dc7a8ce68c",
+  "testedTree": "0119646689c357ba8f3fb70ee8cc8f71dfbf638b",
+  "workingTreeAtNativeStart": [],
+  "status": "implemented-native-acceptance-unverified",
+  "qualifiesP1Verification": false,
+  "screenshots": 0,
+  "priorMacP0": {
+    "commit": "f86ba0a",
+    "required": 10,
+    "attempted": 10,
+    "passed": 10,
+    "failed": 0,
+    "coverageObserved": 38,
+    "coverageRequired": 40,
+    "qualifiesP0Verification": false,
+    "receipt": "../qa-r19p0-20261112/p0-f86ba0a.json",
+    "preservedAsHistoricalEvidence": true
+  },
+  "currentP0": {
+    "status": "unverified",
+    "qualifiesP0Verification": false,
+    "counts": {
+      "required": 10,
+      "attempted": 0,
+      "passed": 0,
+      "failed": 0,
+      "unattempted": 10
+    },
+    "sourceStable": true,
+    "staticSourceAudit": "passed",
+    "staticTokenPairsPassed": 40,
+    "staticTokenPairsRequired": 40,
+    "nativeSampleCoverage": {
+      "required": 40,
+      "observed": 0,
+      "passed": 0,
+      "status": "unverified"
+    },
+    "settingsIcon": [
+      {
+        "theme": "light",
+        "observed": 0,
+        "status": "unverified",
+        "selector": "#atlas-display-options svg path"
+      },
+      {
+        "theme": "dark",
+        "observed": 0,
+        "status": "unverified",
+        "selector": "#atlas-display-options svg path"
+      }
+    ],
+    "contrastThresholds": {
+      "text": 4.5,
+      "icon": 3.0
+    },
+    "blockedAt": "Chromium launch",
+    "exitCode": 1
+  },
+  "currentP1": {
+    "status": "unverified",
+    "counts": {
+      "requiredLayouts": 28,
+      "attemptedLayouts": 0,
+      "passedLayouts": 0,
+      "requiredNavigationActivations": 56,
+      "attemptedNavigationActivations": 0,
+      "passedNavigationActivations": 0,
+      "requiredChartReturns": 8,
+      "attemptedChartReturns": 0,
+      "passedChartReturns": 0
+    },
+    "sourceStable": true,
+    "blockedAt": "Chromium launch",
+    "exitCode": 1
+  },
+  "viewports": [
+    {
+      "width": 320,
+      "height": 900,
+      "requiredRoutes": 7,
+      "attemptedLayouts": 0,
+      "horizontalOverflowPx": null,
+      "pointerActivations": {
+        "required": 7,
+        "attempted": 0,
+        "passed": 0
+      },
+      "keyboardActivations": {
+        "required": 7,
+        "attempted": 0,
+        "passed": 0
+      },
+      "status": "unmeasured-browser-launch-blocked"
+    },
+    {
+      "width": 390,
+      "height": 900,
+      "requiredRoutes": 7,
+      "attemptedLayouts": 0,
+      "horizontalOverflowPx": null,
+      "pointerActivations": {
+        "required": 7,
+        "attempted": 0,
+        "passed": 0
+      },
+      "keyboardActivations": {
+        "required": 7,
+        "attempted": 0,
+        "passed": 0
+      },
+      "status": "unmeasured-browser-launch-blocked"
+    },
+    {
+      "width": 768,
+      "height": 900,
+      "requiredRoutes": 7,
+      "attemptedLayouts": 0,
+      "horizontalOverflowPx": null,
+      "pointerActivations": {
+        "required": 7,
+        "attempted": 0,
+        "passed": 0
+      },
+      "keyboardActivations": {
+        "required": 7,
+        "attempted": 0,
+        "passed": 0
+      },
+      "status": "unmeasured-browser-launch-blocked"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "requiredRoutes": 7,
+      "attemptedLayouts": 0,
+      "horizontalOverflowPx": null,
+      "pointerActivations": {
+        "required": 7,
+        "attempted": 0,
+        "passed": 0
+      },
+      "keyboardActivations": {
+        "required": 7,
+        "attempted": 0,
+        "passed": 0
+      },
+      "status": "unmeasured-browser-launch-blocked"
+    }
+  ],
+  "checks": {
+    "productAndP0Contracts": {
+      "passed": 76,
+      "failed": 0,
+      "skipped": 0
+    },
+    "shellOwnershipRoundtripModels": {
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0
+    },
+    "nativeVerifierAndP0TextContracts": {
+      "passed": 77,
+      "failed": 0,
+      "skipped": 0
+    },
+    "standaloneAndP0Inventory": {
+      "passed": 42,
+      "failed": 0,
+      "skipped": 0
+    },
+    "overlappingSuitesMustNotBeSummed": true,
+    "typecheck": {
+      "exitCode": 0
+    },
+    "buildWeb": {
+      "exitCode": 0
+    },
+    "verifyStatic": {
+      "exitCode": 0,
+      "files": 1065,
+      "checkedScripts": 220,
+      "checkedReferences": 1068
+    },
+    "fullNpmTestComplete": false,
+    "diagnosticDetails": "test-diagnostics.json"
+  },
+  "blocker": "Chromium process_singleton_posix.cc:297 socket() failed: Operation not permitted (1), SIGABRT before any product case. No browser permission bypass was attempted.",
+  "unchangedFiles": [
+    {
+      "path": "dist/equity-view.js",
+      "baselineSha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5",
+      "testedSha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5",
+      "unchanged": true
+    },
+    {
+      "path": "dist/eth-view.js",
+      "baselineSha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4",
+      "testedSha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4",
+      "unchanged": true
+    },
+    {
+      "path": "dist/instrument-indicator-overlay.js",
+      "baselineSha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a",
+      "testedSha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/verify-eth-candidate-browser.mjs",
+      "baselineSha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e",
+      "testedSha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e",
+      "unchanged": true
+    },
+    {
+      "path": "dist/price-axis.js",
+      "baselineSha256": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2",
+      "testedSha256": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/verify-ui-renewal-p0-browser.mjs",
+      "baselineSha256": "d31fda26f00111f8d3b949e64bad629395af009cb516ac46c2e0165ad90eea26",
+      "testedSha256": "d31fda26f00111f8d3b949e64bad629395af009cb516ac46c2e0165ad90eea26",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/ui-renewal-p0-contract.mjs",
+      "baselineSha256": "d34d2644e93f3a8805b0e4043f3c31bf4fcfee4eb3b5bb46bf3bca0f47324f39",
+      "testedSha256": "d34d2644e93f3a8805b0e4043f3c31bf4fcfee4eb3b5bb46bf3bca0f47324f39",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/ui-renewal-p0-text-hit.mjs",
+      "baselineSha256": "ea481867cdf818d1cd41a1979467152c5a4a1230eed40e75bf1306a102078f64",
+      "testedSha256": "ea481867cdf818d1cd41a1979467152c5a4a1230eed40e75bf1306a102078f64",
+      "unchanged": true
+    }
+  ],
+  "priceAxisMinRight": 64,
+  "rawNativeReceipts": {
+    "p0": {
+      "file": "p0-7589543.report.json.gz",
+      "rawBytes": 885340,
+      "rawSha256": "1a74fa73dc81583a09c252ace5d4f2bfad800dc17e528015a01ced607859f5c7",
+      "archiveBytes": 68344,
+      "archiveSha256": "007305bfc343fb97a6aba7de8f36126d414bf30cd5cd6dcca1a69d7e1c596426"
+    },
+    "p1": {
+      "file": "p1-7589543.report.json.gz",
+      "rawBytes": 254497,
+      "rawSha256": "a49a2c3dd75c88b9fb8ce54753231e2604d1e3578145294911e8418362af19c1",
+      "archiveBytes": 106039,
+      "archiveSha256": "17449812e8bc45d12a8c9769c9545f467aef5a40b05c927d33f77a09a420fc92"
+    }
+  },
+  "checkLogArchive": {
+    "file": "checks.log.tar.gz",
+    "sha256": "77e6a2bf237f2089f6107bc6e5f4dc9657916b4ed2926b782cb31eba068358a5",
+    "files": [
+      {
+        "file": "r19p1-product-final-stable.tap",
+        "bytes": 8262,
+        "sha256": "9bd2601c10dc00b18e311816b14a0145d68898b04cc4c1b9f51168b46420139e"
+      },
+      {
+        "file": "r19p1-shell-panel-final.tap",
+        "bytes": 555,
+        "sha256": "26ea5f25d4a721097e7dc7019edc26dba63f6df05f0a5a7b8ca102af32deb287"
+      },
+      {
+        "file": "r19p1-native-contract-final.tap",
+        "bytes": 7608,
+        "sha256": "5acc2c919da22ccc996b488d16f68a12fd9f255dc985f4d32e86cdd2f49ca33d"
+      },
+      {
+        "file": "r19p1-inventory-tests-final.tap",
+        "bytes": 4847,
+        "sha256": "a9a91c8283514b1db9c5047344b90bd452c410010774001931ebd31077795e1b"
+      },
+      {
+        "file": "r19p1-static-final.log",
+        "bytes": 305,
+        "sha256": "6389075698ca2aa348725fabb85f836bd702cfc6097b82e5e32dfb4c19cd0fb9"
+      },
+      {
+        "file": "r19p1-typecheck-final.log",
+        "bytes": 155,
+        "sha256": "0ce845be03f8e2940ef199f21b07a78f140e03a0f80c0c59c57b3b8ba3cb28a7"
+      },
+      {
+        "file": "r19p1-web-build-final.log",
+        "bytes": 9988,
+        "sha256": "7e4a6f72cc4c13bf0833986ec492ffe116d91d38112e201099933a313d17a78e"
+      },
+      {
+        "file": "r19p1-npm-test.tap",
+        "bytes": 931299,
+        "sha256": "9295979f20149ab81052b72f35176603d693eebe92215f5eec2cd4d6b1ce30be"
+      },
+      {
+        "file": "r19p1-baseline-failures.tap",
+        "bytes": 27800,
+        "sha256": "6840f039351723534e03e5a8ad79aeedc745233393bf2baa8d3d3de34a7227d2"
+      }
+    ]
+  },
+  "changedImplementationFiles": [
+    "dist/atlas-shell.js",
+    "dist/content-shell.js",
+    "dist/index.html",
+    "dist/site-after-shell.css",
+    "dist/styles.css",
+    "dist/ui/mobile-shell-heading.js",
+    "dist/ui/shell-layout.css",
+    "docs/conference/boot-preload-graph.json",
+    "scripts/build-site-styles.mjs",
+    "scripts/verify-compare-shell-browser.mjs",
+    "scripts/verify-ui-renewal-p1-browser.mjs",
+    "tests/compare-content-navigation-owner.test.mjs",
+    "tests/r19p1-settings-reachability.test.mjs",
+    "tests/r19p1-shell.test.mjs",
+    "tests/site-styles.test.mjs",
+    "tests/standalone-packaging.test.mjs",
+    "tests/ui-renewal-p0-contract.test.mjs",
+    "tests/ui-renewal-p1-browser.test.mjs",
+    "tests/web/atlas-shell-current-workspace.test.tsx",
+    "tests/web/atlas-shell.test.tsx"
+  ],
+  "acceptanceRemaining": [
+    "Native overflow 0 at all four widths and all 7 route entries",
+    "Native pointer/keyboard destination activation 56/56 and chart return 8/8",
+    "Unchanged P0 settings-icon observed in light and dark; fixed coverage40/40 with thresholds4.5/3.0",
+    "Stage screenshots (currently0); no U-7 completion claim",
+    "Full npm test completion remains blocked by21 baseline-reproduced failures and unavailable declared Docker runtime"
+  ]
+}

@@ -1,6 +1,6 @@
 # 요구사항 — Funnest Charts UI/UX로 전면 리뉴얼 (초안)
 
-작성 2026-11-12. 상태: **P0 10케이스 게이트는 `f86ba0a` Mac 10/10으로 닫힘. P1 셸은 다음 요청이며 아직 구현 전**. settings-icon 라이트·다크 표본은 이전과 같이 미관측(38/40)이라 하네스 `qualifiesP0Verification`은 false로 남긴다. 그 표본과 임계값은 유지한다. [구현·미충족 근거](../evidence/ui-renewal-p0/README.md) · [Mac 영수증](../evidence/qa-r19p0-20261112/p0-48c314c.json). 대상 `twoimo/bitcoin-cycle-atlas`.
+작성 2026-11-12. 상태: **P0 10케이스 게이트는 `f86ba0a` Mac 10/10으로 닫힘. P1 셸·내비는 `ab1ce69`로 구현했고 검증기는 `7589543`이다. 실제 P1 수용은 Chromium 실행 환경 차단으로 미검증**. settings-icon 라이트·다크 표본은 이전과 같이 미관측(38/40)이라 하네스 `qualifiesP0Verification`은 false로 남긴다. 그 표본과 임계값은 유지한다. P1에서 원본 화면 설정 버튼의 도크 배치와 모바일 표시 규칙을 수정했으나 새 Linux 실행의 실제 관측은 0회다. [P1 구현·차단 영수증](../evidence/ui-renewal-p1/README.md). [구현·미충족 근거](../evidence/ui-renewal-p0/README.md) · [Mac 영수증](../evidence/qa-r19p0-20261112/p0-f86ba0a.json). 대상 `twoimo/bitcoin-cycle-atlas`.
 참조 저장소: `funnest-xyz/funnest-charts` (Apache-2.0, `main` @ `39cb29ae250448d520384c12de555b1c00727883`, 2026-11-12). 홈페이지 `https://charts.funnest.xyz`.
 방법: 저장소 소스(`apps/site/app/globals.css`, README)와 실제 홈페이지(1440×900)를 함께 읽고, `ui-ux-pro-max`로 방향을 대조했다. 참조 스크린샷은 `docs/evidence/funnest-ui-20261112/home-1440.png`.
 
