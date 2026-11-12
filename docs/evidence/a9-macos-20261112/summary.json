@@ -108,5 +108,69 @@
       "batches": 2
     },
     "note": "First WP6/chart-qa run failed with spawnSync fc-list ENOENT because PATH lacked /opt/homebrew/bin; rerun with PATH passed. Not a product defect."
+  },
+  "round2": {
+    "sourceCommit": "e6c9a7a3b96df34b3f13875f932106ec56e94a07",
+    "implementationCommit": "1e0d071",
+    "verdict": "A-9 PASSED 6/6",
+    "initialReadyMs": {
+      "390x844": 2311.2,
+      "320x740": 2300.9,
+      "768x1024": 2323.4,
+      "1024x768": 2277.6,
+      "1440x900": 2288.5,
+      "1920x1080": 2330.7
+    },
+    "initialPass": "6/6",
+    "functionalPass": "6/6",
+    "waterfall": {
+      "levelStartsMs": [
+        179
+      ],
+      "requests": 70,
+      "transferBytes": 769501,
+      "timelineJsonStartMs": 180,
+      "timelineJsonDurationMs": 693,
+      "timelineJsonTransferBytes": 187206,
+      "timelineFetchesPerContext": 1,
+      "timelineFetchesTotal": 6
+    },
+    "pageTransitionMs": {
+      "min": 20.8,
+      "max": 32.4
+    },
+    "budgetTransitionMs": 150,
+    "conference": {
+      "cases": 14,
+      "passed": 14,
+      "failures": 0
+    },
+    "responsive": {
+      "cases": 44,
+      "passed": 44,
+      "failures": 0
+    },
+    "chartQa": {
+      "cases": 12,
+      "passed": 12,
+      "status": "PASS"
+    },
+    "compareShell": {
+      "status": "PASSED",
+      "failures": 0
+    },
+    "wp6": {
+      "cases": 30,
+      "passed": 30,
+      "note": "Bundle run had one native heading pan timeout on btcusd-768x1024 under load; standalone rerun on the same commit passed 30/30."
+    },
+    "npmTest": {
+      "complete": true,
+      "tests": 3479,
+      "pass": 3474,
+      "skipped": 5,
+      "fail": 0,
+      "batches": 2
+    }
   }
 }
