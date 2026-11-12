@@ -35,3 +35,19 @@ above without modification.
 Pretendard Variable is separately licensed under the SIL Open Font License 1.1.
 Its copyright, license, pinned source and font-file integrity records are in
 'dist/fonts/pretendard/OFL.txt' and 'dist/fonts/pretendard/PROVENANCE.json'.
+
+---
+
+P2a-0 isolated chart-engine evaluation (not integrated into the production site)
+
+'spikes/funnest-p2a0/' pins @funnest/charts-ui and @funnest/charts to 0.6.16.
+The Apache-2.0 license and original NOTICE are retained unchanged in that
+directory's 'licenses/' folder. Its generated bundle links
+'THIRD_PARTY_NOTICES.txt', including those notices and the local font license.
+The package's public attribution mark is disabled; the Atlas page does not use
+Funnest trademarks to identify itself.
+
+The published UI package also embeds Preact 11.2.0, licensed under the MIT
+License, Copyright (c) 2015-present Jason Miller. The unchanged upstream license
+is retained as 'spikes/funnest-p2a0/licenses/PREACT-LICENSE.txt' and included in
+the generated third-party notices.
