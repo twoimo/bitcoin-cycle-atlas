@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "provenance": "preserved prior local run; raw logs unavailable in current workspace",
+  "localCommit": "7965438ce91aa66e6b5b7094f8aa0cf077eb9c22",
+  "parent": "f92124e3fe8e3ebd802dd4aeb2de75c12cf37fd3",
+  "bundle": {
+    "path": "work/wp-a-7965438.bundle",
+    "bytes": 163145795,
+    "sha256": "094b69457e061bace459d29d14f2b7d3a80dac29bfbfbe4768d9e0bcd9cb19e8",
+    "verifyExit": 0,
+    "availableNow": false
+  },
+  "tests": {
+    "method": "four complementary native shards",
+    "files": [77,77,77,76],
+    "tests": [851,944,867,700],
+    "total": 3362,
+    "pass": 3362,
+    "fail": 0,
+    "skip": 0
+  },
+  "static": {"files":1537,"references":1012,"exit":0},
+  "pages": {"files":12,"routes":9,"exit":0},
+  "viewports": ["320x740","390x844","768x1024","1024x768","1440x900","1920x1080"],
+  "directListening": {"completed":0,"required":10,"passed":false},
+  "limitations": [
+    "not rerun in current recovery workspace",
+    "full-resolution page and 48kbps audio blobs unavailable",
+    "A9 4G and A10 final-source full-hour remain incomplete"
+  ]
+}

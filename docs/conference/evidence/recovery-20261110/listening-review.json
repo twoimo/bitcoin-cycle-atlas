@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "status": "blocked",
+  "completed": 0,
+  "required": 10,
+  "passed": false,
+  "reason": "This execution environment cannot perform human auditory review. Machine-derived audio samples are not listening acceptance.",
+  "points": []
+}

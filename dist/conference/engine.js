@@ -1,0 +1,9 @@
+export const DECKS=Object.freeze(['final-290','r17-257']);
+export const clamp=(value,min,max)=>Math.min(max,Math.max(min,Number(value)||0));
+export function formatTime(seconds){const value=Math.max(0,Math.round(Number(seconds)||0)),h=Math.floor(value/3600),m=Math.floor(value%3600/60),s=value%60;return h?`${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`:`${m}:${String(s).padStart(2,'0')}`}
+export function readConferenceLocation(locationLike,duration=20400){const query=new URLSearchParams(locationLike?.search||'');return{page:'conference',deck:DECKS.includes(query.get('deck'))?query.get('deck'):'r17-257',time:clamp(query.get('t'),0,duration)}}
+export function conferenceUrl({time=0,deck='r17-257'}={}){return`?${new URLSearchParams({page:'conference',t:String(Math.round(time)),deck:DECKS.includes(deck)?deck:'r17-257'})}`}
+export function sessionAt(sessions,time){const t=Number(time)||0;return sessions.find(item=>t>=item.start&&t<item.end)||sessions.at(-1)||null}
+export function cueAt(cues,time){let low=0,high=cues.length-1,answer=null,t=Number(time)||0;while(low<=high){const mid=low+high>>1,cue=cues[mid];if(cue.start<=t){answer=cue;low=mid+1}else high=mid-1}return answer}
+export function pageForTime(timeline,deck,time){const session=sessionAt(timeline.sessions,time),range=session?.pages?.[deck];if(!range)return null;const ratio=(time-session.start)/Math.max(1,session.end-session.start);return Math.min(range[1],Math.max(range[0],range[0]+Math.floor(ratio*(range[1]-range[0]+1))))}
+export function isEditingTarget(target){if(!target)return false;const tag=String(target.tagName||'').toLowerCase();return Boolean(target.isContentEditable||['input','textarea','select','button','a'].includes(tag)||target.closest?.('[contenteditable="true"],input,textarea,select,button,a'))}

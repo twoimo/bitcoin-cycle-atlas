@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "event": {
+    "id": "plspo-2026-10-31",
+    "title": "플스포 투자 컨퍼런스 2026",
+    "date": "2026-10-31",
+    "timezone": "Asia/Seoul",
+    "clockStart": "12:33:00",
+    "clockEnd": "18:13:00"
+  },
+  "decisions": {
+    "r17Variant": null,
+    "audioFormat": null,
+    "audioSplit": null,
+    "speakerLabels": null,
+    "generatedSlides": null,
+    "pageId": null,
+    "pageLabel": null
+  },
+  "sources": [
+    {
+      "id": "plaud1",
+      "audioSourceId": "plaud-1",
+      "file": null,
+      "sha256": null,
+      "clockStart": "12:33:00",
+      "durationSec": 18000,
+      "expectedSegments": 7995
+    },
+    {
+      "id": "plaud2",
+      "audioSourceId": "plaud-2",
+      "file": null,
+      "sha256": null,
+      "clockStart": "17:33:00",
+      "durationSec": 2400,
+      "expectedSegments": 1174
+    }
+  ],
+  "mediaManifest": { "file": null, "sha256": null },
+  "sessions": { "file": null, "sha256": null },
+  "mapping": { "file": null, "sha256": null },
+  "review": null,
+  "outputDir": null,
+  "notes": [
+    "This is an unresolved configuration template, not a real conference timeline or review receipt.",
+    "All file hashes must be full SHA-256 values computed from the supplied originals.",
+    "audioSplit must be explicitly session or chunk and must match the media manifest receipt. Atomic new-output publication shares prepare-media.py and requires Python 3 and Linux renameat2(RENAME_NOREPLACE); unsupported platforms fail without an overwrite-prone fallback.",
+    "Session document: schemaVersion/eventId/sessions; ordered IDs 00..14, actual title/t0/t1, pageRange with both deck IDs (range or null).",
+    "Mapping document: schemaVersion/eventId/sourceSha256 (plaud1 and plaud2)/rows. Each source has exactly one row: source/talk/page/reviewed/reviewer/reviewedAt. page is null or both deck IDs with 1-based page numbers or null. Speaker labels require an explicit speaker string or null per row.",
+    "No automatic slide mapping or invented session boundaries are produced. A cue crossing a program boundary remains one row assigned by its start.",
+    "The media manifest must include original audio measured durationSec from FFprobe. Subtitle ends are checked against measured original ends and the sum of measured prepared durations; planned 20400 seconds is reported separately. Overlapping/nested cues retain their full text and ends.",
+    "Review document: schemaVersion/eventId/approved/reviewer/reviewedAt/inputSha256; pins plaud1, plaud2, mediaManifest, sessions and mapping. anchorEvidence contains bookmarks=32, asrCheckpoints=38, SHA-256 and a reference to the actual R11 evidence.",
+    "Review sampling: algorithm=sha256-ranked-sources-v1, a recorded seed and sources from selectListeningSources. Exactly 10 listeningPoints contain source/subtitleTimeSec/audioTimeSec/errorSec/heardText/evidence/reviewer/reviewedAt/page/slideMatches for both decks. errorSec=subtitleTimeSec-audioTimeSec and abs(errorSec)<=0.5.",
+    "Input receipt validation cannot prove that a human listened, that browser synchronization passes, or that production is deployed.",
+    "Both decks need at least one reviewed actual page mapping before the publish-ready input gate can pass. Every generated JSON/media file must be <=25 MiB; complete-Worker asset-count/deployment verification remains separate.",
+    "Draft output reports missing approval and is not publish-ready. Unknown media/speaker/generated-slide decisions fail even draft conversion. No generated slides are supported until their separate asset contract is reviewed.",
+    "Choose a new output directory outside the media/input directories. Existing directories are never overwritten. Verified assets are copied into the atomic output bundle."
+  ]
+}
