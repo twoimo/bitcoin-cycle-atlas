@@ -683,14 +683,16 @@ async function verifyInstrumentIndicatorLegend(cdp,width,receipt,kind){
       readout:box(readout),source:box(source),rows,
       volumePainted:Boolean(document.querySelector('#chart-indicator-manager')&&plot.querySelector('.volume-bars')),
       volumeBars:plot.querySelectorAll('.volume-bars path, .volume-bars rect').length,
-      plotTop,plotTopY:box(svg).top+Number(svg.dataset.plotTop),plotBox:box(svg),scrollWidth:document.documentElement.scrollWidth,width:innerWidth};
+      plotTop,plotTopY:box(svg).top+Number(svg.dataset.plotTop),plotBox:box(svg),legendBackground:manager?getComputedStyle(manager).backgroundColor:null,scrollWidth:document.documentElement.scrollWidth,width:innerWidth};
   },kind);
   assert.ok(value.manager,'Missing instrument indicator legend: '+kind);
   assert.ok(value.painted,'Instrument indicator legend is not painted: '+kind);
   assert.ok(value.page==='outlook'||value.page==='', 'Indicator legend mounted on an unrelated route: '+value.page);
   assert.ok(value.manager.left>=value.plot.left-1&&value.manager.right<=value.plot.right+1,'Legend escaped the plot horizontally: '+kind);
   assert.ok(value.manager.top>=value.readout.top-1,'Legend overlaps the readout: '+kind);
-  assert.ok(value.manager.bottom<=value.plotTopY+1,'Legend overlaps the price plot: '+kind+' '+value.manager.bottom+'/'+value.plotTopY);
+  // BTC keeps its legend transparent over the plot; the native charts follow the same contract.
+  assert.ok(value.manager.bottom<=value.plot.bottom+1,'Legend escaped the plot bottom: '+kind);
+  assert.equal(value.legendBackground,'rgba(0, 0, 0, 0)','Legend must keep a transparent overlay background: '+kind);
   assert.ok(value.manager.width<=value.plot.width+1,'Legend is wider than the plot: '+kind);
   assert.ok(value.scrollWidth<=value.width+1,'Indicator legend created horizontal overflow: '+kind);
   assert.deepEqual(value.rows.map(row=>row.id),['volume','history','forecast'],'Legend lost one of the supported studies: '+kind);

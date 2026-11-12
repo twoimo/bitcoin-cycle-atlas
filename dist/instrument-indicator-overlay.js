@@ -41,6 +41,14 @@ export function mountInstrumentIndicatorOverlay({plot, anchor, context, items, o
     fold.innerHTML = glyph(collapsed ? UNFOLD : FOLD);
   };
   manager.append(readoutDate, list, fold);
+  // Phones fold the legend so it cannot cover the chart legend chip or the
+  // first candles; the chevron expands it on demand.
+  if (doc.defaultView.matchMedia?.('(max-width:620px)')?.matches) {
+    manager.dataset.collapsed = 'true';
+    fold.setAttribute('aria-expanded', 'false');
+    fold.setAttribute('aria-label', '지표 목록 펼치기');
+    fold.innerHTML = glyph(FOLD);
+  }
 
   const rows = new Map();
   for (const item of items) {

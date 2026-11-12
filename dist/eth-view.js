@@ -278,7 +278,7 @@ export async function initEthView() {
     }
     // Keep readable semantic keys outside the price clip at every font/viewport size.
     const forecastNote=$('#eth-forecast-note'),noteBottom=forecastNote.offsetTop+forecastNote.offsetHeight;
-    const headerInset=Math.max(indicatorOverlay.reserveHeight(),plot.clientHeight<300?(forecast?70:54):(forecast?100:76),
+    const headerInset=Math.max(plot.clientHeight<300?(forecast?70:54):(forecast?100:76),
       forecast&&Number.isFinite(noteBottom)?Math.ceil(noteBottom+8):0);
     state.controller=drawIntradayChart({svg,series,range:state.range,chartType:state.chartType,scale:state.scale,priceDomain:state.priceDomain,invertScale:state.invertScale,showVolume:state.showVolume,tool:state.tool,magnet:state.magnet,measurement:state.measurement,onMeasurement:value=>workbench?.measure(value),onInspect:detail=>workbench?.inspect(detail),selectedTime:state.selectedTime,headerInset,forecast,onForecastEvidence:()=>openInfo('forecast'),historyStatus:entry?.historyStatus||'ready',onHover:showReadout,
       historicalEvents:getEthereumEvents({category:state.eventSettings.category}),showHistoricalEvents:state.eventSettings.visible,activeHistoricalEventId:state.selectedHistoryEvent,historicalEventColors:ETHEREUM_EVENT_COLORS,onHistoricalEvent:openHistoricalEvent});
