@@ -1,0 +1,412 @@
+{
+ "schema": "atlas.wp-a.deck-inputs/1",
+ "generatedAt": "2026-11-12T10:10:00+09:00",
+ "generatedBy": "driver routine s3YAL919SDJ183nn (read-only extraction from the locked originals; no deck writes)",
+ "lock": "docs/conference/deck-lock-20261112.json",
+ "sources": {
+  "final-290": {
+   "pdf": {
+    "path": "/Users/twoimo/Documents/projects/plspo-conference-20261031/00_열람/플스포_강연자료_최종.pdf",
+    "sha256": "4b1affb46789400a4079743bb8f5b29bfbdcc4aa36544f4a43c3c7516dbd24db",
+    "pages": 290
+   },
+   "ocr": {
+    "dpi": 100,
+    "engine": "macOS Vision VNRecognizeTextRequest ko-KR+en-US accurate, usesLanguageCorrection=false",
+    "pageTextFile": "deck-pages-final-290.json"
+   }
+  },
+  "r17-clean-257": {
+   "pdf": {
+    "path": "/Users/twoimo/Documents/projects/plspo-conference-20261031/깔끔본_R17_로고_20261109/플스포_강연자료_최종본_깔끔본_20261110.pdf",
+    "sha256": "3760cd72c04c4625750f3fe80b0b28cc666fe9a0b9a8467823750c30b87c873e",
+    "pages": 257
+   },
+   "pptx": {
+    "path": "/Users/twoimo/Documents/projects/plspo-conference-20261031/깔끔본_R17_로고_20261109/플스포_강연자료_최종본_깔끔본_20261110.pptx",
+    "sha256": "43fb4f2dbf996f0b1c478675fe19a3e9fe1bbf949ba738b46f260ef61d4cdb39"
+   },
+   "text": {
+    "source": "PPTX text frames (exact, not OCR)",
+    "pageTextFile": "deck-pages-r17-clean-257.json"
+   }
+  }
+ },
+ "srt": {
+  "plaud-1": {
+   "file": "srt/plaud1_1233-1733_5h.srt",
+   "sha256": "90544fc7481d1445b667e858ce19379fbbdbbc1f207a932f296de7a188a8259c",
+   "clockStart": "12:33:00",
+   "offsetSeconds": 0,
+   "durationSec": 18000,
+   "offsetNote": "파일 시작이 곧 이벤트 시작이므로 오프셋 0."
+  },
+  "plaud-2": {
+   "file": "srt/plaud2_1733-1813_40m.srt",
+   "sha256": "78647f0ded22969fd66cac7fddafaa057d7edf957db5d08b5c6b7c74216d8976",
+   "clockStart": "17:33:00",
+   "offsetSeconds": 18000,
+   "durationSec": 2400,
+   "offsetNote": "17:33 − 12:33 = 5h = 18,000초. 모든 t0/t1은 이벤트 시작(12:33) 기준 초."
+  }
+ },
+ "bookmarks": {
+  "final-290": {
+   "count": 32,
+   "toc": [
+    {
+     "level": 1,
+     "title": "프로그램 · 1쪽",
+     "page": 1
+    },
+    {
+     "level": 1,
+     "title": "1 · 규동산 · 강연 시작 (2–8)",
+     "page": 2
+    },
+    {
+     "level": 2,
+     "title": "강연 끝 · 규동산 · 8쪽",
+     "page": 8
+    },
+    {
+     "level": 1,
+     "title": "2 · 드림캐스트 · 강연 시작 (9–22)",
+     "page": 9
+    },
+    {
+     "level": 2,
+     "title": "강연 끝 · 드림캐스트 · 22쪽",
+     "page": 22
+    },
+    {
+     "level": 1,
+     "title": "3 · 셀프 · 강연 시작 (23–39)",
+     "page": 23
+    },
+    {
+     "level": 2,
+     "title": "현장 확인과 수리 상태",
+     "page": 30
+    },
+    {
+     "level": 2,
+     "title": "강연 끝 · 셀프 · 39쪽",
+     "page": 39
+    },
+    {
+     "level": 1,
+     "title": "4 · 겜보이 · 강연 시작 (40–47)",
+     "page": 40
+    },
+    {
+     "level": 2,
+     "title": "매매일지: 반복 행동 복기",
+     "page": 42
+    },
+    {
+     "level": 2,
+     "title": "강연 끝 · 겜보이 · 47쪽",
+     "page": 47
+    },
+    {
+     "level": 1,
+     "title": "5 · 관점킹 · 강연 시작 (48–55)",
+     "page": 48
+    },
+    {
+     "level": 2,
+     "title": "강연 끝 · 관점킹 · 55쪽",
+     "page": 55
+    },
+    {
+     "level": 1,
+     "title": "6 · 루틴 · 강연 시작 (56–88)",
+     "page": 56
+    },
+    {
+     "level": 2,
+     "title": "분석 질문과 반론 점검",
+     "page": 81
+    },
+    {
+     "level": 2,
+     "title": "강연 끝 · 루틴 · 88쪽",
+     "page": 88
+    },
+    {
+     "level": 1,
+     "title": "7 · 다마고치 · 강연 시작 (89–125)",
+     "page": 89
+    },
+    {
+     "level": 2,
+     "title": "강연 끝 · 다마고치 · 125쪽",
+     "page": 125
+    },
+    {
+     "level": 1,
+     "title": "8 · 크립토 · 강연 시작 (126–142)",
+     "page": 126
+    },
+    {
+     "level": 2,
+     "title": "강연 끝 · 크립토 · 142쪽",
+     "page": 142
+    },
+    {
+     "level": 1,
+     "title": "9 · 청약노트 · 강연 시작 (143–158)",
+     "page": 143
+    },
+    {
+     "level": 2,
+     "title": "강연 끝 · 청약노트 · 158쪽",
+     "page": 158
+    },
+    {
+     "level": 1,
+     "title": "10 · 엑박 · 강연 시작 (159–238)",
+     "page": 159
+    },
+    {
+     "level": 2,
+     "title": "성장·유동성·심리 정의",
+     "page": 163
+    },
+    {
+     "level": 2,
+     "title": "AI: 누적 → 증명 → 자산화",
+     "page": 208
+    },
+    {
+     "level": 2,
+     "title": "강연 끝 · 엑박 · 238쪽",
+     "page": 238
+    },
+    {
+     "level": 1,
+     "title": "11 · 플스포 · 강연 시작 (239–277)",
+     "page": 239
+    },
+    {
+     "level": 2,
+     "title": "메타인지: 왜를 묻기",
+     "page": 242
+    },
+    {
+     "level": 2,
+     "title": "삼플레 매매법 소개",
+     "page": 248
+    },
+    {
+     "level": 2,
+     "title": "강연 끝 · 플스포 · 277쪽",
+     "page": 277
+    },
+    {
+     "level": 1,
+     "title": "후원·현장 안내 (278–281)",
+     "page": 278
+    },
+    {
+     "level": 1,
+     "title": "출처·검증 부록 (282–290)",
+     "page": 282
+    }
+   ]
+  },
+  "r17-clean-257": {
+   "count": 35,
+   "toc": [
+    {
+     "level": 1,
+     "title": "프로그램 안내",
+     "page": 1
+    },
+    {
+     "level": 1,
+     "title": "규동산",
+     "page": 2
+    },
+    {
+     "level": 2,
+     "title": "강연 시작",
+     "page": 2
+    },
+    {
+     "level": 2,
+     "title": "강연 끝",
+     "page": 8
+    },
+    {
+     "level": 1,
+     "title": "드림캐스트",
+     "page": 9
+    },
+    {
+     "level": 2,
+     "title": "강연 시작",
+     "page": 9
+    },
+    {
+     "level": 2,
+     "title": "강연 끝",
+     "page": 22
+    },
+    {
+     "level": 1,
+     "title": "셀프",
+     "page": 23
+    },
+    {
+     "level": 2,
+     "title": "강연 시작",
+     "page": 23
+    },
+    {
+     "level": 2,
+     "title": "강연 끝",
+     "page": 39
+    },
+    {
+     "level": 1,
+     "title": "겜보이",
+     "page": 40
+    },
+    {
+     "level": 2,
+     "title": "강연 시작",
+     "page": 40
+    },
+    {
+     "level": 2,
+     "title": "강연 끝",
+     "page": 47
+    },
+    {
+     "level": 1,
+     "title": "관점킹",
+     "page": 48
+    },
+    {
+     "level": 2,
+     "title": "강연 시작",
+     "page": 48
+    },
+    {
+     "level": 2,
+     "title": "강연 끝",
+     "page": 55
+    },
+    {
+     "level": 1,
+     "title": "루틴",
+     "page": 56
+    },
+    {
+     "level": 2,
+     "title": "강연 시작",
+     "page": 56
+    },
+    {
+     "level": 2,
+     "title": "강연 끝",
+     "page": 88
+    },
+    {
+     "level": 1,
+     "title": "다마고치",
+     "page": 89
+    },
+    {
+     "level": 2,
+     "title": "강연 시작",
+     "page": 89
+    },
+    {
+     "level": 2,
+     "title": "강연 끝",
+     "page": 120
+    },
+    {
+     "level": 1,
+     "title": "크립토",
+     "page": 121
+    },
+    {
+     "level": 2,
+     "title": "강연 시작",
+     "page": 121
+    },
+    {
+     "level": 2,
+     "title": "강연 끝",
+     "page": 136
+    },
+    {
+     "level": 1,
+     "title": "청약노트",
+     "page": 137
+    },
+    {
+     "level": 2,
+     "title": "강연 시작",
+     "page": 137
+    },
+    {
+     "level": 2,
+     "title": "강연 끝",
+     "page": 152
+    },
+    {
+     "level": 1,
+     "title": "엑박",
+     "page": 153
+    },
+    {
+     "level": 2,
+     "title": "강연 시작",
+     "page": 153
+    },
+    {
+     "level": 2,
+     "title": "강연 끝",
+     "page": 220
+    },
+    {
+     "level": 1,
+     "title": "플스포",
+     "page": 221
+    },
+    {
+     "level": 2,
+     "title": "강연 시작",
+     "page": 221
+    },
+    {
+     "level": 2,
+     "title": "강연 끝",
+     "page": 253
+    },
+    {
+     "level": 1,
+     "title": "마무리·원문 협찬 안내",
+     "page": 254
+    }
+   ]
+  }
+ },
+ "pageText": {
+  "final-290": {
+   "count": 290,
+   "kind": "ocr-lines",
+   "note": "이미지 기반 덱이라 텍스트 레이어가 없다(전체 4,902자). OCR 결과는 매핑 초안용이며 정본 텍스트가 아니다."
+  },
+  "r17-clean-257": {
+   "count": 257,
+   "kind": "pptx-text",
+   "note": "PPTX 텍스트 프레임에서 직접 추출한 정확 텍스트."
+  }
+ }
+}
