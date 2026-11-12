@@ -10,14 +10,14 @@ import {assertConferenceSeekEvidence} from '../scripts/conference-media-browser-
 const fixtureTimeline = JSON.parse(await readFile(new URL('./fixtures/conference/timeline.synthetic.json', import.meta.url)));
 const settle = () => new Promise(resolve => setImmediate(resolve));
 
-function fixture({href='https://atlas.test/bitcoin-cycle-atlas/?page=conference', width=1440, response, play, mediaManifestUrl} = {}) {
+function fixture({href='https://atlas.test/bitcoin-cycle-atlas/?page=conference', width=1440, response, play, mediaManifestUrl, ResizeObserver} = {}) {
   const {document, window} = parseHTML('<html><body data-page="conference"><h1>컨퍼런스 복습</h1><main id="host"></main></body></html>');
   const host = document.getElementById('host');
   let location = new URL(href);
   const windowEvents = new window.EventTarget();
   const writes = [];
   const view = {
-    get location() { return location; }, innerWidth:width,
+    get location() { return location; }, innerWidth:width, ResizeObserver,
     history:{state:null, replaceState(_state, _title, url) { location = new URL(url, location); writes.push(location.href); }},
     addEventListener:windowEvents.addEventListener.bind(windowEvents),
     removeEventListener:windowEvents.removeEventListener.bind(windowEvents),
@@ -1134,4 +1134,196 @@ test('r17 first-image visibility survives preload completion on either side of n
       assertVisibleSlide(f, 2);
     } finally {f.controller.destroy();}
   });
+});
+
+test('stage controls and mapping status sit in a header immediately before the image surface at all four requested widths', async () => {
+  for (const width of [320, 390, 768, 1440]) {
+    const f = fixture({width});
+    try {
+      await f.controller.load();
+      const stage = f.host.querySelector('.conference-stage'), header = f.host.querySelector('.conference-stage-header');
+      const tools = f.host.querySelector('.conference-stage-tools'), status = f.role('page-status');
+      assert.ok(header, width + ': separate stage header');
+      assert.equal(header.nextElementSibling, stage, width + ': header directly precedes the surface');
+      assert.equal(header.parentElement, stage.parentElement);
+      assert.equal(stage.parentElement.classList.contains('conference-stage-shell'), true);
+      assert.ok(header.contains(tools)); assert.ok(header.contains(status));
+      assert.equal(stage.contains(tools), false); assert.equal(stage.contains(status), false);
+      assert.equal(stage.querySelectorAll('[data-action=zoom],[data-action=fullscreen],[data-role=page]').length, 0);
+      assert.equal(tools.querySelectorAll('[data-action=zoom],[data-action=fullscreen],[data-role=page]').length, 3);
+      assert.equal(stage.querySelector('.conference-slide-image').closest('.conference-stage'), stage);
+      assert.equal(f.document.querySelectorAll('h1').length, 1);
+    } finally {f.controller.destroy();}
+  }
+});
+
+test('the moved stage header preserves the real null-mapping badge, direct page entry, keyboard navigation and zoom/fullscreen controls', async () => {
+  const timeline = JSON.parse(await readFile(new URL('../dist/conference/timeline.json', import.meta.url)));
+  const manifest = readyMediaManifest(timeline);
+  const f = fixture({href:'https://atlas.test/?page=conference&t=3283&deck=final-290', width:320,
+    response:async url => jsonResponse(url.endsWith('/timeline.json') ? timeline : manifest)});
+  try {
+    await f.controller.load(); assert.equal(await f.controller.whenMediaSettled(), true);
+    const header = f.host.querySelector('.conference-stage-header'), stage = f.host.querySelector('.conference-stage');
+    const page = f.role('page'), zoom = f.host.querySelector('[data-action=zoom]'), fullscreen = f.host.querySelector('[data-action=fullscreen]');
+    assert.ok(header?.contains(f.role('page-status')));
+    assert.equal(f.controller.getState().time, 3283); assert.equal(f.controller.getState().page, 7);
+    assert.equal(f.role('page-status').hidden, false);
+    assert.equal(f.role('page-status').textContent, '이 구간에 맞는 장표 없음'); assertVisibleSlide(f, 7);
+    assert.equal(page.getAttribute('aria-label'), '장표 페이지'); assert.equal(page.type, 'number');
+    assert.equal(page.disabled, false); assert.equal(zoom.disabled, false); assert.equal(fullscreen.disabled, false);
+    assert.equal(zoom.getAttribute('aria-label'), '장표 확대'); assert.equal(zoom.getAttribute('aria-pressed'), 'false');
+    assert.equal(fullscreen.getAttribute('aria-label'), '장표 전체화면');
+    const timeBeforeInput = f.controller.getState().time;
+    assert.equal(f.key('ArrowRight', {}, page).defaultPrevented, false);
+    assert.equal(f.controller.getState().time, timeBeforeInput, 'editing the page input does not run player arrow shortcuts');
+    page.value = '6'; page.dispatchEvent(new f.window.Event('change'));
+    assert.equal(f.controller.getState().time, 2401.74); assert.equal(f.controller.getState().page, 6);
+    assert.equal(f.role('page-status').hidden, true); assertVisibleSlide(f, 6);
+    assert.equal(f.key(']').defaultPrevented, true); assert.equal(f.controller.getState().page, 7);
+    assert.equal(f.key('[').defaultPrevented, true); assert.equal(f.controller.getState().page, 6);
+    f.click('zoom');
+    assert.equal(stage.classList.contains('conference-zoomed'), true);
+    assert.equal(zoom.getAttribute('aria-pressed'), 'true'); assert.equal(zoom.getAttribute('aria-label'), '장표 확대 해제');
+    f.click('zoom');
+    assert.equal(stage.classList.contains('conference-zoomed'), false);
+    assert.equal(zoom.getAttribute('aria-pressed'), 'false'); assert.equal(zoom.getAttribute('aria-label'), '장표 확대');
+    const shell = stage.parentElement;
+    let fullscreenRequests = 0, fullscreenExits = 0;
+    Object.defineProperty(f.document, 'fullscreenElement', {configurable:true, writable:true, value:null});
+    const fullscreenChanged = () => f.document.dispatchEvent(new f.window.Event('fullscreenchange'));
+    shell.requestFullscreen = () => { fullscreenRequests++; f.document.fullscreenElement = shell; fullscreenChanged(); return Promise.resolve(); };
+    f.document.exitFullscreen = () => { fullscreenExits++; f.document.fullscreenElement = null; fullscreenChanged(); return Promise.resolve(); };
+    f.click('fullscreen'); await settle();
+    assert.equal(fullscreenRequests, 1, 'fullscreen includes the image and its outside controls');
+    assert.equal(f.document.fullscreenElement, shell);
+    assert.equal(fullscreen.getAttribute('aria-pressed'), 'true'); assert.match(fullscreen.getAttribute('aria-label'), /전체화면.*해제/);
+    f.click('fullscreen'); await settle();
+    assert.equal(fullscreenExits, 1); assert.equal(fullscreen.getAttribute('aria-pressed'), 'false');
+    assert.equal(fullscreen.getAttribute('aria-label'), '장표 전체화면');
+    // Browser-native entry/exit notifications also synchronize the same button.
+    f.document.fullscreenElement = shell; fullscreenChanged();
+    assert.equal(fullscreen.getAttribute('aria-pressed'), 'true');
+    f.document.fullscreenElement = null; fullscreenChanged();
+    assert.equal(fullscreen.getAttribute('aria-pressed'), 'false');
+    assert.equal(f.role('page'), page, 'navigation retains the original focusable page input');
+  } finally {f.controller.destroy();}
+});
+
+test('moved stage controls become disabled again during reload and remain disabled on missing or failed data', async () => {
+  let response = async () => jsonResponse(fixtureTimeline);
+  const f = fixture({response:(...args) => response(...args)});
+  const controls = [...f.host.querySelectorAll('[data-action=zoom],[data-action=fullscreen],[data-role=page]')];
+  const assertDisabled = value => {
+    assert.equal(controls.length, 3);
+    for (const control of controls) assert.equal(control.disabled, value, control.getAttribute('aria-label'));
+  };
+  try {
+    assertDisabled(true); assert.equal(await f.controller.load(), true); assertDisabled(false);
+    let release;
+    response = () => new Promise(resolve => {release = resolve;});
+    const loading = f.controller.load();
+    assert.equal(f.controller.getState().status, 'loading'); assertDisabled(true);
+    f.click('zoom'); assert.equal(f.controller.getState().zoom, false);
+    release({ok:false, status:500}); assert.equal(await loading, false);
+    assert.equal(f.controller.getState().status, 'error'); assertDisabled(true);
+    response = async () => ({ok:false, status:404}); assert.equal(await f.controller.load(), false);
+    assert.equal(f.controller.getState().status, 'empty'); assertDisabled(true);
+  } finally {f.controller.destroy();}
+});
+
+test('stage chrome CSS keeps normal grid flow, wrapping text, 44px controls and visible focus without overlay offsets', async () => {
+  const css = (await readFile(new URL('../dist/conference/player.css', import.meta.url), 'utf8')).replace(/\/\*[\s\S]*?\*\//g, '');
+  const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(([, selector, body]) => ({selector:selector.trim(), body}));
+  for (const name of ['conference-stage-header', 'conference-stage-tools', 'conference-page-status']) {
+    const matches = rules.filter(rule => rule.selector === '.conference-player .' + name);
+    assert.ok(matches.length, name + ' is styled');
+    for (const {body} of matches) {
+      assert.doesNotMatch(body, /(?:^|;)\s*position\s*:\s*(?:absolute|fixed)\b/, name + ' stays outside overlay positioning');
+      assert.doesNotMatch(body, /(?:^|;)\s*(?:top|right|bottom|left|inset)\s*:/, name + ' has no surface offsets');
+    }
+  }
+  const header = rules.filter(rule => rule.selector === '.conference-player .conference-stage-header').map(rule => rule.body).join(';');
+  assert.match(header, /(?:^|;)\s*display\s*:\s*grid\b/);
+  assert.match(header, /grid-template-columns\s*:\s*minmax\(\s*0\s*,\s*1fr\s*\)\s+auto/);
+  assert.match(header, /min-width\s*:\s*0\b/);
+  const meta = rules.filter(rule => rule.selector === '.conference-player .conference-stage-meta').map(rule => rule.body).join(';');
+  assert.match(meta, /min-width\s*:\s*0\b/); assert.match(meta, /min-height\s*:\s*52px/);
+  const status = rules.filter(rule => rule.selector === '.conference-player .conference-page-status').map(rule => rule.body).join(';');
+  assert.match(status, /white-space\s*:\s*normal/); assert.match(status, /overflow-wrap\s*:\s*anywhere/);
+  const targets = rules.find(rule => rule.selector.includes('.conference-player button') && rule.selector.includes('.conference-player input:not([type=range])'));
+  assert.ok(targets); assert.match(targets.body, /min-height\s*:\s*44px/); assert.match(targets.body, /min-width\s*:\s*44px/);
+  const focus = rules.find(rule => rule.selector.includes(':focus-visible'));
+  assert.ok(focus); assert.match(focus.body, /outline\s*:\s*2px/);
+  const toolFocus = rules.find(rule => rule.selector.includes('.conference-stage-tools') && rule.selector.includes(':focus-visible'));
+  assert.ok(toolFocus); assert.match(toolFocus.body, /outline-offset\s*:\s*-2px/);
+  const surface = rules.find(rule => rule.selector === '.conference-player .conference-stage');
+  assert.ok(surface); assert.match(surface.body, /aspect-ratio\s*:\s*16\s*\/\s*9/);
+});
+
+test('controlled sizing reserves the measured header and keeps 16:9 in normal and fullscreen modes', async () => {
+  // These dimensions are injected model inputs, not measured browser geometry.
+  for (const viewportWidth of [320, 390, 768, 1024, 1440]) {
+    let observer;
+    class TestResizeObserver {
+      targets = []; disconnected = false;
+      constructor(callback) { this.callback = callback; observer = this; }
+      observe(target) { this.targets.push(target); }
+      disconnect() { this.disconnected = true; }
+    }
+    const f = fixture({width:viewportWidth, ResizeObserver:TestResizeObserver});
+    try {
+      await f.controller.load();
+      const visual = f.host.querySelector('.conference-visual'), header = f.host.querySelector('.conference-stage-header');
+      const shell = f.host.querySelector('.conference-stage-shell'), stage = f.host.querySelector('.conference-stage');
+      const fullscreen = f.host.querySelector('[data-action=fullscreen]'), page = f.role('page');
+      assert.ok(header && shell);
+      const normalWidth = viewportWidth <= 767 ? viewportWidth : viewportWidth - 32;
+      const size = {visualWidth:normalWidth, visualHeight:400, headerHeight:viewportWidth <= 767 ? 52 : 44,
+        shellWidth:viewportWidth, shellHeight:viewportWidth <= 767 ? 240 : 500};
+      Object.defineProperties(visual, {
+        clientWidth:{get:() => size.visualWidth}, clientHeight:{get:() => size.visualHeight},
+      });
+      Object.defineProperties(shell, {
+        clientWidth:{get:() => size.shellWidth}, clientHeight:{get:() => size.shellHeight},
+      });
+      Object.defineProperty(header, 'offsetHeight', {get:() => size.headerHeight});
+      // The event row is inside the measured header and must not be subtracted twice.
+      Object.defineProperty(f.host.querySelector('.conference-event'), 'offsetHeight', {get:() => 18});
+      Object.defineProperty(f.document, 'fullscreenElement', {configurable:true, writable:true, value:null});
+      const changedFullscreen = () => f.document.dispatchEvent(new f.window.Event('fullscreenchange'));
+      const expectedNormalWidth = () => viewportWidth <= 767 ? size.visualWidth
+        : Math.min(size.visualWidth, (size.visualHeight - size.headerHeight) * 16 / 9, viewportWidth >= 1280 ? 1120 : Infinity);
+      const assertSize = expectedWidth => {
+        const width = Number.parseFloat(stage.style.width), height = Number.parseFloat(stage.style.height);
+        assert.ok(Math.abs(width - expectedWidth) < 1e-7, viewportWidth + ': stage width follows its current measured area');
+        assert.ok(Math.abs(height - expectedWidth * 9 / 16) < 1e-7, viewportWidth + ': image surface remains 16:9');
+      };
+      f.view.dispatchEvent(new f.window.Event('resize')); assertSize(expectedNormalWidth());
+      assert.ok(observer.targets.includes(header), 'header changes are observed without relying on an outer resize');
+      size.headerHeight += 40; observer.callback([{target:header}]); assertSize(expectedNormalWidth());
+      if (viewportWidth === 1440) {
+        size.visualHeight = 1000; observer.callback([{target:visual}]); assertSize(1120);
+        size.visualHeight = 400;
+      }
+      // Fullscreen dimensions belong to the shell, not the underlying visual.
+      f.document.fullscreenElement = shell; size.visualWidth = 10; size.visualHeight = 10;
+      changedFullscreen();
+      assertSize(Math.min(size.shellWidth, (size.shellHeight - size.headerHeight) * 16 / 9));
+      assert.equal(fullscreen.getAttribute('aria-pressed'), 'true');
+      if (viewportWidth === 1440) {
+        size.shellWidth = 2400; size.shellHeight = 1600; changedFullscreen();
+        assertSize(2400); // No normal-view 1120px cap in fullscreen.
+      }
+      f.document.fullscreenElement = null; size.visualWidth = normalWidth; size.visualHeight = 400;
+      changedFullscreen(); assertSize(expectedNormalWidth());
+      assert.equal(fullscreen.getAttribute('aria-pressed'), 'false');
+      assert.equal(f.role('page'), page);
+      const lastSize = [stage.style.width, stage.style.height];
+      f.controller.destroy(); assert.equal(observer.disconnected, true);
+      f.document.fullscreenElement = shell; changedFullscreen(); observer.callback([{target:header}]);
+      assert.equal(fullscreen.getAttribute('aria-pressed'), 'false', 'destroyed controls no longer react to fullscreenchange');
+      assert.deepEqual([stage.style.width, stage.style.height], lastSize, 'destroyed observers cannot resize the removed surface');
+    } finally {f.controller.destroy();}
+  }
 });

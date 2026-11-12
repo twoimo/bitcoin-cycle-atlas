@@ -3674,14 +3674,18 @@ body[data-page="relay"]{overflow:hidden}
 }
 
 
-/* Source: conference/player.css; SHA-256: 468b6222fa5299ce6918fc6f554d7dc3fb7454c751ce4b83763fcf8d6fbd71ab */
+/* Source: conference/player.css; SHA-256: 82e3c19726dfed781dfe4ffbc143b6b6350cc9876659716948d156baab8dba0a */
 #conference-view{height:100%;min-height:0;min-width:0;overflow:hidden}
 .conference-player{--conference-line:var(--border,#333);--conference-focus:var(--focus,#90b2ff);display:grid;grid-template-columns:minmax(0,1fr);height:100%;min-height:0;min-width:0;width:100%;position:relative;overflow:hidden;background:var(--bg,#0f0f0f);color:var(--text,#dbdbdb);font-family:var(--font,system-ui,sans-serif);font-size:13px;box-sizing:border-box}
 .conference-player *,.conference-player *::before,.conference-player *::after{box-sizing:border-box}
 .conference-player [hidden]{display:none!important}
 .conference-player .conference-main{display:flex;flex-direction:column;align-items:center;min-width:0;min-height:0;height:100%;overflow:hidden;padding:12px 16px 0}
 .conference-player .conference-visual{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;min-width:0;flex:1;width:100%;overflow:hidden}
-.conference-player .conference-event{display:flex;justify-content:space-between;gap:16px;min-width:0;width:100%;max-width:1120px;padding:0 0 8px;color:var(--muted,#b8b8b8);font-size:12px;line-height:18px}
+.conference-player .conference-stage-shell{display:flex;flex-direction:column;align-items:center;flex:none;min-width:0;width:100%;max-width:1120px}
+.conference-player .conference-stage-header{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;flex:none;min-width:0;min-height:44px;width:100%;padding:0 4px}
+/* Reserve the status row even when mapped; changing slides cannot move the frame. */
+.conference-player .conference-stage-meta{display:flex;flex-direction:column;justify-content:flex-start;gap:4px;min-width:0;min-height:44px}
+.conference-player .conference-event{display:flex;justify-content:space-between;gap:16px;min-width:0;width:100%;color:var(--muted,#b8b8b8);font-size:12px;line-height:18px}
 .conference-player .conference-event span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .conference-player .conference-event [data-role=talk-title]{text-align:right}
 .conference-player .conference-stage{position:relative;width:100%;max-width:1120px;aspect-ratio:16/9;min-height:0;flex-shrink:0;overflow:hidden;border:1px solid var(--conference-line);background:var(--surface,#191919)}
@@ -3689,21 +3693,24 @@ body[data-page="relay"]{overflow:hidden}
 .conference-player .conference-slide-image{display:block;width:100%;height:100%;object-fit:contain;transition:none}
 .conference-player .conference-stage.conference-zoomed .conference-slide{overflow:auto;display:block}
 .conference-player .conference-stage.conference-zoomed .conference-slide-image{width:200%;height:200%;max-width:none;object-fit:contain}
-.conference-player .conference-stage:fullscreen{width:100vw;height:100dvh;max-width:none;aspect-ratio:auto;background:var(--bg,#0f0f0f)}
-.conference-player .conference-stage-message{display:flex;flex-direction:column;gap:8px;max-width:90%;padding:64px 12px 32px;text-align:center;line-height:1.6;color:var(--muted,#b8b8b8)}
+.conference-player .conference-stage-shell:fullscreen{width:100vw;height:100dvh;max-width:none;justify-content:center;background:var(--bg,#0f0f0f)}
+.conference-player .conference-stage-shell:fullscreen .conference-stage{max-width:none}
+.conference-player .conference-stage-message{display:flex;flex-direction:column;gap:8px;max-width:90%;padding:24px 12px;text-align:center;line-height:1.6;color:var(--muted,#b8b8b8)}
 .conference-player .conference-stage-message strong{font-size:16px;font-weight:500;color:var(--text,#dbdbdb)}
 .conference-player .conference-stage-message>span{font-size:12px;max-width:36em}
-.conference-player .conference-stage-tools{position:absolute;top:8px;right:8px;display:flex;align-items:center;gap:4px;background:var(--surface,#191919)}
+.conference-player .conference-stage-tools{display:flex;align-items:center;gap:4px;background:var(--surface,#191919)}
 .conference-player button,.conference-player select,.conference-player input:not([type=range]){font:inherit;color:inherit;border:1px solid var(--conference-line);border-radius:4px;background:var(--surface,#191919);box-shadow:none;min-height:44px;min-width:44px}
 .conference-player button{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 10px;cursor:pointer;line-height:1.2;letter-spacing:normal;text-transform:none}
 .conference-player button:hover:not(:disabled){background:var(--surface-hover,#303030)}
 .conference-player button:disabled,.conference-player select:disabled,.conference-player input:disabled{opacity:.5;cursor:default}
 .conference-player button[aria-pressed=true]{border-color:var(--ui-primary,#2962ff);color:var(--text,#dbdbdb);background:var(--surface-raised,#222)}
 .conference-player :is(button,input,select,[tabindex]):focus-visible{outline:2px solid var(--conference-focus);outline-offset:2px}
+/* Keep the full focus ring inside the toolbar, clear of the image and clipping edge. */
+.conference-player .conference-stage-tools :is(button,input):focus-visible{outline-offset:-2px}
 .conference-player svg{width:20px;height:20px;flex:0 0 20px;pointer-events:none}
 .conference-player .conference-page-field{display:flex;align-items:center;gap:4px;padding-right:8px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .conference-player .conference-page-field input{width:56px;padding:4px;border:0;background:transparent;text-align:center}
-.conference-player .conference-page-status{position:absolute;left:8px;bottom:8px;max-width:calc(100% - 16px);padding:6px 8px;background:var(--surface,#191919);color:var(--muted,#b8b8b8);font-size:12px;line-height:18px}
+.conference-player .conference-page-status{align-self:flex-start;min-width:0;max-width:100%;padding:2px 4px;background:var(--surface,#191919);color:var(--muted,#b8b8b8);font-size:12px;line-height:18px;white-space:normal;overflow-wrap:anywhere}
 .conference-player .conference-caption{display:block;flex:none;width:100%;max-width:1120px;min-height:56px;height:56px;margin:0;padding:6px 12px;border:0;border-bottom:1px solid var(--conference-line);border-radius:0;background:var(--bg,#0f0f0f);text-align:center;user-select:text}
 .conference-player .conference-caption-text{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:22px;max-height:44px;white-space:normal;overflow-wrap:anywhere;user-select:text}
 .conference-player .conference-controls{display:flex;flex-direction:column;align-items:center;gap:4px;position:sticky;bottom:0;z-index:2;flex:none;min-width:0;width:100%;max-width:1120px;padding:0 8px 8px;background:var(--surface,#191919);border-top:1px solid var(--conference-line)}
@@ -3745,7 +3752,11 @@ body[data-page="relay"]{overflow:hidden}
 .conference-player .conference-search-empty{padding:16px;margin:0;color:var(--muted,#b8b8b8)}
 .conference-player .conference-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 @media(min-width:1024px) and (max-width:1279px){
-  .conference-player .conference-main{padding:8px 8px 0}
+  /* The 44px header replaces a 26px title row. Recover those 18px here so
+     the existing full-width 16:9 frame still fits above two caption lines. */
+  .conference-player .conference-main{padding:0 8px}
+  .conference-player .conference-caption{height:48px;min-height:48px;padding:1px 12px 2px}
+  .conference-player .conference-controls{gap:3px}
 }
 @media(max-width:1023px){
   .conference-player.conference-transcript-open{grid-template-columns:minmax(0,1fr)}
@@ -3757,16 +3768,17 @@ body[data-page="relay"]{overflow:hidden}
 @media(max-width:767px){
   .conference-player .conference-main{padding:0}
   .conference-player .conference-visual{justify-content:center}
-  .conference-player .conference-event{gap:8px;padding:4px 8px;font-size:11px;line-height:18px}
+  .conference-player .conference-stage-meta{gap:2px;min-height:52px}
+  .conference-player .conference-event{gap:8px;font-size:11px;line-height:18px}
   .conference-player .conference-event [data-role=talk-title]{display:none}
   .conference-player .conference-stage{width:100%;max-width:none;flex-shrink:0}
-  .conference-player .conference-stage-tools{top:4px;right:4px;gap:0}
-  .conference-player .conference-stage-message{padding:48px 8px 20px;gap:4px}
+  .conference-player .conference-stage-tools{gap:0}
+  .conference-player .conference-stage-message{padding:16px 8px;gap:4px}
   .conference-player .conference-stage-message strong{font-size:13px;line-height:20px}
   .conference-player .conference-stage-message>span{font-size:11px;line-height:16px}
   .conference-player .conference-page-field{gap:0;padding-right:4px;font-size:11px}
   .conference-player .conference-page-field input{width:44px;font-size:14px}
-  .conference-player .conference-page-status{left:4px;bottom:4px;max-width:calc(100% - 8px);padding:4px;font-size:11px;line-height:16px}
+  .conference-player .conference-page-status{padding:0 4px;font-size:11px;line-height:16px}
   .conference-player .conference-caption{height:56px;min-height:56px;padding:6px 8px;font-size:12px}
   .conference-player .conference-caption-text{line-height:22px}
   .conference-player .conference-controls{padding:0 4px max(4px,env(safe-area-inset-bottom));gap:2px}

@@ -134,8 +134,8 @@
     {
       "url": "./conference/player.js?v=1.0.0",
       "file": "conference/player.js",
-      "bytes": 46197,
-      "sha256": "08c020a97575727ac871572e7385f606c7a365145f643f2f0b8adba31cd91e5c",
+      "bytes": 47310,
+      "sha256": "f398e0bc60dbb883a87f09513a7d6a6e3936cbdeb8302d36a0d455baee7edcd6",
       "depth": 0,
       "imports": [
         {
@@ -878,6 +878,6 @@
     "sharedModulePreloads": 1,
     "staticImportEdges": 81,
     "maxShortestImportDepth": 6,
-    "moduleBytesByUrl": 749759
+    "moduleBytesByUrl": 750872
   }
 }

@@ -91,18 +91,24 @@ export function mountConferencePlayer(host, options = {}) {
     '<section class="conference-player" data-state="loading" aria-label="컨퍼런스 플레이어">',
     '<div class="conference-main">',
       '<div class="conference-visual">',
-        '<div class="conference-event"><span data-role="event-title">컨퍼런스 자료</span><span data-role="talk-title"></span></div>',
-        '<div class="conference-stage">',
-          '<button type="button" class="conference-slide" data-action="slide" aria-label="현재 장표의 첫 발화로 이동" disabled>',
-            '<img class="conference-slide-image" alt="" hidden decoding="async">',
-            '<span class="conference-stage-message"><strong data-role="state-title">복습 자료를 불러오는 중</strong><span data-role="state-detail"></span></span>',
-          '</button>',
-          '<div class="conference-stage-tools">',
-            '<button type="button" data-action="zoom" aria-label="장표 확대" aria-pressed="false" disabled>' + icon('zoom') + '</button>',
-            '<button type="button" data-action="fullscreen" aria-label="장표 전체화면" disabled>' + icon('fullscreen') + '</button>',
-            '<label class="conference-page-field"><span class="conference-sr-only">장표 페이지</span><input data-role="page" type="number" min="1" step="1" inputmode="numeric" aria-label="장표 페이지" disabled><span data-role="page-total">/ —</span></label>',
+        '<div class="conference-stage-shell">',
+          '<div class="conference-stage-header">',
+            '<div class="conference-stage-meta">',
+              '<div class="conference-event"><span data-role="event-title">컨퍼런스 자료</span><span data-role="talk-title"></span></div>',
+              '<span class="conference-page-status" data-role="page-status" hidden></span>',
+            '</div>',
+            '<div class="conference-stage-tools">',
+              '<button type="button" data-action="zoom" aria-label="장표 확대" aria-pressed="false" disabled>' + icon('zoom') + '</button>',
+              '<button type="button" data-action="fullscreen" aria-label="장표 전체화면" aria-pressed="false" disabled>' + icon('fullscreen') + '</button>',
+              '<label class="conference-page-field"><span class="conference-sr-only">장표 페이지</span><input data-role="page" type="number" min="1" step="1" inputmode="numeric" aria-label="장표 페이지" disabled><span data-role="page-total">/ —</span></label>',
+            '</div>',
           '</div>',
-          '<span class="conference-page-status" data-role="page-status" hidden></span>',
+          '<div class="conference-stage">',
+            '<button type="button" class="conference-slide" data-action="slide" aria-label="현재 장표의 첫 발화로 이동" disabled>',
+              '<img class="conference-slide-image" alt="" hidden decoding="async">',
+              '<span class="conference-stage-message"><strong data-role="state-title">복습 자료를 불러오는 중</strong><span data-role="state-detail"></span></span>',
+            '</button>',
+          '</div>',
         '</div>',
       '</div>',
       '<button type="button" class="conference-caption" data-action="transcript" aria-label="자막 전체 보기" aria-expanded="false" disabled>',
@@ -451,15 +457,26 @@ export function mountConferencePlayer(host, options = {}) {
     action('settings').setAttribute('aria-expanded', String(state.settings));
     setPanelMode();
     // Fit the image to the space actually left by the caption and controls.
-    // Measuring the owned visual area also accounts for wrapped options, a
-    // docked transcript, the outer shell footer and short viewports.
+    // The chrome is a normal-flow sibling of the 16:9 surface. Reserve its
+    // measured height, including a wrapped status, before fitting the image.
+    // Fullscreen owns both siblings and has a different height from the shell.
     const visual = root.querySelector('.conference-visual'), stage = root.querySelector('.conference-stage');
-    const availableWidth = visual.clientWidth, availableHeight = visual.clientHeight - root.querySelector('.conference-event').offsetHeight;
+    const stageShell = root.querySelector('.conference-stage-shell');
+    const fullscreen = document.fullscreenElement === stageShell;
+    const area = fullscreen ? stageShell : visual;
+    const availableWidth = area.clientWidth, availableHeight = area.clientHeight - root.querySelector('.conference-stage-header').offsetHeight;
     if (availableWidth > 0 && availableHeight > 0) {
-      const width = phone() ? availableWidth : Math.min(availableWidth, availableHeight * 16 / 9, (view?.innerWidth || 1440) >= 1280 ? 1120 : Infinity);
+      const width = phone() && !fullscreen ? availableWidth : Math.min(availableWidth, availableHeight * 16 / 9,
+        !fullscreen && (view?.innerWidth || 1440) >= 1280 ? 1120 : Infinity);
       const dimensions = {width:width + 'px', height:(width * 9 / 16) + 'px'};
       for (const [name, value] of Object.entries(dimensions)) if (stage.style[name] !== value) stage.style[name] = value;
     }
+  }
+  function syncFullscreen() {
+    const fullscreen = document.fullscreenElement === root.querySelector('.conference-stage-shell');
+    action('fullscreen').setAttribute('aria-pressed', String(fullscreen));
+    action('fullscreen').setAttribute('aria-label', fullscreen ? '장표 전체화면 해제' : '장표 전체화면');
+    responsive();
   }
   function filterTranscript() {
     const query = role('transcript-search').value.trim().toLocaleLowerCase();
@@ -523,7 +540,7 @@ export function mountConferencePlayer(host, options = {}) {
     audio.removeAttribute?.('src'); audio.load?.();
     image.removeAttribute('src'); image.hidden = true; message.hidden = false;
     role('page-status').hidden = true;
-    for (const control of root.querySelectorAll('.conference-controls button,.conference-controls select,.conference-controls input,.conference-stage button,.conference-stage input,.conference-caption')) control.disabled = true;
+    for (const control of root.querySelectorAll('.conference-controls button,.conference-controls select,.conference-controls input,.conference-stage button,.conference-stage-tools button,.conference-stage-tools input,.conference-caption')) control.disabled = true;
     action('retry').disabled = false;
     lastAnnouncement = null; setText(live, '');
     setText(caption, '재생 자료가 준비되면 자막이 표시됩니다.');
@@ -651,9 +668,9 @@ export function mountConferencePlayer(host, options = {}) {
       button.setAttribute('aria-pressed', String(state.zoom)); button.setAttribute('aria-label', state.zoom ? '장표 확대 해제' : '장표 확대');
     }
     if (name === 'fullscreen') {
-      const stage = root.querySelector('.conference-stage');
+      const stageShell = root.querySelector('.conference-stage-shell');
       try {
-        const result = document.fullscreenElement === stage ? document.exitFullscreen?.() : stage.requestFullscreen?.();
+        const result = document.fullscreenElement === stageShell ? document.exitFullscreen?.() : stageShell.requestFullscreen?.();
         if (!result) notice('이 브라우저에서는 전체화면을 사용할 수 없습니다.');
         result?.catch?.(() => notice('전체화면을 열지 못했습니다.'));
       } catch { notice('전체화면을 열지 못했습니다.'); }
@@ -703,6 +720,7 @@ export function mountConferencePlayer(host, options = {}) {
     if (rect && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) closeTranscript();
   });
   on(document, 'keydown', keydown, true);
+  on(document, 'fullscreenchange', syncFullscreen);
   on(view, 'popstate', syncFromUrl);
   on(view, 'resize', responsive);
   on(view, 'pagehide', () => { if (timeline) writeUrl(true); pause(); });
@@ -742,6 +760,7 @@ export function mountConferencePlayer(host, options = {}) {
     resizeObserver = new Resize(responsive);
     resizeObserver.observe(host);
     resizeObserver.observe(root.querySelector('.conference-visual'));
+    resizeObserver.observe(root.querySelector('.conference-stage-header'));
   }
   const initial = readUrl(); state.time = initial.time; state.deck = initial.deck;
   responsive(); render();
