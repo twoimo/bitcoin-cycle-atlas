@@ -675,8 +675,8 @@
     {
       "url": "./ui/mobile-shell-heading.js",
       "file": "ui/mobile-shell-heading.js",
-      "bytes": 6468,
-      "sha256": "b13d9612749a74c6649edccbda1853bc86c27b278dcdbb7e9f6f055ad736b303",
+      "bytes": 6696,
+      "sha256": "06637574d2e7be2d1e28f3a180fe57653b39088fbfb3731976e760a5b4c37052",
       "depth": 3,
       "imports": []
     },
@@ -891,6 +891,6 @@
     "sharedModulePreloads": 1,
     "staticImportEdges": 82,
     "maxShortestImportDepth": 6,
-    "moduleBytesByUrl": 763144
+    "moduleBytesByUrl": 763372
   }
 }
