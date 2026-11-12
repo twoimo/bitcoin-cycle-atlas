@@ -82,7 +82,7 @@ export function mountConferencePlayer(host, options = {}) {
   let timeline = null, destroyed = false, loadVersion = 0, abort = null, playVersion = 0;
   let audioIndex = -1, pendingSeek = null, seekTarget = null, lastAnnouncement = null, lastUrlKey = null, lastWrittenUrl = null;
   let transcriptOpener = null, transcriptMode = null, imageVersion = 0, imageKey = null;
-  let imagePreload = null, resizeObserver = null, mediaError = false;
+  let imagePreload = null, resizeObserver = null, resizeFrame = null, frameFitKey = null, mediaError = false;
   let mediaLoad = Promise.resolve(false);
   let noticeText = '', highlightedRow = -1;
   const disposers = [], transcriptRows = [], transcriptSearch = [], imageCache = new Map(), pageIndexes = new Map(), mediaDecks = new Map();
@@ -463,6 +463,37 @@ export function mountConferencePlayer(host, options = {}) {
     const visual = root.querySelector('.conference-visual'), stage = root.querySelector('.conference-stage');
     const stageShell = root.querySelector('.conference-stage-shell');
     const fullscreen = document.fullscreenElement === stageShell;
+    const viewportWidth = view?.innerWidth || 1440;
+    // The landscape band restores a real navigation column and a compact
+    // shell header. Fit the whole player card to its remaining height as well:
+    // tools, image, caption and transport must share the full content width.
+    // These rows can grow (notice, wrapped settings, transcript dock), so use
+    // their measured sizes rather than a fixed toolbar-height allowance.
+    if (!fullscreen && viewportWidth >= 1024 && viewportWidth <= 1279 && view?.getComputedStyle) {
+      const main = root.querySelector('.conference-main');
+      const dockWidth = panel.open && panel.dataset.mode === 'dock' ? panel.offsetWidth : 0;
+      const fitKey = [viewportWidth, host.parentElement?.clientWidth, main.clientHeight, dockWidth,
+        role('notice').hidden, role('page-status').hidden, action('retry').hidden].join(':');
+      // Restart at the parent's natural width after an external layout/state
+      // change. Internal observer passes retain the cap while rows settle.
+      if (fitKey !== frameFitKey) { host.style.removeProperty('--conference-frame-width'); frameFitKey = fitKey; }
+      const mainStyle = view.getComputedStyle(main), hostStyle = view.getComputedStyle(host);
+      const pixels = value => Number.parseFloat(value) || 0;
+      const imageHeight = main.clientHeight - pixels(mainStyle.paddingTop) - pixels(mainStyle.paddingBottom)
+        - root.querySelector('.conference-stage-header').offsetHeight
+        - root.querySelector('.conference-caption').offsetHeight - root.querySelector('.conference-controls').offsetHeight;
+      if (imageHeight > 0) {
+        const frameWidth = Math.min(imageHeight * 16 / 9, 1120) + dockWidth
+          + pixels(mainStyle.paddingLeft) + pixels(mainStyle.paddingRight)
+          + pixels(hostStyle.borderLeftWidth) + pixels(hostStyle.borderRightWidth);
+        const value = frameWidth + 'px';
+        if (host.style.getPropertyValue('--conference-frame-width') !== value) host.style.setProperty('--conference-frame-width', value);
+      }
+    } else {
+      host.style.removeProperty('--conference-frame-width'); frameFitKey = null;
+      if (resizeFrame !== null) view?.cancelAnimationFrame?.(resizeFrame);
+      resizeFrame = null;
+    }
     const area = fullscreen ? stageShell : visual;
     const availableWidth = area.clientWidth, availableHeight = area.clientHeight - root.querySelector('.conference-stage-header').offsetHeight;
     if (availableWidth > 0 && availableHeight > 0) {
@@ -757,7 +788,14 @@ export function mountConferencePlayer(host, options = {}) {
   on(audio, 'pause', () => { if (!audio.ended && state.playing) { state.playing = false; renderPlayback(); } });
   const Resize = view?.ResizeObserver || globalThis.ResizeObserver;
   if (Resize) {
-    resizeObserver = new Resize(responsive);
+    resizeObserver = new Resize(() => {
+      if (destroyed) return;
+      const width = view?.innerWidth || 1440;
+      if (width >= 1024 && width <= 1279 && view?.getComputedStyle && view?.requestAnimationFrame) {
+        // The card is itself observed; write its cap outside observer delivery.
+        if (resizeFrame === null) resizeFrame = view.requestAnimationFrame(() => { resizeFrame = null; responsive(); });
+      } else responsive();
+    });
     resizeObserver.observe(host);
     resizeObserver.observe(root.querySelector('.conference-visual'));
     resizeObserver.observe(root.querySelector('.conference-stage-header'));
@@ -773,6 +811,9 @@ export function mountConferencePlayer(host, options = {}) {
       if (destroyed) return;
       destroyed = true; loadVersion++; imageVersion++; playVersion++;
       abort?.abort(); resizeObserver?.disconnect();
+      if (resizeFrame !== null) view?.cancelAnimationFrame?.(resizeFrame);
+      resizeFrame = null; frameFitKey = null;
+      host.style.removeProperty('--conference-frame-width');
       for (const dispose of disposers.splice(0)) dispose();
       audio.pause?.(); audio.removeAttribute?.('src'); audio.load?.();
       if (panel.open) panel.close?.();

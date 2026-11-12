@@ -3933,7 +3933,7 @@ body[data-page="relay"]{overflow:hidden}
 }
 
 
-/* Source: conference/player.css; SHA-256: 96ee6f3b315c0cdd18732c0dac81fd06507163fd30f2c59118f63c93f66f6327 */
+/* Source: conference/player.css; SHA-256: b2d5f63f836120fef43474abda46c8fd988f42f62e5c15254f0464b485392ad0 */
 #conference-view{height:100%;min-height:0;min-width:0;overflow:hidden}
 /* R19 P4: shared type and control paint; retain the stage and control geometry. */
 .conference-player{--conference-line:var(--border);--conference-focus:var(--focus);display:grid;grid-template-columns:minmax(0,1fr);height:100%;min-height:0;min-width:0;width:100%;position:relative;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font,system-ui,sans-serif);font-size:var(--type-meta);box-sizing:border-box}
@@ -4013,6 +4013,37 @@ body[data-page="relay"]{overflow:hidden}
 .conference-player .conference-search-empty{padding:16px;margin:0;color:var(--muted);font-size:var(--type-body-sm)}
 .conference-player .conference-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 @media(min-width:1024px) and (max-width:1279px){
+  /* A-5 landscape: the real navigation moves to a left column, recovering
+     the height consumed by the dashboard's two-row header and card gutters.
+     All player rows share the card width; only the whole card may be capped
+     by responsive() when its measured chrome leaves less room for 16:9. */
+  body[data-shell=dashboard][data-page=conference]{--app-sidebar-width:216px;--app-header-height:48px}
+  body[data-shell=dashboard][data-page=conference] .atlas-dashboard-header.atlas-canvas-heading{
+    left:var(--app-sidebar-width);right:0;width:auto;grid-template-rows:44px;padding-block:1px 2px;
+  }
+  body[data-shell=dashboard][data-page=conference] .atlas-dashboard-nav{
+    position:fixed;inset:0 auto 0 0;width:var(--app-sidebar-width);height:100dvh;min-height:0;
+    flex-direction:column;align-items:stretch;gap:0;padding:12px 8px;
+    border-right:1px solid var(--border);background:var(--bg);box-sizing:border-box;
+  }
+  body[data-shell=dashboard][data-page=conference] .atlas-dashboard-nav>.atlas-nav{
+    flex:1 1 auto;flex-direction:column;align-items:stretch;height:100%;min-height:0;
+    overflow-x:hidden;overflow-y:auto;overscroll-behavior-y:contain;touch-action:pan-y pinch-zoom;
+  }
+  body[data-shell=dashboard][data-page=conference] .atlas-dashboard-nav .atlas-nav :is(a,button){
+    width:100%;justify-content:flex-start;text-align:left;
+  }
+  body[data-shell=dashboard][data-page=conference] .workspace,
+  body[data-shell=dashboard][data-page=conference] #root>.workspace{
+    margin-left:var(--app-sidebar-width)!important;width:calc(100% - var(--app-sidebar-width));
+    padding-block:0 var(--content-bottom-height);
+  }
+  body[data-shell=dashboard][data-page=conference] #main>#conference-view{
+    max-width:min(100%,var(--conference-frame-width,100%));margin-inline:auto;
+  }
+  body[data-shell=dashboard][data-page=conference] .content-bottom-bar{
+    left:var(--app-sidebar-width);right:0;width:auto;
+  }
   /* The 44px header replaces a 26px title row. Recover those 18px here so
      the existing full-width 16:9 frame still fits above two caption lines. */
   .conference-player .conference-main{padding:0 8px}
