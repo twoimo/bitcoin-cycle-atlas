@@ -1,0 +1,218 @@
+{
+  "sourceCommit": "74653b1979af0515ca0fed698dd2852c7a9cef29",
+  "note": "Original report/log/runtime/runner bytes are gzip-compressed unchanged; all PNGs verified and two retained.",
+  "files": [
+    {
+      "file": "verification/executions.json.gz",
+      "bytes": 1153,
+      "sha256": "7efa8ec6fd6208eba876e1aa641f30b329a3c7b08dc2e6b38cf09be5cfc73a9f",
+      "original": "verification/executions.json",
+      "originalBytes": 2971,
+      "originalSha256": "0fa3a6739d5ac97020c5f088744a2f62f8f293f67db393d540b9c1c25be8e0e7"
+    },
+    {
+      "file": "verification/unit.log.gz",
+      "bytes": 1201,
+      "sha256": "9915a894ceb91453b05e5af60fe0c355d82ef9dbd69f6844eabbb087b15a1bcf",
+      "original": "verification/unit.log",
+      "originalBytes": 2775,
+      "originalSha256": "4c6b9c8318840eccef0386eff66af01df46c32dfc0e52aa7bd6e3bb64a26913d"
+    },
+    {
+      "file": "verification/conference.log.gz",
+      "bytes": 273,
+      "sha256": "1698d768e70500a1c00efff7649170661ba69f4299c9a3d001fb9e1d0404f90f",
+      "original": "verification/conference.log",
+      "originalBytes": 968,
+      "originalSha256": "ec99f0c05ec2caf9ff670af9c10b009781062c324b33d53435e4c9760012f00e"
+    },
+    {
+      "file": "conference/report.json.gz",
+      "bytes": 79956,
+      "sha256": "9641dbb1e7cda42959e3df04149c612c7afb75afbe1ef9446e2509538fac7b1e",
+      "original": "conference/report.json",
+      "originalBytes": 663795,
+      "originalSha256": "2a8e699ae752c251d2c1fab92ea719440c4b2df8e4773ffcdf763b3963e5e12d"
+    },
+    {
+      "file": "conference/chrome.stderr.log.gz",
+      "bytes": 1308,
+      "sha256": "8000284e18563e4b22d456eea4c3d35c1f2cdd2bc42ca3f1a3b7c3cd7851a0d5",
+      "original": "conference/chrome.stderr.log",
+      "originalBytes": 11683,
+      "originalSha256": "343a47d2c29b6ed905fa90e625a0b73292dbdfecbe73ff053bb174134ae7d985"
+    },
+    {
+      "file": "run-verification.mjs.gz",
+      "bytes": 1847,
+      "sha256": "eb6630f140eeca7e58f9e9408fa5fe64ef2cf2973381a5a7e5ce9bbc3f7e0da5",
+      "original": "run-verification.mjs",
+      "originalBytes": 4613,
+      "originalSha256": "7bb5bd56988ed01528b3c16fc6b0e1d1d475f73ff0d3c1bd5a3c408182cfe812"
+    },
+    {
+      "file": "runtime/setup.json.gz",
+      "bytes": 534,
+      "sha256": "b605020951b340583ff521880cb6df8e1a4e5fe33ea77977ba852b9da579f91a",
+      "original": "runtime/setup.json",
+      "originalBytes": 940,
+      "originalSha256": "f3131fd0fb5ec1737ca7b996483c25e1b1ed979b705b98abff6068e5c670e859"
+    },
+    {
+      "file": "runtime/cleanup.json.gz",
+      "bytes": 437,
+      "sha256": "6a08a451db94eff614e701f9bd740d8b58476df85efd2e04c4ae49167217087b",
+      "original": "runtime/cleanup.json",
+      "originalBytes": 641,
+      "originalSha256": "0f2af294651690eb0f601fcc9ee8afd2b22824102e1eeb3298ed48297f46a1ea"
+    },
+    {
+      "file": "pack-evidence.py.gz",
+      "bytes": 4281,
+      "sha256": "428569cf4ef36aa2a4f0ece1439188eea959244fe5a4a0b278fe6e61f8912545",
+      "original": "pack-evidence.py",
+      "originalBytes": 11687,
+      "originalSha256": "3ac789175f0e0a2196a89149c5c825c1c7b0fcf74da039bdb3756820eec52f80"
+    },
+    {
+      "file": "repeat-reason.json.gz",
+      "bytes": 282,
+      "sha256": "8580f681b652ee89a069cf7aa1b4c1ff9668ba320bf8cac50c137a03dd794fdf",
+      "original": "repeat-reason.json",
+      "originalBytes": 410,
+      "originalSha256": "453f62d8aca732ccccb013b2dbfcc7f1148c922f286ab2a0b665d4570a44f185"
+    },
+    {
+      "file": "conference/fixture-320x740-transcript.png",
+      "bytes": 16412,
+      "sha256": "2d7c63bc72b02ae497c4543b77a4b632627dfd1b54ffbef1a10f368ddb158521"
+    },
+    {
+      "file": "conference/fixture-1440x900-transcript.png",
+      "bytes": 70491,
+      "sha256": "40f556a83512532c63905ea23748e3bf9b0f5ae737f7e3f3252c2282c4c634c4"
+    },
+    {
+      "file": "prior-attempt-1/chrome.stderr.log.gz",
+      "bytes": 1305,
+      "sha256": "f5bb7d006ebd6e8aec0ef6cc61c71e81f2291b12c8c3c8f600e371b7cc3298b2",
+      "original": "build/r13-native-text-attempt-1/chrome.stderr.log",
+      "originalBytes": 11683,
+      "originalSha256": "b193c29c009d6dacec2ba02564904c1af041914362e5823b21cf8a3dc1cff1c9",
+      "provenance": "See prior-attempt preservation and excerpt provenance; no lost full report reconstruction."
+    },
+    {
+      "file": "prior-attempt-1/conference.log.gz",
+      "bytes": 566,
+      "sha256": "2691fe238e81d49ea8f63b9bbdadeee3e690c6f5edda043bb92c8c8eeaaeb5e2",
+      "original": "build/r13-native-text-attempt-1/conference.log",
+      "originalBytes": 1621,
+      "originalSha256": "d82932ab7d14c0c30942862bc495b2c2fc2270fefc1b164786e151d77c65329a",
+      "provenance": "See prior-attempt preservation and excerpt provenance; no lost full report reconstruction."
+    },
+    {
+      "file": "prior-attempt-1/navigation-ETHUSD-failed.png",
+      "bytes": 9999,
+      "sha256": "880065f6ff7f64fae959bdcaaca2d6fb3c96e6b880296643c53f45c0b958b1a6",
+      "original": "build/r13-native-text-attempt-1/navigation-ETHUSD-failed.png",
+      "originalBytes": 9999,
+      "originalSha256": "880065f6ff7f64fae959bdcaaca2d6fb3c96e6b880296643c53f45c0b958b1a6",
+      "provenance": "See prior-attempt preservation and excerpt provenance; no lost full report reconstruction."
+    },
+    {
+      "file": "prior-attempt-1/preservation.json.gz",
+      "bytes": 1157,
+      "sha256": "efaf0344fd03c32d9a37c7ba2f901532a1fb85496f1ea4327a01ab655c295c2e",
+      "original": "build/r13-native-text-attempt-1/preservation.json",
+      "originalBytes": 3371,
+      "originalSha256": "de0babe237bc313b38c95ee5382372094bd3df834386112c6ff0302cb2105d02",
+      "provenance": "See prior-attempt preservation and excerpt provenance; no lost full report reconstruction."
+    },
+    {
+      "file": "prior-attempt-1-excerpts/PROVENANCE.md.gz",
+      "bytes": 1013,
+      "sha256": "70dccc5452a6b7f47d525d65f6b0c652c58d636f2d33f2b2855c1774f696d22f",
+      "original": "build/r13-native-text-recovered-attempt-1/PROVENANCE.md",
+      "originalBytes": 1929,
+      "originalSha256": "b00176d66cb11e240ce629049915c67a2667bfd902a6a3e6e78753ec9b063de5",
+      "provenance": "See prior-attempt preservation and excerpt provenance; no lost full report reconstruction."
+    },
+    {
+      "file": "prior-attempt-1-excerpts/excerpt-manifest.json.gz",
+      "bytes": 388,
+      "sha256": "51bf8d81f0efbc3436f6d277b5a08e277497e2b35ef09a29bb0ace4cce62d27f",
+      "original": "build/r13-native-text-recovered-attempt-1/excerpt-manifest.json",
+      "originalBytes": 657,
+      "originalSha256": "2a42fd1e800c6c4610f47af2754746e992550fa89a63c3fe64530ccfd07280c2",
+      "provenance": "See prior-attempt preservation and excerpt provenance; no lost full report reconstruction."
+    },
+    {
+      "file": "prior-attempt-1-excerpts/observed-failed-case-excerpt.json.gz",
+      "bytes": 2598,
+      "sha256": "f5dfecfbe233cdc0ae34adfd2cbd2465a3c5871dec2cb7e01c6ed5af7e5f39c4",
+      "original": "build/r13-native-text-recovered-attempt-1/observed-failed-case-excerpt.json",
+      "originalBytes": 18549,
+      "originalSha256": "546c0c6ac59d041e46e74f02962f513e20c9543d1d51999c9cde35652c7ad42e",
+      "provenance": "See prior-attempt preservation and excerpt provenance; no lost full report reconstruction."
+    },
+    {
+      "file": "prior-attempt-1-excerpts/observed-summary-excerpt.json.gz",
+      "bytes": 615,
+      "sha256": "d7d0e51f5842ff7965c1bfb9eae8384819aee46f4d2edd91572444018c6ca8fc",
+      "original": "build/r13-native-text-recovered-attempt-1/observed-summary-excerpt.json",
+      "originalBytes": 1492,
+      "originalSha256": "e7e200e261434b5da0f9c498c0f39175a512337736226270cf3ded17496d01d7",
+      "provenance": "See prior-attempt preservation and excerpt provenance; no lost full report reconstruction."
+    },
+    {
+      "file": "interrupted-retry/conference/report.json.gz",
+      "bytes": 52291,
+      "sha256": "c570a359dc507449f9368f7eaa9507e2cc5113ee77065bbfc6bd685ab283cab3",
+      "original": "build/r13-native-text-interrupted-2/conference/report.json",
+      "originalBytes": 152647,
+      "originalSha256": "567e85212c608abffdd94f5036ae599a5dbc652a24e67cae478d08463e255fb8",
+      "provenance": "See prior-attempt preservation and excerpt provenance; no lost full report reconstruction."
+    },
+    {
+      "file": "interrupted-retry/interruption.json.gz",
+      "bytes": 299,
+      "sha256": "b41a1c538906fc116ad38ece5fa16ec7ce9262100f76f26b9babafa85652ca33",
+      "original": "build/r13-native-text-interrupted-2/interruption.json",
+      "originalBytes": 428,
+      "originalSha256": "2472fe0a3c6ee7b5ca38ad3345b7ed3226c9ff8dd68b3211a936e847690dd46a",
+      "provenance": "See prior-attempt preservation and excerpt provenance; no lost full report reconstruction."
+    },
+    {
+      "file": "interrupted-retry/run-verification.mjs.gz",
+      "bytes": 1766,
+      "sha256": "072a1c0f172bd7bc96b937573fbe2a9deb714b802125c47125473b333e48163d",
+      "original": "build/r13-native-text-interrupted-2/run-verification.mjs",
+      "originalBytes": 4405,
+      "originalSha256": "024e7b7ff64e00752deec2d95aecabc8095d6657fbc866d6f6c5692a1da87001",
+      "provenance": "See prior-attempt preservation and excerpt provenance; no lost full report reconstruction."
+    },
+    {
+      "file": "interrupted-retry/verification/executions.json.gz",
+      "bytes": 1082,
+      "sha256": "82211d22cd752574e6f49ce72dfffdd03137243e45510452a05954e7485825ac",
+      "original": "build/r13-native-text-interrupted-2/verification/executions.json",
+      "originalBytes": 2647,
+      "originalSha256": "4c693484cbac1a34bf3ec8af92dbe872a555d03934e2fd6ed43c55054b770bc7",
+      "provenance": "See prior-attempt preservation and excerpt provenance; no lost full report reconstruction."
+    },
+    {
+      "file": "interrupted-retry/verification/unit.log.gz",
+      "bytes": 1205,
+      "sha256": "262a8da05de7630cfb23a3d59d4c23a33d071efacd1d1149c76d257f9e042a58",
+      "original": "build/r13-native-text-interrupted-2/verification/unit.log",
+      "originalBytes": 2780,
+      "originalSha256": "b3c82753400ef98a1c8687e1f73506d4cdcf3d8ff407c927e2ccc09b5d423283",
+      "provenance": "See prior-attempt preservation and excerpt provenance; no lost full report reconstruction."
+    },
+    {
+      "file": "summary.json",
+      "bytes": 18273,
+      "sha256": "ab015b33f114f8c40d1dec4f6fbe605cf71ac3585bbf9c6d3d491c857ef3b04b"
+    }
+  ]
+}
