@@ -21,6 +21,7 @@ const afterShell = Object.freeze([
   'vendor/skullet/styles.css', 'loading-surfaces.css', 'editorial-system.css',
   'editorial-panels.css', 'editorial-ledgers.css', 'relay-room.css',
   'conference/player.css', 'ui/chart-legend.css', 'ui/quote-hud.css', 'ui/shell-layout.css',
+  'chart-chrome.css',
 ]);
 // Keep the base and shell as direct links. Their relative order is also an
 // existing 44px touch-floor contract; both intervening ranges stay in order.
@@ -83,7 +84,7 @@ export async function inlineSiteStyles(html, dist) {
   await buildSiteStyles(dist, {check:true});
   for (const entry of siteStylesheetEntries(html)) {
     const blocks = await Promise.all(entry.sources.map(async file => `<style>\n${await readFile(resolve(dist, file), 'utf8')}\n</style>`));
-    // The offline document retains all 41 original, exact source style blocks.
+    // The offline document retains every exact source style block in order.
     // A replacement callback preserves literal replacement-token bytes in CSS.
     html = html.replace(entry.tag, () => blocks.join('\n'));
   }

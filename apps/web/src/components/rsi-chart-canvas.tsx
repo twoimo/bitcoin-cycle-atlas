@@ -126,7 +126,7 @@ export function RsiChartCanvas(props:Props) {
     if(snap!=null&&(view.magnet==='strong'||view.magnet==='weak'&&Math.abs(snapY-py)<=8))value=snap;
     return {date:stamp,value,panel};
   }
-  const color=(bar:RsiBar)=>bar[4]>=bar[1]?'var(--green)':'var(--red)';
+  const color=(bar:RsiBar)=>bar[4]>=bar[1]?'var(--chart-candle-up)':'var(--chart-candle-down)';
   const anchorY=(a:Anchor)=>a.panel==='rsi'?g.rsiY(a.value):g.y(a.value);
   const measurement=view.measurement.length===1&&hover?.panel===view.measurement[0].panel?[...view.measurement,hover]:view.measurement;
   return <div className={`atlas-plot rsi-chart-canvas ${props.className||''}`} ref={root} data-tool={view.tool} data-chart={props.series?'instrument-price':'rsi-price'}>

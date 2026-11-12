@@ -210,10 +210,10 @@ export function volumePaneMarkup({bars,x,left,right,top,bottom,barWidth=3,source
     // thousands of DOM nodes to two paths without summing or averaging volume.
     const paths=['',''];
     for(const bar of usable){const xx=positions.get(bar)-barWidth/2,yy=y(bar.volume),height=Math.max(0,bottom-yy),side=bar.close>=bar.open?0:1;paths[side]+=`M${xx.toFixed(2)},${yy.toFixed(2)}h${barWidth.toFixed(2)}v${height.toFixed(2)}h${(-barWidth).toFixed(2)}Z`;}
-    for(let side=0;side<2;side++)if(paths[side])markup+=`<path class="volume-bars-batch" d="${paths[side]}" data-indicator-fill fill="${side?'#ab6374':'#498f80'}" opacity=".78"/>`;
+    for(let side=0;side<2;side++)if(paths[side])markup+=`<path class="volume-bars-batch" d="${paths[side]}" data-indicator-fill fill="${side?'var(--chart-candle-down)':'var(--chart-candle-up)'}" opacity=".78"/>`;
     markup+=`<title>${usable.length}개 실제 거래량 막대 · 화면의 같은 가격 날짜에서 정확한 ${esc(unit)} 수량을 확인할 수 있습니다.</title>`;
   }else for(const bar of usable){
-    const xx=positions.get(bar),yy=y(bar.volume),color=bar.close>=bar.open?'#498f80':'#ab6374';
+    const xx=positions.get(bar),yy=y(bar.volume),color=bar.close>=bar.open?'var(--chart-candle-up)':'var(--chart-candle-down)';
     markup+=`<rect class="volume-bar" data-indicator-fill data-volume="${bar.volume}" data-time="${bar.time}" data-date="${esc(bar.date)}" x="${xx-barWidth/2}" y="${yy}" width="${barWidth}" height="${Math.max(0,bottom-yy)}" fill="${color}" opacity=".78"><title>${esc(`${dateLabel(bar.startDate||bar.date)}${bar.endDate?'–'+dateLabel(bar.endDate):''} ${clock} · ${source} · ${number(bar.volume,8)} ${unit}`)}</title></rect>`;
   }
   markup+='</g>';

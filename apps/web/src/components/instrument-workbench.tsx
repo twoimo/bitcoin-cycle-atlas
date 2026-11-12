@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { calculateRsiSeries } from '@atlas/domain/market-lab';
 import { CompactToolbar, CompactToolbarMenu } from './compact-toolbar.js';
+import { ChartColorsControl } from './chart-colors-control.js';
 import { RsiChartCanvas, axisNumber, type ChartQuote, type InstrumentMarker, type Pick } from './rsi-chart-canvas.js';
 import { workspaceInstrument } from '../../../../dist/workspace-instruments.js';
 import { type Pane, type RsiChartView } from '../rsi-chart-model.js';
@@ -266,6 +267,7 @@ export function InstrumentWorkbench(props: Props) {
         {pane === 'data' && <><dl className="rsi-data-list"><dt>종목</dt><dd>{symbol}</dd><dt>관측{monthly ? '월' : '일'}</dt><dd>{dateLabel(selectedDate)}</dd><dt>{monthly ? '실거래가격지수' : '종가'}</dt><dd>{selected ? axisNumber(selected[1]) : '미공표'} {unit}</dd>{bar && <><dt>시가 / 고가</dt><dd>{axisNumber(bar[1])} / {axisNumber(bar[2])}</dd><dt>저가 / 종가</dt><dd>{axisNumber(bar[3])} / {axisNumber(bar[4])}</dd></>}<dt>거래량</dt><dd>{volume?.value == null ? '미공표' : axisNumber(volume.value)} {volumeUnit}</dd></dl>{props.data?.(selectedDate)}{props.details}</>}
         {pane === 'indicators' && <><label className="rsi-panel-check"><input type="checkbox" checked={view.showVolume} disabled={!hasVolume} onChange={() => command.current('toggle', 'showVolume')}/>{monthly ? '매매 거래량·과거 평균' : '거래량'}</label>{!hasVolume && <p>거래량 자료 없음</p>}</>}
         {pane === 'settings' && <>
+          {hasCandles && <ChartColorsControl/>}
           <label className="rsi-panel-field">시간 간격<select value={view.frequency} onChange={event => command.current('frequency', event.target.value)}>{frequencies.map(frequency => <option key={frequency} value={frequency}>{frequencyNames[frequency]}</option>)}</select></label>
           <label className="rsi-panel-field">가격 표시<select value={view.chartType} disabled={!hasCandles} onChange={() => command.current('type')}><option value="line">{monthly ? '지수선' : '선'}</option>{hasCandles && <option value="candles">캔들</option>}</select></label>
           <label className="rsi-panel-field">가격 눈금<select value={view.scale} onChange={() => command.current('scale')}><option value="log">로그</option><option value="linear">선형</option></select></label>

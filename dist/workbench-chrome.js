@@ -6,6 +6,7 @@ import { mountWorkspaceTools } from './workspace-tools.js?v=1.29.1';
 import { mountChartBottomBar } from './chart-bottom-bar.js?v=1.29.0';
 import { mountSymbolSelector } from './symbol-selector.js?v=1.35.0';
 import { createThemeControl } from './ui/theme.js';
+import { createChartColorsControl } from './ui/chart-colors.js';
 const $ = selector => document.querySelector(selector);
 
 const paths = {
@@ -53,7 +54,7 @@ export function mountWorkbenchChrome({icon,stage,workspace,plot,tools,controlSto
   const displayBasis=document.createElement('p');displayBasis.className='price-axis-basis';priceOptions.append(displayBasis);settingsBody.append(priceOptions);
   const goTo=mountChartGoTo({document,onSubmit:result=>command('go-to',result)});
   const modeTabs=$('.atlas-mode-tabs'),controlSets=[...document.querySelectorAll('.atlas-controls>.atlas-control-set')];
-  settingsBody.prepend(...controlSets);settingsBody.append($('#atlas-reset'),createThemeControl(document));
+  settingsBody.prepend(...controlSets);settingsBody.append($('#atlas-reset'),createChartColorsControl(document),createThemeControl(document));
   const frequency=$('[data-lab-frequency]').closest('fieldset');frequency.id='workbench-frequency';
   frequency.setAttribute('aria-label','가격 표시 간격');
   const intervalButtons=frequency.querySelector('.lab-segmented');intervalButtons.replaceChildren();

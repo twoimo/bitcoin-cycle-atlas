@@ -86,10 +86,10 @@ export function drawIntradayChart({svg,series,chartType='candles',scale='log',pr
       const wicks=['',''],bodies=['',''];
       for(const row of rows){const xx=x(row.time),side=row.close>=row.open?0:1,top=Math.min(y(row.open),y(row.close)),height=Math.max(1,Math.abs(y(row.open)-y(row.close)));wicks[side]+=`M${xx.toFixed(2)},${y(row.high).toFixed(2)}V${y(row.low).toFixed(2)}`;bodies[side]+=`M${(xx-width/2).toFixed(2)},${top.toFixed(2)}h${width.toFixed(2)}v${height.toFixed(2)}h${(-width).toFixed(2)}Z`;}
       s+=`<g class="market-candles-batched" data-count="${rows.length}"><title>${rows.length}개 실제 완료 봉 · 모든 OHLC 보존 · 선택하여 정확한 값을 확인합니다.</title>`;
-      for(let side=0;side<2;side++){const color=side?'#dd7e8d':'#62bca5';if(wicks[side])s+=`<path d="${wicks[side]}" fill="none" stroke="${color}"/>`;if(bodies[side])s+=`<path d="${bodies[side]}" fill="${color}"/>`;}
+      for(let side=0;side<2;side++){const color=side?'var(--chart-candle-down)':'var(--chart-candle-up)';if(wicks[side])s+=`<path d="${wicks[side]}" fill="none" stroke="${color}"/>`;if(bodies[side])s+=`<path d="${bodies[side]}" fill="${color}"/>`;}
       s+='</g>';
     }else{
-    for(const row of rows){const xx=x(row.time),up=row.close>=row.open,color=up?'#62bca5':'#dd7e8d',top=Math.min(y(row.open),y(row.close)),height=Math.max(1,Math.abs(y(row.open)-y(row.close)));s+=`<g class="market-candle" data-time="${row.time}" data-open="${row.open}" data-high="${row.high}" data-low="${row.low}" data-close="${row.close}"><line x1="${xx}" x2="${xx}" y1="${y(row.high)}" y2="${y(row.low)}" stroke="${color}"/><rect x="${xx-width/2}" y="${top}" width="${width}" height="${height}" fill="${color}"/><title>${esc(observationLabel(row))} · O ${money(row.open)} H ${money(row.high)} L ${money(row.low)} C ${money(row.close)}</title></g>`;}
+    for(const row of rows){const xx=x(row.time),up=row.close>=row.open,color=up?'var(--chart-candle-up)':'var(--chart-candle-down)',top=Math.min(y(row.open),y(row.close)),height=Math.max(1,Math.abs(y(row.open)-y(row.close)));s+=`<g class="market-candle" data-time="${row.time}" data-open="${row.open}" data-high="${row.high}" data-low="${row.low}" data-close="${row.close}"><line x1="${xx}" x2="${xx}" y1="${y(row.high)}" y2="${y(row.low)}" stroke="${color}"/><rect x="${xx-width/2}" y="${top}" width="${width}" height="${height}" fill="${color}"/><title>${esc(observationLabel(row))} · O ${money(row.open)} H ${money(row.high)} L ${money(row.low)} C ${money(row.close)}</title></g>`;}
     }
   }else{
     let path='',run=[];
@@ -103,9 +103,9 @@ export function drawIntradayChart({svg,series,chartType='candles',scale='log',pr
   if(showVolume)s+=volumePaneMarkup({bars:rows,x:bar=>x(bar.time),left:L,right:W-R,top:volumeTop,bottom:volumeBottom,titleY:layout.volumeTitleY,titleFontSize:layout.volumeTitleFontSize,separatorY:layout.volumeSeparatorY,barWidth:width,source:series.source,unit:baseAsset,clock:equity?'뉴욕 세션':'UTC',dateLabel:value=>equity?value.slice(0,10):value,clipId:`${svg.id}-volume-clip`}).markup;
   const last=allRows.at(-1);
   if(last.time<=maxTime&&last.time>=minTime&&last.close>=axis.min&&last.close<=axis.max){
-    const yy=y(last.close),labelTop=Math.max(T,Math.min(B-18,yy-9)),up=last.close>=last.open,color=up?'#2b6558':'#823c4c';
+    const yy=y(last.close),labelTop=Math.max(T,Math.min(B-18,yy-9)),up=last.close>=last.open,color=up?'var(--chart-candle-up)':'var(--chart-candle-down)';
     const label=axisLabels.price(last.close);
-    s+=`<g class="market-last-price" pointer-events="none"><title>${esc(series.source)} · 마지막 완료 봉 · ${esc(observationLabel(last))} · ${esc(money(last.close))}</title><line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="${up?'#74ab9e':'#dd7e8d'}" stroke-dasharray="3 5" opacity=".6"/><g class="chart-latest-price-tag"><rect x="${W-R}" y="${labelTop}" width="${R-2}" height="18" rx="2" fill="${color}"/><text x="${W-R+axisText.inset}" y="${labelTop+13}" ${axisText.attributes(label,{badge:true,kind:'latest'})} fill="#f0f5fa" font-size="${axisText.badgeFontSize}">${esc(label)}</text></g></g>`;
+    s+=`<g class="market-last-price" pointer-events="none"><title>${esc(series.source)} · 마지막 완료 봉 · ${esc(observationLabel(last))} · ${esc(money(last.close))}</title><line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="${up?'var(--chart-candle-up)':'var(--chart-candle-down)'}" stroke-dasharray="3 5" opacity=".6"/><g class="chart-latest-price-tag"><rect x="${W-R}" y="${labelTop}" width="${R-2}" height="18" rx="2" fill="${color}"/><text x="${W-R+axisText.inset}" y="${labelTop+13}" ${axisText.attributes(label,{badge:true,kind:'latest'})} fill="var(--on-chart-candle-ink)" font-size="${axisText.badgeFontSize}">${esc(label)}</text></g></g>`;
   }
   const historicalEventIds=new Set();
   if(showHistoricalEvents&&['daily','weekly'].includes(series.interval)){

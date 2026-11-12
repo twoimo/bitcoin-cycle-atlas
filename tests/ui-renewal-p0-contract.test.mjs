@@ -410,8 +410,9 @@ test('a reader that cannot scroll or does not advance leaves missing samples unv
 
 test('current authored CSS and pinned local font bytes satisfy the source contract without claiming a browser pass', async () => {
   const source = await readP0Sources();
-  assert.equal(source.scopeFiles.length,48);assert.equal(source.scopeFiles.filter(file => file.startsWith('apps/web/src/')).length,7);
+  assert.equal(source.scopeFiles.length,49);assert.equal(source.scopeFiles.filter(file => file.startsWith('apps/web/src/')).length,7);
   assert.ok(source.scopeFiles.includes('dist/ui/shell-layout.css'),'the appended P1 shell is included in the unchanged P0 source audit');
+  assert.ok(source.scopeFiles.includes('dist/chart-chrome.css'),'the P2 chart sheet also enters the original literal and role audit');
   assert.equal(source.audit.status,'passed',JSON.stringify({issues:source.audit.issues,literals:source.audit.literalViolations,globalOverrides:source.audit.globalTokenViolations}));
   assert.equal(source.audit.colorRootBlocks.length,1);assert.equal(source.audit.literalViolations.length,0);
   assert.equal(source.audit.globalTokenViolations.length,0);assert.equal(source.audit.rootPaintTokens.status,'passed');

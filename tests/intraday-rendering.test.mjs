@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import {parseHTML} from 'linkedom';
 import { drawIntradayChart } from '../dist/intraday-chart.js';
 
 const start=Date.parse('2026-10-01T00:00:00Z')/1000;
@@ -11,6 +12,37 @@ class SvgNode {
   querySelector(selector){if(!this.nodes.has(selector))this.nodes.set(selector,new SvgNode());return this.nodes.get(selector);}querySelectorAll(){return [];}focus(){}
 }
 function svgFixture(width,height=450){const svg=new SvgNode();Object.assign(svg,{id:'intraday-render-test',clientWidth:width,clientHeight:height,innerHTML:'',parentElement:{style:{setProperty(){}}}});svg.getBoundingClientRect=()=>({left:0,top:0,width,height});return svg;}
+
+test('individual and batched source candles, volume and the last quote keep the same OHLC direction with either palette',()=>{
+  for(const count of [3,400]){
+    const rows=Array.from({length:count},(_,index)=>({...candle(index),close:index%3===0?100+index%31:index%3===1?101+index%31:99+index%31}));
+    const before=structuredClone(rows),svg=svgFixture(390);
+    drawIntradayChart({svg,series:series(rows),chartType:'candles'});
+    const document=parseHTML(`<html><body><svg>${svg.innerHTML}</svg></body></html>`).document;
+    const up=rows.filter(row=>row.close>=row.open).length,down=count-up;
+    if(count===3){
+      const candles=[...document.querySelectorAll('.market-candle')];assert.equal(candles.length,count);
+      for(const [index,candle]of candles.entries()){
+        const role=rows[index].close>=rows[index].open?'up':'down';
+        assert.equal(candle.querySelector('rect').getAttribute('fill'),`var(--chart-candle-${role})`);
+        assert.equal(candle.querySelector('line').getAttribute('stroke'),`var(--chart-candle-${role})`);
+        assert.equal(document.querySelectorAll('.volume-bar')[index].getAttribute('fill'),`var(--chart-candle-${role})`);
+      }
+    }else{
+      assert.equal(svg.dataset.candleRendering,'batched');
+      for(const [role,total]of [['up',up],['down',down]]){
+        const body=document.querySelector(`.market-candles-batched path[fill="var(--chart-candle-${role})"]`);
+        const volume=document.querySelector(`.volume-bars-batch[fill="var(--chart-candle-${role})"]`);
+        assert.equal((body.getAttribute('d').match(/Z/g)||[]).length,total);
+        assert.equal((volume.getAttribute('d').match(/Z/g)||[]).length,total);
+      }
+    }
+    const lastRole=rows.at(-1).close>=rows.at(-1).open?'up':'down';
+    assert.equal(document.querySelector('.chart-latest-price-tag rect').getAttribute('fill'),`var(--chart-candle-${lastRole})`);
+    assert.equal(document.querySelector('.chart-latest-price-tag text').getAttribute('fill'),'var(--on-chart-candle-ink)');
+    assert.deepEqual(rows,before,'palette indirection does not mutate any source OHLCV value');
+  }
+});
 
 test('6000 intraday candles remain a small DOM on mobile and desktop while all source OHLCV stay selectable',()=>{
   const rows=Array.from({length:6000},(_,i)=>candle(i));

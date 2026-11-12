@@ -8,6 +8,7 @@ import { createChartSvgExport, createChartPngFromSvg } from './chart-export.js';
 import { isIntradayInterval } from './ohlc-data.js';
 import { mountNativeChartLegend } from './ui/native-chart-legend.js?v=1.36.1';
 import { createThemeControl } from './ui/theme.js';
+import { initChartColors, createChartColorsControl } from './ui/chart-colors.js';
 
 const glyphs={
   crosshair:'<path d="M12 2v5m0 10v5M2 12h5m10 0h5"/><circle cx="12" cy="12" r="4"/>',
@@ -71,6 +72,7 @@ export function nativeDateRange(range,result) {
 
 export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,getSeries,navigation,actions,onChange,onRestore,cancelInteraction}) {
   const doc=app.ownerDocument,win=doc.defaultView,workspace=app.parentElement,sidebar=doc.querySelector('.atlas-sidebar');
+  initChartColors({document:doc});
   const $=selector=>app.querySelector(selector),top=$('.eth-topbar');top.classList.add('atlas-canvas-heading');
   const active=()=>!doc.body.dataset.centerTool&&svg.dataset.chartReplayActive!=='true'&&doc.documentElement.dataset.chartReplayActive!=='true';
   const make=(tag,className,text)=>{const node=doc.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;};
@@ -160,7 +162,7 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
       const price=make('button','native-reader-action',state.scale==='log'?'로그 → 선형 가격축':'선형 → 로그 가격축');price.type='button';price.onclick=()=>command('scale');body.append(price);
       const future=make('button','native-reader-action','미래 가정·표시 설정');future.type='button';future.onclick=()=>{closeReader({restoreFocus:false});actions.forecast?.();};body.append(future);
       const note=make('p','','거래량은 실제 완료 봉에만 표시합니다. 미래 가정에는 거래량을 생성하지 않습니다.');body.append(note);
-      if(readerKind==='settings')body.append(createThemeControl(doc));
+      if(readerKind==='settings')body.append(createChartColorsControl(doc),createThemeControl(doc));
     }else if(readerKind==='selection'){
       const current=inspection||state.controller?.getSelection?.();
       if(current){body.append(make('p','',current.label));if(current.fields){const list=make('dl','native-chart-data');for(const field of current.fields)list.append(make('dt','',field.label),make('dd','',field.value));body.append(list,make('p','',current.note));}else body.append(make('pre','',current.copyText));}

@@ -4005,3 +4005,178 @@ body[data-shell=chart] .workbench-rail .atlas-nav :is(a, button) { border-radius
   body[data-shell=dashboard] .atlas-dashboard-nav .atlas-nav :is(a, button) { padding-inline: 12px; }
 }
 
+
+/* Source: chart-chrome.css; SHA-256: f5b1da697ca80244047ce541ec3f52f0f122b727de3b890cae6a8c954658d096 */
+/* P2-CHROME-b16a7c6 — paint for the existing Atlas workbench.
+ * The source renderers still own the chart, overlays, replay and comparison.
+ * Do not change SVG fonts, transforms, gutter allocation or axis coordinates.
+ * The 38px fine-pointer / 48px compact toolbar and phone dock retain their
+ * existing allocation; 44px compact targets are never reduced here. */
+
+/* The palette lives in styles.css's single root block. A preference only
+ * selects roles inside chart owners; financial judgments keep green/red. */
+:root[data-chart-colors=international] :is(.atlas-plot, .chart-legend-dialog) {
+  --chart-candle-up: var(--positive-ink);
+  --chart-candle-down: var(--negative-ink);
+}
+
+/* A card encloses the existing title, toolbar, canvas and lower controls.
+ * Its ordinary 1px border participates in normal allocation; the SVG still
+ * measures its actual rectangular plot. There is no overlay frame or mask. */
+body[data-shell=chart][data-page=outlook]:not([data-center-tool]) .atlas-chart-stage,
+body[data-shell=chart][data-page=outlook]:not([data-center-tool]) .workspace.native-chart-workspace > #main.native-chart-workbench {
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius-md);
+  background: var(--surface);
+}
+/* Keep the native toolbar as the card's own header. Its original scrollport,
+ * sizes and node identities remain; only the former fixed positioning and
+ * matching desktop spacer are removed. The phone dock still orders last. */
+@media (min-width: 621px) {
+  body[data-shell=chart][data-page=outlook]:not([data-center-tool]) .workspace.atlas-details-layout > #main,
+  body[data-shell=chart][data-page=outlook]:not([data-center-tool]) .workspace.native-chart-workspace > #main.native-chart-workbench {
+    padding-top: 0 !important;
+  }
+  body[data-shell=chart][data-page=outlook]:not([data-center-tool]) .atlas-canvas-heading {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Keep the original toolbar, controls and disclosure owners. Rounded controls
+ * only change their paint; their pointer/keyboard targets stay the same size. */
+body[data-shell=chart] .atlas-canvas-heading {
+  background: var(--surface);
+  color: var(--text);
+  border-bottom-color: var(--border);
+}
+body[data-shell=chart] .atlas-canvas-heading :is(button, select, summary),
+body[data-shell=chart] .atlas-canvas-heading > .workbench-icon,
+body[data-shell=chart] .atlas-canvas-heading button.symbol-selector-trigger,
+body[data-shell=chart] .shell-instrument-slot > .workbench-icon,
+body[data-shell=chart] .atlas-canvas-heading #workbench-interval-select,
+body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=phone-dock] :is(.workbench-icon, .mobile-workbench-button, .shell-feature-toggle),
+body[data-shell=chart] .workbench-bottom-bar :is(button, select) {
+  border-radius: var(--pill-radius);
+}
+body[data-shell=chart] .atlas-canvas-heading :is(button, select, summary) {
+  color: var(--text);
+}
+body[data-shell=chart] .atlas-canvas-heading button.symbol-selector-trigger {
+  background: var(--surface-raised);
+}
+body[data-shell=chart] .atlas-canvas-heading :is(button, select, summary):hover:not(:disabled) {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+body[data-shell=chart] .atlas-canvas-heading :is([aria-pressed=true], [aria-expanded=true]) {
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+}
+body[data-shell=chart] .atlas-canvas-heading :is(button, select, summary):focus-visible,
+body[data-shell=chart] .workbench-bottom-bar :is(button, select):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+body[data-shell=chart] .workbench-bottom.workbench-bottom-bar {
+  background: var(--surface);
+  border-top-color: var(--border);
+}
+
+/* Preserve the measured legend rectangle, source disclosure and real 44px
+ * chip. No shadow, clipping, padding or font changes can cover price ticks. */
+:is(body[data-shell=chart], body[data-embedded=true]) .atlas-plot > .lab-chart-foot.chart-legend-dock {
+  border-radius: var(--card-radius-sm);
+  border-color: var(--border);
+  color: var(--muted);
+  background: var(--surface);
+}
+:is(body[data-shell=chart], body[data-embedded=true]) .atlas-plot > .chart-legend-dock[data-legend-mode=chip] {
+  background: transparent;
+}
+:is(body[data-shell=chart], body[data-embedded=true]) .chart-legend-dock button,
+:is(body[data-shell=chart], body[data-embedded=true]) .atlas-plot > .chart-legend-dock .chart-legend-more::before {
+  border-radius: var(--pill-radius);
+}
+body[data-shell=chart] .chart-legend-dialog {
+  border-radius: var(--card-radius-md);
+}
+body[data-shell=chart] .chart-legend-dialog > header > button {
+  border-radius: var(--pill-radius);
+}
+body[data-shell=chart] .chart-legend-dialog[data-fullscreen=true] {
+  border-radius: 0;
+}
+
+/* The readout remains transparent and keeps its source-owned compact width,
+ * line height and plot-right-gap. Full values remain in the original details. */
+:is(body[data-shell=chart], body[data-embedded=true]) .atlas-plot > :is(.atlas-readout, .eth-readout, .eth-readout-source) {
+  background: transparent;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+body[data-shell=chart] .eth-readout-line > strong {
+  color: var(--text);
+}
+body[data-shell=chart] .readout-kind,
+body[data-shell=chart] .eth-ohlc-details > summary {
+  border-radius: var(--pill-radius);
+}
+body[data-shell=chart] .eth-ohlc-details > summary {
+  border-color: var(--border-strong);
+  color: var(--text);
+  background: var(--surface-raised);
+}
+:is(body[data-shell=chart], body[data-embedded=true]) .atlas-plot > .atlas-quote-hud [data-tone=up],
+body[data-shell=chart] .eth-readout .eth-gain {
+  color: var(--chart-candle-up);
+}
+:is(body[data-shell=chart], body[data-embedded=true]) .atlas-plot > .atlas-quote-hud [data-tone=down],
+body[data-shell=chart] .eth-readout .eth-loss {
+  color: var(--chart-candle-down);
+}
+/* Axis paint only. The renderer's measured type, fitted textLength, final
+ * paint layer, boundary lines and fixed minRight=64 are unchanged. */
+:is(body[data-shell=chart], body[data-embedded=true]) .atlas-plot svg :is([data-price-axis-label=tick], .market-time-label, .price-time-label) {
+  fill: var(--chart-axis-ink);
+}
+
+/* One native preference in the original settings reader. It is always a real
+ * 44px target, including a desktop with the compact historical toolbar. */
+body .chart-colors-setting,
+body .chart-details-panel .atlas-settings-body .chart-colors-setting {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 44px;
+  color: var(--text);
+  font: var(--type-body-sm)/1.6 var(--font);
+}
+body .chart-colors-setting > select,
+body .chart-details-panel .atlas-settings-body .chart-colors-setting > select {
+  flex: 1 1 190px;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 44px;
+  max-width: 100%;
+  height: 44px;
+  min-height: 44px;
+  margin: 0;
+  padding: 8px 28px 8px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--pill-radius);
+  color: var(--text);
+  background: var(--surface);
+  font: var(--type-body-sm)/1.6 var(--font);
+  color-scheme: inherit;
+}
+body .chart-colors-setting > select:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+

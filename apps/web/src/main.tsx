@@ -1,4 +1,5 @@
 import { initTheme } from '../../../dist/ui/theme.js';
+import { initChartColors } from '../../../dist/ui/chart-colors.js';
 import '../../../dist/fonts/pretendard/pretendard-variable.css';
 import { createRoot } from 'react-dom/client';
 import { MarketLabApp } from './app.js';
@@ -22,7 +23,9 @@ import '../../../dist/editorial-panels.css';
 import './instrument-workbench.css';
 import '../../../dist/ui/chart-legend.css';
 import '../../../dist/ui/quote-hud.css';
+import '../../../dist/chart-chrome.css';
 
 initTheme();
+initChartColors();
 
 createRoot(document.getElementById('root')!).render(<MarketLabApp embedded={new URLSearchParams(location.search).get('embedded')==='1'} />);

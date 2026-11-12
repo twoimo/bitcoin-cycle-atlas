@@ -26,12 +26,16 @@
     // Restore only presentation preference before any blocking stylesheet paints.
     (() => {
       let theme = 'light';
+      let chartColors = 'korean';
       try {
         const saved = localStorage.getItem('atlas-ui-theme');
         if (saved === 'light' || saved === 'dark') theme = saved;
+        const savedChartColors = localStorage.getItem('atlas-chart-colors');
+        if (savedChartColors === 'korean' || savedChartColors === 'international') chartColors = savedChartColors;
       } catch { /* Local fonts and the default theme work without storage. */ }
       document.documentElement.dataset.theme = theme;
       document.documentElement.style.colorScheme = theme;
+      document.documentElement.dataset.chartColors = chartColors;
     })();
   </script>
   <!-- Keep the first paint stable while the module graph builds the workbench. -->
@@ -180,10 +184,10 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
       if (fonts.sheet) activate();
     })();
   </script>
-  <link rel="stylesheet" href="./styles.css?v=f01eb99a89ce">
+  <link rel="stylesheet" href="./styles.css?v=1f06384b1659">
   <link rel="stylesheet" href="./site-before-shell.css?v=c6031ebb25d3">
   <link rel="stylesheet" href="./atlas-shell.css?v=4fb8d682f7b8">
-  <link rel="stylesheet" href="./site-after-shell.css?v=867a26f7a595">
+  <link rel="stylesheet" href="./site-after-shell.css?v=afd5a1802755">
 </head>
 <body>
   <div id="atlas-boot-shell">

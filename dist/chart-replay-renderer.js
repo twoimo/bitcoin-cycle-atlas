@@ -131,13 +131,13 @@ function drawObservedViewport({svg,rows,candles,start,end,frequency,scale,domain
     }
     markup+=`<g class="observed-candles-batched" data-count="${visibleCandles.length}"><title>${escape(source)} ${escape(symbol)} · ${visibleCandles.length}개 실제 완료 봉 · 모든 OHLC 보존</title>`;
     for(let side=0;side<2;side++){
-      const color=side?'var(--red)':'var(--green)';
+      const color=side?'var(--chart-candle-down)':'var(--chart-candle-up)';
       if(wicks[side])markup+=`<path d="${wicks[side]}" fill="none" stroke="${color}"/>`;
       if(bodies[side])markup+=`<path d="${bodies[side]}" fill="${color}"/>`;
     }
     markup+='</g>';
   }else for(const row of visibleCandles){
-    const at=x(row.endDate),color=row.close>=row.open?'var(--green)':'var(--red)',bodyTop=Math.min(axis.y(row.open),axis.y(row.close)),bodyHeight=Math.max(1,Math.abs(axis.y(row.open)-axis.y(row.close)));
+    const at=x(row.endDate),color=row.close>=row.open?'var(--chart-candle-up)':'var(--chart-candle-down)',bodyTop=Math.min(axis.y(row.open),axis.y(row.close)),bodyHeight=Math.max(1,Math.abs(axis.y(row.open)-axis.y(row.close)));
     const title=`${source} ${symbol} · ${row.startDate}${row.startDate===row.endDate?'':'–'+row.endDate} UTC · O ${money(row.open)} H ${money(row.high)} L ${money(row.low)} C ${money(row.close)}`;
     markup+=`<g class="observed-candle" data-date="${row.endDate}" data-open="${row.open}" data-high="${row.high}" data-low="${row.low}" data-close="${row.close}"><line x1="${at}" x2="${at}" y1="${axis.y(row.high)}" y2="${axis.y(row.low)}" stroke="${color}"/><rect x="${at-candleWidth/2}" y="${bodyTop}" width="${candleWidth}" height="${bodyHeight}" fill="${color}"/><title>${escape(title)}</title></g>`;
   }

@@ -21,6 +21,11 @@
   --accent-soft: light-dark(#f0ecff, #28203e);
   --positive-ink: light-dark(#097354, #66c3ab);
   --negative-ink: light-dark(#b3324b, #ec8190);
+  /* Chart direction is a display preference, independent of research states.
+     Korean candles use red for an advance and blue for a decline. */
+  --chart-candle-up: var(--negative-ink);
+  --chart-candle-down: light-dark(#245fbd, #8db2ff);
+  --on-chart-candle-ink: light-dark(#ffffff, #191f28);
   --data-gold: #d8b56d;
   --on-data-gold: #191f28;
   --data-gold-ink: light-dark(#836110, #d8b56d);
