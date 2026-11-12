@@ -1,0 +1,139 @@
+{
+  "base": "b16a7c660a39ab29d01f06e18cc96217dd173ea6",
+  "checked": 22,
+  "allUnchanged": true,
+  "files": [
+    {
+      "file": "dist/equity-view.js",
+      "baseSha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5",
+      "candidateSha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5",
+      "unchanged": true
+    },
+    {
+      "file": "dist/eth-view.js",
+      "baseSha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4",
+      "candidateSha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4",
+      "unchanged": true
+    },
+    {
+      "file": "dist/instrument-indicator-overlay.js",
+      "baseSha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a",
+      "candidateSha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/verify-eth-candidate-browser.mjs",
+      "baseSha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e",
+      "candidateSha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e",
+      "unchanged": true
+    },
+    {
+      "file": "dist/price-axis.js",
+      "baseSha256": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2",
+      "candidateSha256": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2",
+      "unchanged": true
+    },
+    {
+      "file": "dist/chart-replay-atlas.js",
+      "baseSha256": "1883829b3d3adbf883c761197265b7482678e0df168d17dd9d0580ad8405ce02",
+      "candidateSha256": "1883829b3d3adbf883c761197265b7482678e0df168d17dd9d0580ad8405ce02",
+      "unchanged": true
+    },
+    {
+      "file": "dist/comparison-url-state.js",
+      "baseSha256": "5c8d26ca71fd5b145b946f6dbc26526732087e790f0739de24b4b95bcec82a4c",
+      "candidateSha256": "5c8d26ca71fd5b145b946f6dbc26526732087e790f0739de24b4b95bcec82a4c",
+      "unchanged": true
+    },
+    {
+      "file": "dist/compare-shell-host.js",
+      "baseSha256": "017c029fe04ded93556e21ad71c6d42e54fa4b9014996a6f69048bcd7dd0f5d1",
+      "candidateSha256": "017c029fe04ded93556e21ad71c6d42e54fa4b9014996a6f69048bcd7dd0f5d1",
+      "unchanged": true
+    },
+    {
+      "file": "dist/atlas-shell.js",
+      "baseSha256": "2b27204e141a9b600011a589a16a08835954fa05a974ba133264ebbf89e4f75a",
+      "candidateSha256": "2b27204e141a9b600011a589a16a08835954fa05a974ba133264ebbf89e4f75a",
+      "unchanged": true
+    },
+    {
+      "file": "dist/ui/page-description.js",
+      "baseSha256": "a3ea1350945329c98db494aa929255cce4b9ffd68a27c24af1ef31f6991dacd0",
+      "candidateSha256": "a3ea1350945329c98db494aa929255cce4b9ffd68a27c24af1ef31f6991dacd0",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/verify-ui-renewal-p0-browser.mjs",
+      "baseSha256": "d31fda26f00111f8d3b949e64bad629395af009cb516ac46c2e0165ad90eea26",
+      "candidateSha256": "d31fda26f00111f8d3b949e64bad629395af009cb516ac46c2e0165ad90eea26",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/ui-renewal-p0-contract.mjs",
+      "baseSha256": "d34d2644e93f3a8805b0e4043f3c31bf4fcfee4eb3b5bb46bf3bca0f47324f39",
+      "candidateSha256": "d34d2644e93f3a8805b0e4043f3c31bf4fcfee4eb3b5bb46bf3bca0f47324f39",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/ui-renewal-p0-text-hit.mjs",
+      "baseSha256": "ea481867cdf818d1cd41a1979467152c5a4a1230eed40e75bf1306a102078f64",
+      "candidateSha256": "ea481867cdf818d1cd41a1979467152c5a4a1230eed40e75bf1306a102078f64",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/verify-ui-renewal-p1-browser.mjs",
+      "baseSha256": "198ebe69d8bacef484c3f1f026d5ebe7a3f598ea5367be221f955ba24215edd5",
+      "candidateSha256": "198ebe69d8bacef484c3f1f026d5ebe7a3f598ea5367be221f955ba24215edd5",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/verify-funnest-p2a0-browser.mjs",
+      "baseSha256": "2e1037e0c0251acd7cb441bf005e7dab8b8f77f6893559b143bf7d5b88135fce",
+      "candidateSha256": "2e1037e0c0251acd7cb441bf005e7dab8b8f77f6893559b143bf7d5b88135fce",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/verify-native-chart-workbench-browser.mjs",
+      "baseSha256": "d062e8b5489dcb4a58352ee9bba8cede7a6103c4914860c7c7cba080f9224c47",
+      "candidateSha256": "d062e8b5489dcb4a58352ee9bba8cede7a6103c4914860c7c7cba080f9224c47",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/verify-responsive-workbench-browser.mjs",
+      "baseSha256": "63efc03c19f76bfdb40d665d117f21366375b46828bdb7c98973e0345165b4f5",
+      "candidateSha256": "63efc03c19f76bfdb40d665d117f21366375b46828bdb7c98973e0345165b4f5",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/verify-price-axis-browser.mjs",
+      "baseSha256": "55bf56030d7f7529a6fa9ebc4c0b5486392e812ffee1472ff86d578698f846b9",
+      "candidateSha256": "55bf56030d7f7529a6fa9ebc4c0b5486392e812ffee1472ff86d578698f846b9",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/price-axis-browser-contract.mjs",
+      "baseSha256": "a5ba1bb5ab6809ec9784ca2e1700f9536ef61afb4bdadc9c14c0fce07e6b986b",
+      "candidateSha256": "a5ba1bb5ab6809ec9784ca2e1700f9536ef61afb4bdadc9c14c0fce07e6b986b",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/verify-conference-data-browser.mjs",
+      "baseSha256": "45fb940df434f5452e02d3fa611041c4ff40ef2aa7834ea8094f92d6b68a5b3a",
+      "candidateSha256": "45fb940df434f5452e02d3fa611041c4ff40ef2aa7834ea8094f92d6b68a5b3a",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/eth-browser-case-specs.mjs",
+      "baseSha256": "360b9a180001a6c9eb99c88e17ca3db567a8788544f6904601b287e71e99a618",
+      "candidateSha256": "360b9a180001a6c9eb99c88e17ca3db567a8788544f6904601b287e71e99a618",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/browser-source-identity.mjs",
+      "baseSha256": "8830448ea7d2bbd30ea0bfbd1bbb25a5bcfb68446652d89c57e78d77457aa51d",
+      "candidateSha256": "8830448ea7d2bbd30ea0bfbd1bbb25a5bcfb68446652d89c57e78d77457aa51d",
+      "unchanged": true
+    }
+  ]
+}

@@ -1,0 +1,239 @@
+{
+  "sourceCommit": "0cf36d814c0b21f7a0d7249df50eec63433e1bc0",
+  "artifacts": [
+    {
+      "file": "source-preservation.json",
+      "source": "build/p2-chrome/source-preservation.json",
+      "encoding": "identity",
+      "originalBytes": 6032,
+      "originalSha256": "95631054e28c446e391711cc871597575708530428984f5b1c89842032895805",
+      "storedBytes": 6032,
+      "storedSha256": "95631054e28c446e391711cc871597575708530428984f5b1c89842032895805"
+    },
+    {
+      "file": "style-audit.json",
+      "source": "build/p2-chrome/style-audit.json",
+      "encoding": "identity",
+      "originalBytes": 3594,
+      "originalSha256": "eb25db39a023d481570329e150a2ef7a320088b6d98d25fdcfa23c90a7dbc30a",
+      "storedBytes": 3594,
+      "storedSha256": "eb25db39a023d481570329e150a2ef7a320088b6d98d25fdcfa23c90a7dbc30a"
+    },
+    {
+      "file": "generated-assets.json",
+      "source": "build/p2-chrome/generated-assets.json",
+      "encoding": "identity",
+      "originalBytes": 28938,
+      "originalSha256": "19e1d9ba31a64d69380d27302edfdc46fe5d08dcca443e433e4b3b1bc19afa00",
+      "storedBytes": 28938,
+      "storedSha256": "19e1d9ba31a64d69380d27302edfdc46fe5d08dcca443e433e4b3b1bc19afa00"
+    },
+    {
+      "file": "paint-only-invariance.json",
+      "source": "build/p2-chrome-color/paint-only-invariance.json",
+      "encoding": "identity",
+      "originalBytes": 4778,
+      "originalSha256": "1e3922575a328a5d7bf2b9225f53000012479bc6f6dd25243bbf5d4a79969e14",
+      "storedBytes": 4778,
+      "storedSha256": "1e3922575a328a5d7bf2b9225f53000012479bc6f6dd25243bbf5d4a79969e14"
+    },
+    {
+      "file": "checks/focused-tests.log",
+      "source": "build/p2-chrome/focused-verified.tap",
+      "encoding": "identity",
+      "originalBytes": 30978,
+      "originalSha256": "a180bf12242ab7135a7a0b5a57c0c91cc8f164e5ca29484880a0dcfd9221b071",
+      "storedBytes": 30978,
+      "storedSha256": "a180bf12242ab7135a7a0b5a57c0c91cc8f164e5ca29484880a0dcfd9221b071"
+    },
+    {
+      "file": "checks/typecheck.log.gz",
+      "source": "build/p2-chrome-color/typecheck.log",
+      "encoding": "gzip",
+      "originalBytes": 155,
+      "originalSha256": "0ce845be03f8e2940ef199f21b07a78f140e03a0f80c0c59c57b3b8ba3cb28a7",
+      "storedBytes": 146,
+      "storedSha256": "e4c7cf6354b07633ba121a872e20b61e21e147a0696f0b94d9f947729a77e23b"
+    },
+    {
+      "file": "checks/pages-build.log.gz",
+      "source": "build/p2-chrome/pages-build.log",
+      "encoding": "gzip",
+      "originalBytes": 10654,
+      "originalSha256": "69a71100abef6987a7eaf3396b044038fbd83ee6cd51b8e55a083c1ed136d48a",
+      "storedBytes": 2640,
+      "storedSha256": "690dd154961b3300703f590de9ec385836f6ef29f37f91d9c7edde0fa416a30d"
+    },
+    {
+      "file": "checks/pages-check.log.gz",
+      "source": "build/p2-chrome/pages-check.log",
+      "encoding": "gzip",
+      "originalBytes": 10666,
+      "originalSha256": "b4a703f2c8365145cf72ec9bcc8ddf2088ca8eaaea288e3fc9494d94a159dd94",
+      "storedBytes": 2641,
+      "storedSha256": "9fc65bc79b09296f554c1ee87046cf0529e2acfb7a0a3658e75d445b7cdee3eb"
+    },
+    {
+      "file": "checks/static-check.log",
+      "source": "build/p2-chrome/static-check.log",
+      "encoding": "identity",
+      "originalBytes": 127,
+      "originalSha256": "274574dc7cd2e6837adbf660132f200885ba4e3be68c55c500e5261b5e9a4ccc",
+      "storedBytes": 127,
+      "storedSha256": "274574dc7cd2e6837adbf660132f200885ba4e3be68c55c500e5261b5e9a4ccc"
+    },
+    {
+      "file": "native-linux/a9/chrome.stderr.log.gz",
+      "source": "build/p2-chrome/native-0cf36d8/a9/chrome.stderr.log",
+      "encoding": "gzip",
+      "originalBytes": 548,
+      "originalSha256": "5722e803bd6b67bdaa9117562256d846c5ad670e0330009ef1d5c1995dfcd130",
+      "storedBytes": 338,
+      "storedSha256": "74a6eea0737403b958982766df79bcaf1cc0a31b485172a52645a0a35d5b69e9"
+    },
+    {
+      "file": "native-linux/a9/report.json.gz",
+      "source": "build/p2-chrome/native-0cf36d8/a9/report.json",
+      "encoding": "gzip",
+      "originalBytes": 140669,
+      "originalSha256": "e83eb424a93fbd1bd361ba6d7b81b9d4b70c37c9a1c05b0c62894c0fe5a59f4b",
+      "storedBytes": 54792,
+      "storedSha256": "0da9adf6913beda4e5917dbc170d12c834f96425f3a76bef9698d6cc7f4c5c17"
+    },
+    {
+      "file": "native-linux/a9.run.log.gz",
+      "source": "build/p2-chrome/native-0cf36d8/a9.run.log",
+      "encoding": "gzip",
+      "originalBytes": 172,
+      "originalSha256": "bfbba48bccbfde2f59a9d3fe099d2af68a83cac7cd1c589b7d03230c84e37b40",
+      "storedBytes": 156,
+      "storedSha256": "379903c2145891a2b8278609dddf26bdcdc2a8afe035365896f3c1d53ff6bbd8"
+    },
+    {
+      "file": "native-linux/axis16/report.json.gz",
+      "source": "build/p2-chrome/native-0cf36d8/axis16/report.json",
+      "encoding": "gzip",
+      "originalBytes": 5856,
+      "originalSha256": "a4eea7c898ed65ba8d62478dc504d1dd27e1605e19b1ee08ae64efd70b3a5d18",
+      "storedBytes": 2474,
+      "storedSha256": "d4de73e584e1015ca9f6ff2ec523a30b6d3d1a1d8b9c61f77387d91cb5a2479d"
+    },
+    {
+      "file": "native-linux/axis16.run.log.gz",
+      "source": "build/p2-chrome/native-0cf36d8/axis16.run.log",
+      "encoding": "gzip",
+      "originalBytes": 1331,
+      "originalSha256": "3b3d2d67f4b35bb3261073a70ddd0952e5f89ce6a3c465c5a8807db4428fbcf6",
+      "storedBytes": 620,
+      "storedSha256": "a08395ee6538e527a3068d40cd24f1069e8181f91a05f4ab1af9cbb95caa1033"
+    },
+    {
+      "file": "native-linux/eth53/report.json.gz",
+      "source": "build/p2-chrome/native-0cf36d8/eth53/report.json",
+      "encoding": "gzip",
+      "originalBytes": 32694,
+      "originalSha256": "f81e5b4b74b7a0f69b04b2b950a9512227b1bea235b67c169b4bb6262eb93adc",
+      "storedBytes": 14027,
+      "storedSha256": "42c71cda586a9552810504889431f4b19d4625cae286554ac765799e5a60599f"
+    },
+    {
+      "file": "native-linux/eth53.run.log.gz",
+      "source": "build/p2-chrome/native-0cf36d8/eth53.run.log",
+      "encoding": "gzip",
+      "originalBytes": 74980,
+      "originalSha256": "12ea44eae9b854ed28c5503207d622c20c7f4662e1bc2e1c1d81807b3ecf8b4a",
+      "storedBytes": 32783,
+      "storedSha256": "c23434b8a367e4c5141532d5b5b81d1eea473d8aeedd50d74572fc4b9bde7d62"
+    },
+    {
+      "file": "native-linux/responsive-BMNR/report.json.gz",
+      "source": "build/p2-chrome/native-0cf36d8/responsive-BMNR/report.json",
+      "encoding": "gzip",
+      "originalBytes": 3737,
+      "originalSha256": "ab252b79a0b260dc89de40b3cad7602913f68087207096eb957f9cd6c1c936c5",
+      "storedBytes": 1089,
+      "storedSha256": "755881ac9c6aa278dbee6eb9313bce08e66070acb0bf7b2a251cda88d4bccc6a"
+    },
+    {
+      "file": "native-linux/responsive-BMNR.run.log.gz",
+      "source": "build/p2-chrome/native-0cf36d8/responsive-BMNR.run.log",
+      "encoding": "gzip",
+      "originalBytes": 415,
+      "originalSha256": "3511434a3e0c7d993a0578012ed4752306986b9d516fe9ba86b1369bb5980c79",
+      "storedBytes": 346,
+      "storedSha256": "374d06e5612ef6404f174cb824418797193ff76e1e96e71e2880744b58e95d7e"
+    },
+    {
+      "file": "native-linux/responsive-BTCUSD/report.json.gz",
+      "source": "build/p2-chrome/native-0cf36d8/responsive-BTCUSD/report.json",
+      "encoding": "gzip",
+      "originalBytes": 3743,
+      "originalSha256": "c6770f640de3d0f396549c778a09e381c19ebe72777d3e97ea22b0a5a9d55f20",
+      "storedBytes": 1089,
+      "storedSha256": "aaea45c27250599e921e48e39fc7e3e3a674e88ec0b0eec07bc669c05f8d4e07"
+    },
+    {
+      "file": "native-linux/responsive-BTCUSD.run.log.gz",
+      "source": "build/p2-chrome/native-0cf36d8/responsive-BTCUSD.run.log",
+      "encoding": "gzip",
+      "originalBytes": 419,
+      "originalSha256": "0731489b45531683ab80d7cb025c4158262d333ce08a534fe34837a937e5a425",
+      "storedBytes": 347,
+      "storedSha256": "b3eb749db1aece5fb71aefb1353b0137f869457d2af2c3c84223066842d9385d"
+    },
+    {
+      "file": "native-linux/responsive-ETHUSD/report.json.gz",
+      "source": "build/p2-chrome/native-0cf36d8/responsive-ETHUSD/report.json",
+      "encoding": "gzip",
+      "originalBytes": 3743,
+      "originalSha256": "f185f7e211c2550d018d1c2998fa64e70400b846ea26fb59d78040ad7b8b7cd6",
+      "storedBytes": 1089,
+      "storedSha256": "ed0653d180268204ea8d7e79e83c6d0bef4b6843c77d4ebf7af01cc475ed935a"
+    },
+    {
+      "file": "native-linux/responsive-ETHUSD.run.log.gz",
+      "source": "build/p2-chrome/native-0cf36d8/responsive-ETHUSD.run.log",
+      "encoding": "gzip",
+      "originalBytes": 419,
+      "originalSha256": "646a5e65c55db4d79d3c36a52b0ad60a636cc9e2cb1c491e70bd6e9b610c110d",
+      "storedBytes": 348,
+      "storedSha256": "dd09b6b2e4a3d2a01a3ab483957c2e335172e80ab3944eb900b5d62adb26e6c6"
+    },
+    {
+      "file": "native-linux/responsive-MSTR/report.json.gz",
+      "source": "build/p2-chrome/native-0cf36d8/responsive-MSTR/report.json",
+      "encoding": "gzip",
+      "originalBytes": 3737,
+      "originalSha256": "777001199cd99cc1623db6c36b77c895fce4189ba39d4cb63e0b519940522894",
+      "storedBytes": 1089,
+      "storedSha256": "2203e724aa330028fccfc91d76020d7b968abfb6fab851cf858cbaf9748e6ce2"
+    },
+    {
+      "file": "native-linux/responsive-MSTR.run.log.gz",
+      "source": "build/p2-chrome/native-0cf36d8/responsive-MSTR.run.log",
+      "encoding": "gzip",
+      "originalBytes": 415,
+      "originalSha256": "a0a20e105094ea774d97b949ba01a97b3c5b36642564a217a590d2323327c993",
+      "storedBytes": 346,
+      "storedSha256": "a459fde1bef72b03b30287995540a65fa840161d35c9821eb5a8d49ef16c1c15"
+    },
+    {
+      "file": "native-linux/summary.json.gz",
+      "source": "build/p2-chrome/native-0cf36d8/summary.json",
+      "encoding": "gzip",
+      "originalBytes": 358227,
+      "originalSha256": "fbf95302ec232014b13c1b9bdcd326fc805e504974501439c40bfe4207c8df88",
+      "storedBytes": 138560,
+      "storedSha256": "2b9dcf6ef0a5e7121aa4c7bbcbe92a5b570a76631a7a6ffe9708801d70ba9305"
+    },
+    {
+      "file": "native-linux/collect-gates.executed.mjs.gz",
+      "source": "build/p2-chrome/collect-gates.mjs",
+      "encoding": "gzip",
+      "originalBytes": 9144,
+      "originalSha256": "e6bd19272393083f5d6c4ced7179c5e263811ce1d068d2b74a46440b5cf2ca5b",
+      "storedBytes": 3530,
+      "storedSha256": "1f70c160f39cf9c222f2010a2635fcc94da97b493ec45c42dc7afc5f4c1e72e2"
+    }
+  ]
+}

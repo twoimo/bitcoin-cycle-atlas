@@ -1,0 +1,131 @@
+{
+  "baseline": "b16a7c660a39ab29d01f06e18cc96217dd173ea6",
+  "nativeObservation": false,
+  "method": "Apply only listed presentation-string substitutions to baseline bytes; require complete equality with candidate file.",
+  "files": [
+    {
+      "path": "dist/atlas-price-chart.js",
+      "baselineSha256": "36680e411160bfa320dd38c638ff8f40d5798f1a21ae122737e3abeb7851c953",
+      "candidateSha256": "c700f0c6341eb0736a3369dd5a76ae2df1937294dc233612ce09912f354d8a67",
+      "onlyListedPaintSubstitutions": true,
+      "substitutions": [
+        {
+          "before": "side?'#dd7e8d':'#62bca5'",
+          "after": "side?'var(--chart-candle-down)':'var(--chart-candle-up)'",
+          "count": 1
+        },
+        {
+          "before": "c.close>=c.open?'#62bca5':'#dd7e8d'",
+          "after": "c.close>=c.open?'var(--chart-candle-up)':'var(--chart-candle-down)'",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "path": "dist/intraday-chart.js",
+      "baselineSha256": "b32a2e750ca01ccc204e871f9814e063b064c4365c7643d58af35e91e7aca126",
+      "candidateSha256": "fc1e8bc7639757dacad8a77e415bb879efd6153427d393eef7db2d386e01afb8",
+      "onlyListedPaintSubstitutions": true,
+      "substitutions": [
+        {
+          "before": "side?'#dd7e8d':'#62bca5'",
+          "after": "side?'var(--chart-candle-down)':'var(--chart-candle-up)'",
+          "count": 1
+        },
+        {
+          "before": "up?'#62bca5':'#dd7e8d'",
+          "after": "up?'var(--chart-candle-up)':'var(--chart-candle-down)'",
+          "count": 1
+        },
+        {
+          "before": "color=up?'#2b6558':'#823c4c'",
+          "after": "color=up?'var(--chart-candle-up)':'var(--chart-candle-down)'",
+          "count": 1
+        },
+        {
+          "before": "up?'#74ab9e':'#dd7e8d'",
+          "after": "up?'var(--chart-candle-up)':'var(--chart-candle-down)'",
+          "count": 1
+        },
+        {
+          "before": "fill=\"#f0f5fa\" font-size=\"${axisText.badgeFontSize}\"",
+          "after": "fill=\"var(--on-chart-candle-ink)\" font-size=\"${axisText.badgeFontSize}\"",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "path": "dist/chart-overlays.js",
+      "baselineSha256": "bdcf5d48b78df7fae7ad216166cb794f42ecdc3cd85f016b416c396021949d32",
+      "candidateSha256": "30a1d523000615a159cc3214b0b8239010fe7237bb675d5ad2755161f2b671ca",
+      "onlyListedPaintSubstitutions": true,
+      "substitutions": [
+        {
+          "before": "side?'#ab6374':'#498f80'",
+          "after": "side?'var(--chart-candle-down)':'var(--chart-candle-up)'",
+          "count": 1
+        },
+        {
+          "before": "bar.close>=bar.open?'#498f80':'#ab6374'",
+          "after": "bar.close>=bar.open?'var(--chart-candle-up)':'var(--chart-candle-down)'",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "path": "dist/price-legend.js",
+      "baselineSha256": "69e527dd10708f7dc80585b4df79e056d2d9258abd765d40fc01989a27190e8a",
+      "candidateSha256": "d26450151e454cbe80fb53d9431b051e6953e928c9f92b78a4b870136b1589b5",
+      "onlyListedPaintSubstitutions": true,
+      "substitutions": [
+        {
+          "before": "stroke=\"#e2eaf3\"",
+          "after": "stroke=\"var(--observed-close-ink)\"",
+          "count": 1
+        },
+        {
+          "before": "#62bca5",
+          "after": "var(--chart-candle-up)",
+          "count": 2
+        },
+        {
+          "before": "#cf7f89",
+          "after": "var(--chart-candle-down)",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "path": "dist/chart-replay-renderer.js",
+      "baselineSha256": "6620593f926aa6dc83c4d2b275e152c6796341ae7aa527d39412b3d2ece1dac7",
+      "candidateSha256": "4adca9c445f13e9a2873cdb40187ef9277ff6d063670431797794313092644c7",
+      "onlyListedPaintSubstitutions": true,
+      "substitutions": [
+        {
+          "before": "side?'var(--red)':'var(--green)'",
+          "after": "side?'var(--chart-candle-down)':'var(--chart-candle-up)'",
+          "count": 1
+        },
+        {
+          "before": "row.close>=row.open?'var(--green)':'var(--red)'",
+          "after": "row.close>=row.open?'var(--chart-candle-up)':'var(--chart-candle-down)'",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "path": "apps/web/src/components/rsi-chart-canvas.tsx",
+      "baselineSha256": "bd2c7cad70c82209cc0096d4dccc6e730014babeac627ceb01326e765f708452",
+      "candidateSha256": "87f28d4bd64c820a38bbb56e407c2733aba3055810f7eea7a57450b564f489f1",
+      "onlyListedPaintSubstitutions": true,
+      "substitutions": [
+        {
+          "before": "bar[4]>=bar[1]?'var(--green)':'var(--red)'",
+          "after": "bar[4]>=bar[1]?'var(--chart-candle-up)':'var(--chart-candle-down)'",
+          "count": 1
+        }
+      ]
+    }
+  ],
+  "allUnlistedBytesUnchanged": true
+}
