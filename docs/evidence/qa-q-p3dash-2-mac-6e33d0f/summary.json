@@ -1,0 +1,38 @@
+{
+  "kind": "qa-q-p3dash-2-mac",
+  "recordedAt": "2026-11-12T21:56:24.832Z",
+  "finishedAt": "2026-11-12T21:57:53.706Z",
+  "browser": "Chrome/157.0.8103.79",
+  "testedHead": "3f5cec32cf48aeaf946bbc19d4d40949b30cb922",
+  "product": "6e33d0fb8a6b489a1c7571d3aba254f84a54bb5b",
+  "baseline": "fbb46aac4e94e22953f3bcae1f572b74826954d0",
+  "command": "node scripts/verify-ui-renewal-p1-browser.mjs --browser \"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --out build/qa-q-p3dash-2-mac-6e33d0f",
+  "status": "passed",
+  "qualifiesP1Verification": true,
+  "qualifiesFullVerification": false,
+  "sourceStable": true,
+  "workingTree": [],
+  "failures": 0,
+  "counts": {
+    "requiredLayouts": 28,
+    "attemptedLayouts": 28,
+    "passedLayouts": 28,
+    "requiredNavigationActivations": 56,
+    "attemptedNavigationActivations": 56,
+    "passedNavigationActivations": 56,
+    "requiredChartReturns": 8,
+    "attemptedChartReturns": 8,
+    "passedChartReturns": 8
+  },
+  "report": {
+    "path": "build/qa-q-p3dash-2-mac-6e33d0f/report.json",
+    "bytes": 14680558,
+    "sha256": "4df91f3f51c2e293a0e9c48c0bd50ba096e9e005c5b978ac4b4763622b098149"
+  },
+  "density": {
+    "evidence320": {"baselineRows": 7, "candidateRows": 6, "rowHeight": 64, "td": "13px", "th": "11px", "tdPadding": "4px/8px/4px/8px"},
+    "evidence1440": {"rows": 9, "rowHeight": 48, "td": "13px", "th": "11px", "tdPadding": "4px/12px/4px/12px", "match": true},
+    "data": {"match": true, "rows": 20, "rowHeight320": 53, "rowHeight1440": 40, "td": "11px", "th": "12px"},
+    "ipo": {"match": true, "rows": 17, "rowHeight": 33.8, "td": "13px", "th": "12px", "tdPadding": "6px/12px/6px/12px"}
+  }
+}
