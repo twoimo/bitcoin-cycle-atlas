@@ -1,6 +1,6 @@
 # 요구사항 — Funnest Charts UI/UX로 전면 리뉴얼 (초안)
 
-작성 2026-11-12. 현재 상태: **P0는 `b787935` Mac에서 10/10·커버리지 40/40·`qualifiesP0Verification:true`로 닫혔다. P1은 `67125bd` Mac에서 레이아웃 28/28·내비 56/56·차트 복귀 8/8·오버플로 0·failures 0·`qualifiesP1Verification:true`로 닫혔다.** 표본과 4.5/3.0은 유지한다. 다음 한 건 `P2A0-6ffbdda`의 임시 페이지·Datafeed·검증기는 `cefc568`·`b0cf985`에 구현했다. Mac `1c8f0c3`에서 startup 6/6·features 7/7·touch 4/4·keyboard 0/4·qualifier false다. **P2a-0은 Q-P2A0-1로 열려 있다.** `Q-P2A0-1-15e9e7b` 수정 후보 `a4485e6`은 타깃·대비·검색 모달 키보드를 보완했다. 같은 게이트의 Linux 실행은 Chromium 시작 차단으로 0시도이며 Mac 재검증 대기다. 기존 엔진 유지, P2 차트 크롬·P3·P2b·배포 미착수. [P1 Mac 정본 영수증](../evidence/qa-r19p1-20261112/mac-67125bd.json) · [P0 Mac 영수증](../evidence/qa-r19p1-20261112/mac-b787935.json) · [P2a-0 구현·측정 한계](../evidence/p2a0-6ffbdda/README.md). 이전 P1 발견과 수정 이력은 [체크리스트 Q-R19P1-2~4](../LAUNCH_CHECKLIST_20261110.md)에 보존한다. 대상 `twoimo/bitcoin-cycle-atlas`.
+작성 2026-11-12. 현재 상태: **P0는 `b787935` Mac에서 10/10·커버리지 40/40·`qualifiesP0Verification:true`로 닫혔다. P1은 `67125bd` Mac에서 레이아웃 28/28·내비 56/56·차트 복귀 8/8·오버플로 0·failures 0·`qualifiesP1Verification:true`로 닫혔다.** 표본과 4.5/3.0은 유지한다. 다음 한 건 `P2A0-6ffbdda`의 임시 페이지·Datafeed·검증기는 `cefc568`·`b0cf985`에 구현했다. Mac `1c8f0c3`에서 startup 6/6·features 7/7·touch 4/4·keyboard 0/4·qualifier false였다. `Q-P2A0-1-15e9e7b` 수정 후보 `a4485e6`은 타깃·대비·검색 모달 키보드를 보완했다. **P2a-0은 `72d3aa1` Mac에서 startup 6/6·features 7/7·keyboard 4/4·touch 4/4·qualifier true로 닫혔다.** 다음은 P2 차트 크롬이다. 기존 엔진 유지, P2 차트 크롬·P3·P2b·배포 미착수. [P1 Mac 정본 영수증](../evidence/qa-r19p1-20261112/mac-67125bd.json) · [P0 Mac 영수증](../evidence/qa-r19p1-20261112/mac-b787935.json) · [P2a-0 구현·측정 한계](../evidence/p2a0-6ffbdda/README.md). 이전 P1 발견과 수정 이력은 [체크리스트 Q-R19P1-2~4](../LAUNCH_CHECKLIST_20261110.md)에 보존한다. 대상 `twoimo/bitcoin-cycle-atlas`.
 참조 저장소: `funnest-xyz/funnest-charts` (Apache-2.0, `main` @ `39cb29ae250448d520384c12de555b1c00727883`, 2026-11-12). 홈페이지 `https://charts.funnest.xyz`.
 방법: 저장소 소스(`apps/site/app/globals.css`, README)와 실제 홈페이지(1440×900)를 함께 읽고, `ui-ux-pro-max`로 방향을 대조했다. 참조 스크린샷은 `docs/evidence/funnest-ui-20261112/home-1440.png`.
 
@@ -59,7 +59,7 @@ Atlas의 현재 다크·골드·hairlines 편집 톤을 **Funnest Charts의 밝�
   - `getBars` ← 각 자산의 원본 OHLCV·시장 컨트롤러. P2a-0은 `dist/data/btc-volume.json`의 완료 BTC 일봉만 연결하며 원본에 없는 시간 단위를 합성하지 않는다.
   - `subscribeBars` ← 정적 사이트에서는 no-op, 리플레이·라이브는 별도
   - `searchSymbols` ← 기존 심볼 선택기, `getSparkline` ← 최근 종가
-- 유지: 정확한 `0.6.16`에는 좌표 변환·`addOverlay`, 기본 bar replay와 종목 compare가 있다. Atlas의 예측 밴드·역사 사건·고정 예측/시점 증거 replay·사이클 정렬 compare와의 패리티는 별도다. P2a-0의 API/계약 대조 결과 해당 네 기능은 **하이브리드로 기존 엔진 유지**를 선택했다(§3.3.2). 네이티브 수용은 Mac 키보드 0/4로 실패했다. 큐 맨 앞은 Q-P2A0-1이다.
+- 유지: 정확한 `0.6.16`에는 좌표 변환·`addOverlay`, 기본 bar replay와 종목 compare가 있다. Atlas의 예측 밴드·역사 사건·고정 예측/시점 증거 replay·사이클 정렬 compare와의 패리티는 별도다. P2a-0의 API/계약 대조 결과 해당 네 기능은 **하이브리드로 기존 엔진 유지**를 선택했다(§3.3.2). 네이티브 수용은 Mac `1c8f0c3`에서 keyboard 0/4로 실패했고, `72d3aa1`에서 keyboard 4/4·qualifier true로 닫혔다. 큐 맨 앞은 P2 차트 크롬이다.
 - 테마: `colorScheme:'system'`을 Atlas 토큰(라이트/다크)과 맞추고, 빨강 상승/파랑 하락은 패키지 기본값을 따른다.
 - 라이선스: Apache-2.0. 번들·NOTICE에 출처 표기, 브랜드 로고·이름은 사용하지 않는다.
 
@@ -76,7 +76,7 @@ Atlas의 현재 다크·골드·hairlines 편집 톤을 **Funnest Charts의 밝�
 | 예측 밴드·가설 경로 | render-only overlay·좌표 변환 지원, 예측을 autoscale 도메인에 넣는 계약 없음 | 필수 | 하이브리드, Atlas 엔진 유지 |
 | 역사 사건 라벨 | 사용자 overlay·거래 실행 마커 지원, Atlas 사건의 키보드/출처 계약은 별도 | 필수 | 하이브리드, Atlas 사건 레이어 유지 |
 | 리플레이·compare | bar replay·다른 종목 종가의 기준점 % 비교 지원 | 필수 | Atlas 고정 예측·사이클 정렬은 하이브리드 |
-| 접근성·키보드 | 32/36px 컨트롤 및 모달 포커스 위험 확인, 네이티브 미검증 | 필수 | 44px·포커스·4.5/3.0 유지, 재검증 대기 |
+| 접근성·키보드 | 32/36px 컨트롤 및 모달 포커스 위험 확인, 네이티브 미검증 | 필수 | Mac `72d3aa1` keyboard 4/4·44px·포커스·4.5/3.0 통과 |
 
 ### 3.3.2 스파이크 게이트 (P2a-0)
 
@@ -160,7 +160,7 @@ Atlas의 현재 다크·골드·hairlines 편집 톤을 **Funnest Charts의 밝�
 
 `sourceStable:true`, `complete:false`, `qualifiesP2a0NativeVerification:false`. 초기 페인트·오버플로 `null`, 스크린샷 0. 수정 전 Mac의 startup 6/6·features 7/7·touch 4/4를 이 후보의 통과로 재사용하지 않는다. **Q-P2A0-1은 같은 Mac 한 실행의 6/6·7/7·4/4·4/4·qualifier true 전까지 열림이다.**
 
-후보 JS는 **237,474B / gzip 74,745B / Brotli 64,490B**, 이전 대비 +2,863B/+1,024B/+848B다. 패키지 0.6.16·데이터는 그대로이며 새 의존성은 없다. 기존 A-9의 Mac `1c8f0c3` **6/6·2,170–2,208.2ms**는 보존한다. 제품 소스·A-9 게이트는 동일하고 이번에는 재실행하지 않았다. 기준 worktree 비교가 없으므로 **시간 영향은 미측정**이며 0ms로 쓰지 않는다. 보호 4파일·가격 축/minRight64·기존 엔진·P0/P1과 이전 Mac 영수증은 바이트 동일하다. P2 차트 크롬·P3·P2b·배포 미착수. [수치·해시](../evidence/q-p2a0-1-15e9e7b/summary.json).
+후보 JS는 **237,474B / gzip 74,745B / Brotli 64,490B**, 이전 대비 +2,863B/+1,024B/+848B다. 패키지 0.6.16·데이터는 그대로이며 새 의존성은 없다. 기존 A-9의 Mac `1c8f0c3` **6/6·2,170–2,208.2ms**는 보존한다. 제품 소스·A-9 게이트는 동일하고 이번에는 재실행하지 않았다. 기준 worktree 비교가 없으므로 **시간 영향은 미측정**이며 0ms로 쓰지 않는다. 보호 4파일·가격 축/minRight64·기존 엔진·P0/P1과 이전 Mac 영수증은 바이트 동일하다. 이 문단의 Linux 0시도는 후보 작성 시점 기록이다. **Mac 재검증(2026-11-13 01:56–01:57 KST, Chrome 157.0.8103.79, HEAD `72d3aa1`)** — startup 6/6, 초기 페인트 1,104.9–1,123.9ms. features 7/7. keyboard 4/4. touch 4/4. failures 0. startup overflow 0. `qualifiesP2a0NativeVerification:true`. 네 폭 타깃 높이 44px, 대화상자 포커스는 안쪽이고 role은 combobox다. 텍스트 대비 14.056959465600228. 심볼 아이콘 대비 4.440810712577725는 아이콘 기준 3.0 이상이라 실격이 아니다. 44px·2px·4.5/3.0·45초는 유지했다. Q-P2A0-1과 P2a-0을 닫는다. 기존 엔진은 남아 있다. 다음은 P2 차트 크롬이며 P3·P2b·배포는 미착수다. [Mac 영수증](../evidence/qa-p2a0-mac-72d3aa1/README.md). [수정 시점 수치](../evidence/q-p2a0-1-15e9e7b/summary.json).
 
 ## 4. 단계
 
