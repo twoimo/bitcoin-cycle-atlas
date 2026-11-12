@@ -1,0 +1,296 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-five-axis-qa",
+  "item": "R17",
+  "recordedAt": "2026-11-12T17:45:00+09:00",
+  "testedHead": "91cf41c",
+  "testedHeadFull": "91cf41ce2c73a272c8a0e7ccd7c101333b3970e0",
+  "productChange": "fix(chart): keep the shared price axis above overlays and continuous",
+  "worktree": "/private/tmp/atlas-r17/wt",
+  "site": {
+    "files": 1530,
+    "conferenceManifestBytes": 163622,
+    "conferenceManifestSha256Prefix": "3380d7d5"
+  },
+  "chrome": "157.0.8103.79 headless",
+  "axes": {
+    "functional": {
+      "status": "passed",
+      "axisParityPx": [
+        {
+          "viewport": "320x740",
+          "btcLabelX": 260,
+          "ethLabelX": 260,
+          "diff": 0
+        },
+        {
+          "viewport": "390x844",
+          "btcLabelX": 330,
+          "ethLabelX": 330,
+          "diff": 0
+        },
+        {
+          "viewport": "768x1024",
+          "btcLabelX": 659,
+          "ethLabelX": 659,
+          "diff": 0
+        },
+        {
+          "viewport": "1440x900",
+          "btcLabelX": 1331,
+          "ethLabelX": 1331,
+          "diff": 0
+        }
+      ],
+      "axisLine": [
+        {
+          "viewport": "320x740",
+          "x": 256,
+          "y1": 0,
+          "y2": 670,
+          "viewBoxHeight": 670
+        },
+        {
+          "viewport": "390x844",
+          "x": 326,
+          "y1": 0,
+          "y2": 774,
+          "viewBoxHeight": 774
+        },
+        {
+          "viewport": "768x1024",
+          "x": 599,
+          "y1": 0,
+          "y2": 906,
+          "viewBoxHeight": 906
+        },
+        {
+          "viewport": "1440x900",
+          "x": 1271,
+          "y1": 0,
+          "y2": 798,
+          "viewBoxHeight": 798
+        }
+      ],
+      "labelHitTest": "all visible price labels hit text nodes inside [data-price-axis-paint-layer] at every viewport (2-3 labels per view)",
+      "paintLayerLastChild": true,
+      "h1CountAllViewports": 1,
+      "horizontalOverflowAllViewports": 0,
+      "unitSuite": {
+        "command": "node --test tests/*.test.mjs (331 files, 3 frozen replay files excluded)",
+        "tests": 3651,
+        "pass": 3646,
+        "fail": 0,
+        "skipped": 5,
+        "exitCode": 0
+      },
+      "a9": {
+        "status": "passed",
+        "passed": 6,
+        "total": 6,
+        "budgetMs": 2500,
+        "paintedMs": {
+          "390x844": 2260.3,
+          "320x740": 2231.1,
+          "768x1024": 2261.5,
+          "1024x768": 2258.1,
+          "1440x900": 2262,
+          "1920x1080": 2255.7
+        },
+        "sourceCommit": "91cf41ce2c73a272c8a0e7ccd7c101333b3970e0"
+      },
+      "gateHarness": {
+        "script": "scripts/verify-price-axis-browser.mjs",
+        "status": "failed",
+        "required": 16,
+        "passed": 4,
+        "failed": 12,
+        "failureSignature": "geometry: unsupported clip geometry on p#indicator-readout-date.indicator-readout-date: inset(50%)",
+        "attribution": "harness defect -> Q-R17-1",
+        "cases": [
+          {
+            "id": "BTCUSD-320-default",
+            "status": "passed",
+            "failures": []
+          },
+          {
+            "id": "ETHUSD-320-default",
+            "status": "failed",
+            "failures": [
+              "geometry: unsupported clip geometry on p#indicator-readout-date.indicator-readout-date: inset(50%)",
+              "frame-axis-0: hud hud-7:time#eth-bar-time:text-0 occludes 13 square CSS pixels"
+            ]
+          },
+          {
+            "id": "BTCUSD-390-default",
+            "status": "passed",
+            "failures": []
+          },
+          {
+            "id": "ETHUSD-390-default",
+            "status": "failed",
+            "failures": [
+              "geometry: unsupported clip geometry on p#indicator-readout-date.indicator-readout-date: inset(50%)"
+            ]
+          },
+          {
+            "id": "BTCUSD-768-default",
+            "status": "failed",
+            "failures": [
+              "geometry: unsupported clip geometry on p#indicator-readout-date.indicator-readout-date: inset(50%)"
+            ]
+          },
+          {
+            "id": "ETHUSD-768-default",
+            "status": "failed",
+            "failures": [
+              "geometry: unsupported clip geometry on p#indicator-readout-date.indicator-readout-date: inset(50%)"
+            ]
+          },
+          {
+            "id": "BTCUSD-1440-default",
+            "status": "failed",
+            "failures": [
+              "geometry: unsupported clip geometry on p#indicator-readout-date.indicator-readout-date: inset(50%)"
+            ]
+          },
+          {
+            "id": "ETHUSD-1440-default",
+            "status": "failed",
+            "failures": [
+              "geometry: unsupported clip geometry on p#indicator-readout-date.indicator-readout-date: inset(50%)"
+            ]
+          },
+          {
+            "id": "BTCUSD-320-candles",
+            "status": "passed",
+            "failures": []
+          },
+          {
+            "id": "ETHUSD-320-candles",
+            "status": "failed",
+            "failures": [
+              "geometry: unsupported clip geometry on p#indicator-readout-date.indicator-readout-date: inset(50%)",
+              "frame-axis-0: hud hud-7:time#eth-bar-time:text-0 occludes 13 square CSS pixels"
+            ]
+          },
+          {
+            "id": "BTCUSD-390-candles",
+            "status": "passed",
+            "failures": []
+          },
+          {
+            "id": "ETHUSD-390-candles",
+            "status": "failed",
+            "failures": [
+              "geometry: unsupported clip geometry on p#indicator-readout-date.indicator-readout-date: inset(50%)"
+            ]
+          },
+          {
+            "id": "BTCUSD-768-candles",
+            "status": "failed",
+            "failures": [
+              "geometry: unsupported clip geometry on p#indicator-readout-date.indicator-readout-date: inset(50%)"
+            ]
+          },
+          {
+            "id": "ETHUSD-768-candles",
+            "status": "failed",
+            "failures": [
+              "geometry: unsupported clip geometry on p#indicator-readout-date.indicator-readout-date: inset(50%)"
+            ]
+          },
+          {
+            "id": "BTCUSD-1440-candles",
+            "status": "failed",
+            "failures": [
+              "geometry: unsupported clip geometry on p#indicator-readout-date.indicator-readout-date: inset(50%)"
+            ]
+          },
+          {
+            "id": "ETHUSD-1440-candles",
+            "status": "failed",
+            "failures": [
+              "geometry: unsupported clip geometry on p#indicator-readout-date.indicator-readout-date: inset(50%)"
+            ]
+          }
+        ]
+      }
+    },
+    "visual": {
+      "status": "passed-with-note",
+      "screenshots": "build/qa-r17-20261112/shots (8 files: BTCUSD/ETHUSD x 320/390/768/1440)",
+      "topLabelOffsetPx": {
+        "bboxFromPlotTop": [
+          {
+            "viewport": 320,
+            "btc": 59.0,
+            "eth": 160.9
+          },
+          {
+            "viewport": 390,
+            "btc": 67.9,
+            "eth": 179.5
+          },
+          {
+            "viewport": 768,
+            "btc": 79.4,
+            "eth": 204.4
+          },
+          {
+            "viewport": 1440,
+            "btc": 70.6,
+            "eth": 185.1
+          }
+        ]
+      },
+      "note": "ETH uses a log price scale and a forecast-extended domain, so its top tick falls lower than BTC's; the axis frame, gutter (64px) and label column are identical. The empty band above the top tick is a data-domain effect, not a layering defect, and is not part of the R17 acceptance sentence."
+    },
+    "accessibility": {
+      "status": "passed",
+      "focusableCount": {
+        "r17": 123,
+        "preR17": 123
+      },
+      "focusableSignatureDiff": {
+        "onlyPre": [],
+        "onlyR17": []
+      },
+      "svgFocusable": 33,
+      "ariaLiveRegions": 23,
+      "axisLabelsFocusable": false,
+      "tickPointerEvents": "bounding-box when visible, none when hidden (axis drag affordance); labels are not keyboard stops"
+    },
+    "performance": {
+      "status": "passed",
+      "a9PaintedMs": {
+        "390x844": 2260.3,
+        "320x740": 2231.1,
+        "768x1024": 2261.5,
+        "1024x768": 2258.1,
+        "1440x900": 2262,
+        "1920x1080": 2255.7
+      },
+      "budgetMs": 2500,
+      "maxMs": 2262
+    },
+    "consistency": {
+      "status": "passed",
+      "colorFontGradientShadowDeltas": "none in added CSS/HTML lines of 91cf41c (grep of + lines for hex/rgb/font-/gradient/shadow returned 0)",
+      "cssDelta": "4 files, +11/-3 lines (chart-workspace-controls.css, site-before-shell.css, index.html, atlas-shell regeneration)"
+    }
+  },
+  "findings": [
+    {
+      "id": "Q-R17-1",
+      "severity": "gate-blocking",
+      "scope": "harness",
+      "summary": "verify-price-axis-browser treats a 1x1 sr-only element's clip-path: inset(50%) as unsupported geometry and fails 12 of 16 cases",
+      "resumeCondition": "harness ignores zero-area/visually hidden nodes and reports 16/16"
+    }
+  ],
+  "notes": [
+    "Transient boot errors (data-boot=error, empty reason, no console error) appeared 3 times in a long-lived reused tab and recovered on reload. 16 controlled first loads (8 per build) were 8/8 ready on both 91cf41c and the pre-R17 build, so no build-specific boot regression is evidenced.",
+    "Human listening (0/10) and the 1-hour replay memory test remain user-side acceptance items and are unrelated to R17."
+  ]
+}
