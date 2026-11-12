@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "task": "Q-P4-1",
+  "status": "closed-browser-14-of-14",
+  "p4Closed": false,
+  "productCommit": "12f070363b65f7c5bd8272f2d786fd8348df3533",
+  "docsHeadAtRun": "67113cbfdb83a54d0f19d2f9f08d1a8aa57b241a",
+  "productFilesIdenticalTo12f0703": true,
+  "browser": "Chrome/157.0.8103.79",
+  "startedAt": "2026-11-12T23:27:05.643Z",
+  "finishedAt": "2026-11-12T23:27:50.293Z",
+  "required": 14,
+  "attempted": 14,
+  "passed": 14,
+  "failures": 0,
+  "exitCode": 0,
+  "sourceCommit": "67113cbfdb83a54d0f19d2f9f08d1a8aa57b241a",
+  "sourceIntegrity": {
+    "checkedFiles": 1166,
+    "changedSources": [],
+    "unchangedDuringRun": true
+  },
+  "fixture1024": {
+    "stage": {
+      "left": 249,
+      "top": 93.8125,
+      "right": 991,
+      "bottom": 511.1875,
+      "width": 742,
+      "height": 417.375
+    },
+    "visual": {
+      "left": 249,
+      "top": 49,
+      "right": 991,
+      "bottom": 512,
+      "width": 742,
+      "height": 463
+    },
+    "widthDifferencePx": 0,
+    "horizontalOverflow": 0,
+    "h1Count": 1,
+    "paintedH1": 1,
+    "play": {
+      "left": 592,
+      "top": 608,
+      "right": 648,
+      "bottom": 664,
+      "width": 56,
+      "height": 56
+    }
+  },
+  "report": {
+    "path": "build/q-p4-1-browser-mac-12f0703/report.json",
+    "bytes": 732269,
+    "sha256": "463d50f0297c3174bb0be23e2135e30a5b3361e83d8b154a4018eac49187909c"
+  },
+  "media20of20": {
+    "ran": false,
+    "reason": "canonical dist file count 1721 does not match ready manifest siteFileCount 1530; contract not relaxed and canonical dist not overwritten"
+  }
+}

@@ -67,3 +67,8 @@ Linux Chromium 156.0.8078.79가 `ProcessSingleton`의 `socket() failed: Operatio
 ```sh
 ATLAS_BROWSER_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" node scripts/verify-conference-browser.mjs --out build/q-p4-1-browser-mac-12f0703
 ```
+
+## Mac 14/14 — 2026-11-13 08:27 KST
+
+제품 `12f0703`과 제품 경로가 같은 문서 `67113cb`에서 원래 전체 명령을 실행했다. 14/14, 실패 0, exit 0. `fixture-1024x768` stage 742×417.375, visual 742×463, 폭 차이 0px. Q-P4-1은 닫는다. 실미디어 20/20은 정본 dist 1721 대 ready siteFileCount 1530이라 시작하지 않았다. [영수증](../ui-renewal-p4/mac-12f0703.md).
+
