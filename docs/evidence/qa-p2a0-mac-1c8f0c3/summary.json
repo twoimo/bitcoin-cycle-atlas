@@ -1,0 +1,31 @@
+{
+  "measuredHead": "1c8f0c3a55b35d8fb08d8fa8aafbc514e8fbc16f",
+  "chrome": "157.0.8103.79",
+  "observedAt": "2026-11-13T01:26:56+09:00",
+  "spike": {
+    "status": "failed",
+    "qualifiesP2a0NativeVerification": false,
+    "sourceStable": true,
+    "complete": true,
+    "failures": 28,
+    "startupPaintedMs": [1100.3, 1091.6, 1108.4, 1086.3, 1125.6, 1080.1],
+    "counts": {
+      "startup": {"required": 6, "attempted": 6, "passed": 6, "failed": 0},
+      "features": {"required": 7, "attempted": 7, "passed": 7, "failed": 0},
+      "keyboard": {"required": 4, "attempted": 4, "passed": 0, "failed": 4},
+      "touch": {"required": 4, "attempted": 4, "passed": 4, "failed": 0}
+    },
+    "textContrast": 4.440810712577725,
+    "reportRawSha256": "b65f4314899fb036ddb370bccdfd60acc3ef1ca4cafa61426efc0a8235bc6871"
+  },
+  "conferenceA9": {
+    "status": "passed",
+    "cases": 6,
+    "failures": 0,
+    "paintedMs": [2208.2, 2185, 2170, 2206, 2174.7, 2197.1],
+    "budgetMs": 2500,
+    "baselineCompared": false,
+    "mediaReady": false,
+    "reportRawSha256": "d1e251601d82c786d6fc309bea9f7c45aba9e8190de7effe6876bde2beb2d38c"
+  }
+}
