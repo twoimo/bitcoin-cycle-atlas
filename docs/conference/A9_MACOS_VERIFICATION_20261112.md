@@ -113,3 +113,16 @@ Pro가 `1e0d071`(정적 import 폐포 생성기 `scripts/build-site-preloads.mjs
 | `npm test` | 아래 §8 | |
 
 증거: `docs/evidence/a9-macos-20261112/summary.json`의 `round2`, 원본 report는 `build/conference-a9-r2/`(미커밋).
+
+## 8. `npm test` 전체 (HEAD `e6c9a7a`, macOS)
+
+같은 커밋에서 전체 테스트를 한 번 돌렸다. 정본은 마지막 한 줄이다.
+
+```
+ATLAS_TEST_TOTAL {"complete":true,"tests":3479,"pass":3474,"fail":0,"skipped":5,"batches":2}
+```
+
+- **3,474 pass + 5 skip = 3,479, 실패 0**, `complete:true`, 2배치, exit 0(약 8분).
+- 실행 조건: `PATH=/opt/homebrew/bin:/Applications/Docker.app/Contents/Resources/bin:$PATH`, `DOCKER_HOST=unix:///Users/twoimo/.docker/run/docker.sock`, 추적 파일 기준 clean 트리(당시 untracked evidence 디렉터리는 테스트 대상이 아니며 이후 제거했다).
+- 라운드 1(3,459 pass + 5 skip)보다 15건 늘었고, 증가분은 `1e0d071`이 추가한 preload 생성기·정적 import 스캐너 테스트와 기존 스위트 확장분이다. 실패 0은 그대로다.
+- 이 실행은 브라우저 게이트와 겹치지 않게 따로 돌렸다.
