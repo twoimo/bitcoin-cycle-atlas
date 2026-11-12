@@ -76,14 +76,16 @@ export function mountConferencePlayer(host, options = {}) {
   const view = options.window || document.defaultView;
   const fetchImpl = options.fetchImpl || globalThis.fetch;
   const timelineUrl = new URL(options.timelineUrl || './conference/timeline.json', view?.location?.href || 'http://localhost/').href;
+  const mediaManifestUrl = new URL(options.mediaManifestUrl || './media-manifest.json', timelineUrl).href;
   const state = {status:'loading', time:0, duration:0, deck:null, page:null, segment:-1,
     playing:false, playPending:false, follow:true, auto:true, rate:1, transcript:false, settings:false, zoom:false};
   let timeline = null, destroyed = false, loadVersion = 0, abort = null, playVersion = 0;
   let audioIndex = -1, pendingSeek = null, lastAnnouncement = null, lastUrlKey = null;
   let transcriptOpener = null, transcriptMode = null, imageVersion = 0, imageKey = null;
   let imagePreload = null, resizeObserver = null, mediaError = false;
+  let mediaLoad = Promise.resolve(false);
   let noticeText = '', highlightedRow = -1;
-  const disposers = [], transcriptRows = [], transcriptSearch = [], imageCache = new Map(), pageIndexes = new Map();
+  const disposers = [], transcriptRows = [], transcriptSearch = [], imageCache = new Map(), pageIndexes = new Map(), mediaDecks = new Map();
 
   host.innerHTML = [
     '<section class="conference-player" data-state="loading" aria-label="컨퍼런스 플레이어">',
@@ -167,7 +169,7 @@ export function mountConferencePlayer(host, options = {}) {
     setText(role('notice'), text); role('notice').hidden = !text;
   }
   function notice(text = '') { noticeText = text; renderNotice(); }
-  function assetUrl(path) { return new URL(path, timelineUrl).href; }
+  function assetUrl(path, base = timelineUrl) { return new URL(path, base).href; }
   function readUrl() {
     const url = new URL(view?.location?.href || timelineUrl);
     const seconds = Number(url.searchParams.get('t'));
@@ -182,7 +184,10 @@ export function mountConferencePlayer(host, options = {}) {
     url.searchParams.set('t', String(time)); url.searchParams.set('deck', state.deck);
     view.history.replaceState(view.history.state, '', url.href); lastUrlKey = key;
   }
-  function currentDeck() { return timeline?.decks.find(deck => deck.id === state.deck); }
+  function currentDeck() {
+    const deck = timeline?.decks.find(item => item.id === state.deck);
+    return deck && mediaDecks.has(deck.id) ? {...deck, ...mediaDecks.get(deck.id)} : deck;
+  }
   function resolveDeck(id) {
     if (timeline?.decks.some(deck => deck.id === id)) return id;
     // Existing deep links used the short ID before the locked input bundle.
@@ -213,7 +218,7 @@ export function mountConferencePlayer(host, options = {}) {
     pendingSeek = localTime;
     if (index !== audioIndex) {
       audioIndex = index; mediaError = false;
-      audio.src = assetUrl(clip.file);
+      audio.src = assetUrl(clip.file, clip.assetBase);
       audio.playbackRate = state.rate;
       audio.load?.();
     }
@@ -251,7 +256,7 @@ export function mountConferencePlayer(host, options = {}) {
     }
     root.dataset.playing = String(state.playing);
   }
-  function pageUrl(deck, page) { return assetUrl(deck.dir.replace(/\/$/, '') + '/' + String(page).padStart(4, '0') + '.webp'); }
+  function pageUrl(deck, page) { return assetUrl(deck.dir.replace(/\/$/, '') + '/' + String(page).padStart(4, '0') + '.webp', deck.assetBase); }
   function preloadPage(deck, page) {
     if (!view?.Image || !page) return null;
     const url = pageUrl(deck, page);
@@ -506,6 +511,7 @@ export function mountConferencePlayer(host, options = {}) {
   function clearContent() {
     pause(); closeTranscript({restoreFocus:false}); timeline = null; state.duration = 0; state.page = null; state.segment = -1;
     clips.length = 0; audioIndex = -1; pendingSeek = null; imageVersion++; imageKey = null; imageCache.clear();
+    mediaDecks.clear(); mediaLoad = Promise.resolve(false);
     pageIndexes.clear(); transcriptRows.length = 0; transcriptSearch.length = 0; highlightedRow = -1; list.replaceChildren();
     role('transcript-search').value = ''; list.hidden = false; root.querySelector('.conference-search-empty').hidden = true;
     audio.removeAttribute?.('src'); audio.load?.();
@@ -515,6 +521,46 @@ export function mountConferencePlayer(host, options = {}) {
     action('retry').disabled = false;
     lastAnnouncement = null; setText(live, '');
     setText(caption, '재생 자료가 준비되면 자막이 표시됩니다.');
+  }
+  async function loadOptionalMedia(version, sourceTimeline, timelineText, signal) {
+    const current = () => !destroyed && version === loadVersion && timeline === sourceTimeline;
+    // Existing authored/fixture media retains its native path. The optional
+    // manifest only adds media to the canonical, explicitly absent package.
+    if (!sourceTimeline.audio.every(clip => clip.available === false) ||
+        !sourceTimeline.decks.every(deck => deck.imagesAvailable === false)) return false;
+    try {
+      const response = await fetchImpl(mediaManifestUrl, {signal, cache:'no-cache'});
+      if (!current() || !response.ok) return false;
+      const manifestText = typeof response.text === 'function' ? await response.text() : null;
+      const manifest = manifestText === null ? await response.json() : JSON.parse(manifestText);
+      if (!current() || manifest?.status !== 'ready') return false;
+      // Hashing and the optional validator import begin only after the original
+      // timeline-ready render. Neither extends the first-screen ready contract.
+      const digest = async () => {
+        if (timelineText === null) return undefined;
+        if (!globalThis.crypto?.subtle) throw new Error('Timeline provenance unavailable');
+        const bytes = await globalThis.crypto.subtle.digest('SHA-256', new TextEncoder().encode(timelineText));
+        return Array.from(new Uint8Array(bytes), byte => byte.toString(16).padStart(2, '0')).join('');
+      };
+      const [{conferenceMediaOverlay}, timelineSha256] = await Promise.all([import('./media.js'), digest()]);
+      if (!current()) return false;
+      const overlay = conferenceMediaOverlay(manifest, {timeline:sourceTimeline, timelineSha256,
+        manifestBytes:manifestText === null ? undefined : new TextEncoder().encode(manifestText).byteLength});
+      if (!overlay || !current()) return false;
+      // Playback indexes belong to the installed media; transcript/page indexes
+      // continue to belong to the unchanged source timeline and event clock.
+      pause();
+      for (const deck of overlay.decks) mediaDecks.set(deck.id, {...deck, assetBase:mediaManifestUrl});
+      clips.splice(0, clips.length, ...overlay.clips.map(clip => ({...clip, assetBase:mediaManifestUrl})));
+      audioIndex = -1; pendingSeek = null; mediaError = false;
+      imageVersion++; imageKey = null; imageCache.clear();
+      ensureAudio(state.time); render();
+      return true;
+    } catch {
+      // Optional, missing, malformed or stale media never removes the usable
+      // timeline, changes its mappings, or replaces its honest absence states.
+      return false;
+    }
   }
   async function load() {
     if (destroyed) return false;
@@ -534,7 +580,8 @@ export function mountConferencePlayer(host, options = {}) {
         action('retry').hidden = false; render(); return false;
       }
       if (!response.ok) throw new Error('Timeline request failed');
-      const data = await response.json();
+      const timelineText = typeof response.text === 'function' ? await response.text() : null;
+      const data = timelineText === null ? await response.json() : JSON.parse(timelineText);
       if (destroyed || version !== loadVersion) return false;
       timeline = assertConferenceTimeline(data);
       state.duration = timeline.audio.reduce((sum, clip) => sum + clip.durationSec, 0);
@@ -545,7 +592,9 @@ export function mountConferencePlayer(host, options = {}) {
       state.status = 'ready';
       state.deck = resolveDeck(pending.deck) || timeline.decks[0].id;
       state.time = clamp(pending.time, 0, state.duration);
-      buildTimeline(); render(true); return true;
+      buildTimeline(); render(true);
+      mediaLoad = loadOptionalMedia(version, timeline, timelineText, abort?.signal);
+      return true;
     } catch (error) {
       if (destroyed || version !== loadVersion || error?.name === 'AbortError') return false;
       clearContent(); state.status = 'error';
@@ -653,7 +702,10 @@ export function mountConferencePlayer(host, options = {}) {
     if (!timeline || audioIndex < 0 || clips[audioIndex].available === false || pendingSeek !== null || destroyed) return;
     const localTime = Number(audio.currentTime);
     if (!Number.isFinite(localTime)) return;
-    state.time = clamp(clips[audioIndex].offset + localTime, 0, state.duration);
+    const clip = clips[audioIndex];
+    // Encoder padding must not move the event clock beyond this session's
+    // original endpoint. The next session starts at its own explicit offset.
+    state.time = clamp(clip.offset + localTime, clip.offset, Math.min(state.duration, clip.offset + clip.durationSec));
     render(); writeUrl();
   });
   on(audio, 'ended', () => {
@@ -677,6 +729,8 @@ export function mountConferencePlayer(host, options = {}) {
   responsive(); render();
   return {
     load, syncFromUrl, seek, setDeck,
+    // The optional metadata overlay settles independently of native decoding.
+    whenMediaSettled:() => mediaLoad,
     getState:() => ({...state}),
     destroy() {
       if (destroyed) return;

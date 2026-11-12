@@ -12,3 +12,6 @@ __pycache__/
 .openai/
 dist/publication.json
 dist/publication.json.tmp
+# Conference media is prepared locally from locked originals, never committed.
+/dist/conference/pages/
+/dist/conference/audio/

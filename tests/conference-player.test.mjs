@@ -1,13 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import {parseHTML} from 'linkedom';
 import {mountConferencePlayer, formatConferenceTime, conferenceSegmentIndex, conferenceMappedPage} from '../dist/conference/player.js';
+import {assertConferenceMediaManifest, CONFERENCE_MEDIA_LIMITS, CONFERENCE_MEDIA_SETTINGS} from '../dist/conference/media.js';
 
 const fixtureTimeline = JSON.parse(await readFile(new URL('./fixtures/conference/timeline.synthetic.json', import.meta.url)));
 const settle = () => new Promise(resolve => setImmediate(resolve));
 
-function fixture({href='https://atlas.test/bitcoin-cycle-atlas/?page=conference', width=1440, response, play} = {}) {
+function fixture({href='https://atlas.test/bitcoin-cycle-atlas/?page=conference', width=1440, response, play, mediaManifestUrl} = {}) {
   const {document, window} = parseHTML('<html><body data-page="conference"><h1>컨퍼런스 복습</h1><main id="host"></main></body></html>');
   const host = document.getElementById('host');
   let location = new URL(href);
@@ -28,7 +30,7 @@ function fixture({href='https://atlas.test/bitcoin-cycle-atlas/?page=conference'
   media.pause = () => { pauseCalls++; media.paused = true; media.dispatchEvent(new window.Event('pause')); };
   media.play = () => { playCalls++; media.paused = false; return play ? play() : Promise.resolve(); };
   const controller = mountConferencePlayer(host, {
-    document, window:view, mediaElement:media,
+    document, window:view, mediaElement:media, mediaManifestUrl,
     timelineUrl:'https://atlas.test/bitcoin-cycle-atlas/conference/timeline.json',
     fetchImpl:response || (async () => ({ok:true,status:200,json:async () => structuredClone(fixtureTimeline)})),
   });
@@ -54,6 +56,65 @@ function fixture({href='https://atlas.test/bitcoin-cycle-atlas/?page=conference'
     role:name => host.querySelector('[data-role="' + name + '"]'),
     navigate(url) { location = new URL(url, location); view.dispatchEvent(new window.Event('popstate')); },
     counts:() => ({playCalls,pauseCalls,loads})};
+}
+
+function absentMediaTimeline() {
+  const timeline = structuredClone(fixtureTimeline);
+  for (const clip of timeline.audio) clip.available = false;
+  for (const deck of timeline.decks) deck.imagesAvailable = false;
+  return timeline;
+}
+
+function jsonResponse(value) {
+  return {ok:true, status:200, text:async () => JSON.stringify(value)};
+}
+
+const sha256 = value => createHash('sha256').update(value).digest('hex');
+
+// These are unit-test metadata records, not rendered pages or encoded audio.
+// Their complete inventory exercises the real optional-manifest validator.
+function readyMediaManifest(timeline) {
+  const raw = JSON.stringify(timeline), inputs = [], decks = [], audio = [], assets = [];
+  for (const deck of timeline.decks) {
+    const hash = sha256('synthetic PDF ' + deck.id);
+    inputs.push({id:deck.id, kind:'pdf', file:deck.id + '.pdf', bytes:100, sha256:hash, pageCount:deck.pages});
+    decks.push({id:deck.id, dir:deck.dir, pageCount:deck.pages, inputSha256:hash});
+    for (let page = 1; page <= deck.pages; page++) {
+      const file = deck.dir + '/' + String(page).padStart(4, '0') + '.webp';
+      assets.push({kind:'page', deckId:deck.id, page, file, bytes:100, sha256:sha256(file), width:1800, height:1013});
+    }
+  }
+  let offset = 0;
+  for (const clip of timeline.audio) {
+    inputs.push({id:clip.id, kind:'audio', file:clip.id + '.mp3', bytes:100, sha256:sha256('synthetic audio ' + clip.id),
+      t0:offset, t1:offset + clip.durationSec, durationSec:clip.durationSec,
+      decodedSamples:Math.round(clip.durationSec * CONFERENCE_MEDIA_SETTINGS.audioSampleRate)});
+    offset += clip.durationSec;
+  }
+  const sources = inputs.filter(input => input.kind === 'audio');
+  for (const talk of timeline.talks) {
+    const file = 'audio/session-' + talk.id + '.m4a';
+    const sourceRanges = sources.filter(input => input.t0 < talk.t1 && input.t1 > talk.t0).map(input => {
+      const t0 = Math.max(input.t0, talk.t0), t1 = Math.min(input.t1, talk.t1);
+      const sourceT0 = t0 - input.t0, sourceT1 = t1 - input.t0;
+      return {inputId:input.id, t0, t1, sourceT0, sourceT1,
+        startSample:Math.round(sourceT0 * CONFERENCE_MEDIA_SETTINGS.audioSampleRate),
+        endSample:Math.round(sourceT1 * CONFERENCE_MEDIA_SETTINGS.audioSampleRate)};
+    });
+    audio.push({id:'session-' + talk.id, talkId:talk.id, file, t0:talk.t0, t1:talk.t1,
+      durationSec:talk.t1 - talk.t0, sourceRanges});
+    assets.push({kind:'audio', talkId:talk.id, file, bytes:100, sha256:sha256(file), codec:'aac', channels:1,
+      sampleRate:CONFERENCE_MEDIA_SETTINGS.audioSampleRate, durationSec:talk.t1 - talk.t0 + 0.01});
+  }
+  const manifest = {schemaVersion:1, kind:'atlas-conference-media', eventId:timeline.event.id, status:'ready',
+    settings:{...CONFERENCE_MEDIA_SETTINGS}, limits:{...CONFERENCE_MEDIA_LIMITS},
+    timeline:{bytes:Buffer.byteLength(raw), sha256:sha256(raw)}, deckLock:{bytes:100, sha256:sha256('synthetic deck lock')},
+    toolchain:{fixture:'unit-test metadata only'}, review:{visual:'pending', listening:'pending'}, inputs, decks, audio, assets,
+    totals:{pageCount:timeline.decks.reduce((sum, deck) => sum + deck.pages, 0), audioCount:audio.length,
+      assetCount:assets.length, assetBytes:100 * assets.length, maxAssetBytes:100, fileCount:assets.length + 1,
+      existingSiteFileCount:1, siteFileCount:assets.length + 2}};
+  assertConferenceMediaManifest(manifest, {timeline, timelineSha256:sha256(raw)});
+  return manifest;
 }
 
 test('conference time and last-segment lookup keep fractional and hour boundaries explicit', () => {
@@ -528,5 +589,256 @@ test('a full-size transcript defers DOM until opened and retains every source ro
     f.click('close-transcript'); f.click('transcript');
     assert.equal(f.host.querySelectorAll('.conference-transcript-row').length, count);
     assert.equal(f.host.querySelector('.conference-transcript-row'), rows[0]);
+  } finally {f.controller.destroy();}
+});
+
+test('optional media discovery leaves the original timeline ready while its response is pending', async () => {
+  const timeline = absentMediaTimeline(), original = JSON.stringify(timeline), requests = [];
+  let releaseManifest;
+  const f = fixture({href:'https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=3725&deck=r17-257',
+    response:async (url, options) => {
+      requests.push({url, options});
+      if (url.endsWith('/timeline.json')) return jsonResponse(timeline);
+      return new Promise(resolve => { releaseManifest = resolve; });
+    }});
+  try {
+    assert.equal(await f.controller.load(), true);
+    assert.equal(f.controller.getState().status, 'ready');
+    assert.equal(f.controller.getState().time, 3725);
+    assert.equal(f.controller.getState().page, 1);
+    assert.equal(f.role('state-title').textContent, '장표 이미지 없음');
+    assert.equal(f.role('notice').textContent, '오디오 없음');
+    assert.equal(f.media.src, '');
+    assert.equal(f.counts().playCalls, 0);
+    assert.equal(requests.length, 2);
+    assert.equal(requests[1].url, 'https://atlas.test/bitcoin-cycle-atlas/conference/media-manifest.json');
+    assert.equal(requests[1].options.signal, requests[0].options.signal);
+    f.controller.setDeck('final-290');
+    f.controller.seek(3780);
+    releaseManifest({ok:false, status:404});
+    assert.equal(await f.controller.whenMediaSettled(), false);
+    assert.equal(f.controller.getState().status, 'ready');
+    assert.equal(f.controller.getState().time, 3780);
+    assert.equal(f.controller.getState().deck, 'final-290');
+    assert.equal(f.controller.getState().page, 3);
+    assert.match(f.role('page-status').textContent, /이 구간에 맞는 장표 없음/);
+    assert.equal(JSON.stringify(timeline), original);
+  } finally {f.controller.destroy();}
+});
+
+test('unavailable and malformed optional manifests retain honest media absence and usable source navigation', async t => {
+  const unavailable = JSON.parse(await readFile(new URL('../dist/conference/media-manifest.json', import.meta.url)));
+  const cases = [
+    ['unavailable package', () => jsonResponse(unavailable)],
+    ['missing file', () => ({ok:false, status:404})],
+    ['request failure', () => {throw new Error('connection closed');}],
+    ['malformed JSON', () => ({ok:true, status:200, text:async () => '{broken'})],
+    ['invalid ready package', () => jsonResponse({schemaVersion:1, status:'ready'})],
+  ];
+  for (const [name, response] of cases) await t.test(name, async () => {
+    const timeline = absentMediaTimeline();
+    const f = fixture({response:async url => url.endsWith('/timeline.json') ? jsonResponse(timeline) : response()});
+    try {
+      assert.equal(await f.controller.load(), true);
+      assert.equal(await f.controller.whenMediaSettled(), false);
+      assert.equal(f.controller.getState().status, 'ready');
+      assert.equal(f.role('state-title').textContent, '장표 이미지 없음');
+      assert.equal(f.role('notice').textContent, '오디오 없음');
+      assert.equal(f.host.querySelector('[data-action="play"]').disabled, true);
+      assert.equal(f.media.src, '');
+      assert.equal(f.counts().playCalls, 0);
+      f.controller.seek(3725); f.controller.setDeck('r17-257');
+      assert.equal(f.controller.getState().time, 3725);
+      assert.equal(f.controller.getState().page, 1);
+      assert.equal(f.document.querySelectorAll('h1').length, 1);
+    } finally {f.controller.destroy();}
+  });
+});
+
+test('existing authored media does not request an optional replacement manifest', async () => {
+  const requests = [];
+  const f = fixture({response:async url => {requests.push(url); return jsonResponse(fixtureTimeline);}});
+  try {
+    assert.equal(await f.controller.load(), true);
+    assert.equal(await f.controller.whenMediaSettled(), false);
+    assert.equal(requests.length, 1);
+    assert.match(f.media.src, /audio\/fixture-1\.wav$/);
+    assert.equal(f.controller.getState().status, 'ready');
+    assert.equal(f.host.querySelector('[data-action="play"]').disabled, false);
+  } finally {f.controller.destroy();}
+});
+
+test('a verified media manifest adds pages and session audio without changing time, deck, source mapping or autoplay', async () => {
+  const timeline = absentMediaTimeline(), original = JSON.stringify(timeline), manifest = readyMediaManifest(timeline);
+  let releaseManifest;
+  const f = fixture({href:'https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=3725&deck=r17-257',
+    response:async url => url.endsWith('/timeline.json') ? jsonResponse(timeline)
+      : new Promise(resolve => {releaseManifest = resolve;})});
+  try {
+    assert.equal(await f.controller.load(), true);
+    assert.equal(f.role('state-title').textContent, '장표 이미지 없음');
+    f.controller.setDeck('final-290');
+    f.role('rate').value = '1.5'; f.role('rate').dispatchEvent(new f.window.Event('change'));
+    releaseManifest(jsonResponse(manifest));
+    assert.equal(await f.controller.whenMediaSettled(), true);
+    assert.equal(f.controller.getState().status, 'ready');
+    assert.equal(f.controller.getState().time, 3725);
+    assert.equal(f.controller.getState().duration, 4000);
+    assert.equal(f.controller.getState().deck, 'final-290');
+    assert.equal(f.controller.getState().page, 3);
+    assert.equal(f.controller.getState().playing, false);
+    assert.equal(f.media.currentTime, 85);
+    assert.match(f.media.src, /conference\/audio\/session-14\.m4a$/);
+    assert.equal(f.media.playbackRate, 1.5);
+    assert.equal(f.counts().playCalls, 0);
+    assert.equal(f.host.querySelector('[data-action="play"]').disabled, false);
+    assert.equal(f.host.querySelector('.conference-slide-image').src,
+      'https://atlas.test/bitcoin-cycle-atlas/conference/pages/synthetic-a/0003.webp');
+    const audioLoads = f.counts().loads;
+    f.controller.setDeck('r17-257');
+    assert.equal(f.controller.getState().time, 3725);
+    assert.equal(f.media.currentTime, 85);
+    assert.equal(f.counts().loads, audioLoads);
+    assert.equal(f.controller.getState().page, 1);
+    f.controller.seek(3780);
+    assert.equal(f.media.currentTime, 140);
+    assert.equal(f.controller.getState().page, 1);
+    assert.match(f.role('page-status').textContent, /이 구간에 맞는 장표 없음/);
+    assert.equal(f.document.querySelectorAll('h1').length, 1);
+    assert.equal(JSON.stringify(timeline), original);
+    assert.equal(new URL(f.writes.at(-1)).searchParams.get('t'), '3780');
+  } finally {f.controller.destroy();}
+});
+
+test('media prepared for different timeline bytes is rejected before any page or audio source is installed', async () => {
+  const timeline = absentMediaTimeline(), manifest = readyMediaManifest(timeline);
+  manifest.timeline.sha256 = sha256('different timeline revision');
+  const f = fixture({response:async url => jsonResponse(url.endsWith('/timeline.json') ? timeline : manifest)});
+  try {
+    assert.equal(await f.controller.load(), true);
+    assert.equal(await f.controller.whenMediaSettled(), false);
+    assert.equal(f.controller.getState().status, 'ready');
+    assert.equal(f.role('state-title').textContent, '장표 이미지 없음');
+    assert.equal(f.role('notice').textContent, '오디오 없음');
+    assert.equal(f.media.src, '');
+    assert.equal(f.host.querySelector('.conference-slide-image').hasAttribute('src'), false);
+    assert.equal(f.counts().playCalls, 0);
+  } finally {f.controller.destroy();}
+});
+
+test('session media rebases native time at exact program boundaries without accumulating encoder padding', async () => {
+  const timeline = absentMediaTimeline(), manifest = readyMediaManifest(timeline);
+  const f = fixture({href:'https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=250',
+    response:async url => jsonResponse(url.endsWith('/timeline.json') ? timeline : manifest)});
+  try {
+    await f.controller.load(); assert.equal(await f.controller.whenMediaSettled(), true);
+    assert.equal(f.media.currentTime, 250);
+    assert.match(f.media.src, /session-00\.m4a$/);
+    f.click('play'); await settle();
+    assert.equal(f.controller.getState().playing, true);
+    f.tick(260.01);
+    assert.equal(f.controller.getState().time, 260);
+    f.media.dispatchEvent(new f.window.Event('ended')); await settle();
+    assert.equal(f.controller.getState().time, 260);
+    assert.equal(f.media.currentTime, 0);
+    assert.match(f.media.src, /session-01\.m4a$/);
+    assert.equal(f.controller.getState().playing, true);
+    f.tick(12.5);
+    assert.equal(f.controller.getState().time, 272.5);
+    f.controller.seek(3999);
+    await settle();
+    assert.equal(f.media.currentTime, 359);
+    f.tick(360.01);
+    assert.equal(f.controller.getState().time, 4000);
+    f.media.dispatchEvent(new f.window.Event('ended'));
+    assert.equal(f.controller.getState().time, 4000);
+    assert.equal(f.controller.getState().playing, false);
+    assert.equal(f.controller.getState().duration, 4000);
+    assert.equal(f.role('total-time').textContent, '1:06:40');
+  } finally {f.controller.destroy();}
+});
+
+test('session 13 crosses the original 18000-second audio split on the unchanged event clock', async () => {
+  const timeline = JSON.parse(await readFile(new URL('../dist/conference/timeline.json', import.meta.url)));
+  const original = JSON.stringify({talks:timeline.talks, segments:timeline.segments}), manifest = readyMediaManifest(timeline);
+  assert.equal(manifest.audio[13].t0, 17956.51);
+  assert.equal(manifest.audio[13].t1, 20042.82);
+  assert.deepEqual(manifest.audio[13].sourceRanges.map(range => [range.inputId, range.t0, range.t1]),
+    [['plaud-1',17956.51,18000], ['plaud-2',18000,20042.82]]);
+  const f = fixture({href:'https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=17999.5&deck=r17-clean-257',
+    response:async url => jsonResponse(url.endsWith('/timeline.json') ? timeline : manifest)});
+  try {
+    await f.controller.load(); assert.equal(await f.controller.whenMediaSettled(), true);
+    assert.equal(f.controller.getState().time, 17999.5);
+    assert.ok(Math.abs(f.media.currentTime - 42.99) < 1e-9);
+    assert.match(f.media.src, /session-13\.m4a$/);
+    const audioUrl = f.media.src, loads = f.counts().loads;
+    f.tick(43.49);
+    assert.equal(f.controller.getState().time, 18000);
+    assert.equal(f.media.src, audioUrl);
+    assert.equal(f.counts().loads, loads);
+    f.controller.setDeck('final-290');
+    assert.equal(f.controller.getState().time, 18000);
+    assert.equal(f.media.currentTime, 43.49);
+    f.tick(203.49);
+    assert.equal(f.controller.getState().time, 18160);
+    f.controller.seek(20042.82);
+    assert.equal(f.controller.getState().time, 20042.82);
+    assert.equal(f.media.currentTime, 0);
+    assert.match(f.media.src, /session-14\.m4a$/);
+    assert.equal(f.controller.getState().duration, 20400);
+    assert.equal(JSON.stringify({talks:timeline.talks, segments:timeline.segments}), original);
+  } finally {f.controller.destroy();}
+});
+
+test('optional media completion after destruction cannot revive media ownership', async () => {
+  const timeline = absentMediaTimeline(), manifest = readyMediaManifest(timeline);
+  let releaseManifest, signal;
+  const f = fixture({response:async (url, options) => {
+    if (url.endsWith('/timeline.json')) return jsonResponse(timeline);
+    signal = options.signal;
+    return new Promise(resolve => {releaseManifest = resolve;});
+  }});
+  await f.controller.load();
+  const pending = f.controller.whenMediaSettled();
+  f.controller.destroy();
+  const loads = f.counts().loads;
+  assert.equal(signal.aborted, true);
+  releaseManifest(jsonResponse(manifest));
+  assert.equal(await pending, false);
+  assert.equal(f.counts().loads, loads);
+  assert.equal(f.counts().playCalls, 0);
+  assert.equal(f.media.src, '');
+  assert.equal(f.host.childElementCount, 0);
+});
+
+test('a manifest from an obsolete load cannot replace the current unavailable package', async () => {
+  const timeline = absentMediaTimeline(), manifest = readyMediaManifest(timeline);
+  let releaseOldManifest, oldSignal, manifestRequests = 0;
+  const f = fixture({response:async (url, options) => {
+    if (url.endsWith('/timeline.json')) return jsonResponse(timeline);
+    if (++manifestRequests === 1) {
+      oldSignal = options.signal;
+      return new Promise(resolve => {releaseOldManifest = resolve;});
+    }
+    return jsonResponse({schemaVersion:1, kind:'atlas-conference-media', eventId:timeline.event.id,
+      status:'unavailable', decks:[], audio:[], assets:[]});
+  }});
+  try {
+    await f.controller.load();
+    const oldPending = f.controller.whenMediaSettled();
+    f.controller.seek(3725); f.controller.setDeck('r17-257');
+    await f.controller.load();
+    assert.equal(await f.controller.whenMediaSettled(), false);
+    assert.equal(oldSignal.aborted, true);
+    releaseOldManifest(jsonResponse(manifest));
+    assert.equal(await oldPending, false);
+    assert.equal(f.controller.getState().status, 'ready');
+    assert.equal(f.controller.getState().time, 3725);
+    assert.equal(f.controller.getState().deck, 'r17-257');
+    assert.equal(f.role('state-title').textContent, '장표 이미지 없음');
+    assert.equal(f.role('notice').textContent, '오디오 없음');
+    assert.equal(f.media.src, '');
+    assert.equal(f.counts().playCalls, 0);
   } finally {f.controller.destroy();}
 });
