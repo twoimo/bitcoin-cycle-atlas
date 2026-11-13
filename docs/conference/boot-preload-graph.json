@@ -151,8 +151,8 @@
     {
       "url": "./ui/theme.js",
       "file": "ui/theme.js",
-      "bytes": 6140,
-      "sha256": "59f678846f2c1ce322f2f37cb7c8c7378d7b3d67cae30b35677d3468bf79e810",
+      "bytes": 6160,
+      "sha256": "8de65c0663d3a3e55bbd682eb368df8a973b1579d009ad04e4446e76a7bb854f",
       "depth": 1,
       "imports": []
     },
@@ -905,6 +905,6 @@
     "sharedModulePreloads": 1,
     "staticImportEdges": 83,
     "maxShortestImportDepth": 6,
-    "moduleBytesByUrl": 782166
+    "moduleBytesByUrl": 782186
   }
 }
