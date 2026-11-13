@@ -96,3 +96,11 @@ AI가 만든 화면처럼 보이는 **템플릿 신호**를 없애고, 이 제�
 공유 셸 DOM 모델의 D-1 범위 스캔은 컨퍼런스·차트·릴레이 각각 **1→0**, 합계 **3→0**이다. 메뉴 SVG+접근성 이름 3/3, 클릭 왕복 3/3, 각 h1 1개, 기존 집중 검사 40/40. 전체 제품 native D-1은 미측정이며 스크린샷은 **0/6**이다. Chromium socket EPERM으로 페이지 시작 전 차단됐다. **F1 수용과 P5는 닫지 않는다.**
 
 [구현·한계·Mac 실행 명령](../evidence/r19-p5-f1/README.md) · [수치와 보호 해시](../evidence/r19-p5-f1/summary.json) · [DOM 모델](../evidence/r19-p5-f1/dom-model.json) · [native 차단 원본](../evidence/r19-p5-f1/native-blocked.json).
+
+## 9. Q-P5F1-1 설정 톱니 후속 (2026-11-13)
+
+기준 `a14022225e5897f14bee16b139f8bd194bd0732c`에서 `dist/analysis-dock.js`의 settings U+2699 한 생성 지점만 Phosphor Gear SVG로 바꿨다. 다섯 분석 창의 이름·이벤트 id/opener·버튼 크기와 포커스 CSS, U+2191 화살표는 그대로다. 기존 검사기와 D-1 제외 목록도 byte-identical이다.
+
+분석 창까지 포함한 DOM 모델은 원래 기준 `b2226d7` 여섯 화면 합계 **16**, 직전 제품 `7d45f88` 합계 **10**, 이번 후보 **0**이다. 후보 여섯 값은 모두 0이며 SVG/접근성 이름/설정 이벤트 쌍 5/5, 기존 관련 검사 43/43이다. 같은 native 명령은 Chromium socket EPERM으로 **0/6·D-1 null·complete false·exit 1**이다. 이 모델을 native 이후 0·실패 0으로 바꾸어 기록하지 않으며 **Q-P5F1-1·F1은 열림**이다.
+
+[전후 표·같은 실행 명령](../evidence/r19-p5-f1-gear/README.md) · [수치와 보호 해시](../evidence/r19-p5-f1-gear/summary.json) · [native 차단](../evidence/r19-p5-f1-gear/native-blocked.json).
