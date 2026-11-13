@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "kind": "r19-p4-mac-real-media",
+  "measuredAt": "2026-11-13T12:00:19.248000+09:00",
+  "finishedAt": "2026-11-13T12:01:29.901000+09:00",
+  "chrome": "157.0.8103.79",
+  "sourceCommit": "549616f84552f3c3e25bdc4d6bffb82b56f57d80",
+  "workingChanges": "",
+  "status": "passed",
+  "exitCode": 0,
+  "cases": {
+    "cases": 20,
+    "passed": 20,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browserLaunched": true,
+  "syntheticFixture": false,
+  "humanListening": "not-performed",
+  "viewport": {
+    "width": 1440,
+    "height": 900,
+    "mobile": false
+  },
+  "preflight": {
+    "passed": true,
+    "siteFileCount": 1721,
+    "observedSiteFileCount": 1721,
+    "verifiedAssetCount": 562,
+    "pageCount": 547,
+    "audioCount": 15,
+    "manifestSha256": "6cfdaaa691f0b7d8e5162fe5913c275241264a5505c7727abbfe60ca2ebabab1",
+    "manifestBytes": 163623
+  },
+  "http": {
+    "passed": true,
+    "images": 547,
+    "imageStatuses": [
+      200
+    ],
+    "sessions": 15,
+    "ranges": 45
+  },
+  "sourceIntegrityUnchangedDuringRun": true,
+  "canonicalManifest": {
+    "path": "dist/conference/media-manifest.json",
+    "sha256": "ff3e3f2b16f4435e71c5e9f07740a9a2af2b9e9fe46aaf013f70972a658d0088",
+    "bytes": 167,
+    "unchanged": true
+  },
+  "refresh": {
+    "mode": "refreshed",
+    "beforeSiteFileCount": 1530,
+    "existingSiteFileCount": 1158,
+    "siteFileCount": 1721,
+    "observedSiteFileCount": 1721,
+    "verifiedAssetCount": 562,
+    "mediaBytesChanged": 0,
+    "equalityCheckRelaxed": false
+  },
+  "report": {
+    "path": "build/r19-p4-media-browser-549616f/report.json",
+    "bytes": 5216352,
+    "sha256": "2872de882849c843ba357b98ab9bcf35d98fe9abf8ca5e60f6af893b7704b1be"
+  },
+  "notClaimed": [
+    "320/390/768 visual sweep was not rerun",
+    "A-9 was not rerun",
+    "keyboard/contrast/reduced-motion were not remeasured",
+    "D-1 through D-8 remain open for P5",
+    "human listening 0/10 and A-10 one-hour memory remain open"
+  ]
+}

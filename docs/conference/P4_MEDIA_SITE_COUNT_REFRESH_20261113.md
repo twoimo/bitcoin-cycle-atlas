@@ -46,3 +46,7 @@ node scripts/refresh-conference-media-site.mjs \
 기존 매니페스트·전달·브라우저 계약 검사와 새 준비 명령 검사는 **76/76, 실패 0, skip 0**이다. 새 23개 검사는 두 필드만 변경, 자산 바이트·inode·mtime 보존, 반복 실행, 잘못된 파일·경로·정본 대상 거부와 수정 뒤에도 추가 파일을 원래 동등 검사가 거부하는 것을 확인한다. 이는 작은 식별자 검사 픽스처이며 실자산 562/562나 브라우저 20/20을 대신하지 않는다.
 
 제품 dist 변경 0. 보호 4파일·가격 축·정본 unavailable 매니페스트·원래 생성기·렌더러·검사기는 기준과 바이트 동일하다. 기존 1530 렌더 영수증은 당시 기록으로 보존한다. main push·배포·force push·P2b·P5·D-1~D-8은 수행하지 않았다. [재산출·실행 한계·해시·검사 기록](../evidence/p4-media-site-count/summary.json).
+
+## Mac 실행 (2026-11-13 12:00 KST)
+
+위 문단의 미실행은 Pro 작업 환경의 기록이다. 같은 명령을 이 Mac의 격리 사본에 실행했다. mode는 `refreshed`, existingSiteFileCount 1158, siteFileCount 1721, observedSiteFileCount 1721, verifiedAssetCount 562, preflightPassed true, mediaBytesChanged 0이다. 정본 `dist/conference/media-manifest.json`은 `ff3e3f2b…` 167바이트로 불변이다. 이어서 실미디어 브라우저는 20/20, 실패 0, exit 0이다. [Mac 영수증](../evidence/ui-renewal-p4/mac-media-549616f.md).
