@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "source": "RelayDeck",
-  "generated_at": "2026-11-13T20:34:04+09:00",
+  "generated_at": "2026-11-13T23:09:50+09:00",
   "rooms": [
     {
       "id": "telegram",
@@ -695,7 +695,15 @@
           "id": "2674",
           "at": "2026-11-13T19:20:38+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2674.webp",
+              "width": 1280,
+              "height": 714,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2675",
@@ -739,7 +747,15 @@
           "id": "2680",
           "at": "2026-11-13T19:27:20+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2680.webp",
+              "width": 495,
+              "height": 287,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2681",
@@ -751,7 +767,15 @@
           "id": "2682",
           "at": "2026-11-13T19:30:58+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2682.webp",
+              "width": 363,
+              "height": 221,
+              "alt": "텔레그램 사진"
+            }
+          ]
         },
         {
           "id": "2683",
@@ -763,7 +787,15 @@
           "id": "2684",
           "at": "2026-11-13T19:32:31+09:00",
           "author": "소수의견(26년 4분기)",
-          "text": ""
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2684.webp",
+              "width": 432,
+              "height": 256,
+              "alt": "텔레그램 사진"
+            }
+          ]
         }
       ]
     },
