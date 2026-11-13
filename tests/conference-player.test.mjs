@@ -176,6 +176,35 @@ test('unmapped segments preserve the previous deck-specific slide without claimi
   assert.deepEqual(conferenceMappedPage(fixtureTimeline.segments, -1, 'r17-257'), {page:null,mapped:false});
 });
 
+test('retry status has one reachable action through loading, empty, failure, and recovery', async () => {
+  let calls = 0, rejectRetry;
+  const f = fixture({response:async () => {
+    calls++;
+    if (calls === 1) return {ok:false,status:404};
+    if (calls === 2) return new Promise(resolve => { rejectRetry = resolve; });
+    return {ok:true,status:200,json:async () => structuredClone(fixtureTimeline)};
+  }});
+  const visibleRetryCount = () => [...f.host.querySelectorAll('[data-action="retry"]')].filter(node => !node.hidden && !node.closest('[hidden]')).length;
+  try {
+    assert.equal(await f.controller.load(), false);
+    assert.equal(f.controller.getState().status, 'empty');
+    assert.equal(visibleRetryCount(), 1);
+    assert.equal(f.host.querySelectorAll('.conference-live[aria-live="polite"]').length, 1);
+    f.click('retry');
+    assert.equal(f.controller.getState().status, 'loading');
+    assert.equal(visibleRetryCount(), 0, 'retry action is hidden while its request is pending');
+    assert.equal(f.host.querySelectorAll('.conference-retry').length, 1, 'one stable retry node is reused');
+    rejectRetry({ok:false,status:503}); await settle(); await settle();
+    assert.equal(f.controller.getState().status, 'error');
+    assert.equal(visibleRetryCount(), 1);
+    f.click('retry'); await settle(); await settle();
+    assert.equal(f.controller.getState().status, 'ready');
+    assert.equal(visibleRetryCount(), 0, 'successful recovery removes the actionable error state');
+    assert.equal(f.host.querySelectorAll('.conference-live[aria-live="polite"]').length, 1);
+    assert.equal(f.host.querySelectorAll('[data-action="retry"]').length, 1);
+  } finally {f.controller.destroy();}
+});
+
 test('missing timeline shows an explicit non-playing empty state and preserves pending deep-link parameters', async () => {
   const f = fixture({href:'https://atlas.test/?page=conference&t=3725&deck=r17-257',response:async () => ({ok:false,status:404})});
   try {

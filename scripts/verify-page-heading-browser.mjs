@@ -250,7 +250,7 @@ try {
         const boot = document.documentElement?.dataset.boot;
         if (boot === 'error') throw new Error('boot error');
         if (boot !== 'ready') return false;
-        if (instrument === 'conference') return document.body?.dataset.page === 'conference' && document.querySelector('.conference-player')?.dataset.state === 'empty';
+        if (instrument === 'conference') return document.body?.dataset.page === 'conference' && ['empty', 'ready'].includes(document.querySelector('.conference-player')?.dataset.state);
         if (instrument === 'compare') return document.body?.dataset.page === 'compare' && document.querySelectorAll('#structure-periods tr').length > 0;
         if (document.documentElement.dataset.symbol !== instrument || document.body?.dataset.page !== 'outlook') return false;
         const svg = document.querySelector(instrument === 'ETHUSD' ? '#eth-chart' : instrument === 'BTCUSD' ? '#lab-chart' : '#equity-chart');

@@ -1,6 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
 import {pageHeadingIntersectionArea, pageHeadingOverlapAreas, validatePageHeadingState} from '../scripts/page-heading-browser-contract.mjs';
+
+test('conference browser readiness accepts both empty and unavailable-manifest ready states', async () => {
+  const harness = await readFile(new URL('../scripts/verify-page-heading-browser.mjs', import.meta.url), 'utf8');
+  assert.match(harness, /instrument === 'conference'[\s\S]*?document\.body\?\.dataset\.page === 'conference'[\s\S]*?\['empty', 'ready'\]\.includes\(document\.querySelector\('\.conference-player'\)\?\.dataset\.state\)/);
+  assert.doesNotMatch(harness, /conference-player'\)\?\.dataset\.state === 'empty'/);
+});
 
 const rect = (left, top, width, height) => ({left, top, right:left + width, bottom:top + height, width, height});
 const clone = value => structuredClone(value);
