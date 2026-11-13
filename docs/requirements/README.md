@@ -8,7 +8,7 @@
 | [REQ_REBRAND_SCOUTING_20261112.md](REQ_REBRAND_SCOUTING_20261112.md) | 저장소·도메인 리브랜딩, 플스포컴퍼니(김동호) 스카우트 대응 표면 | 요구사항 확정 대기 | 이름·도메인 미결정 4건. 리서치·마이그레이션 계획 포함 |
 | [REQ_RAG_FREE_ARCH_20261112.md](REQ_RAG_FREE_ARCH_20261112.md) | 릴레이 RAG 무료 아키텍처(Vectorize·D1 없이 정적 인덱스+Workers AI) | 설계 확정·구현 전 | bge-m3 1024d·int8, 코퍼스 0.3MB, 무료 10k neurons/일, 추출형 폴백 |
 | [REQ_UI_RENEWAL_FUNNEST_20261112.md](REQ_UI_RENEWAL_FUNNEST_20261112.md) | Funnest Charts UI/UX로 전면 리뉴얼(토큰·타이포·셸·차트 크롬·대시보드·컨퍼런스) | Q-P4-1 닫힘 · P4 실미디어 20/20 닫힘 · P5 열림 · Mac 549616f | 고정 0.6.16 `cefc568`·`b0cf985`. Mac `72d3aa1`은 startup 6/6·features 7/7·keyboard 4/4·touch 4/4·qualifier true. Q-P2A0-1 닫힘. 기존 A-9 6/6·2,170–2,208.2ms는 재측정 아님. P2 `0cf36d8` 구현. Linux 게이트는 0시도다. Mac `4b66980`은 ETH 17/53·반응형 44/44·축 16/16·A-9 6/6·painted 2,171.3–2,207.7ms, qualifies false. [Mac 영수증](../evidence/qa-p2-chrome-mac-4b66980/README.md). [P2 근거](../evidence/ui-renewal-p2/README.md). 엔진 유지. R18은 P5로 흡수 |
-| [REQ_ANTI_AI_DESIGN_20261112.md](REQ_ANTI_AI_DESIGN_20261112.md) | AI 티 제거·브랜드 일관성(아이콘·액센트·타이포·중복 상태) 심층 감사 | F1 메뉴 0 · 아웃룩 ⚙ 5 열림 | 1440/390 실측: 그라디언트·그림자·필 배지 0(유지), `☰` 글리프 1·비브랜드 블루 1·<12px 다수 |
+| [REQ_ANTI_AI_DESIGN_20261112.md](REQ_ANTI_AI_DESIGN_20261112.md) | AI 티 제거·브랜드 일관성(아이콘·액센트·타이포·중복 상태) 심층 감사 | F1 닫힘 · Q-P5F1-1 닫힘 · F2 대기 | Mac `36869d2` 6/6·D-1 이후 0. 비브랜드 블루·<12px는 남음 |
 | [REQ_SEASONAL_THEMES_20261109.md](REQ_SEASONAL_THEMES_20261109.md) | 명절·행사 시즌 테마 자동 적용(18종, 음력 표, 우선순위, 장식 전용) | 요구사항 확정 · 구현 보류 | QA 계획 포함 |
 | [WP_B_OPEN_DECISIONS_20261111.md](WP_B_OPEN_DECISIONS_20261111.md) | WP-B §11 미결정 8건의 결정 질문·현재 문서 위치·선택지 | 결정 대기 | 결정은 사용자 몫. 구현·유료 용량·배포 승인 아님 |
 

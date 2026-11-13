@@ -39,6 +39,6 @@ node scripts/verify-r19-p5-f1-browser.mjs \
   --out build/r19-p5-f1-gear-browser
 ```
 
-이 작업 환경에서 `/usr/bin/chromium`으로 실행한 결과는 **0/6, complete false, status blocked, D-1 이전/이후 null, exit 1**이다. `ProcessSingleton socket() failed: Operation not permitted (1)`로 페이지 시작 전에 종료했다. PNG는 생성되지 않았다. [차단 원본](native-blocked.json). **여섯 화면 native 이후 0·실패 0을 아직 확인하지 못했으므로 Q-P5F1-1과 F1은 닫지 않는다.**
+이 작업 환경에서 `/usr/bin/chromium`으로 실행한 결과는 **0/6, complete false, status blocked, D-1 이전/이후 null, exit 1**이다. `ProcessSingleton socket() failed: Operation not permitted (1)`로 페이지 시작 전에 종료했다. PNG는 생성되지 않았다. [차단 원본](native-blocked.json). **여섯 화면 native 이후 0·실패 0을 이 작업 환경에서는 확인하지 못했다.** Mac에서는 2026-11-13 12:57 KST에 같은 명령이 6/6·D-1 이후 0·실패 0·exit 0이었다. [Mac 영수증](mac-36869d2.md).
 
 보호 4파일·가격 축·`dist/styles.css`·기존 검사기·다른 아이콘과 이벤트는 그대로다. F2 및 이전에 닫힌 미디어 파일 수·미디어 브라우저를 다시 작업하지 않았다.
