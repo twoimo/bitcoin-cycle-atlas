@@ -221,6 +221,7 @@
     "dist/research-methods.js",
     "dist/relay-room.css",
     "dist/relay-room.js",
+    "dist/relay-topics.js",
     "dist/research-reader.css",
     "dist/research-reader.js",
     "dist/research-source-data.js",

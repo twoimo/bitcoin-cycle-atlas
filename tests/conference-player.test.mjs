@@ -1279,7 +1279,8 @@ test('stage chrome CSS keeps normal grid flow, wrapping text, 44px controls and 
   const meta = rules.filter(rule => rule.selector === '.conference-player .conference-stage-meta').map(rule => rule.body).join(';');
   assert.match(meta, /min-width\s*:\s*0\b/); assert.match(meta, /min-height\s*:\s*52px/);
   const status = rules.filter(rule => rule.selector === '.conference-player .conference-page-status').map(rule => rule.body).join(';');
-  assert.match(status, /white-space\s*:\s*normal/); assert.match(status, /overflow-wrap\s*:\s*anywhere/);
+  assert.match(status, /white-space\s*:\s*normal/);
+  assert.match(status, /word-break\s*:\s*keep-all/); assert.match(status, /overflow-wrap\s*:\s*break-word/);
   const targets = rules.find(rule => rule.selector.includes('.conference-player button') && rule.selector.includes('.conference-player input:not([type=range])'));
   assert.ok(targets); assert.match(targets.body, /min-height\s*:\s*44px/); assert.match(targets.body, /min-width\s*:\s*44px/);
   const focus = rules.find(rule => rule.selector.includes(':focus-visible'));

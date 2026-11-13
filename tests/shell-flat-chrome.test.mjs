@@ -58,7 +58,7 @@ test('the outer dashboard header stays one compact row', () => {
 });
 
 test('page-context chrome keeps its compact size while prose keeps a reading size', () => {
-  assert.match(shell, /\.atlas-page-description\{margin:0;color:var\(--muted\);font:11px\/14px var\(--font\)/);
+  assert.match(shell, /\.atlas-page-description\{margin:0;color:var\(--muted\);font:12px\/1\.4 var\(--font\);white-space:normal;word-break:keep-all;overflow-wrap:break-word/);
   assert.match(base, /p:not\(\.atlas-page-description\)\{\n {2}font-size:var\(--copy-size\);line-height:1\.6;/);
   const tokens = readP0RootTokens(base);
   assert.equal(tokens.get('--copy-size'), 'var(--body-size)');

@@ -6,6 +6,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
+import { registerHooks } from 'node:module';
 import { standaloneModuleMap } from '../scripts/standalone-modules.mjs';
 import { verifyStandaloneArtifact } from '../scripts/standalone-verification.mjs';
 import { javascriptModuleReferences, javascriptModuleSpecifiers } from '../scripts/module-references.mjs';
@@ -180,7 +181,16 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   await assert.rejects(verifyStandaloneArtifact(html.replace(relayAssetsMatch[0],()=>relayAssetsMatch[1]+JSON.stringify(changedRelayAssets)+relayAssetsMatch[3]),isolated.dist),/Changed embedded relay image bytes/);
   const mapMatch = html.match(/<script type="importmap">([\s\S]*?)<\/script>/);
   const map = JSON.parse(mapMatch[1]);
-  const {initRelayRoomView}=await import(map.imports['@atlas/relay-room.js']);
+  // Node's data-URL loader does not implement browser import maps. Resolve only
+  // exact embedded module IDs through the map while loading the unchanged bytes.
+  const importMapHook=registerHooks({resolve(specifier,context,nextResolve){
+    if(Object.hasOwn(map.imports,specifier))return {url:map.imports[specifier],shortCircuit:true};
+    return nextResolve(specifier,context);
+  }});
+  let relayModule;
+  try{relayModule=await import(map.imports['@atlas/relay-room.js']);}
+  finally{importMapHook.deregister();}
+  const {initRelayRoomView}=relayModule;
   const {document,window}=parseHTML('<section id="relay"></section>'),relayRoot=document.getElementById('relay');
   const previousFetch=globalThis.fetch,fetches=[];globalThis.fetch=async url=>{fetches.push(url);throw new Error('Standalone relay requested an external resource');};
   try{
