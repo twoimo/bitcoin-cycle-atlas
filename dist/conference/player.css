@@ -35,9 +35,9 @@
 .conference-player svg{width:20px;height:20px;flex:0 0 20px;pointer-events:none}
 .conference-player .conference-page-field{display:flex;align-items:center;gap:4px;padding-right:8px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .conference-player .conference-page-field input{width:56px;padding:4px;border:0;background:transparent;text-align:center}
-.conference-player .conference-page-status{align-self:flex-start;min-width:0;max-width:100%;padding:2px 4px;background:var(--surface);color:var(--muted);font-size:var(--type-meta);line-height:18px;white-space:normal;overflow-wrap:anywhere}
+.conference-player .conference-page-status{align-self:flex-start;min-width:0;max-width:100%;padding:2px 4px;background:var(--surface);color:var(--muted);font-size:max(12px,var(--type-meta));line-height:1.4;white-space:normal;word-break:keep-all;overflow-wrap:break-word}
 .conference-player .conference-caption{display:block;flex:none;width:100%;max-width:1120px;min-height:56px;height:56px;margin:0;padding:6px 12px;border:0;border-bottom:1px solid var(--conference-line);border-radius:0;background:var(--bg);font-size:var(--type-body-sm);text-align:center;user-select:text}
-.conference-player .conference-caption-text{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:22px;max-height:44px;white-space:normal;overflow-wrap:anywhere;user-select:text}
+.conference-player .conference-caption-text{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4;max-height:44px;white-space:normal;word-break:keep-all;overflow-wrap:break-word;user-select:text}
 .conference-player .conference-controls{display:flex;flex-direction:column;align-items:center;gap:4px;position:sticky;bottom:0;z-index:2;flex:none;min-width:0;width:100%;max-width:1120px;padding:0 8px 8px;background:var(--surface);border-top:1px solid var(--conference-line)}
 .conference-player .conference-progress{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;min-width:0}
 .conference-player .conference-track{position:relative;min-width:0;height:44px;display:flex;align-items:center}
@@ -56,7 +56,7 @@
 .conference-player .conference-select [data-role=deck]{max-width:230px}
 .conference-player .conference-options button{font-size:var(--type-meta);white-space:nowrap}
 .conference-player .conference-settings-toggle{display:none}
-.conference-player .conference-notice{margin:0;width:100%;font-size:var(--type-meta);line-height:18px;text-align:center;color:var(--muted)}
+.conference-player .conference-notice{margin:0;width:100%;font-size:var(--type-meta);line-height:1.4;text-align:center;color:var(--muted)}
 .conference-player .conference-retry{margin:4px 0}
 .conference-player .conference-audio{display:none}
 .conference-player .conference-transcript{padding:0;border:0;border-left:1px solid var(--conference-line);border-radius:0;margin:0;inset:auto;min-width:0;color:var(--text);background:var(--surface);font:inherit}
@@ -134,9 +134,9 @@
   .conference-player .conference-stage-message>span{font-size:var(--type-meta);line-height:16px}
   .conference-player .conference-page-field{gap:0;padding-right:4px;font-size:var(--type-meta)}
   .conference-player .conference-page-field input{width:44px;font-size:var(--type-meta)}
-  .conference-player .conference-page-status{padding:0 4px;font-size:var(--type-meta);line-height:16px}
+  .conference-player .conference-page-status{padding:0 4px;font-size:max(12px,var(--type-meta));line-height:1.4}
   .conference-player .conference-caption{height:56px;min-height:56px;padding:6px 8px;font-size:var(--type-body-sm)}
-  .conference-player .conference-caption-text{line-height:22px}
+  .conference-player .conference-caption-text{line-height:1.4}
   .conference-player .conference-controls{padding:0 4px max(4px,env(safe-area-inset-bottom));gap:2px}
   .conference-player .conference-progress{gap:6px}
   .conference-player .conference-clock{font-size:var(--type-meta)}

@@ -223,6 +223,7 @@ body:not([data-page=outlook]) .workbench-detail-tools>[data-reader=selection],bo
 .workbench-market-info{top:46px;max-width:calc(100% - 96px);font-size:11px}
 .workbench-market-info #workbench-market-refresh{height:19px;min-height:19px}
 .history-event-marker{cursor:pointer;outline:none}
+.history-event-marker text{font-size:11px}
 .history-event-marker:hover>rect,.history-event-marker:focus-visible>rect{fill:var(--chart-details-panel-mark);stroke-width:1.5;stroke-opacity:1}
 .history-event-marker:hover>circle,.history-event-marker:focus-visible>circle{stroke:var(--chart-details-panel-rule-8);stroke-width:2.5}
 .atlas-plot[data-dragging=true]>svg{cursor:grabbing}

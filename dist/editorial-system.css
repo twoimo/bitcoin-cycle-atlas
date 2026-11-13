@@ -99,7 +99,7 @@ body[data-shell=chart] :is(.atlas-sidebar, .workbench-rail, .atlas-canvas-headin
   font-weight: 600;
 }
 .center-workspace-toolbar .workspace-region-code {
-  font: 10px/1 var(--font-mono);
+  font: 11px/1.4 var(--font-mono);
   padding-right: 4px;
   border-right: 1px solid var(--border);
 }

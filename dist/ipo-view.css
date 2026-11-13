@@ -75,9 +75,9 @@
 .ipo-day-events { display: flex; flex-direction: column; gap: 4px; min-height: 0; }
 .ipo-cal-event { display: flex; align-items: baseline; gap: 4px; min-width: 0; font-size: 11px; line-height: 1.4; color: var(--accent-ink); }
 .ipo-cal-event[data-kind=subscription], .ipo-cal-kind[data-kind=subscription] { color: var(--green); }
-.ipo-cal-event > span { flex: none; font-size: 10px; }
+.ipo-cal-event > span { flex: none; font-size: 11px; }
 .ipo-cal-event strong { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
-.ipo-day-more { font-size: 10px; color: var(--muted); }
+.ipo-day-more { font-size: 11px; color: var(--muted); }
 .ipo-day-dialog { width: min(560px,100%); max-width: calc(100% - 32px); max-height: min(720px,calc(100dvh - 32px)); padding: 20px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); }
 .ipo-day-dialog[open] { display: grid; grid-template-rows: auto minmax(0,1fr) auto; gap: 16px; }
 .ipo-day-dialog::backdrop { background: var(--bg); opacity: .8; }
@@ -110,7 +110,7 @@
   .ipo-month-heading h2 { font-size: 20px; }
   .ipo-month-heading p { font-size: 11px; }
   .ipo-month-day { padding: 4px; gap: 4px; }
-  .ipo-cal-event { font-size: 10px; gap: 0; }
+  .ipo-cal-event { font-size: 11px; gap: 0; }
   .ipo-cal-event > span { display: none; }
   .ipo-cal-event strong::before { content: '예 '; }
   .ipo-cal-event[data-kind=subscription] strong::before { content: '청 '; }

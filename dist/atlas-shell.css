@@ -19,7 +19,7 @@ body[data-shell=dashboard] .atlas-sidebar .atlas-brand{
 }
 body[data-shell=dashboard] .atlas-sidebar .atlas-brand>span{font-size:21px;color:var(--accent-ink);flex:none}
 body[data-shell=dashboard] .atlas-sidebar .atlas-brand>div,body[data-shell=dashboard] .atlas-sidebar .atlas-brand>strong{display:block!important;color:var(--text);font-size:13px;font-weight:600;letter-spacing:0}
-body[data-shell=dashboard] .atlas-sidebar .atlas-brand small{display:block!important;font-size:10px;letter-spacing:normal;color:var(--subtle);font-weight:500;margin-top:2px}
+body[data-shell=dashboard] .atlas-sidebar .atlas-brand small{display:block!important;font-size:11px;letter-spacing:normal;color:var(--subtle);font-weight:500;margin-top:2px}
 .atlas-sidebar-group{display:none}
 body[data-shell=dashboard] .atlas-sidebar .atlas-nav{display:flex;flex-direction:column;align-items:stretch;gap:1px;width:100%;margin:0;overflow:visible;order:2}
 body[data-shell=dashboard] .atlas-sidebar .atlas-nav :is(a,button){position:relative;display:flex;align-items:center;justify-content:flex-start;gap:8px;width:100%;height:32px;min-height:32px;padding:6px 8px;border:0;border-radius:2px;background:none;color:var(--muted);font-size:12px;font-weight:450;text-decoration:none;text-align:left;white-space:nowrap}
@@ -85,7 +85,7 @@ body[data-sidebar=compact][data-shell=dashboard] .atlas-sidebar :is(.atlas-brand
   body[data-shell=dashboard] .ml-score h3{font-size:12px;white-space:nowrap}
   body[data-shell=dashboard] .ml-score h3 span{font-size:17px}
   body[data-shell=dashboard] .ml-score .ml-axis-value{font-size:24px;letter-spacing:-.04em}
-  body[data-shell=dashboard] .ml-score .ml-axis-stats{display:flex;flex-direction:column;gap:2px;font-size:10px}
+  body[data-shell=dashboard] .ml-score .ml-axis-stats{display:flex;flex-direction:column;gap:2px;font-size:11px}
 }
 @media(max-width:620px){
   body[data-shell=chart] .atlas-sidebar:not([data-mobile-open=true]),body[data-shell=chart] .workbench-rail:not([data-mobile-open=true]){display:none}
@@ -132,7 +132,7 @@ body[data-shell=chart] .workbench-rail .atlas-nav :is(a,button){color:var(--mute
 body[data-shell=chart] .workbench-rail .atlas-nav .active{color:var(--nav-active-text);background:var(--nav-active-bg)}
 @media(max-width:620px){body[data-shell=chart] .workbench-rail[data-mobile-open=true] .atlas-nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:1 1 72px;min-height:64px;padding:8px 4px;text-decoration:none;font-size:11px;text-align:center;white-space:normal}}
 
-.atlas-nav-code{display:inline-grid;place-items:center;flex:none;width:18px;height:18px;font-family:var(--font-mono,monospace);font-size:10px;font-weight:600;line-height:1}
+.atlas-nav-code{display:inline-grid;place-items:center;flex:none;width:18px;height:18px;font-family:var(--font-mono,monospace);font-size:11px;font-weight:600;line-height:1.4}
 /* Center focus belongs to the frame; the preserved chart perimeter cannot scroll. */
 body[data-center-tool] #lab-chart-stage{overflow:clip}
 .atlas-center-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--bg);z-index:20}
@@ -267,7 +267,7 @@ body[data-shell=chart] .shell-feature-panel[data-shell-measuring=true] .shell-fe
 .atlas-page-intro,.atlas-shell-copy{min-width:0;box-sizing:border-box}
 .atlas-page-intro{position:fixed;display:block;height:14px;margin:0;padding:0;border:0;background:transparent;color:var(--text);pointer-events:none;z-index:61}
 .atlas-page-intro>.atlas-shell-heading{margin:0;font-size:12px;font-weight:500;line-height:14px;letter-spacing:0;white-space:nowrap;text-align:center}
-.atlas-page-description{margin:0;color:var(--muted);font:11px/14px var(--font);white-space:normal;word-break:normal;overflow-wrap:break-word}
+.atlas-page-description{margin:0;color:var(--muted);font:12px/1.4 var(--font);white-space:normal;word-break:keep-all;overflow-wrap:break-word}
 .atlas-page-intro>.atlas-page-description{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 /* A full-width normal-flow row also fits the 320px dock without displacing
    its original controls. The order keeps it above the plot when the dock is
@@ -429,3 +429,6 @@ body[data-shell=dashboard] .workspace{padding-right:44px;padding-bottom:var(--co
 body[data-shell=dashboard] .atlas-sidebar-toggle{display:none}
 /* The chart frame and the content routes never show two copies of a region. */
 body[data-shell=chart] :is(.content-rail,.content-bottom-bar){display:none!important}
+
+/* Crosshair date readouts are metadata, not axis tick labels. */
+.atlas-plot svg .cross-date-tag>text{font-size:11px}
