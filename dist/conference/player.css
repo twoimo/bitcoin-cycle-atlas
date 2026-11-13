@@ -48,8 +48,8 @@
 .conference-player .conference-clock{font:var(--type-meta) var(--font-mono,monospace);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--muted)}
 .conference-player .conference-transport{display:grid;grid-template-columns:44px 44px 44px 56px 44px 44px 44px;align-items:center;justify-content:center;gap:8px;min-width:0}
 .conference-player .conference-transport>button{width:44px;height:44px;padding:0}
-.conference-player .conference-play{width:56px!important;height:56px!important;min-width:56px;min-height:56px;border-color:var(--ui-primary);border-radius:var(--pill-radius);background:var(--ui-primary);color:var(--on-ui-primary)}
-.conference-player .conference-play:hover:not(:disabled){background:var(--ui-primary-hover)}
+.conference-player .conference-play{width:56px!important;height:56px!important;min-width:56px;min-height:56px;border-color:var(--accent-ink);border-radius:6px;background:var(--surface);color:var(--text)}
+.conference-player .conference-play:hover:not(:disabled){background:var(--surface-hover)}
 .conference-player .conference-options{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px 8px;min-width:0;width:100%;padding-top:4px}
 .conference-player .conference-select{display:flex;align-items:center;gap:6px;min-width:0}
 .conference-player .conference-select select{min-width:56px;max-width:230px;padding:4px 24px 4px 8px}

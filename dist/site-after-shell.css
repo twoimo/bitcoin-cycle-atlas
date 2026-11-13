@@ -3933,7 +3933,7 @@ body[data-page="relay"]{overflow:hidden}
 }
 
 
-/* Source: conference/player.css; SHA-256: b2d5f63f836120fef43474abda46c8fd988f42f62e5c15254f0464b485392ad0 */
+/* Source: conference/player.css; SHA-256: cb9bf91606db62490890cf063ba9bc3bb1e6cb39890baace93198f0abb51448a */
 #conference-view{height:100%;min-height:0;min-width:0;overflow:hidden}
 /* R19 P4: shared type and control paint; retain the stage and control geometry. */
 .conference-player{--conference-line:var(--border);--conference-focus:var(--focus);display:grid;grid-template-columns:minmax(0,1fr);height:100%;min-height:0;min-width:0;width:100%;position:relative;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font,system-ui,sans-serif);font-size:var(--type-meta);box-sizing:border-box}
@@ -3984,8 +3984,8 @@ body[data-page="relay"]{overflow:hidden}
 .conference-player .conference-clock{font:var(--type-meta) var(--font-mono,monospace);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--muted)}
 .conference-player .conference-transport{display:grid;grid-template-columns:44px 44px 44px 56px 44px 44px 44px;align-items:center;justify-content:center;gap:8px;min-width:0}
 .conference-player .conference-transport>button{width:44px;height:44px;padding:0}
-.conference-player .conference-play{width:56px!important;height:56px!important;min-width:56px;min-height:56px;border-color:var(--ui-primary);border-radius:var(--pill-radius);background:var(--ui-primary);color:var(--on-ui-primary)}
-.conference-player .conference-play:hover:not(:disabled){background:var(--ui-primary-hover)}
+.conference-player .conference-play{width:56px!important;height:56px!important;min-width:56px;min-height:56px;border-color:var(--accent-ink);border-radius:6px;background:var(--surface);color:var(--text)}
+.conference-player .conference-play:hover:not(:disabled){background:var(--surface-hover)}
 .conference-player .conference-options{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px 8px;min-width:0;width:100%;padding-top:4px}
 .conference-player .conference-select{display:flex;align-items:center;gap:6px;min-width:0}
 .conference-player .conference-select select{min-width:56px;max-width:230px;padding:4px 24px 4px 8px}

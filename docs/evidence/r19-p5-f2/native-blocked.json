@@ -1,0 +1,65 @@
+{
+  "kind": "r19-p5-f2-native-paint",
+  "startedAt": "2026-11-13T04:17:00.655Z",
+  "baseline": "3356e68aca3e45ce82bbeca1e852ba220fa9c762",
+  "scope": "Conference play default paint, native enabled hover when available, adjacent visible clock text, and 320/1440 screenshots in both themes. No media, playback, D-1, timing, chart-axis, or full P5 qualification.",
+  "thresholds": {
+    "text": 4.5,
+    "icon": 3,
+    "allowedRadiusPx": [
+      3,
+      6
+    ],
+    "targetPx": 56
+  },
+  "requiredTokens": {
+    "normalBackground": "--surface",
+    "hoverBackground": "--surface-hover",
+    "icon": "--text",
+    "border": "--accent-ink"
+  },
+  "colorPolicy": "The candidate must match its exact native surface/text/accent-ring token contract. Separately record every raw hue, including low-saturation neutrals. A hue-200–260 background is new only if absent from the same-theme baseline visible UI/observed native hover palette; existing neutrals are not new accents.",
+  "harnessSha256": "40f3b2eac6cbbf32c2d54b98b097b76695c2447e2b7bde107b19fe82b0b1315e",
+  "sourceBefore": {
+    "commit": "3356e68aca3e45ce82bbeca1e852ba220fa9c762",
+    "tree": "ce4f912509bf86c3a0b65f0d8c2d6b1675ea5477",
+    "trackedChanges": "M dist/conference/player.css\n M dist/index.html\n M dist/market-lab/cashflow/index.html\n M dist/market-lab/charts/index.html\n M dist/market-lab/housing/index.html\n M dist/market-lab/index.html\n M dist/market-lab/kr/index.html\n M dist/market-lab/rsi/index.html\n M dist/market-lab/scenario/index.html\n M dist/market-lab/themes/index.html\n M dist/market-lab/us/index.html\n M dist/site-after-shell.css\n M docs/LAUNCH_CHECKLIST_20261110.md\n M docs/requirements/REQ_ANTI_AI_DESIGN_20261112.md",
+    "hashes": {
+      "dist/index.html": "380a165d402e88f8a933d9b1db249c37ac73176b6f37157608514f25e10203b4",
+      "dist/styles.css": "190305d7b15c3a6b64ff3a8a06bf40b2c4594b395d2f32c112fe2f4b2f9da08c",
+      "dist/conference/player.css": "cb9bf91606db62490890cf063ba9bc3bb1e6cb39890baace93198f0abb51448a",
+      "dist/conference/player.js": "f854c1a23503ce3b7bea166d8e712fcbdaf1737fd822d607ccafcb1648346927",
+      "dist/conference/media-manifest.json": "ff3e3f2b16f4435e71c5e9f07740a9a2af2b9e9fe46aaf013f70972a658d0088",
+      "dist/ui/theme.js": "59f678846f2c1ce322f2f37cb7c8c7378d7b3d67cae30b35677d3468bf79e810"
+    }
+  },
+  "lanes": [],
+  "failures": [
+    "harness: Error: Chrome exited (SIGABRT): /usr/bin/chromium: 9: [: 5225713664: unexpected operator\n[37:37:1113/131700.773305:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1113/131700.773612:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[1:1:0100/000000.815764:ERROR:content/zygote/zygote_main_linux.cc:197] Failed sending zygote boot message: Broken pipe (32)\n[59:59:0100/000000.829655:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n\n    at file:///workspace/scratch/48482dcbb79e/bitcoin-cycle-atlas/scripts/verify-r19-p5-f2-browser.mjs:105:220\n    at async until (file:///workspace/scratch/48482dcbb79e/bitcoin-cycle-atlas/scripts/verify-r19-p5-f2-browser.mjs:33:107)\n    at async file:///workspace/scratch/48482dcbb79e/bitcoin-cycle-atlas/scripts/verify-r19-p5-f2-browser.mjs:105:14"
+  ],
+  "sourceAfter": {
+    "commit": "3356e68aca3e45ce82bbeca1e852ba220fa9c762",
+    "tree": "ce4f912509bf86c3a0b65f0d8c2d6b1675ea5477",
+    "trackedChanges": "M dist/conference/player.css\n M dist/index.html\n M dist/market-lab/cashflow/index.html\n M dist/market-lab/charts/index.html\n M dist/market-lab/housing/index.html\n M dist/market-lab/index.html\n M dist/market-lab/kr/index.html\n M dist/market-lab/rsi/index.html\n M dist/market-lab/scenario/index.html\n M dist/market-lab/themes/index.html\n M dist/market-lab/us/index.html\n M dist/site-after-shell.css\n M docs/LAUNCH_CHECKLIST_20261110.md\n M docs/requirements/REQ_ANTI_AI_DESIGN_20261112.md",
+    "hashes": {
+      "dist/index.html": "380a165d402e88f8a933d9b1db249c37ac73176b6f37157608514f25e10203b4",
+      "dist/styles.css": "190305d7b15c3a6b64ff3a8a06bf40b2c4594b395d2f32c112fe2f4b2f9da08c",
+      "dist/conference/player.css": "cb9bf91606db62490890cf063ba9bc3bb1e6cb39890baace93198f0abb51448a",
+      "dist/conference/player.js": "f854c1a23503ce3b7bea166d8e712fcbdaf1737fd822d607ccafcb1648346927",
+      "dist/conference/media-manifest.json": "ff3e3f2b16f4435e71c5e9f07740a9a2af2b9e9fe46aaf013f70972a658d0088",
+      "dist/ui/theme.js": "59f678846f2c1ce322f2f37cb7c8c7378d7b3d67cae30b35677d3468bf79e810"
+    }
+  },
+  "workingTreeStable": true,
+  "sourceStable": false,
+  "completedCases": 0,
+  "complete": false,
+  "oldBlueBackgrounds": null,
+  "newHueBandBackgrounds": null,
+  "status": "blocked",
+  "qualifiesF2ObservedPaint": false,
+  "mediaPlaybackVerified": false,
+  "fullP5Qualified": false,
+  "finishedAt": "2026-11-13T04:17:00.892Z",
+  "chromeStderr": "/usr/bin/chromium: 9: [: 5225713664: unexpected operator\n[37:37:1113/131700.773305:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1113/131700.773612:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[1:1:0100/000000.815764:ERROR:content/zygote/zygote_main_linux.cc:197] Failed sending zygote boot message: Broken pipe (32)\n[59:59:0100/000000.829655:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n"
+}
