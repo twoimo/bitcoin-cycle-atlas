@@ -1,0 +1,645 @@
+{
+  "kind": "home-chart-first-native",
+  "sourceBefore": {
+    "commit": "969e46da46daa6d236311052c62735db6a959ad2",
+    "hashes": {
+      "dist/index.html": "f1b29650deb2a24affcaa22b1e8f695371ecd008f86ad969e82c781498e5aef5",
+      "dist/ui/theme.js": "8de65c0663d3a3e55bbd682eb368df8a973b1579d009ad04e4446e76a7bb854f",
+      "apps/web/index.html": "520c6e1ddfed4fb23a4d232d6409d677c4790a105d492145b2d65d4222244f6e",
+      "dist/styles.css": "190305d7b15c3a6b64ff3a8a06bf40b2c4594b395d2f32c112fe2f4b2f9da08c",
+      "dist/atlas-shell.css": "79b18aea15616b2ad905437c552d03e1abade7c884dfcd9f3a3fd60c98b56082",
+      "dist/atlas-shell.js": "e5cd5d67ae979ded8722f82a794655834883b7d2fa3115b7b4c5bb8a7b0b5181"
+    }
+  },
+  "cases": [
+    {
+      "id": "deployed-1440",
+      "origin": "https://bitcoin-cycle-atlas.twoimo.workers.dev",
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "reference": true,
+      "failures": [],
+      "nativeWindow": {
+        "windowId": 467444189,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "state": {
+        "url": "https://bitcoin-cycle-atlas.twoimo.workers.dev/",
+        "boot": "ready",
+        "page": "outlook",
+        "shell": "chart",
+        "theme": "dark",
+        "background": "rgb(34, 34, 34)",
+        "domReadyTheme": "dark",
+        "chart": {
+          "x": 56,
+          "y": 83,
+          "width": 1335,
+          "height": 779
+        },
+        "paths": 40,
+        "toolbar": {
+          "x": 52,
+          "y": 0,
+          "width": 1388,
+          "height": 38
+        },
+        "toolbarCount": 1,
+        "overflow": 0,
+        "width": 1440,
+        "height": 900,
+        "themeStorage": null,
+        "pendingLabels": [],
+        "navigation": [
+          "가격 차트",
+          "시장 분석",
+          "리서치",
+          "자산 비교",
+          "공모주",
+          "릴레이 콘텐츠"
+        ]
+      },
+      "status": "passed",
+      "screenshot": "deployed-1440.png",
+      "screenshotSha256": "98704e1017b4e2db07f508ad36bc926ecca70b4d627bf52872bbe9c92d6686b7"
+    },
+    {
+      "id": "default-320",
+      "origin": "http://127.0.0.1:8193",
+      "width": 320,
+      "height": 900,
+      "theme": "dark",
+      "failures": [],
+      "nativeWindow": {
+        "windowId": 467444191,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 320,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "state": {
+        "url": "http://127.0.0.1:8193/",
+        "boot": "ready",
+        "page": "outlook",
+        "shell": "chart",
+        "theme": "dark",
+        "background": "rgb(16, 16, 19)",
+        "domReadyTheme": "dark",
+        "chart": {
+          "x": 1,
+          "y": 23,
+          "width": 318,
+          "height": 828
+        },
+        "paths": 42,
+        "toolbar": {
+          "x": 1,
+          "y": 851,
+          "width": 318,
+          "height": 48
+        },
+        "toolbarCount": 1,
+        "overflow": 0,
+        "width": 320,
+        "height": 900,
+        "themeStorage": null,
+        "pendingLabels": [],
+        "navigation": [
+          "가격 차트",
+          "시장 분석",
+          "리서치",
+          "자산 비교",
+          "공모주",
+          "릴레이 콘텐츠",
+          "컨퍼런스 복습"
+        ]
+      },
+      "status": "passed",
+      "screenshot": "default-320.png",
+      "screenshotSha256": "c346a22ed0ef4a1fea5da605bd34d3cce2b3f5820e1e27f889aefea352b97170"
+    },
+    {
+      "id": "default-390",
+      "origin": "http://127.0.0.1:8193",
+      "width": 390,
+      "height": 900,
+      "theme": "dark",
+      "failures": [],
+      "nativeWindow": {
+        "windowId": 467444193,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 390,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "state": {
+        "url": "http://127.0.0.1:8193/",
+        "boot": "ready",
+        "page": "outlook",
+        "shell": "chart",
+        "theme": "dark",
+        "background": "rgb(16, 16, 19)",
+        "domReadyTheme": "dark",
+        "chart": {
+          "x": 1,
+          "y": 23,
+          "width": 388,
+          "height": 828
+        },
+        "paths": 42,
+        "toolbar": {
+          "x": 1,
+          "y": 851,
+          "width": 388,
+          "height": 48
+        },
+        "toolbarCount": 1,
+        "overflow": 0,
+        "width": 390,
+        "height": 900,
+        "themeStorage": null,
+        "pendingLabels": [],
+        "navigation": [
+          "가격 차트",
+          "시장 분석",
+          "리서치",
+          "자산 비교",
+          "공모주",
+          "릴레이 콘텐츠",
+          "컨퍼런스 복습"
+        ]
+      },
+      "status": "passed",
+      "screenshot": "default-390.png",
+      "screenshotSha256": "8da5e34d3b3689ec3f2cf2e268adf736086087ad5caa41da3d083090ab518c46"
+    },
+    {
+      "id": "default-768",
+      "origin": "http://127.0.0.1:8193",
+      "width": 768,
+      "height": 900,
+      "theme": "dark",
+      "failures": [],
+      "nativeWindow": {
+        "windowId": 467444195,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 768,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "state": {
+        "url": "http://127.0.0.1:8193/",
+        "boot": "ready",
+        "page": "outlook",
+        "shell": "chart",
+        "theme": "dark",
+        "background": "rgb(27, 27, 33)",
+        "domReadyTheme": "dark",
+        "chart": {
+          "x": 57,
+          "y": 71,
+          "width": 661,
+          "height": 780
+        },
+        "paths": 41,
+        "toolbar": {
+          "x": 57,
+          "y": 23,
+          "width": 661,
+          "height": 48
+        },
+        "toolbarCount": 1,
+        "overflow": 0,
+        "width": 768,
+        "height": 900,
+        "themeStorage": null,
+        "pendingLabels": [],
+        "navigation": [
+          "가격 차트",
+          "시장 분석",
+          "리서치",
+          "자산 비교",
+          "공모주",
+          "릴레이 콘텐츠",
+          "컨퍼런스 복습"
+        ]
+      },
+      "status": "passed",
+      "screenshot": "default-768.png",
+      "screenshotSha256": "d182dc7522df7de2af44230a5b2b81588fe5b531d9c0f27695b6132d3310b30a"
+    },
+    {
+      "id": "default-1440",
+      "origin": "http://127.0.0.1:8193",
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "failures": [],
+      "nativeWindow": {
+        "windowId": 467444197,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "state": {
+        "url": "http://127.0.0.1:8193/",
+        "boot": "ready",
+        "page": "outlook",
+        "shell": "chart",
+        "theme": "dark",
+        "background": "rgb(27, 27, 33)",
+        "domReadyTheme": "dark",
+        "chart": {
+          "x": 57,
+          "y": 61,
+          "width": 1333,
+          "height": 800
+        },
+        "paths": 41,
+        "toolbar": {
+          "x": 57,
+          "y": 23,
+          "width": 1333,
+          "height": 38
+        },
+        "toolbarCount": 1,
+        "overflow": 0,
+        "width": 1440,
+        "height": 900,
+        "themeStorage": null,
+        "pendingLabels": [],
+        "navigation": [
+          "가격 차트",
+          "시장 분석",
+          "리서치",
+          "자산 비교",
+          "공모주",
+          "릴레이 콘텐츠",
+          "컨퍼런스 복습"
+        ]
+      },
+      "status": "passed",
+      "screenshot": "default-1440.png",
+      "screenshotSha256": "310b7f41e5f857fccd579f79c8ceaea5df21db762718966ec1d1b55795f0cb30"
+    },
+    {
+      "id": "saved-light-390",
+      "origin": "http://127.0.0.1:8193",
+      "width": 390,
+      "height": 900,
+      "theme": "light",
+      "saved": "light",
+      "failures": [],
+      "nativeWindow": {
+        "windowId": 467444199,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 390,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "state": {
+        "url": "http://127.0.0.1:8193/",
+        "boot": "ready",
+        "page": "outlook",
+        "shell": "chart",
+        "theme": "light",
+        "background": "rgb(255, 255, 255)",
+        "domReadyTheme": "light",
+        "chart": {
+          "x": 1,
+          "y": 23,
+          "width": 388,
+          "height": 828
+        },
+        "paths": 42,
+        "toolbar": {
+          "x": 1,
+          "y": 851,
+          "width": 388,
+          "height": 48
+        },
+        "toolbarCount": 1,
+        "overflow": 0,
+        "width": 390,
+        "height": 900,
+        "themeStorage": "light",
+        "pendingLabels": [],
+        "navigation": [
+          "가격 차트",
+          "시장 분석",
+          "리서치",
+          "자산 비교",
+          "공모주",
+          "릴레이 콘텐츠",
+          "컨퍼런스 복습"
+        ]
+      },
+      "status": "passed",
+      "screenshot": "saved-light-390.png",
+      "screenshotSha256": "b0673f7a403e3f9fd7b91d1d1a08cca6dcf6cfaadbfaf4c7a2dbd84678841115"
+    },
+    {
+      "id": "saved-light-1440",
+      "origin": "http://127.0.0.1:8193",
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "saved": "light",
+      "failures": [],
+      "nativeWindow": {
+        "windowId": 467444201,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "state": {
+        "url": "http://127.0.0.1:8193/",
+        "boot": "ready",
+        "page": "outlook",
+        "shell": "chart",
+        "theme": "light",
+        "background": "rgb(242, 244, 246)",
+        "domReadyTheme": "light",
+        "chart": {
+          "x": 57,
+          "y": 61,
+          "width": 1333,
+          "height": 800
+        },
+        "paths": 41,
+        "toolbar": {
+          "x": 57,
+          "y": 23,
+          "width": 1333,
+          "height": 38
+        },
+        "toolbarCount": 1,
+        "overflow": 0,
+        "width": 1440,
+        "height": 900,
+        "themeStorage": "light",
+        "pendingLabels": [],
+        "navigation": [
+          "가격 차트",
+          "시장 분석",
+          "리서치",
+          "자산 비교",
+          "공모주",
+          "릴레이 콘텐츠",
+          "컨퍼런스 복습"
+        ]
+      },
+      "status": "passed",
+      "screenshot": "saved-light-1440.png",
+      "screenshotSha256": "a59b336e9b666abc4d6912871e3af6fd397c2c3af9d829f18df53e76b376c85c"
+    },
+    {
+      "id": "saved-dark-1440",
+      "origin": "http://127.0.0.1:8193",
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "saved": "dark",
+      "failures": [],
+      "nativeWindow": {
+        "windowId": 467444203,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "state": {
+        "url": "http://127.0.0.1:8193/",
+        "boot": "ready",
+        "page": "outlook",
+        "shell": "chart",
+        "theme": "dark",
+        "background": "rgb(27, 27, 33)",
+        "domReadyTheme": "dark",
+        "chart": {
+          "x": 57,
+          "y": 61,
+          "width": 1333,
+          "height": 800
+        },
+        "paths": 41,
+        "toolbar": {
+          "x": 57,
+          "y": 23,
+          "width": 1333,
+          "height": 38
+        },
+        "toolbarCount": 1,
+        "overflow": 0,
+        "width": 1440,
+        "height": 900,
+        "themeStorage": "dark",
+        "pendingLabels": [],
+        "navigation": [
+          "가격 차트",
+          "시장 분석",
+          "리서치",
+          "자산 비교",
+          "공모주",
+          "릴레이 콘텐츠",
+          "컨퍼런스 복습"
+        ]
+      },
+      "status": "passed",
+      "screenshot": "saved-dark-1440.png",
+      "screenshotSha256": "310b7f41e5f857fccd579f79c8ceaea5df21db762718966ec1d1b55795f0cb30"
+    },
+    {
+      "id": "invalid-390",
+      "origin": "http://127.0.0.1:8193",
+      "width": 390,
+      "height": 900,
+      "theme": "dark",
+      "saved": "invalid",
+      "failures": [],
+      "nativeWindow": {
+        "windowId": 467444205,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 390,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "state": {
+        "url": "http://127.0.0.1:8193/",
+        "boot": "ready",
+        "page": "outlook",
+        "shell": "chart",
+        "theme": "dark",
+        "background": "rgb(16, 16, 19)",
+        "domReadyTheme": "dark",
+        "chart": {
+          "x": 1,
+          "y": 23,
+          "width": 388,
+          "height": 828
+        },
+        "paths": 42,
+        "toolbar": {
+          "x": 1,
+          "y": 851,
+          "width": 388,
+          "height": 48
+        },
+        "toolbarCount": 1,
+        "overflow": 0,
+        "width": 390,
+        "height": 900,
+        "themeStorage": "invalid",
+        "pendingLabels": [],
+        "navigation": [
+          "가격 차트",
+          "시장 분석",
+          "리서치",
+          "자산 비교",
+          "공모주",
+          "릴레이 콘텐츠",
+          "컨퍼런스 복습"
+        ]
+      },
+      "status": "passed",
+      "screenshot": "invalid-390.png",
+      "screenshotSha256": "8da5e34d3b3689ec3f2cf2e268adf736086087ad5caa41da3d083090ab518c46"
+    }
+  ],
+  "failures": [],
+  "deploymentPerformed": false,
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/157.0.8103.79",
+    "revision": "@6dc9bc3bdaea5c35ed6d41fceab2f7a3a2227c4f",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+    "jsVersion": "15.7.112.43"
+  },
+  "sourceAfter": {
+    "commit": "969e46da46daa6d236311052c62735db6a959ad2",
+    "hashes": {
+      "dist/index.html": "f1b29650deb2a24affcaa22b1e8f695371ecd008f86ad969e82c781498e5aef5",
+      "dist/ui/theme.js": "8de65c0663d3a3e55bbd682eb368df8a973b1579d009ad04e4446e76a7bb854f",
+      "apps/web/index.html": "520c6e1ddfed4fb23a4d232d6409d677c4790a105d492145b2d65d4222244f6e",
+      "dist/styles.css": "190305d7b15c3a6b64ff3a8a06bf40b2c4594b395d2f32c112fe2f4b2f9da08c",
+      "dist/atlas-shell.css": "79b18aea15616b2ad905437c552d03e1abade7c884dfcd9f3a3fd60c98b56082",
+      "dist/atlas-shell.js": "e5cd5d67ae979ded8722f82a794655834883b7d2fa3115b7b4c5bb8a7b0b5181"
+    }
+  },
+  "sourceStable": true,
+  "status": "passed"
+}

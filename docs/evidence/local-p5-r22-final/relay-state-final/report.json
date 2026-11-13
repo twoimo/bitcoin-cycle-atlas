@@ -1,0 +1,239 @@
+{
+  "kind": "relay-state-network-fixture",
+  "cases": [
+    {
+      "width": 320,
+      "error": {
+        "state": "error",
+        "statuses": 1,
+        "retries": 1,
+        "retryButtons": 1,
+        "refreshButtons": 0,
+        "actionLabels": [
+          "다시 불러오기"
+        ],
+        "overflow": 0,
+        "messages": 0,
+        "boot": "ready"
+      },
+      "loading": {
+        "state": "loading",
+        "statuses": 1,
+        "retries": 0,
+        "retryButtons": 0,
+        "refreshButtons": 0,
+        "actionLabels": [],
+        "overflow": 0,
+        "messages": 0,
+        "boot": "ready"
+      },
+      "empty": {
+        "state": "empty",
+        "statuses": 1,
+        "retries": 1,
+        "retryButtons": 1,
+        "refreshButtons": 0,
+        "actionLabels": [
+          "다시 불러오기"
+        ],
+        "overflow": 0,
+        "messages": 0,
+        "boot": "ready"
+      },
+      "recovered": {
+        "state": "ready",
+        "statuses": 1,
+        "retries": 1,
+        "retryButtons": 0,
+        "refreshButtons": 1,
+        "actionLabels": [
+          "릴레이 새로고침"
+        ],
+        "overflow": 0,
+        "messages": 60,
+        "boot": "ready"
+      }
+    },
+    {
+      "width": 390,
+      "error": {
+        "state": "error",
+        "statuses": 1,
+        "retries": 1,
+        "retryButtons": 1,
+        "refreshButtons": 0,
+        "actionLabels": [
+          "다시 불러오기"
+        ],
+        "overflow": 0,
+        "messages": 0,
+        "boot": "ready"
+      },
+      "loading": {
+        "state": "loading",
+        "statuses": 1,
+        "retries": 0,
+        "retryButtons": 0,
+        "refreshButtons": 0,
+        "actionLabels": [],
+        "overflow": 0,
+        "messages": 0,
+        "boot": "ready"
+      },
+      "empty": {
+        "state": "empty",
+        "statuses": 1,
+        "retries": 1,
+        "retryButtons": 1,
+        "refreshButtons": 0,
+        "actionLabels": [
+          "다시 불러오기"
+        ],
+        "overflow": 0,
+        "messages": 0,
+        "boot": "ready"
+      },
+      "recovered": {
+        "state": "ready",
+        "statuses": 1,
+        "retries": 1,
+        "retryButtons": 0,
+        "refreshButtons": 1,
+        "actionLabels": [
+          "릴레이 새로고침"
+        ],
+        "overflow": 0,
+        "messages": 60,
+        "boot": "ready"
+      }
+    },
+    {
+      "width": 768,
+      "error": {
+        "state": "error",
+        "statuses": 1,
+        "retries": 1,
+        "retryButtons": 1,
+        "refreshButtons": 0,
+        "actionLabels": [
+          "다시 불러오기"
+        ],
+        "overflow": 0,
+        "messages": 0,
+        "boot": "ready"
+      },
+      "loading": {
+        "state": "loading",
+        "statuses": 1,
+        "retries": 0,
+        "retryButtons": 0,
+        "refreshButtons": 0,
+        "actionLabels": [],
+        "overflow": 0,
+        "messages": 0,
+        "boot": "ready"
+      },
+      "empty": {
+        "state": "empty",
+        "statuses": 1,
+        "retries": 1,
+        "retryButtons": 1,
+        "refreshButtons": 0,
+        "actionLabels": [
+          "다시 불러오기"
+        ],
+        "overflow": 0,
+        "messages": 0,
+        "boot": "ready"
+      },
+      "recovered": {
+        "state": "ready",
+        "statuses": 1,
+        "retries": 1,
+        "retryButtons": 0,
+        "refreshButtons": 1,
+        "actionLabels": [
+          "릴레이 새로고침"
+        ],
+        "overflow": 0,
+        "messages": 60,
+        "boot": "ready"
+      }
+    },
+    {
+      "width": 1440,
+      "error": {
+        "state": "error",
+        "statuses": 1,
+        "retries": 1,
+        "retryButtons": 1,
+        "refreshButtons": 0,
+        "actionLabels": [
+          "다시 불러오기"
+        ],
+        "overflow": 0,
+        "messages": 0,
+        "boot": "ready"
+      },
+      "loading": {
+        "state": "loading",
+        "statuses": 1,
+        "retries": 0,
+        "retryButtons": 0,
+        "refreshButtons": 0,
+        "actionLabels": [],
+        "overflow": 0,
+        "messages": 0,
+        "boot": "ready"
+      },
+      "empty": {
+        "state": "empty",
+        "statuses": 1,
+        "retries": 1,
+        "retryButtons": 1,
+        "refreshButtons": 0,
+        "actionLabels": [
+          "다시 불러오기"
+        ],
+        "overflow": 0,
+        "messages": 0,
+        "boot": "ready"
+      },
+      "recovered": {
+        "state": "ready",
+        "statuses": 1,
+        "retries": 1,
+        "retryButtons": 0,
+        "refreshButtons": 1,
+        "actionLabels": [
+          "릴레이 새로고침"
+        ],
+        "overflow": 0,
+        "messages": 60,
+        "boot": "ready"
+      }
+    }
+  ],
+  "failures": [],
+  "fixture": "503 failure, held response, empty source, then real source; product DOM and state are never assigned",
+  "nativeWindow": {
+    "windowId": 1337017001,
+    "bounds": {
+      "left": 22,
+      "top": 22,
+      "width": 2048,
+      "height": 1600,
+      "windowState": "normal"
+    },
+    "client": {
+      "width": 2048,
+      "height": 1513
+    },
+    "requestedViewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "verifiedBeforeEmulation": true
+  },
+  "status": "passed"
+}
