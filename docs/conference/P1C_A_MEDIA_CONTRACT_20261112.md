@@ -195,6 +195,8 @@ node scripts/prepare-conference-media.mjs \
 
 ## 7. 로컬 설치 → 검증 → 복원
 
+**2026-11-13 현재 사이트 인벤토리 변경:** 이미 설치된 실제 자산이 동일하고 ready 매니페스트의 사이트 총수만 옛 렌더 기준이면 [P4 파일 수 재산출 절차](P4_MEDIA_SITE_COUNT_REFRESH_20261113.md)를 사용한다. 기존 계수 함수와 원래 preflight로 확인한 뒤 격리 사이트 ready 매니페스트의 두 파일 수 필드만 갱신한다. 정본 unavailable 매니페스트와 pages/audio, 원래 생성기·검사기는 변경하지 않는다. 실제 총수 동등 검사 통과 전에는 실미디어 브라우저를 시작하지 않는다.
+
 P1c-B의 [실제 미디어 검증 절차](P1C_B_MEDIA_VERIFICATION_20261112.md)를 사용한다. 설치 대상은 `pages/`, `audio/`, `media-manifest.json` 세 항목이며, timeline/player/route와 원본 PDF·MP3는 복사하거나 수정하지 않는다. 기존 unavailable 매니페스트를 보관하고, 두 자산 디렉터리가 모두 준비된 뒤 ready 매니페스트를 마지막으로 설치한다. 검증 종료 시 이번 설치 항목만 제거하고 보관한 매니페스트를 바이트 그대로 복원한다. 기존 미디어가 이미 있는 경로에는 덮어쓰거나 혼합 설치하지 않는다.
 
 Cloudflare 로컬 산출물을 확인할 때는 **`npm run build:cloudflare`를 먼저 실행하고 그 뒤에 미디어를 설치**해야 한다. 이 명령은 현재 커밋·트리에 맞는 빌드 검증 영수증과 실제 `ATLAS_PUBLIC_ORIGIN`을 요구한다. `build/cloudflare-assets`는 중간 스테이징이며 최종 자산 디렉터리는 `.cloudflare/output/v0/workers/default/assets`다. 빌드를 다시 돌리면 중간/최종 산출물은 재생성되므로 설치한 미디어를 유지하는 명령으로 사용하지 않는다.
