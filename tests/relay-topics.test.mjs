@@ -113,3 +113,8 @@ test('loading, unavailable, empty and recovered relay have one status owner and 
     assert.equal(root.dataset.relayState,'ready');assert.equal(root.querySelectorAll('.relay-retry').length,0);assert.equal(root.querySelectorAll('[data-message-id]').length,3);
   } finally {globalThis.fetch=originalFetch;}
 });
+
+test('a pending latest-message scroll never takes ownership of newer search results', async () => {
+  const original=globalThis.requestAnimationFrame;const scheduled=[];globalThis.requestAnimationFrame=callback=>{scheduled.push(callback);return scheduled.length;};
+  try {const {root,window}=await view(sample());root.querySelector('[name="query"]').value='비트코인';root.querySelector('form').dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));const body=root.querySelector('.relay-detail-body');body.scrollTop=0;Object.defineProperty(body,'scrollHeight',{value:500});for(const fn of scheduled)fn();assert.equal(body.scrollTop,0);}finally{globalThis.requestAnimationFrame=original;}
+});

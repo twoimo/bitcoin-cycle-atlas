@@ -410,10 +410,15 @@
     {
       "url": "./relay-room.js?v=1.37.8",
       "file": "relay-room.js",
-      "bytes": 28427,
-      "sha256": "b001b38bbbfd562ac42736e8b1564a3ad20b0732cdebdda5c8a9d4b22d752482",
+      "bytes": 32002,
+      "sha256": "5f871b767338ccbd7683349220f9bc90d959d6d6f846d4ee38298aab6aaee8b6",
       "depth": 1,
-      "imports": []
+      "imports": [
+        {
+          "specifier": "./relay-topics.js",
+          "url": "./relay-topics.js"
+        }
+      ]
     },
     {
       "url": "./conference/route.js?v=1.0.0",
@@ -609,6 +614,14 @@
           "url": "./asset-judgment-records.js?v=1.32.1"
         }
       ]
+    },
+    {
+      "url": "./relay-topics.js",
+      "file": "relay-topics.js",
+      "bytes": 5763,
+      "sha256": "b210b01559ec8fc9bd15a99436040293e7b3929cc601f23804f4b5aa9d2d675e",
+      "depth": 2,
+      "imports": []
     },
     {
       "url": "./ipo-month-calendar.js?v=1.32.1",
@@ -866,6 +879,7 @@
     "./workspace-instruments.js",
     "./asset-comparison.js?v=1.32.1",
     "./asset-judgment-history-view.js?v=1.32.1",
+    "./relay-topics.js",
     "./ipo-month-calendar.js?v=1.32.1",
     "./market-lab-math.js?v=1.31.3",
     "./legacy-workspace-toolbar.js",
@@ -885,12 +899,12 @@
     "./price-display.js?v=1.29.0"
   ],
   "summary": {
-    "moduleUrls": 56,
-    "uniqueModuleFiles": 54,
-    "conferenceModulePreloads": 55,
+    "moduleUrls": 57,
+    "uniqueModuleFiles": 55,
+    "conferenceModulePreloads": 56,
     "sharedModulePreloads": 1,
-    "staticImportEdges": 82,
+    "staticImportEdges": 83,
     "maxShortestImportDepth": 6,
-    "moduleBytesByUrl": 772668
+    "moduleBytesByUrl": 782006
   }
 }

@@ -251,7 +251,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
   let data = null, roomId = null, articleId = null, editionIndex = 0, pageIndex = 0, loading = false, error = null, readySent = false;
   let imageAssets = {};
   let revealLatest = true;
-  let topic = 'all', query = '';
+  let topic = 'all', query = '', renderVersion = 0;
   const filtered = item => relayEntries(item).filter(entry => relayMatches(entry, { topic, query }));
   const filtering = () => topic !== 'all' || query.trim() !== '';
   const noMatches = () => '<p class="relay-empty" role="status">조건에 맞는 항목이 없습니다. 분류나 검색어를 바꿔 주세요.</p>';
@@ -508,6 +508,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
   }
 
   function render() {
+    const version = ++renderVersion;
     const generatedTime = data?.generated_at ? hhmm(data.generated_at) : '';
     const currentRoom = room(), currentKind = currentRoom?.kind || 'chat';
     const reading = !!(currentArticle(currentRoom));
@@ -524,7 +525,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
     if (revealLatest && data && (room()?.kind || 'chat') === 'chat') {
       revealLatest = false;
       const scrollLatest = () => {
-        if ((room()?.kind || 'chat') !== 'chat') return;
+        if (version !== renderVersion || (room()?.kind || 'chat') !== 'chat') return;
         const body = root.querySelector('.relay-detail-body');
         if (body) body.scrollTop = body.scrollHeight;
       };
