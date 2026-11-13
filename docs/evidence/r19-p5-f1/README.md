@@ -50,3 +50,7 @@ node scripts/verify-r19-p5-f1-browser.mjs \
 ## 범위 보존
 
 보호 4파일·가격 축·`dist/styles.css`·기존 검사기·컨퍼런스 제품 파일은 기준 커밋과 같다. F2·F3·F4·Q-P1c-B-2·Q-R16-1 변경은 없다. P4 파일 수 및 실미디어 브라우저는 다시 실행하지 않았다. 기존 npm 17실패는 이번에 수정하거나 재실행하지 않았다. F1 native 수용과 P5는 열어 둔다.
+
+## Mac follow-up (2026-11-13 12:29 KST)
+
+The Mac command above was run against `7d45f88`. It completed 6/6 after cases and wrote 12 PNGs. It did not pass. Conference and relay D-1 went from 1 to 0. Outlook went from 6 to 5 because five `U+2699` settings buttons remain. Receipt: [mac-7d45f88.md](mac-7d45f88.md). F1 acceptance stays open.
