@@ -1,3 +1,5 @@
+import { RELAY_TOPICS, classifyRelayEntry, relayEntries, relayMatches } from './relay-topics.js';
+
 // 릴레이 콘텐츠 방(Relay room).
 //
 // RelayDeck은 텔레그램(소수의견)·인생의 방(네이버 프리미엄)·모바일한경 세 원천을 한 리서치룸으로
@@ -249,6 +251,25 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
   let data = null, roomId = null, articleId = null, editionIndex = 0, pageIndex = 0, loading = false, error = null, readySent = false;
   let imageAssets = {};
   let revealLatest = true;
+  let topic = 'all', query = '';
+  const filtered = item => relayEntries(item).filter(entry => relayMatches(entry, { topic, query }));
+  const filtering = () => topic !== 'all' || query.trim() !== '';
+  const noMatches = () => '<p class="relay-empty" role="status">조건에 맞는 항목이 없습니다. 분류나 검색어를 바꿔 주세요.</p>';
+
+  function topicEvidence(entry) {
+    const result = classifyRelayEntry(entry);
+    return `<details class="relay-topic-evidence"><summary>${esc(result.topics.map(match => match.label).join(' · '))} · 분류 근거</summary><ul>${result.topics.map(match => `<li>${esc(match.label)}: ${match.evidence ? `「${esc(match.evidence.quote)}」<span> ${esc(match.evidence.excerpt)}</span>` : esc(result.reason)}</li>`).join('')}</ul><p>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.</p></details>`;
+  }
+
+  function filterForm(item) {
+    const entries = relayEntries(item), shown = filtered(item).length;
+    return `<form class="relay-filter-form" aria-label="릴레이 분류와 검색">
+      <label>주제<select name="topic" aria-label="릴레이 주제"><option value="all">전체 (${entries.length})</option>${RELAY_TOPICS.map(tag => `<option value="${tag.id}"${topic === tag.id ? ' selected' : ''}>${tag.label} (${entries.filter(entry => relayMatches(entry,{topic:tag.id})).length})</option>`).join('')}</select></label>
+      <label>원문 검색<input type="search" name="query" aria-label="릴레이 제목·본문 검색" value="${esc(query)}" placeholder="제목·본문"></label>
+      <button type="submit">검색</button><button type="button" data-relay-action="clear-filters">초기화</button>
+      <output role="status" aria-live="polite">${shown} / ${entries.length}건 · 원문 키워드 분류</output>
+    </form>`;
+  }
   const imageSource = value => Object.hasOwn(imageAssets, value) ? imageAssets[value] : value;
   const signalReady = () => { if (!readySent) { readySent = true; try { onReady?.(); } catch { /* optional */ } } };
 
@@ -299,9 +320,10 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
   }
 
   function chatDetail(item) {
-    const messages = Array.isArray(item.messages) ? item.messages : [];
+    const messages = filtered(item);
+    if (!messages.length && filtering()) return noMatches();
     if (!messages.length) return '<p class="relay-empty" role="status">아직 받은 메시지가 없습니다.</p>';
-    const byId = new Map(messages.map(message => [String(message.id), message]));
+    const byId = new Map(relayEntries(item).map(message => [String(message.id), message]));
     const authors = new Set(messages.map(message => String(message.author || '').trim()).filter(Boolean));
     const showAuthor = authors.size > 1;
     let lastDay = null;
@@ -355,8 +377,8 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
           ${author}${reply}${quote}${images}
           ${text ? `<p class="relay-msg-text">${text}</p>` : ''}
           ${previews ? `<div class="relay-msg-previews">${previews}</div>` : ''}
-          ${withheld}${linkNote}
-          <div class="relay-msg-foot">${album}<time datetime="${esc(message.at || '')}">${esc(clock(message.at))}</time></div>
+          ${withheld}${linkNote}${topicEvidence(message)}
+          <div class="relay-msg-foot"><span>${esc(item.title || item.id)}</span>${!link ? '<span>원문 링크 미제공</span>' : ''}${album}<time datetime="${esc(message.at || '')}">${esc(clock(message.at))}</time></div>
         </div>
       </li>`;
     }).join('');
@@ -394,6 +416,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
           </div>
         </div>
       </header>
+      ${topicEvidence(article)}
       <div class="relay-body">${body || '<p class="relay-reader-empty">본문이 아직 없습니다.</p>'}</div>
       <footer class="relay-reader-foot">
         <span>${esc(publication)}</span>
@@ -414,14 +437,15 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
         <span class="relay-article-meta">${esc(dayLabel(article.published_date || article.at))} · ${articleReadMinutes(article)}분 읽기</span>
         <span class="relay-article-title">${esc(article.title || '제목 없음')}</span>
         ${excerpt ? `<span class="relay-article-excerpt">${esc(excerpt)}</span>` : ''}
-        <span class="relay-article-foot">${images.length ? `사진 ${images.length}장` : '글'}</span>
+        <span class="relay-article-foot">${esc(classifyRelayEntry(article).topics.map(match => match.label).join(' · '))} · ${images.length ? `사진 ${images.length}장` : '글'}</span>
       </span>
       ${thumb}
     </button></li>`;
   }
 
   function articleDetail(item) {
-    const articles = Array.isArray(item.articles) ? item.articles : [];
+    const articles = filtered(item);
+    if (!articles.length && filtering()) return noMatches();
     if (!articles.length) return '<p class="relay-empty" role="status">아직 받은 글이 없습니다.</p>';
     const chosen = articles.find(article => article.id === articleId);
     if (chosen) return articleReader(chosen, item.title || '인생의 방');
@@ -429,7 +453,8 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
   }
 
   function editionDetail(item) {
-    const editions = Array.isArray(item.editions) ? item.editions : [];
+    const editions = filtered(item);
+    if (!editions.length && filtering()) return noMatches();
     if (!editions.length) return '<p class="relay-empty" role="status">아직 받은 판본이 없습니다.</p>';
     if (editionIndex >= editions.length) editionIndex = 0;
     const edition = editions[editionIndex];
@@ -441,7 +466,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
     const stage = page?.image
       ? `<img class="relay-paper-image" src="${esc(imageSource(page.image))}" alt="${esc(page.alt || (page.label || ''))}" loading="lazy">`
       : `<div class="relay-paper-placeholder">${esc(page?.text || '이미지 준비 중')}</div>`;
-    return `<div class="relay-paper">
+    return `<div class="relay-paper">${topicEvidence(edition)}
       <div class="relay-paper-foot"><div class="relay-edition-list">${dates}</div><span class="relay-paper-status">${esc(page?.label || '')} · ${pageIndex + 1}/${Math.max(pages.length, 1)}</span></div>
       <div class="relay-paper-body">
         <div class="relay-paper-stage">${stage}
@@ -459,7 +484,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
 
   function detail() {
     const item = room();
-    if (!item) return '<p class="relay-empty" role="status">표시할 원천이 없습니다.</p>';
+    if (!item) return `<div class="relay-blank-state"><p class="relay-empty" role="status">${loading ? '릴레이 자료를 불러오는 중입니다.' : esc(error || '표시할 원천이 없습니다.')}</p>${loading ? '' : '<button type="button" class="relay-retry" data-relay-action="reload">다시 불러오기</button>'}</div>`;
     const kind = item.kind || 'chat';
     const article = currentArticle(item);
     const body = kind === 'chat' ? chatDetail(item) : kind === 'editions' ? editionDetail(item) : articleDetail(item);
@@ -478,6 +503,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
           <button type="button" class="relay-refresh" data-relay-action="reload" aria-label="릴레이 새로고침" title="새로고침">${GLYPH.refresh}</button>
         </div>
       </header>
+      ${filterForm(item)}
       <div class="relay-detail-body" role="region" aria-label="${esc(item.title || item.id)} 내용" tabindex="0">${body}</div>`;
   }
 
@@ -485,11 +511,12 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
     const generatedTime = data?.generated_at ? hhmm(data.generated_at) : '';
     const currentRoom = room(), currentKind = currentRoom?.kind || 'chat';
     const reading = !!(currentArticle(currentRoom));
+    root.dataset.relayState = loading ? 'loading' : error ? 'error' : rooms().length ? 'ready' : 'empty';
     root.dataset.relayMode = reading ? 'reading' : currentKind === 'articles' ? 'articles' : 'default';
     root.innerHTML = `
       <aside class="relay-rooms" aria-label="릴레이 채널">
         <header class="relay-rooms-head"><h2>채널</h2><span class="relay-rooms-total">${rooms().length}</span></header>
-        ${rooms().length ? `<ul class="relay-room-list">${roomList()}</ul>` : `<p class="relay-empty" role="status">${loading ? '불러오는 중…' : esc(error || '자료 없음')}</p>`}
+        ${rooms().length ? `<ul class="relay-room-list">${roomList()}</ul>` : '<p class="relay-empty">채널 0개</p>'}
         <footer class="relay-rooms-foot">${generatedTime ? `<span>15분마다 갱신</span><time>${esc(generatedTime)}</time>` : '<span>RelayDeck</span>'}</footer>
       </aside>
       <section class="relay-detail">${detail()}</section>`;
@@ -517,11 +544,26 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
     const pageButton = event.target.closest('.relay-pager [data-page]');
     if (pageButton) { pageIndex = Number(pageButton.dataset.page); render(); return; }
     const action = event.target.closest('[data-relay-action]')?.dataset.relayAction;
-    if (action === 'article-back') { articleId = null; render(); }
+    if (action === 'clear-filters') { topic = 'all'; query = ''; articleId = null; editionIndex = 0; pageIndex = 0; revealLatest = false; render(); root.querySelector('[name="query"]')?.focus(); }
+    else if (action === 'article-back') { articleId = null; render(); }
     else if (action === 'page-prev') { pageIndex = Math.max(0, pageIndex - 1); render(); }
-    else if (action === 'page-next') { pageIndex = Math.min((room()?.editions?.[editionIndex]?.pages?.length || 1) - 1, pageIndex + 1); render(); }
+    else if (action === 'page-next') { pageIndex = Math.min((filtered(room())[editionIndex]?.pages?.length || 1) - 1, pageIndex + 1); render(); }
     else if (action === 'reload') { revealLatest = true; void load(); }
   });
+
+  function applyFilters(event) {
+    const form = event.target.closest('.relay-filter-form');
+    if (!form) return;
+    event.preventDefault();
+    const chosen = form.querySelector('[name="topic"]')?.value;
+    topic = RELAY_TOPICS.some(tag => tag.id === chosen) ? chosen : 'all';
+    query = form.querySelector('[name="query"]')?.value || '';
+    articleId = null; editionIndex = 0; pageIndex = 0; revealLatest = false;
+    render();
+    root.querySelector(event.type === 'change' ? '[name="topic"]' : '[name="query"]')?.focus();
+  }
+  root.addEventListener('submit', applyFilters);
+  root.addEventListener('change', event => { if (event.target.matches('[name="topic"]')) applyFilters(event); });
 
   render();
 

@@ -1,0 +1,1618 @@
+{
+  "schema": 1,
+  "taxonomy": "relay-topics-v1",
+  "generatedAt": "2026-11-13T11:40:30+09:00",
+  "entries": [
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2602",
+      "kind": "chat",
+      "time": "2026-11-12T19:00:51+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2603",
+      "kind": "chat",
+      "time": "2026-11-12T19:01:07+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 8,
+            "length": 4,
+            "quote": "엔비디아",
+            "excerpt": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>"
+          }
+        },
+        {
+          "id": "politics",
+          "label": "정치·국제",
+          "evidence": {
+            "field": "text",
+            "offset": 3,
+            "length": 3,
+            "quote": "민주당",
+            "excerpt": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2604",
+      "kind": "chat",
+      "time": "2026-11-12T19:02:00+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 74,
+            "length": 2,
+            "quote": "주가",
+            "excerpt": "니다\n\n내년 1월까지 불확실 해소가 안된 상태라서\n단기로 주가가 시원하게 올라오기\n힘들 수 있습니다\n\n제가 AI인프라주 당분간 매수에\n신중한 이유이"
+          }
+        },
+        {
+          "id": "politics",
+          "label": "정치·국제",
+          "evidence": {
+            "field": "text",
+            "offset": 25,
+            "length": 3,
+            "quote": "민주당",
+            "excerpt": "🐒내년 1월부터 새 의회가 들어서기 때문에\n민주당의 청문회 총공세가 시작됩니다\n\n내년 1월까지 불확실 해소가 안된 상태라서\n단기로 주가"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2605",
+      "kind": "chat",
+      "time": "2026-11-12T19:02:29+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2606",
+      "kind": "chat",
+      "time": "2026-11-12T19:02:34+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2607",
+      "kind": "chat",
+      "time": "2026-11-12T19:02:49+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2608",
+      "kind": "chat",
+      "time": "2026-11-12T19:03:05+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 17,
+            "length": 3,
+            "quote": "젠슨황",
+            "excerpt": "아마 이 사진의 다음 주인공은\n젠슨황이 될 가능성이 높겠습니다"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2609",
+      "kind": "chat",
+      "time": "2026-11-12T19:03:38+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 24,
+            "length": 3,
+            "quote": "바이오",
+            "excerpt": "🐒AI인프라가 쉰다면\n그 사이에 헬스케어/바이오쪽이\n들썩일 가능성이 높겠습니다\n(차기 주도주)"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2610",
+      "kind": "chat",
+      "time": "2026-11-12T21:01:26+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2611",
+      "kind": "chat",
+      "time": "2026-11-12T21:01:38+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 3,
+            "length": 5,
+            "quote": "일라이릴리",
+            "excerpt": "<💊일라이릴리, 중국에 먹는 비만약 먼저 진출>"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2612",
+      "kind": "chat",
+      "time": "2026-11-12T21:02:27+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 8,
+            "length": 2,
+            "quote": "제약",
+            "excerpt": "🐒세계 2위 제약 시장에\n일라이릴리가 먼저 진출합니다\n\n2026 먹는 비만약(미국)\n2027 전세계 먹"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2613",
+      "kind": "chat",
+      "time": "2026-11-12T21:05:42+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류 사전에 일치하는 원문 구절 없음"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2614",
+      "kind": "chat",
+      "time": "2026-11-12T21:37:48+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2615",
+      "kind": "chat",
+      "time": "2026-11-12T21:38:04+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 21,
+            "length": 2,
+            "quote": "실적",
+            "excerpt": "↘️프리)네오클라우드 대장 네비우스,\n실적 미스 나오면서 하락 중입니다"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2616",
+      "kind": "chat",
+      "time": "2026-11-12T21:38:11+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2617",
+      "kind": "chat",
+      "time": "2026-11-12T21:38:16+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 2,
+            "length": 5,
+            "quote": "AI인프라",
+            "excerpt": "↘️AI인프라주 낙폭 확대 중입니다"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2618",
+      "kind": "chat",
+      "time": "2026-11-12T22:58:44+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2619",
+      "kind": "chat",
+      "time": "2026-11-12T22:58:47+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 2,
+            "length": 3,
+            "quote": "젠슨황",
+            "excerpt": "↘️젠슨황 공식 사임 발표"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2620",
+      "kind": "chat",
+      "time": "2026-11-12T23:01:49+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2621",
+      "kind": "chat",
+      "time": "2026-11-12T23:02:00+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 2,
+            "length": 4,
+            "quote": "엔비디아",
+            "excerpt": "↘️엔비디아 주가는 낙폭 확대 중"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2622",
+      "kind": "chat",
+      "time": "2026-11-12T23:04:03+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2623",
+      "kind": "chat",
+      "time": "2026-11-12T23:04:26+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 32,
+            "length": 2,
+            "quote": "증시",
+            "excerpt": "🔔엔비디아+AI인프라 빼고\n나머지는 대체로 평온합니다\n\n증시 전체에 이상 신호는 없습니다"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2624",
+      "kind": "chat",
+      "time": "2026-11-13T08:23:52+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2628",
+      "kind": "chat",
+      "time": "2026-11-13T08:24:38+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 3,
+            "length": 2,
+            "quote": "증시",
+            "excerpt": "<🔔증시, 유가 상승/금리 급등에 하락 마감>\n\n1. 엔비디아 이슈 외에 \n2. 지정학 우려 "
+          }
+        },
+        {
+          "id": "macro",
+          "label": "경제·정책",
+          "evidence": {
+            "field": "text",
+            "offset": 13,
+            "length": 2,
+            "quote": "금리",
+            "excerpt": "<🔔증시, 유가 상승/금리 급등에 하락 마감>\n\n1. 엔비디아 이슈 외에 \n2. 지정학 우려 또 커지며 유가/금"
+          }
+        },
+        {
+          "id": "politics",
+          "label": "정치·국제",
+          "evidence": {
+            "field": "text",
+            "offset": 46,
+            "length": 3,
+            "quote": "지정학",
+            "excerpt": "리 급등에 하락 마감>\n\n1. 엔비디아 이슈 외에 \n2. 지정학 우려 또 커지며 유가/금리 상승했습니다\n3. 10년 금리 5% 재돌파, 단기/장기 금"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2629",
+      "kind": "chat",
+      "time": "2026-11-13T08:26:02+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2630",
+      "kind": "chat",
+      "time": "2026-11-13T08:26:19+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2631",
+      "kind": "chat",
+      "time": "2026-11-13T08:26:51+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "macro",
+          "label": "경제·정책",
+          "evidence": {
+            "field": "text",
+            "offset": 10,
+            "length": 2,
+            "quote": "금리",
+            "excerpt": "<🐒시장이 4회 금리인상 반영하기 시작>\n구조적 고물가 우려 커지고 있습니다\n단기,장기금리+달러까지 강세입"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2632",
+      "kind": "chat",
+      "time": "2026-11-13T08:26:57+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2633",
+      "kind": "chat",
+      "time": "2026-11-13T08:27:06+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "macro",
+          "label": "경제·정책",
+          "evidence": {
+            "field": "text",
+            "offset": 2,
+            "length": 2,
+            "quote": "달러",
+            "excerpt": "⚠️달러 최근 고점 돌파, 유동성 부정적"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2634",
+      "kind": "chat",
+      "time": "2026-11-13T08:27:16+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2635",
+      "kind": "chat",
+      "time": "2026-11-13T08:27:44+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "macro",
+          "label": "경제·정책",
+          "evidence": {
+            "field": "text",
+            "offset": 8,
+            "length": 2,
+            "quote": "금리",
+            "excerpt": "⚠️미 10년 금리 상승세, 유동성 부정적"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2636",
+      "kind": "chat",
+      "time": "2026-11-13T08:30:01+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2639",
+      "kind": "chat",
+      "time": "2026-11-13T08:32:11+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2640",
+      "kind": "chat",
+      "time": "2026-11-13T08:32:17+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2641",
+      "kind": "chat",
+      "time": "2026-11-13T08:33:08+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 19,
+            "length": 4,
+            "quote": "엔비디아",
+            "excerpt": "<👑주요시총 상위주 현황>\n1. 엔비디아 하락 지속, 시총 2위\n2. AMD, 브로드컴 등 경쟁사 반사이익 기대\n3. 테슬라-"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2642",
+      "kind": "chat",
+      "time": "2026-11-13T08:34:34+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2644",
+      "kind": "chat",
+      "time": "2026-11-13T08:35:54+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2645",
+      "kind": "chat",
+      "time": "2026-11-13T08:36:15+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 8,
+            "length": 3,
+            "quote": "젠슨황",
+            "excerpt": "⚠️지금 다들 젠슨황에 눈이 팔려 있는데,\n금리 상승, 달러 상승이 더 심상치 않습니다\n이 부분 모니터링 "
+          }
+        },
+        {
+          "id": "macro",
+          "label": "경제·정책",
+          "evidence": {
+            "field": "text",
+            "offset": 24,
+            "length": 2,
+            "quote": "금리",
+            "excerpt": "⚠️지금 다들 젠슨황에 눈이 팔려 있는데,\n금리 상승, 달러 상승이 더 심상치 않습니다\n이 부분 모니터링 필요합니다"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2646",
+      "kind": "chat",
+      "time": "2026-11-13T08:38:27+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2647",
+      "kind": "chat",
+      "time": "2026-11-13T08:39:34+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "politics",
+          "label": "정치·국제",
+          "evidence": {
+            "field": "text",
+            "offset": 30,
+            "length": 3,
+            "quote": "지정학",
+            "excerpt": "⚠️신호)트럼프가 온건파 밴스 배제했습니다\n\n정치적, 지정학적 강경모드 시그널이\n하나 더 추가되었습니다\n\n1. 비서실장 강경론자로 교체(지난주)\n"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2648",
+      "kind": "chat",
+      "time": "2026-11-13T08:42:39+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2649",
+      "kind": "chat",
+      "time": "2026-11-13T08:43:42+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "politics",
+          "label": "정치·국제",
+          "evidence": {
+            "field": "text",
+            "offset": 31,
+            "length": 2,
+            "quote": "전쟁",
+            "excerpt": "⚠️확률은 낮지만,\n2006 부시때처럼 중간선거 패배후\n전쟁 재개 가능성도 염두에 둬야하므로\n모니터링 필요합니다\n\n부시 행정부 당시\n2006년 1"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2650",
+      "kind": "chat",
+      "time": "2026-11-13T08:50:57+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2651",
+      "kind": "chat",
+      "time": "2026-11-13T08:51:04+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2652",
+      "kind": "chat",
+      "time": "2026-11-13T08:51:57+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 35,
+            "length": 2,
+            "quote": "증시",
+            "excerpt": "018년 중간선거 이후에도,\n파월이 초강경 긴축 발언하자\n증시 급락한 적이 있습니다\n(마치 선거가 끝나길 기다렸다는듯이)"
+          }
+        },
+        {
+          "id": "macro",
+          "label": "경제·정책",
+          "evidence": {
+            "field": "text",
+            "offset": 27,
+            "length": 2,
+            "quote": "긴축",
+            "excerpt": "🐒2018년 중간선거 이후에도,\n파월이 초강경 긴축 발언하자\n증시 급락한 적이 있습니다\n(마치 선거가 끝나길 기다렸다는듯이)"
+          }
+        },
+        {
+          "id": "politics",
+          "label": "정치·국제",
+          "evidence": {
+            "field": "text",
+            "offset": 8,
+            "length": 4,
+            "quote": "중간선거",
+            "excerpt": "🐒2018년 중간선거 이후에도,\n파월이 초강경 긴축 발언하자\n증시 급락한 적이 있습니다\n(마치 선거가 끝나"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2653",
+      "kind": "chat",
+      "time": "2026-11-13T08:55:27+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2654",
+      "kind": "chat",
+      "time": "2026-11-13T08:56:23+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "politics",
+          "label": "정치·국제",
+          "evidence": {
+            "field": "text",
+            "offset": 3,
+            "length": 4,
+            "quote": "상무장관",
+            "excerpt": "<⚠️상무장관 교체 논의 중>\n\n이것도 신호입니다\n중국 수출 협상파(허용)에서\n수출 제한 강경파(금"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2655",
+      "kind": "chat",
+      "time": "2026-11-13T08:56:48+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "politics",
+          "label": "정치·국제",
+          "evidence": {
+            "field": "text",
+            "offset": 2,
+            "length": 4,
+            "quote": "중간선거",
+            "excerpt": "🐒중간선거 끝나기무섭게\n구도가 바뀌고 있다고 보시면 되겠습니다\n\n온건파->강경파"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2656",
+      "kind": "chat",
+      "time": "2026-11-13T08:57:18+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2657",
+      "kind": "chat",
+      "time": "2026-11-13T08:58:10+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "macro",
+          "label": "경제·정책",
+          "evidence": {
+            "field": "text",
+            "offset": 39,
+            "length": 2,
+            "quote": "금리",
+            "excerpt": "이제 AI가 아니라 긴축 걱정할때\n\n그동안은 AI 투자가 금리 끌어올렸지만\n지금은 긴축 반영으로 금리가\n올라가고 있다는 보도입니다 \n\n(안좋은 신호"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2658",
+      "kind": "chat",
+      "time": "2026-11-13T09:07:29+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2659",
+      "kind": "chat",
+      "time": "2026-11-13T09:07:31+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2660",
+      "kind": "chat",
+      "time": "2026-11-13T09:08:23+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 6,
+            "length": 4,
+            "quote": "엔비디아",
+            "excerpt": "<🙂‍↕️엔비디아 올해 수익률 하위권>\n\n엔비디아는 불과 얼마전만해도\n그래도 시장은 계속 이기고 있었는"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2661",
+      "kind": "chat",
+      "time": "2026-11-13T09:12:00+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2662",
+      "kind": "chat",
+      "time": "2026-11-13T09:12:40+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 3,
+            "length": 4,
+            "quote": "엔비디아",
+            "excerpt": "<🔔엔비디아,슈마컴-법무부 조사 시작>\n기존 상무부(수출) 조사에서\n-> 법무부(위법)로 넘어갔습"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2663",
+      "kind": "chat",
+      "time": "2026-11-13T09:13:21+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2664",
+      "kind": "chat",
+      "time": "2026-11-13T09:13:48+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 3,
+            "length": 4,
+            "quote": "엔비디아",
+            "excerpt": "<🔔엔비디아 하락에도 시장은 잘 버티는 중>\n->비AI주 영향은 크지 않은 편입니다(지금까지는)"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2665",
+      "kind": "chat",
+      "time": "2026-11-13T09:14:40+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2666",
+      "kind": "chat",
+      "time": "2026-11-13T09:15:32+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 3,
+            "length": 3,
+            "quote": "테슬라",
+            "excerpt": "<🔔테슬라-스페이스X합병, 올해 발표될수도?>\n블룸버그발 보도입니다, 내년 민주당 의회 들어오기"
+          }
+        },
+        {
+          "id": "politics",
+          "label": "정치·국제",
+          "evidence": {
+            "field": "text",
+            "offset": 43,
+            "length": 3,
+            "quote": "민주당",
+            "excerpt": "X합병, 올해 발표될수도?>\n블룸버그발 보도입니다, 내년 민주당 의회 들어오기 전에\n올해 안에 빠르게 진행하고자 하는 의도도\n있는 것 같습니다 \n\n테"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "telegram",
+      "roomTitle": "소수의견(26년 4분기)",
+      "id": "2667",
+      "kind": "chat",
+      "time": "2026-11-13T09:41:25+09:00",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "text",
+            "offset": 46,
+            "length": 4,
+            "quote": "엔비디아",
+            "excerpt": ",11/13>\n[테크]\n트럼프 \"젠슨 황 후임은 팀 쿡\"\n엔비디아 임시 CEO에 크레스\n젠슨황 연인, 화웨이측 DC 간접 보유\n슈마컴, 中 반출 의혹 "
+          }
+        },
+        {
+          "id": "macro",
+          "label": "경제·정책",
+          "evidence": {
+            "field": "text",
+            "offset": 301,
+            "length": 2,
+            "quote": "금리",
+            "excerpt": "엔비디아 中수출승인 조사\n\n[매크로/지정학]\n美 10년물 금리 5.109% 급등\n트럼프 \"이란과 합의 필요 없어\"\n백악관, 상무장관 경질 논의\n연준"
+          }
+        },
+        {
+          "id": "politics",
+          "label": "정치·국제",
+          "evidence": {
+            "field": "text",
+            "offset": 289,
+            "length": 3,
+            "quote": "지정학",
+            "excerpt": " 규제 추진\n美민주, 엔비디아 中수출승인 조사\n\n[매크로/지정학]\n美 10년물 금리 5.109% 급등\n트럼프 \"이란과 합의 필요 없어\"\n백악관, 상무"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "naver",
+      "roomTitle": "인생의 방",
+      "id": "261107141050493ep",
+      "kind": "articles",
+      "time": "2026-11-07",
+      "sourceUrl": "https://contents.premium.naver.com/ps4/ps4life/contents/261107141050493ep",
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "housing",
+          "label": "부동산",
+          "evidence": {
+            "field": "body_text",
+            "offset": 2501,
+            "length": 3,
+            "quote": "아파트",
+            "excerpt": "험회사 직원들이 소송 상대방을 며칠간 미행하면서,\n\n​\n\n아파트 주차장 등 공공장소에서 소송 상대방의 사진을 몰래 찍은 일이 있었는데요.\n\n​\n\n이 "
+          }
+        },
+        {
+          "id": "rights",
+          "label": "법률·권리",
+          "evidence": {
+            "field": "title",
+            "offset": 23,
+            "length": 3,
+            "quote": "초상권",
+            "excerpt": "우리는 매일매일 어디선가 찍히고 있다 - 초상권"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "naver",
+      "roomTitle": "인생의 방",
+      "id": "261107142259903mj",
+      "kind": "articles",
+      "time": "2026-11-07",
+      "sourceUrl": "https://contents.premium.naver.com/ps4/ps4life/contents/261107142259903mj",
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "life",
+          "label": "생활·건강",
+          "evidence": {
+            "field": "title",
+            "offset": 9,
+            "length": 2,
+            "quote": "용기",
+            "excerpt": "결국 나를 믿는 용기"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "naver",
+      "roomTitle": "인생의 방",
+      "id": "261108074514480oe",
+      "kind": "articles",
+      "time": "2026-11-09",
+      "sourceUrl": "https://contents.premium.naver.com/ps4/ps4life/contents/261108074514480oe",
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "life",
+          "label": "생활·건강",
+          "evidence": {
+            "field": "title",
+            "offset": 0,
+            "length": 2,
+            "quote": "운동",
+            "excerpt": "운동에서 가장 중요한 두 가지 패턴"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "naver",
+      "roomTitle": "인생의 방",
+      "id": "261109145117700at",
+      "kind": "articles",
+      "time": "2026-11-09",
+      "sourceUrl": "https://contents.premium.naver.com/ps4/ps4life/contents/261109145117700at",
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "body_text",
+            "offset": 96,
+            "length": 4,
+            "quote": "삼성전자",
+            "excerpt": "올패스컨설팅그룹 대표 대기업김과장입니다.\n\n​\n\n11월은 삼성전자, SK하이닉스, 기아, 현대자동차 등\n\n주요 대기업 면접 시즌입니다.\n\n​\n\n처음 취"
+          }
+        },
+        {
+          "id": "career",
+          "label": "취업·학습",
+          "evidence": {
+            "field": "title",
+            "offset": 0,
+            "length": 2,
+            "quote": "면접",
+            "excerpt": "면접에서 합격하기 위한 마인드 세팅 방법."
+          }
+        },
+        {
+          "id": "life",
+          "label": "생활·건강",
+          "evidence": {
+            "field": "title",
+            "offset": 13,
+            "length": 3,
+            "quote": "마인드",
+            "excerpt": "면접에서 합격하기 위한 마인드 세팅 방법."
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "naver",
+      "roomTitle": "인생의 방",
+      "id": "261022011021535lc",
+      "kind": "articles",
+      "time": "2026-11-10",
+      "sourceUrl": "https://contents.premium.naver.com/ps4/ps4life/contents/261022011021535lc",
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "markets",
+          "label": "증시·기업",
+          "evidence": {
+            "field": "body_text",
+            "offset": 202,
+            "length": 2,
+            "quote": "실적",
+            "excerpt": "정적으로 애정을 쏟는 남자.\"\n\n​\n\n여기서 더 나아가 현실적인 조건이나 안정감 등을 이야기할 수도 있겠지만 오늘 이야기할 주제는 이런 사회적 조건"
+          }
+        },
+        {
+          "id": "macro",
+          "label": "경제·정책",
+          "evidence": {
+            "field": "body_text",
+            "offset": 9468,
+            "length": 2,
+            "quote": "유가",
+            "excerpt": "구인 셈입니다.\n\n​\n\n그래서 남성들은 특별한 목적이나 이유가 없다면 대화 자체를 반드시 필요하다고 생각하지 않을 수도 있습니다.\n\n​\n\n반면 여성"
+          }
+        },
+        {
+          "id": "life",
+          "label": "생활·건강",
+          "evidence": {
+            "field": "title",
+            "offset": 0,
+            "length": 2,
+            "quote": "결혼",
+            "excerpt": "결혼할 남자를 고를 때는 이렇게 골라야 합니다."
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "naver",
+      "roomTitle": "인생의 방",
+      "id": "261111133016879ic",
+      "kind": "articles",
+      "time": "2026-11-11",
+      "sourceUrl": "https://contents.premium.naver.com/ps4/ps4life/contents/261111133016879ic",
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "macro",
+          "label": "경제·정책",
+          "evidence": {
+            "field": "body_text",
+            "offset": 3624,
+            "length": 2,
+            "quote": "달러",
+            "excerpt": " 서로 같은 생각인 거지?\n\n     B: 응. 5,000달러 이하로 유지하기로 했잖아.\n\n4. Call it a day.\n\n    [콜 잇 어 데"
+          }
+        },
+        {
+          "id": "career",
+          "label": "취업·학습",
+          "evidence": {
+            "field": "title",
+            "offset": 17,
+            "length": 3,
+            "quote": "외국인",
+            "excerpt": "알아두면 상대방이 깜짝 놀랄, 외국인들이 많이 쓰는 표현들(3)"
+          }
+        },
+        {
+          "id": "life",
+          "label": "생활·건강",
+          "evidence": {
+            "field": "body_text",
+            "offset": 2299,
+            "length": 2,
+            "quote": "결혼",
+            "excerpt": "cat out of the bag.\n\n     A: 우리 결혼 계획을 모두에게 누가 말한 거야?\n\n     B: 미안해. 내가 비밀을 말해 버린 것"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "naver",
+      "roomTitle": "인생의 방",
+      "id": "261111170618093yl",
+      "kind": "articles",
+      "time": "2026-11-11",
+      "sourceUrl": "https://contents.premium.naver.com/ps4/ps4life/contents/261111170618093yl",
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "housing",
+          "label": "부동산",
+          "evidence": {
+            "field": "body_text",
+            "offset": 318,
+            "length": 3,
+            "quote": "임대차",
+            "excerpt": "리한 지역을 고려하여 최종결정하였는지?\n\n\n\n\n8\n\n\t\n\n임대차계약 전 사무실 형태가 창업감면에 적정한지를 고려하였는지?(비상주or공유오피스 등)\n\n"
+          }
+        },
+        {
+          "id": "business",
+          "label": "사업·세금",
+          "evidence": {
+            "field": "title",
+            "offset": 0,
+            "length": 3,
+            "quote": "사업자",
+            "excerpt": "사업자등록 신청서, 10분이면 쓰는데, 5년이 괴로울 수 있습니다. 꼭 등록 전에 체크하세요"
+          }
+        }
+      ],
+      "reason": "원문 키워드 일치"
+    },
+    {
+      "room": "naver",
+      "roomTitle": "인생의 방",
+      "id": "261113110938185lp",
+      "kind": "articles",
+      "time": "2026-11-13",
+      "sourceUrl": "https://contents.premium.naver.com/ps4/ps4life/contents/261113110938185lp",
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류 사전에 일치하는 원문 구절 없음"
+    },
+    {
+      "room": "hankyung",
+      "roomTitle": "모바일한경",
+      "id": "2026-11-12:v3",
+      "kind": "editions",
+      "time": "2026-11-12",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    },
+    {
+      "room": "hankyung",
+      "roomTitle": "모바일한경",
+      "id": "2026-11-13:v6",
+      "kind": "editions",
+      "time": "2026-11-13",
+      "sourceUrl": null,
+      "version": "relay-topics-v1",
+      "topics": [
+        {
+          "id": "unclassified",
+          "label": "미분류",
+          "evidence": null
+        }
+      ],
+      "reason": "분류할 원문 텍스트 없음 · 이미지 내용 미판독"
+    }
+  ],
+  "sourceSha256": "be11c563ac9fa76160118649a4577d5ea8f2e4d6b83b1384a9486642710abd33",
+  "counts": {
+    "crypto": 0,
+    "markets": 22,
+    "macro": 10,
+    "politics": 10,
+    "housing": 2,
+    "business": 1,
+    "career": 2,
+    "rights": 1,
+    "life": 5,
+    "unclassified": 35
+  }
+}

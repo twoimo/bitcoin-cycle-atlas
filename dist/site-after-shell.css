@@ -3471,7 +3471,7 @@ body .research-reader :is(a,button):focus-visible {
 }
 
 
-/* Source: relay-room.css; SHA-256: 26429da0ee31a8b35101d0eff411c4faac3d462eef37607565580fb54461cbc8 */
+/* Source: relay-room.css; SHA-256: a4f180e41f1856def03f638c14dd87cf447b3fc75062fab67b8b4faff585e1b6 */
 /* 릴레이 콘텐츠 방(Relay room) — 아틀라스 토큰 위에 텔레그램 웹의 채널 목록·대화 구조를 얹는다. */
 #relay-view[hidden]{display:none!important}
 body[data-page="relay"]{overflow:hidden}
@@ -3931,6 +3931,23 @@ body[data-page="relay"]{overflow:hidden}
 @media (prefers-reduced-motion:reduce){
   .relay-room,.relay-room *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
+
+/* R22: source-preserving topic filters, independent of the later relay layout. */
+.relay-room .relay-detail{grid-template-rows:auto auto minmax(0,1fr)}
+.relay-room .relay-filter-form{display:flex;flex-wrap:wrap;align-items:end;gap:8px;padding:8px 16px;border-bottom:1px solid var(--border);min-width:0;background:var(--surface)}
+.relay-filter-form label{display:grid;gap:4px;min-width:0;flex:1 1 160px;font-size:12px;line-height:1.4;color:var(--text)}
+.relay-filter-form :is(input,select,button){min-height:44px;max-width:100%;min-width:44px;padding:8px;border:1px solid var(--border-strong);border-radius:6px;background:var(--surface);color:var(--text);font:inherit}
+.relay-filter-form :is(input,select){width:100%;font-size:16px}
+.relay-filter-form button{font-size:12px;cursor:pointer}
+.relay-filter-form :is(input,select,button):focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.relay-filter-form output{flex-basis:100%;font-size:12px;line-height:1.4;color:var(--muted)}
+.relay-topic-evidence{font-size:12px;line-height:1.5;color:var(--muted);overflow-wrap:break-word;word-break:keep-all;min-width:0;max-width:100%}
+.relay-topic-evidence summary{cursor:pointer;min-height:44px;align-content:center;color:var(--text)}
+.relay-topic-evidence summary:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.relay-topic-evidence ul{padding-left:18px;margin:4px 0}.relay-topic-evidence p{margin:4px 0}
+@media(max-width:480px){.relay-room .relay-filter-form{padding:8px 12px}.relay-filter-form label{flex-basis:100%}}
+
+.relay-blank-state{padding:20px;min-width:0}.relay-retry{min-width:44px;min-height:44px;padding:8px 12px;font:inherit;font-size:12px;color:var(--text);background:var(--surface);border:1px solid var(--border-strong);border-radius:6px;cursor:pointer}.relay-retry:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 
 
 /* Source: conference/player.css; SHA-256: cb9bf91606db62490890cf063ba9bc3bb1e6cb39890baace93198f0abb51448a */
