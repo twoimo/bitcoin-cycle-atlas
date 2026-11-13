@@ -1,0 +1,71 @@
+{
+  "kind": "r19-p5-f1-native-capture",
+  "startedAt": "2026-11-13T03:22:19.536Z",
+  "scope": "D-1, header SVG/name, declared target size, and product screenshots only; not a P4/P5 full gate.",
+  "d1": {
+    "range": "[\\u{1F300}-\\u{1FAFF}\\u{2600}-\\u{27BF}]",
+    "includesHiddenUI": true,
+    "contentExclusions": [
+      ".conference-caption-text",
+      ".conference-transcript-text",
+      ".relay-room-name",
+      ".relay-room-sub",
+      ".relay-peer>h2",
+      ".relay-peer-sub",
+      ".relay-msg-text",
+      ".relay-msg-quote",
+      ".relay-reply-text",
+      ".relay-reply-name",
+      ".relay-msg-author",
+      ".relay-preview",
+      ".relay-article-title",
+      ".relay-article-excerpt",
+      ".relay-reader-head h2",
+      ".relay-body",
+      ".relay-reader-figure figcaption",
+      "#lab-chart-stage>svg"
+    ]
+  },
+  "harnessSha256": "7112458c6481a7fc5474da6a42951ed5401c8827d59cdb157605bd7f873a4bc6",
+  "sourceBefore": {
+    "commit": "b2226d77ddf4ff4fe6e05953e02cbb753ea4f7f8",
+    "tree": "3e21032983a094551289d8b92bf2932c5364abb6",
+    "trackedChanges": "M dist/atlas-shell.css\n M dist/atlas-shell.js\n M dist/index.html\n D dist/market-lab/app/assets/index-dBHlihvh.js\n D dist/market-lab/app/assets/index-oNbYM56y.css\n M dist/market-lab/app/index.html\n M dist/market-lab/cashflow/index.html\n M dist/market-lab/charts/index.html\n M dist/market-lab/housing/index.html\n M dist/market-lab/index.html\n M dist/market-lab/kr/index.html\n M dist/market-lab/rsi/index.html\n M dist/market-lab/scenario/index.html\n M dist/market-lab/themes/index.html\n M dist/market-lab/us/index.html\n M docs/LAUNCH_CHECKLIST_20261110.md\n M docs/conference/boot-preload-graph.json\n M docs/requirements/REQ_ANTI_AI_DESIGN_20261112.md",
+    "hashes": {
+      "dist/index.html": "aee68b3108a38d8ca84b78b9fa77c0e7c988c27f29feef894c00edcb6cb96994",
+      "dist/atlas-shell.js": "e5cd5d67ae979ded8722f82a794655834883b7d2fa3115b7b4c5bb8a7b0b5181",
+      "dist/atlas-shell.css": "47f3f24bab8b68ad06212a607a6acb8f3fcac978c9df8c968281ab88999e0e46",
+      "dist/styles.css": "190305d7b15c3a6b64ff3a8a06bf40b2c4594b395d2f32c112fe2f4b2f9da08c",
+      "dist/ui/shell-layout.css": "6c5f9f6ae914ae5f765e47733c59cbf7da324b92fe55a22ae73fbc962b2cf0f8",
+      "dist/site-before-shell.css": "b6cab02b46ba6c3920ff8be60ffebdcd4c1ec7a4cbdd2856382242aee4f012b8",
+      "dist/site-after-shell.css": "77590c46bbca9c1f019604baad702489e1ea7260d57c28d23a4e4ee183fea597"
+    }
+  },
+  "lanes": [],
+  "failures": [
+    "harness: Error: Chrome exited (SIGABRT): /usr/bin/chromium: 9: [: 5225713664: unexpected operator\n[37:37:1113/122219.646484:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1113/122219.646677:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n\n    at file:///workspace/scratch/48482dcbb79e/bitcoin-cycle-atlas/scripts/verify-r19-p5-f1-browser.mjs:102:62\n    at async until (file:///workspace/scratch/48482dcbb79e/bitcoin-cycle-atlas/scripts/verify-r19-p5-f1-browser.mjs:53:19)\n    at async file:///workspace/scratch/48482dcbb79e/bitcoin-cycle-atlas/scripts/verify-r19-p5-f1-browser.mjs:100:14"
+  ],
+  "sourceAfter": {
+    "commit": "b2226d77ddf4ff4fe6e05953e02cbb753ea4f7f8",
+    "tree": "3e21032983a094551289d8b92bf2932c5364abb6",
+    "trackedChanges": "M dist/atlas-shell.css\n M dist/atlas-shell.js\n M dist/index.html\n D dist/market-lab/app/assets/index-dBHlihvh.js\n D dist/market-lab/app/assets/index-oNbYM56y.css\n M dist/market-lab/app/index.html\n M dist/market-lab/cashflow/index.html\n M dist/market-lab/charts/index.html\n M dist/market-lab/housing/index.html\n M dist/market-lab/index.html\n M dist/market-lab/kr/index.html\n M dist/market-lab/rsi/index.html\n M dist/market-lab/scenario/index.html\n M dist/market-lab/themes/index.html\n M dist/market-lab/us/index.html\n M docs/LAUNCH_CHECKLIST_20261110.md\n M docs/conference/boot-preload-graph.json\n M docs/requirements/REQ_ANTI_AI_DESIGN_20261112.md",
+    "hashes": {
+      "dist/index.html": "aee68b3108a38d8ca84b78b9fa77c0e7c988c27f29feef894c00edcb6cb96994",
+      "dist/atlas-shell.js": "e5cd5d67ae979ded8722f82a794655834883b7d2fa3115b7b4c5bb8a7b0b5181",
+      "dist/atlas-shell.css": "47f3f24bab8b68ad06212a607a6acb8f3fcac978c9df8c968281ab88999e0e46",
+      "dist/styles.css": "190305d7b15c3a6b64ff3a8a06bf40b2c4594b395d2f32c112fe2f4b2f9da08c",
+      "dist/ui/shell-layout.css": "6c5f9f6ae914ae5f765e47733c59cbf7da324b92fe55a22ae73fbc962b2cf0f8",
+      "dist/site-before-shell.css": "b6cab02b46ba6c3920ff8be60ffebdcd4c1ec7a4cbdd2856382242aee4f012b8",
+      "dist/site-after-shell.css": "77590c46bbca9c1f019604baad702489e1ea7260d57c28d23a4e4ee183fea597"
+    }
+  },
+  "workingTreeStable": true,
+  "sourceStable": false,
+  "completedCases": 0,
+  "complete": false,
+  "d1After": null,
+  "d1Before": null,
+  "status": "blocked",
+  "finishedAt": "2026-11-13T03:22:19.682Z",
+  "chromeStderr": "/usr/bin/chromium: 9: [: 5225713664: unexpected operator\n[37:37:1113/122219.646484:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1113/122219.646677:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n"
+}

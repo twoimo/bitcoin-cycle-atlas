@@ -176,8 +176,8 @@
     {
       "url": "./atlas-shell.js?v=1.36.1",
       "file": "atlas-shell.js",
-      "bytes": 12215,
-      "sha256": "2b27204e141a9b600011a589a16a08835954fa05a974ba133264ebbf89e4f75a",
+      "bytes": 12680,
+      "sha256": "e5cd5d67ae979ded8722f82a794655834883b7d2fa3115b7b4c5bb8a7b0b5181",
       "depth": 1,
       "imports": [
         {
@@ -891,6 +891,6 @@
     "sharedModulePreloads": 1,
     "staticImportEdges": 82,
     "maxShortestImportDepth": 6,
-    "moduleBytesByUrl": 772203
+    "moduleBytesByUrl": 772668
   }
 }

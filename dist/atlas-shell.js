@@ -1,6 +1,7 @@
 /*! MIT License
 
 Copyright (c) 2023 shadcn
+Copyright (c) 2023 Phosphor Icons
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -127,7 +128,8 @@ export function initAtlasShell() {
   // The page header becomes the top region only on non-chart routes; on the
   // chart route the frame's own toolbar owns that identity (see sync()).
   const toggle = document.createElement('button'); toggle.type = 'button'; toggle.className = 'atlas-sidebar-toggle';
-  toggle.textContent = '☰';
+  // Phosphor List (regular), MIT: phosphor-icons/core@2b75f3ad12b420c9504ef05df8d2564a28f8500e.
+  toggle.innerHTML = '<svg width="20" height="20" aria-hidden="true" focusable="false" data-icon="phosphor-list" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"/></svg>';
   const heading = document.createElement('h1'); heading.className = 'atlas-shell-heading';
   header.append(toggle, heading); document.body.insertBefore(header, workspace);
   const pageDescription = mountPageDescription(document, {header, heading});
