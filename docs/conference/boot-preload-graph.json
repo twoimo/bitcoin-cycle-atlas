@@ -410,8 +410,8 @@
     {
       "url": "./relay-room.js?v=1.37.8",
       "file": "relay-room.js",
-      "bytes": 32002,
-      "sha256": "5f871b767338ccbd7683349220f9bc90d959d6d6f846d4ee38298aab6aaee8b6",
+      "bytes": 32162,
+      "sha256": "aa387e9bb18b03584261b3f0cb5c042ea04789f9418bc1b8bb577e45f3446c5c",
       "depth": 1,
       "imports": [
         {
@@ -905,6 +905,6 @@
     "sharedModulePreloads": 1,
     "staticImportEdges": 83,
     "maxShortestImportDepth": 6,
-    "moduleBytesByUrl": 782006
+    "moduleBytesByUrl": 782166
   }
 }
