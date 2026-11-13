@@ -98,3 +98,21 @@ for(const symbol of ['ETHUSD','MSTR','BMNR'])test(`${symbol} preserves the price
   assert.deepEqual([...footer.querySelectorAll('button,select')],controls,'desktop restoration retains the original controls');
   assert.deepEqual(series,original,'presentation never changes source observations or clocks');
 });
+
+// Native symbols must export their actual new renderer, never the old SVG-only surface.
+test('native Funnest export includes the owned painted canvas and keeps source metadata',async t=>{
+  const f=fixture(t),box={left:0,top:0,width:600,height:400};
+  f.svg.getBoundingClientRect=()=>box;
+  const canvas=Object.assign(f.document.createElement('canvas'),{width:600,height:400,getBoundingClientRect:()=>box,getContext:()=>({getImageData:()=>({data:new Uint8ClampedArray([0,0,0,255,220,30,40,255])})}),toDataURL:()=> 'data:image/png;base64,Y2hhcnQ='});
+  f.state.controller.engine='funnest';f.state.controller.getExportSurface=()=>({svg:f.svg,canvas});
+  f.adapter.command('export');
+  const dialog=f.document.querySelector('#chart-export-dialog');assert.ok(dialog.hasAttribute('open'),f.document.querySelector('#chart-reader').textContent);
+  const vector=await (await fetch(dialog.querySelector('a[download]').href)).text();
+  assert.match(vector,/data:image\/png;base64,Y2hhcnQ=/);assert.match(vector,/Coinbase Exchange/);assert.match(vector,/Funnest 캔버스/);
+});
+test('native Funnest export refuses an unavailable canvas instead of returning a legacy-only image',t=>{
+  const f=fixture(t);f.state.controller.engine='funnest';f.state.controller.getExportSurface=()=>({svg:f.svg,canvas:null});
+  f.adapter.command('export');
+  assert.equal(f.document.querySelector('#chart-export-dialog').hasAttribute('open'),false);
+  assert.match(f.document.querySelector('#chart-reader').textContent,/캔버스가 아직 준비되지 않아/);
+});

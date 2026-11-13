@@ -146,13 +146,34 @@ export function chartExportTheme(svg,{getComputedStyle=computedStyleFor(svg)}={}
   return {...palette,colorScheme,fontFamily};
 }
 
-export function createChartSvgExport(svg,{title='BTCUSD',readout='',source='',note='',countdown='',panels=[],legend=[]}={}){
+/** Snapshot only an already-painted, same-viewport chart canvas. Canvas pixels
+ * remain a raster image inside SVG; the cloned SVG overlay keeps vector labels. */
+export function captureChartCanvas(canvas,svg,{width,height}={}){
+  if(!canvas||!svg)throw new TypeError('저장할 Funnest 캔버스가 없습니다.');
+  if(!(canvas instanceof (canvas.ownerDocument?.defaultView?.HTMLCanvasElement||Object))||!(canvas.width>0&&canvas.height>0))throw new Error('Funnest 차트 캔버스가 준비되지 않았습니다. 차트가 표시된 뒤 다시 시도해 주세요.');
+  const box=canvas.getBoundingClientRect(),overlay=svg.getBoundingClientRect();
+  if(!(box.width>0&&box.height>0&&overlay.width>0&&overlay.height>0))throw new Error('Funnest 차트 캔버스가 표시되지 않아 저장할 수 없습니다.');
+  const close=(a,b)=>Math.abs(a-b)<=Math.max(.75,Math.max(Math.abs(a),Math.abs(b))*.002);
+  if(!close(canvas.width/box.width,canvas.height/box.height))throw new Error('Funnest 캔버스의 뷰포트와 장치 픽셀 비율이 달라 저장할 수 없습니다.');
+  const x=(box.left-overlay.left)*width/overlay.width,y=(box.top-overlay.top)*height/overlay.height,w=box.width*width/overlay.width,h=box.height*height/overlay.height;
+  if(![x,y,w,h].every(Number.isFinite)||w<=0||h<=0||x<-.75||y<-.75||x+w>width+.75||y+h>height+.75)throw new Error('Funnest 캔버스가 차트 화면 범위를 벗어나 저장할 수 없습니다.');
+  let pixels;try{pixels=canvas.getContext('2d',{willReadFrequently:true})?.getImageData(0,0,canvas.width,canvas.height).data;}catch(cause){throw new Error('Funnest 캔버스 픽셀을 읽을 수 없습니다. SVG 저장을 사용해 주세요.',{cause});}
+  if(!pixels)throw new Error('Funnest 차트 캔버스를 읽을 수 없습니다.');
+  let ink=false,first=-1;for(let i=0;i<pixels.length;i+=4){if(pixels[i+3]){const color=(pixels[i]<<16)|(pixels[i+1]<<8)|pixels[i+2];if(first<0)first=color;else if(color!==first){ink=true;break;}}}
+  if(!ink)throw new Error('Funnest 차트 캔버스가 아직 그려지지 않았습니다. 빈 차트를 저장하지 않았습니다.');
+  let href;try{href=canvas.toDataURL('image/png');}catch(cause){throw new Error('Funnest 차트 캔버스를 PNG로 읽을 수 없습니다. 외부 픽셀이 포함되었거나 캔버스가 손상되었습니다.',{cause});}
+  if(!/^data:image\/png;base64,/u.test(href)||href.endsWith(','))throw new Error('Funnest 차트 캔버스 이미지 인코딩에 실패했습니다.');
+  return {x,y,width:w,height:h,href};
+}
+
+export function createChartSvgExport(svg,{title='BTCUSD',readout='',source='',note='',countdown='',panels=[],legend=[],canvas=null}={}){
   if(!svg)throw new TypeError('저장할 차트가 없습니다.');
   const box=(svg.getAttribute('viewBox')||'').trim().split(/[\s,]+/u).map(Number);
   const width=box.length===4?box[2]:svg.clientWidth,height=box.length===4?box[3]:svg.clientHeight;
   if(!(width>0&&height>0))throw new RangeError('표시 중인 차트만 저장할 수 있습니다.');
   const doc=svg.ownerDocument,make=(tag,attrs={},text)=>{const node=doc.createElementNS(NS,tag);for(const [key,value]of Object.entries(attrs))node.setAttribute(key,String(value));if(text!==undefined)node.textContent=text;return node;};
   const theme=chartExportTheme(svg);
+  const canvasImage=canvas?captureChartCanvas(canvas,svg,{width,height}):null;
   const readableWidth=Math.max(80,width-28),head=[...wrapExportText(title,readableWidth,14).map(text=>({text,size:14,color:theme.text})),...wrapExportText(readout,readableWidth,11).map(text=>({text,size:11,color:theme.muted}))];
   if(countdown)head.push(...wrapExportText(countdown,readableWidth,10).map(text=>({text,size:10,color:theme.subtle})));
   const foot=[...wrapExportText(source,readableWidth,10),...wrapExportText(note,readableWidth,10)];
@@ -169,7 +190,7 @@ export function createChartSvgExport(svg,{title='BTCUSD',readout='',source='',no
   const top=18+head.reduce((sum,line)=>sum+line.size+5,0),bottom=18+foot.length*15,total=top+chartHeight+legendHeight+bottom;
   const root=make('svg',{xmlns:NS,width:Math.round(width),height:Math.round(total),viewBox:`0 0 ${width} ${total}`,role:'img','aria-label':title});
   root.setAttribute('style',`background:${theme.background};color:${theme.text};color-scheme:${theme.colorScheme};font-family:${theme.fontFamily};font-variant-numeric:tabular-nums`);
-  root.append(make('title',{},title),make('desc',{},[readout,countdown,source,note].filter(Boolean).join(' · ')),make('rect',{width:'100%',height:'100%',fill:theme.background}));
+  root.append(make('title',{},title),make('desc',{},[readout,countdown,source,note,canvasImage?'Funnest 캔버스 플롯은 현재 렌더된 픽셀 이미지이며 축·주석·범례·출처 텍스트는 SVG 요소입니다.':''].filter(Boolean).join(' · ')),make('rect',{width:'100%',height:'100%',fill:theme.background}));
   let yy=17;for(const line of head){yy+=line.size;root.append(make('text',{x:14,y:yy,fill:line.color,'font-size':line.size},line.text));yy+=5;}
   function copyChart(sourceChart,y,chartHeight){
     const clone=materializeChartPaint(sourceChart,sourceChart.cloneNode(true));clone.removeAttribute('id');clone.removeAttribute('class');clone.removeAttribute('hidden');clone.removeAttribute('tabindex');clone.setAttribute('x','0');clone.setAttribute('y',String(y));clone.setAttribute('width',String(width));clone.setAttribute('height',String(chartHeight));
@@ -182,7 +203,8 @@ export function createChartSvgExport(svg,{title='BTCUSD',readout='',source='',no
     }
     root.append(clone);
   }
-  copyChart(svg,top,height);
+  if(canvasImage){const image=make('image',{x:canvasImage.x,y:top+canvasImage.y,width:canvasImage.width,height:canvasImage.height,preserveAspectRatio:'none','image-rendering':'auto',href:canvasImage.href});root.append(image);copyChart(svg,top,height);}
+  else copyChart(svg,top,height);
   let chartY=top+height;
   for(const item of extra){chartY+=8;for(const line of item.labels){chartY+=line.size+5;root.append(make('text',{x:14,y:chartY,fill:theme.muted,'font-size':line.size},line.text));}if(item.labels.length)chartY+=8;copyChart(item.panel,chartY,item.height);chartY+=item.height;}
   for(let i=0;i<legendItems.length;i++){
