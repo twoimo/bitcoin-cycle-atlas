@@ -258,7 +258,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
 
   function topicEvidence(entry) {
     const result = classifyRelayEntry(entry);
-    return `<details class="relay-topic-evidence"><summary>${esc(result.topics.map(match => match.label).join(' · '))} · 분류 근거</summary><ul>${result.topics.map(match => `<li>${esc(match.label)}: ${match.evidence ? `「${esc(match.evidence.quote)}」<span> ${esc(match.evidence.excerpt)}</span>` : esc(result.reason)}</li>`).join('')}</ul><p>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.</p></details>`;
+    return `<details class="relay-topic-evidence"><summary>${esc(result.topics.map(match => match.label).join(' · '))} · 분류 근거</summary><ul>${result.topics.map(match => `<li><span class="relay-topic-evidence-label">${esc(match.label)}</span>: ${match.evidence ? `<span class="relay-topic-evidence-keyword">「${esc(match.evidence.quote)}」</span><blockquote class="relay-msg-quote relay-topic-evidence-quote">${esc(match.evidence.excerpt)}</blockquote>` : esc(result.reason)}</li>`).join('')}</ul><p>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.</p></details>`;
   }
 
   function filterForm(item) {
