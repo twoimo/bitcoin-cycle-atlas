@@ -3,14 +3,14 @@ const THEME_MESSAGE = 'atlas:ui-theme';
 const THEME_REQUEST = 'atlas:ui-theme-request';
 const controllers = new WeakMap();
 const validTheme = value => value === 'light' || value === 'dark';
-const normalizeTheme = value => validTheme(value) ? value : 'light';
+const normalizeTheme = value => validTheme(value) ? value : 'dark';
 
 function documentStorage(document) {
   try { return document?.defaultView?.localStorage; } catch { return null; }
 }
 
 /** Missing, malformed and blocked preferences keep the explicit fallback. */
-export function readTheme(storage, fallback = 'light') {
+export function readTheme(storage, fallback = 'dark') {
   try {
     const value = storage?.getItem(THEME_STORAGE_KEY);
     if (validTheme(value)) return value;
@@ -80,7 +80,7 @@ export function initTheme({document = globalThis.document, storage} = {}) {
   const onStorage = event => {
     if (event.key !== THEME_STORAGE_KEY && event.key !== null) return;
     if (event.storageArea && preference && event.storageArea !== preference) return;
-    applyTheme(event.key === null ? 'light' : event.newValue, {document, persist:false});
+    applyTheme(event.key === null ? readTheme(preference, 'dark') : event.newValue, {document, persist:false});
   };
   const onMessage = event => {
     if (!origin || event.origin !== origin || !event.source) return;

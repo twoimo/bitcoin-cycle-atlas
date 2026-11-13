@@ -63,12 +63,12 @@ function frame(document) {
   return {node, window:node.contentWindow, calls};
 }
 
-test('the default is light and only explicit light/dark preferences are accepted', () => {
+test('the default is dark and only explicit light/dark preferences are accepted', () => {
   assert.equal(THEME_STORAGE_KEY, 'atlas-ui-theme');
-  for (const value of [null, '', 'system', 'DARK', '{"theme":"dark"}', 'unexpected']) assert.equal(readTheme(storage(value)), 'light');
+  for (const value of [null, '', 'system', 'DARK', '{"theme":"dark"}', 'unexpected']) assert.equal(readTheme(storage(value)), 'dark');
   assert.equal(readTheme(storage('dark')), 'dark');
   assert.equal(readTheme(storage('light'), 'dark'), 'light');
-  assert.equal(readTheme({getItem() { throw new Error('blocked'); }}), 'light');
+  assert.equal(readTheme({getItem() { throw new Error('blocked'); }}), 'dark');
 });
 
 test('initialization honors a saved choice and the early head fallback without writing storage', t => {
@@ -77,17 +77,20 @@ test('initialization honors a saved choice and the early head fallback without w
   assert.equal(saved.root.dataset.theme, 'dark');
   assert.equal(saved.root.style.getPropertyValue('color-scheme'), 'dark');
   assert.deepEqual(saved.preference.writes, []);
+  const savedLight = fixture(t, {theme:'dark', preference:storage('light')});
+  savedLight.boot();
+  assert.equal(savedLight.root.dataset.theme, 'light', 'an explicit saved light choice wins over the new-visitor fallback');
   const restored = fixture(t, {theme:'dark'});
   Object.defineProperty(restored.view, 'localStorage', {get() { throw new Error('SecurityError'); }});
   assert.doesNotThrow(() => restored.boot());
   assert.equal(restored.root.dataset.theme, 'dark');
   const clean = fixture(t);
   clean.boot();
-  assert.equal(clean.root.dataset.theme, 'light');
+  assert.equal(clean.root.dataset.theme, 'dark');
 });
 
 test('native settings buttons toggle and persist one choice while keeping focus and chart nodes intact', t => {
-  const f = fixture(t), first = createThemeControl(f.document), second = createThemeControl(f.document);
+  const f = fixture(t, {theme:'light'}), first = createThemeControl(f.document), second = createThemeControl(f.document);
   const chart = f.document.createElement('svg');
   chart.dataset.plotRight = '256';
   f.document.body.append(chart, first, second);
@@ -122,7 +125,7 @@ test('native settings buttons toggle and persist one choice while keeping focus 
 
 test('reopening settings keeps the current choice when storage writes are blocked', t => {
   const preference = {getItem() { throw new Error('blocked'); }, setItem() { throw new Error('blocked'); }};
-  const f = fixture(t, {preference}), first = createThemeControl(f.document);
+  const f = fixture(t, {theme:'light', preference}), first = createThemeControl(f.document);
   f.document.body.append(first);
   assert.doesNotThrow(() => first.click());
   const reopened = createThemeControl(f.document);
@@ -132,7 +135,7 @@ test('reopening settings keeps the current choice when storage writes are blocke
 });
 
 test('cross-tab preference changes update controls without re-persisting or accepting session storage', t => {
-  const f = fixture(t), button = createThemeControl(f.document);
+  const f = fixture(t, {theme:'light'}), button = createThemeControl(f.document);
   f.document.body.append(button);
   emit(f.view, 'storage', {key:'another-setting', newValue:'dark', storageArea:f.preference});
   emit(f.view, 'storage', {key:THEME_STORAGE_KEY, newValue:'dark', storageArea:storage()});
@@ -140,15 +143,16 @@ test('cross-tab preference changes update controls without re-persisting or acce
   emit(f.view, 'storage', {key:THEME_STORAGE_KEY, newValue:'dark', storageArea:f.preference});
   assert.equal(button.getAttribute('aria-pressed'), 'true');
   emit(f.view, 'storage', {key:THEME_STORAGE_KEY, newValue:'unknown', storageArea:f.preference});
-  assert.equal(f.root.dataset.theme, 'light');
+  assert.equal(f.root.dataset.theme, 'dark');
   emit(f.view, 'storage', {key:THEME_STORAGE_KEY, newValue:'dark', storageArea:f.preference});
   emit(f.view, 'storage', {key:null, newValue:null, storageArea:f.preference});
-  assert.equal(button.getAttribute('aria-pressed'), 'false');
+  assert.equal(button.getAttribute('aria-pressed'), 'true');
+  assert.equal(f.root.dataset.theme, 'dark');
   assert.deepEqual(f.preference.writes, []);
 });
 
 test('document initialization is idempotent and teardown removes external listeners', t => {
-  const f = fixture(t), controller = f.boot();
+  const f = fixture(t, {theme:'light'}), controller = f.boot();
   assert.equal(f.boot(), controller);
   let changes = 0;
   f.document.addEventListener('atlas:theme-change', () => changes++);
@@ -161,7 +165,7 @@ test('document initialization is idempotent and teardown removes external listen
 });
 
 test('parent messages require both a matching origin and the actual parent window', t => {
-  const parent = {postMessage() {}}, f = fixture(t, {parent});
+  const parent = {postMessage() {}}, f = fixture(t, {theme:'light', parent});
   f.boot();
   const message = {type:'atlas:ui-theme', theme:'dark'};
   emit(f.view, 'message', {origin:'https://other.example', source:parent, data:message});
@@ -195,7 +199,7 @@ test('child requests receive the current theme at an exact origin, including lat
 });
 
 test('a same-origin child choice reaches siblings without echoing or rewriting source data', t => {
-  const f = fixture(t), first = frame(f.document), second = frame(f.document);
+  const f = fixture(t, {theme:'light'}), first = frame(f.document), second = frame(f.document);
   f.boot();
   first.calls.length = second.calls.length = 0;
   emit(f.view, 'message', {origin:f.view.location.origin, source:first.window, data:{type:'atlas:ui-theme', theme:'dark'}});
@@ -212,7 +216,7 @@ test('opaque-origin standalone documents keep local controls without sending wil
   const button = createThemeControl(f.document);
   f.document.body.append(button);
   button.click();
-  assert.equal(f.root.dataset.theme, 'dark');
+  assert.equal(f.root.dataset.theme, 'light');
   assert.deepEqual(calls, []);
   assert.deepEqual(child.calls, []);
 });
@@ -220,7 +224,7 @@ test('opaque-origin standalone documents keep local controls without sending wil
 test('applyTheme rejects malformed input and does not need a mounted control', t => {
   const f = fixture(t);
   assert.equal(applyTheme('dark', {document:f.document, persist:false}), 'dark');
-  assert.equal(applyTheme('invalid', {document:f.document, persist:false}), 'light');
-  assert.equal(f.root.style.getPropertyValue('color-scheme'), 'light');
+  assert.equal(applyTheme('invalid', {document:f.document, persist:false}), 'dark');
+  assert.equal(f.root.style.getPropertyValue('color-scheme'), 'dark');
   assert.deepEqual(f.preference.writes, []);
 });

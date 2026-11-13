@@ -120,8 +120,8 @@ for(const path of ['../dist/index.html','../apps/web/index.html'])test(`${path}:
   assert.ok(match,'the actual early bootstrap is present');
   for(const [savedTheme,savedPalette,expectedTheme,expectedPalette,blocked]of [
     ['dark','international','dark','international',false],['light','korean','light','korean',false],
-    ['dark','unexpected','dark','korean',false],['unexpected','international','light','international',false],
-    [null,null,'light','korean',false],['dark','international','light','korean',true],
+    ['dark','unexpected','dark','korean',false],['unexpected','international','dark','international',false],
+    [null,null,'dark','korean',false],['dark','international','dark','korean',true],
   ]){
     const root={dataset:{},style:{}},reads=[],writes=[];
     const context={document:{documentElement:root},localStorage:{getItem(key){reads.push(key);if(blocked)throw Error('blocked');return key==='atlas-ui-theme'?savedTheme:savedPalette;},setItem(...args){writes.push(args);}}};
