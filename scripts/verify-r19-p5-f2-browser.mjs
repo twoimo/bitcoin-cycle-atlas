@@ -8,7 +8,7 @@ import {tmpdir} from 'node:os';
 import {extname,resolve,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {headlessWindowArgument,verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
-import {p0ParseColor,p0Composite,p0Contrast} from './ui-renewal-p0-contract.mjs';
+import {p0ParseColor,p0Composite,p0Contrast,resolveP0Token} from './ui-renewal-p0-contract.mjs';
 
 const root=fileURLToPath(new URL('..',import.meta.url)),site=resolve(root,'dist'),prefix='/bitcoin-cycle-atlas/';
 const args=process.argv.slice(2),option=(name,fallback)=>args.includes(name)?args[args.indexOf(name)+1]:fallback;
@@ -49,11 +49,13 @@ function inspect(){
   const palette=[];for(const el of document.querySelectorAll('body,body *'))if(visible(el)){const color=getComputedStyle(el).backgroundColor;if(!palette.some(row=>row.color===color))palette.push({color,example:named(el)});}
   const neighbor=[...document.querySelectorAll('.conference-transport button:not(:disabled),.conference-player button:not(:disabled)')].find(el=>el!==button&&el.getAttribute('aria-pressed')!=='true'&&visible(el)&&hit(el));
   const focusRules=[];const visit=rules=>{for(const rule of rules){if(rule.cssRules)visit(rule.cssRules);if(rule.selectorText?.includes(':focus-visible')&&rule.style?.outline&&button.matches(rule.selectorText.replace(/:focus-visible/g,'')))focusRules.push({selector:rule.selectorText,outline:rule.style.outline});}};for(const sheet of document.styleSheets)try{visit(sheet.cssRules);}catch{}
+  const tokens=Object.fromEntries(['--surface','--surface-hover','--text','--muted','--accent','--accent-ink','--focus'].map(name=>[name,c.getPropertyValue(name).trim()]));
+  const tokenSupport=Object.fromEntries(Object.entries(tokens).map(([name,value])=>[name,Boolean(value)&&CSS.supports('color',value)]));
   return {theme:document.documentElement.dataset.theme,colorScheme:getComputedStyle(document.documentElement).colorScheme,boot:document.documentElement.dataset.boot,state:document.querySelector('.conference-player')?.dataset.state,viewport:{width:innerWidth,height:innerHeight},h1Count:document.querySelectorAll('h1').length,overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth,document.body.scrollWidth-innerWidth),
-    play:{name:button.getAttribute('aria-label'),disabled:button.disabled,hover:button.matches(':hover'),visible:visible(button),centerHit:hit(button),box:rect(button),background:c.backgroundColor,color:c.color,opacity:Number(c.opacity),radii:[c.borderTopLeftRadius,c.borderTopRightRadius,c.borderBottomRightRadius,c.borderBottomLeftRadius],border:{color:c.borderTopColor,width:c.borderTopWidth,style:c.borderTopStyle,layers:layers(button),sides:['Top','Right','Bottom','Left'].map(side=>({side:side.toLowerCase(),color:c['border'+side+'Color'],width:c['border'+side+'Width'],style:c['border'+side+'Style']}))},svg:svg?{hidden:svg.getAttribute('aria-hidden'),focusable:svg.getAttribute('focusable'),box:rect(svg)}:null,
+    play:{name:button.getAttribute('aria-label'),disabled:button.disabled,hover:button.matches(':hover'),visible:visible(button),centerHit:hit(button),box:rect(button),background:c.backgroundColor,color:c.color,colorScheme:c.colorScheme,opacity:Number(c.opacity),radii:[c.borderTopLeftRadius,c.borderTopRightRadius,c.borderBottomRightRadius,c.borderBottomLeftRadius],border:{color:c.borderTopColor,width:c.borderTopWidth,style:c.borderTopStyle,layers:layers(button),sides:['Top','Right','Bottom','Left'].map(side=>({side:side.toLowerCase(),color:c['border'+side+'Color'],width:c['border'+side+'Width'],style:c['border'+side+'Style']}))},svg:svg?{hidden:svg.getAttribute('aria-hidden'),focusable:svg.getAttribute('focusable'),box:rect(svg)}:null,
       paths:paths.map(path=>{const p=getComputedStyle(path);return {d:path.getAttribute('d'),color:p.color,stroke:p.stroke,strokeOpacity:Number(p.strokeOpacity),strokeWidth:p.strokeWidth,fill:p.fill,visible:visible(path),layers:layers(path)};})},texts,palette,
     neighbor:neighbor?{name:neighbor.getAttribute('aria-label')||neighbor.textContent,box:rect(neighbor),background:getComputedStyle(neighbor).backgroundColor}:null,focusRules,
-    tokens:Object.fromEntries(['--surface','--surface-hover','--text','--muted','--accent','--accent-ink','--focus'].map(name=>[name,c.getPropertyValue(name).trim()]))};
+    tokens,tokenSupport};
 }
 function paint(raw,layers,paintOpacity=1){
   let foreground=p0ParseColor(raw),background=[0,0,0,0];if(!Number.isFinite(paintOpacity)||paintOpacity<0||paintOpacity>1)throw new Error('Unknown paint opacity');foreground[3]*=paintOpacity;
@@ -73,16 +75,22 @@ function measurements(state){
   return {icons,text,border:{...border,meets3: border.ratio>=3,acceptance:state.play.disabled?'Recorded disabled boundary; not substituted for icon contrast.':'Enabled boundary measured separately.'},background:colorEntry(state.play.background)};
 }
 function tokenContract(state,mode){
-  const checks=[],colors={};try{
-    for(const name of ['--surface','--surface-hover','--text','--accent-ink']){try{colors[name]=p0ParseColor(state.tokens?.[name]);}catch(error){throw new Error(name+' is unverified: '+error.message);}}
-    const compare=(property,actual,token)=>{const color=p0ParseColor(actual),expected=colors[token];checks.push({property,actual,token,expected:state.tokens[token],passed:color.every((value,index)=>value===expected[index])});};
+  const checks=[],colors={},resolved={},colorScheme=state.play?.colorScheme;try{
+    if(!['light','dark'].includes(colorScheme))throw new Error('Actual play color scheme is unverified: '+colorScheme);
+    if(colorScheme!==state.colorScheme)throw new Error('Play color scheme does not match the document');
+    const tokens=new Map(Object.entries(state.tokens||{}));
+    for(const name of ['--surface','--surface-hover','--text','--accent-ink']){try{
+      if(state.tokenSupport?.[name]!==true)throw new Error('Native CSS color syntax is unsupported or unverified');
+      resolved[name]=resolveP0Token(tokens,name,colorScheme);colors[name]=resolved[name].color;
+    }catch(error){throw new Error(name+' is unverified: '+error.message);}}
+    const compare=(property,actual,token)=>{const color=p0ParseColor(actual),expected=colors[token];checks.push({property,actual,token,expected:state.tokens[token],resolvedExpected:resolved[token].value,colorScheme,passed:color.every((value,index)=>value===expected[index])});};
     compare('background-color',state.play.background,mode==='hover'?'--surface-hover':'--surface');compare('color',state.play.color,'--text');
     if(!state.play.paths.length)throw new Error('No SVG paths to verify');
     for(const [index,path] of state.play.paths.entries()){compare(`svg path ${index} color`,path.color,'--text');compare(`svg path ${index} stroke`,path.stroke,'--text');}
     if(state.play.border.sides?.length!==4)throw new Error('Four computed border sides unavailable');
     for(const side of state.play.border.sides){compare(`border-${side.side}-color`,side.color,'--accent-ink');checks.push({property:`border-${side.side}-width/style`,actual:{width:side.width,style:side.style},expected:'positive px width and a visible border style',passed:/^(?:\d+(?:\.\d+)?|\.\d+)px$/.test(side.width)&&Number.parseFloat(side.width)>0&&['solid','double','dotted','dashed','groove','ridge','inset','outset'].includes(side.style)});}
-    const errors=checks.filter(check=>!check.passed).map(check=>check.property+' does not satisfy '+(check.token||check.expected));return {status:errors.length?'failed':'passed',mode,checks,errors};
-  }catch(error){return {status:'unverified',mode,checks,errors:[error.message]};}
+    const errors=checks.filter(check=>!check.passed).map(check=>check.property+' does not satisfy '+(check.token||check.expected));return {status:errors.length?'failed':'passed',mode,colorScheme,checks,errors};
+  }catch(error){return {status:'unverified',mode,colorScheme,checks,errors:[error.message]};}
 }
 async function hover(cdp,box){
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',x:box.x+box.width/2,y:box.y+box.height/2});await settle(cdp);
