@@ -76,3 +76,7 @@ build/r19-p5-f2-browser/after/conference-light-1440.png
 build/r19-p5-f2-browser/after/conference-dark-320.png
 build/r19-p5-f2-browser/after/conference-dark-1440.png
 ```
+
+## Mac 재검증 (2026-11-13 13:27 KST)
+
+Chrome 157.0.8103.79, 제품 `f8075a1`, 출력 `build/r19-p5-f2-browser-f8075a1`. 4/4 캡처, exit 1. 실패는 검사기의 `light-dark()` 미해석이다. 수용은 열림. [영수증](mac-f8075a1.md).
