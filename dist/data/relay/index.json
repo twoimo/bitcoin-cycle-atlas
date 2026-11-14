@@ -1,61 +1,15 @@
 {
   "schema": 1,
   "source": "RelayDeck",
-  "generated_at": "2026-11-14T10:02:37+09:00",
+  "generated_at": "2026-11-14T11:05:08+09:00",
   "rooms": [
     {
       "id": "telegram",
       "kind": "chat",
       "title": "소수의견(26년 4분기)",
       "subtitle": "Telegram",
-      "updated_at": "2026-11-14T09:19:56+09:00",
+      "updated_at": "2026-11-14T10:13:03+09:00",
       "messages": [
-        {
-          "id": "2653",
-          "at": "2026-11-13T08:55:27+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2653.webp",
-              "width": 612,
-              "height": 386,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2654",
-          "at": "2026-11-13T08:56:23+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "<⚠️상무장관 교체 논의 중>\n\n이것도 신호입니다\n중국 수출 협상파(허용)에서\n수출 제한 강경파(금지)로\n주도권이 넘어가는 신호입니다"
-        },
-        {
-          "id": "2655",
-          "at": "2026-11-13T08:56:48+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "🐒중간선거 끝나기무섭게\n구도가 바뀌고 있다고 보시면 되겠습니다\n\n온건파->강경파"
-        },
-        {
-          "id": "2656",
-          "at": "2026-11-13T08:57:18+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2656.webp",
-              "width": 558,
-              "height": 335,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2657",
-          "at": "2026-11-13T08:58:10+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "⚠️마켓워치)이제 AI가 아니라 긴축 걱정할때\n\n그동안은 AI 투자가 금리 끌어올렸지만\n지금은 긴축 반영으로 금리가\n올라가고 있다는 보도입니다 \n\n(안좋은 신호)"
-        },
         {
           "id": "2658",
           "at": "2026-11-13T09:07:29+09:00",
@@ -768,6 +722,178 @@
               "alt": "텔레그램 사진"
             }
           ]
+        },
+        {
+          "id": "2720",
+          "at": "2026-11-14T10:09:28+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<🗞소몽선정 데일리 뉴스,11/14>\n<엔비디아/테크>\n젠슨 황 퇴진에 670조 AI 금융 흔들\n엔비디아 직원들, 젠슨 황 복귀 청원\n버리 \"젠슨 황 없는 엔비디아 탈출\"\n美 증시 혼조…AMD 8.8% 급락\n엔비디아 주간 13%↓, 반도체지수 8%↑\nJP모건 \"HBM 탑재량 축소 신호\"\n메타, 예측시장 앱 '테이크' 테스트\n美의회 '대중 칩 규제 3법' 가속\n베선트 \"제재 찬성했다\"…러트닉 탓\n젠슨 황·러트닉 의회 증언 예정\n\n<지정학/정치>\n트럼프 \"협상 중단\"…이란 레이더 파괴\n네타냐후, 트럼프에 이란 공격 압박\n밴스, 2028 대선 불출마 검토\n트럼프·시진핑·푸틴 19일 3자 회담\n美 민주당, 상원 56석 눈앞\n美·이란 종전 교착…밴스 손 떼\n\n<금리/매크로>\nBofA \"연준 3회 연속 인상\"\n美재무 \"과도한 금리 인상 경계\"\n굴스비 \"연준, 인플레에 할 일 있어\"\n뉴욕 연은 \"추가 금리인상 필요\"\n\n<기타>\n비트코인, 2년 연속 하락 위기\n美항공 이륙 올스톱…7000편 차질\nMS \"서비스 장애는 네트워크 문제\"\n\n출처 : 소수의견 🐒\n(기사 누르면 링크 연결됩니다)",
+          "links": [
+            {
+              "offset": 32,
+              "length": 22,
+              "url": "https://www.yna.co.kr/view/AKR20261114010400072"
+            },
+            {
+              "offset": 55,
+              "length": 20,
+              "url": "https://www.joongang.co.kr/article/25478474"
+            },
+            {
+              "offset": 76,
+              "length": 20,
+              "url": "https://www.edaily.co.kr/News/Read?newsId=04372246645645392&mediaCodeNo=257"
+            },
+            {
+              "offset": 97,
+              "length": 19,
+              "url": "https://n.news.naver.com/mnews/article/138/0002248521"
+            },
+            {
+              "offset": 117,
+              "length": 23,
+              "url": "https://www.edaily.co.kr/News/Read?newsId=02046726645645720&mediaCodeNo=257"
+            },
+            {
+              "offset": 141,
+              "length": 20,
+              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4444690"
+            },
+            {
+              "offset": 162,
+              "length": 20,
+              "url": "https://www.digitaltoday.co.kr/news/articleView.html?idxno=715492"
+            },
+            {
+              "offset": 183,
+              "length": 19,
+              "url": "https://www.donga.com/news/Economy/article/all/20261113/135023330/2"
+            },
+            {
+              "offset": 203,
+              "length": 19,
+              "url": "https://n.news.naver.com/mnews/article/014/0005604135"
+            },
+            {
+              "offset": 223,
+              "length": 17,
+              "url": "https://www.news1.kr/world/usa-canada/6353906"
+            },
+            {
+              "offset": 251,
+              "length": 21,
+              "url": "https://www.news1.kr/world/middleeast-africa/6353658"
+            },
+            {
+              "offset": 273,
+              "length": 19,
+              "url": "https://www.fnnews.com/news/202611140143532271"
+            },
+            {
+              "offset": 293,
+              "length": 18,
+              "url": "https://www.yna.co.kr/view/AKR20261114004000071"
+            },
+            {
+              "offset": 312,
+              "length": 20,
+              "url": "https://www.news1.kr/world/usa-canada/6353931"
+            },
+            {
+              "offset": 333,
+              "length": 16,
+              "url": "https://www.fnnews.com/news/202611131605476356"
+            },
+            {
+              "offset": 350,
+              "length": 17,
+              "url": "https://www.hankyung.com/article/2026111357781"
+            },
+            {
+              "offset": 378,
+              "length": 18,
+              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4444741"
+            },
+            {
+              "offset": 397,
+              "length": 18,
+              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4444739"
+            },
+            {
+              "offset": 416,
+              "length": 21,
+              "url": "https://n.news.naver.com/mnews/article/014/0005604143"
+            },
+            {
+              "offset": 438,
+              "length": 18,
+              "url": "https://n.news.naver.com/mnews/article/421/0009288078"
+            },
+            {
+              "offset": 463,
+              "length": 17,
+              "url": "https://www.digitaltoday.co.kr/news/articleView.html?idxno=715248"
+            },
+            {
+              "offset": 481,
+              "length": 19,
+              "url": "https://www.news1.kr/world/usa-canada/6353933"
+            },
+            {
+              "offset": 501,
+              "length": 20,
+              "url": "https://www.digitaltoday.co.kr/news/articleView.html?idxno=715490"
+            }
+          ],
+          "previews": [
+            {
+              "url": "https://yna.co.kr/view/AKR20261114010400072",
+              "title": "젠슨황 퇴진에 670조원 AI 금융구상 '흔들'…금융사 이탈 움직임 | 연합뉴스",
+              "description": "(뉴욕=연합뉴스) 임수정 특파원 = 젠슨 황 엔비디아 전 최고경영자(CEO)의 퇴진 여파로 그가 직접 주도했던 5천억달러(약 670조원) 규모의...",
+              "site_name": "연합뉴스",
+              "display_url": "yna.co.kr/view/AKR20261114010400072"
+            }
+          ]
+        },
+        {
+          "id": "2721",
+          "at": "2026-11-14T10:11:12+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2721.webp",
+              "width": 391,
+              "height": 371,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2722",
+          "at": "2026-11-14T10:11:51+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<🐒엔비디아 직원들, 복귀 청원 중>\n직원들 입장에서는 젠슨황이\n계속 회사 이끌어주길 바라는 것 같습니다\n청원/단체 움직임 진행 중이라고 합니다"
+        },
+        {
+          "id": "2723",
+          "at": "2026-11-14T10:12:27+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2723.webp",
+              "width": 381,
+              "height": 273,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2724",
+          "at": "2026-11-14T10:13:03+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<🔔메타, 예측시장 진출 준비 중>\n🐒예측시장이 차세대 유망 시장이라서\n너도나도 뛰어드는 것 같습니다\n\n메타 입장에서도 놓치기 어려운\n시장이라 내부 테스트 중으로 보입니다"
         }
       ]
     },
