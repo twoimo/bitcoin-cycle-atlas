@@ -36,8 +36,6 @@ function sourceScope(source = 'Bitstamp') {
     scope: 'single-exchange-spot-pair', globalMarketVolume: false };
 }
 
-export const VOLUME_ENDPOINT = VOLUME_PROVIDERS.Bitstamp.endpoint;
-export const VOLUME_DOCUMENTATION_URLS = VOLUME_PROVIDERS.Bitstamp.documentationUrls;
 export const VOLUME_SCOPE = Object.freeze(sourceScope());
 
 function validNow(now) {
