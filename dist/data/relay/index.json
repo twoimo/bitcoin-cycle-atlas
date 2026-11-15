@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "source": "RelayDeck",
-  "generated_at": "2026-11-16T03:11:11+09:00",
+  "generated_at": "2026-11-16T03:35:41+09:00",
   "rooms": [
     {
       "id": "telegram",
@@ -468,7 +468,7 @@
           "text": "",
           "images": [
             {
-              "src": "data/relay/assets/telegram-2738.jpg",
+              "src": "data/relay/assets/telegram-2738.webp",
               "width": 940,
               "height": 636,
               "alt": "텔레그램 사진"
