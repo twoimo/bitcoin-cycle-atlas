@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import pg from 'pg';
-import { createPool, migrate, publishSnapshot, readSnapshot, snapshotIdentity } from '../../apps/api/src/repository.js';
+import { createPool, migrate } from '../../apps/api/src/db.js';
+import { publishSnapshot, readSnapshot, snapshotIdentity } from '../../apps/api/src/repository.js';
 import { buildServer } from '../../apps/api/src/server.js';
 import { diagnoseRegion, calculateRsiSeries, positiveFactorScenario, assetEconomics } from '@atlas/domain/market-lab';
 import { loadSnapshot } from '../../apps/web/src/load-snapshot.js';
@@ -84,7 +85,7 @@ test('real PostgreSQL publication, API and calculation parity', async t => {
   await admin.query(`CREATE SCHEMA ${schema}`);
   const pool = new pg.Pool({ connectionString: process.env.TEST_DATABASE_URL, options: `-c search_path=${schema}`, max: 5 });
   t.after(async () => { await pool.end(); await admin.query(`DROP SCHEMA ${schema} CASCADE`); await admin.end(); });
-  await migrate(pool); await migrate(pool);
+  await migrate(pool, ['001_market_lab']); await migrate(pool, ['001_market_lab']);
   const api = await buildServer({ pool, clock: () => now });
   t.after(() => api.close());
 

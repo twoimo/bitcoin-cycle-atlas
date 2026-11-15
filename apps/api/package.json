@@ -10,6 +10,7 @@
     "@atlas/contracts": "*"
   },
   "exports": {
+    "./db": "./src/db.ts",
     "./repository": "./src/repository.ts"
   }
 }

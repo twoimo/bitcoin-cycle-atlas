@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {randomUUID} from 'node:crypto';
 import pg from 'pg';
-import {migrate,publishSnapshot,readSnapshot} from '../../apps/api/src/repository.js';
-import {migrateUsCollection,runUsCollection,readUsCollection,startUsCollection,parseVixCsv} from '../../apps/api/src/us-collector.js';
+import {migrate} from '../../apps/api/src/db.js';
+import {publishSnapshot,readSnapshot} from '../../apps/api/src/repository.js';
+import {runUsCollection,readUsCollection,startUsCollection,parseVixCsv} from '../../apps/api/src/us-collector.js';
 import {spxDirection} from '@atlas/domain/us-direction';
 import {buildServer} from '../../apps/api/src/server.js';
 const fixture=JSON.parse(await readFile(new URL('../../dist/data/market-lab.json',import.meta.url),'utf8'));
@@ -24,7 +25,7 @@ test('US collector PostgreSQL: complete acquisition, exclusion, no-op, partial f
   const fetchImpl:typeof fetch=async url=>{calls++;const id=new URL(String(url)).searchParams.get('id');return new Response(id==='GDPC1'?gdp:id==='TB3MS'?rate:vix,{status:fail&&id==='TB3MS'?503:200});};
   const app=await buildServer({pool,clock});
   try {
-    await migrate(pool);await migrateUsCollection(pool);await migrateUsCollection(pool);await publishSnapshot(pool,fixture);
+    await migrate(pool,['001_market_lab','004_us_collection']);await migrate(pool,['004_us_collection']);await publishSnapshot(pool,fixture);
     const original=(await readSnapshot(pool))!;
     await t.test('one owner collects; all three sources and immutable blobs commit with one new revision',async()=>{
       let release!:()=>void,entered!:()=>void;const gate=new Promise<void>(r=>release=r),started=new Promise<void>(r=>entered=r);let count=0;

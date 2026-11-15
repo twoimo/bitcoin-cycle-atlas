@@ -1,15 +1,10 @@
-import { createPool,migrate } from './repository.js';
-import { migrateHousing } from './housing-repository.js';
-import { migrateThemes } from './theme-repository.js';
+import { createPool, migrate } from './db.js';
 import { buildServer } from './server.js';
-import { migrateUsCollection,startUsCollection } from './us-collector.js';
+import { startUsCollection } from './us-collector.js';
 
 if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is required; see docs/architecture-migration/README.md');
 const pool = createPool(process.env.DATABASE_URL);
 await migrate(pool);
-await migrateHousing(pool);
-await migrateThemes(pool);
-await migrateUsCollection(pool);
 const collector = process.env.ATLAS_US_COLLECTION_ENABLED === '0' ? null : startUsCollection(pool);
 const app = await buildServer({ pool, serveWeb: true, logger: true, ...(collector ? {collectionSchedule:collector.status} : {}) });
 for (const signal of ['SIGINT', 'SIGTERM'] as const) {

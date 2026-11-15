@@ -3,12 +3,13 @@ import assert from 'node:assert/strict';
 import pg from 'pg';
 import {randomUUID} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
-import {migrateThemes,publishThemes,readThemes,saveThemeJudgment,readThemeReceipt} from '../../apps/api/src/theme-repository.js';
+import {migrate} from '../../apps/api/src/db.js';
+import {publishThemes,readThemes,saveThemeJudgment,readThemeReceipt} from '../../apps/api/src/theme-repository.js';
 import {buildServer} from '../../apps/api/src/server.js';
 const snapshot=JSON.parse(await readFile(new URL('../../dist/data/themes.json',import.meta.url),'utf8'));
 test('themes DB/API: append-only decisions, concurrent idempotency, rejected future evidence, readback and route',async()=>{
   if(!process.env.TEST_DATABASE_URL)throw new Error('TEST_DATABASE_URL required');const admin=new pg.Pool({connectionString:process.env.TEST_DATABASE_URL}),schema=`themes_check_${process.pid}_${Date.now()}`;await admin.query(`CREATE SCHEMA ${schema}`);const pool=new pg.Pool({connectionString:process.env.TEST_DATABASE_URL,options:`-c search_path=${schema}`}),clock=()=>new Date(Date.parse(snapshot.generatedAt)+60000),app=await buildServer({pool,clock,serveWeb:true});
-  try{await migrateThemes(pool);await migrateThemes(pool);const {revision}=await publishThemes(pool,snapshot);assert.equal((await publishThemes(pool,snapshot)).revision,revision);
+  try{await migrate(pool,['003_themes']);await migrate(pool,['003_themes']);const {revision}=await publishThemes(pool,snapshot);assert.equal((await publishThemes(pool,snapshot)).revision,revision);
     const original=(await readThemes(pool))!,payload={requestId:randomUUID(),revision,draft:{title:'저장 검증',criteria:structuredClone(snapshot.judgments[2].criteria)}};
     const writes=await Promise.all([saveThemeJudgment(pool,payload,clock),saveThemeJudgment(pool,payload,clock)]);assert.equal(writes.filter(r=>r.created).length,1);assert.deepEqual(writes[0].judgment,writes[1].judgment);assert.equal(writes[0].judgment.asOf,clock().toISOString());assert.equal(writes[0].judgment.mode,'recorded');assert.equal((await readThemes(pool))!.judgments.length,4);assert.deepEqual((await readThemeReceipt(pool,payload.requestId))!.judgment,writes[0].judgment);
     await assert.rejects(saveThemeJudgment(pool,{...payload,draft:{...payload.draft,title:'다른 내용'}},clock),/IDEMPOTENCY_CONFLICT/);

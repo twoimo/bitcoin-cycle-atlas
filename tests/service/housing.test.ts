@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import pg from 'pg';
 import { readFile } from 'node:fs/promises';
-import { migrateHousing,publishHousing,readHousing } from '../../apps/api/src/housing-repository.js';
+import { migrate } from '../../apps/api/src/db.js';
+import { publishHousing,readHousing } from '../../apps/api/src/housing-repository.js';
 import { buildServer } from '../../apps/api/src/server.js';
 import { analyzeHousing } from '@atlas/domain/housing';
 const snapshot=JSON.parse(await readFile(new URL('../../dist/data/housing.json',import.meta.url),'utf8'));
@@ -11,7 +12,7 @@ test('housing PostgreSQL: immutable revision, idempotent migration/import, old r
   const admin=new pg.Pool({connectionString:process.env.TEST_DATABASE_URL}),schema=`housing_check_${process.pid}_${Date.now()}`;await admin.query(`CREATE SCHEMA ${schema}`);
   const pool=new pg.Pool({connectionString:process.env.TEST_DATABASE_URL,options:`-c search_path=${schema}`}),app=await buildServer({pool,serveWeb:true});
   try{
-    await migrateHousing(pool);await migrateHousing(pool);
+    await migrate(pool,['002_housing']);await migrate(pool,['002_housing']);
     const first=await publishHousing(pool,snapshot);assert(first.published);assert.deepEqual(await publishHousing(pool,snapshot),first);
     const bad=structuredClone(snapshot);bad.regions[0].volume[0][1]++;await assert.rejects(publishHousing(pool,bad),/clock collision/);assert.equal((await readHousing(pool))!.revision,first.revision);
     const newer=structuredClone(snapshot);newer.generatedAt=new Date(Date.parse(snapshot.generatedAt)+1000).toISOString();const second=await publishHousing(pool,newer);assert.notEqual(first.revision,second.revision);assert.equal((await readHousing(pool,first.revision))!.revision,first.revision);

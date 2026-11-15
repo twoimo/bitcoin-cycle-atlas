@@ -4,10 +4,10 @@ import pg from 'pg';
 import { randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import type { InjectOptions } from 'fastify';
-import { migrate, publishSnapshot } from '../../apps/api/src/repository.js';
-import { migrateHousing, publishHousing } from '../../apps/api/src/housing-repository.js';
-import { migrateThemes, publishThemes } from '../../apps/api/src/theme-repository.js';
-import { migrateUsCollection } from '../../apps/api/src/us-collector.js';
+import { migrate } from '../../apps/api/src/db.js';
+import { publishSnapshot } from '../../apps/api/src/repository.js';
+import { publishHousing } from '../../apps/api/src/housing-repository.js';
+import { publishThemes } from '../../apps/api/src/theme-repository.js';
 import { buildServer } from '../../apps/api/src/server.js';
 
 const load = async (name: string) => JSON.parse(await readFile(new URL(`../../dist/data/${name}.json`, import.meta.url), 'utf8'));
@@ -35,7 +35,7 @@ test('API error and status responses keep their exact status, cache header and b
   const servers: Server[] = [];
   const server = async (options: Parameters<typeof buildServer>[0]) => { const app = await buildServer(options); servers.push(app); return app; };
   try {
-    await migrate(pool); await migrateHousing(pool); await migrateThemes(pool); await migrateUsCollection(pool);
+    await migrate(pool);
     const empty = await server({ pool, clock: () => now }), down = await server({ pool: closed, clock: () => now });
     const backtest = { symbol: 'TQQQ', start: '2020-01-01', end: '2021-01-01', capital: 10000, buy: 33.5, sell: 43, feeBps: 10 };
     const analysis = { region: 'busan', window: 36, band: 10, lag: 2, start: '2006-01', end: '2026-09' };

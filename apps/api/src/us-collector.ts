@@ -1,13 +1,12 @@
 import { createHash, randomUUID } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
 import type pg from 'pg';
 import type { MarketSnapshot, Point } from '@atlas/contracts/market-lab';
 import type { CollectionRun, CollectionSource, CollectionSchedule, UsSeries } from '@atlas/contracts/us-collection';
 import { validateSnapshot, validateSeries, calendarDate } from '@atlas/domain/market-lab';
 import { parseFredMacro } from '../../../scripts/import-market-lab-fred.mjs';
 import { readSnapshot, publishSnapshot } from './repository.js';
+import { locks } from './db.js';
 
-const LOCK = 'atlas:us-official-collection';
 export const US_COLLECTION_INTERVAL = 15 * 60 * 1000;
 export const usSources = [
   { series: 'GDPC1', axis: 'alpha', frequency: 'quarterly', label: 'FRED / BEA 실질GDP 전기비', metric: '실질GDP 전기비(FRED/BEA 계절조정 수준비)' },
@@ -16,23 +15,6 @@ export const usSources = [
 ] as const;
 const digest = (body: string) => createHash('sha256').update(body).digest('hex');
 export const fredUrl = (series: UsSeries) => `https://fred.stlouisfed.org/graph/fredgraph.csv?id=${series}&cosd=2010-01-01`;
-
-export async function migrateUsCollection(pool: pg.Pool) {
-  const sql = await readFile(new URL('../../../db/migrations/004_us_collection.sql', import.meta.url), 'utf8');
-  const client = await pool.connect();
-  try {
-    await client.query('BEGIN');
-    await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [LOCK]);
-    const previous = await client.query('SELECT sha256 FROM atlas_schema_migrations WHERE name=$1', ['004_us_collection']);
-    if (previous.rowCount && previous.rows[0].sha256 !== digest(sql)) throw new Error('Applied collection migration checksum changed');
-    if (!previous.rowCount) {
-      await client.query(sql);
-      await client.query('INSERT INTO atlas_schema_migrations(name,sha256) VALUES ($1,$2)', ['004_us_collection', digest(sql)]);
-    }
-    await client.query('COMMIT');
-  } catch (error) { await client.query('ROLLBACK'); throw error; }
-  finally { client.release(); }
-}
 
 export function parseVixCsv(raw: string, now: Date): Point[] {
   const rows = raw.trim().split(/\r?\n/).map(row => row.split(','));
@@ -91,7 +73,7 @@ export async function runUsCollection(pool: pg.Pool, { fetchImpl = fetch, clock 
   const receipts: CollectionSource[] = [];
   try {
     signal?.throwIfAborted();
-    locked = (await client.query('SELECT pg_try_advisory_lock(hashtext($1)) AS locked', [LOCK])).rows[0].locked;
+    locked = (await client.query('SELECT pg_try_advisory_lock(hashtext($1)) AS locked', [locks.usCollection])).rows[0].locked;
     signal?.throwIfAborted();
     if (!locked) return { status: 'busy' as const };
     const last = (await client.query('SELECT started_at,finished_at,status FROM market_lab_collection_runs ORDER BY run_order DESC LIMIT 1')).rows[0];
@@ -162,7 +144,7 @@ export async function runUsCollection(pool: pg.Pool, { fetchImpl = fetch, clock 
     return { status: 'failed' as const, id };
   } finally {
     try {
-      if (locked) await client.query('SELECT pg_advisory_unlock(hashtext($1))', [LOCK]);
+      if (locked) await client.query('SELECT pg_advisory_unlock(hashtext($1))', [locks.usCollection]);
     } catch (error) {
       client.release(true);
       throw error;
