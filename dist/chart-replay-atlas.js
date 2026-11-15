@@ -1,12 +1,13 @@
 import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.36.1';
-import {buildCycleMilestones} from './cycle-milestones.js?v=1.29.0';
+import {mountAtlasBtcFunnestChart} from './btc-funnest-chart.js?v=1.36.1';
+import {buildCycleMilestones,INTERVAL_RELATIONS} from './cycle-milestones.js?v=1.29.0';
 import {validateDataset,utcDay,dateFromDay} from './cycle-engine.js?v=1.29.0';
 import {detectDirectionalChanges,computeRollingStates} from './market-structure.js?v=1.29.0';
 import {BITCOIN_EVENTS} from './bitcoin-events.js?v=1.29.0';
 import {clearChartHover} from './chart-hover.js?v=1.29.0';
 import {retainPriceViewport} from './empty-price-chart.js?v=1.36.1';
 
-const renderers=new WeakMap();
+const renderers=new WeakMap(),legacyRenderers=new WeakMap();
 const positive=value=>Number.isFinite(value)&&value>0;
 const clone=value=>JSON.parse(JSON.stringify(value));
 function freeze(value){if(value&&typeof value==='object'&&!Object.isFrozen(value)){for(const child of Object.values(value))freeze(child);Object.freeze(value);}return value;}
@@ -80,7 +81,7 @@ function svgNode(svg,tag,attributes={},text){const node=svg.ownerDocument.create
 
 /** The ordinary Atlas chart renderer owns the primary SVG in replay too.
  * Only its input prefix and frozen forecast layer change. */
-export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line',context,selectionPreview=false,onInspect=()=>{}}={}){
+export function drawAtlasChartReplayLegacy({svg,session,data,start,end,chartType='line',context,selectionPreview=false,onInspect=()=>{}}={}){
   if(!svg||!data?.frame||!context)throw new TypeError('A main chart, replay frame and frozen Atlas context are required');
   const frequency=data.frequency??'daily';
   if(!['daily','weekly'].includes(frequency))throw new RangeError('Atlas replay requires genuine daily or weekly observations; intraday candles cannot be made from daily closes');
@@ -89,7 +90,7 @@ export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line
   if(frame.inputVisible===false||frame.forecastVisible===false)throw new RangeError('The Atlas replay view requires visible preserved input and forecast');
   const firstDay=utcDay(start),lastDay=utcDay(end);if(lastDay<firstDay)throw new RangeError('Replay viewport ends before it starts');
   const cursorDate=frame.cursorDate;utcDay(cursorDate);
-  renderers.get(svg)?.destroy();clearChartHover(svg);
+  legacyRenderers.get(svg)?.destroy();clearChartHover(svg);
   const p=context.presentation;
   const actual=canonicalRows(data.observedRows??[]).filter(row=>row.date<=cursorDate&&positive(row.price)).sort((a,b)=>a.date.localeCompare(b.date));
   // These are fresh presentation copies. Fill them once without copying the
@@ -198,6 +199,94 @@ export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line
   const controller={axis,x,dateAt,barDateAt,getPriceScale:()=>axis,previewPointer:event=>!destroyed&&chart.previewPointer?.(event),
     selectDate(date){if(destroyed)return;utcDay(date);chart.selectDate?.(date);selected=date;onInspect(inspection(date));},
     getSelection(){const value=inspection(selected);return {...value,copyText:`${selected}\n실제: ${money(value.actual)}\n고정 예측: ${money(value.originalPredicted)}`+(value.retrospectivePredicted!==null?`\n회고 경로(현재 생성): ${money(value.retrospectivePredicted)}`:'')};},
-    destroy(){if(destroyed)return;destroyed=true;if(renderers.get(svg)!==controller)return;clearChartHover(svg);for(const [key,handler]of Object.entries(nativeHandlers))if(svg[key]===handler)svg[key]=null;overlay.remove();renderers.delete(svg);}};
+    destroy(){if(destroyed)return;destroyed=true;if(legacyRenderers.get(svg)!==controller)return;clearChartHover(svg);for(const [key,handler]of Object.entries(nativeHandlers))if(svg[key]===handler)svg[key]=null;overlay.remove();legacyRenderers.delete(svg);}};
+  legacyRenderers.set(svg,controller);return controller;
+}
+
+
+/** Active replay renderer. Funnest owns the real observed bars and all price/time coordinates. */
+export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line',context,selectionPreview=false,onInspect=()=>{}}={}){
+  if(!svg||!data?.frame||!context)throw new TypeError('A main chart, replay frame and frozen Atlas context are required');
+  const frequency=data.frequency??'daily';
+  if(!['daily','weekly'].includes(frequency))throw new RangeError('Atlas replay requires genuine daily or weekly observations; intraday candles cannot be made from daily closes');
+  const frame=data.frame,origin=session?.asOf??data.originDate;
+  if(context.originDate!==origin)throw new RangeError('Atlas chart context belongs to a different forecast origin');
+  if(frame.inputVisible===false||frame.forecastVisible===false)throw new RangeError('The Atlas replay view requires visible preserved input and forecast');
+  const firstDay=utcDay(start),lastDay=utcDay(end);if(lastDay<firstDay)throw new RangeError('Replay viewport ends before it starts');
+  const cursorDate=frame.cursorDate;utcDay(cursorDate);
+  renderers.get(svg)?.destroy();legacyRenderers.get(svg)?.destroy();clearChartHover(svg);
+  const p=context.presentation;
+  const actual=canonicalRows(data.observedRows??[]).filter(row=>row.date<=cursorDate&&positive(row.price)).sort((a,b)=>a.date.localeCompare(b.date));
+  let peak=0;
+  for(const row of actual){peak=Math.max(peak,row.price);row.drawdownPct=(row.price/peak-1)*100;row.replaySource='observed';}
+  const forecastDates=new Set((frame.forecast??[]).map(row=>row.date));
+  const fixed=context.forecast.filter(row=>forecastDates.has(row.date)).map(row=>({...row,replaySource:'forecast'}));
+  const fixedByDate=new Map(fixed.map(row=>[row.date,row]));
+  if((frame.forecast??[]).some(row=>{const frozen=fixedByDate.get(row.date);return !frozen||['price','lower','upper'].some(key=>row[key]!==undefined&&row[key]!==null&&row[key]!==frozen[key]);}))throw new RangeError('Displayed Atlas path does not match the scored replay forecast');
+  const retrospectiveFrame=frame.retrospectiveForecast??[],retrospectiveDates=new Set(retrospectiveFrame.map(row=>row.date));
+  const retrospective=(context.retrospectiveForecast?.path??[]).filter(row=>retrospectiveDates.has(row.date)&&row.date>=origin&&row.date<=context.forecastOrigin).map(row=>({...row,replaySource:'retrospective'}));
+  const retrospectiveByDate=new Map(retrospective.map(row=>[row.date,row]));
+  if(retrospectiveFrame.some(row=>{const frozen=retrospectiveByDate.get(row.date);return !frozen||['price','lower','upper'].some(key=>row[key]!==undefined&&row[key]!==frozen[key]);}))throw new RangeError('Displayed retrospective path does not match its separate frozen record');
+  const actualByDate=new Map(actual.map(row=>[row.date,row]));
+  const observedCandles=(data.observedCandles??[]).filter(row=>{
+    const date=row.endDate??row.date;return date<=cursorDate&&['open','high','low','close'].every(key=>positive(row[key]))&&row.low<=Math.min(row.open,row.close)&&row.high>=Math.max(row.open,row.close);
+  }).map(row=>({...row,date:row.endDate??row.date,startDate:row.startDate??row.periodStartDate??row.date,endDate:row.endDate??row.date}));
+  const useOhlc=chartType==='candles'&&observedCandles.length>0;
+  const inspection=date=>{const actualPoint=actualByDate.get(date),original=fixedByDate.get(date),retrospectivePoint=retrospectiveByDate.get(date),predicted=original??retrospectivePoint,candle=chartType==='candles'?observedCandles.find(row=>(row.endDate??row.date)===date):null;
+    return {date,actual:actualPoint?.price??null,predicted:predicted?.price??null,originalPredicted:original?.price??null,retrospectivePredicted:retrospectivePoint?.price??null,predictedKind:original?'original':retrospectivePoint?'retrospective':null,price:actualPoint?.price??predicted?.price??null,
+      candle:candle??null,kind:actualPoint?'observed':original?'forecast':retrospectivePoint?'retrospective':'missing',source:sourceLabel(data.priceSource??data.candleSource),candleSource:sourceLabel(data.candleSource),forecastOrigin:context.forecastOrigin,replayOrigin:origin,
+      retrospectiveOrigin:context.retrospectiveForecast?.asOf??null,retrospectiveCreatedAt:context.retrospectiveForecast?.createdAt??null};};
+  let selected=cursorDate;
+  const inspect=value=>{if(!value?.date)return;selected=value.date;onInspect(inspection(value.date));};
+  const forecastThrough=fixed.at(-1)?.date??origin;
+  const cycleMarkers=context.cycleMarkers.filter(marker=>marker.kind==='observed'?marker.date<=cursorDate:marker.date<=forecastThrough);
+  const markerIds=new Set(cycleMarkers.map(marker=>marker.id));
+  const relation=p.cycleRelation??'all';
+  const displayedRelations=new Set(INTERVAL_RELATIONS.some(item=>item.id===relation)?[relation]:INTERVAL_RELATIONS.map(item=>item.id));
+  const cycleIntervals=context.cycleIntervals.filter(interval=>markerIds.has(interval.fromId)&&markerIds.has(interval.toId)&&displayedRelations.has(interval.relation));
+  const states=p.showStates?[...(actual.length?computeRollingStates(actual).points:[]),...context.states.filter(row=>row.date>cursorDate&&row.date<=forecastThrough)]:[];
+  const calibration=context.cycleCalibration?{...context.cycleCalibration,series:(context.cycleCalibration.series??[]).filter(row=>row.date<=cursorDate)}:null;
+  const title=svgNode(svg,'title',{},'비트코인 사이클 아틀라스 · 현재 차트 봉 리플레이');
+  const description=svgNode(svg,'desc',{},'주황색 미래 가정은 시작할 때의 현재 차트 값 그대로 고정하고, 실제 봉만 재생 시점까지 공개합니다. 현재 가정은 과거에 발행한 예측 성적이 아닙니다.'+(retrospective.length?' 회고 점선과 범위는 선택한 시작일 전날까지의 입력으로 현재 생성해 별도로 고정한 경로이며, 당시 발행한 예측이나 원래 주황선의 연장이 아닙니다.':'')+' 사이클 표식과 기간선은 보존된 경로의 표시이며 당시 발행된 표식 기록이 아닙니다.');
+  // Clear the live SVG price series while preserving the SVG node and its replay listeners.
+  svg.replaceChildren(title,description);
+  const stage=svg.parentElement;
+  if(!stage)throw new TypeError('The Funnest replay chart requires the live chart stage');
+  const source=sourceLabel(data.priceSource??data.candleSource),candleSource=sourceLabel(data.candleSource),volumeSource=candleSource;
+  const boundaries=selectionPreview?[]:[
+    {date:origin,name:'data-replay-origin-boundary',label:'봉 리플레이 시작 기준일',color:'var(--muted)'},
+    ...(context.forecastOrigin!==origin?[{date:context.forecastOrigin,name:'data-replay-forecast-origin',label:'현재 고정 가정의 입력 기준일',color:'var(--data-gold)'}]:[]),
+    {date:cursorDate,name:'data-replay-cursor-line',label:'실제 가격 공개일',color:'var(--text)'}];
+  const suspendedLiveHosts=[...stage.querySelectorAll('.atlas-funnest-canvas,.atlas-funnest-status')].map(node=>({node,visibility:node.style.visibility,hidden:node.hidden,ariaHidden:node.getAttribute('aria-hidden')}));
+  const restoreLiveHosts=()=>{for(const item of suspendedLiveHosts){item.node.style.visibility=item.visibility;item.node.hidden=item.hidden;if(item.ariaHidden===null)item.node.removeAttribute('aria-hidden');else item.node.setAttribute('aria-hidden',item.ariaHidden);}};
+  for(const {node} of suspendedLiveHosts){node.style.visibility='hidden';node.setAttribute('aria-hidden','true');if(node.matches('.atlas-funnest-status'))node.hidden=true;}
+  let chart;
+  try{chart=mountAtlasBtcFunnestChart({container:stage,svg,sourceMode:useOhlc?'ohlc':'close-only',observedRows:actual,observedCandles:useOhlc?observedCandles:[],candleSource,closeSource:source,
+    frequency,chartType:useOhlc?'candles':'line',start,end,forecast:fixed,retrospective,band:p.band!==false,
+    volumeBars:observedCandles.filter(row=>Number.isFinite(row.volume)),showVolume:Boolean(p.showVolume),volumeSource,
+    events:context.events.filter(event=>event.date<=forecastThrough),historicalEvents:p.showHistoricalEvents===false?[]:BITCOIN_EVENTS.filter(event=>event.date<=cursorDate),
+    turns:p.showTurns===false?[]:context.turns.filter(turn=>turn.date<=forecastThrough),cycleMarkers:p.showCycleMarkers===false?[]:cycleMarkers,
+    cycleIntervals:p.showCycleIntervals===false?[]:cycleIntervals,cycleRelation:relation,selectedDate:cursorDate,scale:p.scale??'log',invertScale:Boolean(p.invertScale),
+    priceDomain:p.priceDomain??null,priceOnlyAuto:Boolean(p.priceOnlyAuto),unit:p.unit??'usd',denominator:actual.findLast(row=>row.date<=origin)?.price??1,
+    showStates:Boolean(p.showStates),states,showDrawdown:Boolean(p.showDrawdown),replayBoundaries:boundaries,cycleCalibration:calibration,
+    showCycleTiming:Boolean(p.showCycleTiming&&calibration),replayCursorDate:cursorDate,selectionPreview,onHover:inspect,onInspect:value=>inspect(value),
+    onCycleMarker:id=>{const marker=cycleMarkers.find(row=>row.id===id);if(marker)inspect(marker);},onCycleInterval:id=>{const interval=cycleIntervals.find(row=>row.id===id);if(interval)inspect({date:interval.endDate});},
+    source:{name:source,sourceDisclosure:`${source} 실제 관측 가격`,candleSource}});}catch(error){restoreLiveHosts();throw error;}
+  // The replay chart is a second Funnest host beside the suspended live host. Mark it so the
+  // replay stylesheet keeps only this host painted and verifiers read its snapshot, not the live one.
+  chart.host.dataset.chartReplayHost='true';
+  const axis=chart.getPriceScale();
+  Object.assign(svg.dataset,{replayRenderer:'funnest',replayViewStart:start,replayViewEnd:end,replayAnnotationSignature:context.annotationSignature,
+    replayActualThrough:actual.at(-1)?.date??origin,replayObservedCount:String(actual.length),replayActualCount:String(actual.filter(row=>row.date>origin).length),replayForecastPoints:String(fixed.length),
+    replayRetrospectiveStatus:context.retrospectiveForecast?.status??'absent',replayRetrospectiveOrigin:context.retrospectiveForecast?.asOf??'',replayRetrospectiveThrough:retrospective.at(-1)?.date??'',replayRetrospectivePoints:String(retrospective.length),
+    replayRetrospectiveInputHash:context.retrospectiveForecast?.inputHash??'',replayRetrospectiveOutputHash:context.retrospectiveForecast?.outputHash??'',replayRetrospectiveCreatedAt:context.retrospectiveForecast?.createdAt??'',
+    replayRetrospectiveIssuedAt:context.retrospectiveForecast?'null':'',replayRetrospectiveScoringEnabled:'false',replayForecastCandleCount:'0',replayOhlcAvailable:String(observedCandles.length>0),
+    replayPriceHidden:'false',replayScale:axis.scale,replayFrequency:frequency,replayPriceMin:String(axis.min),replayPriceMax:String(axis.max),
+    replayFormingWeekCount:String(observedCandles.filter(row=>row.complete===false).length),replayMissingWeekCount:String(data.missingWeekCount??0)});
+  let destroyed=false;
+  const controller={engine:'funnest',chart:chart.chart,host:chart.host,getPriceScale:chart.getPriceScale,x:chart.x,dateAt:chart.dateAt,barDateAt:chart.barDateAt,
+    previewPointer:event=>!destroyed&&chart.previewPointer(event),selectDate(date){if(destroyed)return;utcDay(date);chart.selectDate?.(date);selected=date;onInspect(inspection(date));},
+    getSelection(){const value=inspection(selected);return {...value,copyText:`${selected}\n실제: ${money(value.actual)}\n고정 예측: ${money(value.originalPredicted)}`+(value.retrospectivePredicted!==null?`\n회고 경로(현재 생성): ${money(value.retrospectivePredicted)}`:'')};},
+    getVisibleTimeRange:chart.getVisibleTimeRange,destroy(){if(destroyed)return;destroyed=true;if(renderers.get(svg)!==controller)return;chart.destroy();restoreLiveHosts();renderers.delete(svg);}};
   renderers.set(svg,controller);return controller;
 }

@@ -339,9 +339,24 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       for(const node of new Set(blocked)){if(node===trigger||node.contains(panel)||atlasAvailable&&['workbench-frequency','workbench-chart-type','mobile-details-toggle'].includes(node.id))continue;ownedInert.set(node,node.inert);node.inert=true;}
     }else{for(const [node,value]of ownedInert)node.inert=value;ownedInert.clear();}
   }
+  // Replay repaints or clears the live chart's overlay SVG. Keep the live nodes and viewBox so
+  // exit returns the exact pre-replay surface (a native chart's crosshair and annotation groups
+  // live there and are not redrawn by the live view on resume).
+  let liveSurface=null;
+  function preserveLiveSurface(){
+    if(liveSurface)return;
+    const nodes=svg.childNodes??svg.children,children=nodes&&typeof nodes[Symbol.iterator]==='function'?[...nodes]:[];
+    liveSurface={children,viewBox:typeof svg.getAttribute==='function'?svg.getAttribute('viewBox'):null};
+  }
+  function restoreLiveSurface(){
+    if(!liveSurface)return;const {children,viewBox}=liveSurface;liveSurface=null;
+    if(typeof svg.replaceChildren==='function')svg.replaceChildren(...children.filter(node=>!node.parentNode||node.parentNode===svg));
+    if(typeof svg.setAttribute!=='function')return;
+    if(viewBox===null||viewBox===undefined)svg.removeAttribute?.('viewBox');else svg.setAttribute('viewBox',viewBox);
+  }
   function activate(){
     if(active)return;
-    transportLayoutKey='';reserveTransportLane();
+    transportLayoutKey='';reserveTransportLane();preserveLiveSurface();
     active=true;plot.classList.add('chart-replay-active');svg.dataset.chartReplayActive='true';
     doc.documentElement.dataset.chartReplayActive='true';trigger.setAttribute('aria-pressed','true');
     panel.hidden=false;hud.hidden=false;blockSurrounding(true);
@@ -367,7 +382,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     if(!active)return;
     epoch++;request?.abort();request=null;active=false;saving=false;externalBacktest=false;controller.exit();
     if(paintFrame!==null){win.cancelAnimationFrame(paintFrame);paintFrame=null;}
-    releaseGesture();picking=false;pickerDate=null;closeChoice();closeMenu();clearPicker();disposeDrawing();plot.classList.remove('chart-replay-active');plot.style.removeProperty('--chart-replay-controls-height');plot.style.removeProperty('--chart-replay-bottom');
+    releaseGesture();picking=false;pickerDate=null;closeChoice();closeMenu();clearPicker();disposeDrawing();restoreLiveSurface();plot.classList.remove('chart-replay-active');plot.style.removeProperty('--chart-replay-controls-height');plot.style.removeProperty('--chart-replay-bottom');
     delete svg.dataset.chartReplayActive;delete doc.documentElement.dataset.chartReplayActive;delete doc.documentElement.dataset.chartReplayMode;
     delete plot.dataset.chartReplayMode;plot.classList.remove('chart-replay-atlas');
     for(const key of Object.keys(svg.dataset))if(key.startsWith('replay'))delete svg.dataset[key];

@@ -9,22 +9,26 @@ import {readChartReplayFocusTarget,readChartReplayFloatingGeometry,assertChartRe
 
 const box=(left,top,width,height)=>({left,top,right:left+width,bottom:top+height,width,height});
 
-// The actual native renderer supplies its axis metadata. These DOM boundary
-// dimensions model the reported 320×568 surface; browser hit rasterization
-// remains part of the real Chrome gate, not a claim made by this fixture.
-function fixture(symbol='ETHUSD'){
-  const id=symbol==='ETHUSD'?'eth-chart':'equity-chart';
+// This isolates coordinate mapping only. Its geometry fixture is not paint or
+// source evidence; real canvas pixels and renderer receipts are asserted in the browser gate.
+// `renderer:'svg'` models the SVG replay renderer (ETH/MSTR/BMNR and BTC cutoff reconstruction):
+// the pane comes from the SVG viewBox and its screen CTM. `renderer:'funnest'` models the BTC
+// Funnest replay: a second, marked host beside the suspended live host owns the pane.
+function fixture(symbol='ETHUSD',{renderer='svg',live=false}={}){
+  const id=symbol==='BTCUSD'?'lab-chart':symbol==='ETHUSD'?'eth-chart':'equity-chart';
   const controls=['first','select-menu','mode-badge','pick','play','next','speed','update-interval','live'];
   const fields=['date','start','display','mode','record','horizon','details','pooled-retry','scrub','export'];
   const {document,window}=parseHTML(`<html><body><main class="atlas-plot">
-    <svg id="${id}"></svg><section class="chart-replay-controls">
+    <div class="atlas-funnest-canvas" style="visibility:hidden"></div><svg id="${id}"></svg>${renderer==='funnest'?'<div class="atlas-funnest-canvas" data-chart-replay-host="true"></div>':''}<section class="chart-replay-controls">
       <div class="chart-replay-bar"><div class="chart-replay-actions">${controls.map(name=>`<button data-cr="${name}"></button>`).join('')}</div></div>
       <button data-cr="exit"></button><button data-cr="pick-cancel" hidden></button>
       <section data-cr="select-panel" hidden>${fields.map(name=>`<div data-cr="${name}"></div>`).join('')}</section>
     </section><div id="unexpected-blocker"></div></main></body></html>`);
-  const svg=document.querySelector('svg'),plot=document.querySelector('.atlas-plot'),root=document.querySelector('.chart-replay-controls');
+  const svg=document.querySelector('svg'),plot=document.querySelector('.atlas-plot'),liveHost=plot.querySelector('.atlas-funnest-canvas'),host=plot.querySelector('.atlas-funnest-canvas[data-chart-replay-host="true"]')??liveHost,root=document.querySelector('.chart-replay-controls');
   const bar=document.querySelector('.chart-replay-bar'),actions=document.querySelector('.chart-replay-actions'),exit=document.querySelector('[data-cr="exit"]');
-  const rectangles=new Map([[svg,box(0,48,320,476)],[plot,box(0,48,320,476)],[root,box(0,48,320,476)],
+  // The suspended live host is display:none under replay; only a marked replay host (or the
+  // pre-replay live chart itself, `live:true`) is laid out.
+  const rectangles=new Map([[svg,box(0,48,320,476)],[liveHost,live?box(0,48,320,476):box(0,0,0,0)],[host,host===liveHost&&!live?box(0,0,0,0):box(0,48,320,476)],[plot,box(0,48,320,476)],[root,box(0,48,320,476)],
     [bar,box(8,420,252,56)],[actions,box(13,425,242,46)],[exit,box(268,426,44,44)]]);
   const style=node=>({display:node.hidden?'none':'block',visibility:'visible',opacity:'1',pointerEvents:node===root?'none':'auto',
     backgroundColor:node===root?'rgba(0, 0, 0, 0)':'rgb(19, 23, 34)',flexWrap:'nowrap',fontFamily:'Arial',fontWeight:'400',fontStyle:'normal',letterSpacing:'0'});
@@ -47,13 +51,19 @@ function fixture(symbol='ETHUSD'){
   };
   drawReplaySelection({svg,symbol,source:symbol==='ETHUSD'?'Coinbase Exchange':'Nasdaq',start:'2026-01-01',end:'2026-01-10',chartType:'line',
     observations:Array.from({length:10},(_,i)=>({date:`2026-01-${String(i+1).padStart(2,'0')}`,price:100+i}))});
-  return {svg,bar,rectangles,setMatrix:value=>{matrix=value;},block:point=>{blocked=point;},read:()=>vm.runInNewContext(`(${readChartReplayFloatingGeometry.toString()})(options)`,
+  const layout={width:320,height:476,plotWidth:Number(svg.dataset.plotRight),panes:[{id:'main',kind:'main',top:Number(svg.dataset.plotTop),height:Number(svg.dataset.priceBottom)-Number(svg.dataset.plotTop)}]};
+  const snapshot=()=>({engine:'funnest',painted:true,range:{from:Date.parse('2026-01-01T00:00:00Z'),to:Date.parse('2026-01-10T00:00:00Z')},layout});
+  liveHost.getAtlasFunnestSnapshot=live?snapshot:()=>({...snapshot(),layout:{width:0,height:0,plotWidth:layout.plotWidth,panes:layout.panes}});
+  if(renderer==='funnest'){host.getAtlasFunnestSnapshot=snapshot;svg.dataset.replayRenderer='funnest';for(const key of ['plotLeft','plotRight','plotTop','priceBottom'])delete svg.dataset[key];}
+  const priceCoordinates={left:0,right:layout.plotWidth,top:layout.panes[0].top,bottom:layout.panes[0].top+layout.panes[0].height};
+  return {svg,host,liveHost,bar,rectangles,layout,priceCoordinates,setHostBox:value=>rectangles.set(host,value),setMatrix:value=>{matrix=value;},block:point=>{blocked=point;},read:()=>vm.runInNewContext(`(${readChartReplayFloatingGeometry.toString()})(options)`,
     {document,getComputedStyle:style,scrollX:0,scrollY:0,options:{chartSelector:'#'+id,panel:'.chart-replay-controls'}})};
 }
 
-for(const symbol of ['ETHUSD','MSTR','BMNR'])test(`${symbol} floating-bar probes use the actual native price pane instead of the full SVG`,()=>{
+for(const symbol of ['ETHUSD','MSTR','BMNR'])test(`${symbol} floating-bar probes use the SVG replay renderer's own price pane instead of the full SVG`,()=>{
   const f=fixture(symbol),geometry=f.read();
   assert.equal(geometry.chart.width,320);assert.equal(geometry.chart.height,476);
+  assert.equal(geometry.renderer,'svg');assert.equal(geometry.funnest.engine,null,'The suspended live host is not the SVG replay pane');
   assert.equal(geometry.pricePane.left,Number(f.svg.dataset.plotLeft));
   assert.equal(geometry.pricePane.right,Number(f.svg.dataset.plotRight));
   assert.equal(geometry.pricePane.top,48+Number(f.svg.dataset.plotTop));
@@ -68,10 +78,35 @@ for(const symbol of ['ETHUSD','MSTR','BMNR'])test(`${symbol} floating-bar probes
   assert.doesNotThrow(()=>assertChartReplayPricePaneAccess(geometry));
 });
 
+test('BTC Funnest replay probes use the marked replay host pane, never the suspended live host',()=>{
+  const f=fixture('BTCUSD',{renderer:'funnest'}),geometry=f.read();
+  assert.equal(geometry.renderer,'funnest');assert.equal(geometry.funnest.engine,'funnest');assert.equal(geometry.funnest.painted,true);
+  for(const key of ['left','right','top','bottom'])assert.equal(geometry.priceCoordinates[key],f.priceCoordinates[key]);
+  assert.equal(geometry.pricePane.left,0);
+  assert.equal(geometry.pricePane.right,f.layout.plotWidth);
+  assert.equal(geometry.pricePane.top,48+f.priceCoordinates.top);
+  assert.equal(geometry.pricePane.bottom,48+f.priceCoordinates.bottom);
+  assert.ok(geometry.pricePane.right<geometry.chart.right,'Price-axis gutter is not price input space');
+  assert.ok(geometry.probes.length>=3);
+  assert.doesNotThrow(()=>assertChartReplayPricePaneAccess(geometry));
+  f.setHostBox(box(30,90,240,238));
+  const scaled=f.read();
+  assert.equal(scaled.pricePane.left,30);
+  assert.equal(scaled.pricePane.right,30+f.layout.plotWidth/f.layout.width*240);
+  assert.equal(scaled.pricePane.top,90+f.priceCoordinates.top/f.layout.height*238);
+  assert.equal(scaled.pricePane.bottom,90+f.priceCoordinates.bottom/f.layout.height*238);
+  assert.doesNotThrow(()=>assertChartReplayPricePaneAccess(scaled));
+  // Reading the live host instead of the marked host would produce a zero pane.
+  f.svg.closest('.atlas-plot').querySelector('[data-chart-replay-host]').removeAttribute('data-chart-replay-host');
+  const unmarked=f.read();assert.equal(unmarked.pricePane,null);assert.throws(()=>assertChartReplayPricePaneAccess(unmarked),/transformable price-pane bounds/);
+});
+
 test('replay probes transform native viewBox coordinates into the actual screen coordinate system',()=>{
   const f=fixture();f.setMatrix({a:.75,b:0,c:0,d:.5,e:30,f:90});
   const geometry=f.read();
+  assert.equal(geometry.renderer,'svg');
   assert.equal(geometry.pricePane.left,30+.75*Number(f.svg.dataset.plotLeft));
+  assert.equal(geometry.pricePane.right,30+.75*Number(f.svg.dataset.plotRight));
   assert.equal(geometry.pricePane.top,90+.5*Number(f.svg.dataset.plotTop));
   assert.equal(geometry.pricePane.bottom,90+.5*Number(f.svg.dataset.priceBottom));
   assert.doesNotThrow(()=>assertChartReplayPricePaneAccess(geometry));
@@ -86,26 +121,26 @@ test('known painted controls are excluded by their geometry while an arbitrary b
   f.block(withBar.probes[0]);const blocked=f.read();
   assert.equal(blocked.probes.length,withBar.probes.length,'A failed hit cannot remove its probe');
   assert.equal(blocked.probes[0].owner.id,'unexpected-blocker');
-  assert.throws(()=>assertChartReplayPricePaneAccess(blocked),/unobstructed price-pane probe.*unexpected-blocker.*pricePane.*excludedRects/);
+  assert.throws(()=>assertChartReplayPricePaneAccess(blocked),/unobstructed SVG price-pane probe.*unexpected-blocker.*pricePane.*excludedRects/);
 });
 
-test('missing or detached native price-axis metadata fails instead of silently probing the whole SVG',()=>{
+test('missing or detached Funnest layout geometry fails instead of silently probing the whole SVG',()=>{
   for(const invalid of ['metadata','matrix']){
-    const f=fixture();if(invalid==='metadata')delete f.svg.dataset.priceBottom;else f.setMatrix(null);
+    const f=fixture('BTCUSD',{renderer:'funnest'});if(invalid==='metadata')f.host.getAtlasFunnestSnapshot=()=>null;else f.host.getAtlasFunnestSnapshot=()=>({engine:'funnest',painted:true,layout:{width:0,height:0,plotWidth:0,panes:[]}});
     const geometry=f.read();assert.equal(geometry.pricePane,null);assert.equal(geometry.probes.length,0);
     assert.throws(()=>assertChartReplayPricePaneAccess(geometry),/transformable price-pane bounds/);
   }
 });
 
-test('the pre-replay focus click uses the SVG gutter even when its center opens a research article',()=>{
-  const f=fixture(),document=f.svg.ownerDocument;
+test('the pre-replay focus click uses an actual Funnest plot point even when its center opens a research article',()=>{
+  const f=fixture('ETHUSD',{live:true}),document=f.svg.ownerDocument;
   const article=document.createElementNS('http://www.w3.org/2000/svg','g');article.setAttribute('role','button');article.dataset.forecastEvidence='model-method';f.svg.append(article);
-  document.elementFromPoint=x=>x<Number(f.svg.dataset.plotLeft)?f.svg:article;
+  document.elementFromPoint=x=>x<20?f.svg:article;
   const nativeContext=vm.createContext({document});
   const read=()=>vm.runInContext(`(${readChartReplayFocusTarget.toString()})('#eth-chart')`,nativeContext);
   assert.equal(document.elementFromPoint(160,286),article,'the old center click would open the source-owned article');
   const live=read();assert.ok(live,'the live chart needs the same safe native focus entrance as replay');
-  assert.equal(live.reachesChart,true);assert.equal(live.interactive,false);assert.ok(live.point.x<Number(f.svg.dataset.plotLeft));
+  assert.equal(live.reachesChart,true);assert.equal(live.interactive,false);assert.ok(live.point.x<f.layout.plotWidth);
   f.svg.dataset.chartReplayActive='true';
   assert.deepEqual(read(),live,'replay does not move the native focus entrance');
   document.elementFromPoint=()=>article;

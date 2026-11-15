@@ -5,6 +5,7 @@ import { createPriceAxisLayout, createPriceAxisFormatter, normalizePriceDomain }
 import { pixelExtrema } from './chart-window.js?v=1.29.0';
 import { utcDay } from './cycle-engine.js?v=1.29.0';
 import { candleBodyWidth } from './chart-view-policy.js?v=1.36.1';
+import {linearScale as fLinear,logScale as fLog,linePath as fLine,areaPath as fArea,barPath as fBar,segments as fSegments} from './funnest-research-primitives.bundle.js?v=1.29.0';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const renderers = new WeakMap();
@@ -51,17 +52,38 @@ function node(svg, tag, attributes = {}, text = null) {
   if (text !== null) element.textContent = text;
   return element;
 }
+function acquireReplaySurface(svg) {
+  const stage=svg.parentElement,liveHosts=stage?.querySelectorAll?[...stage.querySelectorAll('.atlas-funnest-canvas,.atlas-funnest-status')]:[];
+  const captureStyle=(element,property,camel)=>{const style=element.style;if(style?.getPropertyValue){const value=style.getPropertyValue(property);return {property,camel,value,priority:typeof style.getPropertyPriority==='function'?style.getPropertyPriority(property):'',present:value!==''};}return {property,camel,value:style?.[camel],present:Boolean(style&&Object.hasOwn(style,camel))};};
+  const writeStyle=(element,saved,value)=>{const style=element.style;if(!style)return;if(style.setProperty)style.setProperty(saved.property,value);else style[saved.camel]=value;};
+  const restoreStyle=(element,saved)=>{const style=element.style;if(!style)return;if(typeof style.setProperty==='function'&&typeof style.removeProperty==='function'){if(saved.present)style.setProperty(saved.property,saved.value,saved.priority);else style.removeProperty(saved.property);}else if(saved.present)style[saved.camel]=saved.value;else delete style[saved.camel];};
+  const hostState=liveHosts.map(element=>({element,styles:[captureStyle(element,'visibility','visibility')],hidden:element.hidden,ariaHidden:element.getAttribute('aria-hidden'),status:element.matches?.('.atlas-funnest-status')??false}));
+  const svgState={hidden:svg.hidden,ariaHidden:svg.getAttribute('aria-hidden'),focusable:svg.getAttribute('focusable'),tabindex:svg.getAttribute('tabindex'),styles:[captureStyle(svg,'visibility','visibility'),captureStyle(svg,'opacity','opacity'),captureStyle(svg,'pointer-events','pointerEvents')]};
+  let restored=false;
+  for(const state of hostState){writeStyle(state.element,state.styles[0],'hidden');state.element.setAttribute('aria-hidden','true');if(state.status)state.element.hidden=true;}
+  svg.hidden=false;svg.removeAttribute('aria-hidden');svg.setAttribute('focusable','true');svg.setAttribute('tabindex','0');
+  writeStyle(svg,svgState.styles[0],'visible');writeStyle(svg,svgState.styles[1],'1');writeStyle(svg,svgState.styles[2],'auto');
+  return ()=>{if(restored)return;restored=true;
+    for(const state of hostState){restoreStyle(state.element,state.styles[0]);state.element.hidden=state.hidden;if(state.ariaHidden===null)state.element.removeAttribute('aria-hidden');else state.element.setAttribute('aria-hidden',state.ariaHidden);}
+    for(const saved of svgState.styles)restoreStyle(svg,saved);svg.hidden=svgState.hidden;
+    for(const [name,value] of [['aria-hidden',svgState.ariaHidden],['focusable',svgState.focusable],['tabindex',svgState.tabindex]]){if(value===null)svg.removeAttribute(name);else svg.setAttribute(name,value);}
+  };
+}
 
 function continuousRuns(rows, usable = () => true) {
-  const runs = []; let run = [];
+  const values = []; let previous = null;
   for (const row of rows) {
-    if (!usable(row)) { if (run.length) runs.push(run); run = []; continue; }
-    if (run.length && utcDay(row.date) !== utcDay(run.at(-1).date) + 1) { runs.push(run); run = []; }
-    run.push(row);
+    if (!usable(row)) { values.push(null); previous = null; continue; }
+    if (previous && utcDay(row.date) !== utcDay(previous.date) + 1) values.push(null);
+    values.push(row); previous = row;
   }
-  if (run.length) runs.push(run);
-  return runs;
+  return fSegments(values).map(segment => segment.values);
 }
+function formatFunnestPath(path){return path.replace(/-?(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?/gi,value=>Number(value).toFixed(2));}
+function funnestVerticalPath(x,y1,y2){const path=fLine([{x,y:y1},{x,y:y2}]),formatted=value=>(Math.round(value*100)/100).toString();return formatFunnestPath(path.replace(`L${formatted(x)},${formatted(y2)}`,`V${formatted(y2)}`));}
+function funnestBarPath(x,width,baseY,valueY){const path=fBar(x,width,baseY,valueY),match=path.match(/^M([^,]+),([^H]+)H([^V]+)V([^H]+)H([^Z]+)Z$/);if(!match)return formatFunnestPath(path);const [,sx,sy,ex,ey,baseX]=match.map((value,index)=>index?Number(value):value);return `M${Number(sx).toFixed(2)},${Number(sy).toFixed(2)}h${(Number(ex)-Number(sx)).toFixed(2)}v${(Number(ey)-Number(sy)).toFixed(2)}h${(Number(baseX)-Number(ex)).toFixed(2)}Z`;}
+function funnestCandleBody(x,width,openY,closeY){const top=Math.min(openY,closeY),height=Math.max(1,Math.abs(openY-closeY));return funnestBarPath(x-width/2,width,top+height,top);}
+function funnestLogScale(domain,range){const scale=fLog(domain,range),[min,max]=domain,[start,end]=range,low=Math.log(min),extent=Math.log(max)-low;const y=value=>value>=min&&value<=max?scale(value):value>0?start+(Math.log(value)-low)/extent*(end-start):NaN;y.invert=scale.invert;return y;}
 
 function viewportDomain(rows, candles, forecast, start, end, scale) {
   let low = Infinity, high = -Infinity;
@@ -93,9 +115,11 @@ function drawObservedViewport({svg,rows,candles,start,end,frequency,scale,domain
   const axisText = createPriceAxisLayout({svg,width,left:layout.left,minRight:layout.right});
   const left=layout.left,right=width-axisText.right,top=layout.top,bottom=layout.priceBottom;
   const first=utcDay(start),span=Math.max(1,utcDay(end)-first);
-  const x=value=>left+(utcDay(typeof value==='string'?value:value.date)-first)/span*(right-left);
-  const axis={...createPriceScale([domain.min,domain.max],{scale,domain,top,bottom,
-    tickCount:Math.max(2,Math.min(7,Math.floor((bottom-top)/45)))}),left,right,mode:priceMode};
+  const xScale=fLinear([first,first+span],[left,right]),x=value=>xScale(utcDay(typeof value==='string'?value:value.date));
+  const priceTickCount=Math.max(2,Math.min(7,Math.floor((bottom-top)/45))),baseAxis=createPriceScale([domain.min,domain.max],{scale,domain,top,bottom,tickCount:priceTickCount});
+  const yScale=scale==='linear'?fLinear([domain.min,domain.max],[bottom,top]):funnestLogScale([domain.min,domain.max],[bottom,top]);
+  const ticks=baseAxis.ticks;
+  const axis={...baseAxis,y:yScale,invert:yScale.invert,ticks,left,right,mode:priceMode};
   const labels=createPriceAxisFormatter({axis,display:{unit:'usd'},layout:axisText});
   const visible=rows.filter(row=>row.date>=start&&row.date<=end);
   const visibleCandles=candles.filter(row=>row.endDate>=start&&row.endDate<=end);
@@ -117,7 +141,7 @@ function drawObservedViewport({svg,rows,candles,start,end,frequency,scale,domain
   }
   markup+=`<g class="replay-observed-series" clip-path="url(#${clipId})">`;
   const runs=continuousRuns(lineRows).map(run=>pixelExtrema(run,x));
-  const path=runs.map(run=>run.map((row,index)=>`${index?'L':'M'}${x(row).toFixed(2)},${axis.y(row.price).toFixed(2)}`).join(' ')).join(' ');
+  const path=runs.map(run=>formatFunnestPath(fLine(run.map(row=>({x:x(row),y:axis.y(row.price)}))))).join(' ');
   markup+=`<path class="observed-close-line" d="${path}" fill="none" stroke="var(--text)" stroke-width="1.8"/>`;
   for(const run of runs)if(run.length===1)markup+=`<circle class="observed-close-point" cx="${x(run[0]).toFixed(2)}" cy="${axis.y(run[0].price).toFixed(2)}" r="1.8" fill="var(--text)"/>`;
   const candleWidth=candleBodyWidth(right-left,span,frequency==='weekly'?7:1);
@@ -125,9 +149,9 @@ function drawObservedViewport({svg,rows,candles,start,end,frequency,scale,domain
   if(dense){
     const wicks=['',''],bodies=['',''];
     for(const row of visibleCandles){
-      const at=x(row.endDate),side=row.close>=row.open?0:1,bodyTop=Math.min(axis.y(row.open),axis.y(row.close)),bodyHeight=Math.max(1,Math.abs(axis.y(row.open)-axis.y(row.close)));
-      wicks[side]+=`M${at.toFixed(2)},${axis.y(row.high).toFixed(2)}V${axis.y(row.low).toFixed(2)}`;
-      bodies[side]+=`M${(at-candleWidth/2).toFixed(2)},${bodyTop.toFixed(2)}h${candleWidth.toFixed(2)}v${bodyHeight.toFixed(2)}h${(-candleWidth).toFixed(2)}Z`;
+      const at=x(row.endDate),side=row.close>=row.open?0:1;
+      wicks[side]+=funnestVerticalPath(at,axis.y(row.high),axis.y(row.low));
+      bodies[side]+=funnestCandleBody(at,candleWidth,axis.y(row.open),axis.y(row.close));
     }
     markup+=`<g class="observed-candles-batched" data-count="${visibleCandles.length}"><title>${escape(source)} ${escape(symbol)} · ${visibleCandles.length}개 실제 완료 봉 · 모든 OHLC 보존</title>`;
     for(let side=0;side<2;side++){
@@ -160,6 +184,8 @@ function render({ svg, rows, candles, forecast, start, end, chartType, frequency
   if (lastDay < firstDay) throw new RangeError('Replay viewport ends before it starts');
   renderers.get(svg)?.destroy();
   detachNativeHandlers(svg);
+  const restoreReplaySurface=acquireReplaySurface(svg);let partialController=null;
+  try {
   const width = Math.max(1, Math.round(svg.clientWidth || svg.parentElement?.clientWidth || 1100));
   const height = Math.max(1, Math.round(svg.clientHeight || svg.parentElement?.clientHeight || 500));
   Object.assign(svg.dataset,{start,end});
@@ -203,12 +229,11 @@ function render({ svg, rows, candles, forecast, start, end, chartType, frequency
   definitions.append(clip); svg.append(definitions);
   const overlay = node(svg, 'g', { 'data-chart-replay-overlay': 'true', 'data-replay-overlay': 'true', 'clip-path': `url(#${clipId})`, 'pointer-events': 'none' });
   if (!hidden) {
-    const path = (values, key = 'price') => values.map((row, index) => `${index ? 'L' : 'M'}${x(row.date).toFixed(2)},${axis.y(row[key]).toFixed(2)}`).join(' ');
+    const path = (values, key = 'price') => formatFunnestPath(fLine(values.map(row=>({x:x(row.date),y:axis.y(row[key])}))));
     const bands = continuousRuns(visibleForecast, row => nonnegative(row.lower) && nonnegative(row.upper) && row.lower <= row.upper);
     for (const run of bands) if (run.length > 1) {
-      const reduced = pixelExtrema(run, x, ['lower', 'upper']);
-      const lower = [...reduced].reverse().map(row => `L${x(row.date).toFixed(2)},${axis.y(row.lower).toFixed(2)}`).join(' ');
-      overlay.append(node(svg, 'path', { d: path(reduced, 'upper') + ' ' + lower + ' Z', class: 'replay-band', fill: 'var(--replay-forecast,var(--accent))', opacity: .12 }));
+      const reduced = pixelExtrema(run, x, ['lower', 'upper']),upper=reduced.map(row=>({x:x(row.date),y:axis.y(row.upper)})),lower=reduced.map(row=>({x:x(row.date),y:axis.y(row.lower)}));
+      overlay.append(node(svg, 'path', { d: formatFunnestPath(fArea(upper,lower)), class: 'replay-band', fill: 'var(--replay-forecast,var(--accent))', opacity: .12 }));
     }
     const paths = continuousRuns(visibleForecast).map(run => path(pixelExtrema(run, x))).join(' ');
     if (paths) overlay.append(node(svg, 'path', { d: paths, class: 'replay-forecast-path', 'data-replay-forecast-path': 'true', fill: 'none', stroke: 'var(--replay-forecast,var(--accent))', 'stroke-width': 1.8, 'stroke-dasharray': '5 4' }));
@@ -265,11 +290,15 @@ function render({ svg, rows, candles, forecast, start, end, chartType, frequency
       if (svg.onpointermove === hover) svg.onpointermove = null;
       if (svg.onpointerleave === leave) svg.onpointerleave = null;
       if (svg.onclick === click) svg.onclick = null;
-      renderers.delete(svg);
+      renderers.delete(svg);restoreReplaySurface();
     } };
-  renderers.set(svg, controller);
+  partialController=controller;renderers.set(svg, controller);
   inspect(selected);
   return controller;
+  } catch(error) {
+    if(partialController&&renderers.get(svg)===partialController)partialController.destroy();else restoreReplaySurface();
+    throw error;
+  }
 }
 
 /** Paint the existing main SVG, with no second chart or access to unrevealed OHLC. */

@@ -2,7 +2,9 @@
 .chart-replay-trigger[aria-pressed=true]{border-color:var(--accent-ink);color:var(--accent-ink)}
 .chart-replay-active{--replay-forecast:var(--data-gold);--replay-actual:var(--text);--replay-up:var(--green);--replay-down:var(--red);position:relative!important;overflow:hidden!important}
 .chart-replay-active>svg{height:100%!important;min-height:0!important;touch-action:none;cursor:crosshair}
-.chart-replay-active>:not(svg):not(.chart-replay-controls):not(.chart-replay-hud):not(.chart-replay-notice){display:none!important}
+.chart-replay-active>:not(svg):not(.chart-replay-controls):not(.chart-replay-hud):not(.chart-replay-notice):not(.atlas-funnest-canvas[data-chart-replay-host=true]){display:none!important}
+/* The Funnest replay host paints the actual replay bars; the suspended live host stays hidden by its own visibility. */
+.chart-replay-active>.atlas-funnest-canvas[data-chart-replay-host=true]{display:block}
 .chart-replay-hud{position:absolute;top:8px;left:12px;right:84px;z-index:7;pointer-events:none;color:var(--text);font:12px var(--font,sans-serif)}
 .chart-replay-hud p{margin:0 0 4px;line-height:1.5;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .chart-replay-hud p:first-child{font-weight:600}
