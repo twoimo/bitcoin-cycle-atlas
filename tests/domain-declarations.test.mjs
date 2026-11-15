@@ -1,8 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
-import {readFile} from 'node:fs/promises';
+import {copyFile,mkdir,mkdtemp,readFile,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {buildEthReviewPacket} from '../scripts/build-eth-review-packet.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const modules = ['market-lab-math', 'rsi-backtest', 'rsi-bars', 'rsi-simulation'];
@@ -21,3 +24,15 @@ for (const name of modules) {
     assert.deepEqual(declared.filter(exported => !(exported in actual)), []);
   });
 }
+
+test('published market math needs no source outside the ETH review packet', async t => {
+  const fixture = await mkdtemp(join(tmpdir(), 'domain-review-packet-'));
+  t.after(() => rm(fixture, {recursive: true, force: true}));
+  await mkdir(join(fixture, 'dist'));
+  await copyFile(new URL('../dist/market-lab-math.js', import.meta.url), join(fixture, 'dist/market-lab-math.js'));
+  const git = args => execFileSync('git', args, {cwd: fixture, stdio: 'ignore'});
+  git(['init']); git(['add', '--', 'dist']);
+  git(['-c', 'user.name=Domain fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-m', 'Published market math']);
+  const manifest = await buildEthReviewPacket({repositoryRoot: fixture, seedPaths: ['dist/market-lab-math.js']});
+  assert.deepEqual(manifest.unresolvedImports, []);
+});
