@@ -1,5 +1,5 @@
 import { chartBottomBarFor } from './chart-bottom-bar.js?v=1.29.0';
-const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+import { esc } from './ui/html-escape.js';
 
 /** The timeline is a disclosure above the shared footer, not another chart row. */
 export function mountHistoryJournal({stage,events,categories,colors,onEvent,openReader,bottomBar=chartBottomBarFor(stage)}){

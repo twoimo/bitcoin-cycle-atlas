@@ -6,8 +6,8 @@ import {loadChartReplayArchive} from './chart-replay-sources.js';
 import {createForecastComputation} from './forecast-computation.js';
 import {setLoadingSurface} from './loading-surfaces.js';
 import {LONG_HORIZON_SCENARIOS} from './long-horizon-forecast.js';
+import {esc} from './ui/html-escape.js';
 
-const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pct=value=>Number.isFinite(value)?(value*100).toFixed(2)+'%':'—';
 const usd=value=>Number.isFinite(value)?'$'+value.toLocaleString('en-US',{maximumFractionDigits:0}):'—';
 const statusLabel={immature:'미성숙','awaiting-data':'자료 대기','missing-observations':'관측 누락'};

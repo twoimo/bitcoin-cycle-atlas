@@ -2,7 +2,7 @@ import {setLoadingSurface,clearLoadingSurface} from './loading-surfaces.js';
 import {utcDay,dateFromDay} from './cycle-engine.js?v=1.29.0';
 import {createAssetJudgmentHistory,fingerprintComparisonBundle,HISTORY_NOTE,yieldHistoryTask} from './asset-judgment-history.js?v=1.32.1';
 import {createSavedJudgmentLoader,savedJudgmentsCsv} from './asset-judgment-records.js?v=1.32.1';
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+import {esc} from './ui/html-escape.js';
 const pct=v=>typeof v==='number'&&Number.isFinite(v)?`${v>0?'+':v<0?'−':''}${Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}%`:'—';
 const num=v=>typeof v==='number'&&Number.isFinite(v)?v.toLocaleString('en-US',{maximumFractionDigits:4}):'—';
 const LABELS={'strong-buy':'적극 매수',buy:'분할 매수',neutral:'중립',sell:'분할 매도','strong-sell':'적극 매도',unavailable:'판단 보류','calculation-error':'계산 확인'};

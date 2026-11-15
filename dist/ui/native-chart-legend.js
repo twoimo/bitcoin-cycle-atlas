@@ -1,7 +1,7 @@
 import {priceLegendMarkup} from '../price-legend.js?v=1.31.3';
 import {mountChartLegend,writeChartLegendMarkup} from './chart-legend.js?v=1.36.1';
+import {esc} from './html-escape.js';
 
-const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const entry=(label,title,className='price-legend-item')=>`<span class="${className}" title="${esc(title||label)}">${esc(label)}</span>`;
 
 /** Keep native instrument labels owned by their source renderer. The shared
