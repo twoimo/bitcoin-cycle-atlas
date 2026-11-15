@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { createPriceScale,nearestDailyIndex,measureDailyRange } from '../dist/chart-math.js';
+import { createPriceScale,nearestDailyIndex } from '../dist/chart-math.js';
 import { utcDay } from '../dist/cycle-engine.js';
 
 const close=(actual,expected,tolerance=1e-9)=>assert.ok(Math.abs(actual-expected)<=tolerance*Math.max(1,Math.abs(expected)),`${actual} ≈ ${expected}`);
@@ -50,22 +50,11 @@ const daily=[
   {date:'2024-03-02',price:180}
 ];
 
-test('measurement snaps to daily points and counts elapsed UTC days across leap day',()=>{
+test('nearest daily index snaps to the closest UTC day across leap day',()=>{
   assert.equal(nearestDailyIndex(daily,utcDay('2024-02-29')+.2),2);
-  const result=measureDailyRange(daily,{startDate:'2024-02-28',endDate:'2024-03-01'},'2024-03-01');
-  assert.equal(result.deltaDays,2);assert.equal(result.startPrice,120);assert.equal(result.endPrice,150);
-  assert.equal(result.changePrice,30);close(result.changePct,25);assert.equal(result.kind,'observed');
-  const same=measureDailyRange(daily,{startDate:'2024-02-29',endDate:'2024-02-29'},'2024-03-01');
-  assert.equal(same.deltaDays,0);assert.equal(same.changePrice,0);assert.equal(same.changePct,0);
 });
 
-test('reverse measurement uses the first chosen price as denominator and marks future overlap',()=>{
-  const result=measureDailyRange(daily,{startDate:'2024-03-02',endDate:'2024-02-28'},'2024-03-01');
-  assert.equal(result.deltaDays,-3);assert.equal(result.changePrice,-60);close(result.changePct,-100/3);
-  assert.equal(result.includesSimulated,true);assert.equal(result.kind,'simulated');
-  const pending=measureDailyRange(daily,{startDate:'2024-03-02',endDate:null},'2024-03-01');
-  assert.equal(pending.endDate,null);assert.equal(pending.changePct,null);assert.equal(pending.includesSimulated,true);
-  assert.equal(measureDailyRange(daily,null),null);
+test('nearest daily index is -1 for an empty series',()=>{
   assert.equal(nearestDailyIndex([],0),-1);
 });
 

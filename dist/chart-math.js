@@ -69,18 +69,3 @@ export function nearestDailyIndex(rows,day) {
   while(lo<hi){const mid=(lo+hi)>>1;if(utcDay(rows[mid].date)<target)lo=mid+1;else hi=mid;}
   return lo>0&&Math.abs(utcDay(rows[lo-1].date)-target)<Math.abs(utcDay(rows[lo].date)-target)?lo-1:lo;
 }
-
-export function measureDailyRange(rows,measurement,split=null) {
-  if(!measurement||!rows.length)return null;
-  const start=rows[nearestDailyIndex(rows,measurement.startDate)];
-  const end=measurement.endDate?rows[nearestDailyIndex(rows,measurement.endDate)]:null;
-  if(!Number.isFinite(start.price)||start.price<=0||(end&&(!Number.isFinite(end.price)||end.price<=0)))throw new RangeError('Measurement requires positive prices');
-  const includesSimulated=Boolean(split&&(start.date>split||(end&&end.date>split)));
-  return {
-    startDate:start.date,endDate:end?.date??null,startPrice:start.price,endPrice:end?.price??null,
-    deltaDays:end?utcDay(end.date)-utcDay(start.date):null,
-    changePrice:end?end.price-start.price:null,
-    changePct:end?(end.price/start.price-1)*100:null,
-    includesSimulated,kind:includesSimulated?'simulated':'observed'
-  };
-}
