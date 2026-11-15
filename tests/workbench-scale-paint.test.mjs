@@ -10,7 +10,9 @@ const read = file => readFile(new URL('../dist/'+file,import.meta.url),'utf8');
 const base = await read('styles.css'), tokens = readP0RootTokens(base);
 const source = await Promise.all(SITE_STYLE_SOURCES.map(read));
 const shipped = await Promise.all(SITE_STYLE_GROUPS.map(group=>read(group.file)));
-const paint = foreground => ({visible:true,kind:'text',foreground,backgrounds:['rgb(229, 232, 235)'],issues:[]});
+const rgb = color => `rgb(${color.slice(0,3).join(', ')})`;
+const currentScaleSurface = rgb(resolveP0Token(tokens,'--chart-bottom-bar-surface','light').color);
+const paint = foreground => ({visible:true,kind:'text',foreground,backgrounds:[currentScaleSurface],issues:[]});
 
 function button(id,{symbol='ETHUSD',theme='light',pressed=true,hover=false,focus=false}={}) {
   const html={tag:'html',id:'',classes:[],attrs:{'data-theme':theme,'data-symbol':symbol},parent:null};
@@ -83,19 +85,22 @@ function transitionState(declarations,node,width) {
 const critical = new Set(['all','color','-webkit-text-fill-color','background','background-color']);
 const interpolatedPaint = state => state.filter(row=>critical.has(row.property)&&row.duration+row.delay>0);
 
-test('scale controls retain the exact existing light role endpoints and alias provenance',()=>{
+test('scale controls retain the current light role endpoints and alias provenance',()=>{
   assert.deepEqual(resolveP0Token(tokens,'--chrome-active','light').chain,['--chrome-active','--ui-link','--accent-ink']);
-  assert.deepEqual(resolveP0Token(tokens,'--chrome-active','light').color,[90,59,240,1]);
-  assert.deepEqual(resolveP0Token(tokens,'--text','light').color,[25,31,40,1]);
-  assert.deepEqual(resolveP0Token(tokens,'--chart-bottom-bar-ink','light').color,[78,89,104,1]);
-  assert.deepEqual(resolveP0Token(tokens,'--chart-bottom-bar-surface','light').color,[229,232,235,1]);
+  // The former purple endpoint is superseded by the current neutral-blue UI link role.
+  assert.deepEqual(resolveP0Token(tokens,'--chrome-active','light').color,[23,78,166,1]);
+  assert.deepEqual(resolveP0Token(tokens,'--text','light').color,[23,23,23,1]);
+  assert.deepEqual(resolveP0Token(tokens,'--chart-bottom-bar-ink','light').color,[82,82,91,1]);
+  assert.deepEqual(resolveP0Token(tokens,'--chart-bottom-bar-surface','light').color,[235,235,237,1]);
 });
 
-test('the recorded ETH intermediate channels still fail role validation despite sufficient contrast',()=>{
-  const start=[78,89,104],progress=.984;
+test('scale-transition intermediate channels still fail strict role validation despite sufficient contrast',()=>{
+  const start=resolveP0Token(tokens,'--chart-bottom-bar-ink','light').color.slice(0,3),progress=.984;
+  const active=resolveP0Token(tokens,'--chrome-active','light').color.slice(0,3);
+  const text=resolveP0Token(tokens,'--text','light').color.slice(0,3);
   const tween=destination=>start.map((channel,index)=>Math.round(channel+(destination[index]-channel)*progress));
-  assert.deepEqual(tween([90,59,240]),[90,59,238]);assert.deepEqual(tween([25,31,40]),[26,32,41]);
-  for(const [observed,exact]of [['rgb(90, 59, 238)','rgb(90, 59, 240)'],['rgb(26, 32, 41)','rgb(25, 31, 40)']]){
+  assert.deepEqual(tween(active),[24,78,165]);assert.deepEqual(tween(text),[24,24,24]);
+  for(const [observed,exact]of [['rgb(24, 78, 165)','rgb(23, 78, 166)'],['rgb(24, 24, 24)','rgb(23, 23, 23)']]){
     assert.equal(validateP0Paint(paint(observed)).status,'passed');
     assert.equal(validateP0PaintRole(paint(observed),tokens,'light').status,'failed','a 1–2 channel mismatch must not acquire tolerance');
     assert.equal(validateP0PaintRole(paint(exact),tokens,'light').status,'passed');

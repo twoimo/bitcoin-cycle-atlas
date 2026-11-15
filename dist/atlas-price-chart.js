@@ -5,7 +5,7 @@ import { MILESTONE_TYPES } from "./cycle-milestones.js?v=1.29.0";
 import { utcDay } from './cycle-engine.js?v=1.29.0';
 import { shiftCalendarMonths } from './cycle-timing.js?v=1.29.0';
 import { STATE_LABELS } from "./market-structure.js?v=1.29.0";
-import { chartPaneLayout, historicalMarkersMarkup, volumePaneMarkup, cycleTimingMarkup, formatBtcVolume } from './chart-overlays.js?v=1.29.0';
+import { chartPaneLayout, historicalMarkersMarkup, volumePaneMarkup, cycleTimingMarkup } from './chart-overlays.js?v=1.29.0';
 import { createPriceScale, barPriceChange, nearestDailyIndex as nearest } from './chart-math.js?v=1.29.0';
 import { candleBodyWidth } from './chart-view-policy.js?v=1.36.1';
 import { priceAxisMarkup, timeAxisMarkup, createPriceAxisLayout, createPriceAxisFormatter, createPriceAxisLabelVisibility } from './price-axis.js?v=1.29.0';
@@ -15,6 +15,7 @@ import { researchAnnotationsMarkup } from './research-annotations.js?v=1.29.0';
 import { refreshChartLegendGeometry } from './ui/chart-legend.js?v=1.36.1';
 import { chartLegendSlot, placePlotLabel } from './ui/chart-legend-layout.js';
 import { createChartAnnotationLayout } from './ui/chart-annotation-layout.js';
+import {linearScale as fLinear,logScale as fLog,linePath as fLine,areaPath as fArea,barPath as fBar,segments as fSegments} from './funnest-research-primitives.bundle.js?v=1.29.0';
 
 import { resolveMagnetPoint, advanceMeasurement, measurePriceAnchors, measurementOverlayMarkup, createMeasurementOverlay } from './chart-magnet.js?v=1.29.0';
 
@@ -70,14 +71,35 @@ function sample(rows,frequency,retainedDates){return frequency==='daily'?rows:ro
 // Split the daily source before weekly/pixel sampling. Otherwise a missing
 // weekday disappears between two Sundays and looks like continuous evidence.
 function dailyRuns(rows,omit=()=>false){
-  const runs=[];let run=[];
+  const values=[];let previous=null;
   for(const row of rows){
-    if(omit(row)){if(run.length)runs.push(run);run=[];continue;}
-    if(run.length&&dayOf(row.date)!==dayOf(run.at(-1).date)+1){runs.push(run);run=[];}
-    run.push(row);
+    if(omit(row)){values.push(null);previous=null;continue;}
+    if(previous&&dayOf(row.date)!==dayOf(previous.date)+1)values.push(null);
+    values.push(row);previous=row;
   }
-  if(run.length)runs.push(run);
-  return runs;
+  return fSegments(values).map(segment=>segment.values);
+}
+function formatFunnestPath(path){return path.replace(/-?(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?/gi,value=>Number(value).toFixed(2));}
+function funnestVerticalPath(x,y1,y2){const path=fLine([{x,y:y1},{x,y:y2}]),formatted=value=>(Math.round(value*100)/100).toString();return formatFunnestPath(path.replace(`L${formatted(x)},${formatted(y2)}`,`V${formatted(y2)}`));}
+function funnestBarPath(x,width,baseY,valueY){const path=fBar(x,width,baseY,valueY),match=path.match(/^M([^,]+),([^H]+)H([^V]+)V([^H]+)H([^Z]+)Z$/);if(!match)return formatFunnestPath(path);const [,sx,sy,ex,ey,baseX]=match.map((value,index)=>index?Number(value):value);return `M${Number(sx).toFixed(2)},${Number(sy).toFixed(2)}h${(Number(ex)-Number(sx)).toFixed(2)}v${(Number(ey)-Number(sy)).toFixed(2)}h${(Number(baseX)-Number(ex)).toFixed(2)}Z`;}
+function funnestCandleBody(x,width,openY,closeY){const top=Math.min(openY,closeY),height=Math.max(1,Math.abs(openY-closeY));return funnestBarPath(x-width/2,width,top+height,top);}
+function funnestLogScale(domain,range){const scale=fLog(domain,range),[min,max]=domain,[start,end]=range,low=Math.log(min),extent=Math.log(max)-low;const y=value=>value>=min&&value<=max?scale(value):value>0?start+(Math.log(value)-low)/extent*(end-start):NaN;y.invert=scale.invert;return y;}
+function funnestVolumeMarkup(volume,{bars,x,left,right,top,bottom,barWidth,source,unit='BTC',clock='UTC',dateLabel=value=>value,clipId,futureX=null,projection=[],projectionLabel='점선 · 조건부 평균 거래량'}){
+  const validBars=bars.filter(bar=>Number.isFinite(bar.volume)&&bar.volume>=0&&Number.isFinite(x(bar))&&x(bar)>=left&&x(bar)<=right);
+  const validProjection=projection.filter(point=>point.kind==='scenario'&&Number.isFinite(point.volume)&&point.volume>0&&Number.isFinite(point.lower)&&point.lower>0&&Number.isFinite(point.upper)&&point.lower<=point.volume&&point.upper>=point.volume&&Number.isFinite(x(point))&&x(point)>=left&&x(point)<=right&&(!Number.isFinite(futureX)||x(point)>futureX));
+  const max=volume.max,scale=volume.scale,valueScale=scale==='log'?fLog([1,max+1],[bottom,top]):fLinear([0,max||1],[bottom,top]);
+  const y=value=>scale==='log'?valueScale(value+1):valueScale(value),dense=volume.rendering==='batched';
+  const barGroup=`<g class="volume-bars" clip-path="url(#${esc(clipId)})">`+(dense?(()=>{const paths=['',''];for(const bar of validBars){const side=bar.close>=bar.open?0:1;paths[side]+=funnestBarPath(x(bar)-barWidth/2,barWidth,bottom,y(bar.volume));}return paths.map((path,side)=>path?`<path class="volume-bars-batch" d="${path}" data-indicator-fill fill="${side?'var(--chart-candle-down)':'var(--chart-candle-up)'}" opacity=".78"/>`:'').join('')+`<title>${validBars.length}개 실제 거래량 막대 · 화면의 같은 가격 날짜에서 정확한 ${esc(unit)} 수량을 확인할 수 있습니다.</title>`;})():validBars.map(bar=>{const xx=x(bar),color=bar.close>=bar.open?'var(--chart-candle-up)':'var(--chart-candle-down)',time=bar.time??'',period=bar.endDate?`${dateLabel(bar.startDate||bar.date)}–${dateLabel(bar.endDate)}`:dateLabel(bar.startDate||bar.date);const yy=y(bar.volume);return `<rect class="volume-bar" data-indicator-fill data-volume="${bar.volume}" data-time="${time}" data-date="${esc(bar.date)}" x="${xx-barWidth/2}" y="${yy}" width="${barWidth}" height="${Math.max(0,bottom-yy)}" fill="${color}" opacity=".78"><title>${esc(`${period} ${clock} · ${source} · ${nf(bar.volume,8)} ${unit}`)}</title></rect>`;}).join('')+'</g>');
+  let markup=volume.markup;
+  const groupStart=markup.indexOf('<g class="volume-bars"'),groupEnd=markup.indexOf('</g>',groupStart)+4;
+  if(groupStart>=0&&groupEnd>=4)markup=markup.slice(0,groupStart)+barGroup+markup.slice(groupEnd);
+
+  if(validProjection.length){const reduced=pixelExtrema(validProjection,point=>x(point),['volume','lower','upper']),upper=reduced.map(point=>({x:x(point),y:y(point.upper)})),lower=reduced.map(point=>({x:x(point),y:y(point.lower)})),central=reduced.map(point=>({x:x(point),y:y(point.volume)})),area=formatFunnestPath(fArea(upper,lower)),line=formatFunnestPath(fLine(central));
+    markup=markup.replace(/(<path class="volume-scenario-range" data-indicator-fill d=")[^"]*(")/,(_,before,after)=>before+area+after);
+    markup=markup.replace(/(<path data-indicator-fill d=")[^"]*(" fill="url\()/,(_,before,after)=>before+area+after);
+    markup=markup.replace(/(<path class="volume-scenario-line" data-indicator-line d=")[^"]*(")/,(_,before,after)=>before+line+after);
+  }
+  return markup;
 }
 
 /** A compact, non-cryptographic identity of the values handed to the painter.
@@ -124,7 +146,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   // Ordinary completed-week archives retain their existing display date.
   const candleCoordinate=c=>c.periodStartDate??c.endDate??c.date;
   const pointCoordinate=p=>p.candle?candleCoordinate(p.candle):p.date;
-  const minDay=dayOf(start),maxDay=dayOf(end),span=Math.max(1,maxDay-minDay),xday=d=>L+(d-minDay)/span*(W-L-R),x=p=>xday(dayOf(pointCoordinate(p)));
+  const minDay=dayOf(start),maxDay=dayOf(end),span=Math.max(1,maxDay-minDay),xCoordinate=fLinear([minDay,minDay+span],[L,W-R]),xday=d=>xCoordinate(d),x=p=>xday(dayOf(pointCoordinate(p)));
   Object.assign(svg.dataset,{start,end,interval:frequency});
   svg.dataset.forecastEvidenceCount='0';svg.dataset.cycleIntervalCount='0';svg.dataset.cycleIntervalLabelCount='0';svg.dataset.cycleMarkerCount='0';svg.dataset.cycleMarkerLabelCount='0';svg.dataset.historyLabelCount='0';svg.dataset.historyEventCount='0';svg.dataset.historyLabelMode='off';svg.dataset.historyHiddenLabelCount='0';
   delete svg.dataset.cycleIntervalBandTop;delete svg.dataset.cycleIntervalBandBottom;
@@ -172,7 +194,9 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   if(!priceOnlyAuto)for(const marker of visibleCycleMarkers)includePrice(marker.price);
   const values=[valueLow,valueHigh];
   const tickCount=Math.max(2,Math.min(small?5:7,Math.floor((priceBottom-T)/38)+1));
-  const priceScale=createPriceScale(values,{scale:effectiveScale,top:T,bottom:priceBottom,tickCount,factor,offset,inverted:invertScale,domain:priceDomain}),{min,max,y}=priceScale;
+  const basePriceScale=createPriceScale(values,{scale:effectiveScale,top:T,bottom:priceBottom,tickCount,factor,offset,inverted:invertScale,domain:priceDomain}),{min,max}=basePriceScale;
+  const yScale=effectiveScale==='log'?funnestLogScale([min,max],invertScale?[T,priceBottom]:[priceBottom,T]):fLinear([min,max],invertScale?[T,priceBottom]:[priceBottom,T]),y=value=>yScale(value);
+  const priceScale={...basePriceScale,y,invert:yScale.invert};
   const axisLabels=createPriceAxisFormatter({axis:priceScale,display,layout:axisText});
   retainPriceViewport(svg,priceScale);
   const yd=v=>ddTop+Math.min(100,Math.max(0,-(v??0)))/100*(ddBottom-ddTop);
@@ -182,7 +206,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
     const selected=new Set(reduced);
     return ps.filter(point=>selected.has(point)||retainedDates.has(point.date));
   };
-  const path=(ps,yy=y,key='price')=>tracePoints(ps,key).map((p,i)=>`${i?'L':'M'}${x(p).toFixed(2)},${yy(p[key]).toFixed(2)}`).join('');
+  const path=(ps,yy=y,key='price')=>formatFunnestPath(fLine(tracePoints(ps,key).map(p=>({x:x(p),y:yy(p[key])}))));
   const observedTrace=(source,yy=y,key='price',omit)=>{
     // Weekly context retains the exact daily landmark anchors. A Wednesday
     // peak must not float away from a Sunday-only polyline or pixel reduction.
@@ -221,7 +245,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   if(nextTurn){const left=xday(Math.max(minDay,dayOf(nextTurn.lowerDate||nextTurn.date))),right=xday(Math.min(maxDay,dayOf(nextTurn.upperDate||nextTurn.date)));if(right>left)s+=`<rect x="${left}" y="${T}" width="${right-left}" height="${priceBottom-T}" fill="#87bde7" opacity=".065"/>`;}
   if(band&&(future.length||retrospective.length)){
     s+='<g data-indicator-layer="range">';
-    for(const [points,attribute] of [[future,hasFixedForecast?' data-replay-forecast-band="true"':''],[retrospective,' data-replay-retrospective-band="true"']])if(points.length)s+=`<path data-indicator-fill${attribute} d="${path(points,y,'upper')}${tracePoints(points,'lower').reverse().map(p=>`L${x(p).toFixed(2)},${y(p.lower).toFixed(2)}`).join('')}Z" fill="#efb45f" opacity=".13" pointer-events="none"/>`;
+    for(const [points,attribute] of [[future,hasFixedForecast?' data-replay-forecast-band="true"':''],[retrospective,' data-replay-retrospective-band="true"']])if(points.length){const kept=new Set([...tracePoints(points,'upper'),...tracePoints(points,'lower')]),paired=points.filter(point=>kept.has(point)),upper=paired.map(point=>({x:x(point),y:y(point.upper)})),lower=paired.map(point=>({x:x(point),y:y(point.lower)}));s+=`<path data-indicator-fill${attribute} d="${formatFunnestPath(fArea(upper,lower))}" fill="#efb45f" opacity=".13" pointer-events="none"/>`;}
     s+='</g>';
   }
   if(fib.length)s+='<g data-indicator-layer="fibonacci">';
@@ -236,7 +260,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   const denseCandles=candleRows.length>256&&candleWidth<2;
   if(denseCandles){
     const wicks=['',''],bodies=['',''];
-    for(const c of candleRows){const xx=xday(dayOf(candleCoordinate(c))),side=c.close>=c.open?0:1,top=Math.min(y(c.open),y(c.close)),height=Math.max(1,Math.abs(y(c.open)-y(c.close)));wicks[side]+=`M${xx.toFixed(2)},${y(c.high).toFixed(2)}V${y(c.low).toFixed(2)}`;bodies[side]+=`M${(xx-candleWidth/2).toFixed(2)},${top.toFixed(2)}h${candleWidth.toFixed(2)}v${height.toFixed(2)}h${(-candleWidth).toFixed(2)}Z`;}
+    for(const c of candleRows){const xx=xday(dayOf(candleCoordinate(c))),side=c.close>=c.open?0:1;wicks[side]+=funnestVerticalPath(xx,y(c.high),y(c.low));bodies[side]+=funnestCandleBody(xx,candleWidth,y(c.open),y(c.close));}
     s+=`<g class="observed-candles-batched" data-count="${candleRows.length}"><title>${candleRows.length}개 실제 캔들 · 모든 OHLC를 보존하며, 날짜 선택으로 정확한 값을 확인합니다.</title>`;
     for(let side=0;side<2;side++){const color=side?'var(--chart-candle-down)':'var(--chart-candle-up)';if(wicks[side])s+=`<path d="${wicks[side]}" fill="none" stroke="${color}"/>`;if(bodies[side])s+=`<path d="${bodies[side]}" fill="${color}"/>`;}s+='</g>';
   }else {
@@ -281,7 +305,10 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   if(showTurns)for(const p of visibleTurns){const actual=!isAssumption(p),color=p.type==='high'?'#e7bb73':'#85bfdc';s+=`<circle data-date="${p.date}" clip-path="url(#${priceClip})" data-indicator-line cx="${xday(dayOf(p.date))}" cy="${y(p.price)}" r="${fullHistory?2.5:4}" fill="${actual?color:'#10151c'}" stroke="${color}" stroke-width="1.4"><title>${esc(`${actual?'관측':'예시 경로'} ${p.type==='high'?'고점':'저점'} ${date(p.date)} · ${money(p.price)}`)}</title></circle>`;}
   if(showTurns&&visibleTurns.length)s+='</g>';s+='</g>';
   if(showCycleTiming)s+=cycleTimingMarkup({points:visibleTiming,x,left:L,right:W-R,top:cycleTop,bottom:cycleBottom,titleY:layout.cycleTitleY,titleFontSize:layout.cycleTitleFontSize,dayWidth:(W-L-R)/span,split}).markup;
-  if(showVolume)s+=volumePaneMarkup({bars:visibleVolume,x:bar=>xday(dayOf(bar.periodStartDate??bar.date)),left:L,right:W-R,top:volumeTop,bottom:volumeBottom,titleY:layout.volumeTitleY,titleFontSize:layout.volumeTitleFontSize,separatorY:layout.volumeSeparatorY,barWidth:candleBodyWidth(W-L-R,span,candleDays),source:volumeSource,projectionLabel:volumeProjection?.summary?.centralMethod==='persistence'?'중앙 · 최근 90일 활동 유지':'점선 · 조건부 평균 거래량',projection:projectedVolume,clipId:`${svg.id}-volume-clip`,futureX:split&&dayOf(split)>=minDay&&dayOf(split)<maxDay?xday(dayOf(split)):null}).markup;
+  if(showVolume){const volumeX=bar=>xday(dayOf(bar.periodStartDate??bar.date)),barWidth=candleBodyWidth(W-L-R,span,candleDays),clipId=`${svg.id}-volume-clip`,projectionLabel=volumeProjection?.summary?.centralMethod==='persistence'?'중앙 · 최근 90일 활동 유지':'점선 · 조건부 평균 거래량',futureX=split&&dayOf(split)>=minDay&&dayOf(split)<maxDay?xday(dayOf(split)):null;
+    const volume=volumePaneMarkup({bars:visibleVolume,x:volumeX,left:L,right:W-R,top:volumeTop,bottom:volumeBottom,titleY:layout.volumeTitleY,titleFontSize:layout.volumeTitleFontSize,separatorY:layout.volumeSeparatorY,barWidth,source:volumeSource,projectionLabel,projection:projectedVolume,clipId,futureX});
+    s+=funnestVolumeMarkup(volume,{bars:visibleVolume,x:volumeX,left:L,right:W-R,top:volumeTop,bottom:volumeBottom,barWidth,source:volumeSource,clipId,futureX,projection:projectedVolume,projectionLabel});
+  }
   // Evidence controls stay on their original model date and price. Reserve
   // their painted dot and title before placing surrounding period labels.
   const evidenceMarkers=forecastEvidence.filter(item=>item.date>split&&item.date>=start&&item.date<=end&&Number.isFinite(item.price)&&item.price>0);

@@ -1,4 +1,5 @@
 import { utcDay, dateFromDay, validateDataset } from './cycle-engine.js?v=1.29.0';
+import { linearScale, logScale, logTicks, linePath as funnestLinePath, areaPath, segments } from './funnest-research-primitives.bundle.js?v=1.29.0';
 
 const $ = (id) => document.getElementById(id);
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
@@ -31,18 +32,15 @@ function svgText(x, y, content, { fill, size = 10, anchor = 'start', weight = 40
 }
 
 function linePath(points, x, y, field = 'price') {
-  return points.map((point, index) => `${index ? 'L' : 'M'}${x(point.date).toFixed(2)},${y(point[field]).toFixed(2)}`).join(' ');
+  return funnestLinePath(points.map((point) => ({ x: x(point.date), y: y(point[field]) })));
 }
 
-function logTicks(minimum, maximum) {
-  const ticks = [];
-  for (let exponent = Math.floor(Math.log10(minimum)) - 1; exponent <= Math.ceil(Math.log10(maximum)); exponent++) {
-    for (const multiplier of [1, 2, 5]) {
-      const value = multiplier * 10 ** exponent;
-      if (value >= minimum && value <= maximum) ticks.push(value);
-    }
-  }
-  return ticks;
+function observedLinePath(points, x, y, field = 'price') {
+  const samples = points.flatMap((point, index) => [
+    ...(index && utcDay(point.date) > utcDay(points[index - 1].date) + 1 ? [null] : []),
+    { x: x(point.date), y: y(point[field]) },
+  ]);
+  return segments(samples).map((run) => funnestLinePath(run.values)).join(' ');
 }
 
 function pointSymbol(type, x, y, color, size = 5) {
@@ -76,8 +74,10 @@ function buildChart(forecast, dataset, { view, scenario }) {
   else for (const point of scenario?.path ?? []) valueInputs.push(point.low, point.price, point.high);
   const validValues = valueInputs.filter((value) => Number.isFinite(value) && value > 0);
   const minValue = Math.min(...validValues) * 0.78, maxValue = Math.max(...validValues) * 1.45;
-  const x = (when) => plot.x + (utcDay(when) - startDay) / (endDay - startDay) * plot.width;
-  const y = (value) => plot.y + (Math.log(maxValue) - Math.log(value)) / (Math.log(maxValue) - Math.log(minValue)) * plot.height;
+  const xScale = linearScale([startDay, endDay], [plot.x, plot.x + plot.width]);
+  const yScale = logScale([minValue, maxValue], [plot.y + plot.height, plot.y]);
+  const x = (when) => xScale(utcDay(when));
+  const y = (value) => yScale(value);
   const currentX = x(forecast.asOf);
   const title = indexed ? '현재 가격을 100으로 맞춘 과거 저점 이후 수익률의 조건부 재생' : '현재 저점 후보와 시간 가정에 따른 다음 고점·저점 시나리오';
   const description = indexed
@@ -85,7 +85,7 @@ function buildChart(forecast, dataset, { view, scenario }) {
     : `${date(forecast.asOf)}까지 금색 실선은 실제 USD 가격입니다. 점선은 ${scenario?.label ?? '선택된 가정'}의 사건 사이를 로그 가격으로 연결한 개략선이며 음영은 가격 가정의 민감도입니다. 미래 고점 ${span(scenario?.peakWindow)}, 미래 저점 ${span(scenario?.troughWindow)}. 날짜 범위는 미래 오차범위가 아닙니다.`;
   let content = `<title id="forecast-svg-title">${esc(title)}</title><desc id="forecast-svg-desc">${esc(description)}</desc><defs><clipPath id="forecast-plot-clip"><rect x="${plot.x}" y="${plot.y}" width="${plot.width}" height="${plot.height}"/></clipPath></defs><rect width="${width}" height="${height}" fill="${palette.background}"/>`;
   content += `<rect x="${currentX}" y="${plot.y}" width="${Math.max(0, plot.x + plot.width - currentX)}" height="${plot.height}" fill="${palette.future}" fill-opacity="0.025"/>`;
-  for (const value of logTicks(minValue, maxValue)) {
+  for (const value of logTicks(minValue, maxValue, 7)) {
     content += `<line x1="${plot.x}" x2="${plot.x + plot.width}" y1="${y(value)}" y2="${y(value)}" stroke="${palette.grid}" stroke-width="1"/>`;
     content += svgText(plot.x - 9, y(value) + 3, indexed ? num(value) : compactMoney(value), { fill: palette.muted, size: small, anchor: 'end' });
   }
@@ -112,9 +112,9 @@ function buildChart(forecast, dataset, { view, scenario }) {
       }
     }
   } else if (!indexed && scenario?.path.length > 1) {
-    const upper = linePath(scenario.path, x, y, 'high');
-    const lower = [...scenario.path].reverse().map((point) => `L${x(point.date).toFixed(2)},${y(point.low).toFixed(2)}`).join(' ');
-    content += `<path clip-path="url(#forecast-plot-clip)" d="${upper} ${lower} Z" fill="${palette.future}" fill-opacity="0.10"/>`;
+    const upper = scenario.path.map((point) => ({ x: x(point.date), y: y(point.high) }));
+    const lower = scenario.path.map((point) => ({ x: x(point.date), y: y(point.low) }));
+    content += `<path clip-path="url(#forecast-plot-clip)" d="${areaPath(upper, lower)}" fill="${palette.future}" fill-opacity="0.10"/>`;
     content += `<path clip-path="url(#forecast-plot-clip)" d="${linePath(scenario.path, x, y)}" fill="none" stroke="${palette.future}" stroke-width="2" stroke-dasharray="6 5" stroke-linejoin="round"><title>α=0.75 및 직전 완결 사이클의 저점 잔존비율을 선택한 개략선입니다. 예상 평균이 아닙니다.</title></path>`;
     for (const anchor of scenario.anchors.filter((point) => point.type !== 'observed')) {
       const type = anchor.type, color = type === 'peak' ? palette.peak : type === 'trough' ? palette.trough : palette.future;
@@ -130,7 +130,7 @@ function buildChart(forecast, dataset, { view, scenario }) {
       if (type !== 'high-zone') content += svgText(labelX, labelY + 14, `${compactMoney(anchor.price)} · 표시 가정`, { fill: color, size: small, anchor: 'middle' });
     }
   }
-  content += `<path clip-path="url(#forecast-plot-clip)" d="${linePath(actualPath, x, y)}" fill="none" stroke="${palette.gold}" stroke-width="2.1" stroke-linejoin="round"/>`;
+  content += `<path clip-path="url(#forecast-plot-clip)" d="${observedLinePath(actualPath, x, y)}" fill="none" stroke="${palette.gold}" stroke-width="2.1" stroke-linejoin="round"/>`;
   const currentY = y(transform(forecast.current.price));
   content += `<circle cx="${currentX}" cy="${currentY}" r="3.4" fill="${palette.gold}"/>`;
   if (!indexed) {

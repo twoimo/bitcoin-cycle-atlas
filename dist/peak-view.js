@@ -1,4 +1,5 @@
 import { utcDay } from './cycle-engine.js?v=1.29.0';
+import { linearScale, ticks, linePath as funnestLinePath, segments } from './funnest-research-primitives.bundle.js?v=1.29.0';
 
 const $ = selector => document.querySelector(selector);
 const fmt = (value, digits = 1) => value == null ? '—' : new Intl.NumberFormat('en-US', { maximumFractionDigits: digits }).format(value);
@@ -50,13 +51,16 @@ function renderPeakChart(a, dataset) {
   const left=mobile?43:61,right=mobile?17:30,top=25,bottom=height-34;
   const visible=a.cycles.filter(c=>c.current||years[a.baseline].includes(c.year));
   const start=200,end=Math.ceil(Math.max(560,...visible.map(c=>c.peak.dayAfterHalving||utcDay(c.peak.date)-utcDay(c.halvingDate)))/50)*50;
-  const x=d=>left+(d-start)/(end-start)*(width-left-right),y=v=>bottom-v/110*(bottom-top);
-  const q=a.threshold*100;
-  const path = rows => rows.map((p,i)=>(i?'L':'M')+x(p.day).toFixed(2)+','+y(p.ratio).toFixed(2)).join(' ');
+  const xScale=linearScale([start,end],[left,width-right]),yScale=linearScale([0,110],[bottom,top]);
+  const x=d=>xScale(d),y=v=>yScale(v),q=a.threshold*100;
+  const path=rows=>{
+    const samples=rows.flatMap((point,index)=>[...(index&&point.day>rows[index-1].day+1?[null]:[]),{x:x(point.day),y:y(point.ratio)}]);
+    return segments(samples).map(run=>funnestLinePath(run.values)).join(' ');
+  };
   let html=`<title>최고값의 ${q}%에 도달한 시점 비교</title><desc>각 사이클의 관측 최고값을 100%로 정규화하고 반감기 이후 같은 경과일을 비교합니다. 마지막 최고값을 이용한 사후 분석입니다.</desc><defs><clipPath id="peak-clip"><rect x="${left}" y="${top}" width="${width-left-right}" height="${bottom-top}"/></clipPath></defs>`;
   html+=`<rect x="${left}" y="${y(100)}" width="${width-left-right}" height="${y(q)-y(100)}" fill="#f2aa4c" opacity=".09"/>`;
-  for(const v of [0,25,50,75,100])html+=`<line x1="${left}" x2="${width-right}" y1="${y(v)}" y2="${y(v)}" stroke="#252d39"/><text x="${left-9}" y="${y(v)+3}" fill="#8e98a8" text-anchor="end" font-size="9">${v}%</text>`;
-  for(let day=start;day<=end;day+=100)html+=`<line x1="${x(day)}" x2="${x(day)}" y1="${top}" y2="${bottom}" stroke="#252d39" stroke-dasharray="2 5"/><text x="${x(day)}" y="${bottom+21}" fill="#8e98a8" text-anchor="middle" font-size="9">D+${day}</text>`;
+  for(const v of ticks(0,100,4))html+=`<line x1="${left}" x2="${width-right}" y1="${y(v)}" y2="${y(v)}" stroke="#252d39"/><text x="${left-9}" y="${y(v)+3}" fill="#8e98a8" text-anchor="end" font-size="9">${v}%</text>`;
+  for(const day of ticks(start,end,Math.max(1,Math.ceil((end-start)/100))))html+=`<line x1="${x(day)}" x2="${x(day)}" y1="${top}" y2="${bottom}" stroke="#252d39" stroke-dasharray="2 5"/><text x="${x(day)}" y="${bottom+21}" fill="#8e98a8" text-anchor="middle" font-size="9">D+${day}</text>`;
   html+=`<line x1="${left}" x2="${width-right}" y1="${y(q)}" y2="${y(q)}" stroke="#f2aa4c" stroke-opacity=".6" stroke-dasharray="4 4"/><text x="${left+8}" y="${y(q)+15}" fill="#d5a46a" font-size="9">고점권 ${q}%</text>`;
   html+='<g clip-path="url(#peak-clip)">';
   visible.forEach(c=>{

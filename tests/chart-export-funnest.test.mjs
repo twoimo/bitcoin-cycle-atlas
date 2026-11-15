@@ -32,3 +32,39 @@ test('unpainted, tainted and mismatched Funnest canvases are rejected as image f
     assert.equal(snap.images.main,null);assert.match(snap.imageErrors.main,/Funnest/);assert.equal(snap.images.workspace,null);
   }
 });
+
+test('visible future calendar labels are exported at their real positions without changing source rows',()=>{
+  const f=fixture(),date='2027-11-01',label='2027-11';
+  const node={textContent:label,getAttribute:key=>key==='data-utc-date'?date:null,getBoundingClientRect:()=>({left:580,top:372,width:40,height:16})};
+  const rail={querySelectorAll:()=>[node]};
+  f.canvas.closest=()=>({querySelector:()=>rail,getAtlasFunnestFutureDateTicks:()=>[{time:Date.parse(date+'T00:00:00Z'),label,x:600}]});
+  f.svg.ownerDocument.defaultView.getComputedStyle=()=>({getPropertyValue:()=>'',fontSize:'12px',fontFamily:'Pretendard',color:'rgb(126, 126, 135)',display:'inline',visibility:'visible'});
+  const rows=[{date:'2026-10-21',price:100}],before=structuredClone(rows);
+  const snap=captureChartExportSnapshot({svg:f.svg,canvas:f.canvas,range:{start:'2026-10-01',end:'2028-10-21'},rows,imageOptions:{title:'BTCUSD'}});
+  assert.equal(snap.imageErrors.main,undefined);
+  assert.match(snap.images.main,/data-atlas-future-date="2027-11-01" x="600" y="417"/);
+  assert.match(snap.images.main,/font-family="Pretendard" font-size="12">2027-11<\/text>/);
+  assert.deepEqual(rows,before);
+  f.canvas.atlasFunnestExportOwner=f.canvas.closest();f.canvas.closest=()=>null;
+  const owned=captureChartExportSnapshot({svg:f.svg,canvas:f.canvas,range:{start:'2026-10-01',end:'2028-10-21'},rows,imageOptions:{title:'BTCUSD'}});
+  assert.match(owned.images.main,/data-atlas-future-date="2027-11-01"/,'An explicitly owned temporary canvas retains its live date rail');
+  f.canvas.atlasFunnestExportOwner={querySelector:()=>rail,getAtlasFunnestFutureDateTicks:()=>[]};
+  const rejected=captureChartExportSnapshot({svg:f.svg,canvas:f.canvas,range:{start:'2026-10-01',end:'2028-10-21'},rows,imageOptions:{title:'BTCUSD'}});
+  assert.equal(rejected.images.main,null);assert.match(rejected.imageErrors.main,/미래 날짜축/);
+});
+
+test('owned temporary native export canvases are removed after both captures and on every failure path',()=>{
+  for(const broken of [false,true]){
+    const f=fixture(broken?{pixels:[10,10,10,255,10,10,10,255]}:{}),events=[];
+    f.canvas.dataset={funnestExportCanvas:'true'};f.canvas.atlasFunnestExportOwner={querySelector:()=>null};
+    f.canvas.remove=()=>events.push('remove');f.canvas.toDataURL=()=>{events.push('encode');return 'data:image/png;base64,Y2hhcnQ=';};
+    const snap=captureChartExportSnapshot({svg:f.svg,canvas:f.canvas,range:{start:'2026-10-01',end:'2028-10-21'},rows:[],imageOptions:{title:'BTCUSD'}});
+    assert.deepEqual(events,broken?['remove']:['encode','encode','remove']);
+    assert.equal(Boolean(snap.images.main),!broken);
+  }
+  const f=fixture(),events=[];f.canvas.dataset={funnestExportCanvas:'true'};f.canvas.atlasFunnestExportOwner={querySelector:()=>null};f.canvas.remove=()=>events.push('remove');
+  const context={svg:f.svg,canvas:f.canvas,get range(){throw new Error('source range unavailable');}};
+  assert.throws(()=>captureChartExportSnapshot(context),/source range unavailable/);assert.deepEqual(events,['remove']);
+  const ordinary=fixture();let removed=false;ordinary.canvas.remove=()=>{removed=true;};
+  captureChartExportSnapshot({svg:ordinary.svg,canvas:ordinary.canvas,range:{start:'2026-10-01',end:'2028-10-21'},rows:[]});assert.equal(removed,false,'A live native canvas is never removed by export cleanup');
+});

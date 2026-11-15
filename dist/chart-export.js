@@ -163,7 +163,21 @@ export function captureChartCanvas(canvas,svg,{width,height}={}){
   if(!ink)throw new Error('Funnest 차트 캔버스가 아직 그려지지 않았습니다. 빈 차트를 저장하지 않았습니다.');
   let href;try{href=canvas.toDataURL('image/png');}catch(cause){throw new Error('Funnest 차트 캔버스를 PNG로 읽을 수 없습니다. 외부 픽셀이 포함되었거나 캔버스가 손상되었습니다.',{cause});}
   if(!/^data:image\/png;base64,/u.test(href)||href.endsWith(','))throw new Error('Funnest 차트 캔버스 이미지 인코딩에 실패했습니다.');
-  return {x,y,width:w,height:h,href};
+  // Calendar ticks beyond observed data are passive DOM labels, not invented
+  // bars. Preserve their actual painted positions/font in the image export too.
+  const host=canvas.atlasFunnestExportOwner||canvas.closest?.('.atlas-funnest-canvas'),rail=host?.querySelector('.atlas-funnest-future-date-rail'),dateTicks=[];
+  if(rail){
+    const receipt=host.getAtlasFunnestFutureDateTicks?.()||[];
+    for(const node of rail.querySelectorAll('span[data-utc-date]')){
+      const rect=node.getBoundingClientRect(),style=canvas.ownerDocument.defaultView.getComputedStyle(node);
+      if(!(rect.width>0&&rect.height>0)||style.display==='none'||style.visibility==='hidden')continue;
+      const date=node.getAttribute('data-utc-date'),label=node.textContent,tick=receipt.find(item=>new Date(item.time).toISOString().slice(0,10)===date&&item.label===label);
+      const xx=(rect.left+rect.width/2-overlay.left)*width/overlay.width,yy=(rect.top+rect.height/2-overlay.top)*height/overlay.height,fontSize=parseFloat(style.fontSize)*height/overlay.height;
+      if(!tick||![xx,yy,fontSize].every(Number.isFinite)||fontSize<=0||xx<0||xx>width||yy<0||yy>height)throw new Error('Funnest 미래 날짜축의 렌더 영수증과 화면 위치가 일치하지 않아 저장하지 않았습니다.');
+      dateTicks.push({date,label,x:xx,y:yy,fontSize,fontFamily:style.fontFamily,color:style.color});
+    }
+  }
+  return {x,y,width:w,height:h,href,dateTicks};
 }
 
 export function createChartSvgExport(svg,{title='BTCUSD',readout='',source='',note='',countdown='',panels=[],legend=[],canvas=null}={}){
@@ -195,7 +209,7 @@ export function createChartSvgExport(svg,{title='BTCUSD',readout='',source='',no
   function copyChart(sourceChart,y,chartHeight){
     const clone=materializeChartPaint(sourceChart,sourceChart.cloneNode(true));clone.removeAttribute('id');clone.removeAttribute('class');clone.removeAttribute('hidden');clone.removeAttribute('tabindex');clone.setAttribute('x','0');clone.setAttribute('y',String(y));clone.setAttribute('width',String(width));clone.setAttribute('height',String(chartHeight));
     clone.removeAttribute('style');
-    for(const node of clone.querySelectorAll('[id$="-cross"],.history-event-preview,.cycle-marker-preview,.cycle-interval-preview,.chart-magnet-preview,.chart-snap-feedback,.price-axis-interaction,.chart-measurement[data-pending="true"],script,foreignObject'))node.remove();
+    for(const node of clone.querySelectorAll('[id$="-cross"],.btc-future-cross,.history-event-preview,.cycle-marker-preview,.cycle-interval-preview,.chart-magnet-preview,.chart-snap-feedback,.price-axis-interaction,.chart-measurement[data-pending="true"],script,foreignObject'))node.remove();
     createPriceAxisLabelVisibility(clone)();
     for(const node of [clone,...clone.querySelectorAll('*')]){
       node.removeAttribute('tabindex');node.removeAttribute('role');
@@ -203,7 +217,7 @@ export function createChartSvgExport(svg,{title='BTCUSD',readout='',source='',no
     }
     root.append(clone);
   }
-  if(canvasImage){const image=make('image',{x:canvasImage.x,y:top+canvasImage.y,width:canvasImage.width,height:canvasImage.height,preserveAspectRatio:'none','image-rendering':'auto',href:canvasImage.href});root.append(image);copyChart(svg,top,height);}
+  if(canvasImage){const image=make('image',{x:canvasImage.x,y:top+canvasImage.y,width:canvasImage.width,height:canvasImage.height,preserveAspectRatio:'none','image-rendering':'auto',href:canvasImage.href});root.append(image);copyChart(svg,top,height);for(const tick of canvasImage.dateTicks)root.append(make('text',{'data-atlas-future-date':tick.date,x:tick.x,y:top+tick.y,'text-anchor':'middle','dominant-baseline':'middle',fill:tick.color,'font-family':tick.fontFamily,'font-size':tick.fontSize},tick.label));}
   else copyChart(svg,top,height);
   let chartY=top+height;
   for(const item of extra){chartY+=8;for(const line of item.labels){chartY+=line.size+5;root.append(make('text',{x:14,y:chartY,fill:theme.muted,'font-size':line.size},line.text));}if(item.labels.length)chartY+=8;copyChart(item.panel,chartY,item.height);chartY+=item.height;}

@@ -41,11 +41,18 @@ export function createChartExportDataSnapshot(context={}) {
 
 /** Capture all geometry, text, source metadata and CSV rows before the first await. */
 export function captureChartExportSnapshot(context={}) {
+  const temporaryCanvas=context.canvas||context.imageOptions?.canvas;
+  try {
   const data=createChartExportDataSnapshot(context),panels=(context.panels||[]).filter(panel=>panel?.svg&&!panel.hidden&&!panel.minimized),options={...(context.imageOptions||{})},images={main:null,workspace:null},imageErrors={};
   const scopeNote='저장 범위: 현재 가격 화면. 날짜·가격축 범위와 표시 중인 연구 주석을 유지합니다.';
   try{images.main=createChartSvgExport(context.svg,{...options,canvas:context.canvas||options.canvas,panels:[],note:[options.note,scopeNote].filter(Boolean).join(' · ')});}catch(error){imageErrors.main=error.message;}
   try{images.workspace=createChartSvgExport(context.svg,{...options,canvas:context.canvas||options.canvas,panels,note:[options.note,'저장 범위: 현재 가격 화면 + 보이는 펼친 연구 창. 숨김·최소화 창은 제외하며 각 창의 고유 축과 범위를 유지합니다.'].filter(Boolean).join(' · ')});}catch(error){imageErrors.workspace=error.message;}
   return deepFreeze({...data,canvasRaster:Boolean(context.canvas||options.canvas),images,imageErrors,panels:panels.map(panel=>({title:panel.title||'분석 창',readout:panel.readout||'',note:panel.note||''})),excludedPanels:(context.panels||[]).filter(panel=>panel?.hidden||panel?.minimized).map(panel=>panel.title||'분석 창')});
+  } finally {
+    // The explicitly owned BTC export snapshot is not a persistent renderer.
+    // Remove it after both captures, including invalid-data and image failures.
+    if(temporaryCanvas?.dataset?.funnestExportCanvas==='true'&&temporaryCanvas.atlasFunnestExportOwner)temporaryCanvas.remove?.();
+  }
 }
 
 export function supportsChartImageClipboard(view=globalThis){return Boolean(view.navigator?.clipboard?.write&&view.ClipboardItem&&(!view.ClipboardItem.supports||view.ClipboardItem.supports('image/png')));}
