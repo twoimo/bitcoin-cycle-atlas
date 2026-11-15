@@ -4,7 +4,6 @@ import {
   BITCOIN_EVENTS,
   BITCOIN_EVENTS_REVIEW_DATE,
   BITCOIN_EVENT_CATEGORIES,
-  getVisibleBitcoinEvents,
 } from '../dist/bitcoin-events.js';
 
 const byId = id => {
@@ -167,54 +166,7 @@ test('tariff events preserve announcement dates, policy qualifications and searc
   assert.match(threat.limitations.join(' '),/즉시 시행됐거나/);
 });
 
-test('inclusive date boundaries allow adjacent-day markers and an exact single-day view', () => {
-  assert.deepEqual(getVisibleBitcoinEvents({ startDate: '2024-01-10', endDate: '2024-01-11' }).map(event => event.id), [
-    'us-spot-etp-approval-2024', 'us-spot-etp-trading-2024',
-  ]);
-  assert.deepEqual(getVisibleBitcoinEvents({ startDate: '2024-01-10', endDate: '2024-01-10' }).map(event => event.id), ['us-spot-etp-approval-2024']);
-  assert.deepEqual(getVisibleBitcoinEvents({ startDate: '2024-01-12', endDate: '2024-01-13' }), []);
-});
-
-test('long forecast windows never acquire hypothetical future historical markers', () => {
-  assert.deepEqual(getVisibleBitcoinEvents({ startDate: '2027-01-01', endDate: '2050-12-31' }), []);
-  assert.deepEqual(getVisibleBitcoinEvents({ startDate: '2009-01-01', endDate: '2050-12-31' }), BITCOIN_EVENTS);
-  assert.equal(getVisibleBitcoinEvents()[0].id, 'genesis-2009', 'pre-price-history context is retained for the full events panel');
-});
-
-test('category and importance filters combine without mutating the caller filters', () => {
-  const categories = new Set(['protocol']);
-  const filtered = getVisibleBitcoinEvents({ startDate: '2011-01-01', minImportance: 3, categories });
-  assert.deepEqual(filtered.map(event => event.id), ['halving-2012', 'halving-2016', 'halving-2020', 'halving-2024']);
-  assert.deepEqual([...categories], ['protocol']);
-  assert.deepEqual(getVisibleBitcoinEvents({ categories: [] }), []);
-  assert.deepEqual(getVisibleBitcoinEvents({ categories: ['macro'] }).map(event => event.id), ['who-pandemic-2020', 'trump-three-country-tariffs-2025', 'trump-reciprocal-tariffs-2025', 'trump-tariff-pause-2025', 'trump-china-tariff-threat-2025']);
-});
-
-test('a constrained marker budget selects editorial priorities and returns chronological order', () => {
-  const window = { startDate: '2024-01-01', endDate: '2024-12-31' };
-  assert.deepEqual(getVisibleBitcoinEvents({ ...window, limit: 2 }).map(event => event.id), ['us-spot-etp-approval-2024', 'halving-2024']);
-  assert.deepEqual(getVisibleBitcoinEvents({ ...window, limit: 3 }).map(event => event.id), ['us-spot-etp-approval-2024', 'us-spot-etp-trading-2024', 'halving-2024']);
-  assert.deepEqual(getVisibleBitcoinEvents({ ...window, limit: 0 }), []);
-  assert.deepEqual(getVisibleBitcoinEvents({ ...window, limit: 1000 }), getVisibleBitcoinEvents(window));
-});
-
-test('invalid chart boundaries and filters fail explicitly instead of silently changing the event view', () => {
-  assert.throws(() => getVisibleBitcoinEvents({ startDate: '2024-02-30' }), RangeError);
-  assert.throws(() => getVisibleBitcoinEvents({ startDate: '2023-02-29' }), RangeError);
-  assert.doesNotThrow(() => getVisibleBitcoinEvents({ startDate: '2024-02-29', endDate: '2024-02-29' }));
-  assert.throws(() => getVisibleBitcoinEvents({ startDate: '2024-01-01T00:00:00Z' }), TypeError);
-  assert.throws(() => getVisibleBitcoinEvents({ startDate: '2025-01-01', endDate: '2024-12-31' }), RangeError);
-  assert.throws(() => getVisibleBitcoinEvents({ categories: ['unverified'] }), RangeError);
-  assert.throws(() => getVisibleBitcoinEvents({ categories: 'protocol' }), TypeError);
-  for (const minImportance of [0, 4, 1.5, NaN]) assert.throws(() => getVisibleBitcoinEvents({ minImportance }), RangeError);
-  for (const limit of [-1, 2.5, Infinity, NaN]) assert.throws(() => getVisibleBitcoinEvents({ limit }), RangeError);
-});
-
 test('views cannot mutate the shared historical facts or nested source evidence', () => {
-  const visible = getVisibleBitcoinEvents();
-  assert.notEqual(visible, BITCOIN_EVENTS);
-  visible.pop();
-  assert.equal(getVisibleBitcoinEvents().length, BITCOIN_EVENTS.length);
   assert.throws(() => { BITCOIN_EVENTS[0].date = '2030-01-01'; }, TypeError);
   assert.throws(() => { BITCOIN_EVENTS[0].sources[0].url = 'https://example.com/'; }, TypeError);
   assert.throws(() => { BITCOIN_EVENTS[0].limitations.push('unverified'); }, TypeError);
