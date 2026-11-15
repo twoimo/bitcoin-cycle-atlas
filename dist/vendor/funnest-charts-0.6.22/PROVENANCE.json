@@ -3,13 +3,13 @@
   "upstreamSnapshot": "e23919055dfca8d3051f4fc2946356269ab8372b",
   "repository": "https://github.com/funnest-xyz/funnest-charts/tree/e23919055dfca8d3051f4fc2946356269ab8372b",
   "source": "src/charts/funnest-chart-runtime.js",
-  "sourceSha256": "d6e2c81fe41e03cf89168d92de9f11240685652a04ddef76b545698b9ecb1897",
+  "sourceSha256": "c520f3f1b962d344b9912a3589a1bb48f3376d5b72d2369c0e5b6213b8b8cfcf",
   "entries": [
     {
       "source": "src/charts/funnest-chart-runtime.js",
-      "sourceSha256": "d6e2c81fe41e03cf89168d92de9f11240685652a04ddef76b545698b9ecb1897",
+      "sourceSha256": "c520f3f1b962d344b9912a3589a1bb48f3376d5b72d2369c0e5b6213b8b8cfcf",
       "bundle": "dist/funnest-chart-runtime.bundle.js",
-      "bundleSha256": "820bec279456dd148da45ff1d324fcd08d45c50c85f934050e82c9016f0fc290"
+      "bundleSha256": "8f3fec88188d170c229fd7e30a1894dc886f2c931aee550e9950011dc989725d"
     },
     {
       "source": "src/charts/funnest-research-primitives.js",

@@ -4582,6 +4582,14 @@ function setFunnestPriceExtrema(chart, domain) {
   scale.setRange(min, max);
   chart.invalidate();
 }
+function holdFunnestPriceAxisWidth(chart, viewerOwnsViewport) {
+  if (!chart || typeof chart.priceAxisWidth !== "number") throw new TypeError("Funnest 0.6.22 price-axis width field is unavailable");
+  if (typeof viewerOwnsViewport !== "function") throw new TypeError("A viewport-ownership predicate is required");
+  let held = chart.priceAxisWidth;
+  Object.defineProperty(chart, "priceAxisWidth", { configurable: true, enumerable: true, get: () => held, set(next) {
+    held = viewerOwnsViewport() ? Math.max(held, next) : next;
+  } });
+}
 function inspectAtlasFunnestChart({ chart, host, source = {}, state = "unknown", sourceMode = "ohlc", observations = [], crosshair = null, crosshairEventSequence = 0 } = {}) {
   if (!chart || !host?.querySelectorAll) throw new TypeError("Funnest chart and mounted host are required for inspection");
   const canvases = [...host.querySelectorAll("canvas")].map((canvas) => {
@@ -4738,6 +4746,7 @@ function mountAtlasFunnestChart(container, options = {}) {
     }
     chart.timeScale.options.minBarSpacing = Math.min(TIME_SCALE_BUDGET.minBarSpacing, width / span);
   };
+  holdFunnestPriceAxisWidth(chart, () => !initialRangeOwned);
   mapData(bars);
   chart.setData(currentBars);
   chart.setChartType(chartType);
@@ -4942,6 +4951,39 @@ function mountAtlasFunnestChart(container, options = {}) {
     container.removeEventListener("pointerdown", releaseInitialRange, true);
     container.removeEventListener("wheel", releaseInitialRange, true);
   });
+  if (typeof chart.timeScale?.zoom !== "function" || typeof chart.invalidate !== "function") throw new TypeError("Funnest 0.6.22 time-scale zoom is unavailable");
+  let axisDrag = null;
+  const onAxisPointerDown = (event) => {
+    if (axisDrag || destroyed || event.button !== 0 || event.isPrimary === false) return;
+    const rect = host.getBoundingClientRect(), layout = chart.layout;
+    if (!(rect.width > 0 && rect.height > 0 && layout?.width > 0 && layout.height > 0 && layout.plotWidth > 0)) return;
+    const perPixel = layout.width / rect.width, x = (event.clientX - rect.left) * perPixel, y = (event.clientY - rect.top) * layout.height / rect.height;
+    if (!(x >= 0 && x < layout.plotWidth && y >= layout.panesHeight && y <= layout.height)) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    axisDrag = { pointerId: event.pointerId, clientX: event.clientX, anchorX: x, perPixel, barSpacing: chart.timeScale.barSpacing, rightOffset: chart.timeScale.rightOffset };
+    event.target?.setPointerCapture?.(event.pointerId);
+  };
+  const onAxisPointerMove = (event) => {
+    if (!axisDrag || event.pointerId !== axisDrag.pointerId) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    const travel = Math.min(2, Math.max(-2, (event.clientX - axisDrag.clientX) * axisDrag.perPixel / chart.timeScale.width));
+    chart.timeScale.barSpacing = axisDrag.barSpacing;
+    chart.timeScale.rightOffset = axisDrag.rightOffset;
+    chart.timeScale.zoom(axisDrag.anchorX, Math.exp(-2 * travel));
+    chart.invalidate();
+  };
+  const onAxisPointerEnd = (event) => {
+    if (!axisDrag || event.pointerId !== axisDrag.pointerId) return;
+    event.stopImmediatePropagation();
+    axisDrag = null;
+  };
+  const axisDragListeners = [["pointerdown", onAxisPointerDown], ["pointermove", onAxisPointerMove], ["pointerup", onAxisPointerEnd], ["pointercancel", onAxisPointerEnd]];
+  for (const [type, handler] of axisDragListeners) host.addEventListener(type, handler, true);
+  cleanups.push(() => {
+    for (const [type, handler] of axisDragListeners) host.removeEventListener(type, handler, true);
+  });
   const api = {
     engine: "funnest",
     chart,
@@ -5068,6 +5110,7 @@ function mountAtlasFunnestChart(container, options = {}) {
 export {
   DEFAULT_THEME as ATLAS_FUNNEST_THEME,
   exposeAtlasFunnestSnapshot,
+  holdFunnestPriceAxisWidth,
   inspectAtlasFunnestChart,
   mapCloseOnlyToFunnestLine,
   mountAtlasFunnestChart,

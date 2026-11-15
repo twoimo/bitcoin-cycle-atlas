@@ -4,6 +4,7 @@ import { parseHTML } from 'linkedom';
 import { createChart } from '@funnest/charts';
 import { ATLAS_FUNNEST_THEME, exposeAtlasFunnestSnapshot, inspectAtlasFunnestChart, mapCloseOnlyToFunnestLine, mountAtlasFunnestChart, setFunnestPriceExtrema, setFunnestPriceScaleInverted, validateFunnestBars } from '../src/charts/funnest-chart-runtime.js';
 import { withChartSpacing } from '../dist/chart-view-policy.js';
+import { sessionBars, sessionDay, withNativeRuntime } from './helpers/funnest-native-fixture.mjs';
 
 test('native current-price badge direction colors preserve red/blue meaning and white text contrast',()=>{
   const channels=hex=>hex.match(/[a-f\d]{2}/ig).map(part=>parseInt(part,16)/255);
@@ -358,4 +359,69 @@ test('a suspended live canvas never counts as visibly painted during replay', ()
   const hidden = inspectAtlasFunnestChart({chart,host,state:'ready'});
   assert.equal(hidden.canvases[0].readable, true); assert.equal(hidden.canvases[0].visible, false); assert.equal(hidden.painted, false);
   visible = true; assert.equal(inspectAtlasFunnestChart({chart,host,state:'ready'}).painted, true);
+});
+
+
+test('a narrower price label never moves bars or the plot edge after the viewer has taken the viewport', async () => {
+  await withNativeRuntime(async ({ container, window, settle, relayout }) => {
+    const mounted = mountAtlasFunnestChart(container, { bars: sessionBars, symbol: 'MSTR', range: { from: sessionBars[40].time, to: sessionBars.at(-1).time + 90 * sessionDay }, volume: false });
+    try {
+      await settle(80);
+      container.dispatchEvent(new window.Event('pointerdown', { bubbles: true, cancelable: true }));
+      await relayout(mounted, 11);
+      const wide = { plotWidth: mounted.chart.layout.plotWidth, range: mounted.chart.getVisibleTimeRange(), anchor: mounted.chart.timeScale.xToIndexFloat(270) };
+      await relayout(mounted, 6);
+      assert.equal(mounted.chart.layout.plotWidth, wide.plotWidth, 'the plot keeps its width when tick labels get narrower');
+      assert.deepEqual(mounted.chart.getVisibleTimeRange(), wide.range, 'a narrower label leaves both visible dates where they were');
+      assert.equal(mounted.chart.timeScale.xToIndexFloat(270), wide.anchor, 'the bar under a fixed pointer stays under it');
+      await relayout(mounted, 15);
+      assert.ok(mounted.chart.layout.plotWidth < wide.plotWidth, 'a wider label still gets the room it needs');
+    } finally { mounted.destroy(); }
+  });
+});
+
+test('while the caller still owns the range, a narrower label gives its width back and the range is refit', async () => {
+  await withNativeRuntime(async ({ container, settle, relayout }) => {
+    const owned = { from: sessionBars[40].time, to: sessionBars.at(-1).time + 90 * sessionDay };
+    const mounted = mountAtlasFunnestChart(container, { bars: sessionBars, symbol: 'MSTR', range: owned, volume: false });
+    try {
+      await settle(80);
+      const narrow = mounted.chart.layout.plotWidth;
+      await relayout(mounted, 11);
+      assert.ok(mounted.chart.layout.plotWidth < narrow, 'a wider label takes plot width');
+      await relayout(mounted, 6);
+      assert.equal(mounted.chart.layout.plotWidth, narrow, 'before any viewer gesture a transient wide label does not cost plot width for good');
+      const visible = mounted.chart.getVisibleTimeRange();
+      assert.equal(Math.round(visible.from), owned.from); assert.equal(Math.round(visible.to), owned.to);
+    } finally { mounted.destroy(); }
+  });
+});
+
+test('dragging the time axis right widens the window around the pressed date, and left narrows it', async () => {
+  await withNativeRuntime(async ({ container, bounds, settle, PointerEvent }) => {
+    const mounted = mountAtlasFunnestChart(container, { bars: sessionBars, symbol: 'MSTR', range: { from: sessionBars[80].time, to: sessionBars[220].time }, volume: false });
+    try {
+      await settle(80);
+      const layout = mounted.chart.layout, surface = [...mounted.host.querySelectorAll('canvas')].at(-1), scale = mounted.chart.timeScale;
+      const pressX = layout.plotWidth * .38, clientY = bounds.top + layout.panesHeight + layout.timeAxisHeight / 2;
+      const drag = async travel => {
+        const start = { span: scale.width / scale.barSpacing, anchor: scale.xToIndexFloat(pressX) };
+        surface.dispatchEvent(new PointerEvent('pointerdown', { clientX: bounds.left + pressX, clientY, buttons: 1 }));
+        for (const step of [.25, .5, .75, 1]) surface.dispatchEvent(new PointerEvent('pointermove', { clientX: bounds.left + pressX + travel * step, clientY, buttons: 1 }));
+        surface.dispatchEvent(new PointerEvent('pointerup', { clientX: bounds.left + pressX + travel, clientY }));
+        await settle(40);
+        return { start, span: scale.width / scale.barSpacing, anchor: scale.xToIndexFloat(pressX) };
+      };
+      const right = await drag(layout.plotWidth * .2);
+      assert.ok(Math.abs(right.span / right.start.span - Math.exp(.4)) < 1e-9, 'a rightward drag of 20% of the plot shows e^0.4 times as many bars: ' + JSON.stringify(right));
+      assert.ok(Math.abs(right.anchor - right.start.anchor) < 1e-9, 'the pressed bar stays under the pressed point');
+      const left = await drag(-layout.plotWidth * .2);
+      assert.ok(Math.abs(left.span / left.start.span - Math.exp(-.4)) < 1e-9, 'the same leftward drag shows e^-0.4 times as many bars');
+      assert.ok(Math.abs(left.anchor - left.start.anchor) < 1e-9, 'the pressed bar stays under the pressed point when narrowing');
+      const beforeHover = scale.width / scale.barSpacing;
+      surface.dispatchEvent(new PointerEvent('pointermove', { clientX: bounds.left + pressX + 120, clientY }));
+      await settle(20);
+      assert.equal(scale.width / scale.barSpacing, beforeHover, 'a move after release is not part of the drag');
+    } finally { mounted.destroy(); }
+  });
 });
