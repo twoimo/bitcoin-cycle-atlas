@@ -178,7 +178,7 @@ body[data-shell=dashboard] #main > :is(#evidence-view, #ipo-view, #data-view, #m
   height: 100%;
   margin: 0;
   border: 1px solid var(--border);
-  border-radius: var(--card-radius-md);
+  border-radius: 0;
   background: var(--surface);
   /* Outer-card paint stays below the header while source popovers retain
      their own overflow/scroll owners. */

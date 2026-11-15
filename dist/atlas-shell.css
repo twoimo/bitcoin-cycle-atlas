@@ -269,6 +269,12 @@ body[data-shell=chart] .shell-feature-panel[data-shell-measuring=true] .shell-fe
 .atlas-page-intro>.atlas-shell-heading{margin:0;font-size:12px;font-weight:500;line-height:14px;letter-spacing:0;white-space:nowrap;text-align:center}
 .atlas-page-description{margin:0;color:var(--muted);font:12px/1.4 var(--font);white-space:normal;word-break:keep-all;overflow-wrap:break-word}
 .atlas-page-intro>.atlas-page-description{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+/* A hosted center's outer toolbar already names the active destination. Keep
+   its semantic page heading available without stacking a second visible row. */
+body[data-shell="chart"][data-center-tool] .atlas-page-intro>.atlas-shell-heading{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+/* Hosted outlook centers use one outer workbench frame. This more specific
+   source rule keeps the later shell paint from rounding that evidence edge. */
+body[data-shell="chart"][data-page="outlook"][data-center-tool] .workspace.native-chart-workspace>#main.native-chart-workbench{border-radius:0}
 /* A full-width normal-flow row also fits the 320px dock without displacing
    its original controls. The order keeps it above the plot when the dock is
    ordered last on phones; it never overlays prices, legends or controls. */
@@ -432,3 +438,314 @@ body[data-shell=chart] :is(.content-rail,.content-bottom-bar){display:none!impor
 
 /* Crosshair date readouts are metadata, not axis tick labels. */
 .atlas-plot svg .cross-date-tag>text{font-size:11px}
+
+/* Lane C: Unslop pass. The Atlas is a Korean evidence desk: graphite chrome,
+   tight hairlines, source-time metadata, and its own charts as the color moment.
+   Keep the TradingView-sized plot and its renderer-owned geometry untouched. */
+html body[data-shell="dashboard"] {
+  letter-spacing: 0;
+  line-height: 1.5;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+body[data-shell="dashboard"] .atlas-dashboard-header {
+  background: var(--sidebar);
+  border-bottom-color: var(--border);
+}
+body[data-shell="dashboard"] .atlas-sidebar {
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+}
+body[data-shell="dashboard"] .atlas-sidebar .atlas-brand {
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border-soft);
+  padding-bottom: 8px;
+}
+body[data-shell="dashboard"] .atlas-sidebar .atlas-brand > span {
+  color: var(--data-gold);
+}
+body[data-shell="dashboard"] .atlas-sidebar .atlas-brand > div,
+body[data-shell="dashboard"] .atlas-sidebar .atlas-brand > strong {
+  font-weight: 500;
+}
+body[data-shell="dashboard"] .atlas-sidebar .atlas-brand small {
+  color: var(--subtle);
+  font-size: 11px;
+  letter-spacing: 0;
+}
+body[data-shell="dashboard"] .atlas-sidebar .atlas-nav {
+  gap: 2px;
+}
+body[data-shell="dashboard"] .atlas-sidebar .atlas-nav :is(a, button) {
+  min-height: 36px;
+  height: 36px;
+  border-radius: 2px;
+  font-size: 12px;
+  font-weight: 400;
+}
+body[data-shell="dashboard"] .atlas-sidebar .atlas-nav :is(.active, [aria-current="page"]) {
+  box-shadow: inset 2px 0 0 var(--accent-ink);
+}
+body[data-shell="dashboard"] .atlas-sidebar :is(a, button):focus-visible,
+body[data-shell="dashboard"] .atlas-dashboard-header :is(a, button, input, select):focus-visible,
+body[data-shell="dashboard"] .workbench-rail :is(a, button):focus-visible,
+body[data-shell="dashboard"] .workbench-bottom-bar :is(a, button):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+body[data-shell="dashboard"] .atlas-dashboard-header .atlas-shell-heading {
+  font-size: 13px;
+  font-weight: 500;
+}
+body[data-shell="dashboard"] .atlas-dashboard-header .atlas-page-description {
+  color: var(--muted);
+  font-size: 12px;
+}
+body[data-shell="dashboard"] .workbench-bottom-bar {
+  border-top-color: var(--border);
+}
+body[data-shell="dashboard"] .workbench-bottom-bar .footer {
+  font-size: 11px;
+  letter-spacing: 0;
+}
+body[data-shell="dashboard"] :is(.atlas-page, #evidence-view, #compare-view, #ipo-view, #relay-view, #conference-view) {
+  color: var(--text);
+  letter-spacing: 0;
+}
+body[data-shell="dashboard"] :is(#evidence-view, #compare-view, #ipo-view) :is(input, select, button):focus-visible,
+body[data-shell="dashboard"] :is(#evidence-view, #compare-view, #ipo-view) summary:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+body[data-shell="dashboard"] :is(#evidence-view, #compare-view, #ipo-view) :is(h1, h2, h3) {
+  font-weight: 500;
+  letter-spacing: 0;
+}
+body[data-shell="dashboard"] :is(#evidence-view, #compare-view, #ipo-view) :is(p, li, .lab-eyebrow, .ipo-source-notes) {
+  line-height: 1.55;
+}
+body[data-shell="dashboard"] :is(#evidence-view, #compare-view, #ipo-view) :is(.evidence-table-shell, .ipo-table-shell, .table-scroll, .lab-table-scroll) {
+  border-color: var(--border);
+  border-radius: 0;
+  box-shadow: none;
+}
+body[data-shell="dashboard"] :is(#evidence-view, #compare-view, #ipo-view) :is(table th, table td) {
+  border-color: var(--border-soft);
+  font-variant-numeric: tabular-nums;
+}
+body[data-shell="dashboard"] :is(#evidence-view, #compare-view, #ipo-view) :is(table th, caption) {
+  color: var(--muted);
+}
+body[data-shell="dashboard"] :is(#evidence-view, #compare-view, #ipo-view) :is(.evidence-controls, .ipo-toolbar, .lab-toolbar) {
+  gap: 8px;
+}
+body[data-shell="dashboard"] :is(#evidence-view, #compare-view, #ipo-view) :is(button, select, input:not([type="range"])) {
+  border-radius: 3px;
+  letter-spacing: 0;
+}
+body[data-shell="dashboard"] :is(#evidence-view, #compare-view, #ipo-view) :is(.lab-details, .timing-details, .ipo-source-disclosure) {
+  border-color: var(--border);
+  border-radius: 0;
+  box-shadow: none;
+}
+body[data-shell="dashboard"] :is(#evidence-view, #compare-view, #ipo-view) :is(.lab-details, .timing-details, .ipo-source-disclosure) > summary {
+  font-weight: 400;
+}
+body[data-shell="dashboard"] .research-reader,
+body[data-shell="dashboard"] .forecast-journal-dialog,
+body[data-shell="dashboard"] .compact-toolbar-dialog,
+body[data-shell="dashboard"] .workspace-dialog {
+  border-color: var(--border-strong);
+  border-radius: 4px;
+  box-shadow: 0 8px 24px var(--shadow-color);
+}
+body[data-shell="dashboard"] :is(.research-reader, .forecast-journal-dialog, .compact-toolbar-dialog, .workspace-dialog) :is(h1, h2, h3) {
+  font-weight: 500;
+  letter-spacing: 0;
+}
+body[data-shell="dashboard"] :is(.research-reader, .forecast-journal-dialog, .compact-toolbar-dialog, .workspace-dialog) :is(button, input, select, textarea) {
+  border-radius: 3px;
+}
+body[data-shell="dashboard"] :is(.research-reader, .forecast-journal-dialog, .compact-toolbar-dialog, .workspace-dialog) :is(button, input, select, textarea, a, summary):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+body[data-shell="dashboard"] .atlas-page :is(.lab-panel, .lab-details, .timing-details, .research-chart-shell) {
+  box-shadow: none;
+}
+body[data-shell="dashboard"] .atlas-page :is(.lab-heading, .lab-section-head, .lab-chart-meta) {
+  border-color: var(--border);
+}
+body[data-shell="dashboard"] .atlas-page .lab-chart-meta :is(span, small) {
+  font-size: 12px;
+}
+body[data-shell="dashboard"] .atlas-page :is(.lab-note, .lab-table-foot, .research-note, .table-footnote) {
+  font-size: 12px;
+  line-height: 1.55;
+}
+@media (max-width: 760px), (pointer: coarse) {
+  body[data-shell="dashboard"] .atlas-sidebar .atlas-nav :is(a, button) {
+    min-height: 44px;
+    height: 44px;
+  }
+  body[data-shell="dashboard"] :is(#evidence-view, #compare-view, #ipo-view) :is(button, select, input:not([type="range"]), summary) {
+    min-height: 44px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body[data-shell="dashboard"] :is(.atlas-sidebar, .atlas-dashboard-header, .workbench-rail, .workbench-bottom-bar) * {
+    scroll-behavior: auto;
+    transition-duration: 0.01ms;
+  }
+}
+
+/* Page-specific detail: keep source identity and time legible without adding
+   new badges, panels or decorative layers. */
+body[data-shell="dashboard"] #evidence-view .evidence-table {
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+body[data-shell="dashboard"] #evidence-view .evidence-table caption {
+  min-height: 36px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+body[data-shell="dashboard"] #evidence-view .evidence-table :is(th, td) {
+  line-height: 1.45;
+}
+body[data-shell="dashboard"] #evidence-view .evidence-table tbody tr:hover td {
+  background: var(--surface-hover);
+}
+body[data-shell="dashboard"] #ipo-view .ipo-table caption,
+body[data-shell="dashboard"] #ipo-view .ipo-source,
+body[data-shell="dashboard"] #ipo-view .ipo-calendar-message {
+  font-size: 12px;
+  line-height: 1.5;
+}
+body[data-shell="dashboard"] #ipo-view .ipo-table :is(th, td) {
+  line-height: 1.45;
+}
+body[data-shell="dashboard"] #ipo-view .ipo-month-page,
+body[data-shell="dashboard"] #ipo-view .ipo-month-day {
+  border-radius: 2px;
+  box-shadow: none;
+}
+body[data-shell="dashboard"] #ipo-view .ipo-source-panel,
+body[data-shell="dashboard"] #ipo-view .ipo-day-dialog {
+  border-color: var(--border-strong);
+  border-radius: 4px;
+  box-shadow: none;
+}
+body[data-shell="dashboard"] .relay-room {
+  --relay-surface: var(--bg);
+  --relay-sidebar: var(--sidebar);
+  --relay-panel: var(--surface);
+  --relay-panel-2: var(--surface-raised);
+  --relay-rule: var(--border);
+  --relay-rule-soft: var(--border-soft);
+  --relay-ink: var(--text);
+  --relay-ink-2: var(--muted);
+  --relay-ink-3: var(--subtle);
+  --relay-mark: var(--accent-ink);
+  --relay-accent: var(--accent-ink);
+  font-size: 13px;
+  line-height: 1.55;
+}
+body[data-shell="dashboard"] .relay-room :is(.relay-rooms-head, .relay-detail-head, .relay-reader-head) {
+  border-color: var(--border);
+}
+body[data-shell="dashboard"] .relay-room :is(.relay-room-name, .relay-peer > h2, .relay-reader-head h2) {
+  font-weight: 500;
+  letter-spacing: 0;
+}
+body[data-shell="dashboard"] .relay-room :is(.relay-room-sub, .relay-room-short, .relay-rooms-foot, .relay-reader-meta, .relay-msg-foot) {
+  font-size: 11px;
+}
+body[data-shell="dashboard"] .relay-room :is(.relay-bubble, .relay-preview, .relay-topic-evidence, .relay-paper) {
+  border-radius: 3px;
+  box-shadow: none;
+}
+body[data-shell="dashboard"] .relay-room :is(.relay-msg-text, .relay-msg-quote, .relay-reply-text, .relay-reader-body) {
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+body[data-shell="dashboard"] .relay-room :is(input, select, button):focus-visible,
+body[data-shell="dashboard"] .relay-room summary:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+body[data-shell="dashboard"] .conference-player {
+  background: var(--bg);
+  color: var(--text);
+}
+body[data-shell="dashboard"] .conference-player :is(.conference-stage, .conference-transcript, .conference-controls) {
+  border-color: var(--border);
+  box-shadow: none;
+}
+body[data-shell="dashboard"] .conference-player :is(.conference-stage-message, .conference-notice, .conference-search-empty) {
+  color: var(--muted);
+  line-height: 1.55;
+}
+body[data-shell="dashboard"] .conference-player :is(button, input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+body[data-shell="dashboard"] .research-reader {
+  border-radius: 4px;
+}
+body[data-shell="dashboard"] .research-reader-nav {
+  min-height: 52px;
+  height: 52px;
+  padding-inline: 24px;
+  font-size: 12px;
+  font-weight: 400;
+}
+body[data-shell="dashboard"] .research-reader-actions button {
+  min-height: 36px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+body[data-shell="dashboard"] .research-article {
+  max-width: 760px;
+  padding: 40px 32px 56px;
+  font-size: 16px;
+  line-height: 1.75;
+  letter-spacing: 0;
+}
+body[data-shell="dashboard"] .research-article #research-reader-title {
+  font-size: clamp(26px, 3.2vw, 34px);
+  line-height: 1.25;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+body[data-shell="dashboard"] .research-article :is(h2, h3) {
+  letter-spacing: 0;
+  font-weight: 500;
+}
+body[data-shell="dashboard"] .research-article :is(.research-meta, .research-kicker, .research-article-footer) {
+  font-size: 12px;
+}
+body[data-shell="dashboard"] .research-article :is(.research-tags span, .research-verdict) {
+  border-radius: 2px;
+  font-weight: 500;
+}
+body[data-shell="dashboard"] .research-article :is(.research-provenance, .research-related, .research-source-text) {
+  border-radius: 3px;
+}
+@media (max-width: 640px) {
+  body[data-shell="dashboard"] .research-reader-nav {
+    height: 52px;
+    min-height: 52px;
+    padding-inline: 12px;
+  }
+  body[data-shell="dashboard"] .research-article {
+    padding: 28px 20px 44px;
+    font-size: 16px;
+  }
+  body[data-shell="dashboard"] .research-article #research-reader-title {
+    font-size: 28px;
+  }
+  body[data-shell="dashboard"] .relay-room {
+    font-size: 12px;
+  }
+}

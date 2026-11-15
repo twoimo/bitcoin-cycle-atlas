@@ -62,7 +62,10 @@ test('page-context chrome keeps its compact size while prose keeps a reading siz
   assert.match(base, /p:not\(\.atlas-page-description\)\{\n {2}font-size:var\(--copy-size\);line-height:1\.6;/);
   const tokens = readP0RootTokens(base);
   assert.equal(tokens.get('--copy-size'), 'var(--body-size)');
-  assert.deepEqual(['--type-body-sm','--type-body-md','--type-body-lg'].map(name => tokens.get(name)), ['15px','16px','17px']);
+  // The current full-project type scale caps body-lg at 16px; the former
+  // 17px endpoint is not a readability requirement. Inputs retain their
+  // separate 16px minimum in the dedicated responsive-control contracts.
+  assert.deepEqual(['--type-body-sm','--type-body-md','--type-body-lg'].map(name => tokens.get(name)), ['15px','16px','16px']);
 });
 
 test('no decorative gradients, blur or large shadows enter the shell', () => {

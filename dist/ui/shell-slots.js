@@ -62,9 +62,13 @@ export function refreshShellSlots(document, {symbol} = {}) {
   const instance = instances.get(document);
   if (symbol && instance) instance.symbol = symbol;
   const currentSymbol = symbol || instance?.symbol || document.documentElement.dataset.symbol || 'BTCUSD';
+  const centerTool = document.body.dataset.centerTool;
+  const pageContext = centerTool && !document.body.dataset.chartControls
+    ? heading.dataset.centerPage || heading.querySelector('.center-workspace-toolbar')?.getAttribute('aria-label')?.replace(/\s+도구$/, '') || centerTool
+    : null;
   const $ = selector => document.querySelector(selector);
   set(heading, 'data-shell-region', 'top');
-  set(heading, 'aria-label', `${currentSymbol} 차트 조작 도구`);
+  set(heading, 'aria-label', pageContext ? `${pageContext} 도구` : `${currentSymbol} 차트 조작 도구`);
   let feature = heading.querySelector('[data-shell-key="instrument"]');
   if (!feature) {
     feature = document.createElement('div');
@@ -100,7 +104,7 @@ export function refreshShellSlots(document, {symbol} = {}) {
   const footer = $('.workbench-bottom-bar');
   if (footer) {
     set(footer, 'data-shell-region', 'bottom');
-    set(footer, 'aria-label', `${currentSymbol} 차트 하단 조작부`);
+    set(footer, 'aria-label', pageContext ? `${pageContext} 하단 영역` : `${currentSymbol} 차트 하단 조작부`);
     [footer.querySelector('.workbench-range-controls'), $('#workbench-go-date'), footer.querySelector('.workbench-event-slot'), $('#workbench-range-label'), $('#workbench-scale'), $('#workbench-auto-scale'), $('#workbench-fit'), footer.querySelector('.workbench-status')].forEach((node, index) => slot(node, 'bottom', index));
     // More is the status slot's disclosure, not a ninth tool category.
     set($('#workbench-bottom-more'), 'data-shell-disclosure', 'status');
@@ -108,7 +112,7 @@ export function refreshShellSlots(document, {symbol} = {}) {
   const left = $('.workbench-tools');
   if (left) {
     set(left, 'data-shell-region', 'left');
-    set(left, 'aria-label', `${currentSymbol} 차트 조작 도구`);
+    set(left, 'aria-label', pageContext ? `${pageContext} 도구` : `${currentSymbol} 차트 조작 도구`);
     const controls = ['[data-chart-tool="crosshair"]','[data-chart-tool="pan"]','[data-chart-tool="measure"]','#workbench-magnet','#workbench-clear','[data-chart-navigation="in"]','[data-chart-navigation="out"]','[data-chart-navigation="left"]','[data-chart-navigation="right"]','[data-chart-navigation="reset"]','#workbench-annotations'].map(selector => left.querySelector(selector));
     controls.forEach((node, index) => slot(node, 'left', index));
     ordered(left, [...controls.slice(0, 5), left.querySelector('#workbench-navigation'), controls[10]]);
@@ -118,7 +122,7 @@ export function refreshShellSlots(document, {symbol} = {}) {
   const rail = $('.workbench-rail');
   if (rail) {
     set(rail, 'data-shell-region', 'right');
-    set(rail, 'aria-label', `${currentSymbol} 차트 정보와 자료`);
+    set(rail, 'aria-label', pageContext ? `${pageContext} 정보와 자료` : `${currentSymbol} 차트 정보와 자료`);
     const navigation = rail.querySelector('.atlas-nav');
     const links = navigation ? [...navigation.querySelectorAll('[data-atlas-page]')] : [];
     // Service navigation precedes chart details; derive the boundary so adding
@@ -132,7 +136,7 @@ export function refreshShellSlots(document, {symbol} = {}) {
     slot(rail.querySelector('.workbench-help'), 'right', SHELL_SLOT_KEYS.right.length - 1);
   }
   const workbench = $('.atlas-workbench,.native-chart-workbench');
-  if (workbench) set(workbench, 'aria-label', `${currentSymbol} 가격 차트`);
+  if (workbench) set(workbench, 'aria-label', pageContext || `${currentSymbol} 가격 차트`);
   const plot = $('.atlas-plot');
   if (plot) set(plot, 'data-chart-symbol', currentSymbol);
   for (const node of document.querySelectorAll('[data-shell-region] button,[data-shell-region] select')) explainDisabled(node);

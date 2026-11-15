@@ -1,4 +1,4 @@
-import {chartLegendSlot,overlayBoxesIntersect} from './chart-legend-layout.js';
+import {chartLegendSlot,overlayBoxesIntersect,placePlotLabel} from './chart-legend-layout.js';
 
 export const RSI_CRITERIA_AREA_LIMIT=.22;
 export const RSI_CRITERIA_CARD_HEIGHT=190;
@@ -13,13 +13,18 @@ export function rsiCriteriaSlot({width=0,height=0,left=0,right=width,top=0,botto
   const area=plotWidth*plotHeight,budget=area*RSI_CRITERIA_AREA_LIMIT;
   const corner=legend||chartLegendSlot({width,height,left,right,top,bottom,viewportWidth,protectedAnchors});
   const inset=Math.min(12,plotWidth/2),gap=8;
+  const anchors=protectedAnchors.filter(box=>box&&[box.x,box.y,box.width,box.height].every(Number.isFinite)&&box.width>0&&box.height>0);
   const fits=box=>box.x>=left&&box.x+box.width<=right&&box.y>=top&&box.y+box.height<=bottom
-    &&box.width*box.height<=budget+.001&&!overlayBoxesIntersect(box,corner,gap);
+    &&box.width*box.height<=budget+.001&&!overlayBoxesIntersect(box,corner,gap)&&!anchors.some(anchor=>overlayBoxesIntersect(box,anchor,gap));
   const expandWidth=Math.min(304,Math.floor(plotWidth*.46),Math.floor(budget/RSI_CRITERIA_CARD_HEIGHT),plotWidth-inset*2);
   const expanded={x:right-inset-expandWidth,y:Math.max(56,top+inset,corner.y+corner.height+gap),width:expandWidth,height:RSI_CRITERIA_CARD_HEIGHT};
-  const reason=viewportWidth<=640?'viewport':budget/RSI_CRITERIA_CARD_HEIGHT<244?'area':expandWidth<244?'width':!fits(expanded)?'height':'';
+  const reason=viewportWidth<=640?'viewport':budget/RSI_CRITERIA_CARD_HEIGHT<244?'area':expandWidth<244?'width':anchors.some(anchor=>overlayBoxesIntersect(expanded,anchor,gap))?'protected-anchors':!fits(expanded)?'height':'';
   const finish=(box,collapsed,placement)=>({...box,collapsed,placement,reason:collapsed?reason:'',areaRatio:area?box.width*box.height/area:0,visible:true});
   if(!reason)return finish(expanded,false,'below');
+  if(reason==='protected-anchors'){
+    const moved=placePlotLabel({...expanded,left:left+inset,right:right-inset,top:Math.max(56,top+inset),bottom,obstacles:[corner,...anchors],gap});
+    if(moved&&fits(moved))return finish(moved,false,'shifted');
+  }
 
   const chipWidth=Math.floor(Math.min(140,plotWidth-inset*2,budget/44));
   if(chipWidth>=44&&plotHeight>=44){
@@ -31,6 +36,10 @@ export function rsiCriteriaSlot({width=0,height=0,left=0,right=width,top=0,botto
     if(sideWidth>=44){
       const beside={x:corner.x-gap-sideWidth,y:Math.max(56,top,Math.min(corner.y,bottom-44)),width:sideWidth,height:44};
       if(fits(beside))return finish(beside,true,'beside');
+    }
+    if(anchors.length){
+      const moved=placePlotLabel({...below,left:left+inset,right:right-inset,top:Math.max(56,top),bottom,obstacles:[corner,...anchors],gap});
+      if(moved&&fits(moved))return finish(moved,true,'shifted');
     }
   }
   // A 44px square cannot meet the area budget in a smaller pane. The same

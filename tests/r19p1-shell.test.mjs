@@ -110,11 +110,15 @@ test('P1 uses exact shared containers and appends only shell-scoped CSS after au
   const tokens=readP0RootTokens(readFileSync(new URL('../dist/styles.css',import.meta.url),'utf8'));
   assert.equal(tokens.get('--shell-container'),'1140px');
   assert.equal(tokens.get('--shell-container-wide'),'1280px');
-  assert.equal(tokens.get('--pill-radius'),'999px');
+  // Supersedes the prior rounded-pill expectation: page navigation is a compact
+  // control, so its shared 4px radius is distinct from square panel surfaces.
+  assert.equal(tokens.get('--pill-radius'),'4px');
+  assert.equal(tokens.get('--control-radius'),'4px');
   const source=readFileSync(new URL('../dist/ui/shell-layout.css',import.meta.url),'utf8');
   assert.deepEqual(SITE_STYLE_GROUPS.at(-1).sources.slice(-2),['ui/shell-layout.css','chart-chrome.css'],'P1 shell remains after authored surfaces, followed only by the approved P2 chart chrome');
   assert.match(source,/\[data-shell-width=wide\] #main \{ max-width: var\(--shell-container-wide\)/);
-  assert.match(source,/border-radius: var\(--card-radius-md\)/);
+  assert.match(source,/border-radius:\s*0(?:px)?\s*;/,'outer sections use square rule-defined edges, not the superseded card radius token');
+  assert.doesNotMatch(source,/border-radius:\s*var\(--card-radius-md\)/,'the old rounded-card token is not reapplied to shell sections');
   assert.match(source,/overflow-x: auto/);
   assert.match(source,/outline: 2px solid var\(--focus\)/);
   const card=source.match(/#main > :is\([^}]+\{([^}]+)\}/)?.[1];
@@ -123,7 +127,7 @@ test('P1 uses exact shared containers and appends only shell-scoped CSS after au
   assert.doesNotMatch(source,/minRight|price-axis|\.atlas-plot|#lab-chart|\.eth-chart|\.equity-chart|linear-gradient|backdrop-filter/);
   const chartRules=[...source.matchAll(/body\[data-shell=chart\][^{]+\{([^}]+)\}/g)];
   assert.equal(chartRules.length,2);
-  assert.equal(chartRules[0][1].trim(),'border-radius: var(--pill-radius);','chart nav paint cannot change chart geometry');
+  assert.equal(chartRules[0][1].trim(),'border-radius: var(--pill-radius);','chart nav keeps the shared compact control radius, not pill geometry');
   assert.match(chartRules[1][0],/\[data-mobile-heading=phone-dock\]\s*>\s*#atlas-display-options/);
   assert.equal(chartRules[1][1].trim(),'display: inline-flex;','the original settings action can become visible without changing its geometry');
 });

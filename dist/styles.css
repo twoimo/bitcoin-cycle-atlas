@@ -2,25 +2,25 @@
  * Reference values: funnest-xyz/funnest-charts @ 39cb29ae (see NOTICE).
  * Data series remain source-owned; UI paint must consume these roles. */
 :root {
-  color-scheme: light;
-  --accent: #6c4dff;
-  --accent-hover: #5a3bf0;
+  color-scheme: dark;
+  --accent: #2962ff;
+  --accent-hover: #1f54e5;
   --on-accent: #ffffff;
-  --bg: light-dark(#ffffff, #101013);
-  --sidebar: light-dark(#f2f4f6, #101013);
-  --surface: light-dark(#ffffff, #17171c);
-  --surface-raised: light-dark(#f2f4f6, #1b1b21);
-  --surface-hover: light-dark(#e5e8eb, #272730);
-  --border: light-dark(#e5e8eb, #2a2a33);
-  --border-soft: light-dark(#edf0f3, #23232b);
-  --border-strong: light-dark(#788392, #7e7e87);
-  --text: light-dark(#191f28, #f2f2f4);
-  --muted: light-dark(#4e5968, #b0b0ba);
-  --subtle: light-dark(#596574, #9a9aa5);
-  --accent-ink: light-dark(#5a3bf0, #b4a4ff);
-  --accent-soft: light-dark(#f0ecff, #28203e);
-  --positive-ink: light-dark(#097354, #66c3ab);
-  --negative-ink: light-dark(#b3324b, #ec8190);
+  --bg: light-dark(#fafafa, #141415);
+  --sidebar: light-dark(#f4f4f5, #0f0f10);
+  --surface: light-dark(#ffffff, #191919);
+  --surface-raised: light-dark(#f4f4f5, #232325);
+  --surface-hover: light-dark(#ebebed, #2a2a2a);
+  --border: light-dark(#dedee1, #303034);
+  --border-soft: light-dark(#e8e8ea, #252529);
+  --border-strong: light-dark(#696970, #73737a);
+  --text: light-dark(#171717, #ededed);
+  --muted: light-dark(#52525b, #b0b0b5);
+  --subtle: light-dark(#626268, #929298);
+  --accent-ink: light-dark(#174ea6, #9bbaff);
+  --accent-soft: light-dark(#e7eefc, #1d2a40);
+  --positive-ink: light-dark(#08764f, #65c69b);
+  --negative-ink: light-dark(#b42336, #e9868d);
   /* Chart direction is a display preference, independent of research states.
      Korean candles use red for an advance and blue for a decline. */
   --chart-candle-up: var(--negative-ink);
@@ -35,8 +35,8 @@
   --icon-muted: var(--muted);
   --focus: var(--accent-ink);
   --grid: var(--border);
-  --shadow-color: light-dark(#001b3714, #00000066);
-  --shadow: 0 10px 40px var(--shadow-color);
+  --shadow-color: light-dark(#17171712, #00000038);
+  --shadow: 0 8px 24px var(--shadow-color);
   --media-scrim: #101013e6;
   --on-media: #f2f2f4;
   --dialog-backdrop: light-dark(#191f2866, #00000099);
@@ -49,9 +49,9 @@
   --workbench-gutter: var(--surface-raised);
   /* Financial canvases retain a dark working field. The frame is distinct
      from action/settings cards, which still follow the user's UI theme. */
-  --workbench-frame: #17171c;
-  --workbench-frame-ink: #f2f2f4;
-  --workbench-frame-muted: #b0b0ba;
+  --workbench-frame: #19191b;
+  --workbench-frame-ink: #ededed;
+  --workbench-frame-muted: #b0b0b5;
   --replay-picker: light-dark(#315d8f, #8db2ff);
   --skullet-highlight: light-dark(#191f2814, #f2f2f414);
   --indicator-label-bg: var(--bg);
@@ -60,21 +60,21 @@
   --font-system-basic: var(--font);
   --type-body-sm: 15px;
   --type-body-md: 16px;
-  --type-body-lg: 17px;
-  --type-meta: 13px;
+  --type-body-lg: 16px;
+  --type-meta: 12px;
   --body-size: var(--type-body-lg);
   --copy-size: var(--body-size);
   --copy-leading: 1.6;
-  --type-tracking: -0.02em;
-  --card-radius-sm: 12px;
-  --card-radius-md: 16px;
-  --card-radius-lg: 20px;
-  --pill-radius: 999px;
+  --type-tracking: 0;
+  --card-radius-sm: 4px;
+  --card-radius-md: 6px;
+  --card-radius-lg: 8px;
+  --pill-radius: 4px;
   --shell-container: 1140px;
   --shell-container-wide: 1280px;
   --shell-gutter: 24px;
   --control-radius: 4px;
-  --panel-radius: 8px;
+  --panel-radius: 4px;
   --chart-axis-ink: var(--muted);
   --observed-close-ink: light-dark(#191f28, #e2eaf3);
   --market-close-ink: light-dark(#191f28, #dce7f2);

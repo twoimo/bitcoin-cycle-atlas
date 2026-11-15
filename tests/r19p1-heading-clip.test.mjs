@@ -19,15 +19,18 @@ const compact=text=>text.replace(/\s+/g,' ').trim();
 const declarations=selector=>Object.fromEntries(parsed.declarations.filter(row=>!row.ancestors.length&&compact(row.selector)===selector).map(row=>[row.property,row.value]));
 const body=declarations(bodySelector),card=declarations(cardSelector);
 const widths=[320,390,768,1440],pages={evidence:'리서치',data:'자산 비교',ipo:'공모주',relay:'릴레이 콘텐츠',conference:'컨퍼런스 복습'};
-// Computed shadows serialize the authored unitless zero as an absolute length.
-const computedShadow=source=>source.replace(/^0 /,'0px ').replace('var(--shadow-color)','rgba(0, 27, 55, 0.08)');
+// The 2026-11-13 full-project Unslop direction supersedes the earlier P1
+// 16px card radius and broad shared-shadow assumptions. Shell sections now use
+// square, rule-defined edges and retain only the existing quiet local shadow.
+// This deliberately oversized shadow is only a negative paint-collector fixture.
+const legacyBroadShadow='0px 10px 40px rgba(0, 27, 55, 0.08)';
 const rectangle=(left,top,width,height)=>({left,top,right:left+width,bottom:top+height,width,height});
 const defaults={display:'block',visibility:'visible',opacity:'1',position:'static',color:'rgb(25, 31, 40)',
   backgroundColor:'transparent',backgroundImage:'none',boxShadow:'none',textShadow:'none',outlineWidth:'0px',outlineStyle:'none',
   overflowX:'visible',overflowY:'visible',borderRadius:'0px',content:'none',
   ...Object.fromEntries(['Top','Right','Bottom','Left'].flatMap(side=>[[`border${side}Width`,'0px'],[`border${side}Style`,'none'],[`border${side}Color`,'transparent']]))};
 
-function collect({width=320,page='evidence',collapsed=false,shadow='none',unsupportedClip=false}={}) {
+function collect({width=320,page='evidence',collapsed=false,shadow='none',unsupportedClip=false,sectionTop=null}={}) {
   const {document}=parseHTML(`<html><body data-shell="dashboard"><header id="header"><h1 id="atlas-page-heading">${pages[page]}</h1></header><div id="workspace"><main id="main"><section id="${page}-view"></section></main></div></body></html>`);
   const headerHeight=Number.parseFloat(body['--app-header-height']),gutter=width<768?12:Math.max(24,(width-1280)/2),padding=width<768?12:24;
   assert.equal(headerHeight,112);
@@ -37,10 +40,10 @@ function collect({width=320,page='evidence',collapsed=false,shadow='none',unsupp
     [header,rectangle(0,0,width,headerHeight)],[heading,rectangle(gutter,18,pages[page].length*17,24)],
     [workspace,rectangle(0,headerHeight,width,900-headerHeight)],
     [main,rectangle(gutter,headerHeight+padding,width-2*gutter,900-headerHeight-2*padding)],
-    [section,rectangle(gutter,headerHeight+padding,width-2*gutter,900-headerHeight-2*padding)]]);
+    [section,rectangle(gutter,sectionTop??headerHeight+padding,width-2*gutter,900-headerHeight-2*padding)]]);
   const styles=new Map([[root,{overflowX:'clip',overflowY:'clip'}],[owner,{overflowX:'clip',overflowY:'clip',display:collapsed?'block':body.display}],
-    [header,{position:'fixed'}],[section,{boxShadow:shadow,borderRadius:'16px'}],
-    ...(unsupportedClip?[[workspace,{clipPath:'circle(50%)'}]]:[])]);
+    [header,{position:'fixed'}],[section,{boxShadow:shadow,borderRadius:'0px'}],
+    ...(unsupportedClip?[[header,{clipPath:'circle(50%)'}]]:[])]);
   for(const [node,box] of bounds) {
     node.getBoundingClientRect=()=>({...box});node.getClientRects=()=>[{...box}];
     for(const [key,value] of Object.entries({clientLeft:0,clientTop:0,clientWidth:box.width,clientHeight:box.height}))Object.defineProperty(node,key,{value});
@@ -56,12 +59,13 @@ function collect({width=320,page='evidence',collapsed=false,shadow='none',unsupp
   return JSON.parse(JSON.stringify(runInNewContext(`(${inspectP0TextInk.toString()})('#atlas-page-heading')`,globals)));
 }
 
-test('P1 heading correction is dashboard-only and retains the shared palette and card contract',()=>{
+test('P1 heading correction is dashboard-only and uses quiet square sections with the shared palette',()=>{
   assert.equal(body.display,'flow-root');
+  // Retain only the existing quiet local edge shadow; the superseded broad
+  // 10/40 root shadow is not a valid shell-card paint expectation.
   assert.equal(card['box-shadow'],'0 2px 8px var(--shadow-color)');
   assert.equal(card.background,'var(--surface)');assert.equal(card.border,'1px solid var(--border)');
-  assert.equal(card['border-radius'],'var(--card-radius-md)');assert.equal(tokens.get('--card-radius-md'),'16px');
-  assert.equal(tokens.get('--shadow'),'0 10px 40px var(--shadow-color)');
+  assert.equal(card['border-radius'],'0','sections use square rule-defined edges, not the superseded 16px card radius');
   assert.equal(tokens.has('--shell-card-shadow'),false,'local card geometry must not replace the P0 root token');
   assert.deepEqual(parsed.declarations.filter(row=>row.property==='--shell-card-shadow'),[],'the P0 source audit retains root ownership of every paint alias');
   for(const row of parsed.declarations.filter(row=>row.value==='flow-root'))assert.equal(compact(row.selector),bodySelector);
@@ -76,20 +80,20 @@ test('negative model: a collapsed body clip rejects the recorded top20–40 titl
   assert.ok(result.issues.some(issue=>issue.includes('body')&&issue.includes('text ink is clipped by overflow')),JSON.stringify(result.issues));
 });
 
-test('negative model: fixing body origin alone cannot prove the original broad card shadow',()=>{
-  const shadow=computedShadow(tokens.get('--shadow'));
+test('negative model: a legacy broad shadow overlapping title ink is rejected as unsupported paint',()=>{
   for(const width of widths)for(const page of Object.keys(pages)) {
-    const result=collect({width,page,shadow});
+    // The elevated section top is a synthetic overlap fixture for this paint
+    // collector only; it is not a browser-layout or product-geometry claim.
+    const result=collect({width,page,shadow:legacyBroadShadow,sectionTop:45});
     assert.ok(!result.issues.some(issue=>issue.includes('text ink is clipped by overflow')));
     assert.ok(result.issues.includes(`#${page}-view: unsupported box-shadow paint`),`${page}-${width}: ${JSON.stringify(result.issues)}`);
     assert.ok(result.intersections.length>0);
   }
 });
 
-for(const width of widths)test(`corrected ${width}px model: contained title and bounded card shadow yield no unsupported paint candidates`,()=>{
-  const shadow=computedShadow(card['box-shadow']);
+for(const width of widths)test(`corrected ${width}px model: contained title and quiet square section yield no unsupported paint candidates`,()=>{
   for(const page of Object.keys(pages)) {
-    const result=collect({width,page,shadow});
+    const result=collect({width,page});
     assert.equal(result.text,pages[page]);assert.ok(result.glyphs.length>0);
     assert.ok(result.glyphs.every(glyph=>glyph.rect.top===20&&glyph.rect.bottom===40));
     assert.deepEqual(result.issues,[],`${page}-${width}`);
@@ -97,9 +101,8 @@ for(const width of widths)test(`corrected ${width}px model: contained title and 
   }
 });
 
-test('negative model: an unsupported clip remains unverified with the title and old shadow present',()=>{
-  const shadow=computedShadow(tokens.get('--shadow'));
-  const result=collect({shadow,unsupportedClip:true});
-  assert.ok(result.issues.some(issue=>issue.includes('unsupported or missing clipPath rectangle (circle(50%))')));
-  assert.ok(result.issues.includes('#evidence-view: unsupported box-shadow paint'));
+test('negative model: an unsupported circle clip remains unverified with quiet surface paint',()=>{
+  const result=collect({unsupportedClip:true});
+  assert.ok(result.issues.some(issue=>issue.includes('unsupported clipPath')),JSON.stringify(result.issues));
+  assert.ok(!result.issues.some(issue=>issue.includes('unsupported box-shadow paint')),'clip verification does not depend on any shadow fixture');
 });

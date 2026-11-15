@@ -15,6 +15,9 @@ const hash=text=>createHash('sha256').update(text).digest('hex');
 const rootHtml=await read('index.html'),p1Css=await read('ui/shell-layout.css');
 const tokens=readP0RootTokens(await read('styles.css'));
 const corners=['border-top-left-radius','border-top-right-radius','border-bottom-right-radius','border-bottom-left-radius'];
+// Navigation rows are compact controls, not panels: the former 999px pill
+// contract is superseded by the shared 4px control radius in the Unslop pass.
+const compactControlRadius='4px';
 const properties=new Set(['width','height','min-width','min-height','border-radius',...corners,'all']);
 const priorityCompare=(a,b)=>{const first=a.findIndex((value,index)=>value!==b[index]);return first<0?0:a[first]-b[first];};
 const parsedSheets=new Map();
@@ -85,6 +88,9 @@ function navNodes({phone=false,tag='button'}={}) {
   const {document}=parseHTML(`<html><body data-shell="chart" data-page="outlook" data-center-tool="market-us"><aside class="workbench-rail" data-shell-region="right"${phone?' data-mobile-open="true"':''}><nav class="atlas-nav">${atlasNavigationPages.map(page=>`<${tag} data-atlas-page="${page.id}"${page.id==='market-us'?' class="active" aria-current="page"':''}>${page.label}</${tag}>`).join('')}</nav></aside></body></html>`);
   return [...document.querySelectorAll('.atlas-nav > *')];
 }
+function assertCompactControlCorners(winners,label) {
+  for(const corner of corners)assert.equal(winners.get(corner)?.value,compactControlRadius,`${label} ${corner}`);
+}
 function cascade(rows,node,width) {
   const winners=new Map();
   for(const [order,row] of rows.entries())for(const selector of p0SplitArguments(row.selector)) {
@@ -120,25 +126,27 @@ for(const route of ['market-lab/','market-lab/us/']) {
   test(`${route} serves the current four stylesheet paths, digests and P1 source`,async()=>{
     await servedStyles(route,await read(route+'index.html'));
   });
-  test(`${route} CSS cascade gives all seven 768/1440 nav items 999px corners without changing 44px controls`,async()=>{
+  test(`${route} CSS cascade gives all seven nav controls compact 4px corners and preserves 44px targets`,async()=>{
     const sheets=await servedStyles(route,await read(route+'index.html')),rows=declarations(sheets);
+    assert.equal(tokens.get('--control-radius'),compactControlRadius);
+    assert.equal(tokens.get('--pill-radius'),compactControlRadius,'the formerly pill-named token is constrained to the current compact control radius');
     for(const width of [768,1440])for(const tag of ['button','a']) {
       const nodes=navNodes({tag});assert.equal(nodes.length,7);
       for(const node of nodes) {
         const winners=cascade(rows,node,width),label=`${route} ${width} ${tag} ${node.dataset.atlasPage}`;
-        for(const corner of corners)assert.equal(winners.get(corner)?.value,'999px',`${label} ${corner}`);
+        assertCompactControlCorners(winners,label);
         for(const property of ['width','height','min-height'])assert.equal(winners.get(property)?.value,'44px',`${label} ${property}`);
       }
     }
   });
 }
-test('omitting the served P1 source reproduces the seven 768px 4px corners and cannot pass this contract',async()=>{
+test('omitting the P1 source still leaves baseline 4px controls and 44px targets',async()=>{
   const sheets=await servedStyles('market-lab/',await read('market-lab/index.html'));
-  const before=declarations(sheets.map(sheet=>({...sheet,css:sheet.css.replace(p1Css,'')})));
-  for(const node of navNodes()) {
-    const winners=cascade(before,node,768);
-    assert.equal(winners.get('height').value,'44px');
-    for(const corner of corners)assert.equal(winners.get(corner).value,'4px');
+  const baseline=declarations(sheets.map(sheet=>({...sheet,css:sheet.css.replace(p1Css,'')})));
+  for(const tag of ['button','a'])for(const node of navNodes({tag})) {
+    const winners=cascade(baseline,node,768),label=`baseline ${tag} ${node.dataset.atlasPage}`;
+    assertCompactControlCorners(winners,label);
+    for(const property of ['width','height','min-height'])assert.equal(winners.get(property)?.value,'44px',`${label} ${property}`);
   }
 });
 test('P1 nav paint preserves the existing 320/390 phone control geometry and exact current-role markup',async()=>{
@@ -147,12 +155,20 @@ test('P1 nav paint preserves the existing 320/390 phone control geometry and exa
   for(const width of [320,390])for(const tag of ['button','a'])for(const node of navNodes({phone:true,tag})) {
     const original=cascade(before,node,width),updated=cascade(after,node,width);
     for(const property of ['width','height','min-width','min-height'])assert.equal(updated.get(property)?.value,original.get(property)?.value,`${width} ${tag} ${property}`);
-    for(const corner of corners)assert.equal(updated.get(corner)?.value,'999px');
+    assertCompactControlCorners(updated,`${width} ${tag} ${node.dataset.atlasPage}`);
     assert.equal(node.getAttribute('aria-current'),node.dataset.atlasPage==='market-us'?'page':null);
   }
 });
-test('a late important radius override wins the model and is rejected instead of trusting the earlier P1 rule',async()=>{
+test('a late important legacy pill override wins the cascade and is rejected by the compact-radius contract',async()=>{
   const sheets=await servedStyles('market-lab/',await read('market-lab/index.html'));
-  const injected=declarations([...sheets,{file:'regression fixture',css:'.workbench-rail .atlas-nav :is(a, button){border-radius:4px!important}'}]);
-  for(const node of navNodes())for(const corner of corners)assert.equal(cascade(injected,node,768).get(corner).value,'4px');
+  const rows=declarations(sheets),injected=declarations([...sheets,{file:'regression fixture',css:'.workbench-rail .atlas-nav :is(a, button){border-radius:999px!important}'}]);
+  for(const node of navNodes()) {
+    const label=`768 button ${node.dataset.atlasPage}`;
+    assertCompactControlCorners(cascade(rows,node,768),`current ${label}`);
+    const regressed=cascade(injected,node,768);
+    for(const corner of corners) {
+      assert.equal(regressed.get(corner)?.value,'999px',`the later important override wins ${label} ${corner}`);
+      assert.notEqual(regressed.get(corner)?.value,compactControlRadius,`the legacy pill cannot satisfy ${label} ${corner}`);
+    }
+  }
 });

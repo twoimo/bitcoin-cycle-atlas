@@ -46,7 +46,10 @@ export function overlayBoxesIntersect(a,b,gap=0){
     a.x<b.x+b.width+gap&&a.x+a.width+gap>b.x&&a.y<b.y+b.height+gap&&a.y+a.height+gap>b.y;
 }
 
-/** Move only annotation text, never its date/price anchor or any chart axis. */
+/** Move only annotation text, never its date/price anchor or any chart axis.
+ * @param {{x:number,y:number,width:number,height:number,left:number,right:number,top:number,bottom:number,obstacles?:Array<{x:number,y:number,width:number,height:number}>,gap?:number}} input
+ * @returns {{x:number,y:number,width:number,height:number}|null}
+ */
 export function placePlotLabel({x,y,width,height,left,right,top,bottom,obstacles=[],gap=4}={}){
   if(![x,y,width,height,left,right,top,bottom].every(Number.isFinite)||width>right-left||height>bottom-top)return null;
   const bounds={left,right:right-width,top,bottom:bottom-height};
