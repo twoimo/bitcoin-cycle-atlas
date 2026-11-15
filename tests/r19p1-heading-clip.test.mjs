@@ -32,7 +32,7 @@ const defaults={display:'block',visibility:'visible',opacity:'1',position:'stati
 
 function collect({width=320,page='evidence',collapsed=false,shadow='none',unsupportedClip=false,sectionTop=null}={}) {
   const {document}=parseHTML(`<html><body data-shell="dashboard"><header id="header"><h1 id="atlas-page-heading">${pages[page]}</h1></header><div id="workspace"><main id="main"><section id="${page}-view"></section></main></div></body></html>`);
-  const headerHeight=Number.parseFloat(body['--app-header-height']),gutter=width<768?12:Math.max(24,(width-1280)/2),padding=width<768?12:24;
+  const headerHeight=Number.parseFloat(body['--app-header-height']),gutter=width<768?12:Math.max(24,(width-1280)/2),padding=width<768?8:12;
   assert.equal(headerHeight,112);
   const root=document.documentElement,owner=document.body,header=document.getElementById('header'),heading=document.getElementById('atlas-page-heading');
   const workspace=document.getElementById('workspace'),main=document.getElementById('main'),section=document.getElementById(`${page}-view`);
