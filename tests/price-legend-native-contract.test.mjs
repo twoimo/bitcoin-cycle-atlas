@@ -37,6 +37,8 @@ test('native measurement input and workbench bind to actual source-bar and paint
   assert.doesNotMatch(measurement,/observed-candle|volume-bar|dataset\.plot(?:Left|Right)/);
   assert.match(workbench,/parseEthArchive/);assert.match(workbench,/parseEquityArchive/);assert.match(workbench,/readNativeFunnestEvidence/);assert.match(workbench,/assertNativeObservedEvidence/);assert.match(workbench,/assertNativeOverlayEvidence/);
   assert.match(workbench,/forecastSegments/);assert.match(workbench,/baselineSegments/);
+  assert.match(workbench,/inspectAtlasInteractionRender/);assert.match(workbench,/readNativeMeasurementInk/);assert.match(workbench,/markup:record\.export\.markup/);
+  assert.doesNotMatch(workbench,/chart-measurement|measurement-start|measureDate/,'the Funnest workbench must not read the replaced SVG measurement layer');
 });
 
 test('native compact legend retains every semantic entry while hiding its replaced inline list',()=>{

@@ -29,6 +29,35 @@ export function readNativeMeasurementTargets(svgSelector){
   });
 }
 
+export async function readNativeMeasurementInk({svgSelector,anchors,markup=null}){
+  const host=document.querySelector(svgSelector)?.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas'),canvas=host?.querySelector('canvas');
+  if(!canvas||typeof host.getAtlasFunnestSnapshot!=='function')throw new Error('Measurement ink requires the actual Funnest main canvas');
+  const layout=host.getAtlasFunnestSnapshot().layout,main=layout.panes.find(pane=>pane.kind==='main'),width=canvas.width,height=canvas.height;
+  let data;
+  if(markup===null)data=canvas.getContext('2d').getImageData(0,0,width,height).data;
+  else{
+    const href=new DOMParser().parseFromString(markup,'image/svg+xml').querySelector('image')?.getAttribute('href');
+    if(!href?.startsWith('data:image/png;base64,'))throw new Error('Saved SVG has no Funnest canvas raster');
+    const image=new Image();image.src=href;await image.decode();
+    if(image.naturalWidth!==width||image.naturalHeight!==height)throw new Error('Saved canvas raster does not match the live Funnest canvas');
+    const scratch=document.createElement('canvas');scratch.width=width;scratch.height=height;
+    const context=scratch.getContext('2d');context.drawImage(image,0,0);data=context.getImageData(0,0,width,height).data;
+  }
+  const sx=width/layout.width,sy=height/layout.height,radius=Math.ceil(6*sx);
+  return anchors.map(anchor=>{
+    const cx=Math.round(anchor.x*sx),cy=Math.round((main.top+anchor.y)*sy);let ink=0;
+    for(let y=Math.max(0,cy-radius);y<=Math.min(height-1,cy+radius);y++)for(let x=Math.max(0,cx-radius);x<=Math.min(width-1,cx+radius);x++){
+      const i=(y*width+x)*4;if(data[i+3]>0&&Math.abs(data[i]-138)<=24&&Math.abs(data[i+1]-200)<=24&&Math.abs(data[i+2]-185)<=24)ink++;
+    }
+    return ink;
+  });
+}
+
+export function nativeMeasurementFacts(measurement){
+  const anchor=value=>value&&{time:value.time,date:value.date,price:value.price,field:value.field,kind:value.kind};
+  return measurement&&{pending:measurement.pending,label:measurement.label,start:anchor(measurement.start),end:anchor(measurement.end)};
+}
+
 /** The checked-out native controllers run in the candidate browser. All state
  * changes below use real pointer/keyboard input; evaluation only reads DOM or
  * the same-origin published source archive. No mock controller is installed. */
@@ -54,13 +83,13 @@ export async function verifyNativeChartWorkbench(api) {
       const pane=layout.panes.find(item=>item.kind==='volume'),main=layout.panes.find(item=>item.kind==='main'),canvas=host.querySelector('canvas');
       let volumePixels={readable:false,opaquePixels:0,sampledColors:0,pixelHash:null};
       if(pane&&canvas){try{const data=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data,x0=0,x1=Math.min(canvas.width,Math.round(layout.plotWidth/layout.width*canvas.width)),y0=Math.round(pane.top/layout.height*canvas.height),y1=Math.min(canvas.height,Math.round((pane.top+pane.height)/layout.height*canvas.height));let hash=2166136261;const colors=new Set();volumePixels.readable=true;const step=Math.max(1,Math.floor(x1*(y1-y0)/12000));for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x+=step){const i=(y*canvas.width+x)*4;colors.add(`${data[i]},${data[i+1]},${data[i+2]},${data[i+3]}`);if(data[i+3])volumePixels.opaquePixels++;for(let j=0;j<4;j++){hash^=data[i+j]||0;hash=Math.imul(hash,16777619);}}volumePixels.sampledColors=colors.size;volumePixels.pixelHash=(hash>>>0).toString(16);}catch{}}
-      const measure=node.querySelector('.chart-measurement'),bars=snapshot.engineBars||[],overlay=plot.inspectAtlasOverlayRender?.()||null;
+      const bars=snapshot.engineBars||[],overlay=plot.inspectAtlasOverlayRender?.()||null;
       return {product:symbol==='ETHUSD'?'ETH-USD':symbol,interval:document.querySelector('#workbench-interval-select')?.value||'daily',type:snapshot.chartType,scale:snapshot.settings?.priceScale,invert:String(Boolean(snapshot.inverted)),
         observed:bars.length,latest:document.querySelector('#'+prefix+'-price').textContent,latestTitle:document.querySelector('#'+prefix+'-bar-time').textContent,
         price:document.querySelector('#'+prefix+'-price').textContent,date:document.querySelector('#'+prefix+'-bar-time').textContent,
         range:`${snapshot.range?.from}/${snapshot.range?.to}`,tool:plot.dataset.tool,overlay,layout,
         volume:{enabled:Boolean(snapshot.settings?.volume&&pane),painted:Boolean(pane&&volumePixels.readable&&volumePixels.opaquePixels>0&&volumePixels.sampledColors>1),unit:symbol==='ETHUSD'?'ETH':'주',clock:symbol==='ETHUSD'?'UTC':'뉴욕 세션',count:bars.filter(bar=>Number.isFinite(bar.volume)).length,projected:0,title:snapshot.source?.product||symbol,pixels:volumePixels},
-        measurement:measure&&measure.getAttribute('display')!=='none'?{pending:measure.dataset.pending,start:{...measure.querySelector('.measurement-start')?.dataset},end:{...measure.querySelector('.measurement-end')?.dataset},text:measure.querySelector('.measurement-label')?.textContent}:null};
+        measurement:plot.inspectAtlasInteractionRender?.()?.measurement||null};
     },{svg,prefix,symbol});
     return {...chart,...ui};
   };
@@ -181,12 +210,35 @@ export async function verifyNativeChartWorkbench(api) {
   const points=await evaluate(cdp,readNativeMeasurementTargets,svg);
   record.measurementInputs=points;
   for(const point of points){assert.ok(Number.isFinite(point.x)&&Number.isFinite(point.y));for(const type of ['mouseMoved','mousePressed','mouseReleased'])await cdp.send('Input.dispatchMouseEvent',{type,x:point.x,y:point.y,...(type==='mouseMoved'?{}:{button:'left',clickCount:1})});await settled(cdp);}
-  const measured=await state();assert.equal(measured.measurement?.pending,'false');
-  for(const [index,side]of ['start','end'].entries())assert.equal(Date.parse(measured.measurement[side].measureDate),points[index].time,'Measurement must retain the selected actual source date');
-  record.states.push({action:'measure',...measured});await shot('measurement');
+  const measured=await state();assert.equal(measured.measurement?.pending,false,'Two source-bar clicks must complete the measurement the Funnest overlay paints');
+  for(const [index,side]of ['start','end'].entries()){
+    assert.equal(measured.measurement[side].time,points[index].time,'Measurement must retain the selected actual source bar');
+    assert.equal(Date.parse(measured.measurement[side].date),points[index].time,'Measurement must retain the selected actual source date');
+  }
+  const ink=anchors=>evaluate(cdp,readNativeMeasurementInk,{svgSelector:svg,anchors:[anchors.start,anchors.end]});
+  const measuredInk=await ink(measured.measurement);
+  assert.ok(measuredInk.every(count=>count>0),'Measurement anchors are not painted on the actual Funnest canvas '+JSON.stringify(measuredInk));
+  record.states.push({action:'measure',...measured,measurementInk:measuredInk});await shot('measurement');
   await tool('#workbench-clear');assert.equal((await state()).measurement,null);
-  await action('#workbench-undo','#workbench-undo');assert.deepEqual((await state()).measurement,measured.measurement,'Undo must restore only the native drawing state');
+  assert.deepEqual(await ink(measured.measurement),[0,0],'Cleared measurement still paints its anchors on the Funnest canvas');
+  await action('#workbench-undo','#workbench-undo');
+  const restored=await state();assert.deepEqual(nativeMeasurementFacts(restored.measurement),nativeMeasurementFacts(measured.measurement),'Undo must restore only the native drawing state');
+  const restoredInk=await ink(restored.measurement);assert.ok(restoredInk.every(count=>count>0),'Undo did not repaint the measurement '+JSON.stringify(restoredInk));
   await tool('[data-chart-tool="crosshair"]');
+
+  const exported=await state();assert.deepEqual(nativeMeasurementFacts(exported.measurement),nativeMeasurementFacts(measured.measurement),'The measurement to save changed before export');
+  await action('#lab-svg','#lab-svg');
+  await until(()=>evaluate(cdp,()=>{const image=document.querySelector('#chart-export-dialog img');return document.querySelector('#chart-export-dialog')?.open&&image?.complete&&image.naturalWidth>0;}),'native chart export preview');
+  inside(await bounds(cdp,'#chart-export-dialog'),'native export dialog');
+  record.export=await evaluate(cdp,async()=>{const dialog=document.querySelector('#chart-export-dialog'),anchor=dialog.querySelector('a[download]'),markup=await(await fetch(anchor.href)).text();return {download:anchor.download,markup,previewWidth:dialog.querySelector('img').naturalWidth,previewHeight:dialog.querySelector('img').naturalHeight};});
+  assert.ok(record.export.download.startsWith(symbol+'-'));assert.ok(record.export.markup.includes(product));assert.ok(record.export.markup.includes(eth?'UTC':'뉴욕 거래 세션일'));
+  record.export.measurementInk=await evaluate(cdp,readNativeMeasurementInk,{svgSelector:svg,anchors:[exported.measurement.start,exported.measurement.end],markup:record.export.markup});
+  assert.ok(record.export.measurementInk.every(count=>count>0),'Saved SVG lost the actual drawing '+JSON.stringify(record.export.measurementInk));
+  assert.doesNotMatch(record.export.markup,/거래량 · BTC/);delete record.export.markup;
+  await shot('export');await click(cdp,'[data-native-export="png"]');
+  await until(()=>evaluate(cdp,()=>document.querySelector('#chart-export-dialog [role=status]').textContent==='PNG 저장 완료'),'actual native PNG creation');
+  record.export.pngCreated=true;await key('Escape','Escape',27);
+  assert.equal(await evaluate(cdp,()=>document.querySelector('#chart-export-dialog').open),false);
 
   const beforeDate=await state();await click(cdp,'#workbench-go-date');
   inside(await bounds(cdp,'#chart-go-to-dialog'),'native date dialog');
@@ -196,18 +248,7 @@ export async function verifyNativeChartWorkbench(api) {
   assert.equal(await evaluate(cdp,()=>document.querySelector('#chart-go-to-dialog').open),false);
   const afterDate=await state();assert.notEqual(afterDate.range,beforeDate.range,'Native date submit must change the actual viewport');assert.ok(afterDate.date.includes(targetDate),'Native date submit selected a different source date');
   record.states.push({action:'go-to',targetDate,...afterDate});
-
-  await action('#lab-svg','#lab-svg');
-  await until(()=>evaluate(cdp,()=>{const image=document.querySelector('#chart-export-dialog img');return document.querySelector('#chart-export-dialog')?.open&&image?.complete&&image.naturalWidth>0;}),'native chart export preview');
-  inside(await bounds(cdp,'#chart-export-dialog'),'native export dialog');
-  record.export=await evaluate(cdp,async()=>{const dialog=document.querySelector('#chart-export-dialog'),anchor=dialog.querySelector('a[download]'),markup=await(await fetch(anchor.href)).text();return {download:anchor.download,markup,previewWidth:dialog.querySelector('img').naturalWidth,previewHeight:dialog.querySelector('img').naturalHeight};});
-  assert.ok(record.export.download.startsWith(symbol+'-'));assert.ok(record.export.markup.includes(product));assert.ok(record.export.markup.includes(eth?'UTC':'뉴욕 거래 세션일'));assert.ok(record.export.markup.includes('measurement-start'),'Saved SVG lost the actual drawing');
-  assert.doesNotMatch(record.export.markup,/거래량 · BTC/);delete record.export.markup;
-  await shot('export');await click(cdp,'[data-native-export="png"]');
-  await until(()=>evaluate(cdp,()=>document.querySelector('#chart-export-dialog [role=status]').textContent==='PNG 저장 완료'),'actual native PNG creation');
-  record.export.pngCreated=true;await key('Escape','Escape',27);
-  assert.equal(await evaluate(cdp,()=>document.querySelector('#chart-export-dialog').open),false);
-  assert.equal((await state()).product,product);
+  assert.equal(afterDate.product,product);
   record.finalOverflow=await evaluate(cdp,()=>Math.max(document.documentElement.scrollWidth,document.body.scrollWidth));
   assert.ok(record.finalOverflow<=width+1,'Native interactions introduced page overflow');
 }

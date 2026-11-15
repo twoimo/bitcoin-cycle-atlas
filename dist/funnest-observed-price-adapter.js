@@ -408,6 +408,7 @@ export function mountObservedPriceChart(plot, { series, symbol, currency = 'USD'
         }
       }
       const current = interactionState.measurement;
+      let paintedMeasurement = null;
       if (current) {
         const preview = !current.endDate && interactionState.tool === 'measure' ? cursor : null;
         const result = measureResult(current, preview);
@@ -418,17 +419,19 @@ export function mountObservedPriceChart(plot, { series, symbol, currency = 'USD'
           const b = hasEnd ? pointXY(coords, endTime, result.endPrice ?? preview.price) : a;
           if ([a.x, a.y, b.x, b.y].every(Number.isFinite)) {
             painter.circle(a.x, a.y, 4, '#17191d', '#8ac8b9', 2);
+            paintedMeasurement = { pending: !current.endDate, start: { time: startTime, date: result.startDate, price: result.startPrice, field: result.startField, kind: current.startKind || 'observed', ...a }, end: null, label: null };
             if (hasEnd) {
               painter.line(a.x, a.y, b.x, b.y, '#8ac8b9', 1.6, [5, 4]);
               painter.circle(b.x, b.y, 4, '#17191d', '#8ac8b9', 2);
               const label = `Δ ${Number(result.changePrice).toFixed(2)} (${Number(result.changePct).toFixed(2)}%) · ${result.deltaDays == null ? '—' : `${Number(result.deltaDays).toFixed(1)}일`}${result.includesSimulated ? ' · 가정 포함' : ''}`;
               painter.text(label, (a.x + b.x) / 2 + 7, Math.min(a.y, b.y) - 8, '#8ac8b9', 'left', 'middle');
               segments.push({ from: { ...a }, to: { ...b }, priceDelta: result.changePrice, percentDelta: result.changePct, deltaSeconds: result.deltaSeconds, kind: result.kind }); labels.push({ text: label, x: (a.x + b.x) / 2 + 7, y: Math.min(a.y, b.y) - 8 });
+              paintedMeasurement.end = { time: endTime, date: result.endDate, price: result.endPrice ?? preview.price, field: result.endField, kind: current.endKind || preview?.kind || 'observed', ...b }; paintedMeasurement.label = label;
             } else marks.push({ ...a, time: startTime, price: result.startPrice, field: result.startField, kind: current.startKind || 'observed', role: 'measurement-start' });
           }
         }
       }
-      lastInteractionRender = Object.freeze({ engine: 'funnest', coordinatesSource: 'Funnest ChartOverlay PaneCoords + Painter calls', sequence: ++interactionSequence, painted: Boolean(marks.length || segments.length), snapMarks: Object.freeze(marks.map(item => Object.freeze({ ...item }))), measurementSegments: Object.freeze(segments.map(item => Object.freeze({ ...item, from: Object.freeze({ ...item.from }), to: Object.freeze({ ...item.to }) }))), labels: Object.freeze(labels.map(item => Object.freeze({ ...item }))) });
+      lastInteractionRender = Object.freeze({ engine: 'funnest', coordinatesSource: 'Funnest ChartOverlay PaneCoords + Painter calls', sequence: ++interactionSequence, painted: Boolean(marks.length || segments.length), snapMarks: Object.freeze(marks.map(item => Object.freeze({ ...item }))), measurementSegments: Object.freeze(segments.map(item => Object.freeze({ ...item, from: Object.freeze({ ...item.from }), to: Object.freeze({ ...item.to }) }))), labels: Object.freeze(labels.map(item => Object.freeze({ ...item }))), measurement: paintedMeasurement && Object.freeze({ ...paintedMeasurement, start: Object.freeze(paintedMeasurement.start), end: paintedMeasurement.end && Object.freeze(paintedMeasurement.end) }) });
     },
   };
   const bandHandle = mounted.addOverlay(bandOverlay);
