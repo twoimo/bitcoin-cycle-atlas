@@ -1,10 +1,6 @@
 /** Research-0.1. These are explicit service assumptions, not the lecturer's fitted model. */
-/** @typedef {typeof import('@atlas/domain/market-lab')} Declared */
-/** @type {Declared['AXES']} */
 export const AXES = Object.freeze(['alpha', 'beta', 'gamma']);
-/** @type {Declared['AXIS_LABELS']} */
 export const AXIS_LABELS = Object.freeze({ alpha: 'α 성장', beta: 'β 유동성', gamma: 'γ 심리' });
-/** @type {Declared['RSI_REFERENCES']} */
 export const RSI_REFERENCES = Object.freeze([
   Object.freeze({ label: '1차 매수 기준', threshold: 33.5 }), Object.freeze({ label: '2차 매수 기준', threshold: 29.5 }),
   Object.freeze({ label: '1차 매도 기준', threshold: 40 }), Object.freeze({ label: '2차 매도 기준', threshold: 43 }),
@@ -12,9 +8,7 @@ export const RSI_REFERENCES = Object.freeze([
 const finite = x => typeof x === 'number' && Number.isFinite(x);
 const object = x => x !== null && typeof x === 'object' && !Array.isArray(x);
 const day = s => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) && Number.isFinite(Date.parse(`${s}T00:00:00Z`)) && new Date(`${s}T00:00:00Z`).toISOString().slice(0,10) === s;
-/** @type {Declared['CLOCK_SKEW_MS']} */
 export const CLOCK_SKEW_MS = 300000;
-/** @type {Declared['calendarDate']} */
 export function calendarDate(now, timeZone = 'UTC') {
   const current = +now;
   if (!Number.isFinite(current) || typeof timeZone !== 'string' || !timeZone.trim()) return null;
@@ -25,7 +19,6 @@ export function calendarDate(now, timeZone = 'UTC') {
     return day(date) ? date : null;
   } catch { return null; }
 }
-/** @type {Declared['isFutureStamp']} */
 export function isFutureStamp(value, now, skewMs = CLOCK_SKEW_MS, timeZone) {
   const current = +now;
   if (!Number.isFinite(current) || !Number.isFinite(skewMs) || skewMs < 0) return true;
@@ -36,7 +29,6 @@ export function isFutureStamp(value, now, skewMs = CLOCK_SKEW_MS, timeZone) {
   const parsed = Date.parse(value);
   return Number.isFinite(parsed) && parsed > current + skewMs;
 }
-/** @type {Declared['observationGate']} */
 export function observationGate({ generatedAt, source, prices, now = new Date(), timeZone } = {}) {
   if (!source) return { ok:false, reason:'출처가 연결되지 않았습니다.' };
   if (source.status !== 'ready') return { ok:false, reason:source.error || '원천 수집이 완료되지 않았습니다.' };
@@ -46,17 +38,13 @@ export function observationGate({ generatedAt, source, prices, now = new Date(),
   if (last && isFutureStamp(last[0], now, CLOCK_SKEW_MS, zone)) return { ok:false, reason: zone ? '미래 가격일은 표시하지 않습니다.' : '거래소 시간대가 없어 가격일을 UTC 달력으로 확인했고, 미래 가격일은 표시하지 않습니다.' };
   return { ok:true };
 }
-/** @type {Declared['matchingIndex']} */
 export function matchingIndex(rows, date, readDate = row => Array.isArray(row) ? row[0] : row?.date) {
   if (!day(date) || !Array.isArray(rows)) return null;
   const index = rows.findIndex(row => readDate(row) === date);
   return index < 0 ? null : index;
 }
-/** @type {Declared['EXCHANGE_TIMEZONES']} */
 export const EXCHANGE_TIMEZONES = Object.freeze({ spx:'America/New_York', nasdaq:'America/New_York', tqqq:'America/New_York', soxl:'America/New_York', 'kodex-kosdaq150':'Asia/Seoul', vix:'America/New_York', kospi:'Asia/Seoul', kosdaq:'Asia/Seoul' });
-/** @type {Declared['exchangeTimezoneFor']} */
 export function exchangeTimezoneFor(id) { return EXCHANGE_TIMEZONES[id] || null; }
-/** @type {Declared['withExchangeTimezones']} */
 export function withExchangeTimezones(doc) {
   if (!object(doc)) fail('스냅샷이 없습니다.');
   const next = structuredClone(doc);
@@ -77,14 +65,12 @@ export function withExchangeTimezones(doc) {
   }
   return next;
 }
-/** @type {Declared['evidenceHolds']} */
 export function evidenceHolds({ kiwoomExport = null, gdpVintage = null } = {}) {
   const holds = [];
   if (!kiwoomExport) holds.push({ id:'kiwoom-rsi', status:'deferred', reason:'키움 RSI 원본 내보내기가 없어 동등성을 주장하지 않습니다.' });
   if (!gdpVintage) holds.push({ id:'gdp-vintage', status:'deferred', reason:'GDP 과거 공표 시점 판본이 없어 실시간 백테스트를 주장하지 않습니다.' });
   return { kiwoomEquivalent:false, realtimeBacktest:false, holds };
 }
-/** @type {Declared['resolveRsiSelection']} */
 export function resolveRsiSelection(prices, rows, priceIndex) {
   const date = Array.isArray(prices?.[priceIndex]) ? prices[priceIndex][0] : null;
   const rsiOscIndex = matchingIndex(rows, date, row => row?.date);
@@ -94,11 +80,9 @@ const text = x => typeof x === 'string' && x.trim().length > 0 && x.length <= 20
 const iso = x => typeof x === 'string' && /T/.test(x) && Number.isFinite(Date.parse(x));
 const fail = message => { throw new TypeError(message); };
 const clip = (x, min, max) => Math.min(max, Math.max(min, x));
-/** @type {Declared['safeSourceUrl']} */
 export function safeSourceUrl(value) {
   try { const u = new URL(value); return ['https:', 'http:'].includes(u.protocol) && !u.username && !u.password ? u.href : null; } catch { return null; }
 }
-/** @type {Declared['validateSeries']} */
 export function validateSeries(rows, { positive = false, maximum = 25000 } = {}) {
   if (!Array.isArray(rows) || rows.length > maximum) fail('시계열 형식 또는 길이를 확인하세요.');
   let previous = '';
@@ -108,7 +92,6 @@ export function validateSeries(rows, { positive = false, maximum = 25000 } = {})
   }
   return rows;
 }
-/** @type {Declared['validateSnapshot']} */
 export function validateSnapshot(doc) {
   if (!object(doc) || doc.schemaVersion !== 1 || !iso(doc.generatedAt) || !text(doc.modelVersion)) fail('연구 데이터 판본을 확인하세요.');
   if (!Array.isArray(doc.sources) || doc.sources.length > 64 || !object(doc.regions) || !Array.isArray(doc.markets) || doc.markets.length > 12) fail('연구 데이터의 필수 항목이 없습니다.');
@@ -137,13 +120,11 @@ export function validateSnapshot(doc) {
   }
   return doc;
 }
-/** @type {Declared['median']} */
 export function median(values) {
   if (!values.length || values.some(v => !finite(v))) return null;
   const a = [...values].sort((x,y) => x-y), i = Math.floor(a.length/2);
   return a.length%2 ? a[i] : a[i-1]/2+a[i]/2;
 }
-/** @type {Declared['robustLatest']} */
 export function robustLatest(rows, { direction = 1, window = 60, minSamples = 20 } = {}) {
   validateSeries(rows);
   if (![1,-1].includes(direction) || !Number.isInteger(window) || !Number.isInteger(minSamples) || minSamples < 1 || window < minSamples) fail('표준화 설정을 확인하세요.');
@@ -155,14 +136,12 @@ export function robustLatest(rows, { direction = 1, window = 60, minSamples = 20
   const rawZ = direction * (latest[1]-center)/scale;
   return { status: 'ready', z: clip(rawZ,-3,3), rawZ, center, scale, samples: history.length, clipped: Math.abs(rawZ)>3 };
 }
-/** @type {Declared['diagnoseRegion']} */
 export function diagnoseRegion(doc, region, { now = new Date() } = {}) {
   validateSnapshot(doc);
   if (!['us','kr'].includes(region) || !Number.isFinite(+now)) fail('지역·조회 시각을 확인하세요.');
   const futureSnapshot = isFutureStamp(doc.generatedAt, now);
   const axes = AXES.map(key => {
     const a = doc.regions[region].axes[key], source = doc.sources.find(s => s.id === a.sourceId), latest = a.values.at(-1), stats = robustLatest(a.values, a);
-    /** @type {string} */
     let status = stats.status, reason = '';
     if (futureSnapshot || isFutureStamp(source.retrievedAt, now) || (latest && isFutureStamp(latest[0], now))) { status='future'; reason='미래 관측·수집시각을 사용할 수 없습니다.'; }
     else if (source.status !== 'ready') { status='unavailable'; reason=source.error || '원천 수집이 완료되지 않았습니다.'; }
@@ -180,7 +159,6 @@ export function diagnoseRegion(doc, region, { now = new Date() } = {}) {
   return { region, label:doc.regions[region].label, status:score!==null?'ready':'withheld', score, scoreLabel:score===null?(signFlipped?'제한 부호 역전 · 판단 유보':'판단 유보'):score>.5?'양의 설명 압력':score<-.5?'음의 설명 압력':'작은 합성 점수', axes, coverage, total:3, clipSignReversed:signFlipped, rawMean,
     notes:['동일 1/3 비중·±3 표준화 제한·±0.5 구분은 서비스 가정이며 학습된 계수가 아닙니다.','GDP·시장금리·변동성은 원문 개념의 일부 대리지표이며 EPS·재정·AAII를 모두 측정하지 않습니다.','±0.5 안은 작은 합성 점수이며 축이 서로 상쇄됐다는 뜻은 아닙니다.','현재 수정판 자료의 횡단 진단입니다. 실시간 투자 신호·확률·검증된 과거 예측 성과가 아닙니다.',...(signFlipped?['±3 제한이 합성 부호를 뒤집었습니다. 제한 전 평균과 제한 후 점수를 같은 방향의 압력으로 읽지 않습니다.']:[])] };
 }
-/** @type {Declared['positiveFactorScenario']} */
 export function positiveFactorScenario({ alpha=0, beta=0, gamma=0, weights=[1,1,1], sensitivity=.1 } = {}) {
   const shocks = [alpha,beta,gamma];
   if (shocks.some(v=>!finite(v)||Math.abs(v)>3) || !Array.isArray(weights) || weights.length!==3 || weights.some(v=>!finite(v)||v<0||v>100) || !finite(sensitivity) || sensitivity<0 || sensitivity>1) fail('조건 실험의 입력 범위를 확인하세요.');
@@ -188,7 +166,6 @@ export function positiveFactorScenario({ alpha=0, beta=0, gamma=0, weights=[1,1,
   const normalizedWeights=weights.map(w=>w/total), contributions=shocks.map((s,i)=>s*normalizedWeights[i]), pressure=contributions.reduce((a,b)=>a+b,0), factors=contributions.map(c=>Math.exp(sensitivity*c));
   return { pressure, contributions, factors, index:100*Math.exp(sensitivity*pressure), weights:normalizedWeights, sensitivity, kind:'hypothetical_dimensionless_index' };
 }
-/** @type {Declared['calculateRsiSeries']} */
 export function calculateRsiSeries(prices, period=14, signalPeriod=9) {
   validateSeries(prices,{positive:true});
   if (!Number.isInteger(period)||period<2||period>250||!Number.isInteger(signalPeriod)||signalPeriod<1||signalPeriod>250) fail('RSI와 시그널 기간을 확인하세요.');
@@ -213,13 +190,11 @@ export function calculateRsiSeries(prices, period=14, signalPeriod=9) {
     return {date,close,rsi,signal};
   });
 }
-/** @type {Declared['thresholdPositions']} */
 export function thresholdPositions(rsi) {
   if(rsi==null)return [];
   if(!finite(rsi)||rsi<0||rsi>100)fail('RSI는 0~100의 수치여야 합니다.');
   return RSI_REFERENCES.map(r=>({...r,difference:rsi-r.threshold,position:rsi===r.threshold?'equal':rsi<r.threshold?'below':'above'}));
 }
-/** @type {Declared['assetEconomics']} */
 export function assetEconomics({costBasis,residual=0,lifeYears,annualRevenue,annualOpex,discountRate=0}) {
   if(![costBasis,residual,annualRevenue,annualOpex,discountRate].every(finite)||Math.max(costBasis,residual,annualRevenue,annualOpex)>1e15||costBasis<=0||residual<0||residual>costBasis||annualRevenue<0||annualOpex<0||discountRate<0||discountRate>1||!Number.isInteger(lifeYears)||lifeYears<1||lifeYears>100)fail('취득원가·잔존가치·연간 현금흐름·내용연수 입력을 확인하세요.');
   const depreciation=(costBasis-residual)/lifeYears,operatingCash=annualRevenue-annualOpex,operatingProfit=operatingCash-depreciation;
@@ -235,7 +210,6 @@ export function assetEconomics({costBasis,residual=0,lifeYears,annualRevenue,ann
   const summary=`${operatingPaybackYears===null?'운영현금만으로는 회수기간을 계산하지 않습니다':`운영현금만 외삽하면 ${yearText(operatingPaybackYears)}년`}. ${recoveredWithinLife?'내용연수 안에 운영현금으로 회수합니다':'내용연수 안에서는 운영현금으로 미회수입니다'}. ${nominalTerminalRecovery?'말기 잔존현금까지 포함하면 명목원금 회수가 가능합니다':'말기 잔존현금까지 포함해도 명목원금은 미회수입니다'}. 할인 전·연중 균등 보간이며 회계상 회수 완료가 아닙니다.`;
   return {depreciation,operatingProfit,operatingCash,npv:-costBasis+presentCash+residual/Math.pow(1+discountRate,lifeYears),paybackYears:operatingPaybackYears,operatingPaybackYears,recoveredWithinLife,nominalTerminalRecovery,summary};
 }
-/** @type {Declared['realizedVolatility']} */
 export function realizedVolatility(prices, window=20, annualization=252) {
   validateSeries(prices,{positive:true});
   if(!Number.isInteger(window)||window<2||window>250||!finite(annualization)||annualization<=0)fail('변동성 기간을 확인하세요.');

@@ -38,8 +38,7 @@ test('canonical domain preserves original formulas with reviewed instrument and 
       const delta=change*factor,gain=Math.max(delta,0),loss=Math.max(-delta,0);`,
     '      const delta=(close-prices[i-1][1])*factor,gain=Math.max(delta,0),loss=Math.max(-delta,0);'],
   ];
-  // Whole-line JSDoc bindings tie each export to market-lab-math.d.ts (packages/domain/tsconfig.json); they are not formulas.
-  let originalSource = canonical.toString().replace(/^[ \t]*\/\*\* @(?:type|typedef) [^\n]*\*\/\n/gm, '');
+  let originalSource = canonical.toString();
   for (const [reviewed, original] of approvedEdits) {
     assert.equal(originalSource.split(reviewed).length - 1, 1, 'Each approved source edit must occur exactly once');
     originalSource = originalSource.replace(reviewed, original);
