@@ -1,14 +1,8 @@
-import { createHash } from 'node:crypto';
 import type pg from 'pg';
 import { validateSnapshot } from '@atlas/domain/market-lab';
-import type { MarketSnapshot } from '@atlas/contracts/market-lab';
-import { locks, withTransaction } from './db.js';
+import { locks, revisionIdentity, withTransaction } from './db.js';
 
-export function snapshotIdentity(input: unknown) {
-  const snapshot = validateSnapshot(input) as MarketSnapshot;
-  const body = JSON.stringify(snapshot);
-  return { snapshot, body, revision: createHash('sha256').update(body).digest('hex') };
-}
+export const snapshotIdentity = revisionIdentity(validateSnapshot);
 
 export async function publishSnapshot(pool: pg.Pool, input: unknown, expectedRevision?: string, onAccepted?: (client: pg.PoolClient, revision: string) => Promise<void>, signal?: AbortSignal) {
   signal?.throwIfAborted();

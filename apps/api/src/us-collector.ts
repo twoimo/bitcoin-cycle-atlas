@@ -1,11 +1,11 @@
-import { createHash, randomUUID } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 import type pg from 'pg';
 import type { MarketSnapshot, Point } from '@atlas/contracts/market-lab';
 import type { CollectionRun, CollectionSource, CollectionSchedule, UsSeries } from '@atlas/contracts/us-collection';
 import { validateSnapshot, validateSeries, calendarDate } from '@atlas/domain/market-lab';
 import { parseFredMacro } from '../../../scripts/import-market-lab-fred.mjs';
 import { readSnapshot, publishSnapshot } from './repository.js';
-import { locks } from './db.js';
+import { locks, sha256 } from './db.js';
 
 export const US_COLLECTION_INTERVAL = 15 * 60 * 1000;
 export const usSources = [
@@ -13,7 +13,6 @@ export const usSources = [
   { series: 'TB3MS', axis: 'beta', frequency: 'monthly', label: 'FRED / 연준 H.15 3개월 국채 월평균', metric: '3개월 미국 국채 할인수익률(월평균)' },
   { series: 'VIXCLS', axis: 'gamma', frequency: 'daily', label: 'FRED / Cboe VIX 일별 종가', metric: 'VIX: 심리의 변동성 대리지표' },
 ] as const;
-const digest = (body: string) => createHash('sha256').update(body).digest('hex');
 export const fredUrl = (series: UsSeries) => `https://fred.stlouisfed.org/graph/fredgraph.csv?id=${series}&cosd=2010-01-01`;
 
 export function parseVixCsv(raw: string, now: Date): Point[] {
@@ -92,7 +91,7 @@ export async function runUsCollection(pool: pg.Pool, { fetchImpl = fetch, clock 
         const checkedAt = clock().toISOString();
         const values: Point[] = definition.series === 'VIXCLS' ? parseVixCsv(body, clock()) : parseFredMacro(body, definition.series, { now: clock() }).map(row => [String(row[0]),Number(row[1])] as Point);
         if (values.length < 40) throw new Error('Macro historical coverage insufficient');
-        const receipt: CollectionSource = { series: definition.series, axis: definition.axis, url, status: 'ready', checkedAt, sha256: digest(body), lastObservation: values.at(-1)![0], rows: values.length };
+        const receipt: CollectionSource = { series: definition.series, axis: definition.axis, url, status: 'ready', checkedAt, sha256: sha256(body), lastObservation: values.at(-1)![0], rows: values.length };
         return { definition, body, values, receipt };
       } catch (error) {
         const receipt: CollectionSource = { series: definition.series, axis: definition.axis, url, status: 'error', checkedAt: clock().toISOString(), error: error instanceof Error ? error.message.slice(0, 400) : 'Source request failed' };

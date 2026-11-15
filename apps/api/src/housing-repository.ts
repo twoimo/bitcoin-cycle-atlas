@@ -1,8 +1,7 @@
-import { createHash } from 'node:crypto';
 import type pg from 'pg';
 import { validateHousing } from '@atlas/domain/housing';
-import { locks, withTransaction } from './db.js';
-export function housingIdentity(input:unknown){const snapshot=validateHousing(input),body=JSON.stringify(snapshot);return {snapshot,body,revision:createHash('sha256').update(body).digest('hex')};}
+import { locks, revisionIdentity, withTransaction } from './db.js';
+export const housingIdentity=revisionIdentity(validateHousing);
 export async function publishHousing(pool:pg.Pool,input:unknown){
   const {snapshot,body,revision}=housingIdentity(input);
   return withTransaction(pool,locks.housing,async client=>{
