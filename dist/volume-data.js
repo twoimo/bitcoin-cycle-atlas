@@ -221,19 +221,6 @@ export function aggregateWeeklyVolume(dailyBars, { source = 'Bitstamp', asOf, no
     aggregation: 'Sum of seven completed UTC daily buckets; Monday start, Sunday chart label', imputedBars: 0 };
 }
 
-/** Filter observed daily or weekly bars, using inclusive display dates. */
-export function filterVolumeForView(bars, { start, end, asOf } = {}) {
-  if (!Array.isArray(bars)) throw new TypeError('Volume view requires bars');
-  const lower = start === undefined ? -Infinity : utcDay(start);
-  const upper = Math.min(end === undefined ? Infinity : utcDay(end), asOf === undefined ? Infinity : utcDay(asOf));
-  if (lower > upper) return [];
-  return bars.filter(row => {
-    if (!nonnegative(row?.volume)) throw new TypeError('Invalid observed volume');
-    const day = utcDay(row.date);
-    return day >= lower && day <= upper;
-  });
-}
-
 /** Public collection. No credentials, polling, retries or implicit provider fallback. */
 export async function fetchDailyVolumeHistory({ source = 'Bitstamp', start = '2010-01-01', asOf, now = Date.now(), fetchImpl = globalThis.fetch, signal } = {}) {
   const provider = providerFor(source), first = utcDay(start), cutoff = dateCutoff(asOf, now), end = cutoff + 1;
