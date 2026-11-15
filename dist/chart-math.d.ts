@@ -11,7 +11,3 @@ export function barPriceChange(close:number,previousClose:number|null,open?:numb
   previousCloseChangePct:number|null;fromOpenChangePrice:number|null;fromOpenChangePct:number|null;
 };
 export function nearestDailyIndex(rows:readonly {date:string}[],day:string|number):number;
-export function measureDailyRange(rows:readonly {date:string;price:number}[],measurement:{startDate:string;endDate?:string}|null,split?:string|null):{
-  startDate:string;endDate:string|null;startPrice:number;endPrice:number|null;deltaDays:number|null;
-  changePrice:number|null;changePct:number|null;includesSimulated:boolean;kind:'simulated'|'observed';
-}|null;
