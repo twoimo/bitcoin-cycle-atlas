@@ -14,6 +14,8 @@ for (const symbol of ['MSTR', 'BMNR']) {
     assert.equal(f.app.inert, true);
     f.reply(0, equityPayload(symbol, 1)); await f.microtasks(); await f.frame();
     assert.equal(f.requests.length, 2, 'coin request is still pending');
+    const initiallyVisible = f.latest(), lastObserved = initiallyVisible.series.candles.at(-1).time;
+    initiallyVisible.onViewport({ from: initiallyVisible.range.start * 1000, to: lastObserved });
     assert.equal(f.calculations.length, 0);
     assert.equal(f.latest().forecast, null);
     assert.equal(f.document.documentElement.dataset.boot, 'ready', 'a completed observed render must release the boot shell');
@@ -34,6 +36,7 @@ for (const symbol of ['MSTR', 'BMNR']) {
     f.scenario('bull'); await f.frame();
     f.reply(1, { revision: 1 }); await f.settle(); await f.initialization;
     assert.equal(f.latest().forecast.scenario, 'bull');
+    assert.ok(f.latest().range.end >= lastObserved + 365 * 86400, 'initial viewport sync must not freeze the later forecast range');
     f.hide(); f.show(); await f.settle();
     assert.deepEqual(f.events, ['atlas:ready'], 'projection completion and cache restoration must not repeat readiness');
   });
@@ -66,7 +69,7 @@ for (const symbol of ['MSTR', 'BMNR']) {
     f.reply(0, equityPayload(symbol, 1)); await f.microtasks();
     f.hide(); f.reject(1); await f.settle(); await f.initialization;
     assert.equal(f.document.documentElement.dataset.boot, 'loading', 'a hidden initialization callback must not release the boot shell');
-    assert.equal(f.draws.length, 0, 'a suspended document must not render retained prices');
+    assert.equal(f.draws.length, 0, 'a hidden initialization callback must not release the boot shell or render retained prices');
     assert.deepEqual(f.events, []);
     f.show(); await complete(f, symbol, 2, 2);
     assert.equal(f.document.documentElement.dataset.boot, 'ready');
@@ -99,7 +102,7 @@ for (const symbol of ['MSTR', 'BMNR']) {
       await f.settle(); await f.initialization;
       assert.deepEqual(f.calculations, [{ priceRevision: 2, assetRevision: 2 }], 'revoked underlying work must not calculate');
       assert.equal(f.latest().forecast, displayed.forecast, 'revoked underlying work must not clear a newer forecast');
-      assert.doesNotMatch(f.status(), /확인 필요|실패/);
+      assert.doesNotMatch(f.status(), /확인 필요|실패/, 'revoked underlying work must not clear a newer forecast');
     });
   }
 

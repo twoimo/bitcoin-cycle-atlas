@@ -12,7 +12,7 @@ test('ETH reveals a rendered observed chart exactly once', async () => {
   const f = await loaded();
   assert.equal(f.document.documentElement.dataset.boot, 'ready');
   assert.equal(f.app.inert, false); assert.equal(f.latest().series.candles.at(-1).close, 102);
-  f.hide(); f.show(); await f.settle();
+  f.hide(); f.show(); f.resize(); await f.settle();
   assert.deepEqual(f.events, ['atlas:ready']);
 });
 
@@ -40,7 +40,7 @@ test('ETH hidden initialization and late resize cannot publish retained prices',
   const f = await ethViewFixture();
   f.reply(0, ethPayload()); await f.microtasks(); f.hide(); f.resize(); await f.settle(); await f.initialization;
   assert.equal(f.document.documentElement.dataset.boot, 'loading', 'a suspended initialization callback must not release the boot shell');
-  assert.equal(f.draws.length, 0, 'a suspended view must not draw retained prices');
+  assert.equal(f.draws.length, 0, 'a suspended initialization callback must not release the boot shell or draw retained prices');
   f.show(); await f.settle();
   assert.equal(f.document.documentElement.dataset.boot, 'ready'); assert.equal(f.draws.length, 1);
 });

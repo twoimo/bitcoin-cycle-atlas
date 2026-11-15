@@ -147,6 +147,6 @@ test('the complete ETH module graph excludes BTC workspaces, forecast engines an
     for(const match of source.matchAll(/^\s*(?:import|export)\s+(?:[^'"\n]*?\s+from\s*)?['"](\.[^'"]+)['"]|\bimport\s*\(\s*['"](\.[^'"]+)['"]\s*\)/gm))pending.push(new URL(match[1]||match[2],url));
   }
   const names=[...seen].map(value=>new URL(value).pathname.split('/').at(-1));
-  assert.ok(names.includes('market-data-controller.js'));assert.ok(names.includes('intraday-chart.js'));assert.ok(names.includes('eth-market-data.js'));assert.ok(names.includes('symbol-selector.js'));
+  assert.ok(names.includes('market-data-controller.js'));assert.ok(names.includes('funnest-observed-price-adapter.js'));assert.ok(names.includes('funnest-chart-runtime.bundle.js'));assert.ok(names.includes('eth-market-data.js'));assert.ok(names.includes('symbol-selector.js'));
   for(const name of names)assert.doesNotMatch(name,/^(?:app|lab-view|workbench-chrome|atlas-analysis|atlas-price-chart|bitcoin-events|cycle-calibration|cycle-timing|cycle-milestones|market-structure|forecast-engine|detailed-forecast|long-horizon-forecast|volume-forecast|outlook-engine)\.js$/);
 });
