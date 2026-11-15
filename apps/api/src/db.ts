@@ -10,8 +10,10 @@ export const revisionIdentity = <T>(validate: (input: unknown) => T) => (input: 
 };
 
 // One key per domain. A migration takes the same key as its domain's writers,
-// so schema changes and publications serialize.
+// so schema changes and publications serialize. Every migrator shares one key
+// to create the ledger, which no single domain owns.
 export const locks = {
+  migrations: 'atlas:schema-migrations',
   marketLab: 'atlas:market-lab',
   housing: 'atlas:housing',
   themes: 'atlas:themes',
@@ -54,11 +56,11 @@ export type Migration = keyof typeof migrations;
 const allMigrations = Object.keys(migrations) as Migration[];
 
 export async function migrate(pool: pg.Pool, names: readonly Migration[] = allMigrations) {
+  await withTransaction(pool, locks.migrations, client => client.query('CREATE TABLE IF NOT EXISTS atlas_schema_migrations (name text PRIMARY KEY, sha256 text NOT NULL, applied_at timestamptz NOT NULL DEFAULT clock_timestamp())'));
   for (const name of names) {
     const { lock, mismatch } = migrations[name];
     const sql = await readFile(new URL(`../../../db/migrations/${name}.sql`, import.meta.url), 'utf8'), checksum = sha256(sql);
     await withTransaction(pool, lock, async client => {
-      await client.query('CREATE TABLE IF NOT EXISTS atlas_schema_migrations (name text PRIMARY KEY, sha256 text NOT NULL, applied_at timestamptz NOT NULL DEFAULT clock_timestamp())');
       const applied = await client.query<{ sha256: string }>('SELECT sha256 FROM atlas_schema_migrations WHERE name=$1', [name]);
       if (applied.rowCount && applied.rows[0].sha256 !== checksum) throw new Error(mismatch);
       if (!applied.rowCount) {
