@@ -930,6 +930,36 @@ const interactionCases=[
     assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);assert.equal(loads,0);assert.equal(h.builds.length,0);
     h.mounted.destroy();
   }},
+  {name:'a replay requested before the asset forecast gate answers starts no forecast once the asset proves T3',async run(source){
+    let availability=null,loads=0;
+    const h=await harness(source,{symbol:'BMNR',loadArchive:async()=>{loads++;return archive('BMNR');},getForecastAvailability:()=>availability});
+    h.svg.innerHTML='<path data-observed-price="true"></path>';
+    const original=h.svg.innerHTML;
+    h.trigger.click();await flush();
+    assert.equal(h.mounted.isActive(),false,'an unanswered forecast gate opens no replay');
+    assert.equal(h.panel.hidden,true);assert.equal(h.notice().hidden,false);assert.match(h.notice().textContent,/현재 차트가 준비된 후/);assert.equal(loads,0);
+    availability={allowed:false,message:'표본 부족으로 미래 경로를 제공하지 않습니다',sampleLabel:'T3 · 관측 359거래일 · 1.4년'};
+    await h.start(dateAt(180));
+    assert.equal(h.builds.length,0,'confirming a date after the gate answers T3 fixes no forecast');
+    assert.equal(h.mounted.isActive(),false);assert.equal(h.svg.innerHTML,original);assert.equal(h.writes.length,0);
+    h.trigger.click();await flush();
+    assert.equal(h.mounted.isActive(),false);assert.match(h.notice().textContent,/표본 부족으로 미래 경로를 제공하지 않습니다.*359거래일/);
+    assert.equal(loads,0);assert.equal(h.builds.length,0);
+    h.mounted.destroy();
+  }},
+  {name:'a replay opened under an allowed forecast gate starts no forecast after the gate blocks the asset',async run(source){
+    let availability={allowed:true};
+    const h=await harness(source,{symbol:'MSTR',getForecastAvailability:()=>availability});
+    h.svg.innerHTML='<path data-observed-price="true"></path>';
+    h.trigger.click();await flush();
+    assert.equal(h.mounted.isActive(),true);assert.equal(h.controllers[0].getState().status,'selecting');
+    availability={allowed:false,message:'표본 부족으로 미래 경로를 제공하지 않습니다',sampleLabel:'T3 · 관측 359거래일 · 1.4년'};
+    await h.start(dateAt(180));
+    assert.equal(h.builds.length,0,'start rereads the gate before it fixes a forecast');
+    assert.equal(h.mounted.isActive(),false);assert.equal(h.panel.hidden,true);assert.equal(h.writes.length,0);
+    assert.equal(h.notice().hidden,false);assert.match(h.notice().textContent,/표본 부족으로 미래 경로를 제공하지 않습니다.*359거래일/);
+    h.mounted.destroy();
+  }},
   {name:'a Funnest replay controller paints the hovered scissors preview from its live price scale',async run(source){
     const fixture=atlasFixture(),raw=JSON.stringify(savedFixture(),null,2)+'\n',axis={top:12,bottom:388,left:0,right:800};
     const h=await harness(source,{...fixture.options,storedText:raw,rendererAxis:axis,funnestAtlasController:true});

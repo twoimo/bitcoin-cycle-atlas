@@ -392,10 +392,11 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     blockSurrounding(false);frame=null;archive=null;atlasCaptured=null;atlasCandles=null;atlasPreview=null;pendingAtlas=null;restoredSnapshot=null;atlasCapturedAt=null;capabilities=null;candleCapabilities=null;draft=null;restore();trigger.focus({preventScroll:true});
   }
   function forecastEntryAvailable(){
-    const availability=getForecastAvailability?.();
-    if(!availability||availability.allowed)return true;
+    if(typeof getForecastAvailability!=='function')return true;
+    const availability=getForecastAvailability();
+    if(availability?.allowed)return true;
     if(active)finishExit();
-    notice.textContent=[availability.message||'표본 부족으로 미래 경로를 제공하지 않습니다',availability.sampleLabel].filter(Boolean).join(' · ');
+    notice.textContent=availability?[availability.message||'표본 부족으로 미래 경로를 제공하지 않습니다',availability.sampleLabel].filter(Boolean).join(' · '):'현재 차트가 준비된 후 봉 리플레이를 다시 눌러 주세요.';
     notice.hidden=false;trigger.setAttribute('aria-pressed','false');return false;
   }
   async function open({resume=null,selectOnly=false,startDateOverride=null}={}){
@@ -514,6 +515,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   }
   async function start(value,{resume=null,automatic=false}={}){
     if(!active||!archive||!modules)return;
+    if(!forecastEntryAvailable())return;
     const source=archive,recorded=q('mode').value==='recorded',selectedRecord=record;
     const atlasMode=atlasAvailable&&['atlas-chart','project-baseline','cutoff-backtest'].includes(q('mode').value),currentMode=q('mode').value==='atlas-chart',backtestMode=q('mode').value==='cutoff-backtest';
     const first=atlasMode?(currentMode||backtestMode?atlasModules[0].PROJECT_REPLAY_ORIGIN.startDate:atlasBaseline.forecast.referenceDate):null;
