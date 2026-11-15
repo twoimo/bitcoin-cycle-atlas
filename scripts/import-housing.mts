@@ -1,6 +1,7 @@
-import { readFile,writeFile,mkdir } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { validateHousing,type MonthlyPoint,type HousingSnapshot } from '@atlas/domain/housing';
+import { writeFileAtomic } from './atomic-file.mjs';
 
 // Network-free importer: only exact, receipt-hashed official responses enter the snapshot.
 const root=new URL('../docs/real-estate/raw/',import.meta.url);
@@ -27,7 +28,6 @@ const snapshot:HousingSnapshot={schemaVersion:1,generatedAt:new Date(Math.max(..
     return {id,label,code,volume:find(ids[0]),price:find(ids[1])};
   })};
 validateHousing(snapshot);
-await mkdir(new URL('../dist/data/',import.meta.url),{recursive:true});
 const body=JSON.stringify(snapshot);
-await writeFile(new URL('../dist/data/housing.json',import.meta.url),body+'\n');
+await writeFileAtomic(new URL('../dist/data/housing.json',import.meta.url),body+'\n');
 console.log(JSON.stringify({revision:createHash('sha256').update(body).digest('hex'),regions:snapshot.regions.map(r=>({id:r.id,volume:r.volume.length,price:r.price.length,latestVolume:r.volume.at(-1),latestPrice:r.price.at(-1)}))}));

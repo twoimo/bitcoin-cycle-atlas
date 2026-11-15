@@ -1,6 +1,7 @@
-import { readFile,writeFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { validateThemeSnapshot,type ThemeSnapshot,type ThemeEvidence,type ThemeBar,type ThemeCriteria } from '@atlas/domain/themes';
+import { writeFileAtomic } from './atomic-file.mjs';
 const base=new URL('../docs/theme-materials/raw/',import.meta.url);
 const receipts=JSON.parse(await readFile(new URL('price-receipts.json',base),'utf8'));
 const docs=JSON.parse(await readFile(new URL('document-receipts.json',base),'utf8'));
@@ -25,4 +26,4 @@ const judgments:ThemeSnapshot['judgments']=[
 ];
 const snapshot:ThemeSnapshot={schemaVersion:1,generatedAt,rubricVersion:'ygs-1',asset:{id:'hype',symbol:'HYPE',pair:'@107',quote:'USDC',name:'하이퍼리퀴드',theme:'온체인 거래 인프라',bars:await bars('hype-spot','@107')},benchmark:{symbol:'BTC',kind:'perpetual',quote:'USD',bars:await bars('btc-perp','BTC')},evidence,judgments,priceSources:receipts.map((r:{id:string;url:string;sha256:string;retrievedAt:string})=>({id:r.id,url:r.url,sha256:r.sha256,retrievedAt:r.retrievedAt}))};
 validateThemeSnapshot(snapshot);
-const body=JSON.stringify(snapshot);await writeFile(new URL('../dist/data/themes.json',import.meta.url),body+'\n');console.log(JSON.stringify({revision:hash(body),generatedAt,bars:snapshot.asset.bars.length,benchmarkBars:snapshot.benchmark.bars.length,evidence:evidence.length,judgments:judgments.length,last:snapshot.asset.bars.at(-1)}));
+const body=JSON.stringify(snapshot);await writeFileAtomic(new URL('../dist/data/themes.json',import.meta.url),body+'\n');console.log(JSON.stringify({revision:hash(body),generatedAt,bars:snapshot.asset.bars.length,benchmarkBars:snapshot.benchmark.bars.length,evidence:evidence.length,judgments:judgments.length,last:snapshot.asset.bars.at(-1)}));

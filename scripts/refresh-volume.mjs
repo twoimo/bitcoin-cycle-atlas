@@ -1,9 +1,10 @@
 #!/usr/bin/env node
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { fetchDailyVolumeHistory, parseVolumeSnapshot } from '../dist/volume-data.js';
+import { writeFileAtomic } from './atomic-file.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const DAY = 86400;
@@ -203,7 +204,7 @@ if (options.verify) {
   const evidence = await collectEvidence(snapshot, options['checks-dir']);
   snapshot.validation = { ...summarize(snapshot, evidence), evidence };
   parseVolumeSnapshot(snapshot);
-  await writeFile(output, `${JSON.stringify(snapshot)}\n`);
+  await writeFileAtomic(output, `${JSON.stringify(snapshot)}\n`);
   console.log(JSON.stringify({ status: 'PASS', output, source: snapshot.source, bars: snapshot.bars.length,
     firstDate: snapshot.firstDate, lastDate: snapshot.lastDate, gapCount: snapshot.coverage.gapCount,
     zeroVolumeSourceBars: snapshot.coverage.sourceZeroVolumeBars, requests: snapshot.collection.requestCount }));
