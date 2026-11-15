@@ -22,8 +22,6 @@ const revision = { type: 'string', pattern: '^[a-f0-9]{64}$' } as const;
 const revisionQuery = { querystring: { type: 'object', additionalProperties: false, properties: { revision } } } as const;
 const dataUnavailable = new ApiError(503, 'DATA_UNAVAILABLE', '연구 자료를 지금 읽을 수 없습니다.');
 
-// An ApiError carries its own response. Anything else is unexpected: log it and
-// answer with the route's 503 so internal details never reach the client.
 function fail(request: FastifyRequest, reply: FastifyReply, error: unknown, unavailable: ApiError) {
   if (error instanceof ApiError) return reply.code(error.status).send(error.body);
   request.log.error({ err: error }, unavailable.code);

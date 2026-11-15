@@ -4,8 +4,6 @@ import pg from 'pg';
 
 export const sha256 = (text: string) => createHash('sha256').update(text).digest('hex');
 
-// A stored revision is the SHA-256 of the validated snapshot's exact JSON text.
-// Readers recompute it from the stored body to detect a changed row.
 export const revisionIdentity = <T>(validate: (input: unknown) => T) => (input: unknown) => {
   const snapshot = validate(input), body = JSON.stringify(snapshot);
   return { snapshot, body, revision: sha256(body) };
