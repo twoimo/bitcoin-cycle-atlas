@@ -46,7 +46,8 @@ async function mount(content: React.ReactNode, publicUrl: string) {
     for (const [key, descriptor] of previous) if (descriptor) Object.defineProperty(globalThis, key, descriptor); else Reflect.deleteProperty(globalThis, key);
   };
   try { await act(async () => root.render(content)); } catch (error) { await cleanup(); throw error; }
-  const svg = () => document.querySelector('.rsi-chart-canvas > svg') as unknown as SVGSVGElement;
+  const svg = () => document.querySelector('.rsi-chart-canvas svg') as unknown as SVGSVGElement;
+  async function wheel(deltaY: number, x: number) { const node=document.querySelector('.atlas-funnest-instrument-plot')!; const event=new dom.Event('wheel',{bubbles:true,cancelable:true}); for(const [key,value] of Object.entries({deltaY,deltaX:0,clientX:x,clientY:180})) Object.defineProperty(event,key,{value}); await act(async()=>node.dispatchEvent(event)); }
   function pointer(type: string, x: number, y: number) {
     const event = new dom.Event(type, { bubbles: true, cancelable: true });
     for (const [key, value] of Object.entries({ clientX: x, clientY: y, pointerId: 1, pointerType: 'mouse', button: 0, buttons: type === 'pointerup' ? 0 : 1, isPrimary: true }))
@@ -54,7 +55,7 @@ async function mount(content: React.ReactNode, publicUrl: string) {
     if (type === 'pointerdown') document.querySelector('.rsi-chart-canvas')!.dispatchEvent(event);
     else for (const listener of listeners.get(type) || []) listener(event);
   }
-  return { document, posts, urlWrites, location, cleanup, svg, pointer,
+  return { document, posts, urlWrites, location, cleanup, svg, pointer, wheel,
     flushFrame() { const pending = [...frames.values()]; frames.clear(); for (const callback of pending) callback(0); },
     message: (message: unknown) => act(async () => { for (const listener of listeners.get('message') || []) listener({ data: message, origin: location.origin, source: parent }); }),
   };
@@ -73,10 +74,8 @@ const monthly: InstrumentSeries = {
 };
 
 for (const symbol of ['TQQQ', 'HYPE', 'HOUSING-BUSAN']) {
-  test(`${symbol} publishes the final native drag view and its revision atomically before the host consumes it`, async t => {
+  test(`${symbol} Funnest zoom publishes the changed range and one undoable user revision`, async t => {
     const frequency = symbol === 'HOUSING-BUSAN' ? 'monthly' : 'daily';
-    // The ETF starts below its existing pixel-spacing limit so both native
-    // drag positions can produce different ranges without altering that limit.
     const start = symbol === 'HYPE' ? '2026-01-01' : symbol === 'TQQQ' ? '2022-01-01' : '2020-01-01';
     const end = symbol === 'HYPE' ? '2026-04-01' : '2024-01-01';
     const publicUrl = `https://example.test/market-lab/charts/?symbol=${symbol}&region=busan&granularity=${frequency}&type=line&axis=linear&view-start=${start}&view-end=${end}#price`;
@@ -84,47 +83,28 @@ for (const symbol of ['TQQQ', 'HYPE', 'HOUSING-BUSAN']) {
     const content = symbol === 'TQQQ'
       ? <RsiWorkbench symbol={symbol} market={market} snapshot={snapshot} now={new Date(snapshot.generatedAt)} rows={[]} epoch={7} active embedded onDate={() => {}} comparison={null} references={null}/>
       : <InstrumentWorkbench symbol={symbol} unit={symbol === 'HYPE' ? 'USDC' : '지수'} timezone={symbol === 'HYPE' ? 'UTC' : 'Asia/Seoul'} series={symbol === 'HYPE' ? daily : monthly} epoch={7} active embedded volumeUnit={symbol === 'HYPE' ? 'HYPE' : '건'} description="View lifecycle fixture"/>;
-    let onCommit = () => {};
-    const fixture = await mount(<Profiler id={symbol} onRender={() => onCommit()}>{content}</Profiler>, publicUrl);
+    const fixture = await mount(content, publicUrl);
     const adapter = createChartWorkbenchControls({ send: () => {}, isActive: () => true });
     t.after(async () => { try { adapter.destroy(); } finally { await fixture.cleanup(); } });
     adapter.begin(symbol, 7);
     assert.equal(fixture.urlWrites.length, 0);
     const range = () => ({ start: fixture.svg().dataset.start!, end: fixture.svg().dataset.end! });
-    const initial = range(), y = Number(fixture.svg().dataset.timeAxisTop) + 14;
-    let intermediate: ReturnType<typeof range> | null = null;
-
-    // Profiler runs in the commit phase, after the intermediate SVG is painted
-    // into the DOM but before its parent's pending passive publication effect.
-    // The final native pointerup flushes a different range and ends the same
-    // gesture here, deterministically exercising that publication ordering.
-    onCommit = () => {
-      if (range().start === initial.start && range().end === initial.end) return;
-      intermediate = range(); onCommit = () => {};
-      fixture.pointer('pointerup', 460, y);
-    };
-    await act(async () => {
-      fixture.pointer('pointerdown', 300, y);
-      fixture.pointer('pointermove', 350, y);
-      fixture.flushFrame();
-    });
+    const initial = range();
+    await fixture.wheel(-120, 450);
     const final = range();
-    assert(intermediate, 'the intermediate render must commit before final pointerup');
-    assert.notDeepEqual(final, intermediate, 'the final pointer position must produce a distinct displayed range');
+    assert.notDeepEqual(final, initial, 'Funnest wheel zoom updates the visible UTC range');
     const states = fixture.posts.filter(message => message.symbol === symbol && message.epoch === 7);
-    assert.equal(states.at(-1).userViewRevision, 1, 'one drag is one user edit');
+    assert.equal(states.at(-1).userViewRevision, 1, 'one zoom is one user edit');
     assert.deepEqual({ start: states.at(-1).start, end: states.at(-1).end }, final);
     for (const message of states) assert.equal(adapter.update(message), true);
     const query = new URLSearchParams(fixture.location.search);
-    assert.equal(query.get('view-start'), final.start, 'an intermediate view must not consume the final revision');
-    assert.equal(query.get('view-end'), final.end, 'the host URL must retain the final SVG range');
+    assert.equal(query.get('view-start'), final.start); assert.equal(query.get('view-end'), final.end);
     assert.equal(query.get('region'), 'busan'); assert.equal(fixture.location.hash, '#price');
     const writes = fixture.urlWrites.length;
     assert.equal(adapter.update(states.at(-1)), true); assert.equal(fixture.urlWrites.length, writes, 'same-revision deduplication remains active');
-
     await fixture.message({ kind: 'atlas:center-command', symbol, epoch: 7, action: 'undo' });
-    assert.deepEqual(range(), initial, 'one undo restores the complete pre-gesture range');
+    assert.deepEqual(range(), initial, 'one undo restores the complete pre-zoom range');
     await fixture.message({ kind: 'atlas:center-command', symbol, epoch: 7, action: 'redo' });
-    assert.deepEqual(range(), final, 'redo restores the committed final range');
+    assert.deepEqual(range(), final, 'redo restores the committed range');
   });
 }

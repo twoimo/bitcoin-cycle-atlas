@@ -1,5 +1,6 @@
-import { Fragment, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Point } from '@atlas/contracts/market-lab';
+import { BarPlot, CartesianChart, Line, Point as ChartPoint, ReferenceLine, Scrubber, XAxis, YAxis } from '@funnest/charts-react';
 import { Empty, finite, fmt } from './common.js';
 
 interface Props {
@@ -18,81 +19,53 @@ interface Props {
 }
 const noLines: readonly number[] = [];
 const noSignal: readonly [string, number | null][] = [];
+const showDate = (value: string | number | undefined) => String(value ?? '').slice(0, 10);
+const number = (value: number) => fmt(value, 4);
 
-export function ObservedChart({ id, points, unit, label, caption, selected, onSelect, lines = noLines, rsi = false, signal = noSignal, markers = [], plotHeight }: Props) {
-  const container = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(640);
-  useLayoutEffect(() => {
-    const measure = () => setWidth(Math.max(200, Math.round(container.current?.clientWidth || 640)));
-    measure();
-    if (typeof ResizeObserver === 'undefined' || !container.current) return;
-    const observer = new ResizeObserver(measure);
-    observer.observe(container.current);
-    return () => observer.disconnect();
-  }, []);
-  const geometry = useMemo(() => {
-    const pts = points.filter(point => point && finite(point[1]));
-    if (!pts.length) return null;
-    const height = plotHeight ?? (rsi ? 220 : 290), pad = { l: 64, r: 20, t: 24, b: 36 };
-    const values = pts.map(point => point[1]).concat(signal.filter(point => finite(point[1])).map(point => point[1] as number));
-    let low = rsi ? 0 : Math.min(...values), high = rsi ? 100 : Math.max(...values);
-    if (low === high) { const extra = Math.max(Math.abs(low) * 0.02, 1); low -= extra; high += extra; }
-    else if (!rsi) { const extra = (high - low) * 0.1; low -= extra; high += extra; }
-    if (!rsi) low = Math.max(0, low);
-    const x = (index: number) => pad.l + (pts.length === 1 ? 0.5 : index / (pts.length - 1)) * (width - pad.l - pad.r);
-    const y = (value: number) => pad.t + (high - value) / (high - low) * (height - pad.t - pad.b);
-    const path = pts.map((point, index) => `${index ? 'L' : 'M'}${x(index).toFixed(2)},${y(point[1]).toFixed(2)}`).join(' ');
-    const signalPath = signal.map((point, index) => finite(point[1])
-      ? `${index && finite(signal[index - 1]?.[1]) ? 'L' : 'M'}${x(index).toFixed(2)},${y(point[1]).toFixed(2)}` : '').join(' ');
-    return { pts, height, pad, low, high, x, y, path, signalPath };
-  }, [points, signal, width, rsi, plotHeight]);
-  if (!geometry) return <div data-chart={id} ref={container}><Empty>{label}에 유효한 수치가 없습니다.</Empty></div>;
-  const { pts, height, pad, low, high, x, y, path, signalPath } = geometry;
-  const index = selected == null ? pts.length - 1 : Math.max(0, Math.min(pts.length - 1, selected));
-  const point = pts[index], last = pts[pts.length - 1];
-  const dates = new Map(pts.map((point, index) => [point[0], index]));
-  const annotations = markers.flatMap(marker => {
-    const at = dates.get(marker.date);
-    return at == null ? [] : [{ ...marker, px: x(at), py: y(pts[at][1]) }];
-  });
-  const labels = new Set<string>();
-  const occupied: Record<'Buy' | 'Sell', number[]> = { Buy: [], Sell: [] };
-  const priority = [...annotations.filter(marker => marker.date === point[0]), ...annotations.toReversed().filter(marker => marker.date !== point[0])];
-  for (const marker of priority) {
-    if (occupied[marker.side].some(px => Math.abs(px - marker.px) < 40)) continue;
-    labels.add(`${marker.date}:${marker.side}`); occupied[marker.side].push(marker.px);
-  }
-  return <div data-chart={id} ref={container}><figure className="ml-chart">
-    <figcaption><strong>{caption || label}</strong><span>{point[0]} · {fmt(point[1])} {unit}</span></figcaption>
-    <svg viewBox={`0 0 ${width} ${height}`} width={width} height={height} role="img" aria-labelledby={`ml-chart-${id}-title ml-chart-${id}-desc`}
-      onPointerDown={event => { if (event.button > 0) return; const bounds = event.currentTarget.getBoundingClientRect(); const fraction = (event.clientX - bounds.left) / bounds.width; onSelect(Math.max(0, Math.min(pts.length - 1, Math.round((fraction * width - pad.l) / (width - pad.l - pad.r) * (pts.length - 1))))); }}>
-      <title id={`ml-chart-${id}-title`}>{`${label} · ${pts.length}개 관측`}</title>
-      <desc id={`ml-chart-${id}-desc`}>{pts[0][0]}부터 {last[0]}. 선택일 {point[0]}, {fmt(point[1])} {unit}. 실제 관측만 연결하며 끝과 시작을 닫지 않습니다.</desc>
-      {Array.from({ length: 5 }, (_, i) => {
-        const value = low + (high - low) * i / 4;
-        return <Fragment key={i}><line className="ml-grid-line" x1={pad.l} x2={width - pad.r} y1={y(value)} y2={y(value)} />
-          <text className="ml-axis-label" x={pad.l - 8} y={y(value) + 4} textAnchor="end">{fmt(value, rsi ? 0 : 1)}</text></Fragment>;
-      })}
-      {lines.map((value, i) => <Fragment key={value}><line className="ml-threshold-line" x1={pad.l} x2={width - pad.r} y1={y(value)} y2={y(value)} />
-        <text className="ml-threshold-label" x={pad.l + 20 + i * (width - pad.l - pad.r - 40) / 3} y={y(value) - 4} textAnchor="middle">{value}</text></Fragment>)}
-      <path className={`ml-observed-line ${rsi ? 'ml-rsi-line' : ''}`} d={path} />
-      {signalPath && <path className="ml-signal-line" d={signalPath} />}
-      {annotations.map(marker => {
-        const up = marker.side === 'Buy', { px, py } = marker;
-        return <g key={`${marker.date}:${marker.side}`} className={`rsi-crossing rsi-crossing-${marker.side.toLowerCase()}`} role="img" aria-label={`${marker.date} ${marker.side} 기준선 통과 ${marker.level}`}>
-          <title>{`${marker.date} · ${marker.side} ${marker.level} · 기준선 통과`}</title>
-          <polygon points={up ? `${px},${py+5} ${px-4},${py+12} ${px+4},${py+12}` : `${px},${py-5} ${px-4},${py-12} ${px+4},${py-12}`} />
-          {labels.has(`${marker.date}:${marker.side}`) && <text x={Math.max(pad.l+16,Math.min(width-pad.r-16,px))} y={Math.max(pad.t+12,Math.min(height-pad.b-8,py+(up?23:-16)))} textAnchor="middle">{marker.side}</text>}
-        </g>;
-      })}
-      <line className="ml-crosshair" x1={x(index)} x2={x(index)} y1={pad.t} y2={height - pad.b} />
-      <circle className="ml-chart-point" cx={x(index)} cy={y(point[1])} r="4" />
-      <text className="ml-axis-label" x={pad.l} y={height - 10}>{pts[0][0]}</text>
-      <text className="ml-axis-label" x={width - pad.r} y={height - 10} textAnchor="end">{last[0]}</text>
-    </svg>
-    <label className="ml-date-selector">관측일 선택 <input type="range" min="0" max={pts.length - 1} step="1" value={index} data-date={id}
-      aria-label={`${label} 관측일`} aria-valuetext={`${point[0]}, ${fmt(point[1])} ${unit}`} disabled={pts.length === 1}
-      onChange={event => onSelect(Number(event.currentTarget.value))} /></label>
-    {rsi && <p className="ml-chart-legend"><span>Wilder RSI14</span><span>SMA9 신호</span> · 점선은 원문 기준</p>}
-  </figure></div>;
+/** Funnest owns the axes, gaps, marks and keyboard scrubber; Atlas retains source-index selection. */
+export function ObservedChart({ id, points, unit, label, caption, selected, onSelect, lines = noLines, rsi = false, signal = noSignal, markers = [], plotHeight = 290 }: Props) {
+  const chart = useRef<HTMLDivElement>(null);
+  const scrubIndex = useRef<number | null>(null);
+  const [current, setCurrent] = useState<number | null>(null), lastScrub = useRef<number | null>(null);
+  const valid = points.some(point => point && finite(point[1]));
+  const values = useMemo(() => points.map(point => point && finite(point[1]) ? point[1] : null), [points]);
+  const signalValues = useMemo(() => points.map(([date]) => {
+    const value = signal.find(row => row[0] === date)?.[1];
+    return finite(value) ? value : null;
+  }), [points, signal]);
+  const markerRows = useMemo(() => markers.flatMap(marker => {
+    const index = points.findIndex(point => point[0] === marker.date);
+    const value = index < 0 ? null : values[index];
+    return value === null || value === undefined ? [] : [{ ...marker, index, value }];
+  }), [markers, points, values]);
+  useEffect(() => { lastScrub.current = null; scrubIndex.current = null; setCurrent(null); }, [selected, points]);
+  if (!valid) return <div data-chart={id} className="atlas-funnest-observed-chart"><Empty>{label}에 유효한 수치가 없습니다.</Empty></div>;
+  const safeSelected = selected == null || !Number.isFinite(selected) ? points.length - 1 : Math.max(0, Math.min(points.length - 1, Math.trunc(selected)));
+  const readIndex = current ?? safeSelected;
+  const [date, value] = points[readIndex] ?? ['', null];
+  const readableValue = finite(value) ? `${fmt(value)} ${unit}` : `관측값 없음 · ${unit}`;
+  const selectCurrent = () => { const at = scrubIndex.current ?? safeSelected; if (at >= 0 && at < points.length) onSelect(at); };
+  return <div ref={chart} data-chart={id} data-chart-engine="funnest" data-source-count={points.length} className="atlas-funnest-observed-chart"
+    onClick={event => { if ((event.target as Element).closest('button,a,input,summary')) return; selectCurrent(); }}
+    onKeyDownCapture={event => { if ((event.target as Element).closest('button,input,summary,textarea,select')) return; const step=event.shiftKey?10:1; let next:number|null=null; if(event.key==='Home')next=0; else if(event.key==='End')next=points.length-1; else if(event.key==='ArrowLeft')next=Math.max(0,safeSelected-step); else if(event.key==='ArrowRight')next=Math.min(points.length-1,safeSelected+step); if(next!==null){event.preventDefault();scrubIndex.current=next;lastScrub.current=next;setCurrent(next);onSelect(next);} }}>
+    <figure className="ml-chart">
+      <figcaption><strong>{caption || label}</strong><span data-selected-date={date} data-selected-index={readIndex}>{date} · {readableValue}</span></figcaption>
+      <CartesianChart series={[
+        { id: 'observed', label, data: values, color: 'var(--data-gold)' },
+        ...(rsi && signal.some(row => finite(row[1])) ? [{ id: 'signal', label: 'SMA9', data: signalValues, color: 'var(--ml-gamma)', lineStyle: 'dashed' as const }] : []),
+      ]} xAxis={{ data: points.map(point => point[0]), scaleType: 'linear' }} yAxis={{ includeZero: rsi, domain: rsi ? { min: 0, max: 100 } : undefined }} height={plotHeight} inset={{ left: 64, right: 20, top: 20, bottom: 36 }}
+        enableScrubbing onScrubberPositionChange={(index: number | null) => { if (lastScrub.current === index) return; lastScrub.current = index; scrubIndex.current = index; queueMicrotask(() => setCurrent(index)); }} aria-label={`${label} · ${points.length}개 원자료 행`}
+        getScrubberAccessibilityLabel={(index: number) => { const row = points[index]; return row ? `${row[0]} · ${finite(row[1]) ? `${fmt(row[1])} ${unit}` : `관측값 없음 ${unit}`}` : ''; }}>
+        <XAxis minTickSpacing={85} tickLabelFormatter={showDate} showGrid/>
+        <YAxis width={64} tickLabelFormatter={number}/>
+        <Line seriesId="observed" curve="linear" strokeWidth={2} points={true}/>
+        {rsi && signal.some(row => finite(row[1])) && <Line seriesId="signal" curve="linear" strokeWidth={1.4}/>}
+        {lines.map(line => <ReferenceLine key={line} dataY={line} label={String(line)} color="var(--subtle)" dash="3 4"/>) }
+        {markerRows.map(marker => <ChartPoint key={`${marker.date}:${marker.side}`} dataX={marker.index} dataY={marker.value} color={marker.side === 'Buy' ? 'var(--green)' : 'var(--red)'} label={`${marker.side} ${marker.level}`} labelPosition={marker.side === 'Buy' ? 'bottom' : 'top'}/>) }
+        <Scrubber dimFuture={false} showValues valueFormatter={number} label={showDate}/>
+      </CartesianChart>
+      <details className="atlas-funnest-source-table"><summary>관측 원자료 표 · {points.length}행</summary><div className="atlas-funnest-table-scroll"><table><caption>{label} ({unit}), 날짜별 원자료</caption><thead><tr><th scope="col">날짜</th><th scope="col">{label} ({unit})</th>{rsi && signal.length > 0 && <th scope="col">SMA9 ({unit})</th>}</tr></thead><tbody>{points.map(([stamp, amount], index) => <tr key={`${stamp}:${index}`}><th scope="row">{stamp}</th><td>{finite(amount) ? fmt(amount) : '관측값 없음'}</td>{rsi && signal.length > 0 && <td>{finite(signalValues[index]) ? fmt(signalValues[index]!) : '산출 불가'}</td>}</tr>)}</tbody></table></div></details>
+      <label className="ml-date-selector">관측일 선택 <input type="range" min="0" max={points.length-1} step="1" value={safeSelected} data-date={id} aria-label={`${label} 관측일`} aria-valuetext={`${date}, ${finite(value)?`${fmt(value)} ${unit}`:`관측값 없음 ${unit}`}`} disabled={points.length===1} onChange={event=>onSelect(Number(event.currentTarget.value))}/></label>
+    </figure>
+  </div>;
 }
