@@ -127,7 +127,6 @@ Coinbase 저장본의 일봉 조회 시각은 2026-10-22T09:23:06.318Z다. 같�
 - `normalizeDailyVolume(payload, {source, now, asOf, start, end})`: 기본 source는 Bitstamp. `.bars` 배열을 가진 계열 객체를 반환한다. Bitstamp native 문자열 객체, 또는 source를 명시한 Coinbase native 6필드 배열을 처리한다. `now`는 밀리초, start는 포함, end는 제외, asOf는 포함하는 UTC 날짜다.
 - `parseVolumeSnapshot(payload, {asOf, now})`: 같은 계열 객체를 반환한다. 저장 당시 `retrievedAt`을 유지하며 공급자·상품·단위·OHLC·봉 경계·중복·coverage를 검증한다. 표시용 asOf가 더 이르면 뒤의 봉을 제거한다.
 - `aggregateWeeklyVolume(dailyBars, {source, asOf, now})`: `.bars` 배열을 가진 주봉 객체를 반환한다. UTC 월요일부터 일요일까지 **연속한 완료 일봉 7개가 모두 있을 때만** 합산한다. 일봉이 빠진 주, 시작 부분 주, 진행 중인 주는 생성하지 않는다.
-- `filterVolumeForView(bars, {start, end, asOf})`: 실제로 있는 일봉 또는 주봉 중 표시 날짜 범위만 돌려준다. 이 함수의 end는 표시용 포함 경계다. 출처 이전, 가격 관측 cutoff 이후, 미래 예측 구간의 거래량을 만들지 않는다.
 - `fetchDailyVolumeHistory(...)`: 기본 Bitstamp 공식 공개 API를 페이지로 읽는다. 인증정보, 재시도, 묵시적 거래소 변경을 사용하지 않는다. 명시적인 다른 provider 처리는 코드 수준에서 지원하지만 이번 수집·갱신은 Bitstamp로 고정된다.
 
 일봉 각 항목은 `{time, date, open, high, low, close, volume}`이다. `time`은 UTC 시작 Unix 초, `date`는 `YYYY-MM-DD`다. 주봉은 `time=월요일 00:00 UTC`, `date=일요일`의 차트 표시 날짜를 사용하며 `startDate`, `endDate`, `daysIncluded:7`, `complete:true`도 포함한다. 거래량은 합, open은 첫날, close는 마지막 날, high/low는 7일의 극값이다. 저장본에서 제공하는 조회 시각·URL은 집계 결과를 표시할 때 원본 계열의 메타데이터와 함께 사용한다.
