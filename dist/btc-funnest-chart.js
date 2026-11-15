@@ -173,7 +173,7 @@ export function mountAtlasBtcFunnestChart({
   onHover = () => {}, onInspect = () => {}, onAnnotation = () => {}, onMeasurement = () => {},
   onHistoricalEvent = () => {}, onForecastEvidence = () => {}, onCycleMarker = () => {}, onCycleInterval = () => {},
   onCycleClock = () => {}, onViewport = () => {}, onAnnotationCounts = () => {}, source = {},
-  replayBoundaries = [], cycleCalibration = null, showCycleTiming = false, replayCursorDate = null, selectionPreview = false,
+  replayBoundaries = [], cycleCalibration = null, showCycleTiming = false, replayCursorDate = null, selectionPreview = false, retrospectiveOrigin = null,
 } = {}) {
   if (!container?.ownerDocument || !svg || svg.parentElement !== container) throw new TypeError('BTC Funnest chart requires the chart stage and its SVG overlay');
   const intraday = !['daily', 'weekly'].includes(frequency);
@@ -268,6 +268,7 @@ export function mountAtlasBtcFunnestChart({
   if (timingPaneHeight) host.style.bottom = `${timingPaneHeight}px`;
   const replayBoundaryLayer = svgNode(svg.ownerDocument, 'g', { 'data-replay-boundaries': 'true', 'pointer-events': 'none' });
   const replayTimingLayer = svgNode(svg.ownerDocument, 'g', { 'data-replay-cycle-timing': 'true', role: 'img', 'aria-label': '사이클 시계 · 관측 기반 보정 · 매매 신호 아님', 'pointer-events': 'none' });
+  const retrospectiveLabelLayer = svgNode(svg.ownerDocument, 'g', { 'data-replay-retrospective-labels': 'true', 'pointer-events': 'none' });
   svg.style.position = 'absolute'; svg.style.inset = '0'; svg.style.zIndex = '2'; svg.style.pointerEvents = 'auto';
   svg.setAttribute('viewBox', '0 0 1000 500');
   svg.dataset.chartEngine = 'funnest'; svg.dataset.observedMode = sourceMode; svg.dataset.source = actualSource; svg.dataset.replaySelectionPreview = String(Boolean(selectionPreview));
@@ -291,7 +292,7 @@ export function mountAtlasBtcFunnestChart({
   const annotationLabelLayer = svgNode(svg.ownerDocument, 'g', { 'data-funnest-annotation-labels': 'true', 'pointer-events': 'none' });
   const intervalLayer = svgNode(svg.ownerDocument, 'g', { 'data-funnest-cycle-intervals': 'true' });
   Object.assign(svg.dataset, { historyLabelCount: '0', historyEventCount: '0', historyLabelMode: 'off', historyHiddenLabelCount: '0', cycleMarkerCount: '0', cycleMarkerLabelCount: '0', cycleIntervalCount: '0', cycleIntervalLabelCount: '0' });
-  svg.append(targetLayer, annotationLabelLayer, intervalLayer, replayBoundaryLayer, replayTimingLayer, futurePreviewLayer);
+  svg.append(targetLayer, annotationLabelLayer, intervalLayer, replayBoundaryLayer, replayTimingLayer, retrospectiveLabelLayer, futurePreviewLayer);
   const forecastValueRows = [...forecastRows, ...retrospectiveRows];
   const expectedGap = gapSize(frequency);
   // Funnest invokes this real underlay before its observed-price series.
@@ -375,6 +376,24 @@ export function mountAtlasBtcFunnestChart({
       if (bridgeRows.length) path(bridgeRows, 'close', lineColor, 1.9);
       path(forecastRows, 'price', '#e2b66c', 1.8, [7, 5], 'forecast', true);
       path(retrospectiveRows, 'price', '#74a7ee', 1.7, [1, 5], 'retrospective', true);
+      const retrospectiveAnchor = retrospectiveOrigin ? retrospectiveRows.find(row => row.date === retrospectiveOrigin) : null;
+      const retrospectiveLabels = [];
+      if (retrospectiveAnchor) {
+        const x = coords.timeToX(retrospectiveAnchor.time), y = coords.priceToY(scaleValue(retrospectiveAnchor.price, display));
+        const text = `회고 · 입력 ${retrospectiveOrigin}`, width = svgLabelWidth11(text), title = `${text}까지의 자료로 현재 생성한 고정 회고 경로`;
+        if (Number.isFinite(x) && Number.isFinite(y) && x >= 0 && x <= coords.plotWidth && y >= 0 && y <= coords.height && width + 8 <= coords.plotWidth) {
+          const rightFits = x + 10 + width <= coords.plotWidth - 4, leftFits = x - 10 - width >= 4, anchor = rightFits || !leftFits ? 'start' : 'end';
+          const labelX = rightFits ? x + 10 : leftFits ? x - 10 : 4, labelY = Math.max(15, Math.min(coords.height - 4, y >= 31 ? y - 14 : y + 25));
+          const group = svgNode(svg.ownerDocument, 'g', { 'data-replay-retrospective-origin-label': 'true', 'data-input-through': retrospectiveOrigin, 'data-anchor-x': x, 'data-anchor-y': y, role: 'img', 'aria-label': title, 'pointer-events': 'none' });
+          group.append(svgNode(svg.ownerDocument, 'title', {}, title));
+          group.append(svgNode(svg.ownerDocument, 'path', { d: `M${x},${y}V${labelY + 3}H${labelX + (anchor === 'end' ? 4 : -4)}`, fill: 'none', stroke: '#e2b66c', 'stroke-width': 1, opacity: .65 }));
+          group.append(svgNode(svg.ownerDocument, 'circle', { cx: x, cy: y, r: 2.8, fill: '#e2b66c', stroke: background, 'stroke-width': 1.5 }));
+          group.append(svgNode(svg.ownerDocument, 'text', { 'data-replay-retrospective-input-date': 'true', x: labelX, y: labelY, 'text-anchor': anchor, fill: '#e2b66c', stroke: background, 'stroke-width': 3, 'stroke-linejoin': 'round', 'paint-order': 'stroke', 'font-size': 11 }, text));
+          retrospectiveLabels.push(group);
+          receipt.retrospectiveOrigin = { date: retrospectiveOrigin, x, y, labelX, labelY, anchor, layer: 'above', order: ++paintOrder };
+        }
+      }
+      retrospectiveLabelLayer.replaceChildren(...retrospectiveLabels);
       const actualRows = rawRows.filter(row => Number.isFinite(row.price ?? row.close) && (row.price ?? row.close) > 0);
       const hasAnnotationDomain = typeof start === 'string' && typeof end === 'string';
       const historicalAnchors = historicalEvents.filter(event => hasAnnotationDomain && event?.date && event.date >= start && event.date <= end && actualRows.length)
@@ -412,7 +431,7 @@ export function mountAtlasBtcFunnestChart({
 
       for (const row of turnsRows) {
         const x = coords.timeToX(row.time), y = coords.priceToY(scaleValue(row.price, display));
-        if (Number.isFinite(x) && Number.isFinite(y)) { painter.circle(x, y, 3, row.type === 'high' ? '#e7bb73' : '#85bfdc', background, 1); receipt.turns.push({ date: row.date, time: row.time, kind: row.kind ?? null, type: row.type, x, y, radius: 3, layer: 'above', order: ++paintOrder }); }
+        if (Number.isFinite(x) && Number.isFinite(y)) { painter.circle(x, y, 3, row.type === 'high' ? '#e7bb73' : '#85bfdc', background, 1); receipt.turns.push({ date: row.date, time: row.time, kind: row.kind ?? null, replaySource: row.replaySource ?? null, type: row.type, x, y, radius: 3, layer: 'above', order: ++paintOrder }); }
       }
       const cycleLayout = milestoneMarkersMarkup({ markers: markerRows, start, end, x: marker => coords.timeToX(utcMs(marker.date)), y: price => coords.priceToY(scaleValue(price, display)), left: 0, right: coords.plotWidth, top: 0, bottom: coords.height, clipId: `${svg.id || 'btc'}-milestones`, activeMarkerId: activeCycleMarkerId, activeMarkerIds: activeCycleMarkerIds, activeInterval: activeCycleInterval });
       const visibleCycleIds = new Set(cycleLayout.markers.map(point => point.marker.id));
@@ -777,8 +796,7 @@ export function mountAtlasBtcFunnestChart({
       pane: coords ? { width: coords.plotWidth, height: coords.height } : null,
       observed: { coordinateBasis: 'projection through the real rendered Funnest PaneCoords; not intercepted core draw calls', rows: projected },
       bridgeRows, volumeByTime, showVolume, forecastRows, retrospectiveRows,
-      // An unconfirmed start preview has no committed cursor; its disclosure limit stays an internal filter.
-      replay: { cursorDate: selectionPreview ? null : replayCursorDate, previewDisclosureThrough: selectionPreview ? replayCursorDate : null, selectionPreview, boundaries: replayBoundaries },
+      replay: { cursorDate: replayCursorDate, selectionPreview, boundaries: replayBoundaries },
       interaction: { selectedDate: activeSelection, measurementAnchor: pointerDetail?.measurementAnchor ?? null, pointer: pointerDetail ? { time: pointerDetail.time, value: pointerDetail.value, x: pointerDetail.x, y: pointerDetail.y } : null, pointerBasis: 'Funnest PaneCoords.pointAt; not an observed source bar' },
       paint: lastOverlay });
   };
@@ -823,7 +841,7 @@ export function mountAtlasBtcFunnestChart({
       clearTimeout(redrawTimer); cleanupLayout?.(); cleanupReplayViewport?.(); cleanupCrosshair?.(); overlayHandle?.remove?.(); bandOverlayHandle?.remove?.();
       if (Object.getOwnPropertyDescriptor(host, 'getAtlasBtcRenderSnapshot')?.value === readRenderSnapshot) delete host.getAtlasBtcRenderSnapshot;
       svg.removeEventListener('pointermove', onPointerMove); svg.removeEventListener('pointerleave', onPointerLeave); svg.removeEventListener('click', onClick); svg.removeEventListener('keydown', onKeyDown);
-      hideFuturePreview({ clearPointer: true }); targetLayer.remove(); annotationLabelLayer.remove(); intervalLayer.remove(); replayBoundaryLayer.remove(); replayTimingLayer.remove(); futurePreviewLayer.remove(); mounted.destroy();
+      hideFuturePreview({ clearPointer: true }); targetLayer.remove(); annotationLabelLayer.remove(); intervalLayer.remove(); replayBoundaryLayer.remove(); replayTimingLayer.remove(); retrospectiveLabelLayer.remove(); futurePreviewLayer.remove(); mounted.destroy();
     },
   };
   // Publish the selected real observation on mount; a price readout must not

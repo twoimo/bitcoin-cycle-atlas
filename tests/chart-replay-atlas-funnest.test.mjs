@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {parseHTML} from 'linkedom';
 import {buildLongHorizonForecast} from '../dist/long-horizon-forecast.js';
 import {createAtlasReplayContext,drawAtlasChartReplay} from '../dist/chart-replay-atlas.js';
+import {svgFixture} from './replay-svg-fixture.mjs';
 
 const archive=JSON.parse(await readFile(new URL('../dist/data/btc-daily.json',import.meta.url),'utf8'));
 const forecast=buildLongHorizonForecast(archive,{scenario:'base'});
@@ -79,6 +80,84 @@ async function waitForOverlay(svg,boundaryCount=null){
     second.destroy();assert.equal(second.host.isConnected,false);assert.equal(Object.hasOwn(second.host,'getAtlasFunnestSnapshot'),false);assert.equal(h.svg.querySelector('[data-funnest-hit-targets]'),null);
     assert.equal(liveHost.style.visibility,'visible');assert.equal(liveHost.getAttribute('aria-hidden'),null);assert.equal(liveStatus.hidden,false,'returning to live restores its prior mounted host/status state');
   }finally{first?.destroy();second?.destroy();h.restore();}
+});
+
+test('the Funnest render snapshot reports the frame cursor it discloses through and the source of each painted turn',async()=>{
+  const h=await fixture();let chart;
+  try{
+    const cursor='2026-10-22';
+    for(const selectionPreview of [false,true]){
+      chart=drawAtlasChartReplay({svg:h.svg,session:{asOf:origin,mode:'current-chart-snapshot'},data:replayData(cursor),start:'2026-10-01',end:'2027-02-01',chartType:'line',context,selectionPreview});
+      await waitForOverlay(h.svg,selectionPreview?0:3);
+      const frame=chart.host.getAtlasBtcRenderSnapshot();
+      assert.equal(frame.replay.selectionPreview,selectionPreview);
+      assert.equal(frame.replay.cursorDate,cursor,'reselecting a start previews over a committed cursor, so a preview frame still reports the cursor it discloses through');
+      assert.ok(frame.observed.rows.length>0&&frame.observed.rows.every(row=>row.date<=cursor));
+      const observed=frame.paint.turns.filter(turn=>turn.replaySource==='observed'),assumed=frame.paint.turns.filter(turn=>turn.replaySource==='forecast');
+      assert.equal(observed.length+assumed.length,frame.paint.turns.length,'every painted turn names its replay source');
+      assert.ok(observed.length>0&&observed.every(turn=>turn.date<=origin),'observed turns end at the replay origin');
+      assert.ok(assumed.length>0&&assumed.every(turn=>turn.date>context.forecastOrigin),'assumed turns belong to the fixed forecast');
+    }
+  }finally{chart?.destroy();h.restore();}
+});
+
+test('the Funnest replay labels the retrospective path at its own frozen input anchor',async()=>{
+  const h=await fixture();let chart;
+  try{
+    const anchor=archive.prices.find(row=>row[0]===origin)[1],days=Math.round((dateMs(forecast.asOf)-dateMs(origin))/86_400_000);
+    const record={kind:'atlas-replay-retrospective-forecast',schemaVersion:1,status:'ready',asOf:origin,displayEnd:forecast.asOf,createdAt:'2026-11-01T02:00:00.000Z',issuedAt:null,
+      inputHash:'a'.repeat(64),outputHash:'b'.repeat(64),modelVersion:'renderer-fixture',modelOptions:{},publicationTimeProven:false,forecastScoringEnabled:false,
+      path:Array.from({length:days+1},(_,i)=>{const price=anchor*(1+i*.003);return {date:new Date(dateMs(origin)+i*86_400_000).toISOString().slice(0,10),price,lower:price*.9,upper:price*1.12};})};
+    const paint=async({start='2026-10-01',priceDomain={min:anchor*.5,max:anchor*2}}={})=>{
+      const captured=createAtlasReplayContext({dataset:archive,forecast,presentation:{...presentation,priceDomain},originDate:origin,retrospectiveForecast:record});
+      const data={...replayData('2026-10-22'),frame:{...replayData('2026-10-22').frame,forecast:captured.forecast.map(({date,price,lower,upper})=>({date,price,lower,upper})),retrospectiveForecast:record.path}};
+      chart=drawAtlasChartReplay({svg:h.svg,session:{asOf:origin,mode:'current-chart-snapshot'},data,start,end:'2027-02-01',chartType:'line',context:captured});
+      await waitForOverlay(h.svg,start>origin?2:3);
+      return h.svg.querySelector('[data-replay-retrospective-origin-label]');
+    };
+    const marker=await paint(),label=marker?.querySelector('[data-replay-retrospective-input-date]');
+    assert.ok(marker,'the fixed retrospective path discloses its input date on the chart');
+    assert.equal(label.textContent,`회고 · 입력 ${origin}`);assert.equal(marker.dataset.inputThrough,origin);
+    assert.equal(marker.getAttribute('pointer-events'),'none');assert.equal(marker.querySelector('rect'),null,'the input date is an annotation, not a price-difference badge');
+    const first=chart.host.getAtlasBtcRenderSnapshot().paint.paths.retrospective.subpaths[0][0],axis=chart.getPriceScale();
+    assert.equal(first.date,origin);
+    assert.ok(Math.abs(Number(marker.dataset.anchorX)-chart.x(origin))<.011&&Math.abs(Number(marker.dataset.anchorX)-first.x)<.011,'the label anchors at the path origin date');
+    assert.ok(Math.abs(Number(marker.dataset.anchorY)-first.y)<.011,'the label anchors at the path origin price');
+    const tx=Number(label.getAttribute('x')),ty=Number(label.getAttribute('y'));
+    assert.ok(tx>=axis.left+4&&tx<=axis.right-4);assert.ok(ty>=axis.top+14&&ty<=axis.bottom-4);
+    assert.equal(label.getAttribute('font-size'),'11');
+    assert.equal(await paint({start:'2026-10-21'}),null,'panning past the origin does not move its date label to another point');
+    assert.ok(chart.host.getAtlasBtcRenderSnapshot().paint.paths.retrospective.subpaths.flat().length>1,'the path itself stays painted after the pan');
+    assert.equal(await paint({priceDomain:{min:anchor*1.5,max:anchor*3}}),null,'an off-scale origin is not relabelled at an invented boundary price');
+  }finally{chart?.destroy();h.restore();}
+});
+
+test('a start before the first disclosed bar paints the empty price viewport instead of failing the replay',()=>{
+  const {svg}=svgFixture(1440,760),empty={...replayData(origin),observedRows:[],observedCandles:[]};
+  const chart=drawAtlasChartReplay({svg,session:{asOf:origin,mode:'current-chart-snapshot'},data:empty,start:'2026-10-01',end:'2026-10-25',chartType:'candles',context});
+  try{
+    assert.equal(chart.engine,undefined,'no Funnest chart is mounted without an observed bar');
+    assert.equal(svg.dataset.replayRenderer,'atlas');assert.equal(svg.dataset.observedCandleCount,'0');assert.equal(svg.dataset.replayActualCount,'0');
+    assert.ok(svg.querySelector('.chart-empty-message'),'the empty viewport says that no price row is shown');
+    assert.equal(svg.querySelectorAll('.observed-candle,.observed-close-line,.market-close-line').length,0,'no price row is invented');
+    const axis=chart.getPriceScale();
+    assert.ok(Number.isFinite(axis.min)&&Number.isFinite(axis.max)&&axis.min<axis.max&&axis.right>axis.left&&axis.bottom>axis.top,'the empty viewport keeps a real price axis');
+    assert.equal(svg.querySelectorAll('[data-replay-origin-boundary]').length,1);assert.equal(svg.querySelectorAll('[data-replay-cursor-line]').length,1);
+    const x=chart.x(origin);assert.ok(Number.isFinite(x)&&x>axis.left&&x<axis.right,'the committed origin stays on the real time axis');
+  }finally{chart.destroy();}
+});
+
+test('the Funnest replay host stacks as one layer below the SVG replay input surface',async()=>{
+  const h=await fixture();let chart;
+  try{
+    chart=drawAtlasChartReplay({svg:h.svg,session:{asOf:origin,mode:'current-chart-snapshot'},data:replayData('2026-10-22'),start:'2026-10-01',end:'2027-02-01',chartType:'line',context,selectionPreview:true});
+    await waitForOverlay(h.svg,0);
+    const inputCanvas=[...chart.host.querySelectorAll('canvas')].at(-1),svgLayer=Number(h.svg.style.zIndex),hostLayer=Number(chart.host.style.zIndex);
+    assert.ok(inputCanvas&&Number(inputCanvas.style.zIndex)>svgLayer,'the pinned runtime raises its input canvas above the SVG layer number inside the host');
+    assert.equal(chart.host.style.position,'absolute');
+    assert.ok(chart.host.style.zIndex!==''&&Number.isInteger(hostLayer),'the replay host owns a stacking context, so its raised input canvas cannot cover the replay SVG');
+    assert.ok(svgLayer>hostLayer,'the replay coordinator accepts pointers on the SVG, so the SVG stacks above the whole Funnest replay host');
+  }finally{chart?.destroy();h.restore();}
 });
 
 test('weekly candle replay maps bar picking to the source period opening date and selection preview suppresses Funnest hit targets',async()=>{

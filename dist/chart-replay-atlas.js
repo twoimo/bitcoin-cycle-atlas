@@ -232,6 +232,8 @@ export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line
     const date=row.endDate??row.date;return date<=cursorDate&&['open','high','low','close'].every(key=>positive(row[key]))&&row.low<=Math.min(row.open,row.close)&&row.high>=Math.max(row.open,row.close);
   }).map(row=>({...row,date:row.endDate??row.date,startDate:row.startDate??row.periodStartDate??row.date,endDate:row.endDate??row.date}));
   const useOhlc=chartType==='candles'&&observedCandles.length>0;
+  // Funnest maps time by bar index and has no time scale until it holds a bar.
+  if(!actual.length&&!useOhlc)return drawAtlasChartReplayLegacy({svg,session,data,start,end,chartType,context,selectionPreview,onInspect});
   const inspection=date=>{const actualPoint=actualByDate.get(date),original=fixedByDate.get(date),retrospectivePoint=retrospectiveByDate.get(date),predicted=original??retrospectivePoint,candle=chartType==='candles'?observedCandles.find(row=>(row.endDate??row.date)===date):null;
     return {date,actual:actualPoint?.price??null,predicted:predicted?.price??null,originalPredicted:original?.price??null,retrospectivePredicted:retrospectivePoint?.price??null,predictedKind:original?'original':retrospectivePoint?'retrospective':null,price:actualPoint?.price??predicted?.price??null,
       candle:candle??null,kind:actualPoint?'observed':original?'forecast':retrospectivePoint?'retrospective':'missing',source:sourceLabel(data.priceSource??data.candleSource),candleSource:sourceLabel(data.candleSource),forecastOrigin:context.forecastOrigin,replayOrigin:origin,
@@ -269,12 +271,13 @@ export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line
     cycleIntervals:p.showCycleIntervals===false?[]:cycleIntervals,cycleRelation:relation,selectedDate:cursorDate,scale:p.scale??'log',invertScale:Boolean(p.invertScale),
     priceDomain:p.priceDomain??null,priceOnlyAuto:Boolean(p.priceOnlyAuto),unit:p.unit??'usd',denominator:actual.findLast(row=>row.date<=origin)?.price??1,
     showStates:Boolean(p.showStates),states,showDrawdown:Boolean(p.showDrawdown),replayBoundaries:boundaries,cycleCalibration:calibration,
-    showCycleTiming:Boolean(p.showCycleTiming&&calibration),replayCursorDate:cursorDate,selectionPreview,onHover:inspect,onInspect:value=>inspect(value),
+    showCycleTiming:Boolean(p.showCycleTiming&&calibration),replayCursorDate:cursorDate,selectionPreview,retrospectiveOrigin:context.retrospectiveForecast?.asOf??null,onHover:inspect,onInspect:value=>inspect(value),
     onCycleMarker:id=>{const marker=cycleMarkers.find(row=>row.id===id);if(marker)inspect(marker);},onCycleInterval:id=>{const interval=cycleIntervals.find(row=>row.id===id);if(interval)inspect({date:interval.endDate});},
     source:{name:source,sourceDisclosure:`${source} 실제 관측 가격`,candleSource}});}catch(error){restoreLiveHosts();throw error;}
   // The replay chart is a second Funnest host beside the suspended live host. Mark it so the
   // replay stylesheet keeps only this host painted and verifiers read its snapshot, not the live one.
   chart.host.dataset.chartReplayHost='true';
+  chart.host.style.zIndex='0';
   const axis=chart.getPriceScale();
   Object.assign(svg.dataset,{replayRenderer:'funnest',replayViewStart:start,replayViewEnd:end,replayAnnotationSignature:context.annotationSignature,
     replayActualThrough:actual.at(-1)?.date??origin,replayObservedCount:String(actual.length),replayActualCount:String(actual.filter(row=>row.date>origin).length),replayForecastPoints:String(fixed.length),

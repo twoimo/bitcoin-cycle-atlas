@@ -30,10 +30,10 @@ const archive=(name,{missing=[],length=185}={})=>({observations:Array.from({leng
 
 async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('current'),loadRecord,stored=null,storedText=null,buildSession,
   getAtlasContext=null,getChartState=null,resolveAtlasRange=null,loadBaseline,random=()=>.5,storageFailure=false,rendererAxis=null,rendererBarDateAt=null,
-  initialMode='atlas-chart',additionalStored={},transportGeometry=null,barWidth=null,getForecastAvailability=null}={}){
+  initialMode='atlas-chart',additionalStored={},transportGeometry=null,barWidth=null,getForecastAvailability=null,funnestAtlasController=false}={}){
   const storageKey='atlas-chart-replay-v1:'+symbol;
   const controls=new Map(),saved=new Map([...Object.entries(additionalStored),...(storedText!==null?[[storageKey,storedText]]:stored?[[storageKey,JSON.stringify(stored)]]:[])]),timers=new Map(),frames=new Map();
-  const builds=[],factories=[],draws=[],controllers=[],atlasContexts=[],chartCalls=[],displayCalls=[],frameEvents=[],writes=[],capabilityCalls=[],resizeCallbacks=[];
+  const builds=[],factories=[],draws=[],drawings=[],controllers=[],atlasContexts=[],chartCalls=[],displayCalls=[],frameEvents=[],writes=[],capabilityCalls=[],resizeCallbacks=[];
   let doc,transportNode,barNode,timerId=0,rafId=0,restores=0,clock=0,pointerDate=dateAt(180);
   class Element{
     constructor(tag='div'){this.tag=tag;this.ownerDocument=doc;this.dataset={};this.attributes={};this.children=[];this.listeners=new Map();this.hidden=false;this.value='';this.inert=false;this.textContent='';this.style={setProperty(){},removeProperty(){}};this.classList={add(){},remove(){}};this.disabled=false;this.checked=false;}
@@ -116,9 +116,10 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
   const axis=rendererAxis??{top:0,bottom:400,left:0,right:800};
   const renderer=kind=>options=>{draws.push({...options,renderer:kind});
     const manual=normalizePriceDomain(options.priceDomain??options.context?.presentation?.priceDomain,{scale:axis.scale}),renderedAxis=manual?{...axis,...manual,mode:'manual'}:axis;
-    return {axis:renderedAxis,
+    const drawing={...(kind==='atlas'&&funnestAtlasController?{engine:'funnest'}:{axis:renderedAxis}),renderer:kind,destroyed:false,
     x:date=>axis.left+(Date.parse(date)-Date.parse(options.start))/Math.max(1,Date.parse(options.end)-Date.parse(options.start))*(axis.right-axis.left),
-    dateAt:()=>pointerDate,...(rendererBarDateAt?{barDateAt:()=>rendererBarDateAt(pointerDate)}:{}),getPriceScale:()=>renderedAxis,destroy(){}};};
+    dateAt:()=>pointerDate,...(rendererBarDateAt?{barDateAt:()=>rendererBarDateAt(pointerDate)}:{}),getPriceScale:()=>renderedAxis,destroy(){drawing.destroyed=true;}};
+    drawings.push(drawing);return drawing;};
   const math=Object.create(Math);math.random=random;
   const context=vm.createContext({Date,Math:math,structuredClone,AbortController,URL,Blob,console,ResizeObserver:class{constructor(callback){resizeCallbacks.push(callback);}observe(){}disconnect(){}}});
   async function module(exports){const result=new vm.SyntheticModule(Object.keys(exports),function(){for(const [key,value]of Object.entries(exports))this.setExport(key,value);},{context});await result.link(()=>{throw new Error('Unexpected test-module import');});await result.evaluate();return result;}
@@ -148,7 +149,7 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
   const trigger=toolbar.children.find(node=>node.id==='workbench-replay');
   const panel=plot.children.find(node=>node.className==='chart-replay-controls');
   for(const match of panel.innerHTML.matchAll(/data-cr="([^"]+)"/g))panel.querySelector('[data-cr="'+match[1]+'"]');
-  return {mounted,svg,plot,toolbar,doc,win,controls,builds,factories,draws,timers,controllers,atlasContexts,chartCalls,displayCalls,frameEvents,writes,capabilityCalls,
+  return {mounted,svg,plot,toolbar,doc,win,controls,builds,factories,draws,drawings,timers,controllers,atlasContexts,chartCalls,displayCalls,frameEvents,writes,capabilityCalls,
     trigger,panel,transport:transportNode,bar:barNode,frequencyControl,typeControl,liveControl,infoOpener,infoRail,infoHeading,infoFooter,infoNavigation,infoAxis,axis,navigationGeometry:view.namespace.replayNavigationGeometry,
     saved:()=>JSON.parse(saved.get(storageKey)??'null'),restores:()=>restores,
     savedText:()=>saved.get(storageKey)??null,
@@ -928,6 +929,40 @@ const interactionCases=[
     assert.equal(h.mounted.isActive(),false);assert.equal(h.panel.hidden,true);assert.equal(h.svg.innerHTML,original);
     assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);assert.equal(loads,0);assert.equal(h.builds.length,0);
     h.mounted.destroy();
+  }},
+  {name:'a Funnest replay controller paints the hovered scissors preview from its live price scale',async run(source){
+    const fixture=atlasFixture(),raw=JSON.stringify(savedFixture(),null,2)+'\n',axis={top:12,bottom:388,left:0,right:800};
+    const h=await harness(source,{...fixture.options,storedText:raw,rendererAxis:axis,funnestAtlasController:true});
+    h.trigger.click();h.controls.get('entry-new').click();await flush();
+    assert.equal(h.controllers[0].getState().status,'selecting');assert.equal(h.draws.at(-1).renderer,'atlas');assert.equal(h.draws.at(-1).selectionPreview,true);
+    h.pointer('pointermove',dateAt(182));
+    assert.equal(h.svg.dataset.pickerDate,dateAt(182),'the hovered bar becomes the previewed start');
+    const line=h.svg.querySelector('[data-chart-replay-picker]')?.children[0];
+    assert.ok(line,'the scissors line is painted for the Funnest controller');
+    assert.equal(line.getAttribute('y1'),String(axis.top));assert.equal(line.getAttribute('y2'),String(axis.bottom));
+    assert.match(h.svg.querySelector('[data-chart-replay-scissors]').textContent,new RegExp(dateAt(182)));
+    assert.equal(h.controllers[0].getState().session,null);assert.equal(h.svg.dataset.replayCursor,undefined);assert.equal(h.savedText(),raw);
+    h.pointer('pointerleave');assert.equal(h.svg.querySelector('[data-chart-replay-picker]'),null);
+    h.mounted.destroy();
+  }},
+  {name:'a pending current-chart frame stays painted and inert until the confirmed session replaces it',async run(source){
+    const fixture=atlasFixture(),raw=JSON.stringify(savedFixture(),null,2)+'\n',session=deferred();let hold=false;
+    const h=await harness(source,{...fixture.options,storedText:raw,funnestAtlasController:true,buildSession:async(options,built)=>{if(hold)await session.promise;return built;}});
+    h.trigger.click();h.controls.get('entry-new').click();await flush();
+    assert.equal(h.controllers[0].getState().status,'selecting');
+    hold=true;await h.start(dateAt(182));
+    assert.equal(h.controllers[0].getState().status,'loading');assert.equal(h.svg.dataset.replayPending,'true');
+    const pending=h.drawings.at(-1);
+    assert.equal(pending.renderer,'atlas');assert.equal(pending.destroyed,false,'the current forecast stays painted while the selected start loads');
+    assert.equal(h.draws.at(-1).selectionPreview,true,'an unverified frame paints no committed boundary and takes no hover');
+    assert.equal(h.drawings.filter(drawing=>!drawing.destroyed).length,1,'only the pending frame is on screen');
+    h.pointer('pointermove',dateAt(140));h.pointer('pointerdown',dateAt(140));h.pointer('pointerup',dateAt(140));
+    assert.equal(h.svg.dataset.pickerDate,undefined);assert.equal(h.controllers[0].getState().status,'loading','a pending frame cannot preview or confirm another start');
+    session.resolve();await flush();
+    assert.equal(h.controllers[0].getState().status,'paused');assert.equal(h.svg.dataset.replayPending,undefined);
+    assert.equal(pending.destroyed,true,'the confirmed session replaces the pending frame');
+    assert.equal(h.drawings.filter(drawing=>!drawing.destroyed).length,1);assert.equal(h.draws.at(-1).selectionPreview,false);
+    h.mounted.destroy();assert.equal(h.drawings.every(drawing=>drawing.destroyed),true,'leaving replay removes every drawing');
   }},
 ];
 
