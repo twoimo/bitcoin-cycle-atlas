@@ -1,7 +1,8 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
+import { writeOrCheckFile } from './atomic-file.mjs';
 const source = new URL('../packages/domain/src/market-lab-math.js', import.meta.url);
 const target = new URL('../dist/market-lab-math.js', import.meta.url);
-const body = await readFile(source, 'utf8');
-if (process.argv.includes('--check')) {
-  if (await readFile(target, 'utf8') !== body) throw new Error('Published market math differs from packages/domain; run npm run build:domain');
-} else await writeFile(target, body);
+await writeOrCheckFile(target, await readFile(source, 'utf8'), {
+  check: process.argv.includes('--check'),
+  stale: 'Published market math differs from packages/domain; run npm run build:domain',
+});

@@ -1,9 +1,10 @@
-import {readFile,writeFile} from 'node:fs/promises';
+import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {canonicalForecastJson} from '../dist/forecast-records.js';
 import {PROJECT_REPLAY_ORIGIN} from '../dist/project-replay-baseline.js';
+import {writeOrCheckFile} from './atomic-file.mjs';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const sha256=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -30,10 +31,8 @@ export async function projectReplayBaselineText({directory=root}={}){
 }
 
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
-  const text=await projectReplayBaselineText(),file=resolve(root,'dist',PROJECT_REPLAY_ORIGIN.archivePath);
-  if(process.argv.includes('--check')){
-    if(await readFile(file,'utf8')!==text)throw new Error('Project-origin bundle differs from the original committed artifacts');
-    if(sha256(text)!==PROJECT_REPLAY_ORIGIN.archiveSha256)throw new Error('Project-origin bundle differs from the reviewed runtime hash');
-  }else await writeFile(file,text);
+  const text=await projectReplayBaselineText(),file=resolve(root,'dist',PROJECT_REPLAY_ORIGIN.archivePath),check=process.argv.includes('--check');
+  await writeOrCheckFile(file,text,{check,stale:'Project-origin bundle differs from the original committed artifacts'});
+  if(check&&sha256(text)!==PROJECT_REPLAY_ORIGIN.archiveSha256)throw new Error('Project-origin bundle differs from the reviewed runtime hash');
   console.log(JSON.stringify({file,bytes:Buffer.byteLength(text),sha256:sha256(text),origin:PROJECT_REPLAY_ORIGIN.startDate,sourceAsOf:PROJECT_REPLAY_ORIGIN.asOf}));
 }
