@@ -1062,7 +1062,7 @@ export async function verifyWorkspaceSurface(api) {
       snapshot.canvases?.some(canvas=>canvas.visible&&canvas.readable&&canvas.opaquePixels>0&&canvas.sampledColors>1));
   }),'BTC Funnest canvas ready');
   await inspect('.atlas-canvas-heading','btc-toolbar');
-  const chart=await readBtcFunnestChart(evaluate,cdp,{svgSelector:'#lab-chart',allocationSelector:'#lab-chart-stage > .atlas-plot'});
+  const chart=await until(async()=>{const value=await readBtcFunnestChart(evaluate,cdp,{svgSelector:'#lab-chart',allocationSelector:'#lab-chart-stage > .atlas-plot'});return value?.painted?value:null;},'BTC Funnest chart painted at its geometry read',10000);
   const frame=await evaluate(cdp,()=>{const stage=document.querySelector('.atlas-workbench').getBoundingClientRect();return {stageBottom:stage.bottom,viewportHeight:innerHeight,bodyPage:document.body.dataset.page};});
   const geometry={...chart,width:chart.box.width,height:chart.box.height,...frame};
   assert.ok(geometry.width>=200&&geometry.height>=80,'BTC Funnest canvas compressed');assert.equal(geometry.engine,'funnest');assert.equal(geometry.painted,true);assert.equal(geometry.bodyPage,'outlook');
