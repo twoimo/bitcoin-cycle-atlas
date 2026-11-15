@@ -98,7 +98,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     ? [...document.body.nodes.values()].filter(node => 'bootContent' in node.dataset) : [];
   document.createElement = () => new Node(); document.fonts = { ready: Promise.resolve() };
   document.addEventListener('atlas:ready', () => emitted.push('atlas:ready'));
-  let frameId = 0, timerId = 0, navigation, historyOptions, resize, workbenchUpdates = 0;
+  let frameId = 0, timerId = 0, navigation, historyOptions, resize, workbenchUpdates = 0, workbenchOptions = null;
   const indicatorRect={left:12,top:18,right:112,bottom:48,width:100,height:30};
   const indicatorElement={hidden:true,getClientRects(){return this.hidden?[]:[indicatorRect];},getBoundingClientRect(){return indicatorRect;}};
   const mount = () => ({ cancel() {}, cancelPending() {}, destroy() {} });
@@ -116,7 +116,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     mountNativeChartApp: app => document.body.append(app),
     // The real shell adapter is exercised separately with a parsed DOM. This
     // fixture owns network/loader races and keeps its DOM boundary explicit.
-    mountNativeChartWorkbench: () => ({update(){workbenchUpdates++;},inspect(){},measure(){},beginGesture(){},endGesture(){},destroy(){}}),
+    mountNativeChartWorkbench: options => (workbenchOptions = options, {update(){workbenchUpdates++;},inspect(){},measure(){},beginGesture(){},endGesture(){},destroy(){}}),
     setLoadingSurface:(element,busy)=>element?.setAttribute('data-skeleton',String(busy)),
     ...ohlc, ...ethData, ...ethState, ...events, ...eventHistory, marketStatusText,buildEthereumForecasts,buildEthereumAdaptiveForecast,buildEthereumPooledForecast,ethereumResearchPanel,
     createMarketDataController: options => createMarketDataController({ ...options, fetchImpl }),
@@ -164,7 +164,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     app.dispatchEvent({ type: 'click', target });
   };
   return {
-    requests, liveRequests, frames, timers, draws, events: emitted, initialization, document, app, location, urlWrites, indicator:indicatorElement,indicatorRect,workbenchUpdates:()=>workbenchUpdates,
+    requests, liveRequests, frames, timers, draws, events: emitted, initialization, document, app, location, urlWrites, indicator:indicatorElement,indicatorRect,workbenchUpdates:()=>workbenchUpdates,workbench:()=>workbenchOptions,
     microtasks, frame, settle,
     reply: (index, payload) => requests[index].resolve({ ok: true, json: async () => payload }),
     reject: (index, message = 'Archive failed') => requests[index].reject(new Error(message)),

@@ -83,7 +83,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
   document.createElement = () => new Node();
   document.fonts = { ready: Promise.resolve() };
   for (const type of ['atlas:ready', 'atlas:boot-error']) document.addEventListener(type, () => events.push(type));
-  let frameId = 0, navigation, replayOptions, workbenchUpdates = 0;
+  let frameId = 0, navigation, replayOptions, workbenchUpdates = 0, workbenchOptions = null;
   const indicatorRect={left:12,top:18,right:112,bottom:48,width:100,height:30};
   const indicatorElement={hidden:true,getClientRects(){return this.hidden?[]:[indicatorRect];},getBoundingClientRect(){return indicatorRect;}};
   const mount = () => ({ cancel() {}, cancelPending() {}, destroy() {} });
@@ -97,7 +97,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,writeChartUrlState,nativeDateRange,mountObservedPriceChart,atlasCandlesToFunnestBars,
     mountNativeChartApp: app => document.body.append(app),
     // Native shell/command behavior has a separate parsed-DOM integration test.
-    mountNativeChartWorkbench: () => ({update(){workbenchUpdates++;},inspect(){},measure(){},beginGesture(){},endGesture(){},destroy(){}}),
+    mountNativeChartWorkbench: options => (workbenchOptions = options, {update(){workbenchUpdates++;},inspect(){},measure(){},beginGesture(){},endGesture(){},destroy(){}}),
     setLoadingSurface:(element,busy)=>element?.setAttribute('data-skeleton',String(busy)),
     ...equityData,CAPITAL_POLICIES,
     // These tiny fixtures isolate request ownership, not sample sufficiency.
@@ -162,7 +162,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     app.dispatchEvent({ type: 'click', target });
   };
   return {
-    requests, frames, draws, calculations, errors, events, articles, initialization, document, app, location, urlWrites, indicator:indicatorElement,indicatorRect,workbenchUpdates:()=>workbenchUpdates,
+    requests, frames, draws, calculations, errors, events, articles, initialization, document, app, location, urlWrites, indicator:indicatorElement,indicatorRect,workbenchUpdates:()=>workbenchUpdates,workbench:()=>workbenchOptions,
     microtasks, frame, settle,
     reply: (index, value) => requests[index].resolve({ ok: true, json: async () => value }),
     reject: (index, message = 'Archive failed') => requests[index].reject(new Error(message)),

@@ -308,6 +308,34 @@ test('ETH preserves an explicit observed row across interval restoration but tre
   assert.equal(f.app.querySelector('#eth-bar-time').textContent, restored.date.slice(0, 10));
 });
 
+const goTo = (workbench, time) => { workbench.cancelInteraction(); workbench.state.selectedTime = time; workbench.onChange(); };
+const cancel = workbench => { workbench.cancelInteraction(); workbench.onChange(); };
+
+test('ETH readout shows a go-to selection over a stale hover and the latest row once the selection is cancelled', async () => {
+  const f = await ethViewFixture();
+  f.reply(0, ethPayload()); await f.settle(); await f.initialization;
+  const candles = f.latest().series.candles, hovered = candles[5], target = candles[10];
+  f.latest().onCrosshair({ time: hovered.time * 1000, source: 'mouse' });
+  assert.equal(f.app.querySelector('#eth-bar-time').textContent, hovered.date.slice(0, 10));
+  goTo(f.workbench(), target.time); await f.settle();
+  assert.equal(f.app.querySelector('#eth-bar-time').textContent, target.date.slice(0, 10));
+  cancel(f.workbench()); await f.settle();
+  assert.equal(f.app.querySelector('#eth-bar-time').textContent, candles.at(-1).date.slice(0, 10));
+});
+
+for (const symbol of ['MSTR', 'BMNR']) test(`${symbol} readout shows a go-to selection over a stale hover and the latest row once the selection is cancelled`, async () => {
+  const f = await equityViewFixture(symbol);
+  f.reply(0, equityPayload(symbol, 1)); await f.microtasks(); f.reply(1, { revision: 1 }); await f.settle(); await f.initialization;
+  const candles = f.latest().series.candles, hovered = candles[2], target = candles[4];
+  f.latest().onCrosshair({ time: hovered.time * 1000, source: 'mouse' });
+  assert.equal(f.app.querySelector('#equity-bar-time').textContent, hovered.date.slice(0, 10));
+  goTo(f.workbench(), target.time); await f.settle();
+  assert.equal(f.app.querySelector('#equity-bar-time').textContent, target.date.slice(0, 10));
+  assert.equal(f.app.querySelector('#equity-price').textContent, `$${target.close.toFixed(2)}`);
+  cancel(f.workbench()); await f.settle();
+  assert.equal(f.app.querySelector('#equity-bar-time').textContent, candles.at(-1).date.slice(0, 10));
+});
+
 test('ETH final visible-range callback refreshes the footer date after panel resize without changing the native viewport', async () => {
   const f = await ethViewFixture();
   f.reply(0, ethPayload()); await f.settle(); await f.initialization;

@@ -222,6 +222,7 @@ export async function initEthView() {
     if(!row.hovered)state.selectedTime=row.time;
   }
   function restoreArchiveReadout(series,forecast){
+    state.readoutSelection=state.selectedTime;
     const candles=series?.candles||[];
     if(!candles.length)return;
     const selected=state.selectedTime;
@@ -314,6 +315,7 @@ export async function initEthView() {
       if(state.funnestScale!==state.scale){state.funnestMount.setScale(state.scale==='log'?'log':'normal');state.funnestScale=state.scale;}
       if(state.range&&state.funnestRangeIdentity!==rangeIdentity(state.range)){state.funnestMount.setAtlasRange(state.range);state.funnestRangeIdentity=rangeIdentity(state.range);}
     }
+    if(state.readoutSelection!==state.selectedTime)restoreArchiveReadout(series,forecast);
     state.funnestMount.setAtlasInteraction?.({tool:state.tool,chartType:state.chartType,magnet:state.magnet,measurement:state.measurement,onMeasure:value=>workbench?.measure(value),onInspect:detail=>workbench?.inspect(detail)});
     state.funnestMount.setAtlasInsets?.({top:headerInset});
     if(state.funnestVolume!==state.showVolume){state.funnestMount.setVolumeVisible?.(state.showVolume);state.funnestVolume=state.showVolume;}
