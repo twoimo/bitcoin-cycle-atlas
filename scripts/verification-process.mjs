@@ -21,7 +21,7 @@ export async function prepareTlc() {
     if (!response.ok) throw new Error(`TLC download HTTP ${response.status}`);
     bytes = Buffer.from(await response.arrayBuffer());
     assert.equal(sha256(bytes), TLC_SHA256, 'Unexpected TLC download checksum');
-    await writeFileAtomic(TLC_JAR, bytes);
+    await writeFileAtomic(TLC_JAR, bytes, { mkdir: true });
   }
   assert.equal(sha256(bytes), TLC_SHA256, 'Use the pinned TLC 1.7.4 jar');
 }

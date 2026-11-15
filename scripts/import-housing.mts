@@ -29,5 +29,5 @@ const snapshot:HousingSnapshot={schemaVersion:1,generatedAt:new Date(Math.max(..
   })};
 validateHousing(snapshot);
 const body=JSON.stringify(snapshot);
-await writeFileAtomic(new URL('../dist/data/housing.json',import.meta.url),body+'\n');
+await writeFileAtomic(new URL('../dist/data/housing.json',import.meta.url),body+'\n',{mkdir:true});
 console.log(JSON.stringify({revision:createHash('sha256').update(body).digest('hex'),regions:snapshot.regions.map(r=>({id:r.id,volume:r.volume.length,price:r.price.length,latestVolume:r.volume.at(-1),latestPrice:r.price.at(-1)}))}));

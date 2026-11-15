@@ -12,7 +12,7 @@ if(pkg.version!==provenance.version||pkg.license!==provenance.license)throw new 
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const hashes={};
 async function sync(target,bytes){
-  await writeOrCheckFile(new URL(target,root),bytes,{check,stale:'Skullet file mismatch: '+target});
+  await writeOrCheckFile(new URL(target,root),bytes,{check,stale:'Skullet file mismatch: '+target,mkdir:true});
   hashes[target]=hash(bytes);
 }
 
