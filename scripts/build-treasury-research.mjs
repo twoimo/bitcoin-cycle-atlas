@@ -28,5 +28,5 @@ const out=path.join(root,'dist/treasury-catalog.js');
 await writeOrCheckFile(out,text,{check,stale:'Treasury catalog is stale'});
 const manifest={version:1,reviewDate:'2026-10-24',scope:'source metadata and original research summaries; no complete third-party text or media copies',sources:allSources.length,historicalEvents:Object.values(data).reduce((n,item)=>n+item.events.length,0),inputs:[]};
 for(const name of ['research-data/treasury-mstr.json','research-data/treasury-bmnr.json'])manifest.inputs.push({path:name,sha256:createHash('sha256').update(await readFile(path.join(root,name))).digest('hex')});
-await writeOrCheckFile(path.join(root,'dist/research/treasury-manifest.json'),JSON.stringify(manifest,null,2)+'\n',{check,stale:'Treasury manifest is stale'});
+await writeOrCheckFile(path.join(root,'dist/research/treasury-manifest.json'),JSON.stringify(manifest,null,2)+'\n',{check,stale:'Treasury manifest is stale',mkdir:true});
 console.log(JSON.stringify({status:'ok',check,sources:manifest.sources,historicalEvents:manifest.historicalEvents}));

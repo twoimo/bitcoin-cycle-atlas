@@ -80,7 +80,7 @@ export async function refreshCycleCalibration({
   catch (error) { if (error.code !== 'ENOENT') throw error; }
   const changed = previous !== expected;
   if (check && changed) throw new Error('Cycle calibration artifact is absent, stale or inconsistent with completed observations. Run npm run refresh:cycle.');
-  if (!check && changed) await writeFileAtomic(outputPath, expected);
+  if (!check && changed) await writeFileAtomic(outputPath, expected, { mode: 0o644, mkdir: true });
   return {
     status: check ? 'verified' : changed ? 'updated' : 'unchanged',
     asOf: record.asOf, version: record.version, observationCount: record.observationCount,
