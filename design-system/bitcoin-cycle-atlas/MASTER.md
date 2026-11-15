@@ -1,5 +1,10 @@
 # Bitcoin Cycle Atlas — chart workbench
 
+## Full redesign and engine replacement — 2026-11-13
+
+The latest user request explicitly selects UI/UX Pro Max plus Unslop for all-page deep QA and improvement and requires actual Funnest implementation for all coin/stock/housing charts. It supersedes the prior UIUX/clone-only tool choice and hybrid-only renderer scope. Preserve chart-first entry, real data, source/forecast distinctions and all lifecycle/accessibility/release contracts. See [current scope](../../docs/requirements/REQ_FULL_FUNNEST_UNSLOP_20261113.md).
+
+
 ## Latest home correction — 2026-11-13
 
 Keep the deployed chart-first home: root navigation opens the real price chart directly, with its existing four perimeter regions and compact toolbar. Do not introduce a landing or card dashboard before the chart. Use the existing dark theme as the new-visitor default, while preserving an explicitly saved light/dark preference. Bloomberg is a density/function reference, not a request to copy its branding or invent a new multi-panel product. This supersedes the Funnest renewal's light-by-default interpretation for initial entry; it does not discard readability, accessibility, data contracts or R22. Scope and tests: [home contract](../../docs/requirements/REQ_HOME_CHART_FIRST_20261113.md).

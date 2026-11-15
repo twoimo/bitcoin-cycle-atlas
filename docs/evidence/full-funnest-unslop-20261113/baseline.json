@@ -1,0 +1,964 @@
+{
+  "baseline": "b6762fd983d176e8ecc88c265aba0e5f2afa77b4",
+  "upstream": "e23919055dfca8d3051f4fc2946356269ab8372b",
+  "routes": [
+    {
+      "id": "outlook",
+      "path": "/?page=outlook",
+      "direct": "/?page=outlook"
+    },
+    {
+      "id": "market-us",
+      "path": "/market-lab/",
+      "direct": "/market-lab/us/"
+    },
+    {
+      "id": "market-kr",
+      "path": "/market-lab/?region=kr",
+      "direct": "/market-lab/kr/"
+    },
+    {
+      "id": "scenario",
+      "path": "/market-lab/?view=scenario",
+      "direct": "/market-lab/scenario/"
+    },
+    {
+      "id": "cashflow",
+      "path": "/market-lab/?view=cashflow",
+      "direct": "/market-lab/cashflow/"
+    },
+    {
+      "id": "rsi",
+      "path": "/market-lab/charts/?symbol=TQQQ",
+      "direct": "/market-lab/rsi/"
+    },
+    {
+      "id": "housing",
+      "path": "/market-lab/charts/?symbol=HOUSING-BUSAN&region=busan",
+      "direct": "/market-lab/housing/"
+    },
+    {
+      "id": "themes",
+      "path": "/market-lab/charts/?symbol=HYPE",
+      "direct": "/market-lab/themes/"
+    },
+    {
+      "id": "evidence",
+      "path": "/?page=evidence",
+      "direct": "/?page=evidence"
+    },
+    {
+      "id": "data",
+      "path": "/?page=data",
+      "direct": "/?page=data"
+    },
+    {
+      "id": "ipo",
+      "path": "/?page=ipo",
+      "direct": "/?page=ipo"
+    },
+    {
+      "id": "relay",
+      "path": "/?page=relay",
+      "direct": "/?page=relay"
+    },
+    {
+      "id": "conference",
+      "path": "/?page=conference",
+      "direct": "/?page=conference"
+    }
+  ],
+  "nativeSymbols": [
+    "BTCUSD",
+    "ETHUSD",
+    "MSTR",
+    "BMNR"
+  ],
+  "hostedSymbols": [
+    {
+      "symbol": "TQQQ",
+      "page": "rsi",
+      "path": "/market-lab/charts/?symbol=TQQQ"
+    },
+    {
+      "symbol": "SOXL",
+      "page": "rsi",
+      "path": "/market-lab/charts/?symbol=SOXL"
+    },
+    {
+      "symbol": "233740",
+      "page": "rsi",
+      "path": "/market-lab/charts/?symbol=233740"
+    },
+    {
+      "symbol": "HYPE",
+      "page": "themes",
+      "path": "/market-lab/charts/?symbol=HYPE"
+    },
+    {
+      "symbol": "HOUSING-BUSAN",
+      "page": "housing",
+      "path": "/market-lab/charts/?symbol=HOUSING-BUSAN&region=busan"
+    },
+    {
+      "symbol": "HOUSING-SEOUL",
+      "page": "housing",
+      "path": "/market-lab/charts/?symbol=HOUSING-SEOUL&region=seoul"
+    },
+    {
+      "symbol": "HOUSING-GYEONGGI",
+      "page": "housing",
+      "path": "/market-lab/charts/?symbol=HOUSING-GYEONGGI&region=gyeonggi"
+    },
+    {
+      "symbol": "HOUSING-NATIONAL",
+      "page": "housing",
+      "path": "/market-lab/charts/?symbol=HOUSING-NATIONAL&region=national"
+    }
+  ],
+  "dataFiles": [
+    {
+      "path": "dist/data/asset-comparison.json",
+      "bytes": 3532880,
+      "sha256": "d8d4a867a1b84c28d0a86c9f744a775a2335a359f3948102c2e59c03a9e3782e"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/evaluation.json",
+      "bytes": 15797,
+      "sha256": "a6aa97b330c00191febd880daf935344f84d384d44eb1301d62d8ec0c0bdb6c3"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/index.json",
+      "bytes": 7826,
+      "sha256": "2620f75f54b9755f417296348a4e31e14d584c338bcd2b67b0ac15c2c59bbe62"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/receipt.json",
+      "bytes": 10909,
+      "sha256": "a050a1722e0ce52116b1648aee0321c90d508690bf64bbadda349d7a42c5b371"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/records/1f6c1f2ddfb52db984a0b21750f0348ed5c9a64bdd304b9ad3a5392269ea85d0.json",
+      "bytes": 353535,
+      "sha256": "4756068b0739ee5710709e4283689c5371a7faa83a6a215bb4aeb12c7d9d2a7b"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/records/6396a34f44819361570112c18a1839a24cba194ce78952116adb15ee1e726f6d.json",
+      "bytes": 294945,
+      "sha256": "0024a5a8a3155c846393474984ff9bfff65dd652ee4a58eaf795e05a38d82754"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/records/6415ad41abb2d18112e931da359f8d22780624714dc34ae10dba3dcad758b032.json",
+      "bytes": 295703,
+      "sha256": "422e4b1760e70ef8125c4aa31e278b93e9047dc25db522adcc5fe4ce81ef4d36"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/records/64c518b3d36c3ea905d4481e8caea5d4c8f1a37636a6c217ae882c3b57b12a0e.json",
+      "bytes": 352540,
+      "sha256": "2b98ae245672400303646f3ec7558ab641e7930b8682d9474ceffba300547163"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/records/70c5376f4bbfe3f01608f267ff5319b0448639c6f7341e7a7a733ee006704dee.json",
+      "bytes": 328316,
+      "sha256": "b673b3eda822da21e4d34593c064009fc7ed791932e049bcbf1a3c2314466fd3"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/records/82a0254b824a45c14ab8f6bb581b6c1ba0a5228660e8886cfcbab572ff5c789e.json",
+      "bytes": 302943,
+      "sha256": "318a51e2d215486622903df8a6ffa8381476b9dce267287b4d0d6ea4863fb51d"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/records/c95ec6279e5e31c1e39ced2b24758cfb7bfeed3f2c8a6c3417a00a4892cc5df5.json",
+      "bytes": 353211,
+      "sha256": "79f6537a6fa53277652b9912d362dffb0190d678dc9c4e24afd50416295e347c"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/records/f46439fa7318b5a2a46fc3fdaae8570fb9498ed16cad58fdac16dfcfd789e4fd.json",
+      "bytes": 295212,
+      "sha256": "2393752aeb833c2098d10b6fbedef4cbb9c1af4ebdd4805752b06579fd346b2b"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/records/fed5d3ed9c1c3a21f264108330b3df069e02575d24508f25e37ce431ca958c35.json",
+      "bytes": 327295,
+      "sha256": "a931458d15ec987d1b977cec6ade9d46ef4a4dcbf51c99edf2d6b4cc3d1369ca"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/snapshots/2e8527d1d9f4f40a736431ba77351b29ef1f974bc261fd0f04cb6188b7699b4c.json",
+      "bytes": 2783432,
+      "sha256": "0d0269a2f4f9c987b17eea8458fe32313b17b8171912f25895576b730e8d0665"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/snapshots/8751ee7c522a1beea811ef98d73a09e58d6d4577e957f72ed1eba581ee92735d.json",
+      "bytes": 1094162,
+      "sha256": "90a6dddcfdcbf3547c96d7d06eff42ecc7e2c33a1733a148a69d8ea79a8f71e3"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/snapshots/924ce95aa5a5e9cda7de95fd5f4061ae7f2517b4856bf7ef5e0f91ca3445d6c5.json",
+      "bytes": 1374172,
+      "sha256": "e813aa973ace44c541f7a5aea1cef6178844c3bdc118c1f9d6db3bbbdcba46da"
+    },
+    {
+      "path": "dist/data/bmnr-ohlc.json",
+      "bytes": 93002,
+      "sha256": "64f8734f5cfdd99b1d5c7066874d171e46926054f15c8e2e4bb0e338ed7d3690"
+    },
+    {
+      "path": "dist/data/btc-daily.json",
+      "bytes": 189768,
+      "sha256": "d04c7443eb4ccd17d93ddc2d61b75e844d86b6cf5f5d456aa986def86e97aca9"
+    },
+    {
+      "path": "dist/data/btc-ohlc.json",
+      "bytes": 195640,
+      "sha256": "7a65f571f3cc0b5ffe97a84d08b3d5bc5f57e45ecf09c6429a2055363db6ecba"
+    },
+    {
+      "path": "dist/data/btc-volume.json",
+      "bytes": 864273,
+      "sha256": "a602ba904b78284138684377ea559598173063ee435350ce281de430150a9993"
+    },
+    {
+      "path": "dist/data/cycle-calibration.json",
+      "bytes": 30172,
+      "sha256": "fba366474df561a6d9c9527ff57eb7649d0351e7f221165a86bf2cf1f782b8f2"
+    },
+    {
+      "path": "dist/data/eth-ohlc.json",
+      "bytes": 900922,
+      "sha256": "a6bfab88a2a5ba982bb68ecf78932bf3438713cad54b2a075894ebbad0b445a5"
+    },
+    {
+      "path": "dist/data/forecast-calibration/factors.json",
+      "bytes": 30655,
+      "sha256": "166eec20f78a5171fa8ffaf1fac6674c96fd16800e0291a9017db3ebbb8f583b"
+    },
+    {
+      "path": "dist/data/forecast-evaluation/summary.json",
+      "bytes": 40623,
+      "sha256": "3837310c866a87f996c05d505c827e0bfc80aec9dfa7eb1940b8ccc04294488e"
+    },
+    {
+      "path": "dist/data/forecast-ledger/evaluation.json",
+      "bytes": 21964,
+      "sha256": "31cf3255d9c1776d19a3e5ecb82ff95cd118c9a1f4767690fa48592866767195"
+    },
+    {
+      "path": "dist/data/forecast-ledger/experiments.json",
+      "bytes": 703958,
+      "sha256": "0e9b1633c4981f10ec02d80ba3ad91d891c5346a00f2281b696948d9815c9239"
+    },
+    {
+      "path": "dist/data/forecast-ledger/index.json",
+      "bytes": 5181,
+      "sha256": "2a407e3cd9aec13e91650f9e0b64fa70fb3c019fcf6224e1503500676f6cb342"
+    },
+    {
+      "path": "dist/data/forecast-ledger/records/761263ab7dec58160c280a211cf522e5d9601321aeed265a84356e850e59d3de.json",
+      "bytes": 1000371,
+      "sha256": "e9ff3b72ed2d694e6233f8627fc70ab1e079069026c518e259e345de95ce0236"
+    },
+    {
+      "path": "dist/data/forecast-ledger/records/7748b3f3ebf559af5c513f425908ce5aa9119f42fca8944b36d6bdc3a09448d2.json",
+      "bytes": 1006844,
+      "sha256": "0a88c9af080e87eae48f614eb8b84855e1ff9b9061ee4cacce1ea75798faa271"
+    },
+    {
+      "path": "dist/data/forecast-ledger/records/c23a29e6f9f6810fe080e4ae1c8765ca4fd27be70800b00398eeed773522d151.json",
+      "bytes": 1003775,
+      "sha256": "058493d7eb9ce556412777a2bf578d916dd893e5c495115bb109500f6b1a0628"
+    },
+    {
+      "path": "dist/data/forecast-ledger/records/d192f63b6a0b3e14c3a8af36c06c8c040110a1d29f6c786f53e362e434f44258.json",
+      "bytes": 1002452,
+      "sha256": "a0267b76b87a6d031f88234594311c7e6141760b3bb5fd04042c31963d08fbc0"
+    },
+    {
+      "path": "dist/data/forecast-ledger/records/f323a1bbdc0402aec7fe36ca1eada553c038239b245737aea150c61930557f6b.json",
+      "bytes": 998666,
+      "sha256": "a40d61e68acc461de1a76b853a8d3360ab3eca8d070455c11485be720a78dd3e"
+    },
+    {
+      "path": "dist/data/forecast-ledger/snapshots/a45a97d8b43064c1221ac52b6e441589a23a11076d97f92969bd6f8c571a5316.json",
+      "bytes": 189547,
+      "sha256": "cb5742c93ec8e9ba5f35858901097ce649ba33f97b29385918392dd27cfd19b9"
+    },
+    {
+      "path": "dist/data/housing.json",
+      "bytes": 36364,
+      "sha256": "c39382261ca09e4ffe49accbce80d8eef20baab4c3cf38d4e2f04273e4923146"
+    },
+    {
+      "path": "dist/data/ipo-calendar.json",
+      "bytes": 12936,
+      "sha256": "f63b3036f90eed69f8e81fd21d08e7122447d06b35892a96d432498e0d9c2d65"
+    },
+    {
+      "path": "dist/data/judgment-snapshots/2026-10-26T044247794Z-85661ddfe00d.json",
+      "bytes": 28154,
+      "sha256": "1f1cfd6c88a588f702f8eb801e90f9674c48dc2b459bac31e7ab015524bd5add"
+    },
+    {
+      "path": "dist/data/judgment-snapshots/2026-10-26T052614776Z-f11d1a5a57db.json",
+      "bytes": 28149,
+      "sha256": "c5280364cd355473da0ca38b804679e8ccd162327394a7061b29305c689842b9"
+    },
+    {
+      "path": "dist/data/judgment-snapshots/2026-10-26T064842461Z-e8a6ee063b35.json",
+      "bytes": 28149,
+      "sha256": "509bd487cb29c9ed00413bd20ce7a4d55bcea91298d18da971cd9bdb41ccf2a4"
+    },
+    {
+      "path": "dist/data/judgment-snapshots/2026-10-26T130355781Z-e8fce648f098.json",
+      "bytes": 28149,
+      "sha256": "dfacc5179638b6c417b1332ef6aa5a2876995c4b34ea015367a76ea4ca58bbfd"
+    },
+    {
+      "path": "dist/data/judgment-snapshots/2026-10-26T224105619Z-d30b088f90af.json",
+      "bytes": 28149,
+      "sha256": "f95dfb14ce9d5cd8d6364d013f33c5f97757f11c153b1bfda400b3bca78f8d84"
+    },
+    {
+      "path": "dist/data/judgment-snapshots/2026-10-31T153816766Z-374467479151.json",
+      "bytes": 28177,
+      "sha256": "e56202c42c72a72770d628709a3116b1668df929ea2b1a955c1c3f19ea077934"
+    },
+    {
+      "path": "dist/data/judgment-snapshots/2026-10-31T213526861Z-78d5c1991940.json",
+      "bytes": 28177,
+      "sha256": "6505501f9ca448c0d491ca2d76eb6573826b0c623ebd71c28ae1929b261719d1"
+    },
+    {
+      "path": "dist/data/judgment-snapshots/2026-11-01T060528186Z-fa9004313636.json",
+      "bytes": 28175,
+      "sha256": "2c4723af382a74dd0bbc83b1abaf4308315c4ddfb6913539581e91e5784ae462"
+    },
+    {
+      "path": "dist/data/judgment-snapshots/2026-11-01T132522423Z-63d16f3c03c2.json",
+      "bytes": 28175,
+      "sha256": "b1e79705e33cfa3aecdd892ac92776a6f53181d8e0b7004da55c49b59f06dac5"
+    },
+    {
+      "path": "dist/data/judgment-snapshots/2026-11-01T220228718Z-92797a3d2355.json",
+      "bytes": 28175,
+      "sha256": "a7fa608980ff3b43ec7e4a04f22f03740a7194e4129d55974feef467aaa166bf"
+    },
+    {
+      "path": "dist/data/judgment-snapshots/2026-11-05T195728454Z-7825c38b8f19.json",
+      "bytes": 28151,
+      "sha256": "0f0dab02c7e47fb4bb504f0e502c814353acee11262a53cba3b5b4cbbeb77608"
+    },
+    {
+      "path": "dist/data/judgment-snapshots/2026-11-06T064627892Z-6e8a5aa3ed28.json",
+      "bytes": 28182,
+      "sha256": "0d2908a1dbc32f0c6df9e685b12167e9fb71045945ca41a67ab6bc60dce3c98e"
+    },
+    {
+      "path": "dist/data/judgment-snapshots/2026-11-07T055859692Z-b4fff604ee69.json",
+      "bytes": 31309,
+      "sha256": "c759f24f7d1b3b35f4cafe55e3702b1c2b15c114e3e11e5aeeebec81beeec5e7"
+    },
+    {
+      "path": "dist/data/judgment-snapshots/index.json",
+      "bytes": 5148,
+      "sha256": "88d5393dc6fa0a46b9d0ad7adaa62aa127d8ed6d14fe34243cae206cde481147"
+    },
+    {
+      "path": "dist/data/market-lab.json",
+      "bytes": 2107437,
+      "sha256": "3eeca3d402b1ce83e89ebf834309867cdd0ecc06f59de098ba96f80abf590107"
+    },
+    {
+      "path": "dist/data/market-structure-summary.json",
+      "bytes": 989925,
+      "sha256": "282c4cfedcc030bfd781abdb309699077372770216d8063d943d021ef34bcfdc"
+    },
+    {
+      "path": "dist/data/mstr-ohlc.json",
+      "bytes": 1798979,
+      "sha256": "acea405cfa7b40d5a8ee815f5d7f749bab63e8fc59323cea8a6a9f589b2f8f74"
+    },
+    {
+      "path": "dist/data/project-origin-btc-2026-10-21.json",
+      "bytes": 517358,
+      "sha256": "571d0d3421d7ae40da4fb3020ab0290aa534822d5a439f9e98f55dc31d5f19ac"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-01.webp",
+      "bytes": 198124,
+      "sha256": "1fe1ef052974c05339742c2b53f701c8b66aa7f81d20ce93cada3abe6fbc7618"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-02.webp",
+      "bytes": 188834,
+      "sha256": "b6898700476a3cbfee820afea9f8a8c946c9e16244aa5d3c87d8ed80eb2af5de"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-03.webp",
+      "bytes": 175826,
+      "sha256": "1259ea95b8274c22b5df50a4e3ca935a3e5cdf8b2d0afdca5a9743faa993507d"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-04.webp",
+      "bytes": 154082,
+      "sha256": "40d5c593bd86d059d5ddddb930ecc3a497391c24cc0e0dae43985778fce32b1a"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-05.webp",
+      "bytes": 181870,
+      "sha256": "ec87aae2f5ea6aa4540cefdead3846de819c1e205e1f270238e665dbd55c72fa"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-06.webp",
+      "bytes": 229414,
+      "sha256": "d5796fbc49ead0ca09b9533d22034907892466230ed0bbeb3fcd4213b6f229d6"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-07.webp",
+      "bytes": 140524,
+      "sha256": "8450534885267759a2d7d5c0073c418e32a6029421f6506a9e0e6d38d692743c"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-08.webp",
+      "bytes": 185810,
+      "sha256": "946d3215999f7a1b0e7af881bda93ce7ce15ed12fe56c234a56385bf8ea0ec9e"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-09.webp",
+      "bytes": 121084,
+      "sha256": "e6fcad5f93ef227f004216fedad66f0efaab7193e2c96a19ca9716bcce66c576"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-10.webp",
+      "bytes": 232394,
+      "sha256": "3eee3f0af9cd21948408db8b526245c6b434dcc507192f801e743264ab9f4d60"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-11.webp",
+      "bytes": 104654,
+      "sha256": "a47a8dd68b033a297790b0ff64244297bd53aaae789cdf8527e1b12c4d741234"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-12.webp",
+      "bytes": 211838,
+      "sha256": "8fb15e5dbaaf963b94666c980c43fbe6b91fecdfe2e496210c7402c8ba580775"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-13.webp",
+      "bytes": 184470,
+      "sha256": "9656d8a12c37a788d75619662f2ca264d27e5f27c9afef256df67a5362d166e8"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-14.webp",
+      "bytes": 204486,
+      "sha256": "7f5677f1976a67adb56f2ece1ef0110253c6f5c7095bb733f3445036c07724e6"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-15.webp",
+      "bytes": 212088,
+      "sha256": "d68091033b48e61bb8d2a84551684a57a122deead250c13b4b486128e90b435b"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-16.webp",
+      "bytes": 217842,
+      "sha256": "708e1bbb40f5dace481d3d7c1160ff0e85a8557f3efba1c6becf4dd2020c275b"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-17.webp",
+      "bytes": 224644,
+      "sha256": "e9d86d7cb28cbf6cee6eee79f2f8550d78b0ed32d8ad1bfd6715c7f141357a76"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-18.webp",
+      "bytes": 146708,
+      "sha256": "aaf4cf1ae06c189247e752b0da64f09bde82b15a287b92be196f65441ae7545d"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-19.webp",
+      "bytes": 204424,
+      "sha256": "5e46fb387ff40b38f16106571fbc7ec8bbbaad38464c54983d60f7f215547ccb"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-20.webp",
+      "bytes": 109696,
+      "sha256": "0785d34114c66191d9134061ce2405bb4fb21811a397901d8cd520261cbc7168"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-21.webp",
+      "bytes": 203338,
+      "sha256": "3a7b2e5454a753077cacfed0e672c9562397651c8833a4a0c7aa7795d4d95bbc"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-22.webp",
+      "bytes": 113936,
+      "sha256": "98d0a947a81a5f00e6ecafa8f6290e7105b604162ba3ec207a1195b12a35c220"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-23.webp",
+      "bytes": 194000,
+      "sha256": "84139986c07bbe7ac6a63dae2342a13c7c24ec8178de4e34e746120d0bc61024"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-24.webp",
+      "bytes": 285020,
+      "sha256": "a660b11b43b6559a27af0c11e9859eda16b781410101a41214c713b872467d3a"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-25.webp",
+      "bytes": 228622,
+      "sha256": "ea9e04b16f12945f7e779c1a0f2295edb4e0b783fd44533b5e02e948ac2ce755"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-26.webp",
+      "bytes": 217532,
+      "sha256": "060ebacfd2fd4238a94e2bffc7e819a6a61f0f7fb7a56a1c44fd6be0f0a70bc4"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-27.webp",
+      "bytes": 217412,
+      "sha256": "2ffab7834b08f29f8086575bcb6acf9f8399abfd945aea888aceb22076757788"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-28.webp",
+      "bytes": 234464,
+      "sha256": "35fb1c7429b4510b4733a68bd2b3e6768c60c3c2cb4243986b83f29f2712a383"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-29.webp",
+      "bytes": 172960,
+      "sha256": "7193f50cefe6f5521e907c1eefd7a9f7dd4c9508ccca765b9a4e743806d53768"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-30.webp",
+      "bytes": 233964,
+      "sha256": "a94fba58bc05dc5871e076ed4ff9858f1d1751467f7a83575edd3f2934673fb5"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-31.webp",
+      "bytes": 168764,
+      "sha256": "9ab9851009b1c68ac1c3497a21f377f9392373302e7669be55dfe10f579f7fe5"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-32.webp",
+      "bytes": 206312,
+      "sha256": "ef223a5597eb052776646f6f1999a8ec8cfd5fc387b6aba22203eab9459b88e9"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-12-v3-33.webp",
+      "bytes": 79070,
+      "sha256": "7547cb79272e0e870e5aeb5047e0dd5cad1bce35aa1719096b390478c09713b7"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-01.webp",
+      "bytes": 173742,
+      "sha256": "d5a1b48e3a431f69a6f2bc29cd89b000b97a23320c41858b4e61db59c5651cf2"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-02.webp",
+      "bytes": 175678,
+      "sha256": "1ffce2cf3f6eedacb845e287b9362682540c95dd6ea06adfa3bb54539bd934a1"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-03.webp",
+      "bytes": 184960,
+      "sha256": "0e88611a0e130a4bc274d9647601e700b05e7b26184ce97b0c42f7811afc5eed"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-04.webp",
+      "bytes": 175658,
+      "sha256": "dda3c0ccd4958fe041022f1b13796993cb61197f5dc544aa41f66ebd58415219"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-05.webp",
+      "bytes": 169674,
+      "sha256": "61664ceb59b95ad01576b2a9b3cc280b2d1b55b42b6fbe76739fb961cef16d83"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-06.webp",
+      "bytes": 220868,
+      "sha256": "37375b60fe0734738c41076ff441de3bb4b9148b1862e2e41d19050c43f3f4f5"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-07.webp",
+      "bytes": 79098,
+      "sha256": "68677c717a32c12433524fac716c0f66c9d044d1fecb032e01139c386a575f64"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-08.webp",
+      "bytes": 182802,
+      "sha256": "9ae5a1595392f8a9c0857f5208260310dbe06bd00142bdf49459e17ae9b9cfc4"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-09.webp",
+      "bytes": 81048,
+      "sha256": "03395f841d79714d41288fcaf49c3e0e43846c5cc5b2759cee09b053f1156086"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-10.webp",
+      "bytes": 210488,
+      "sha256": "8bb0711463e5912c28982b84acfa9fa225b2866c0e691f9ba6076263aeee4ed1"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-11.webp",
+      "bytes": 109282,
+      "sha256": "15c53064e5d16f7b1f77a5b3d7055d1b7695dac24aabd66a23f0dc9d1a8e67af"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-12.webp",
+      "bytes": 211822,
+      "sha256": "3ade4cf30a3b077a94a387903b4557a6872031828af090dd48d9b1e178f55620"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-13.webp",
+      "bytes": 189244,
+      "sha256": "c5d757ffcc5b74d73f2ba69dc5690c85aad47b0fae9b13646c936a77037effa9"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-14.webp",
+      "bytes": 197270,
+      "sha256": "fac014b94f8d4e1bdc041267a1a92ce04473f9d4f99e2afe2231976ece5d1cae"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-15.webp",
+      "bytes": 89738,
+      "sha256": "5d2930bfa84bf56da5c2e9bb7f1a982fc1436693eb3de66324e3b603e46db7ea"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-16.webp",
+      "bytes": 145298,
+      "sha256": "75cd50e2c48c2f5df9dd887f96de21c8f3a79e922472e89f52250934e9a77894"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-17.webp",
+      "bytes": 153582,
+      "sha256": "a2e403585855ab85cf39e8746651fe2237cab65d65856828adedee01dfc5bc8c"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-18.webp",
+      "bytes": 165726,
+      "sha256": "fa7e7ce7ac7b155c924de70fdc2407676ce25c6d6a50209a315a7c12c28e0f38"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-19.webp",
+      "bytes": 142258,
+      "sha256": "ccc913075432d89ccd9068b91984ed689ce495fe1508682749f2a2919e0e2f7e"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-20.webp",
+      "bytes": 174916,
+      "sha256": "65cd0ee081d4ed3afb97d0384e3eff2422430227392bad35d189e7db53ba4161"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-21.webp",
+      "bytes": 150646,
+      "sha256": "f6d7356ccae1ac092eb617a7b8b501ee16c3d37e3dd731cdd1547d19f680ff7f"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-22.webp",
+      "bytes": 84006,
+      "sha256": "ad05eb7a3471cf37393cad0e9e5bed0d0f54b597d06ba0fc1905e72f7f316fa8"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-23.webp",
+      "bytes": 198748,
+      "sha256": "ac34937ef6bdac01ac765073f258b075b96ab9b231670a6ef7dfd8e3900b4c05"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-24.webp",
+      "bytes": 62884,
+      "sha256": "4af39dbee5f479892d66946b1de73c3f57b5f9ee991638d042c9bb012204cfb3"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-25.webp",
+      "bytes": 225724,
+      "sha256": "7625893fee6ee817477f3e180f56fcea0dd34ff124fe93bb5134b2aa64fa8879"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-26.webp",
+      "bytes": 147526,
+      "sha256": "cf29c363eb9cc6a2f231975a32095ff90eed469e5da3ec885ba1069df49744c8"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-27.webp",
+      "bytes": 202550,
+      "sha256": "6ba76ac3ada4ee6fe272160ffb46efc896c0a5c8d2e5f14f9547403ae6167a13"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-28.webp",
+      "bytes": 69806,
+      "sha256": "7b15abe16f63be216cf31cc0a260987fc8dcaf117e77cc2cfb1176f864fa9538"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-29.webp",
+      "bytes": 228904,
+      "sha256": "ac400b141d796271882e766ded32b624cd179c350dc64779f98a65b19d1c86d2"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-30.webp",
+      "bytes": 235760,
+      "sha256": "f0b99161db00c4a4810f9832da5ad999ba8e6a5d62f73e9127fabfd9b071882b"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-31.webp",
+      "bytes": 189344,
+      "sha256": "2431597f6c451526aa0a70b1a515c429fe8eb2e5427f8aef6325608a148cdb5e"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-32.webp",
+      "bytes": 221076,
+      "sha256": "9a3a5e70d70e957629eba906101af4f92eb32addc32153ece306cd07b904b160"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-33.webp",
+      "bytes": 175154,
+      "sha256": "de7b0ba2f78732650a0e73095e86351639fd723ae22e12d3c62d70b9e0fb6fc1"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-34.webp",
+      "bytes": 212134,
+      "sha256": "9805ae5ef177612e7be833f38ec475d5ecd7ae31c6408202aa0887171463d617"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-35.webp",
+      "bytes": 208526,
+      "sha256": "4e038ac559cb1fdaa67a6b41d1aef7aa6c054b7488c8c627a0ef4be80cdf9748"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-36.webp",
+      "bytes": 184376,
+      "sha256": "8f04ff41dad89c7601b5fa08d074cab39fdbb09dd07ae9fb37d1040c587a0a12"
+    },
+    {
+      "path": "dist/data/relay/assets/hankyung-2026-11-13-v6-37.webp",
+      "bytes": 27984,
+      "sha256": "0d715c938767e40740fba128cab53b19a37e5cbc8338b23e63e5f6b327629907"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261022011021535lc-1.webp",
+      "bytes": 20124,
+      "sha256": "3b44ae19088727377d04979d4b17964205b35ba4e71d59b76f21844d5e206a01"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261107141050493ep-1.webp",
+      "bytes": 19322,
+      "sha256": "da4b8ea9d1a038a3d81625f738fa73c81699b355bb4474c83c37197883f64d2d"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261107141050493ep-2.webp",
+      "bytes": 39766,
+      "sha256": "118bf5b9732e67d12b770a9f4d0b24f470756010ae52193503986593dab40b37"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261107141050493ep-3.webp",
+      "bytes": 18742,
+      "sha256": "d29c20ff3b7c0dcfe0d189530a44202d752448b0636df9f002022b773edd478d"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261107141050493ep-4.webp",
+      "bytes": 74018,
+      "sha256": "83efc0b6972b7b45a171105f9718225d05c8fe404ebefeb17aec0f3e10bcf6e3"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261107141050493ep-5.webp",
+      "bytes": 63460,
+      "sha256": "c0a375cd3ecfeb547c7a20f0a401038167b3df0c13f078a70f117213214f65a5"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261107141050493ep-6.webp",
+      "bytes": 22004,
+      "sha256": "225cfce64078715a6a180c06bf19134439ff42e595e7ef2a50fd874098c27d67"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261107141050493ep-7.webp",
+      "bytes": 58294,
+      "sha256": "00b086cea10221948e61766bcbba6e79de040b0c2efa09908c2e08b83bee680a"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261107142259903mj-1.webp",
+      "bytes": 18128,
+      "sha256": "c4d619421ce7409c0ad55a9147043dc8b46c7bce13f0c53a49e42de182194284"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261108074514480oe-1.webp",
+      "bytes": 21324,
+      "sha256": "50931c3fad6fd97a10ec9ace44d19c29c1593f8a202b13c1de1401e2a98af379"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261108074514480oe-10.webp",
+      "bytes": 39196,
+      "sha256": "cdbc116eb6f90235731763b954f9ac29d8f24288469a266b1f45cd682c637dd4"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261108074514480oe-11.webp",
+      "bytes": 67212,
+      "sha256": "2940a6a580ffa5b4a8a36fec479aacda450dcc2884cf18fc6c29a98178df38ab"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261108074514480oe-2.webp",
+      "bytes": 52766,
+      "sha256": "da4f83fb6ac0494ccc84e113d9a47e4406d9347a99bb771cbe79a8e6615cfa10"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261108074514480oe-3.webp",
+      "bytes": 17914,
+      "sha256": "ac52b29289c3e9685bbc54cf2dc5df3c9e6c8c467ed423a68cebc805b3148695"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261108074514480oe-4.webp",
+      "bytes": 75200,
+      "sha256": "cafab1f039a8e52c97fd84e5bbae9b9267380b946655a35363be3632f0033613"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261108074514480oe-5.webp",
+      "bytes": 42368,
+      "sha256": "941affe8646ada8351501b6b9b3b0b0e7ee546cbe0d23174abe57b535bb9310c"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261108074514480oe-6.webp",
+      "bytes": 67758,
+      "sha256": "7bece909e50f42aabc7cd343c2a516611f2fd8062169ee1bb35a2e422918b7a8"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261108074514480oe-7.webp",
+      "bytes": 47460,
+      "sha256": "d8d0fb977eb09f22ef1ada9959c8c305cf0ba155d957e42a8541b9c4ea52f4fa"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261108074514480oe-8.webp",
+      "bytes": 17152,
+      "sha256": "dc381aebf46236bd7c22b9764d4bbf1a5449337d253421dc43adfdcccccdfbe0"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261108074514480oe-9.webp",
+      "bytes": 80180,
+      "sha256": "5a7951391df4a5794ff10e26458a044bd59e5610b514f0d9587400a302d9fa91"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261109145117700at-1.webp",
+      "bytes": 7096,
+      "sha256": "4e26c447865e3e61549b9eacfa89d91d782e99d3aad6b82a50abb654afeddfd1"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261109145117700at-2.webp",
+      "bytes": 32176,
+      "sha256": "d318ee15b95dd34cad8a02f8ea987440b840a82e5edc8c049d9ef76a7fd5525a"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261111133016879ic-1.webp",
+      "bytes": 6720,
+      "sha256": "b417ad6b28faa9cc8733b47c36795b7b7996930308af93276b61f30a0435feea"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261111133016879ic-2.webp",
+      "bytes": 80824,
+      "sha256": "b563d46638adceee4e73e87e5fb2dad60f886c16537e309093ca1ba7d503f6d8"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261111170618093yl-1.webp",
+      "bytes": 18540,
+      "sha256": "aa93a681bd338b950d700b504f1d25f6a90fc04085af2ca9b3066374ff971dd8"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261111170618093yl-2.webp",
+      "bytes": 12864,
+      "sha256": "e9a7bd0692168a7f9dea57fca1970ea7c4936bca32ea4e216ad9df61b09b7847"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261111170618093yl-3.webp",
+      "bytes": 24598,
+      "sha256": "62428c888b5bd43156d72464239ce04c11d83b3416ec80ce5f91eb05d86a7022"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261111170618093yl-4.webp",
+      "bytes": 24598,
+      "sha256": "62428c888b5bd43156d72464239ce04c11d83b3416ec80ce5f91eb05d86a7022"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261111170618093yl-5.webp",
+      "bytes": 57060,
+      "sha256": "fa0de78d9a5924710f6a61eb0144879656bcf178f5c1c1356e60ff2df381cdcc"
+    },
+    {
+      "path": "dist/data/relay/assets/naver-261113110938185lp-1.webp",
+      "bytes": 5026,
+      "sha256": "b853e8e47ce9e6f77f446d10e835326b761724a968b24aff471b966ccd8375d1"
+    },
+    {
+      "path": "dist/data/relay/assets/telegram-2602.webp",
+      "bytes": 32046,
+      "sha256": "c2a0303161bfbae3c714c3adb5ee8c62367fd3c881855ca16d93d0606cfd6d04"
+    },
+    {
+      "path": "dist/data/relay/assets/telegram-2605.webp",
+      "bytes": 95252,
+      "sha256": "026c36305dafac9648d1607f0ab9bfc348e75ee0eb69b70ba9260cba1fe199ad"
+    },
+    {
+      "path": "dist/data/relay/assets/telegram-2606.webp",
+      "bytes": 87396,
+      "sha256": "0c80d7e7ba67615e259ae1c3f7a1149a698af55fd5c6b27c32eb232aa8c32134"
+    },
+    {
+      "path": "dist/data/relay/assets/telegram-2607.webp",
+      "bytes": 88106,
+      "sha256": "f9e045bf515ec15b743e9636d9d58be2836ae1569d239d91b902db7380add08d"
+    },
+    {
+      "path": "dist/data/relay/assets/telegram-2610.webp",
+      "bytes": 25050,
+      "sha256": "27486ad47aafae53355584973f8b0056e1ea75d499d14484ecc5b0caff170584"
+    },
+    {
+      "path": "dist/data/relay/assets/telegram-2614.webp",
+      "bytes": 3940,
+      "sha256": "b0fefe1f96a9fab6bece7bd1acefe2a1a9663bfa0e5f26686ed0a66d1d1cd76c"
+    },
+    {
+      "path": "dist/data/relay/assets/telegram-2616.webp",
+      "bytes": 49132,
+      "sha256": "6236c19c65f244e671da53201acbd891515f2886cd6fc89c45d58e9a93a38eff"
+    },
+    {
+      "path": "dist/data/relay/assets/telegram-2618.webp",
+      "bytes": 81668,
+      "sha256": "86d8db1dd6f6836b3fa4d1073d085d4661761886bad9dfc7ab2236b15af68395"
+    },
+    {
+      "path": "dist/data/relay/assets/telegram-2620.webp",
+      "bytes": 51130,
+      "sha256": "de9fb899123587b6e0f5d40a94f019af05ad3e535b273db86b087a23b551c84d"
+    },
+    {
+      "path": "dist/data/relay/assets/telegram-2622.webp",
+      "bytes": 91844,
+      "sha256": "3c9d15543dd5151d2ff8f4a1e2c6bc7ba70dca1ec2b50c12e027cf99e42cfed9"
+    },
+    {
+      "path": "dist/data/relay/index.json",
+      "bytes": 219328,
+      "sha256": "be11c563ac9fa76160118649a4577d5ea8f2e4d6b83b1384a9486642710abd33"
+    },
+    {
+      "path": "dist/data/replay-eth-ohlc.json",
+      "bytes": 897676,
+      "sha256": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37"
+    },
+    {
+      "path": "dist/data/themes.json",
+      "bytes": 81956,
+      "sha256": "0446c265f4e7141c348dd406ea1635663c6d005b01b4d77d837a4786c04bad17"
+    },
+    {
+      "path": "dist/conference/timeline.json",
+      "bytes": 1044921,
+      "sha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad"
+    }
+  ],
+  "previousTests": {
+    "tests": 4007,
+    "pass": 4002,
+    "fail": 0,
+    "skipped": 5,
+    "complete": true
+  },
+  "coverageStatus": "baseline inventory, not candidate acceptance"
+}
