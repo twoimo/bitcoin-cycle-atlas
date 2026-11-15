@@ -1,12 +1,9 @@
 import { setLoadingSurface } from './loading-surfaces.js';
 import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.36.1';
+import {esc} from './ui/html-escape.js';
+import {decimal,percent,day,fromDay} from './ui/journal-format.js';
 
-const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const price=value=>Number.isFinite(value)?'$'+value.toLocaleString('en-US',{maximumFractionDigits:2}):'미공개';
-const decimal=value=>Number.isFinite(value)?value.toFixed(4):'미평가';
-const percent=value=>Number.isFinite(value)?(value*100).toFixed(2)+'%':'미평가';
-const day=value=>Date.parse(value+'T00:00:00Z')/86400000;
-const fromDay=value=>new Date(value*86400000).toISOString().slice(0,10);
 const stamp=value=>value?value.replace('T',' ').replace('Z',' UTC'):'미상';
 const speeds=new Set([1,2,4]);
 let nextChartId=0;

@@ -6,14 +6,11 @@ import { describeFreshness } from './data-freshness.js?v=1.29.0';
 import { performanceSnapshot, downloadPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
 import {mountForecastReplay} from './forecast-replay-view.js?v=1.29.0';
 import {withRequestTimeout} from './ui/request-timeout.js';
+import {esc} from './ui/html-escape.js';
+import {decimal,percent,day,fromDay} from './ui/journal-format.js';
 
-const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const price=value=>Number.isFinite(value)?'$'+value.toLocaleString('en-US',{maximumFractionDigits:2}):'—';
-const decimal=value=>Number.isFinite(value)?value.toFixed(4):'미평가';
-const percent=value=>Number.isFinite(value)?(value*100).toFixed(2)+'%':'미평가';
 const stamp=value=>value?new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',dateStyle:'short',timeStyle:'short'}).format(new Date(value))+' KST':'확인되지 않음';
-const day=value=>Date.parse(value+'T00:00:00Z')/86400000;
-const fromDay=value=>new Date(value*86400000).toISOString().slice(0,10);
 const tabs=[['records','보존본'],['replay','리플레이'],['evaluation','평가'],['changes','변경 이유'],['data','자료 상태'],['experiments','실험'],['performance','성능']];
 let instance=null;
 const resources=new Map();

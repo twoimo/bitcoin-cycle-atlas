@@ -6,13 +6,12 @@ import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.36.1';
 import {nearestDailyIndex} from './chart-math.js?v=1.29.0';
 import {mountDialogViewport} from './dialog-viewport.js?v=1.29.0';
 import {mountForecastReplay} from './forecast-replay-view.js?v=1.29.0';
+import {esc} from './ui/html-escape.js';
+import {day,fromDay} from './ui/journal-format.js';
 
 const SYMBOLS=new Set(['ETHUSD','BMNR','MSTR']);
-const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const price=value=>Number.isFinite(value)?'$'+value.toLocaleString('en-US',{maximumFractionDigits:2}):'—';
 const stamp=value=>value?value.replace('T',' ').replace('Z',' UTC'):'미상';
-const day=value=>Date.parse(value+'T00:00:00Z')/86400000;
-const fromDay=value=>new Date(value*86400000).toISOString().slice(0,10);
 const scenarioName=id=>({stress:'스트레스',base:'기준 조건',bull:'채택 확대'})[id]??id;
 function savedPathMeaning(record){
   const sampled=record.output.metadata?.assetPath?.method==='eth-post-merge-historical-blocks';
