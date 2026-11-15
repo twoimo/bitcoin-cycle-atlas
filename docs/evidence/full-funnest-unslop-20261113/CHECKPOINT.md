@@ -3,6 +3,7 @@
 - Baseline: b6762fd983d176e8ecc88c265aba0e5f2afa77b4; original local P5/R22 worktree remains preserved.
 - Current local checkpoint: cd884574bbb1c59ee29c15c7544c4be8e2bd583f (canvas image export + native caller, 14 focused tests pass). No push/merge/deploy.
 - Protected inputs: 167/167 byte/hash identical.
+- 2026-11-16: the work is committed locally on `work/full-funnest-unslop-20261113` after cd884574, with every gate green on the final tree. See the last section of INTEGRATION_CONTINUATION.md.
 - Runtime 0.6.22 pins, source-backed adapters and third-party notices are present. Parent added deterministic --check and negative controls; build-pages now calls it.
 - First integration run: 3934 pass / 34 fail / 6 skip, 3974 host tests. This was diagnostic while lanes edited files, not final acceptance. Frozen Linux tests separately pass 41/41 after starting existing Docker.
 - Java actually available: /Applications/Android Studio.app/Contents/jbr/Contents/Home/bin/java (25.0.3). Homebrew Java links are broken.
