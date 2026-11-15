@@ -3,6 +3,8 @@ import { calculateRsiSeries, validateSeries } from './market-lab-math.js';
 const DAY = 86400000;
 const ENTRY = [33.5, 29.5];
 const EXIT = [40, 43];
+const RSI_PERIOD = 14;
+const SIGNAL_PERIOD = 9;
 const validDay = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)
   && Number.isFinite(Date.parse(value+'T00:00:00Z')) && new Date(value+'T00:00:00Z').toISOString().slice(0,10) === value;
 const sum = (rows, read) => rows.reduce((value,row) => value + read(row), 0);
@@ -35,7 +37,7 @@ export function simulateRsiTranches(prices, options) {
   const through = end < confirmedThrough ? end : confirmedThrough;
   // Cut before indicator calculation: an unconfirmed tail cannot change RSI.
   const confirmed = prices.filter(([date]) => date <= through);
-  const rows = calculateRsiSeries(confirmed,14,9);
+  const rows = calculateRsiSeries(confirmed,RSI_PERIOD,SIGNAL_PERIOD);
   const selected = rows.filter(row => row.date >= start);
   const offset = rows.length-selected.length;
   const rate = feeBps/10000, allocations = [...weights];
@@ -145,6 +147,6 @@ export function simulateRsiTranches(prices, options) {
       profitFactorBasis:'equal-notional-net-tranche-returns',expectancyBasis:'mean-net-closed-tranche-return',
       drawdownBasis:'daily-mark-to-market-equity-after-paid-costs',holdingDays:'calendar-days-fill-to-fill',
       reentry:'only-after-all-tranches-close',fractionalShares:true,finalLiquidation:false,
-      stopLoss:false,dividends:false,taxes:false,fx:false,period:14,signalPeriod:9,frequency:'daily'}
+      stopLoss:false,dividends:false,taxes:false,fx:false,period:RSI_PERIOD,signalPeriod:SIGNAL_PERIOD,frequency:'daily'}
   };
 }

@@ -28,17 +28,16 @@ export function yahooRsiBars(payload,market,{now=new Date()}={}) {
   validateRsiBars(bars,market.prices);
   return {bars,omitted,timezone:zone};
 }
+const mondayOf=date=>{const day=new Date(date+'T00:00:00Z');day.setUTCDate(day.getUTCDate()-((day.getUTCDay()+6)%7));return day.toISOString().slice(0,10);};
 export function weeklyRsiPrices(prices) {
   const groups=new Map();
-  for(const point of prices) {
-    const day=new Date(point[0]+'T00:00:00Z');day.setUTCDate(day.getUTCDate()-((day.getUTCDay()+6)%7));groups.set(day.toISOString().slice(0,10),point);
-  }
+  for(const point of prices)groups.set(mondayOf(point[0]),point);
   return [...groups.values()];
 }
 export function weeklyRsiBars(bars) {
   const groups=new Map();
   for(const row of bars) {
-    const day=new Date(row[0]+'T00:00:00Z');day.setUTCDate(day.getUTCDate()-((day.getUTCDay()+6)%7));const key=day.toISOString().slice(0,10),before=groups.get(key);
+    const key=mondayOf(row[0]),before=groups.get(key);
     groups.set(key,before?[row[0],before[1],Math.max(before[2],row[2]),Math.min(before[3],row[3]),row[4],before[5]===null||row[5]===null?null:before[5]+row[5]]:[...row]);
   }
   return [...groups.values()];
