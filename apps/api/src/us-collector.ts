@@ -54,12 +54,13 @@ async function readBounded(response: Response) {
   } finally { reader.releaseLock(); }
   return Buffer.concat(chunks).toString('utf8');
 }
-function rowRun(row: Record<string, any>): CollectionRun {
+type RunRow = { id: string; started_at: Date; finished_at: Date | null; status: CollectionRun['status']; revision: string | null; sources: CollectionSource[]; error: string | null };
+function rowRun(row: RunRow): CollectionRun {
   return { id: row.id, startedAt: row.started_at.toISOString(), finishedAt: row.finished_at?.toISOString() ?? null, status: row.status, revision: row.revision, sources: row.sources, error: row.error };
 }
 export async function readUsCollection(pool: pg.Pool) {
-  const result = await pool.query(`SELECT * FROM market_lab_collection_runs ORDER BY run_order DESC LIMIT 1`);
-  const success = await pool.query(`SELECT * FROM market_lab_collection_runs WHERE status IN ('published','unchanged') ORDER BY run_order DESC LIMIT 1`);
+  const result = await pool.query<RunRow>(`SELECT * FROM market_lab_collection_runs ORDER BY run_order DESC LIMIT 1`);
+  const success = await pool.query<RunRow>(`SELECT * FROM market_lab_collection_runs WHERE status IN ('published','unchanged') ORDER BY run_order DESC LIMIT 1`);
   return { latest: result.rowCount ? rowRun(result.rows[0]) : null, lastSuccess: success.rowCount ? rowRun(success.rows[0]) : null };
 }
 
@@ -72,10 +73,10 @@ export async function runUsCollection(pool: pg.Pool, { fetchImpl = fetch, clock 
   const receipts: CollectionSource[] = [];
   try {
     signal?.throwIfAborted();
-    locked = (await client.query('SELECT pg_try_advisory_lock(hashtext($1)) AS locked', [locks.usCollection])).rows[0].locked;
+    locked = (await client.query<{ locked: boolean }>('SELECT pg_try_advisory_lock(hashtext($1)) AS locked', [locks.usCollection])).rows[0].locked;
     signal?.throwIfAborted();
     if (!locked) return { status: 'busy' as const };
-    const last = (await client.query('SELECT started_at,finished_at,status FROM market_lab_collection_runs ORDER BY run_order DESC LIMIT 1')).rows[0];
+    const last = (await client.query<Pick<RunRow, 'started_at' | 'finished_at' | 'status'>>('SELECT started_at,finished_at,status FROM market_lab_collection_runs ORDER BY run_order DESC LIMIT 1')).rows[0];
     if (!force && last && last.status !== 'running' && +clock() - +(last.finished_at ?? last.started_at) < intervalMs) return { status: 'not_due' as const };
     signal?.throwIfAborted();
     const interruptedAt = clock().toISOString();
@@ -137,8 +138,8 @@ export async function runUsCollection(pool: pg.Pool, { fetchImpl = fetch, clock 
     return { status: changed ? 'published' as const : 'unchanged' as const, revision, id };
   } catch (error) {
     if (!id) throw error;
-    const reconciled = (await client.query('SELECT status,revision FROM market_lab_collection_runs WHERE id=$1', [id])).rows[0];
-    if (reconciled?.status === 'published' || reconciled?.status === 'unchanged') return { status: reconciled.status as 'published' | 'unchanged', revision: reconciled.revision as string, id };
+    const reconciled = (await client.query<Pick<RunRow, 'status' | 'revision'>>('SELECT status,revision FROM market_lab_collection_runs WHERE id=$1', [id])).rows[0];
+    if (reconciled?.status === 'published' || reconciled?.status === 'unchanged') return { status: reconciled.status, revision: reconciled.revision as string, id };
     await client.query("UPDATE market_lab_collection_runs SET status='failed',finished_at=$2,sources=$3,error=$4 WHERE id=$1", [id, clock().toISOString(), JSON.stringify(receipts), error instanceof Error ? error.message.slice(0, 500) : 'Collection failed']);
     return { status: 'failed' as const, id };
   } finally {

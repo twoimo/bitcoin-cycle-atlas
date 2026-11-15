@@ -2,13 +2,15 @@ import type pg from 'pg';
 import { validateSnapshot } from '@atlas/domain/market-lab';
 import { locks, revisionIdentity, withTransaction } from './db.js';
 
+type RevisionRow = { revision: string; canonical_body: string; generated_at: Date; imported_at: Date; first_published_at: Date | null };
+
 export const snapshotIdentity = revisionIdentity(validateSnapshot);
 
 export async function publishSnapshot(pool: pg.Pool, input: unknown, expectedRevision?: string, onAccepted?: (client: pg.PoolClient, revision: string) => Promise<void>, signal?: AbortSignal) {
   signal?.throwIfAborted();
   const { snapshot, body, revision } = snapshotIdentity(input);
   return withTransaction(pool, locks.marketLab, async client => {
-    const current = await client.query('SELECT r.revision,r.generated_at FROM market_lab_publications p JOIN market_lab_revisions r USING (revision) WHERE p.channel=$1', ['market-lab']);
+    const current = await client.query<Pick<RevisionRow, 'revision' | 'generated_at'>>('SELECT r.revision,r.generated_at FROM market_lab_publications p JOIN market_lab_revisions r USING (revision) WHERE p.channel=$1', ['market-lab']);
     if (expectedRevision !== undefined && current.rows[0]?.revision !== expectedRevision) throw new Error('SNAPSHOT_CHANGED: publication changed during collection');
     const generated = Date.parse(snapshot.generatedAt);
     if (current.rowCount && +current.rows[0].generated_at === generated && current.rows[0].revision !== revision) {
@@ -48,8 +50,8 @@ export async function publishSnapshot(pool: pg.Pool, input: unknown, expectedRev
 
 export async function readSnapshot(pool: pg.Pool, revision?: string) {
   const result = revision
-    ? await pool.query('SELECT r.*,p.published_at FROM market_lab_revisions r LEFT JOIN market_lab_publications p USING (revision) WHERE r.revision=$1', [revision])
-    : await pool.query("SELECT r.*,p.published_at FROM market_lab_publications p JOIN market_lab_revisions r USING (revision) WHERE p.channel='market-lab'");
+    ? await pool.query<RevisionRow>('SELECT r.*,p.published_at FROM market_lab_revisions r LEFT JOIN market_lab_publications p USING (revision) WHERE r.revision=$1', [revision])
+    : await pool.query<RevisionRow>("SELECT r.*,p.published_at FROM market_lab_publications p JOIN market_lab_revisions r USING (revision) WHERE p.channel='market-lab'");
   if (!result.rowCount) return null;
   const row = result.rows[0];
   const checked = snapshotIdentity(JSON.parse(row.canonical_body));
