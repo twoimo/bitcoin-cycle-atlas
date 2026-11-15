@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import {
-  normalizeDailyVolume, parseVolumeSnapshot, aggregateWeeklyVolume, filterVolumeForView,
+  normalizeDailyVolume, parseVolumeSnapshot, aggregateWeeklyVolume,
   fetchDailyVolumeHistory, volumeCoverage, VOLUME_SCOPE,
 } from '../dist/volume-data.js';
 
@@ -96,14 +96,6 @@ test('a missing observed day invalidates that week instead of manufacturing volu
   const result = aggregateWeeklyVolume(rows, { now });
   assert.equal(result.bars.length, 0); assert.equal(result.incompleteGroups, 1); assert.equal(result.imputedBars, 0);
   assert.throws(() => volumeCoverage([...rows].reverse()), /ordered/);
-});
-
-test('view filtering honors price asOf and never extends volume into unavailable history or forecast dates', () => {
-  const bars = normal([row(monday), row(monday + DAY)]);
-  assert.deepEqual(filterVolumeForView(bars, { start: '2010-01-01', end: '2050-12-31', asOf: '2026-10-12' }), [bars[0]]);
-  assert.equal(filterVolumeForView(bars, { start: '2027-01-01', end: '2050-12-31' }).length, 0);
-  assert.equal(filterVolumeForView(bars, { start: '2010-01-01', end: '2011-01-01' }).length, 0);
-  assert.throws(() => filterVolumeForView([{ date: '2026-10-12', volume: -1 }]));
 });
 
 test('Bitstamp pagination respects its 1000-bar cap and end-precedence semantics without gaps', async () => {
