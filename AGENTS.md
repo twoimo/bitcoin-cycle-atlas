@@ -42,6 +42,7 @@ Each rule below fixes a mistake agents have repeated here. When a check fails, i
 | Run the forecast ledger only through `npm run verify:forecast` or `npm run build:forecast`. Never read a direct off-x64 `build-forecast-ledger.mjs` failure as a regression. | `scripts/run-forecast-ledger.mjs` moves off-x64 runs into Docker. The direct call is unguarded because that file is in the ETH operation graph. |
 | Run a frozen replay test only through `npm test`. A new test that replays stored linux/x64 outputs imports `tests/support/linux-x64-replay.mjs` on its first line. | The guard throws at once off linux/x64 Node 24.22.2 and names `npm test`. `scripts/test.mjs` sends every importer to Docker. |
 | "Nothing imports it" is not enough to delete a file. Files kept on purpose are listed with the document that keeps them. | `scripts/preserved-files.mjs`, checked by `tests/preserved-files.test.mjs` |
+| Derive a list or count of files from the file that defines it, such as `dist/index.html` or `dist/`. Do not add a second hand-kept copy to a script or test. | Judgment, no check. The standalone builder and the inventory checks above already derive theirs. |
 
 ## Architecture
 

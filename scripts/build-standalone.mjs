@@ -18,7 +18,7 @@ let html = await readFile(resolve(dist, 'index.html'), 'utf8');
 // The downloadable file uses local fallback fonts and needs no external CSS.
 html = html.replace(/\s*<link\b[^>]*id="atlas-optional-fonts"[^>]*>/, '')
   .replace(/\s*<script\b[^>]*id="atlas-fonts-script"[^>]*>[\s\S]*?<\/script>/, '');
-for (const file of ['styles.css', 'compact.css', 'outlook.css', 'lab.css', 'atlas.css', 'viewport.css', 'chart-details-panel.css', 'analysis-dock.css', 'chart-magnet.css', 'mobile-workspace.css', 'workspace-tools.css', 'chart-workspace-controls.css', 'research-annotations.css', 'chart-export-workbench.css', 'cycle-milestones.css', 'compact-chart-layout.css', 'chart-bottom-bar.css', 'symbol-selector.css', 'eth-view.css', 'ethereum-history.css', 'equity-view.css', 'research-reader.css', 'daily-data.css', 'forecast-journal.css', 'chart-replay.css', 'monthly-backtest.css', 'ipo-view.css', 'market-lab.css', 'atlas-shell.css', 'compact-toolbar.css', 'ui/rsi-simulation.css', 'legacy-workspace-toolbar.css', 'vendor/skullet/styles.css', 'loading-surfaces.css', 'editorial-system.css', 'editorial-panels.css', 'editorial-ledgers.css', 'relay-room.css', 'ui/chart-legend.css', 'ui/quote-hud.css']) {
+for (const [, file] of [...html.matchAll(/<link rel="stylesheet" href="\.\/([^"?]+)(?:\?[^"\s]*)?">/g)]) {
   // Font URLs contain semicolons in their weight lists. Consume the complete
   // url(...) before its terminating semicolon so :root stays valid CSS.
   const css = (await readFile(resolve(dist, file), 'utf8')).replace(/@import\s+url\(\s*(?:"[^"]*"|'[^']*'|[^)]*)\s*\)\s*;/g, '');
@@ -78,7 +78,8 @@ html = html.replace(/<script type="module" src="\.\/site-entry\.js(?:\?[^"\s]*)?
 // A callback inserts those bytes literally instead of expanding them as HTML.
 html=html.replace('<script type="importmap">',()=>`<script id="embedded-relay-data" type="application/json">${relayJson}</script>\n  <script id="embedded-relay-assets" type="application/json">${relayAssetsJson}</script>\n  <script type="importmap">`);
 html=html.replace('<script type="importmap">',()=>`<script id="atlas-forecast-ledger" type="application/json">${forecastJson}</script>\n  <script id="atlas-asset-forecast-ledger" type="application/json">${assetForecastJson}</script>\n  <script id="atlas-replay-price-archives" type="application/json">${replayJson}</script>\n  <script id="atlas-project-origin-baseline" type="application/json">${projectBaselineJson}</script>\n  <script id="atlas-publication" type="application/json">${publicationJson}</script>\n  <script type="importmap">`);
-if (/\b(?:src|href)=["']\.\//.test(html)) throw new Error('Unresolved local resource');
+const unresolved = html.match(/\b(?:src|href)=["']\.\/[^"']*/);
+if (unresolved) throw new Error('Unresolved local resource: ' + unresolved[0]);
 await mkdir(dirname(output), { recursive: true });
 await writeFile(output, html);
 console.log(JSON.stringify({ file: basename(output), bytes: Buffer.byteLength(html), modules: Object.keys(modules.imports).length, embeddedObservations: JSON.parse(data).prices.length, embeddedRelayImages:Object.keys(relayAssets.images).length, embeddedRelayImageBytes:relayAssets.bytes }));
