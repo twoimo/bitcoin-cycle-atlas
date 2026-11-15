@@ -11,7 +11,7 @@ export type ThemeDraft={title:string;criteria:ThemeCriteria};
 const instant=(v:unknown)=>typeof v==='string'&&/^\d{4}-\d\d-\d\dT/.test(v)&&Number.isFinite(Date.parse(v));
 const validDay=(s:string)=>/^\d{4}-\d\d-\d\d$/.test(s)&&Number.isFinite(Date.parse(s+'T00:00:00Z'))&&new Date(s+'T00:00:00Z').toISOString().slice(0,10)===s;
 export const evidenceAvailableAt=(e:ThemeEvidence)=>e.publishedAt===null?e.retrievedAt:e.precision==='day'?`${e.publishedAt.slice(0,10)}T23:59:59.999Z`:e.publishedAt;
-export function validateThemeCriteria(criteria:ThemeCriteria,evidence:ThemeEvidence[],asOf:string):ThemeCriteria{
+function validateThemeCriteria(criteria:ThemeCriteria,evidence:ThemeEvidence[],asOf:string):ThemeCriteria{
   if(!criteria||Object.keys(criteria).length!==3)throw new Error('연·기·신 세 항목을 확인하세요.');
   const normalized={} as ThemeCriteria;
   for(const axis of axes){const c=criteria[axis];if(!c||!['pass','fail','hold'].includes(c.state)||typeof c.reason!=='string'||!c.reason.trim()||c.reason.length>400||!Array.isArray(c.evidenceIds)||c.evidenceIds.length>12||new Set(c.evidenceIds).size!==c.evidenceIds.length||c.state!=='hold'&&!c.evidenceIds.length)throw new Error('각 판정의 이유와 근거를 확인하세요.');
@@ -36,13 +36,14 @@ export function normalizeThemeDraft(input:ThemeDraft,evidence:ThemeEvidence[],as
 }
 export function themeStatus(j:ThemeJudgment){return axes.some(a=>j.criteria[a].state==='fail')?'fail':axes.every(a=>j.criteria[a].state==='pass')?'pass':'hold';}
 const dayAfter=(s:string,n=1)=>new Date(Date.parse(s.slice(0,10)+'T00:00:00Z')+n*86400000).toISOString().slice(0,10);
+const horizons=[1,5,20];
 function indexThemePrices(snapshot:ThemeSnapshot){
   return {bars:new Map(snapshot.asset.bars.map(b=>[b[0],b])),benchmark:new Map(snapshot.benchmark.bars.map(b=>[b[0],b])),last:snapshot.asset.bars.at(-1)![0]};
 }
 function performanceWithPrices(judgment:ThemeJudgment,{bars,benchmark,last}:ReturnType<typeof indexThemePrices>){
   // Entry uses the close of the next UTC day, whose entire bar follows the decision.
   const entryDate=dayAfter(judgment.asOf),entry=bars.get(entryDate);
-  return [1,5,20].map(horizon=>{
+  return horizons.map(horizon=>{
     const exitDate=dayAfter(entryDate,horizon),exit=bars.get(exitDate),path=Array.from({length:horizon},(_,i)=>bars.get(dayAfter(entryDate,i+1)));
     const status=exitDate>last?'pending':!entry||!exit||path.some(b=>!b)?'unavailable':'observed';
     if(status!=='observed')return {horizon,status,entryDate,exitDate,entry:entry?.[4]??null,exit:null,change:null,benchmarkChange:null,excess:null,adverse:null,favorable:null};
@@ -61,7 +62,7 @@ export function themeComparison(snapshot:ThemeSnapshot,judgments:ThemeJudgment[]
   return (['recorded','reconstructed'] as const).flatMap(mode=>(['pass','hold','fail'] as const).flatMap(status=>{
     const records=judgments.filter(j=>j.mode===mode&&themeStatus(j)===status);
     const performance=records.map(j=>{validateThemeJudgment(j,snapshot);prices??=indexThemePrices(snapshot);return performanceWithPrices(j,prices);});
-    return [1,5,20].map((horizon,index)=>{
+    return horizons.map((horizon,index)=>{
     const results=performance.map(p=>p[index]!);
     const completed=results.filter(p=>p.status==='observed'),returns=completed.map(p=>p.change!),excess=completed.flatMap(p=>p.excess===null?[]:[p.excess]);
     return {mode,status,horizon,records:records.length,n:completed.length,pending:results.filter(p=>p.status==='pending').length,unavailable:results.filter(p=>p.status==='unavailable').length,up:returns.filter(v=>v>0).length,down:returns.filter(v=>v<0).length,flat:returns.filter(v=>v===0).length,mean:returns.length?returns.reduce((s,v)=>s+v,0)/returns.length:null,excessN:excess.length,meanExcess:excess.length?excess.reduce((s,v)=>s+v,0)/excess.length:null};
