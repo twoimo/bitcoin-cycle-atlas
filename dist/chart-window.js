@@ -62,11 +62,3 @@ export function pixelExtrema(rows, x, keys = ['price']) {
   }
   flush(); return result;
 }
-
-/** Preserve every input break while reducing only the connected runs. */
-export function pixelLineSegments(rows, x, keys = ['price'], breakWhen = () => false) {
-  const segments = []; let run = [];
-  const flush = () => { if (run.length) segments.push(pixelExtrema(run, x, keys)); run = []; };
-  for (const row of rows) { if (breakWhen(row)) flush(); else run.push(row); }
-  flush(); return segments;
-}

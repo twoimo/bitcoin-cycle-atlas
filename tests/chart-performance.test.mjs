@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { dateWindow, intervalAtDate, pixelExtrema, pixelLineSegments } from '../dist/chart-window.js';
+import { dateWindow, intervalAtDate, pixelExtrema } from '../dist/chart-window.js';
 import { chartPaneLayout, cycleTimingMarkup, volumePaneMarkup } from '../dist/chart-overlays.js';
 import { drawAtlasPriceChart } from '../dist/atlas-price-chart.js';
 
@@ -63,12 +63,6 @@ test('pixel reduction keeps chronological endpoints and every requested extreme 
       assert.equal(Math.max(...sampled.map(row => row[key])), Math.max(...original.map(row => row[key])));
     }
   }
-});
-
-test('display reduction never connects across a candle-covered run', () => {
-  const rows = [{ price: 1, index: 0 }, { price: 2, index: 1, candle: {} }, { price: 9, index: 2 }, { price: 3, index: 3 }];
-  const runs = pixelLineSegments(rows, row => row.index / 10, ['price'], row => Boolean(row.candle));
-  assert.deepEqual(runs.map(run => run.map(row => row.index)), [[0], [2, 3]]);
 });
 
 test('observed daily and weekly price lines retain calendar gaps before display sampling', () => {
