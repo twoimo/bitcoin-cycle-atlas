@@ -57,6 +57,41 @@ export async function readChart({svgSelector,allocationSelector}) {
     viewport:{width:innerWidth,height:innerHeight},documentWidth:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)};
 }
 
+export function readEngineBarTimes({svgSelector}) {
+  const host=document.querySelector(svgSelector)?.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas');
+  return host?.getAtlasFunnestSnapshot?.().engineBars?.map(bar=>bar.time)??null;
+}
+
+/** Funnest's time axis is bar-indexed. A time between two bars is interpolated
+ * between their indices, and a time past either end is extrapolated by the
+ * engine's bar interval, the smallest gap among its last 20 bars. Session gaps
+ * and the forecast gutter therefore make screen x non-linear in time. */
+export function funnestTimeAxis(times) {
+  assert.ok(Array.isArray(times)&&times.length>1&&times.every((time,index)=>Number.isFinite(time)&&(index===0||time>times[index-1])),'Funnest bar times must be finite and strictly increasing');
+  const last=times.length-1;let interval=Infinity;
+  for(let index=Math.max(1,times.length-20);index<times.length;index++)interval=Math.min(interval,times[index]-times[index-1]);
+  const indexOf=time=>{
+    if(time<=times[0])return (time-times[0])/interval;
+    if(time>=times[last])return last+(time-times[last])/interval;
+    let low=0,high=last;
+    while(low+1<high){const middle=(low+high)>>1;if(times[middle]<=time)low=middle;else high=middle;}
+    return low+(time-times[low])/(times[high]-times[low]);
+  };
+  const timeOf=index=>{
+    if(index<=0)return times[0]+index*interval;
+    if(index>=last)return times[last]+(index-last)*interval;
+    const whole=Math.floor(index);
+    return times[whole]+(index-whole)*(times[whole+1]-times[whole]);
+  };
+  return {interval,indexOf,timeOf};
+}
+
+export function pointerAnchorDrift({axis,before,after,pointerX}) {
+  const at=state=>{const from=axis.indexOf(state.first),to=axis.indexOf(state.last);return axis.timeOf(from+(pointerX-state.plot.left)/(state.plot.right-state.plot.left)*(to-from));};
+  const candle=before.intervalMs,pixel=(before.last-before.first)/(before.plot.right-before.plot.left);
+  return {error:Math.abs(at(before)-at(after)),tolerance:candle+pixel,pointerX,before:at(before),after:at(after)};
+}
+
 function readPerimeter() {
   const selectors={top:'.atlas-canvas-heading',left:'.atlas-sidebar',right:'.workbench-rail',bottom:'.workbench-bottom-bar'};
   return Object.fromEntries(Object.entries(selectors).map(([name,selector])=>{
@@ -120,18 +155,20 @@ export async function verifyChartZoomBrowser({cdp,context=cdp,receipt,evaluate,u
     assert.equal(a.first,b.first,label+': '+stage+' changed the actual Funnest range start');
     assert.equal(a.last,b.last,label+': '+stage+' changed the actual Funnest range end');
   }
+  let axis;
   function samePointerTime(before,after,pointerX,stage){
-    const at=(state)=>state.first+(pointerX-state.plot.left)/(state.plot.right-state.plot.left)*span(state);
-    const candle=before.intervalMs,pixel=span(before)/(before.plot.right-before.plot.left);
-    const error=Math.abs(at(before)-at(after)),tolerance=candle+pixel;
-    assert.ok(error<=tolerance,label+': '+stage+' moved the pointer time beyond candle/pixel rounding: '+JSON.stringify({error,tolerance,pointerX,before:at(before),after:at(after)}));
-    (record.pointerAnchors??=[]).push({stage,pointerX,before:at(before),after:at(after),error,tolerance});
+    const drift=pointerAnchorDrift({axis,before,after,pointerX});
+    assert.ok(drift.error<=drift.tolerance,label+': '+stage+' moved the pointer time beyond candle/pixel rounding: '+JSON.stringify(drift));
+    (record.pointerAnchors??=[]).push({stage,...drift});
   }
   try{
     await until(async()=>valid(await read()),label+' rendered zoom metadata',10000);
     await settled(context);
     baseline=await read();perimeter=await evaluate(cdp,readPerimeter);
     record.states.push({stage:'initial',...baseline,perimeter});assertGeometry(baseline,perimeter,'initial');
+    const barTimes=await evaluate(context,readEngineBarTimes,{svgSelector});
+    assert.equal(barTimes?.length,baseline.barCount,label+': the engine bar times must be the bars the initial state counted');
+    axis=funnestTimeAxis(barTimes);
 
     await wheel(baseline,'plot');
     await until(async()=>{const next=await read();return valid(next)&&span(next)<span(baseline);},label+' native plot-wheel zoom',5000);
