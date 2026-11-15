@@ -1,0 +1,21 @@
+{
+  // Checks each export of these JS files against its hand-written .d.ts via the `Declared` JSDoc bindings. Bodies stay untyped, so implicit any
+  // and null checks stay off: a field that starts as `null` is not compared with its declaration.
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowJs": true,
+    "checkJs": true,
+    "strict": false,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "types": ["node"]
+  },
+  "files": [
+    "src/market-lab-math.js",
+    "src/rsi-backtest.js",
+    "src/rsi-bars.js",
+    "src/rsi-simulation.js"
+  ]
+}

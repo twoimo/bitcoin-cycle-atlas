@@ -1,5 +1,7 @@
 import { calendarDate, validateSeries } from './market-lab-math.js';
+/** @typedef {typeof import('@atlas/domain/rsi-bars')} Declared */
 
+/** @type {Declared['validateRsiBars']} */
 export function validateRsiBars(input,prices) {
   validateSeries(prices,{positive:true});
   if(!Array.isArray(input)||input.length>20000)throw new TypeError('OHLC history is invalid');
@@ -13,6 +15,7 @@ export function validateRsiBars(input,prices) {
   }
   return input;
 }
+/** @type {Declared['yahooRsiBars']} */
 export function yahooRsiBars(payload,market,{now=new Date()}={}) {
   const item=payload?.chart?.result?.[0],q=item?.indicators?.quote?.[0];
   if(payload?.chart?.error||item?.meta?.symbol!==market.symbol||item.meta.dataGranularity!=='1d'||item.meta.currency!==market.unit||!q||!Array.isArray(item.timestamp))throw new Error('OHLC provider identity mismatch');
@@ -29,11 +32,13 @@ export function yahooRsiBars(payload,market,{now=new Date()}={}) {
   return {bars,omitted,timezone:zone};
 }
 const mondayOf=date=>{const day=new Date(date+'T00:00:00Z');day.setUTCDate(day.getUTCDate()-((day.getUTCDay()+6)%7));return day.toISOString().slice(0,10);};
+/** @type {Declared['weeklyRsiPrices']} */
 export function weeklyRsiPrices(prices) {
   const groups=new Map();
   for(const point of prices)groups.set(mondayOf(point[0]),point);
   return [...groups.values()];
 }
+/** @type {Declared['weeklyRsiBars']} */
 export function weeklyRsiBars(bars) {
   const groups=new Map();
   for(const row of bars) {

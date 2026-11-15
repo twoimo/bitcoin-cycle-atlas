@@ -1,7 +1,9 @@
 import { calculateRsiSeries, validateSeries } from './market-lab-math.js';
+/** @typedef {typeof import('@atlas/domain/rsi-backtest')} Declared */
 
 /** Price-only, long/cash experiment. Signals use the completed close and fills
  * use the next observed session's close. No final liquidation is invented. */
+/** @type {Declared['backtestRsi']} */
 export function backtestRsi(prices, options) {
   validateSeries(prices, { positive:true });
   const { start, end, capital, buy, sell, feeBps } = options || {};
