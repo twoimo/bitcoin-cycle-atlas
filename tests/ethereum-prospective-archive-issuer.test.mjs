@@ -1,3 +1,4 @@
+import './support/linux-x64-replay.mjs';
 import {mkdtemp} from './helpers/physical-temp-directory.mjs';
 import {frozenMarketText} from './helpers/frozen-market-fixture.mjs';
 import test from 'node:test';

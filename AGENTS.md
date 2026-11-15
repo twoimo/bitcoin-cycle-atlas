@@ -25,7 +25,7 @@ npm run verify:publication
 npm run build:standalone   # build/Bitcoin_Cycles_Comparison.html
 ```
 
-- `npm test` replays three frozen ETH archive tests in a pinned linux/amd64 Node image through Docker unless the host already runs Linux x64 Node 24.22.2. Without Docker that batch fails. Read the final `ATLAS_TEST_TOTAL` line; `complete:false` is not a pass.
+- `npm test` runs every test that imports `tests/support/linux-x64-replay.mjs` (the frozen ETH archive replays) in a pinned linux/amd64 Node image through Docker unless the host already runs Linux x64 Node 24.22.2. Without Docker that batch fails. Read the final `ATLAS_TEST_TOTAL` line; `complete:false` is not a pass.
 - `verify:formal` needs Java 11 or later and downloads a SHA-pinned TLC 1.7.4 on first use; set `TLA2TOOLS=/path/to/tla2tools.jar` to reuse a copy.
 - A `build:*` script with a `--check` twin fails when a committed generated file differs from what its generator produces. After changing a generator or its inputs, run the build form and commit the regenerated output.
 - `verify:forecast` and `build:forecast` replay the stored forecast experiments bit for bit, and those results were produced on linux/x64 Node 24.22.2. On any other host both run in the pinned Docker image from `scripts/canonical-runtime.mjs`. On arm64 (Apple Silicon included), V8's `Math.exp` and `Math.log` differ from x64 in the last bit, so a direct `node scripts/build-forecast-ledger.mjs --check` fails there even though nothing changed.
@@ -40,6 +40,7 @@ Each rule below fixes a mistake agents have repeated here. When a check fails, i
 | Adding, renaming or deleting a top-level `dist/*.{js,css,html}` file, or a stylesheet linked from `dist/index.html`, updates `seedPaths` in `research-data/eth-review-scope.json` in the same change. | `scripts/eth-review-inventory.mjs`, run by `npm run verify:static` and `tests/eth-review-packet.test.mjs` |
 | A file that an issued ETH prospective record or `dist/data/forecast-ledger/experiments.json` pins keeps its exact bytes, even for an unused export. Put new behavior in a module outside the pinned graph. | `scripts/recorded-source-pins.mjs`, run by `npm run verify:static` and `tests/recorded-source-pins.test.mjs` |
 | Run the forecast ledger only through `npm run verify:forecast` or `npm run build:forecast`. Never read a direct off-x64 `build-forecast-ledger.mjs` failure as a regression. | `scripts/run-forecast-ledger.mjs` moves off-x64 runs into Docker. The direct call is unguarded because that file is in the ETH operation graph. |
+| Run a frozen replay test only through `npm test`. A new test that replays stored linux/x64 outputs imports `tests/support/linux-x64-replay.mjs` on its first line. | The guard throws at once off linux/x64 Node 24.22.2 and names `npm test`. `scripts/test.mjs` sends every importer to Docker. |
 
 ## Architecture
 
