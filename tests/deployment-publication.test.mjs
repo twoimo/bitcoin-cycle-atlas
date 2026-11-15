@@ -91,8 +91,8 @@ test('the real public-confirmation loop retries failures at most four times and 
   const env={...process.env,PATH:`${bin}:${process.env.PATH}`,ATTEMPT_COUNTER:counter,ARGUMENT_LOG:log,PAGES_URL:'https://example.com/atlas/',EXPECTED_SOURCE:'a'.repeat(40),EXPECTED_MANIFEST:'b'.repeat(64)};
   for(const name of ['pages','refresh-data'])for(const failUntil of [1,99]){
     await writeFile(counter,'0');await writeFile(log,'');
-    const promise=run('bash',['--noprofile','--norc','-e','-o','pipefail','-c',script(step(await workflow(name),'Confirm the served publication identity'))],{cwd:directory,env:{...env,FAIL_UNTIL:String(failUntil)},timeout:2500});
-    if(failUntil===99)await assert.rejects(promise);else await promise;
+    const promise=run('bash',['--noprofile','--norc','-e','-o','pipefail','-c',script(step(await workflow(name),'Confirm the served publication identity'))],{cwd:directory,env:{...env,FAIL_UNTIL:String(failUntil)},timeout:60000});
+    if(failUntil===99)await assert.rejects(promise,error=>error.code===1&&!error.killed);else await promise;
     assert.equal(Number(await readFile(counter,'utf8')),failUntil===99?4:2);
     for(const line of (await readFile(log,'utf8')).trim().split('\n'))assert.deepEqual(JSON.parse(line),['scripts/build-publication.mjs','--verify-url',env.PAGES_URL,'--expected-manifest',env.EXPECTED_MANIFEST,'--expected-source',env.EXPECTED_SOURCE]);
   }
