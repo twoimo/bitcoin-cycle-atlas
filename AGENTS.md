@@ -31,6 +31,14 @@ npm run build:standalone   # build/Bitcoin_Cycles_Comparison.html
 - `verify:forecast` replays the stored forecast experiments bit for bit, and those results were produced on x64. On arm64 (Apple Silicon included), V8's `Math.exp` and `Math.log` differ from x64 in the last bit, so the check fails there even though nothing changed. Run it, and `build:forecast`, only on linux/x64 Node 24.22.2 (the pinned Docker image in `scripts/test.mjs` works). Never commit experiments regenerated on arm64.
 - `refresh:*`, `scripts/refresh-ohlc.mjs` and `scripts/refresh-volume.mjs` collect new data over the network. Their `--check` or `--verify` forms revalidate stored data offline.
 
+## Rules and what enforces them
+
+Each rule below fixes a mistake agents have repeated here. When a check fails, its message names the fix; follow it instead of loosening the check.
+
+| Rule | Enforced by |
+| --- | --- |
+| Adding, renaming or deleting a top-level `dist/*.{js,css,html}` file, or a stylesheet linked from `dist/index.html`, updates `seedPaths` in `research-data/eth-review-scope.json` in the same change. | `scripts/eth-review-inventory.mjs`, run by `npm run verify:static` and `tests/eth-review-packet.test.mjs` |
+
 ## Architecture
 
 - `dist/` is hand-written source, not build output. It is the static ES-module app (`index.html`, `app.js`, `atlas-shell.*`, `atlas-price-chart.js`, `market-data-controller.js`, `chart-*.js`) and its committed data in `dist/data/`. Some files in it are generated and guarded by a check: `dist/market-lab-math.js` is copied from `packages/domain/src/market-lab-math.js` by `build:domain`, and Skullet assets are synced from `node_modules/skullet` against `tools/skullet/provenance.json`.

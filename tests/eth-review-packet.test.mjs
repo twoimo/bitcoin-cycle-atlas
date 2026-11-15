@@ -5,6 +5,7 @@ import {tmpdir} from 'node:os';
 import {join,dirname} from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
+import {fileURLToPath} from 'node:url';
 import {parseStaticReviewImports,discoverDynamicReviewImports,partitionReviewBook,buildEthReviewPacket,validateEthReviewSource,validateEthReviewChain} from '../scripts/build-eth-review-packet.mjs';
 
 const hash=body=>createHash('sha256').update(body).digest('hex');
@@ -403,23 +404,15 @@ test('file limits reject nonfinite fractional and nonpositive values before read
   }
 });
 
-test('declared ETH review inventory includes every top-level browser source and root stylesheet',async()=>{
-  const {readdir}=await import('node:fs/promises');
-  const scope=JSON.parse(await readFile(new URL('../research-data/eth-review-scope.json',import.meta.url),'utf8'));
-  const entries=await readdir(new URL('../dist/',import.meta.url),{withFileTypes:true});
-  const required=new Set(entries.filter(entry=>entry.isFile()&&/\.(?:js|css|html)$/i.test(entry.name)).map(entry=>'dist/'+entry.name));
-  const index=await readFile(new URL('../dist/index.html',import.meta.url),'utf8');
-  const origin=new URL('https://atlas-review.invalid/'),localStylesheets=[];
-  for(const [tag] of index.matchAll(/<link\b[^>]*>/gi)){
-    const attributes=new Map([...tag.matchAll(/\s(rel|href)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)]
-      .map(([,name,double,single,bare])=>[name.toLowerCase(),double??single??bare]));
-    if(!(attributes.get('rel')??'').toLowerCase().split(/\s+/).includes('stylesheet')||!attributes.has('href'))continue;
-    const url=new URL(attributes.get('href'),origin);
-    if(url.origin===origin.origin)localStylesheets.push('dist'+decodeURIComponent(url.pathname));
-  }
-  assert.ok(localStylesheets.length>0,'The root entry must expose a readable local stylesheet inventory');
-  for(const path of localStylesheets)required.add(path);
-  const seeded=new Set(scope.seedPaths);
-  assert.deepEqual([...required].filter(path=>!seeded.has(path)).sort(),[],
-    'Every top-level browser source and locally linked root stylesheet must be an explicit review seed');
+test('declared ETH review inventory matches the top-level browser sources and root stylesheets',async()=>{
+  const {assertEthReviewInventory}=await import('../scripts/eth-review-inventory.mjs');
+  await assertEthReviewInventory(fileURLToPath(new URL('..',import.meta.url)));
+});
+
+test('the inventory check names the scope file and both directions of drift',async t=>{
+  const {assertEthReviewInventory}=await import('../scripts/eth-review-inventory.mjs');
+  const f=await fixture(t,{'dist/index.html':'<link rel="stylesheet" href="./ui/linked.css">','dist/app.js':'','dist/new-view.js':'','dist/ui/linked.css':'',
+    'research-data/eth-review-scope.json':JSON.stringify({seedPaths:['dist/index.html','dist/app.js','dist/deleted-view.js']})});
+  await assert.rejects(assertEthReviewInventory(f.root),error=>error.message.startsWith('research-data/eth-review-scope.json seedPaths')&&
+    /\+ dist\/new-view\.js/.test(error.message)&&/\+ dist\/ui\/linked\.css/.test(error.message)&&/- dist\/deleted-view\.js/.test(error.message));
 });
