@@ -22,9 +22,14 @@ export const locks = {
 
 export function createPool(connectionString: string) {
   const pool = new pg.Pool({ connectionString, max: 5, connectionTimeoutMillis: 3000, query_timeout: 10000, statement_timeout: 10000, idle_in_transaction_session_timeout: 15000, application_name: 'atlas-market-lab' });
-  // An idle connection can disappear between requests. pg removes that client;
-  // the next request reconnects instead of an unhandled event killing the API.
-  pool.on('error', error => { console.error('atlas: idle database connection lost', (error as NodeJS.ErrnoException).code ?? 'unknown'); });
+  // pg reports a lost connection on the pool while the client is idle and on the
+  // client itself while it is checked out; an unheard 'error' kills the process.
+  // A checked-out client's pending query also rejects, so its caller still fails.
+  const lost = (state: string) => (error: Error) => { console.error(`atlas: ${state} database connection lost`, (error as NodeJS.ErrnoException).code ?? error.message); };
+  const checkedOut = lost('checked-out');
+  pool.on('error', lost('idle'));
+  pool.on('acquire', client => client.on('error', checkedOut));
+  pool.on('release', (_error, client) => client.off('error', checkedOut));
   return pool;
 }
 
