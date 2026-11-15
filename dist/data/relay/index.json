@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "source": "RelayDeck",
-  "generated_at": "2026-11-16T03:35:41+09:00",
+  "generated_at": "2026-11-16T04:44:06+09:00",
   "rooms": [
     {
       "id": "telegram",
@@ -1701,7 +1701,7 @@
             {
               "label": "26면",
               "alt": "모바일한경 2026-11-16 v5 26면",
-              "image": "data/relay/assets/hankyung-2026-11-16-v5-26.webp"
+              "image": "data/relay/assets/hankyung-2026-11-16-v5-26.jpg"
             },
             {
               "label": "27면",
