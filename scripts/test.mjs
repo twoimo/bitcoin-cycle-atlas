@@ -1,14 +1,13 @@
-import { readdir } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import { CANONICAL_NODE as version, CANONICAL_IMAGE as image, onCanonicalRuntime, canonicalDockerRun } from './canonical-runtime.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-// These cases reproduce immutable outputs originally made on Linux/x64.
-// Every other case uses the host runtime, including new-model calculations.
-const frozenFiles = new Set(['ethereum-prospective-archive-issuer.test.mjs', 'ethereum-prospective-archive-summary.test.mjs', 'ethereum-warm-start-prospective.test.mjs']);
 const files = (await readdir(resolve(root, 'tests'))).filter(name => name.endsWith('.test.mjs')).sort();
+const frozenGuard = "import './support/linux-x64-replay.mjs';";
+const frozenFiles = new Set((await Promise.all(files.map(async file => (await readFile(resolve(root, 'tests', file), 'utf8')).includes(frozenGuard) ? file : null))).filter(Boolean));
 const canonical = onCanonicalRuntime();
 const args = process.argv.slice(2).filter(arg => arg !== '--test-reporter=tap');
 if (args.some(arg => arg.startsWith('--test-reporter'))) throw new Error('The combined test receipt requires TAP reporting');

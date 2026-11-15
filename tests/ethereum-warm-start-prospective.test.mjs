@@ -1,3 +1,4 @@
+import './support/linux-x64-replay.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
