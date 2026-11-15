@@ -5,13 +5,14 @@ import { tmpdir } from 'node:os';
 import { isBuiltin } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { prepareTlc, runVerification, TLC_JAR, TLC_SHA256 } from './verification-process.mjs';
+import { checkTap, prepareTlc, runVerification, TLC_JAR, TLC_SHA256 } from './verification-process.mjs';
 import { javascriptModuleSpecifiers } from './module-references.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 
-const implementationEntries = ['dist/equity-view.js', 'dist/equity-market-data.js', 'dist/treasury-instruments.js', 'dist/cycle-engine.js', 'dist/chart-view-policy.js', 'dist/ohlc-data.js', 'dist/price-axis.js', 'dist/index.html', 'tests/equity-load-ownership.test.mjs', 'tests/helpers/equity-view-fixture.mjs'];
+const implementationEntries = ['dist/equity-view.js', 'dist/equity-market-data.js', 'dist/treasury-instruments.js', 'dist/cycle-engine.js', 'dist/chart-view-policy.js', 'dist/ohlc-data.js', 'dist/price-axis.js', 'dist/index.html', 'tests/equity-load-ownership.test.mjs', 'tests/helpers/equity-view-fixture.mjs', 'tests/native-chart-viewport.test.mjs'];
+const viewportArgs = ['--test-reporter=tap', '--test-name-pattern=weekly switch and scale mode', 'tests/native-chart-viewport.test.mjs'];
 
 export async function copyEquityFixtureDependencies(copy, { sourceRoot = root, entries = implementationEntries } = {}) {
   const files = new Set();
@@ -90,6 +91,7 @@ async function implementation(work) {
   const pristine = runVerification(process.execPath, ['tests/equity-load-ownership.test.mjs'], { cwd: copy });
   assert.equal(pristine.status, 0, pristine.output);
   assert.match(pristine.output, /tests 28/);
+  checkTap(runVerification(process.execPath, viewportArgs, { cwd: copy }), 2);
   const viewFile = path.join(copy, 'dist/equity-view.js'), source = await readFile(viewFile, 'utf8');
   const changes = [
     {
@@ -121,13 +123,18 @@ async function implementation(work) {
       id: 'overwritten-range', from: 'state.range=state.rangeTouched&&state.range?{...nextRange,start:state.range.start,end:state.range.end}:null;', to: 'state.range=null;',
       failure: /preserves user interval, scenario and range/,
     },
+    {
+      id: 'interval-range-reset', from: 'state.range=previous&&target?retargetChartRange(previous,target):target;', to: 'state.range=target;',
+      args: viewportArgs, tests: 2, failure: /interval conversion keeps the UTC center within the target grid/,
+    },
   ];
   const mutations = {}, mutationExitStatuses = {};
   for (const change of changes) {
     assert.equal(source.split(change.from).length, 2, `Review model/code correspondence and mutation selector: ${change.id}`);
     await writeFile(viewFile, source.replace(change.from, change.to));
-    const result = runVerification(process.execPath, ['tests/equity-load-ownership.test.mjs'], { cwd: copy, expectedStatus: 1 });
+    const result = runVerification(process.execPath, change.args || ['tests/equity-load-ownership.test.mjs'], { cwd: copy, expectedStatus: 1 });
     assert.equal(result.status, 1, `${change.id} must finish with an assertion failure`);
+    if (change.tests) checkTap(result, change.tests, { fails: true });
     assert.match(result.output, change.failure, `Mutation failed for an unrelated reason: ${change.id}\n${result.output}`);
     mutations[change.id] = 'expected assertion failure';
     mutationExitStatuses[change.id] = result.status;
@@ -135,7 +142,8 @@ async function implementation(work) {
   await writeFile(viewFile, source);
   const restored = runVerification(process.execPath, ['tests/equity-load-ownership.test.mjs'], { cwd: copy });
   assert.equal(restored.status, 0, restored.output);
-  return { tests: 28, original: 'pass', isolated: 'pass', restored: 'pass', fixtureModules, sourceSha256: hash(source), mutations, mutationExitStatuses };
+  checkTap(runVerification(process.execPath, viewportArgs, { cwd: copy }), 2);
+  return { tests: 28, viewportTests: 2, original: 'pass', isolated: 'pass', restored: 'pass', fixtureModules, sourceSha256: hash(source), mutations, mutationExitStatuses };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
