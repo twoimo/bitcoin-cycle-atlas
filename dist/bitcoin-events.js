@@ -523,33 +523,3 @@ function deepFreeze(value) {
 function chronology(a, b) { return a.date.localeCompare(b.date) || a.id.localeCompare(b.id); }
 
 export const BITCOIN_EVENTS = deepFreeze(events.map(event => ({ datePrecision: 'source-calendar-day', ...event })).sort(chronology));
-
-function calendarDay(value, name, fallback) {
-  if (value === undefined) return fallback;
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new TypeError(`${name} must be YYYY-MM-DD`);
-  const time = Date.parse(`${value}T00:00:00.000Z`);
-  if (!Number.isFinite(time) || new Date(time).toISOString().slice(0, 10) !== value) throw new RangeError(`${name} is not a valid calendar day`);
-  return value;
-}
-
-/**
- * Inclusive calendar-day filtering. Optional limit prioritizes editorial
- * importance, then earlier date/id; the returned list is always chronological.
- * It never synthesizes future events or changes the frozen source catalog.
- */
-export function getVisibleBitcoinEvents({ startDate, endDate, minImportance = 1, categories, limit } = {}) {
-  const start = calendarDay(startDate, 'startDate', '0001-01-01');
-  const end = calendarDay(endDate, 'endDate', BITCOIN_EVENTS_REVIEW_DATE);
-  if (start > end) throw new RangeError('startDate must not be later than endDate');
-  if (!Number.isInteger(minImportance) || minImportance < 1 || minImportance > 3) throw new RangeError('minImportance must be 1, 2 or 3');
-  if (limit !== undefined && (!Number.isSafeInteger(limit) || limit < 0)) throw new RangeError('limit must be a nonnegative safe integer');
-  let allowed;
-  if (categories !== undefined) {
-    if (!Array.isArray(categories) && !(categories instanceof Set)) throw new TypeError('categories must be an array or Set');
-    allowed = new Set(categories);
-    for (const category of allowed) if (!Object.hasOwn(BITCOIN_EVENT_CATEGORIES, category)) throw new RangeError(`Unknown event category: ${String(category)}`);
-  }
-  let visible = BITCOIN_EVENTS.filter(event => event.date >= start && event.date <= end && event.importance >= minImportance && (!allowed || allowed.has(event.category)));
-  if (limit !== undefined && visible.length > limit) visible = visible.sort((a, b) => b.importance - a.importance || chronology(a, b)).slice(0, limit);
-  return visible.sort(chronology);
-}
