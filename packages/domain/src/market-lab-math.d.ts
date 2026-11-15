@@ -4,7 +4,6 @@ export const AXES: readonly Axis[];
 export const AXIS_LABELS: Record<Axis, string>;
 export const RSI_REFERENCES: readonly { label: string; threshold: number }[];
 export const CLOCK_SKEW_MS: number;
-// Parameters typed `any` are untrusted input that the JS body reads directly; tsconfig.json checks every export against these declarations.
 export function safeSourceUrl(value: any): string | null;
 export function validateSnapshot(doc: any): MarketSnapshot;
 export function validateSeries<T extends readonly Point[]>(rows: T, options?: { positive?: boolean; maximum?: number }): T;

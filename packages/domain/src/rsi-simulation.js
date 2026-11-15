@@ -1,5 +1,4 @@
 import { calculateRsiSeries, validateSeries } from './market-lab-math.js';
-/** @typedef {typeof import('@atlas/domain/rsi-simulation')} Declared */
 
 const DAY = 86400000;
 const ENTRY = [33.5, 29.5];
@@ -24,7 +23,6 @@ const sum = (rows, read) => rows.reduce((value,row) => value + read(row), 0);
  * valuation nor metrics can consume observations after that source boundary.
  * Daily source bars, not display-frequency aggregates, must be supplied.
  */
-/** @type {Declared['simulateRsiTranches']} */
 export function simulateRsiTranches(prices, options) {
   validateSeries(prices, { positive:true });
   const {start,end,capital,confirmedThrough,updatedAt=null,feeBps=5,weights=[.5,.5]} = options || {};
@@ -108,7 +106,6 @@ export function simulateRsiTranches(prices, options) {
   });
   const quantity=sum(holdings,position=>position.quantity),entryCost=sum(holdings,position=>position.entryCost);
   const state=held[0]?(held[1]?'both':'first'):(held[1]?'remaining':'flat');
-  /** @type {{side:'Buy'|'Sell',tranche:1|2,level:number}[]} */
   const next=state==='flat'?[{side:'Buy',tranche:1,level:ENTRY[0]}]
     :state==='first'?[{side:'Buy',tranche:2,level:ENTRY[1]},{side:'Sell',tranche:1,level:EXIT[0]}]
     :state==='both'?[{side:'Sell',tranche:1,level:EXIT[0]}]
