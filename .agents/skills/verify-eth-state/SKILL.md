@@ -12,22 +12,28 @@ actionable retry error. A suspended or superseded request cannot publish into th
 current chart, and refresh cannot reset navigation chosen while it was pending.
 Readiness is emitted once for each document.
 
-Covered runtime: dist/eth-view.js — initEthView, load, render, revealReady,
-schedule, changeInterval, date/price navigation callbacks, pagehide, and
-pageshow. The replay also executes the real inline boot script in dist/index.html,
+Covered runtime: dist/eth-view.js — initEthView, load, render (including its
+replay and center-tool early return, the interval viewport retarget and the
+one-shot URL range), revealReady, schedule, changeInterval, date/price
+navigation callbacks, the workbench onChange/onRestore/range actions, pagehide,
+and pageshow; undo/redo and go-to in dist/native-chart-workbench.js; the plot
+flags written by dist/chart-replay.js and dist/center-workbench.js. The replay also executes the real inline boot script in dist/index.html,
 archive parsers, and intraday controller at its actual import boundary.
 Review the history-jump availability checks in dist/ethereum-history.js and the
 post-await focusHistoricalEvent writer whenever either changes: daily coverage
 and cached daily loading establish the current abstraction's focus boundary.
 
 Baseline commit: 64c8207cb044d8990289c5a7d39972e21b74c240.
-Last code/model synchronization commit: 7261c1807028e1b69bf9cd9be0d269a64f88acc0.
-Previous skill synchronization: 1ad3be543e870e74f10708c266f19572b217d25f.
-The forecast range bound adds an argument without removing the navigation guard.
-The exact mutation selector was maintained; all 17 original/restored replays and
-nine actual-source mutations retain their required outcomes. Reviewed SHA-256:
-51202d57377b6da50f4db0d1c3e33745dfcea8b897fe269a2f5f366f82784168.
-Current receipt: docs/evolution-2026-10-26/eth-state-final.json.
+Last code/model synchronization commit: fe93a5727277d15a934b7472588fb907e30b02b8
+(2026-11-16, tree dfae0bceba83415838a1e6d4802c7754dcf608d3).
+Previous synchronization: 7261c1807028e1b69bf9cd9be0d269a64f88acc0.
+Reviewed SHA-256:
+d2839d8522632644a3cd9c7e45a39c11cfe96ca30102ab9ecc8ba001f60e3a42.
+That review added obscured and urlRange, SkipRender, Obscure/Reveal and Restore,
+and stopped BeginLoad resetting the range on an interval change, as
+tests/native-chart-viewport.test.mjs requires. Properties and bounds are
+unchanged. Model comments cite current line numbers; docs/formal-eth and
+docs/evolution-2026-10-26/eth-state-final.json still describe 7261c180.
 The new ETH future-price engine, scenario calculations and future visibility are
 outside this finite lifecycle model; their dedicated tests are separate evidence.
 See docs/formal-eth/README.md for the committed review revision, every action and
@@ -45,6 +51,9 @@ Requires Node.js and Java 11 or later. The checker pins the official TLC release
 It uses build/formal-tools/tla2tools-1.7.4.jar and downloads that pinned release
 only if missing. For an offline installation, set TLA2TOOLS to that exact jar;
 JAVA may select a Java binary. A supplied jar with a different hash fails.
+TLC 1.7.4 exits 255 with an ArithmeticException after a complete search under
+Java 25, so use Java 11 to 21. scripts/verification-process.mjs holds the
+download, hash check, 60 s process runner and TAP counts.
 
 An optional output argument writes a machine-readable receipt:
 
@@ -120,6 +129,14 @@ document. The replay injects DOM, rendering, HTTP, timers, animation frames and
 import boundaries. Neither layer proves browser pixels/timing, economic
 correctness, historical-event causation, scheduler fairness, eventual completion,
 or behavior after arbitrarily many generations.
+
+The replay fixture stubs chart replay and the workbench, so their paths are
+checked by the model only. The model's navigated flag is the code's
+navigationRevision mismatch, so a new navigation path that forgets
+++navigationRevision is caught by neither layer. ReadinessOnce counts this
+view's revealReady; dist/center-workbench.js:250 also dispatches atlas:ready, and
+every listener ignores repeats. The boot script's 20 s fail('timeout') is a
+wall-clock path outside the model.
 
 ## Recover the original local synchronization revision
 
