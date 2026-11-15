@@ -195,7 +195,6 @@
     "dist/monthly-backtest.js",
     "dist/ohlc-data.js",
     "dist/outlook-engine.js",
-    "dist/outlook-view.js",
     "dist/outlook.css",
     "dist/peak-view.js",
     "dist/peak-zones.js",
