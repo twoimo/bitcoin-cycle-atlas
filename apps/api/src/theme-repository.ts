@@ -1,6 +1,7 @@
 import type pg from 'pg';
 import { validateThemeSnapshot,validateThemeJudgment,normalizeThemeDraft,type ThemeDraft,type ThemeJudgment } from '@atlas/domain/themes';
 import { locks, revisionIdentity, sha256, withTransaction } from './db.js';
+import { ApiError } from './api-error.js';
 export const themeIdentity=revisionIdentity(validateThemeSnapshot);
 export async function publishThemes(pool:pg.Pool,input:unknown){
   const {snapshot,body,revision}=themeIdentity(input);
@@ -15,13 +16,26 @@ export async function readThemes(pool:pg.Pool,revision?:string){
 export async function readThemeReceipt(pool:pg.Pool,id:string){const r=await pool.query('SELECT * FROM theme_judgments WHERE request_id=$1',[id]);return r.rowCount?{revision:r.rows[0].revision,judgment:checkedRecord(r.rows[0])}:null;}
 export async function saveThemeJudgment(pool:pg.Pool,{requestId,revision,draft}:{requestId:string;revision:string;draft:ThemeDraft},clock=()=>new Date()){
   return withTransaction(pool,locks.themes,async c=>{
-    const r=await c.query('SELECT * FROM theme_revisions WHERE revision=$1',[revision]);if(!r.rowCount)throw new Error('THEME_NOT_FOUND');const checked=themeIdentity(JSON.parse(r.rows[0].canonical_body));if(checked.revision!==revision)throw new Error('Theme snapshot digest mismatch');
-    const asOf=clock().toISOString();if(Date.parse(checked.snapshot.generatedAt)>Date.parse(asOf))throw new Error('Future snapshot');
+    const r=await c.query('SELECT * FROM theme_revisions WHERE revision=$1',[revision]);
+    if(!r.rowCount)throw new ApiError(404,'THEME_NOT_FOUND');
+    const checked=themeIdentity(JSON.parse(r.rows[0].canonical_body));
+    if(checked.revision!==revision)throw new Error('Theme snapshot digest mismatch');
+    const asOf=clock().toISOString();
+    if(Date.parse(checked.snapshot.generatedAt)>Date.parse(asOf))throw new ApiError(422,'INVALID_JUDGMENT','Future snapshot');
     // Normalize before comparing so harmless JSON key order cannot duplicate a record.
-    const normalized=normalizeThemeDraft(draft,checked.snapshot.evidence,asOf),inputHash=sha256(JSON.stringify({revision,draft:normalized}));
+    const normalized=invalidJudgment(()=>normalizeThemeDraft(draft,checked.snapshot.evidence,asOf)),inputHash=sha256(JSON.stringify({revision,draft:normalized}));
     const old=await c.query('SELECT * FROM theme_judgments WHERE request_id=$1',[requestId]);
-    if(old.rowCount){if(old.rows[0].input_hash!==inputHash)throw new Error('IDEMPOTENCY_CONFLICT');return {created:false,revision,judgment:checkedRecord(old.rows[0])};}
-    const judgment:ThemeJudgment={id:requestId,title:normalized.title,assetId:'hype',mode:'recorded',asOf,recordedAt:asOf,criteria:normalized.criteria};validateThemeJudgment(judgment,checked.snapshot);const body=JSON.stringify(judgment);
-    await c.query('INSERT INTO theme_judgments(request_id,revision,input_hash,record_hash,canonical_body,recorded_at) VALUES ($1,$2,$3,$4,$5,$6)',[requestId,revision,inputHash,sha256(body),body,asOf]);return {created:true,revision,judgment};
+    if(old.rowCount){
+      if(old.rows[0].input_hash!==inputHash)throw new ApiError(409,'IDEMPOTENCY_CONFLICT','같은 저장 번호의 내용이 다릅니다.');
+      return {created:false,revision,judgment:checkedRecord(old.rows[0])};
+    }
+    const judgment:ThemeJudgment={id:requestId,title:normalized.title,assetId:'hype',mode:'recorded',asOf,recordedAt:asOf,criteria:normalized.criteria};
+    invalidJudgment(()=>validateThemeJudgment(judgment,checked.snapshot));
+    const body=JSON.stringify(judgment);
+    await c.query('INSERT INTO theme_judgments(request_id,revision,input_hash,record_hash,canonical_body,recorded_at) VALUES ($1,$2,$3,$4,$5,$6)',[requestId,revision,inputHash,sha256(body),body,asOf]);
+    return {created:true,revision,judgment};
   });
+}
+function invalidJudgment<T>(check:()=>T){
+  try{return check();}catch(error){throw new ApiError(422,'INVALID_JUDGMENT',error instanceof Error?error.message:String(error));}
 }

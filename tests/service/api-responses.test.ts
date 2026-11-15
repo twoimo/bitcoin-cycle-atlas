@@ -121,7 +121,7 @@ test('API error and status responses keep their exact status, cache header and b
     const tampered = structuredClone(themes); tampered.judgments[0].title = '';
     await pool.query('UPDATE theme_revisions SET canonical_body=$1 WHERE revision=$2', [JSON.stringify(tampered), themeRevision]);
     await check('themes tampered snapshot', app, { url: '/api/v1/themes' }, 503, null, json({ code: 'THEME_UNAVAILABLE', message: '테마 자료를 읽을 수 없습니다.' }));
-    await check('judgment tampered snapshot', app, judgment({}), 422, null, json({ code: 'INVALID_JUDGMENT', message: '판정 기록 형식 오류' }));
+    await check('judgment tampered snapshot', app, judgment({}), 503, null, json({ code: 'SAVE_UNAVAILABLE', message: '저장 여부를 확인하세요.' }));
 
     assert.deepEqual(actual, expected);
   } finally {
