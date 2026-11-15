@@ -1,6 +1,6 @@
 ---
-name: verify-cycle-decision
-description: Verify cycle-table provenance, displayed-period MDD, causal observed and future sideways episodes, shared cycle membership, and provisional strength guards in Bitcoin Cycle Atlas. Use when changing cycle-decision.js, chart-point or period contracts, sideways criteria, future bounds, or the verification script.
+name: "verify-cycle-decision"
+description: "Verify cycle-table provenance, displayed-period MDD, causal observed and future sideways episodes, shared cycle membership, and provisional strength guards in Bitcoin Cycle Atlas. Use when changing cycle-decision.js, chart-point or period contracts, sideways criteria, future bounds, or the verification script."
 ---
 
 # Verify cycle decision boundaries
@@ -11,7 +11,9 @@ Keep the promise: **the table never turns future assumptions into realized resul
 
 - Covered code: `dist/cycle-decision.js`, specifically `buildCycleDecisionTable`, `makeRow`, `observedRisk`, `checkpointAction`, `currentObservation`, `sidewaysRuns`, and `rangeRow`.
 - Integration contract: chart marker IDs, endpoint prices and cutoff must match the supplied selected `buildCycleMilestones` result and forecast.
-- Reviewed committed implementation: `8039187b6e2505f306f16b7baf52ccf99e574e39` on 2026-10-25, verified again after fetching the published commit with `npm run verify:cycle-table`. Covered module SHA-256: `7dad7868a73f43aaea1ca656bf9223a7a4fdabe1d88da75b6d2b59be12ebb0a9`. Reviewed runtime: Node `v24.22.1`. The runner prints the current hash; a different hash requires correspondence review before advancing this record.
+- Reviewed committed implementation: `fe93a5727277d15a934b7472588fb907e30b02b8` on 2026-11-16, checked with `npm run verify:cycle-table`. Covered module SHA-256: `2ca34a30c608631cccb9ad0b8b5c17bbaf4cafe6e58b35ff2a44d09a9b2aadea`. Reviewed runtime: Node `v26.13.0`. The runner prints the current hash; a different hash requires correspondence review before advancing this record.
+- Previous record: `8039187b6e2505f306f16b7baf52ccf99e574e39` on 2026-10-25, SHA-256 `7dad7868a73f43aaea1ca656bf9223a7a4fdabe1d88da75b6d2b59be12ebb0a9`, Node `v24.22.1`. The only change to the covered module since then is the `cycle-engine.js` import query, `?v=1.19.0` to `?v=1.29.0`. `dist/cycle-engine.js` is unchanged, and the runner resolves that import to the same file.
+- No shipped module imports `buildCycleDecisionTable` at this record. Only `tests/cycle-decision.test.mjs`, this runner and `scripts/verify-cycle-table-integration.mjs` call it. A pass describes the retained module, not a current screen. Recheck the integration contract when a view imports it again.
 - Verification: `scripts/verify-cycle-decision.mjs`. Detailed bounds and findings: `docs/CYCLE_TABLE_VERIFICATION.md`. The state diagram in `docs/formal-cycle-table/provenance.mmd` documents actual classification branches; it is not a TLA+ proof.
 
 ## Run
@@ -38,7 +40,7 @@ The runner mutates a memory copy of the source one change at a time and imports 
 6. Preserve the independent oracles. Never replace ordered-pair or calendar-grid enumeration with the production algorithm or make expected values by reading the result being checked.
 7. Run the command and inspect every named mutation result. A stale selector, import failure, unrelated failure, or unexecuted test is BLOCKED rather than passed. If an intended source change moves a guard, update the mutation to break that real guard and require its specific expected assertion again.
 8. Reproduce a new counterexample through `buildCycleDecisionTable`. Correct the product or the mistaken correspondence; do not weaken the invariant to make the result green. Confirm that the final unchanged production rerun passes after all controls.
-9. Move the synchronization commit and source hash forward only after verifying the committed code, rerunning the checks, and confirming the state diagram still describes the branches. Validate this skill with the skill-creator `quick_validate.py` after editing it and persist the project skill with its repository commit.
+9. Move the synchronization commit and source hash forward only after verifying the committed code, rerunning the checks, and confirming the state diagram still describes the branches. Validate this skill with the current host's installed skill-creator validator after editing it (Aside: `node /Users/twoimo/.aside/u/0/skills/builtin/skill-creator/scripts/validate-frontmatter.mjs .agents/skills/verify-cycle-decision/SKILL.md`). `quick_validate.py` needs PyYAML and does not run where that module is missing. Persist the project skill with its repository commit.
 
 ## Report
 
