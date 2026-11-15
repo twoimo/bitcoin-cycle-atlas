@@ -3,8 +3,6 @@ import { chmod, mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/pro
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Readers never see a partial file: the bytes land in a sibling temporary file
-// that replaces the target in one rename. An existing target keeps its mode.
 export async function writeFileAtomic(file, data) {
   const target = typeof file === 'string' ? file : fileURLToPath(file);
   let mode = null;
@@ -19,7 +17,6 @@ export async function writeFileAtomic(file, data) {
   } finally { await rm(temporary, { force: true }); }
 }
 
-// A check never writes; it fails with `stale` unless the bytes already match.
 export async function writeOrCheckFile(file, data, { check, stale }) {
   if (!check) return writeFileAtomic(file, data);
   if (!(await readFile(file)).equals(Buffer.from(data))) throw new Error(stale);

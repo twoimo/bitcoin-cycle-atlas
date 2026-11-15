@@ -11,8 +11,6 @@ export const TLC_SHA256 = '936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b2
 export const TLC_JAR = process.env.TLA2TOOLS || path.join(root, 'build/formal-tools/tla2tools-1.7.4.jar');
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 
-// The download is checked in memory and renamed into place, so an interrupted
-// run cannot leave a truncated jar that every later run rejects.
 export async function prepareTlc() {
   let bytes;
   try { bytes = await readFile(TLC_JAR); }
