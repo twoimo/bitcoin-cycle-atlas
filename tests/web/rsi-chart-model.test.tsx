@@ -69,7 +69,7 @@ test('narrow full-history zoom is reversible through reconstructed React viewpor
 });
 
 test('OHLC enrichment rejects a wrong provider identity or exchange clock and omits mismatches and unfinished days',()=>{
-  const market={id:'tqqq',symbol:'TQQQ',name:'TQQQ',region:'us' as const,unit:'USD',sourceId:'tqqq',timezone:'America/New_York',prices:[['2025-01-06',10],['2025-01-07',12],['2025-01-08',13]] as Point[]};
+  const market={id:'tqqq' as const,symbol:'TQQQ',name:'TQQQ',region:'us' as const,unit:'USD',sourceId:'tqqq',timezone:'America/New_York',prices:[['2025-01-06',10],['2025-01-07',12],['2025-01-08',13]] as Point[]};
   const payload={chart:{result:[{meta:{symbol:'TQQQ',currency:'USD',dataGranularity:'1d',exchangeTimezoneName:'America/New_York'},timestamp:['2025-01-06T21:00:00Z','2025-01-07T21:00:00Z','2025-01-08T21:00:00Z'].map(t=>Date.parse(t)/1000),indicators:{quote:[{open:[9,10,12],high:[11,14,15],low:[8,9,10],close:[10,12.01,13],volume:[100,null,300]}]}}],error:null}};
   assert.deepEqual(yahooRsiBars(payload,market,{now:new Date('2025-01-08T23:00:00Z')}),{bars:[['2025-01-06',9,11,8,10,100]],omitted:['2025-01-07'],timezone:'America/New_York'});
   for(const patch of [{symbol:'SOXL'},{currency:'KRW'},{dataGranularity:'1h'},{exchangeTimezoneName:'Asia/Seoul'},{exchangeTimezoneName:''}]){
