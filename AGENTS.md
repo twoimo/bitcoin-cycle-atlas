@@ -38,6 +38,7 @@ Each rule below fixes a mistake agents have repeated here. When a check fails, i
 | Rule | Enforced by |
 | --- | --- |
 | Adding, renaming or deleting a top-level `dist/*.{js,css,html}` file, or a stylesheet linked from `dist/index.html`, updates `seedPaths` in `research-data/eth-review-scope.json` in the same change. | `scripts/eth-review-inventory.mjs`, run by `npm run verify:static` and `tests/eth-review-packet.test.mjs` |
+| A file that an issued ETH prospective record or `dist/data/forecast-ledger/experiments.json` pins keeps its exact bytes, even for an unused export. Put new behavior in a module outside the pinned graph. | `scripts/recorded-source-pins.mjs`, run by `npm run verify:static` and `tests/recorded-source-pins.test.mjs` |
 
 ## Architecture
 
