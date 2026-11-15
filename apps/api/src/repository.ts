@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import type pg from 'pg';
 import { validateSnapshot } from '@atlas/domain/market-lab';
 import type { MarketSnapshot } from '@atlas/contracts/market-lab';
-import { locks } from './db.js';
+import { locks, withTransaction } from './db.js';
 
 export function snapshotIdentity(input: unknown) {
   const snapshot = validateSnapshot(input) as MarketSnapshot;
@@ -13,11 +13,7 @@ export function snapshotIdentity(input: unknown) {
 export async function publishSnapshot(pool: pg.Pool, input: unknown, expectedRevision?: string, onAccepted?: (client: pg.PoolClient, revision: string) => Promise<void>, signal?: AbortSignal) {
   signal?.throwIfAborted();
   const { snapshot, body, revision } = snapshotIdentity(input);
-  const client = await pool.connect();
-  try {
-    signal?.throwIfAborted();
-    await client.query('BEGIN');
-    await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [locks.marketLab]);
+  return withTransaction(pool, locks.marketLab, async client => {
     const current = await client.query('SELECT r.revision,r.generated_at FROM market_lab_publications p JOIN market_lab_revisions r USING (revision) WHERE p.channel=$1', ['market-lab']);
     if (expectedRevision !== undefined && current.rows[0]?.revision !== expectedRevision) throw new Error('SNAPSHOT_CHANGED: publication changed during collection');
     const generated = Date.parse(snapshot.generatedAt);
@@ -52,13 +48,8 @@ export async function publishSnapshot(pool: pg.Pool, input: unknown, expectedRev
       if (!published) throw new Error('Publication overtaken; acceptance callback not run');
       await onAccepted(client, revision);
     }
-    signal?.throwIfAborted();
-    await client.query('COMMIT');
     return { revision, inserted: Boolean(inserted.rowCount), published };
-  } catch (error) {
-    await client.query('ROLLBACK');
-    throw error;
-  } finally { client.release(); }
+  }, signal);
 }
 
 export async function readSnapshot(pool: pg.Pool, revision?: string) {

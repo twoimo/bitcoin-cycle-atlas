@@ -21,6 +21,24 @@ export function createPool(connectionString: string) {
   return pool;
 }
 
+export async function withTransaction<T>(pool: pg.Pool, lock: string, work: (client: pg.PoolClient) => Promise<T>, signal?: AbortSignal): Promise<T> {
+  const client = await pool.connect();
+  let broken: Error | undefined;
+  try {
+    signal?.throwIfAborted();
+    await client.query('BEGIN');
+    await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [lock]);
+    const result = await work(client);
+    signal?.throwIfAborted();
+    await client.query('COMMIT');
+    return result;
+  } catch (error) {
+    // A client whose ROLLBACK failed may still hold the transaction and its lock.
+    await client.query('ROLLBACK').catch((rollback: Error) => { broken = rollback; });
+    throw error;
+  } finally { client.release(broken); }
+}
+
 const migrations = {
   '001_market_lab': { lock: locks.marketLab, mismatch: 'Applied migration checksum changed' },
   '002_housing': { lock: locks.housing, mismatch: 'Applied housing migration checksum changed' },
@@ -34,10 +52,7 @@ export async function migrate(pool: pg.Pool, names: readonly Migration[] = allMi
   for (const name of names) {
     const { lock, mismatch } = migrations[name];
     const sql = await readFile(new URL(`../../../db/migrations/${name}.sql`, import.meta.url), 'utf8'), checksum = sha256(sql);
-    const client = await pool.connect();
-    try {
-      await client.query('BEGIN');
-      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [lock]);
+    await withTransaction(pool, lock, async client => {
       await client.query('CREATE TABLE IF NOT EXISTS atlas_schema_migrations (name text PRIMARY KEY, sha256 text NOT NULL, applied_at timestamptz NOT NULL DEFAULT clock_timestamp())');
       const applied = await client.query<{ sha256: string }>('SELECT sha256 FROM atlas_schema_migrations WHERE name=$1', [name]);
       if (applied.rowCount && applied.rows[0].sha256 !== checksum) throw new Error(mismatch);
@@ -45,10 +60,6 @@ export async function migrate(pool: pg.Pool, names: readonly Migration[] = allMi
         await client.query(sql);
         await client.query('INSERT INTO atlas_schema_migrations (name,sha256) VALUES ($1,$2)', [name, checksum]);
       }
-      await client.query('COMMIT');
-    } catch (error) {
-      await client.query('ROLLBACK');
-      throw error;
-    } finally { client.release(); }
+    });
   }
 }
