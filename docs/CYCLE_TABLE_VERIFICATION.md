@@ -4,7 +4,7 @@
 
 `node scripts/verify-cycle-decision.mjs`는 **실제 JavaScript 공개 함수**에 유한한 입력 집합을 넣고 독립 계산과 비교한다. 현재 구현은 PASS이며 **27개 의도적 결함**을 각각 예정된 실패로 탐지했다. 기존 9개 결함 검사를 보존하고 횡보 기간·미래 경계·공유 사이클 소속에 관한 18개 검사를 추가했다. 이 검증은 시장 예측, 수익성, 고점·저점 적중률 또는 무한한 입력 영역에 대한 수학적 증명이 아니다.
 
-구현과 검증의 대응 검토 커밋은 `8039187b6e2505f306f16b7baf52ccf99e574e39`이다. GitHub에 게시한 이 커밋을 다시 받아 `npm run verify:cycle-table`을 실행해 PASS를 확인했다. 검토한 `dist/cycle-decision.js`의 SHA-256은 `7dad7868a73f43aaea1ca656bf9223a7a4fdabe1d88da75b6d2b59be12ebb0a9`이며 실행 환경은 Node `v24.22.1`이다. 현재 소스의 정확한 SHA-256과 사용한 Node 버전은 매 실행 결과에 출력한다. 프로젝트의 `verify-cycle-decision` 스킬도 같은 대응 검토 커밋과 해시를 기록한다.
+구현과 검증의 대응 검토 커밋은 `fe93a5727277d15a934b7472588fb907e30b02b8`(2026-11-16)이다. 이 커밋에서 `npm run verify:cycle-table`을 실행해 PASS를 확인했다. 검토한 `dist/cycle-decision.js`의 SHA-256은 `2ca34a30c608631cccb9ad0b8b5c17bbaf4cafe6e58b35ff2a44d09a9b2aadea`이며 실행 환경은 Node `v26.13.0`이다. 이전 기록은 `8039187b6e2505f306f16b7baf52ccf99e574e39`(SHA-256 `7dad7868a73f43aaea1ca656bf9223a7a4fdabe1d88da75b6d2b59be12ebb0a9`, Node `v24.22.1`)이다. 그 뒤 이 모듈에서 바뀐 것은 `cycle-engine.js` import의 캐시 쿼리(`?v=1.19.0` → `?v=1.29.0`)뿐이고 `dist/cycle-engine.js`는 그대로다. 현재 배포 화면 중 `buildCycleDecisionTable`을 불러오는 모듈은 없으므로, 이 PASS는 보존된 모듈에 대한 결과다. 현재 소스의 정확한 SHA-256과 사용한 Node 버전은 매 실행 결과에 출력한다. 프로젝트의 `verify-cycle-decision` 스킬도 같은 대응 검토 커밋과 해시를 기록한다.
 
 ## 중요한 발견과 수정
 
