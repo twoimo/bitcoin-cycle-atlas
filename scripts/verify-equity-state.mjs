@@ -1,17 +1,14 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { spawnSync } from 'node:child_process';
 import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { isBuiltin } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { verificationProcessResult } from './verification-process.mjs';
+import { prepareTlc, runVerification, TLC_JAR, TLC_SHA256 } from './verification-process.mjs';
 import { javascriptModuleSpecifiers } from './module-references.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const jarSha256 = '936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88';
-const jar = process.env.TLA2TOOLS || path.join(root, 'build/formal-tools/tla2tools-1.7.4.jar');
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 
 const implementationEntries = ['dist/equity-view.js', 'dist/equity-market-data.js', 'dist/treasury-instruments.js', 'dist/cycle-engine.js', 'dist/chart-view-policy.js', 'dist/ohlc-data.js', 'dist/price-axis.js', 'dist/index.html', 'tests/equity-load-ownership.test.mjs', 'tests/helpers/equity-view-fixture.mjs'];
@@ -40,25 +37,6 @@ export async function copyEquityFixtureDependencies(copy, { sourceRoot = root, e
   return [...files].sort();
 }
 
-async function prepareTool() {
-  let bytes;
-  try { bytes = await readFile(jar); }
-  catch (error) {
-    if (error.code !== 'ENOENT' || process.env.TLA2TOOLS) throw error;
-    const response = await fetch('https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar', { signal: AbortSignal.timeout(60000) });
-    if (!response.ok) throw new Error(`TLC download HTTP ${response.status}`);
-    bytes = Buffer.from(await response.arrayBuffer());
-    assert.equal(hash(bytes), jarSha256, 'Unexpected TLC download checksum');
-    await mkdir(path.dirname(jar), { recursive: true }); await writeFile(jar, bytes);
-  }
-  assert.equal(hash(bytes), jarSha256, 'Use the pinned TLC 1.7.4 jar');
-}
-
-function run(command, args, cwd = root, expectedStatus = 0) {
-  const result = spawnSync(command, args, { cwd, encoding: 'utf8', timeout: 60000, maxBuffer: 16 * 1024 * 1024 });
-  return verificationProcessResult(result, { command, expectedStatus });
-}
-
 const variants = [
   { id: 'current', values: {}, invariant: null },
   { id: 'original-boot-order', values: { BootOnRender: false, RespectSuspension: false }, invariant: 'UsableRenderReleasesBoot' },
@@ -80,7 +58,7 @@ async function models(work) {
     if (variant.invariant) value = value.replace(/^INVARIANTS .*$/m, `INVARIANT ${variant.invariant}`);
     const file = path.join(root, 'verification/equity-state', variant.id === 'current' ? 'EquityLoad.cfg' : `${variant.id}.cfg`);
     assert.equal(await readFile(file, 'utf8'), value, `Reviewed configuration drift: ${variant.id}`);
-    const result = run(process.env.JAVA || 'java', ['-XX:+UseParallelGC', '-cp', jar, 'tlc2.TLC', '-workers', '1', '-seed', '1', '-fp', '0', '-metadir', path.join(work, variant.id), '-config', file, model], root, variant.invariant ? 12 : 0);
+    const result = runVerification(process.env.JAVA || 'java', ['-XX:+UseParallelGC', '-cp', TLC_JAR, 'tlc2.TLC', '-workers', '1', '-seed', '1', '-fp', '0', '-metadir', path.join(work, variant.id), '-config', file, model], { expectedStatus: variant.invariant ? 12 : 0 });
     if (variant.invariant) {
       assert.equal(result.status, 12, `${variant.id} must finish with the invariant-violation exit status`);
       assert.ok(result.output.includes(`Invariant ${variant.invariant} is violated`), result.output);
@@ -101,7 +79,7 @@ async function models(work) {
 }
 
 async function implementation(work) {
-  const original = run(process.execPath, ['tests/equity-load-ownership.test.mjs']);
+  const original = runVerification(process.execPath, ['tests/equity-load-ownership.test.mjs']);
   assert.equal(original.status, 0, original.output);
   assert.match(original.output, /tests 28/);
   console.log(original.output.trim());
@@ -109,7 +87,7 @@ async function implementation(work) {
   // Follow real module dependencies, including shared UI helpers added to the
   // initializer fixture. A pristine isolated run must pass before mutations.
   const fixtureModules = await copyEquityFixtureDependencies(copy);
-  const pristine = run(process.execPath, ['tests/equity-load-ownership.test.mjs'], copy);
+  const pristine = runVerification(process.execPath, ['tests/equity-load-ownership.test.mjs'], { cwd: copy });
   assert.equal(pristine.status, 0, pristine.output);
   assert.match(pristine.output, /tests 28/);
   const viewFile = path.join(copy, 'dist/equity-view.js'), source = await readFile(viewFile, 'utf8');
@@ -148,25 +126,25 @@ async function implementation(work) {
   for (const change of changes) {
     assert.equal(source.split(change.from).length, 2, `Review model/code correspondence and mutation selector: ${change.id}`);
     await writeFile(viewFile, source.replace(change.from, change.to));
-    const result = run(process.execPath, ['tests/equity-load-ownership.test.mjs'], copy, 1);
+    const result = runVerification(process.execPath, ['tests/equity-load-ownership.test.mjs'], { cwd: copy, expectedStatus: 1 });
     assert.equal(result.status, 1, `${change.id} must finish with an assertion failure`);
     assert.match(result.output, change.failure, `Mutation failed for an unrelated reason: ${change.id}\n${result.output}`);
     mutations[change.id] = 'expected assertion failure';
     mutationExitStatuses[change.id] = result.status;
   }
   await writeFile(viewFile, source);
-  const restored = run(process.execPath, ['tests/equity-load-ownership.test.mjs'], copy);
+  const restored = runVerification(process.execPath, ['tests/equity-load-ownership.test.mjs'], { cwd: copy });
   assert.equal(restored.status, 0, restored.output);
   return { tests: 28, original: 'pass', isolated: 'pass', restored: 'pass', fixtureModules, sourceSha256: hash(source), mutations, mutationExitStatuses };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-await prepareTool();
+await prepareTlc();
 const work = await mkdtemp(path.join(tmpdir(), 'atlas-equity-proof-'));
 try {
   const model = await models(work), replay = await implementation(work);
   const report = {
-    tool: { name: 'TLC', release: '1.7.4', jarSha256 },
+    tool: { name: 'TLC', release: '1.7.4', jarSha256: TLC_SHA256 },
     bounds: { requestGenerations: 3, intervals: ['daily', 'weekly'], rangeChoices: ['auto', 'custom'] },
     model, implementation: replay,
     limitations: ['Finite request-state model, not an unbounded proof', 'UI replay injects import, HTTP, animation-frame and DOM boundaries', 'No economic accuracy, visual pixels, browser timing or liveness proof'],

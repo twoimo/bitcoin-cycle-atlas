@@ -1,41 +1,16 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { spawnSync } from 'node:child_process';
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { verificationProcessResult } from './verification-process.mjs';
+import { prepareTlc, runVerification, TLC_JAR, TLC_SHA256 } from './verification-process.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const baselineCommit = '64c8207cb044d8990289c5a7d39972e21b74c240';
-const jarSha256 = '936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88';
-const jar = process.env.TLA2TOOLS || path.join(root, 'build/formal-tools/tla2tools-1.7.4.jar');
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const invariants = ['TypeOK', 'ReadyHasUsableView', 'NoHiddenPublication', 'NoStalePublication', 'NavigationSurvivesRefresh', 'ReadinessOnce'];
 const failuresBeforeFix = new Set(['ReadyHasUsableView', 'NoHiddenPublication', 'NavigationSurvivesRefresh']);
-
-async function prepareTool() {
-  let bytes;
-  try { bytes = await readFile(jar); }
-  catch (error) {
-    if (error.code !== 'ENOENT' || process.env.TLA2TOOLS) throw error;
-    const response = await fetch('https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar', { signal: AbortSignal.timeout(60000) });
-    if (!response.ok) throw new Error('TLC download HTTP ' + response.status);
-    bytes = Buffer.from(await response.arrayBuffer());
-    assert.equal(hash(bytes), jarSha256, 'Unexpected TLC download checksum');
-    await mkdir(path.dirname(jar), { recursive: true }); await writeFile(jar, bytes);
-  }
-  assert.equal(hash(bytes), jarSha256, 'Use the pinned TLC 1.7.4 jar');
-}
-
-function run(command, args, env = {}, expectedStatus = 0) {
-  const result = spawnSync(command, args, {
-    cwd: root, env: { ...process.env, ...env }, encoding: 'utf8',
-    timeout: 60000, maxBuffer: 16 * 1024 * 1024,
-  });
-  return verificationProcessResult(result, { command, expectedStatus });
-}
 
 async function models(work) {
   await mkdir(path.join(work, 'configs'));
@@ -63,7 +38,7 @@ async function models(work) {
       const file = path.join(work, 'configs', id.replaceAll('/', '-') + '.cfg');
       await writeFile(file, invariant ? reviewed.replace(/^INVARIANTS .*$/m, 'INVARIANT ' + invariant) : reviewed);
       const expectedFailure = variant.id === 'baseline' ? failuresBeforeFix.has(invariant) : variant.id !== 'current';
-      const result = run(process.env.JAVA || 'java', ['-XX:+UseParallelGC', '-Xmx1g', '-cp', jar, 'tlc2.TLC', '-workers', '1', '-seed', '1', '-fp', '0', '-metadir', path.join(work, 'states', id.replaceAll('/', '-')), '-config', file, source], {}, expectedFailure ? 12 : 0);
+      const result = runVerification(process.env.JAVA || 'java', ['-XX:+UseParallelGC', '-Xmx1g', '-cp', TLC_JAR, 'tlc2.TLC', '-workers', '1', '-seed', '1', '-fp', '0', '-metadir', path.join(work, 'states', id.replaceAll('/', '-')), '-config', file, source], { expectedStatus: expectedFailure ? 12 : 0 });
       if (expectedFailure) {
         assert.equal(result.status, 12, id + ' must finish with the invariant-violation exit status');
         assert.ok(result.output.includes('Invariant ' + invariant + ' is violated'), result.output);
@@ -112,7 +87,7 @@ function assertTestRun(result, { mutation = false } = {}) {
 async function implementation(work) {
   const test = 'tests/eth-load-ownership.test.mjs';
   const testArgs = ['--test-reporter=tap', test];
-  const original = run(process.execPath, testArgs, { ETH_VIEW_SOURCE: path.join(root, 'dist/eth-view.js') });
+  const original = runVerification(process.execPath, testArgs, { env: { ETH_VIEW_SOURCE: path.join(root, 'dist/eth-view.js') } });
   const originalCounts = assertTestRun(original);
   console.log(original.output.trim());
   const source = await readFile(path.join(root, 'dist/eth-view.js'), 'utf8');
@@ -166,7 +141,7 @@ async function implementation(work) {
     for (const change of changes) {
       assert.equal(source.split(change.from).length, 2, 'Review model/code correspondence and mutation selector: ' + change.id);
       await writeFile(temporary, source.replace(change.from, change.to));
-      const result = run(process.execPath, testArgs, { ETH_VIEW_SOURCE: temporary }, 1);
+      const result = runVerification(process.execPath, testArgs, { env: { ETH_VIEW_SOURCE: temporary }, expectedStatus: 1 });
       assert.equal(result.status, 1, change.id + ' must finish with an assertion failure');
       assert.match(result.output, change.failure, 'Mutation failed for an unrelated reason: ' + change.id + '\n' + result.output);
       assertTestRun(result, { mutation: true });
@@ -177,17 +152,17 @@ async function implementation(work) {
     // Never alter the working runtime; restore and exercise the scratch copy too.
     await writeFile(temporary, source);
   }
-  const restored = run(process.execPath, testArgs, { ETH_VIEW_SOURCE: temporary });
+  const restored = runVerification(process.execPath, testArgs, { env: { ETH_VIEW_SOURCE: temporary } });
   const restoredCounts = assertTestRun(restored);
   return { tests: 17, original: 'pass', restored: 'pass', originalCounts, restoredCounts, sourceSha256: hash(source), mutations, mutationExitStatuses };
 }
 
-await prepareTool();
+await prepareTlc();
 const work = await mkdtemp(path.join(tmpdir(), 'atlas-eth-proof-'));
 try {
   const model = await models(work), replay = await implementation(work);
   const report = {
-    baselineCommit, tool: { name: 'TLC', release: '1.7.4', jarSha256 },
+    baselineCommit, tool: { name: 'TLC', release: '1.7.4', jarSha256: TLC_SHA256 },
     bounds: { requestGenerations: 3, intervals: ['daily', 'weekly'], rangeChoices: ['auto', 'custom'] },
     model, implementation: replay,
     limitations: [
