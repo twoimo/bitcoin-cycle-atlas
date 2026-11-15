@@ -1,0 +1,9 @@
+Funnest Charts
+Copyright 2026 Funnest
+
+This product includes software developed by the Funnest Charts project.
+
+Trademarks: "Funnest", "Funnest Charts" and the Funnest logos (the brand/ directory and
+the logo marks in the code) are trademarks of Funnest. The Apache License 2.0 covers the
+code only and grants no rights to these names or logos (Section 6). Forks and
+redistributions must not use them to identify their own products.

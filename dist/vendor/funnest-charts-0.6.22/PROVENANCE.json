@@ -1,0 +1,51 @@
+{
+  "version": "0.6.22",
+  "upstreamSnapshot": "e23919055dfca8d3051f4fc2946356269ab8372b",
+  "repository": "https://github.com/funnest-xyz/funnest-charts/tree/e23919055dfca8d3051f4fc2946356269ab8372b",
+  "source": "src/charts/funnest-chart-runtime.js",
+  "sourceSha256": "d6e2c81fe41e03cf89168d92de9f11240685652a04ddef76b545698b9ecb1897",
+  "entries": [
+    {
+      "source": "src/charts/funnest-chart-runtime.js",
+      "sourceSha256": "d6e2c81fe41e03cf89168d92de9f11240685652a04ddef76b545698b9ecb1897",
+      "bundle": "dist/funnest-chart-runtime.bundle.js",
+      "bundleSha256": "820bec279456dd148da45ff1d324fcd08d45c50c85f934050e82c9016f0fc290"
+    },
+    {
+      "source": "src/charts/funnest-research-primitives.js",
+      "sourceSha256": "a6b34bfe529d6e02fa9f3f8dd77e7636343f272e5a56e24c82cbe6958471ff48",
+      "bundle": "dist/funnest-research-primitives.bundle.js",
+      "bundleSha256": "049bad34b5e65a344dc86535ff6bce2f8eedae0348fb1969d3a76e92a6f69777"
+    }
+  ],
+  "packages": [
+    {
+      "name": "@funnest/charts",
+      "version": "0.6.22",
+      "license": "Apache-2.0",
+      "npmTarball": "https://registry.npmjs.org/@funnest/charts/-/charts-0.6.22.tgz",
+      "integrity": "sha512-8M2wdF3QaAGZtfmYjv2F/0Ye26YA/Qi1C2kiHqkR3J9G9VJxb0SMBhyKw2K3TqEC3AEd5XbASOXPpMslhoweVA=="
+    },
+    {
+      "name": "@funnest/charts-react",
+      "version": "0.6.22",
+      "license": "Apache-2.0",
+      "npmTarball": "https://registry.npmjs.org/@funnest/charts-react/-/charts-react-0.6.22.tgz",
+      "integrity": "sha512-YzwTv8KsxmJ+XMnwXokkct/0xHsdXxWbNlefSFyvNMT3I+o9kVYa3CQS+Kd21hI6GDhiy29xoivHizBRSYdFlQ=="
+    },
+    {
+      "name": "@funnest/charts-ui",
+      "version": "0.6.22",
+      "license": "Apache-2.0",
+      "npmTarball": "https://registry.npmjs.org/@funnest/charts-ui/-/charts-ui-0.6.22.tgz",
+      "integrity": "sha512-vPlzoZ7BMQTLBimogqEE9ybIO2Lb09TP/W/NYYpNkdi90SmeNTesZszOBF6O73cjAGlRtj8gm4Eo1QDiVs8XSQ=="
+    },
+    {
+      "name": "@funnest/charts-viz",
+      "version": "0.6.22",
+      "license": "Apache-2.0",
+      "npmTarball": "https://registry.npmjs.org/@funnest/charts-viz/-/charts-viz-0.6.22.tgz",
+      "integrity": "sha512-fsFkC/c2oZOFgltXi3n9z/iV/bI6QNZDQ7eWo0K4PNFGtAuOa8W8YLxjQ2NfGIzrysBLvFgvPYHraN1nxyR21Q=="
+    }
+  ]
+}

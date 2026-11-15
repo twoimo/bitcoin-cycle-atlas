@@ -8,6 +8,7 @@ import {atlasPages} from '../dist/atlas-navigation.js';
 const root=fileURLToPath(new URL('../',import.meta.url)),check=process.argv.includes('--check');
 assert(process.argv.length===2||process.argv.length===3&&check,'Usage: node scripts/build-pages.mjs [--check]');
 const dist=path.join(root,'dist'),web=path.join(root,'build/pages-web'),base='/bitcoin-cycle-atlas/';
+execFileSync(process.execPath,[path.join(root,'scripts/build-funnest-chart-runtime.mjs'),...(check?['--check']:[])],{cwd:root,stdio:'inherit'});
 execFileSync(process.execPath,[path.join(root,'node_modules/vite/bin/vite.js'),'build','--config',path.join(root,'apps/web/vite.config.ts'),'--base','./','--outDir',web],{cwd:root,stdio:'inherit'});
 const expected=new Map();
 async function collect(dir,prefix=''){
