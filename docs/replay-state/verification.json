@@ -11,9 +11,9 @@
   "testSha256": "1ae620d55fd750fbc951b0980f8eed58a2a64cf4eb2a83dc9b74626601badabc",
   "method": "Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, manual-date rejection, destroy-during-save cases and isolated real-source negative controls",
   "coordinatorPath": "dist/chart-replay.js",
-  "coordinatorSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+  "coordinatorSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
   "coordinatorTestPath": "tests/chart-replay-ui.test.mjs",
-  "coordinatorTestSha256": "ac3c33a79079df41530b17ae620bd488ce4152c4241a10678c857a5e42396e5b",
+  "coordinatorTestSha256": "cfe6e6644c9ee3d2c5df366c73a1904b6055180e048490b84a3fbd8404f976cc",
   "snapshotPath": "dist/chart-replay-snapshot.js",
   "snapshotSha256": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6",
   "bounds": {
@@ -164,7 +164,7 @@
       "transitions": 726,
       "observableStates": 24,
       "observableEdges": 78,
-      "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+      "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
       "scope": "Actual coordinator and controller with deterministic DOM, source, forecast and renderer doubles; exhaustive bounded traces without state merging"
     },
     "mutations": {
@@ -180,7 +180,7 @@
         "transitions": 0,
         "observableStates": 1,
         "observableEdges": 0,
-        "sourceSha256": "453412733682df82eba0f302ea9e437a71ef943eccfe7a75d04b1f1ab251f422"
+        "sourceSha256": "4e837f161c8a71475989248039d451bb1117c747f0298f56ed390fb0623ec70e"
       },
       "horizon-settings-confirm-start": {
         "status": "fail",
@@ -194,7 +194,7 @@
         "transitions": 2,
         "observableStates": 2,
         "observableEdges": 2,
-        "sourceSha256": "9965ef42b4cbb73a7edfd8aad5f7da8ec0d6a864e668e0976e2e20dee0ace0c4"
+        "sourceSha256": "0bdb124b120dfe401d383e61bfe6f33453559b44bf4afc523e49ac5a79da901b"
       }
     },
     "restored": {
@@ -212,7 +212,7 @@
       "transitions": 726,
       "observableStates": 24,
       "observableEdges": 78,
-      "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+      "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
       "scope": "Actual coordinator and controller with deterministic DOM, source, forecast and renderer doubles; exhaustive bounded traces without state merging"
     }
   },
@@ -221,13 +221,13 @@
       {
         "status": "pass",
         "name": "default cutoff entry preserves current-chart save and Continue across mode changes",
-        "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+        "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
         "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
       },
       {
         "status": "pass",
         "name": "saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories",
-        "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+        "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
         "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
       }
     ],
@@ -237,27 +237,27 @@
         "name": "default cutoff entry preserves current-chart save and Continue across mode changes",
         "assertion": "the last selected current-chart mode must find its own saved slot",
         "exitStatus": 1,
-        "sourceSha256": "e5f6aa2096a2aa4389499f572a60d5cf2e65779af3dd5ae431031d3ecb7ec1b5"
+        "sourceSha256": "89f77a5e88f3c78af3e9dc5a20cd0428b64e256604142258237723a158e21cdb"
       },
       "entry-accepts-cross-mode-storage": {
         "status": "expected behavioral failure",
         "name": "saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories",
         "assertion": "invalid or cross-mode records must not borrow another slot",
         "exitStatus": 1,
-        "sourceSha256": "f23e3d84de8ac51776dcd78a6366aed6900b9318e79ad8a4c4ea2547fce3bf82"
+        "sourceSha256": "bfa206f91b76e44454a9c6183d506e6f34715bfc3922337a3b05c9172f392d4d"
       }
     },
     "restored": [
       {
         "status": "pass",
         "name": "default cutoff entry preserves current-chart save and Continue across mode changes",
-        "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+        "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
         "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
       },
       {
         "status": "pass",
         "name": "saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories",
-        "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+        "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
         "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
       }
     ]
@@ -266,7 +266,7 @@
     "original": {
       "status": "pass",
       "name": "destroy during an explicit save releases replay once and ignores late completion",
-      "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+      "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
       "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
     },
     "mutations": {
@@ -275,20 +275,20 @@
         "name": "destroy during an explicit save releases replay once and ignores late completion",
         "assertion": "destroy must release replay even while an explicit save is pending",
         "exitStatus": 1,
-        "sourceSha256": "27e4f804466ece56eea9a5cdb42ebfbbf64002c8bed332c845e2c634148eb87d"
+        "sourceSha256": "352b118d3550b5d933f6819ff6fe4e78e1854733271d34e574cf60a91a2db73b"
       },
       "late-exit-completion-updates-destroyed-controls": {
         "status": "expected behavioral failure",
         "name": "destroy during an explicit save releases replay once and ignores late completion",
         "assertion": "destroyed save completion cannot update detached controls",
         "exitStatus": 1,
-        "sourceSha256": "d55a2fbf1f1c33a3532b777a3218c05aa681bf42ffb3b895bb26ee324fd75e48"
+        "sourceSha256": "8542afbfa28fdb9e3ce6d4763b90b8b67033d5bbfb8c0b2f72e98a8e0905b0e4"
       }
     },
     "restored": {
       "status": "pass",
       "name": "destroy during an explicit save releases replay once and ignores late completion",
-      "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+      "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
       "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
     }
   },
@@ -297,13 +297,13 @@
       {
         "status": "pass",
         "name": "manual date button and Enter reject invalid dates without changing a resumed capture",
-        "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+        "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
         "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
       },
       {
         "status": "pass",
         "name": "manual invalid dates leave an unconfirmed replay start unconfirmed",
-        "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+        "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
         "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
       }
     ],
@@ -313,20 +313,20 @@
         "name": "manual date button and Enter reject invalid dates without changing a resumed capture",
         "assertion": "manual invalid date cannot replace the current session",
         "exitStatus": 1,
-        "sourceSha256": "a67dda365d7b629f1ba901cd7f7134aa443d7168b9ff09cebe5498e1f47f3e38"
+        "sourceSha256": "35819ca4801a0d4b537ddadc3e173455419153715b3db0e390dcb6235d7f31be"
       }
     },
     "restored": [
       {
         "status": "pass",
         "name": "manual date button and Enter reject invalid dates without changing a resumed capture",
-        "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+        "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
         "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
       },
       {
         "status": "pass",
         "name": "manual invalid dates leave an unconfirmed replay start unconfirmed",
-        "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+        "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
         "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
       }
     ]

@@ -4230,7 +4230,7 @@ body[data-page="relay"]{overflow:hidden}
 }
 
 
-/* Source: ui/shell-layout.css; SHA-256: 6c5f9f6ae914ae5f765e47733c59cbf7da324b92fe55a22ae73fbc962b2cf0f8 */
+/* Source: ui/shell-layout.css; SHA-256: 8b83af979cc10b265dd08c95776b18ad7b1d40fc611b4ed10d231c30e55e6f33 */
 /* R19 P1: the shared page frame, original navigation and outer sections.
  * Chart coordinates and the independent content scroll owners stay local.
  * P0 owns the palette; later stages own chart chrome and section internals. */
@@ -4388,7 +4388,7 @@ body[data-shell=dashboard] #root > .workspace {
   height: calc(100dvh - var(--app-header-height));
   min-width: 0;
   min-height: 0;
-  padding: 24px var(--shell-gutter) calc(24px + var(--content-bottom-height));
+  padding: 12px var(--shell-gutter) calc(12px + var(--content-bottom-height));
   box-sizing: border-box;
   background: var(--surface-raised);
 }
@@ -4411,7 +4411,7 @@ body[data-shell=dashboard] #main > :is(#evidence-view, #ipo-view, #data-view, #m
   height: 100%;
   margin: 0;
   border: 1px solid var(--border);
-  border-radius: var(--card-radius-md);
+  border-radius: 0;
   background: var(--surface);
   /* Outer-card paint stays below the header while source popovers retain
      their own overflow/scroll owners. */
@@ -4439,7 +4439,7 @@ body[data-shell=chart] .workbench-rail .atlas-nav :is(a, button) { border-radius
 @media (max-width: 767px) {
   body[data-shell=dashboard] { --shell-gutter: 12px; }
   body[data-shell=dashboard] .workspace,
-  body[data-shell=dashboard] #root > .workspace { padding-block: 12px calc(12px + var(--content-bottom-height)); }
+  body[data-shell=dashboard] #root > .workspace { padding-block: 8px calc(8px + var(--content-bottom-height)); }
   body[data-shell=dashboard] .atlas-shell-copy > .atlas-shell-heading { font-size: 17px; line-height: 24px; }
   body[data-shell=dashboard] .atlas-dashboard-header .atlas-page-description { display: none; }
   body[data-shell=dashboard] .atlas-dashboard-nav .atlas-nav :is(a, button) { padding-inline: 12px; }

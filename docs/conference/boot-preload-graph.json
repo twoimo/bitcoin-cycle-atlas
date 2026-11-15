@@ -53,13 +53,17 @@
     {
       "url": "./app.js?v=1.37.8",
       "file": "app.js",
-      "bytes": 57128,
-      "sha256": "7a9dd50b29487f155c31e9a04dfdf576b4f4fd2f33098246b459cf2747bc29a7",
+      "bytes": 57079,
+      "sha256": "9c823e3001074d95c779af12a9a98ae95040cc1b8194dadb4f094def889ae94a",
       "depth": 0,
       "imports": [
         {
           "specifier": "./site-paths.js",
           "url": "./site-paths.js"
+        },
+        {
+          "specifier": "./funnest-research-primitives.bundle.js?v=1.29.0",
+          "url": "./funnest-research-primitives.bundle.js?v=1.29.0"
         },
         {
           "specifier": "./cycle-engine.js?v=1.29.0",
@@ -248,6 +252,14 @@
       "imports": []
     },
     {
+      "url": "./funnest-research-primitives.bundle.js?v=1.29.0",
+      "file": "funnest-research-primitives.bundle.js",
+      "bytes": 6277,
+      "sha256": "049bad34b5e65a344dc86535ff6bce2f8eedae0348fb1969d3a76e92a6f69777",
+      "depth": 1,
+      "imports": []
+    },
+    {
       "url": "./cycle-engine.js?v=1.29.0",
       "file": "cycle-engine.js",
       "bytes": 14793,
@@ -363,26 +375,34 @@
     {
       "url": "./peak-view.js?v=1.29.0",
       "file": "peak-view.js",
-      "bytes": 10647,
-      "sha256": "9e12550a63b65097ee612b73e5afee488f7e75059cd5d41aa4feedc34a4c798c",
+      "bytes": 10979,
+      "sha256": "12a4e6352de703e8c3914c5ac7591ff32c89ab7afbe785b6f19548446ed9b008",
       "depth": 1,
       "imports": [
         {
           "specifier": "./cycle-engine.js?v=1.29.0",
           "url": "./cycle-engine.js?v=1.29.0"
+        },
+        {
+          "specifier": "./funnest-research-primitives.bundle.js?v=1.29.0",
+          "url": "./funnest-research-primitives.bundle.js?v=1.29.0"
         }
       ]
     },
     {
       "url": "./forecast-view.js?v=1.29.0",
       "file": "forecast-view.js",
-      "bytes": 35911,
-      "sha256": "dbf2ce842de77d64fe65007a80c4c478df66678e64dfb04a82b643476a35bd3f",
+      "bytes": 36025,
+      "sha256": "0a1b866457a16c7720503a19b61da05161dcc5d2429a6c887ff98ee2f0300371",
       "depth": 1,
       "imports": [
         {
           "specifier": "./cycle-engine.js?v=1.29.0",
           "url": "./cycle-engine.js?v=1.29.0"
+        },
+        {
+          "specifier": "./funnest-research-primitives.bundle.js?v=1.29.0",
+          "url": "./funnest-research-primitives.bundle.js?v=1.29.0"
         }
       ]
     },
@@ -456,13 +476,17 @@
     {
       "url": "./market-lab-view.js?v=1.31.3",
       "file": "market-lab-view.js",
-      "bytes": 33762,
-      "sha256": "df6ea7a5bf9be5fe490ad1e276eaf6cd054f121c775512748316d9c94d703432",
+      "bytes": 33860,
+      "sha256": "012e4e4f82375123d9df41a117350aba2ef72f25c40cd59e1e47a5cfcfdfb19f",
       "depth": 1,
       "imports": [
         {
           "specifier": "./loading-surfaces.js",
           "url": "./loading-surfaces.js"
+        },
+        {
+          "specifier": "./funnest-research-primitives.bundle.js?v=1.29.0",
+          "url": "./funnest-research-primitives.bundle.js?v=1.29.0"
         },
         {
           "specifier": "./market-lab-math.js?v=1.31.3",
@@ -538,8 +562,8 @@
     {
       "url": "./ui/shell-slots.js",
       "file": "ui/shell-slots.js",
-      "bytes": 11359,
-      "sha256": "837decee5ee5356da35f54934c85c365fe4e21b87dbe4127236aa8c2820023ab",
+      "bytes": 11847,
+      "sha256": "a9739f81a9af1a52713d84d115ff262888f05aaf6398bb48245f6f8a6a069c9d",
       "depth": 2,
       "imports": [
         {
@@ -851,6 +875,7 @@
     "./journal-entry.js?v=1.29.0",
     "./performance-diagnostics.js?v=1.29.0",
     "./site-paths.js",
+    "./funnest-research-primitives.bundle.js?v=1.29.0",
     "./cycle-engine.js?v=1.29.0",
     "./data-source.js?v=1.29.0",
     "./published-data.js?v=1.29.0",
@@ -899,12 +924,12 @@
     "./price-display.js?v=1.29.0"
   ],
   "summary": {
-    "moduleUrls": 57,
-    "uniqueModuleFiles": 55,
-    "conferenceModulePreloads": 56,
+    "moduleUrls": 58,
+    "uniqueModuleFiles": 56,
+    "conferenceModulePreloads": 57,
     "sharedModulePreloads": 1,
-    "staticImportEdges": 83,
+    "staticImportEdges": 87,
     "maxShortestImportDepth": 6,
-    "moduleBytesByUrl": 782186
+    "moduleBytesByUrl": 789446
   }
 }

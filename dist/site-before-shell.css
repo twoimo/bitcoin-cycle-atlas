@@ -2379,12 +2379,14 @@ body[data-embedded=true] #data-view .daily-heading { position: relative; inset: 
 @media(max-width:620px),(max-height:500px){.forecast-replay input{min-height:44px}.replay-settings{gap:8px 4px}.replay-settings label{flex:1 1 140px;align-items:start;flex-direction:column}.replay-settings select,.replay-settings input{width:100%}.replay-chart{height:250px}.replay-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.replay-clock{gap:8px}.replay-legend{gap:8px}.replay-toolbar{padding-bottom:8px}}
 
 
-/* Source: chart-replay.css; SHA-256: fbed518d80bf4353b0a8fd7983884d06479d87e2c6ca3c720f1fe231df751853 */
+/* Source: chart-replay.css; SHA-256: 47ac93eef7423a4c5fa422df095738603f3a6e5fa07ecbfa691076d44701b43d */
 .chart-replay-trigger{display:inline-flex;align-items:center;justify-content:center;flex:none;gap:4px;min-height:32px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font:600 12px var(--font,sans-serif);white-space:nowrap;cursor:pointer}
 .chart-replay-trigger[aria-pressed=true]{border-color:var(--accent-ink);color:var(--accent-ink)}
 .chart-replay-active{--replay-forecast:var(--data-gold);--replay-actual:var(--text);--replay-up:var(--green);--replay-down:var(--red);position:relative!important;overflow:hidden!important}
 .chart-replay-active>svg{height:100%!important;min-height:0!important;touch-action:none;cursor:crosshair}
-.chart-replay-active>:not(svg):not(.chart-replay-controls):not(.chart-replay-hud):not(.chart-replay-notice){display:none!important}
+.chart-replay-active>:not(svg):not(.chart-replay-controls):not(.chart-replay-hud):not(.chart-replay-notice):not(.atlas-funnest-canvas[data-chart-replay-host=true]){display:none!important}
+/* The Funnest replay host paints the actual replay bars; the suspended live host stays hidden by its own visibility. */
+.chart-replay-active>.atlas-funnest-canvas[data-chart-replay-host=true]{display:block}
 .chart-replay-hud{position:absolute;top:8px;left:12px;right:84px;z-index:7;pointer-events:none;color:var(--text);font:12px var(--font,sans-serif)}
 .chart-replay-hud p{margin:0 0 4px;line-height:1.5;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .chart-replay-hud p:first-child{font-weight:600}
