@@ -1,7 +1,8 @@
 {
   "kind": "atlas-replay-state-verification",
   "schemaVersion": 1,
-  "baselineCommit": "aca73b74a5128a5466488a0c701e86f5e854af46",
+  "baselineCommit": "fe93a5727277d15a934b7472588fb907e30b02b8",
+  "manualDateFollowupBaselineCommit": "aca73b74a5128a5466488a0c701e86f5e854af46",
   "previousFollowupBaselineCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
   "originalAuditBaselineCommit": "94a1b1dda9eb359de70747043808340da369d087",
   "node": "v26.13.0",
@@ -9,11 +10,11 @@
   "sourceSha256": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908",
   "testPath": "tests/chart-replay-state.test.mjs",
   "testSha256": "1ae620d55fd750fbc951b0980f8eed58a2a64cf4eb2a83dc9b74626601badabc",
-  "method": "Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, manual-date rejection, destroy-during-save cases and isolated real-source negative controls",
+  "method": "Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, manual-date rejection, destroy-during-save, axis-click, inert-ownership and refused-entry cases and isolated real-source negative controls",
   "coordinatorPath": "dist/chart-replay.js",
   "coordinatorSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
   "coordinatorTestPath": "tests/chart-replay-ui.test.mjs",
-  "coordinatorTestSha256": "ac3c33a79079df41530b17ae620bd488ce4152c4241a10678c857a5e42396e5b",
+  "coordinatorTestSha256": "8873e57f9c8dce221ba24d4c7438847c11f84c00db6bee8d00ef1d9c1fb6efb6",
   "snapshotPath": "dist/chart-replay-snapshot.js",
   "snapshotSha256": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6",
   "bounds": {
@@ -59,6 +60,28 @@
         "native invalidity"
       ],
       "finiteSelectionAlphabetUnchanged": true
+    },
+    "startGestures": {
+      "clickedRegions": [
+        "price axis",
+        "time axis"
+      ],
+      "entryState": "unconfirmed selection",
+      "finiteSelectionAlphabetUnchanged": true
+    },
+    "inertOwnership": {
+      "layouts": [
+        "phone information sheet",
+        "desktop footer"
+      ],
+      "preexistingInertOwners": 1
+    },
+    "refusal": {
+      "entries": [
+        "toolbar entry with a saved record",
+        "exported open with that record"
+      ],
+      "availability": "refused before entry"
     }
   },
   "formalProof": false,
@@ -70,7 +93,9 @@
     "Exhaustive network completion schedules",
     "Exhaustive persistence and concurrent-tab schedules",
     "Wall-clock scheduling accuracy",
-    "Cutoff-model loading in the coordinator fixture"
+    "Cutoff-model loading in the coordinator fixture",
+    "Forecast availability that changes after replay entry",
+    "Wheel, keyboard and drag navigation beyond axis-click start confirmation"
   ],
   "original": {
     "status": "pass",
@@ -330,6 +355,82 @@
         "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
       }
     ]
+  },
+  "startGesture": {
+    "original": {
+      "status": "pass",
+      "name": "replay time-axis and plot drags use actual plot width and axis clicks cannot confirm a start bar",
+      "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+      "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+    },
+    "mutations": {
+      "axis-click-confirms-start": {
+        "status": "expected behavioral failure",
+        "name": "replay time-axis and plot drags use actual plot width and axis clicks cannot confirm a start bar",
+        "assertion": "an axis click cannot confirm a replay start",
+        "exitStatus": 1,
+        "sourceSha256": "bcb4fb50c9e1823caf23dd80ff75812629f0769694e6c237b1cd048db8717d93"
+      }
+    },
+    "restored": {
+      "status": "pass",
+      "name": "replay time-axis and plot drags use actual plot width and axis clicks cannot confirm a start bar",
+      "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+      "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+    }
+  },
+  "inertOwnership": {
+    "original": {
+      "status": "pass",
+      "name": "mobile information sheet keeps original replay periods reachable and restores unrelated inert state across resizing",
+      "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+      "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+    },
+    "mutations": {
+      "duplicate-discovery-overwrites-prior-inert": {
+        "status": "expected behavioral failure",
+        "name": "mobile information sheet keeps original replay periods reachable and restores unrelated inert state across resizing",
+        "assertion": "overlapping discovery cannot replace the original inert value",
+        "exitStatus": 1,
+        "sourceSha256": "1ffd6dfde4207f2fead091f78fe6077d6ac02eb029d4fd79e95937cd613089ba"
+      }
+    },
+    "restored": {
+      "status": "pass",
+      "name": "mobile information sheet keeps original replay periods reachable and restores unrelated inert state across resizing",
+      "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+      "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+    }
+  },
+  "refusal": {
+    "original": {
+      "status": "pass",
+      "name": "T3 replay refusal retains actual prices and saved records without starting any forecast request",
+      "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+      "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+    },
+    "mutations": {
+      "refused-entry-activates-replay": {
+        "status": "expected behavioral failure",
+        "name": "T3 replay refusal retains actual prices and saved records without starting any forecast request",
+        "assertion": "a refused forecast cannot enter replay",
+        "exitStatus": 1,
+        "sourceSha256": "24f6ebac43c85687a90804cb979d98b0b34efb72845c02181a808ea0b6bb6975"
+      },
+      "refused-open-starts-replay": {
+        "status": "expected behavioral failure",
+        "name": "T3 replay refusal retains actual prices and saved records without starting any forecast request",
+        "assertion": "a refused forecast cannot open replay",
+        "exitStatus": 1,
+        "sourceSha256": "a338a7edd43e2f694019c0dca0c029d6409b3d9ed81c2ba4faf2b583463d0b26"
+      }
+    },
+    "restored": {
+      "status": "pass",
+      "name": "T3 replay refusal retains actual prices and saved records without starting any forecast request",
+      "sourceSha256": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+      "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+    }
   },
   "restored": {
     "status": "pass",

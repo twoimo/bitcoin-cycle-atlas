@@ -9,6 +9,7 @@ stateDiagram-v2
     state "Last observed bar" as Ended
     state "Preparation failed" as Failed
     [*] --> Idle
+    Idle --> Idle: Refuse entry without a permitted forecast
     Idle --> Selecting: Enter without saved history
     Idle --> SavedChoice: Enter with saved or invalid history
     SavedChoice --> Loading: Continue valid saved mode
