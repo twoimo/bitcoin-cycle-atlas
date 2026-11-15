@@ -49,3 +49,21 @@ test('API startup on a fresh database applies every migration its routes read', 
     await admin.query(`DROP SCHEMA ${schema} CASCADE`); await admin.end();
   }
 });
+
+test('API startup that fails a migration checksum exits 1 with the original error', async () => {
+  if (!process.env.TEST_DATABASE_URL) throw new Error('TEST_DATABASE_URL required');
+  const admin = new pg.Pool({ connectionString: process.env.TEST_DATABASE_URL }), schema = `api_start_fail_${process.pid}_${Date.now()}`;
+  await admin.query(`CREATE SCHEMA ${schema}`);
+  await admin.query(`CREATE TABLE ${schema}.atlas_schema_migrations (name text PRIMARY KEY, sha256 text NOT NULL, applied_at timestamptz NOT NULL DEFAULT clock_timestamp())`);
+  await admin.query(`INSERT INTO ${schema}.atlas_schema_migrations (name,sha256) VALUES ('002_housing',$1)`, ['0'.repeat(64)]);
+  const url = new URL(process.env.TEST_DATABASE_URL); url.searchParams.set('options', `-c search_path=${schema}`);
+  const api = startApi(url.href);
+  try {
+    await assert.rejects(api.listening, /exited with 1 before listening[\s\S]*Applied housing migration checksum changed/);
+    const applied = await admin.query(`SELECT name FROM ${schema}.atlas_schema_migrations ORDER BY name`);
+    assert.deepEqual(applied.rows.map(row => row.name), ['001_market_lab', '002_housing'], 'migrations after the failed one are not applied');
+  } finally {
+    if (api.child.exitCode === null && api.child.signalCode === null) api.child.kill('SIGKILL');
+    await admin.query(`DROP SCHEMA ${schema} CASCADE`); await admin.end();
+  }
+});
