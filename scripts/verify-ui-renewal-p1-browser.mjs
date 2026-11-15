@@ -61,7 +61,12 @@ export function inspectP1Page(spec) {
   const details = n => {if (!n) return null;const s=getComputedStyle(n);return {rect:rect(n),painted:painted(n),maxWidth:s.maxWidth,paddingLeft:s.paddingLeft,paddingRight:s.paddingRight,
     borderLeftWidth:s.borderLeftWidth,borderRightWidth:s.borderRightWidth,radii:[s.borderTopLeftRadius,s.borderTopRightRadius,s.borderBottomRightRadius,s.borderBottomLeftRadius],background:s.backgroundColor,overflowX:s.overflowX,overflowY:s.overflowY};};
   const h1=[...document.querySelectorAll('h1')], heading=document.getElementById('atlas-page-heading');
+  const chartToolbar=document.querySelector('.atlas-canvas-heading');
+  const toolbarAfter=chartToolbar?getComputedStyle(chartToolbar,'::after').content:'none';
+  const toolbarLabel=toolbarAfter&&toolbarAfter!=='none'&&toolbarAfter!=='normal'
+    ? toolbarAfter.replace(/^(['\"])([\s\S]*)\1$/,'$2') : '';
   const range=document.createRange();if (heading) range.selectNodeContents(heading);
+  const chartToolbarText=chartToolbar?.textContent.trim()||'';
   const glyphs=heading?[...range.getClientRects()].filter(r=>r.width>0&&r.height>0).map(r=>({left:r.left,right:r.right,top:r.top,bottom:r.bottom})):[];
   const viewport={width:innerWidth,height:innerHeight}, frame=document.querySelector('.atlas-center-frame:not([hidden])'), child=frame?.contentDocument;
   const nav=[...document.querySelectorAll('.atlas-nav [data-atlas-page]')].map(n=>({id:n.dataset.atlasPage,label:n.getAttribute('aria-label'),active:n.getAttribute('aria-current'),...details(n)}));
@@ -74,6 +79,10 @@ export function inspectP1Page(spec) {
       inHeader:Boolean(heading?.closest('.atlas-dashboard-header')),
       duplicateTitles:[...document.querySelectorAll('h1,h2,h3')].filter(n=>n!==heading&&painted(n)&&n.textContent.trim()===heading?.textContent.trim()).map(n=>n.id||n.tagName)},
     workspace:details(document.querySelector('.workspace')),container:details(document.querySelector('#main')),section:details(document.querySelector(`#${spec.page}-view`)),
+    chartToolbar:chartToolbar?{...details(chartToolbar),label:toolbarLabel,centerPage:chartToolbar.dataset.centerPage||'',
+      ariaLabel:chartToolbar.getAttribute('aria-label')||'',text:chartToolbarText,centerTool:document.body.dataset.centerTool||null,
+      identity:(()=>{const n=chartToolbar.querySelector('.symbol-selector-trigger,.workbench-symbol');return n?{painted:painted(n),label:n.getAttribute('aria-label')||n.title||'',text:n.textContent.trim()}:null})(),
+      workspaceToolbar:[...chartToolbar.querySelectorAll('.center-workspace-toolbar')].map(n=>({painted:painted(n),role:n.getAttribute('role'),label:n.getAttribute('aria-label'),text:n.textContent.trim()}))}:null,
     nav,navOwners:document.querySelectorAll('.atlas-nav').length,
     child:child?{boot:child.documentElement.dataset.boot,page:child.body?.dataset.page,url:child.location.href,
       viewport:{width:child.defaultView.innerWidth,height:child.defaultView.innerHeight},
@@ -84,13 +93,48 @@ export function inspectP1Page(spec) {
  * establish that a heading's glyphs escape clipping and covering paint. */
 export async function inspectP1Snapshot(cdp, spec) {
   const state=await evaluate(cdp,inspectP1Page,spec);
-  const proof=await verifyP0TextInk(cdp,'#atlas-page-heading');
-  if (proof.status==='passed' && (proof.geometry?.text?.trim()!==state.headings?.title ||
+  const chartHosted=state.shell==='chart'&&Boolean(state.center);
+  const proof=await verifyP0TextInk(cdp,chartHosted?'.atlas-canvas-heading':'#atlas-page-heading');
+  if (proof.status==='passed' && chartHosted && proof.geometry?.text?.trim()!==state.chartToolbar?.text?.trim()) {
+    proof.status='unverified';proof.reason='toolbar text changed during native hit verification';
+  } else if (proof.status==='passed' && !chartHosted && (proof.geometry?.text?.trim()!==state.headings?.title ||
     ['left','top','right','bottom'].some(key=>proof.geometry?.rect?.[key]!==state.headings?.rect?.[key]))) {
     proof.status='unverified';proof.reason='heading text/geometry changed during native hit verification';
   }
-  state.headings.nativeTextHit=proof;
+  if(chartHosted)state.chartToolbar.nativeTextHit=proof;
+  else state.headings.nativeTextHit=proof;
+  if(state.shell==='chart')state.headings.accessibility=await inspectP1HeadingAccessibility(cdp,state.headings);
   return state;
+}
+
+/** The single chart H1 may be visually hidden when the chart toolbar already
+ * owns the visible route identity. Prove its actual Chromium AX node (name,
+ * level and description), rather than weakening heading checks to DOM counts. */
+export async function inspectP1HeadingAccessibility(cdp,heading) {
+  const proof={status:'unverified',role:null,name:null,description:null,level:null,ignored:null,accessibleH1Count:null};
+  try {
+    const documentNode=await cdp.send('DOM.getDocument',{depth:0}),rootId=documentNode.root?.nodeId;
+    if(!rootId)return proof;
+    const selected=await cdp.send('DOM.querySelector',{nodeId:rootId,selector:'#atlas-page-heading'});
+    if(!selected.nodeId)return proof;
+    const described=await cdp.send('DOM.describeNode',{nodeId:selected.nodeId,depth:0}),backendNodeId=described.node?.backendNodeId;
+    if(!backendNodeId)return proof;
+    const [partial,full]=await Promise.all([
+      cdp.send('Accessibility.getPartialAXTree',{backendNodeId,fetchRelatives:false}),
+      cdp.send('Accessibility.getFullAXTree',{}),
+    ]);
+    const ax=partial.nodes?.find(node=>node.backendDOMNodeId===backendNodeId)||partial.nodes?.[0];
+    const value=(node,key)=>node?.properties?.find(item=>item.name===key)?.value?.value??null;
+    const accessible=full.nodes||[];
+    proof.accessibleH1Count=accessible.filter(node=>!node.ignored&&node.role?.value==='heading'&&value(node,'level')===1).length;
+    proof.role=ax?.role?.value||null;proof.name=ax?.name?.value||'';proof.description=ax?.description?.value||'';
+    proof.level=value(ax,'level');proof.ignored=ax?.ignored??null;
+    const valid=proof.accessibleH1Count===1&&proof.role==='heading'&&proof.level===1&&proof.ignored===false&&
+      proof.name===heading.title&&proof.description===heading.description&&Boolean(heading.describedBy);
+    proof.status=valid?'passed':'failed';
+    if(!valid)proof.reason='Chromium AX tree does not expose exactly one level-1 heading with the expected name and source description';
+  } catch(error) {proof.status='unverified';proof.reason=`Chromium AX tree could not be read: ${error.message}`;}
+  return proof;
 }
 
 export function validateP1Layout(state, spec) {
@@ -98,12 +142,27 @@ export function validateP1Layout(state, spec) {
   if (state.overflow!==0) failures.push(`horizontal overflow ${state.overflow}px`);
   if (spec.hosted ? state.page!=='outlook'||state.center!==spec.id||state.shell!=='chart' : state.page!==spec.page||state.center) failures.push(`route did not own its requested page: ${state.page}/${state.center}`);
   if (spec.hosted && (!state.child || state.child.overflow!==0)) failures.push('hosted market child is missing or horizontally overflows');
-  if (state.headings?.count!==1 || state.headings?.paintedCount!==1) failures.push('expected exactly one DOM and painted h1');
+  if (state.headings?.count!==1 || (spec.hosted?state.headings?.paintedCount!==0:state.headings?.paintedCount!==1)) failures.push(spec.hosted?'expected one intentionally visually hidden chart h1':'expected exactly one DOM and painted h1');
   if (state.headings?.title!==spec.title) failures.push(`wrong h1: ${state.headings?.title}`);
   if (!state.headings?.describedBy || !state.headings?.description) failures.push('h1 source description is missing');
   if (state.headings?.duplicateTitles?.length) failures.push('duplicate visible section/header title');
-  if (!state.headings?.glyphs?.length || !state.headings.glyphs.every(r=>r.left>=0&&r.right<=spec.width&&r.top>=0&&r.bottom<=spec.height)) failures.push('h1 text lies outside the viewport');
-  if (state.headings?.nativeTextHit?.status!=='passed') failures.push(`h1 native text paint is ${state.headings?.nativeTextHit?.status||'missing'}: ${state.headings?.nativeTextHit?.reason||'complete native hit evidence is required'}`);
+  if(state.shell==='chart') {
+    if(state.headings?.accessibility?.status!=='passed')failures.push(`chart h1 accessibility is ${state.headings?.accessibility?.status||'missing'}: ${state.headings?.accessibility?.reason||'native Chromium AX evidence is required'}`);
+    const toolbar=state.chartToolbar;
+    if(!toolbar?.painted||!toolbar.ariaLabel)failures.push('chart toolbar is not visibly painted or lacks its accessible label');
+    if(spec.hosted) {
+      const owner=toolbar?.workspaceToolbar?.filter(item=>item.painted);
+      if(toolbar?.centerTool!==spec.id||!toolbar.centerPage||toolbar.label!==toolbar.centerPage||owner?.length!==1||owner[0]?.role!=='toolbar'||owner[0]?.label!==`${toolbar.centerPage} 도구`)failures.push('chart toolbar does not expose the active route identity and its matching visible/labeled toolbar');
+      if(toolbar?.nativeTextHit?.status!=='passed')failures.push(`chart toolbar native text paint is ${toolbar?.nativeTextHit?.status||'missing'}: ${toolbar?.nativeTextHit?.reason||'complete native hit evidence is required'}`);
+    } else {
+      if(!toolbar?.identity?.painted||!toolbar.identity.text||!toolbar.identity.label)failures.push('chart toolbar lacks a visible, labeled instrument identity');
+      if (!state.headings?.glyphs?.length || !state.headings.glyphs.every(r=>r.left>=0&&r.right<=spec.width&&r.top>=0&&r.bottom<=spec.height)) failures.push('h1 text lies outside the viewport');
+      if (state.headings?.nativeTextHit?.status!=='passed') failures.push(`h1 native text paint is ${state.headings?.nativeTextHit?.status||'missing'}: ${state.headings?.nativeTextHit?.reason||'complete native hit evidence is required'}`);
+    }
+  } else {
+    if (!state.headings?.glyphs?.length || !state.headings.glyphs.every(r=>r.left>=0&&r.right<=spec.width&&r.top>=0&&r.bottom<=spec.height)) failures.push('h1 text lies outside the viewport');
+    if (state.headings?.nativeTextHit?.status!=='passed') failures.push(`h1 native text paint is ${state.headings?.nativeTextHit?.status||'missing'}: ${state.headings?.nativeTextHit?.reason||'complete native hit evidence is required'}`);
+  }
   if (state.navOwners!==1 || JSON.stringify(state.nav?.map(n=>n.id))!==JSON.stringify(p1Destinations.map(n=>n.id))) failures.push('navigation identities are missing, duplicated or reordered');
   if (JSON.stringify(state.nav?.filter(n=>n.active==='page').map(n=>n.id))!==JSON.stringify([spec.id])) failures.push('active navigation identity differs from the direct route');
   if (spec.limit) {
@@ -121,9 +180,9 @@ export function validateP1Layout(state, spec) {
       if (Math.abs(c.rect.width-expected)>.1) failures.push(`container actual width ${c.rect.width} differs from ${expected}`);
       if (Math.abs((c.rect.left+c.rect.right)/2-(left+right)/2)>.1) failures.push('container is not centered in its available width');
     } else failures.push('container/workspace geometry or padding/border evidence is missing, nonfinite or invalid');
-    if (!state.section?.painted || !state.section.radii.every(value=>[12,16,20].includes(Number.parseFloat(value))) || /^(?:transparent|rgba\(0, 0, 0, 0\))$/.test(state.section.background)) failures.push('outer section does not paint the shared card surface/radius');
+    if (!state.section?.painted || !state.section.radii.every(value=>Number.parseFloat(value)===0) || /^(?:transparent|rgba\(0, 0, 0, 0\))$/.test(state.section.background)) failures.push('outer section does not paint the shared square surface');
   }
-  for (const n of state.nav||[]) if (n.painted && !n.radii.every(value=>Number.parseFloat(value)>=n.rect.height/2)) failures.push(`navigation ${n.id} is not pill shaped`);
+  for (const n of state.nav||[]) if (n.painted && !n.radii.every(value=>Number.parseFloat(value)===4)) failures.push(`navigation ${n.id} does not use the exact 4px compact-control radius`);
   return failures;
 }
 

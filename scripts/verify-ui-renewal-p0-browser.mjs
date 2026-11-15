@@ -11,6 +11,8 @@ import {tmpdir} from 'node:os';
 import {dirname,extname,resolve} from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {SITE_STYLE_SOURCES} from './build-site-styles.mjs';
+import {listWorktreeSourceFiles as listP0SourceFiles} from './browser-source-identity.mjs';
+export {listP0SourceFiles};
 import {ensureOwnedVisibleForPaint} from './browser-paint-readiness.mjs';
 import {headlessWindowArgument,verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
 import {verifyP0TextInk} from './ui-renewal-p0-text-hit.mjs';
@@ -38,7 +40,7 @@ export function parseP0Arguments(argv,cwd=root) {
 /** Source inventory is bounded and explicit. JS hex colours are disclosed as
  * residual declarations, not mislabelled as eliminated by CSS tokenisation. */
 export async function readP0Sources(projectRoot=root) {
-  const appCss = execFileSync('git',['ls-files','--','apps/web/src/*.css'],{cwd:projectRoot,encoding:'utf8'}).trim().split('\n').filter(Boolean);
+  const appInventory = listP0SourceFiles(projectRoot,'apps/web/src/*.css'), appCss = appInventory.files;
   const cssFiles = [...SITE_STYLE_SOURCES.filter(file => !file.startsWith('vendor/')).map(file => `dist/${file}`),...appCss];
   const html = await readFile(resolve(projectRoot,'dist/index.html'),'utf8');
   const sources = await Promise.all(cssFiles.map(async file => ({file,source:await readFile(resolve(projectRoot,file),'utf8')})));
@@ -58,13 +60,13 @@ export async function readP0Sources(projectRoot=root) {
   if (manifest.fontAssets.files.length !== 92 || [...fontCss.matchAll(/@font-face\s*\{/g)].length !== 92) fontIssues.push('expected the 92 pinned unicode-range font faces');
   const optional = html.match(/<link\b[^>]*id="atlas-optional-fonts"[^>]*>/)?.[0] || '';
   if (!optional.includes('fonts/pretendard/pretendard-variable.css') || !optional.includes('media="print"') || /href="https?:/.test(optional)) fontIssues.push('optional font CSS is not the local nonblocking stylesheet');
-  const jsFiles = execFileSync('git',['ls-files','--','dist/*.js'],{cwd:projectRoot,encoding:'utf8'}).trim().split('\n').filter(Boolean);
+  const jsInventory = listP0SourceFiles(projectRoot,'dist/*.js'), jsFiles = jsInventory.files;
   if (!jsFiles.includes('dist/ui/theme.js')) jsFiles.push('dist/ui/theme.js');
   const residualJsColors = [];
   for (const file of jsFiles) {
     const source = await readFile(resolve(projectRoot,file),'utf8'), literals = [...source.matchAll(/#[\da-f]{8}\b|#[\da-f]{6}\b|#[\da-f]{4}\b|#[\da-f]{3}\b/gi)];
     if (literals.length) residualJsColors.push({file,count:literals.length,values:[...new Set(literals.map(match => match[0]))],
-      disposition:'existing JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file'});
+      disposition:'current JS/SVG/data/brand literal inventory; CSS consolidation does not prove zero literals in this file'});
   }
   const files = [...new Set([...cssFiles,'dist/vendor/skullet/styles.css','dist/site-before-shell.css','dist/site-after-shell.css','dist/index.html','apps/web/index.html',
     ...jsFiles,fontManifestFile,...fontFiles.map(entry => entry.file),'dist/data/btc-daily.json','dist/data/eth-ohlc.json',
@@ -73,7 +75,8 @@ export async function readP0Sources(projectRoot=root) {
   const hashes = Object.fromEntries(await Promise.all(files.map(async file => [file,sha256(await readFile(resolve(projectRoot,file)))])));
   return {audit:{...audit,tokens:Object.fromEntries(audit.tokens)},tokenPairs:pairs,hashes,
     fonts:{manifest:fontManifestFile,family:manifest.family,faces:manifest.fontAssets.count,bytes:manifest.fontAssets.totalBytes,issues:fontIssues,status:fontIssues.length ? 'failed' : 'passed'},
-    residualJsColors,excludedThirdParty:['dist/vendor/skullet/styles.css'],scopeFiles:cssFiles};
+    residualJsColors,excludedThirdParty:['dist/vendor/skullet/styles.css'],scopeFiles:cssFiles,
+    sourceInventory:{basis:'current nonignored worktree files; tracked and untracked',removedTrackedFiles:[...appInventory.removedTrackedFiles,...jsInventory.removedTrackedFiles].sort()}};
 }
 
 class Cdp {

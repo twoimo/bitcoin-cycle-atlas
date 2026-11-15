@@ -556,7 +556,22 @@
     "dist/compare-shell-host.js",
     "dist/conference/player.css",
     "dist/content-shell.js",
-    "dist/comparison-url-state.js"
+    "dist/comparison-url-state.js",
+    "dist/btc-funnest-chart.js",
+    "dist/funnest-chart-runtime.bundle.js",
+    "src/charts/funnest-chart-runtime.js",
+    "dist/funnest-observed-price-adapter.js",
+    "src/charts/funnest-research-primitives.js",
+    "dist/funnest-research-primitives.bundle.js",
+    "scripts/build-funnest-chart-runtime.mjs",
+    "tests/funnest-chart-runtime.test.mjs",
+    "tests/funnest-observed-price-adapter.test.mjs",
+    "tests/funnest-research-renderers.test.mjs",
+    "tests/funnest-runtime-build.test.mjs",
+    "dist/vendor/funnest-charts-0.6.22/PROVENANCE.json",
+    "scripts/funnest-browser-evidence.mjs",
+    "tests/funnest-browser-evidence.test.mjs",
+    "tests/ui-renewal-source-inventory.test.mjs"
   ],
   "dynamicResolutions": [
     {

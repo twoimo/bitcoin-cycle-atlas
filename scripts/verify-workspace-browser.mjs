@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
+import {readChart as readFunnestChart} from './verify-chart-zoom-browser.mjs';
 
 export async function readComparisonAssetSymbols(source=new URL('../dist/data/asset-comparison.json',import.meta.url)){
   const snapshot=JSON.parse(await readFile(source,'utf8')),symbols=snapshot.assets?.map(asset=>asset.symbol);
@@ -21,6 +22,50 @@ workspaceBrowserCases.push({page:'workspace-legacy',surface:'legacy',width:375,h
 workspaceBrowserCases.push(...[{width:320,height:900,touch:true},{width:1440,height:900,touch:false},{width:900,height:430,touch:true}].map(size=>({
   page:'workspace-center-data',surface:'center-data',...size,route:'/?symbol=BTCUSD&granularity=daily&type=line'
 })));
+
+// Runs in the document. Daily and weekly BTC candles are the Bitstamp
+// completed-day archive (dist/data/btc-volume.json) that lab-view hands the
+// Funnest chart as observedCandles; weekly bars use the app's own
+// aggregateWeeklyVolume. btc-ohlc.json only holds the Coinbase intraday
+// windows, so a 180-row interval table cannot be the oracle for 5,560 daily
+// bars. The snapshot's declared source selects the archive; the check keeps
+// the exact per-bar time/volume identity and the linear price-scale contract.
+export async function readBtcCompletedCandleSourceCheck({svgSelector,frequency}) {
+  const host=document.querySelector(svgSelector)?.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas'),snapshot=host?.getAtlasFunnestSnapshot?.();
+  if(!snapshot)throw new Error('BTC Funnest snapshot is unavailable for the completed-candle source check');
+  const bars=snapshot.engineBars||[],archiveUrl='./data/btc-volume.json';
+  const response=await fetch(new URL(archiveUrl,location.href),{credentials:'omit',cache:'force-cache'});if(!response.ok)throw new Error('BTC completed candle archive HTTP '+response.status);
+  const archive=await response.json(),daily=archive.bars||[];
+  let sourceRows=daily;
+  if(frequency==='weekly'){const module=await import(new URL('./volume-data.js',location.href).href);sourceRows=module.aggregateWeeklyVolume(daily,{asOf:archive.lastDate,source:archive.source}).bars||[];}
+  else if(frequency!=='daily')throw new Error('Completed-candle source check only covers daily/weekly, got '+frequency);
+  const sourceMap=new Map(sourceRows.map(row=>[Number(row.time)*1000,row]));
+  const ratios=[],missing=[],volumeMismatches=[],valueMismatches=[];
+  for(const bar of bars){const original=sourceMap.get(Number(bar.time));if(!original){missing.push(bar.time);continue;}
+    for(const key of ['open','high','low','close'])if(Number.isFinite(original[key])&&Number.isFinite(bar[key]))ratios.push({key,source:original[key],rendered:bar[key]});
+    if(bar.volume!==original.volume)volumeMismatches.push({time:bar.time,source:original.volume,rendered:bar.volume});}
+  let priceScale=null,priceOffset=null,scaleConsistent=ratios.length>1;
+  if(ratios.length){const close=ratios.find(row=>row.key==='close')||ratios[0],second=ratios.find(row=>row.key===close.key&&row.source!==close.source);
+    if(second){priceScale=(second.rendered-close.rendered)/(second.source-close.source);priceOffset=close.rendered-priceScale*close.source;
+      for(const item of ratios){const expected=priceScale*item.source+priceOffset,tolerance=Math.max(1e-7,Math.abs(expected)*1e-9);if(Math.abs(item.rendered-expected)>tolerance){scaleConsistent=false;valueMismatches.push({key:item.key,source:item.source,rendered:item.rendered,expected});}}}}
+  return {archiveUrl,archiveProvider:archive.provider||null,archiveProduct:archive.product||null,archiveAsOf:archive.asOf||null,archiveDailyRows:daily.length,sourceRows:sourceRows.length,
+    declaredSource:snapshot.source?.name||null,sourceMode:snapshot.sourceMode,frequency,engineBars:bars.length,matched:bars.length-missing.length,missing,volumeMismatches,volumeSourceMismatches:[],valueMismatches,closeSourceMismatches:[],priceScale,priceOffset,scaleConsistent};
+}
+
+// BTC chart reads route the source check by the snapshot's own declared
+// source: Bitstamp completed candles use the archive above; Coin Metrics
+// close-only and Coinbase intraday windows keep the shared readChart oracle.
+async function readBtcFunnestChart(evaluate,cdp,target){
+  const chart=await evaluate(cdp,readFunnestChart,target);
+  if(chart&&chart.symbol==='BTCUSD'&&chart.sourceMode==='ohlc'&&['daily','weekly'].includes(chart.frequency)){
+    assert.equal(chart.source?.name,'Bitstamp','Daily/weekly BTC candles must declare the Bitstamp completed-candle source');
+    const sourceCheck=await evaluate(cdp,readBtcCompletedCandleSourceCheck,{svgSelector:target.svgSelector,frequency:chart.frequency});
+    assert.deepEqual([sourceCheck.archiveProvider,sourceCheck.archiveProduct],['Bitstamp','BTC-USD'],'Completed-candle archive identity changed');
+    assert.ok(sourceCheck.archiveDailyRows>0&&sourceCheck.sourceRows>0,'Completed-candle archive has no rows');
+    return {...chart,sourceCheck:{...sourceCheck,barHash:chart.sourceCheck?.barHash??null}};
+  }
+  return chart;
+}
 
 // Let native layout resolve the containing-block and top-layer clip chain.
 // DOM ancestry alone incorrectly clips both modal dialogs and fixed rails.
@@ -133,7 +178,8 @@ export async function verifyEmbeddedDataSurface(api){
     }
     throw new Error('Native navigation never exposed '+id);
   };
-  await until(()=>evaluate(cdp,()=>document.documentElement?.dataset.boot==='ready'&&document.querySelectorAll('#lab-chart path').length>0),'center-data initial chart');
+  await until(()=>evaluate(cdp,()=>{const host=document.querySelector('#lab-chart')?.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas'),snapshot=host?.getAtlasFunnestSnapshot?.();
+    return document.documentElement?.dataset.boot==='ready'&&Boolean(snapshot?.painted&&snapshot.engineBars?.length>0&&snapshot.canvases?.some(canvas=>canvas.readable&&canvas.opaquePixels>0&&canvas.sampledColors>1));}),'BTC Funnest canvas');
   const initialPage=await evaluate(cdp,readParent);
   assert.equal(initialPage.page,'outlook');assert.equal(initialPage.center,null);
   evidence.navigation=await evaluate(cdp,()=>[...document.querySelectorAll('.atlas-nav [data-atlas-page]')].map(item=>({id:item.dataset.atlasPage,label:item.getAttribute('aria-label'),href:item.getAttribute('href')})));
@@ -372,16 +418,27 @@ export function assertIndicatorLegendSurface(state){
 }
 
 export function readPriceLegendScrollSurface(){
-  const svg=document.querySelector('#lab-chart'),plot=svg.closest('.atlas-plot'),legend=plot.querySelector(':scope > .lab-chart-foot');
+  const svg=document.querySelector('#lab-chart'),plot=svg?.closest('.atlas-plot'),host=plot?.querySelector('.atlas-funnest-canvas'),legend=plot?.querySelector(':scope > .lab-chart-foot');
+  if(!svg||!plot||!host||!legend||typeof host.getAtlasFunnestSnapshot!=='function')return null;
+  const snapshot=host.getAtlasFunnestSnapshot(),layout=snapshot.layout,main=layout.panes.find(pane=>pane.kind==='main');
   const box=node=>{const b=node.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height};};
   const painted=node=>Boolean(node&&node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})&&node.getClientRects().length);
   const named=node=>({...box(node),name:node.textContent.replace(/\s+/g,' ').trim(),painted:painted(node)});
   const itemSelector='.price-legend-item,.cycle-legend-item',statusSelector='.cycle-style-sample,.cycle-reference-key';
   const area=box(legend),items=[...legend.querySelectorAll(itemSelector)].map(named),statusItems=[...legend.querySelectorAll(statusSelector)].map(named);
-  const trigger=[...legend.querySelectorAll('.chart-legend-open,.chart-legend-more')].find(painted);
-  const chart=box(svg),view=svg.viewBox.baseVal,pricePane={left:chart.left+(Number(svg.dataset.plotLeft)-view.x)/view.width*chart.width,
-    right:chart.left+(Number(svg.dataset.plotRight)-view.x)/view.width*chart.width,top:chart.top+(Number(svg.dataset.plotTop)-view.y)/view.height*chart.height,
-    bottom:chart.top+(Number(svg.dataset.priceBottom)-view.y)/view.height*chart.height};
+  const trigger=[...legend.querySelectorAll('.chart-legend-open,.chart-legend-more')].find(painted),hostBox=box(host),pricePane={
+    left:hostBox.left,right:hostBox.left+layout.plotWidth/layout.width*hostBox.width,
+    top:hostBox.top+main.top/layout.height*hostBox.height,bottom:hostBox.top+(main.top+main.height)/layout.height*hostBox.height};
+  const canvases=[...host.querySelectorAll('canvas')].map(canvas=>{let readable=false,opaque=0,colors=new Set(),hash=2166136261,mainHash=2166136261;
+    try{const data=canvas.getContext('2d')?.getImageData(0,0,canvas.width,canvas.height).data;if(data){readable=true;const stride=Math.max(4,Math.floor(data.length/16000/4)*4);
+      for(let i=0;i<data.length;i+=stride){colors.add(`${data[i]},${data[i+1]},${data[i+2]},${data[i+3]}`);if(data[i+3])opaque++;for(let j=0;j<4;j++){hash^=data[i+j]||0;hash=Math.imul(hash,16777619);}}
+      const x1=Math.min(canvas.width,Math.round(layout.plotWidth/layout.width*canvas.width)),y0=Math.min(canvas.height,Math.round(main.top/layout.height*canvas.height)),y1=Math.min(canvas.height,Math.round((main.top+main.height)/layout.height*canvas.height)),step=Math.max(4,Math.floor(x1*(y1-y0)/16000));
+      for(let y=y0;y<y1;y++)for(let x=0;x<x1;x+=Math.max(1,step)){const i=(y*canvas.width+x)*4;for(let j=0;j<4;j++){mainHash^=data[i+j]||0;mainHash=Math.imul(mainHash,16777619);}}
+    }}catch{}
+    const r=box(canvas);return {width:canvas.width,height:canvas.height,box:r,visible:Boolean(canvas.isConnected&&r.width>0&&r.height>0),readable,opaquePixels:opaque,sampledColors:colors.size,mainPanePixelHash:(mainHash>>>0).toString(16),pixelHash:(hash>>>0).toString(16)};
+  });
+  const barIdentity=JSON.stringify(snapshot.engineBars.map(bar=>[bar.time,bar.open,bar.high,bar.low,bar.close,bar.volume??null]));let barHash=2166136261;
+  for(let i=0;i<barIdentity.length;i++){barHash^=barIdentity.charCodeAt(i);barHash=Math.imul(barHash,16777619);}
   const dialog=document.querySelector('#chart-legend-dialog'),content=dialog?.querySelector('.chart-legend-dialog-content');
   let sheet=null;
   if(dialog?.open&&content){
@@ -392,11 +449,11 @@ export function readPriceLegendScrollSurface(){
       horizontalOverflow:content.scrollWidth-content.clientWidth,overflowY:getComputedStyle(content).overflowY,items:entries,
       visibleNames:entries.filter(item=>item.painted&&item.width>0&&item.height>0&&item.left>=scrollport.left-1&&item.right<=scrollport.right+1&&item.top>=scrollport.top-1&&item.bottom<=scrollport.bottom+1).map(item=>item.name)};
   }
-  return {width:innerWidth,height:innerHeight,scrollX,scrollY,pageWidth:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth),
-    url:location.pathname+location.search,pricePane,sheet,
-    range:{start:svg.dataset.start,end:svg.dataset.end,interval:svg.dataset.interval},
-    observed:{line:Number(svg.dataset.observedLineCount),candles:Number(svg.dataset.observedCandleCount)},
-    price:{min:Number(svg.dataset.priceMin),max:Number(svg.dataset.priceMax),mode:svg.dataset.priceMode,scale:svg.dataset.scale,unit:svg.dataset.unit,inverted:svg.dataset.invertScale},
+  return {width:innerWidth,height:innerHeight,scrollX,scrollY,pageWidth:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth),url:location.pathname+location.search,
+    pricePane,sheet,range:{start:snapshot.range?.from,end:snapshot.range?.to,interval:document.querySelector('[data-lab-frequency][aria-pressed="true"]')?.dataset.labFrequency||'daily'},
+    observed:{count:snapshot.engineBars.length,sourceMode:snapshot.sourceMode,hash:(barHash>>>0).toString(16)},
+    price:{scale:snapshot.settings?.priceScale,unit:snapshot.currency,inverted:snapshot.inverted},
+    paint:{engine:snapshot.engine,painted:snapshot.painted,legacyPriceNodes:snapshot.legacy?.priceNodes,hostVisible:host.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),canvases:canvases.filter(canvas=>canvas.visible&&canvas.readable&&canvas.opaquePixels>0&&canvas.sampledColors>1)},
     touchAction:{plot:getComputedStyle(plot).touchAction,svg:getComputedStyle(svg).touchAction,legend:getComputedStyle(legend).touchAction},
     legend:{...area,mode:legend.dataset.legendMode,clientWidth:legend.clientWidth,maximum:legend.scrollWidth-legend.clientWidth,items,statusItems,trigger:trigger?named(trigger):null}};
 }
@@ -404,11 +461,13 @@ export function readPriceLegendScrollSurface(){
 export function assertPriceLegendScrollSurface(state,baseline=state){
   assert.deepEqual(state.range,baseline.range,'A native legend gesture changed the chart time range');
   assert.deepEqual(state.observed,baseline.observed,'A native legend gesture changed the observed price inventory');
-  assert.deepEqual(state.price,baseline.price,'A native legend gesture changed the price axis');
+  assert.deepEqual(state.price,baseline.price,'A native legend gesture changed the Funnest price-scale settings');
   assert.equal(state.url,baseline.url,'A native legend gesture changed URL state');
   assert.deepEqual([state.scrollX,state.scrollY],[baseline.scrollX,baseline.scrollY],'Legend scrolling moved the document');
   assert.ok(state.pageWidth<=state.width+1,'Legend scrolling introduced document overflow');
-  assert.ok(state.observed.line+state.observed.candles>0&&Number.isFinite(state.price.min)&&state.price.max>state.price.min,'The legend check requires actual observed prices and a valid axis');
+  assert.ok(state.observed.count>0&&state.observed.hash&&state.paint.engine==='funnest'&&state.paint.painted&&state.paint.legacyPriceNodes===0&&state.paint.hostVisible&&
+    state.paint.canvases.some(canvas=>canvas.visible&&canvas.readable&&canvas.opaquePixels>0&&canvas.sampledColors>1&&canvas.mainPanePixelHash),
+    'The legend check requires the actual Funnest chart, no legacy price renderer, and readable painted canvas pixels');
   assert.deepEqual(state.legend.items.map(item=>item.name),['실제 가격','미래 가정','가정 범위','고점·저점','CYCLE TOP','PIT STOP','FIRST TOP','ATH','MID-TOP','BOTTOM'],'The price/cycle legend lost actual items');
   const statusNames=['실선 · 관측 사후 기준','점선 · 잠정·가정','◇ 거시 시계 · ○ 예시 경로'];
   assert.deepEqual(state.legend.statusItems.map(item=>item.name),statusNames,'The legend lost provisional/retrospective meanings');
@@ -764,9 +823,14 @@ export async function verifyWorkspaceSurface(api) {
     await inspect('header','preview-controls',{opaque:false});
     receipt.workspace.actual=await evaluate(cdp,()=>{
       const frame=document.querySelector('#mobile-preview'),doc=frame.contentDocument,main=document.querySelector('main');
-      return {boot:doc.documentElement?.dataset.boot,width:frame.width,height:frame.height,innerWidth:frame.contentWindow.innerWidth,plotPaths:doc.querySelectorAll('#lab-chart path').length,mainHeight:main.clientHeight,scrollHeight:main.scrollHeight,scrollWidth:main.scrollWidth,clientWidth:main.clientWidth};
+      const host=doc.querySelector('#lab-chart')?.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas'),snapshot=host?.getAtlasFunnestSnapshot?.();
+      return {boot:doc.documentElement?.dataset.boot,width:frame.width,height:frame.height,innerWidth:frame.contentWindow.innerWidth,
+        chartEngine:snapshot?.engine,chartPainted:snapshot?.painted,barCount:snapshot?.engineBars?.length||0,
+        readableCanvases:snapshot?.canvases?.filter(canvas=>canvas.readable&&canvas.opaquePixels>0&&canvas.sampledColors>1).length||0,
+        mainHeight:main.clientHeight,scrollHeight:main.scrollHeight,scrollWidth:main.scrollWidth,clientWidth:main.clientWidth};
     });
-    assert.ok(receipt.workspace.actual.plotPaths>0,'Preview iframe never rendered actual BTC chart');
+    assert.equal(receipt.workspace.actual.chartEngine,'funnest');assert.equal(receipt.workspace.actual.chartPainted,true);
+    assert.ok(receipt.workspace.actual.barCount>0&&receipt.workspace.actual.readableCanvases>0,'Preview iframe never rendered readable actual BTC canvas pixels');
     await until(()=>evaluate(cdp,()=>Boolean(document.querySelector('#mobile-preview')?.contentDocument?.querySelector('.workbench-bottom-bar'))),'preview footer ready');
     const previewPan=await evaluate(cdp,()=>{
       const main=document.querySelector('main'),frame=document.querySelector('#mobile-preview');
@@ -904,10 +968,13 @@ export async function verifyWorkspaceSurface(api) {
     const density=await evaluate(cdp,()=>{
       const view=document.querySelector('#evidence-view'),controls=view.querySelector('.evidence-controls'),shell=view.querySelector('.evidence-table-shell'),rect=shell.getBoundingClientRect();
       const rows=[...view.querySelectorAll('#evidence-body tr')].filter(row=>{const r=row.getBoundingClientRect();return r.height>0&&r.top>=rect.top&&r.bottom<=rect.bottom+1;});
-      return {controlsHeight:controls.getBoundingClientRect().height,tableHeight:rect.height,rowsInView:rows.length,gridRows:getComputedStyle(view).gridTemplateRows};
+      return {controlsHeight:controls.getBoundingClientRect().height,tableHeight:rect.height,rowsInView:rows.length,gridRows:getComputedStyle(view).gridTemplateRows,
+        // Shell context for diagnosis only: the header, refresh notice, outer workspace padding and bottom bar all compete with the list for the same viewport.
+        viewHeight:view.getBoundingClientRect().height,headerHeight:document.querySelector('.atlas-dashboard-header')?.getBoundingClientRect().height||0,noticeHeight:document.querySelector('#btc-refresh-notice')?.getBoundingClientRect().height||0,
+        workspacePadding:getComputedStyle(document.querySelector('.workspace')).padding,bottomBarHeight:document.querySelector('.workbench-bottom-bar')?.getBoundingClientRect().height||0,pagerHeight:view.querySelector('.evidence-pagination')?.getBoundingClientRect().height||0};
     });
     assert.ok(density.controlsHeight<=112,'Research filters consume the reading viewport');
-    assert.ok(density.tableHeight>=height*.6&&density.rowsInView>=6,'Research viewport must retain useful list density');
+    assert.ok(density.tableHeight>=height*.6&&density.rowsInView>=6,'Research viewport must retain useful list density: '+JSON.stringify({...density,requiredTableHeight:height*.6,requiredRows:6}));
     receipt.workspace.density=density;
 
     await text('#evidence-search','__atlas_no_matching_research__');
@@ -984,19 +1051,24 @@ export async function verifyWorkspaceSurface(api) {
         return brand&&brand.getClientRects().length?'.atlas-sidebar .atlas-brand[data-view="outlook"]':'.content-rail [data-atlas-page="outlook"]';
       });
       await click(cdp,returnSelector);
-      await until(()=>evaluate(cdp,()=>document.body.dataset.page==='outlook'&&document.querySelectorAll('#lab-chart path').length>0),'mobile research back to chart');
+      await until(()=>evaluate(cdp,()=>{const host=document.querySelector('#lab-chart')?.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas'),snapshot=host?.getAtlasFunnestSnapshot?.();return document.body.dataset.page==='outlook'&&Boolean(snapshot?.painted&&snapshot.engineBars?.length>0&&snapshot.canvases?.some(canvas=>canvas.readable&&canvas.opaquePixels>0&&canvas.sampledColors>1));}),'mobile return Funnest canvas');
       receipt.workspace.mobileReturn={selector:returnSelector,actualChart:true};
     }
     return;
   }
-  await until(()=>evaluate(cdp,()=>document.querySelectorAll('#lab-chart path').length>0&&document.querySelector('#workbench-workspace')),'BTC workbench ready');
+  await until(()=>evaluate(cdp,()=>{
+    const host=document.querySelector('#lab-chart')?.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas'),snapshot=host?.getAtlasFunnestSnapshot?.();
+    return Boolean(document.querySelector('#workbench-workspace')&&snapshot?.engine==='funnest'&&snapshot.painted&&snapshot.engineBars?.length>0&&
+      snapshot.canvases?.some(canvas=>canvas.visible&&canvas.readable&&canvas.opaquePixels>0&&canvas.sampledColors>1));
+  }),'BTC Funnest canvas ready');
   await inspect('.atlas-canvas-heading','btc-toolbar');
-  const geometry=await evaluate(cdp,()=>{
-    const chart=document.querySelector('#lab-chart'),b=chart.getBoundingClientRect(),stage=document.querySelector('.atlas-workbench').getBoundingClientRect();
-    return {paths:chart.querySelectorAll('path').length,invalidPaths:[...chart.querySelectorAll('path')].filter(p=>/NaN|Infinity/.test(p.getAttribute('d')||'')).length,
-      width:b.width,height:b.height,stageBottom:stage.bottom,viewportHeight:innerHeight,bodyPage:document.body.dataset.page};
-  });
-  assert.ok(geometry.width>=200&&geometry.height>=80,'BTC price canvas compressed');assert.equal(geometry.invalidPaths,0);assert.equal(geometry.bodyPage,'outlook');
+  const chart=await readBtcFunnestChart(evaluate,cdp,{svgSelector:'#lab-chart',allocationSelector:'#lab-chart-stage > .atlas-plot'});
+  const frame=await evaluate(cdp,()=>{const stage=document.querySelector('.atlas-workbench').getBoundingClientRect();return {stageBottom:stage.bottom,viewportHeight:innerHeight,bodyPage:document.body.dataset.page};});
+  const geometry={...chart,width:chart.box.width,height:chart.box.height,...frame};
+  assert.ok(geometry.width>=200&&geometry.height>=80,'BTC Funnest canvas compressed');assert.equal(geometry.engine,'funnest');assert.equal(geometry.painted,true);assert.equal(geometry.bodyPage,'outlook');
+  assert.equal(geometry.sourceCheck.matched,geometry.barCount,'BTC Funnest bars must map to the checked source archive');
+  assert.deepEqual([geometry.sourceCheck.missing.length,geometry.sourceCheck.valueMismatches.length,geometry.sourceCheck.volumeMismatches.length,geometry.sourceCheck.volumeSourceMismatches.length,geometry.sourceCheck.closeSourceMismatches.length],[0,0,0,0,0],'BTC Funnest rendered bars diverged from exact archived source values');
+  assert.ok(geometry.sourceCheck.scaleConsistent&&geometry.actualCanvases.some(canvas=>canvas.visible&&canvas.readable&&canvas.opaquePixels>0&&canvas.sampledColors>1),'BTC Funnest canvas pixels or normalized source mapping are missing');
   receipt.workspace.geometry=geometry;
   await click(cdp,'.workbench-symbol');
   await inspect('.symbol-search-dialog','symbols',{dialog:true});
@@ -1015,9 +1087,9 @@ export async function verifyWorkspaceSurface(api) {
   await key('Tab','Tab',9);await focused('.symbol-search-dialog');await escape('.symbol-search-dialog');
   await command('__atlas_no_matching_command__',{empty:true});
   const candleSettingsCheck=page==='workspace-btc'&&width===1440;
-  const originalChartType=candleSettingsCheck?await evaluate(cdp,()=>document.querySelector('#lab-chart').dataset.chartType):null;
+  const originalChartType=candleSettingsCheck?await evaluate(cdp,()=>{const host=document.querySelector('#lab-chart').closest('.atlas-plot').querySelector('.atlas-funnest-canvas');return host.getAtlasFunnestSnapshot().chartType;}):null;
   if(candleSettingsCheck&&originalChartType!=='candles')await click(cdp,'#workbench-chart-type');
-  if(candleSettingsCheck)await until(()=>evaluate(cdp,()=>document.querySelector('#lab-chart').dataset.chartType==='candles'&&Number(document.querySelector('#lab-chart').dataset.observedCandleCount)>0),'BTC observed candles before opening settings');
+  if(candleSettingsCheck)await until(()=>evaluate(cdp,()=>{const host=document.querySelector('#lab-chart').closest('.atlas-plot').querySelector('.atlas-funnest-canvas'),snapshot=host.getAtlasFunnestSnapshot();return snapshot.chartType==='candles'&&snapshot.engineBars.length>0&&snapshot.painted;}),'BTC Funnest observed candles before opening settings');
   await command('차트 설정');
   await inspect('#chart-reader','settings');
   assert.equal(await evaluate(cdp,()=>document.querySelector('#chart-reader').dataset.kind),'settings');
@@ -1030,28 +1102,22 @@ export async function verifyWorkspaceSurface(api) {
   if(panelBoundary.railVisible)assert.equal(panelBoundary.overlap,0,'Settings panel and right rail must occupy separate areas');
   receipt.workspace.settingsPanelBoundary=panelBoundary;
   if(candleSettingsCheck){
-    await until(()=>evaluate(cdp,()=>{const svg=document.querySelector('#lab-chart'),b=svg.getBoundingClientRect(),v=svg.viewBox.baseVal;return Math.abs(b.width-v.width)<=1&&Math.abs(b.height-v.height)<=1;}),'open-settings candle SVG resize');
-    const candleSettings=await evaluate(cdp,()=>{
-      const svg=document.querySelector('#lab-chart'),b=svg.getBoundingClientRect(),v=svg.viewBox.baseVal;
-      const box=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom};};
-      const ticks=[...svg.querySelectorAll('[data-price-axis-label="tick"]')].filter(el=>el.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})).map(el=>({...box(el),text:el.textContent}));
-      const candles=[...svg.querySelectorAll('.observed-candle,.observed-candles-batched')];
-      const clips=[...new Set(candles.map(el=>el.closest('[clip-path]')?.getAttribute('clip-path')).filter(Boolean))].map(value=>{
-        const id=value.match(/^url\(#(.+)\)$/)?.[1],rect=id&&svg.querySelector(`[id="${id}"] rect`);
-        if(!rect)return null;
-        const x=Number(rect.getAttribute('x')),y=Number(rect.getAttribute('y')),width=Number(rect.getAttribute('width')),height=Number(rect.getAttribute('height'));
-        if(!(width>0&&height>0))return null;
-        return {left:b.left+(x-v.x)/v.width*b.width,right:b.left+(x+width-v.x)/v.width*b.width,
-          top:b.top+(y-v.y)/v.height*b.height,bottom:b.top+(y+height-v.y)/v.height*b.height};
-      });
-      return {type:svg.dataset.chartType,count:Number(svg.dataset.observedCandleCount),chart:box(svg),
-        plotRight:b.left+(Number(svg.dataset.plotRight)-v.x)/v.width*b.width,ticks,candleNodes:candles.length,clips,
+    await until(()=>evaluate(cdp,()=>{const host=document.querySelector('#lab-chart').closest('.atlas-plot').querySelector('.atlas-funnest-canvas'),b=host.getBoundingClientRect(),layout=host.getAtlasFunnestSnapshot().layout;return b.width>0&&b.height>0&&Math.abs(b.width-layout.width)<=1&&Math.abs(b.height-layout.height)<=1;}),'open-settings Funnest canvas resize');
+    const candleChart=await readBtcFunnestChart(evaluate,cdp,{svgSelector:'#lab-chart',allocationSelector:'#lab-chart-stage > .atlas-plot'});
+    const candleBounds=await evaluate(cdp,()=>{
+      const host=document.querySelector('#lab-chart').closest('.atlas-plot').querySelector('.atlas-funnest-canvas'),layout=host.getAtlasFunnestSnapshot().layout,
+        main=layout.panes.find(pane=>pane.kind==='main'),b=host.getBoundingClientRect(),box=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};},
+        plotRight=b.left+layout.plotWidth/layout.width*b.width;
+      return {chart:box(host),plotRight,axisGutter:{left:plotRight,right:b.right,top:b.top+main.top/layout.height*b.height,bottom:b.top+(main.top+main.height)/layout.height*b.height},
         panel:box(document.querySelector('#chart-reader')),rail:box(document.querySelector('.workbench-rail'))};
     });
-    assert.equal(candleSettings.type,'candles');assert.ok(candleSettings.count>0&&candleSettings.candleNodes>0&&candleSettings.ticks.length>0,'Open settings must exercise actual candles and painted price ticks');
+    const candleSettings={type:candleChart.chartType,count:candleChart.barCount,chart:candleBounds.chart,plotRight:candleBounds.plotRight,axisGutter:candleBounds.axisGutter,
+      canvas:candleChart.actualCanvases,painted:candleChart.painted,sourceCheck:candleChart.sourceCheck,panel:candleBounds.panel,rail:candleBounds.rail};
+    assert.equal(candleSettings.type,'candles');assert.ok(candleSettings.count>0&&candleSettings.painted&&candleSettings.canvas.some(canvas=>canvas.readable&&canvas.opaquePixels>0&&canvas.sampledColors>1),'Open settings must exercise actual Funnest candle source bars and readable canvas paint');
+    assert.equal(candleSettings.sourceCheck.matched,candleSettings.count);assert.equal(candleSettings.sourceCheck.scaleConsistent,true);assert.deepEqual([candleSettings.sourceCheck.missing.length,candleSettings.sourceCheck.valueMismatches.length,candleSettings.sourceCheck.volumeMismatches.length],[0,0,0]);
     assert.ok(candleSettings.panel.right<=candleSettings.rail.left+1,'The rail overlaps the open candle settings panel');
-    assert.ok(candleSettings.clips.length>0&&candleSettings.clips.every(clip=>clip&&clip.right<=candleSettings.plotRight+1),'Candle paint must stop at the measured plot edge while settings is open');
-    for(const tick of candleSettings.ticks)assert.ok(tick.left>=candleSettings.plotRight-1&&tick.right<=candleSettings.chart.right+1,'Open candle settings moved price ticks over candles: '+JSON.stringify({tick,plotRight:candleSettings.plotRight,chart:candleSettings.chart}));
+    assert.ok(candleSettings.axisGutter.right>candleSettings.axisGutter.left&&candleSettings.canvas.some(canvas=>canvas.axisGutterPixelHash&&canvas.axisGutterOpaquePixels>0&&canvas.axisGutterColors>1),
+      'Open candle settings must retain painted price-axis pixels in the measured Funnest axis gutter');
     receipt.workspace.candleSettingsBoundary=candleSettings;
     await screenshot(cdp,'workspace-btc-candles-settings-open.png',receipt);
   }
@@ -1059,7 +1125,7 @@ export async function verifyWorkspaceSurface(api) {
   assert.equal(await evaluate(cdp,()=>document.querySelector('#chart-reader').hidden),true);
   if(candleSettingsCheck&&originalChartType!=='candles'){
     await click(cdp,'#workbench-chart-type');
-    await until(()=>evaluate(cdp,type=>document.querySelector('#lab-chart').dataset.chartType===type,originalChartType),'restore BTC chart type after open-settings check');
+    await until(()=>evaluate(cdp,type=>document.querySelector('#lab-chart').closest('.atlas-plot').querySelector('.atlas-funnest-canvas').getAtlasFunnestSnapshot().chartType===type,originalChartType),'restore BTC chart type after open-settings check');
   }
   await click(cdp,'#atlas-mode-menu');
   await inspect('#indicator-library','indicators',{dialog:true});
@@ -1141,22 +1207,51 @@ export async function verifyWorkspaceSurface(api) {
       for(const [qaWidth,qaHeight]of [[390,844],[320,740],[390,430]]){
         await cdp.send('Emulation.setDeviceMetricsOverride',{width:qaWidth,height:qaHeight,deviceScaleFactor:1,mobile:receipt.touch});
         await settled(cdp);
-        await until(()=>evaluate(cdp,()=>{const svg=document.querySelector('#lab-chart'),b=svg.getBoundingClientRect(),v=svg.viewBox.baseVal;return b.width>0&&b.height>0&&Math.abs(b.width-v.width)<=1&&Math.abs(b.height-v.height)<=1;}),'reported mobile SVG resize',10000);
+        await until(()=>evaluate(cdp,()=>{const host=document.querySelector('#lab-chart').closest('.atlas-plot').querySelector('.atlas-funnest-canvas'),b=host.getBoundingClientRect(),layout=host.getAtlasFunnestSnapshot().layout;return b.width>0&&b.height>0&&Math.abs(b.width-layout.width)<=1&&Math.abs(b.height-layout.height)<=1;}),'reported mobile Funnest resize',10000);
         await settled(cdp);
-        const qa=await evaluate(cdp,()=>{
-          const svg=document.querySelector('#lab-chart'),b=svg.getBoundingClientRect(),v=svg.viewBox.baseVal;
+        const qa=await evaluate(cdp,async()=>{
+          const svg=document.querySelector('#lab-chart'),host=svg.closest('.atlas-plot').querySelector('.atlas-funnest-canvas'),snapshot=host.getAtlasFunnestSnapshot(),layout=snapshot.layout,main=layout.panes.find(pane=>pane.kind==='main'),b=svg.getBoundingClientRect(),v=svg.viewBox.baseVal,canvasBox=host.getBoundingClientRect();
           const rect=el=>{const r=el.getBoundingClientRect();return {tag:el.tagName,id:el.id,text:el.textContent.trim().slice(0,120),left:r.left,right:r.right,top:r.top,bottom:r.bottom};};
           const painted=(selector,owner=svg)=>[...owner.querySelectorAll(selector)].filter(el=>el.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})&&el.getBoundingClientRect().width>0);
           const boxes=(selector,owner=svg)=>painted(selector,owner).map(rect);
-          const plot={left:b.left+(Number(svg.dataset.plotLeft)-v.x)/v.width*b.width,right:b.left+(Number(svg.dataset.plotRight)-v.x)/v.width*b.width,
-            top:b.top+(Number(svg.dataset.plotTop)-v.y)/v.height*b.height,bottom:b.top+(Number(svg.dataset.priceBottom)-v.y)/v.height*b.height};
-          const evidence=painted('.forecast-evidence-layer [data-forecast-evidence] > circle,.forecast-evidence-layer [data-forecast-evidence] > rect,.forecast-evidence-layer [data-forecast-evidence] > text').flatMap(el=>{
-            const r=rect(el),style=getComputedStyle(el),stroke=style.stroke==='none'?0:(parseFloat(style.strokeWidth)||0)/2;
-            const clipped={...r,left:Math.max(plot.left,r.left-stroke*b.width/v.width),right:Math.min(plot.right,r.right+stroke*b.width/v.width),
-              top:Math.max(plot.top,r.top-stroke*b.height/v.height),bottom:Math.min(plot.bottom,r.bottom+stroke*b.height/v.height)};
-            return clipped.right>clipped.left&&clipped.bottom>clipped.top?[clipped]:[];
-          });
-          const cycleTags=boxes('.cycle-marker-label-bg'),historyTags=boxes('.history-event-marker.has-label > rect');
+          const plot={left:canvasBox.left,right:canvasBox.left+layout.plotWidth/layout.width*canvasBox.width,
+            top:canvasBox.top+main.top/layout.height*canvasBox.height,bottom:canvasBox.top+(main.top+main.height)/layout.height*canvasBox.height};
+          const axisBounds={left:plot.right,right:canvasBox.right,top:plot.top,bottom:plot.bottom};
+          // Funnest paints model evidence on canvas: a 7px #202027 disc with a
+          // 1.5px #a8c695 ring at the forecast path point of each evidence date
+          // (btc-funnest-chart.js). Rebuild the expected set from the same
+          // sources forecast-evidence.js uses (first path point >= asOf+90d and
+          // the unexpired WisdomTree year-end references), locate each one on
+          // the rendered forecast path receipt, require its hit target and read
+          // the actual canvas pixels. Legacy .forecast-evidence-layer SVG is gone.
+          const render=host.getAtlasBtcRenderSnapshot?.();if(!render)throw new Error('BTC render snapshot is unavailable');
+          const pathPoints=(render.paint?.paths?.forecast?.subpaths||[]).flat(),forecastRows=render.forecastRows||[];
+          const asOfDate=forecastRows[0]?.date;if(!asOfDate)throw new Error('Forecast rows are missing from the BTC render snapshot');
+          const asOf=Date.parse(asOfDate+'T00:00:00Z'),DAY=86400000;
+          const longHorizon=await import(new URL('./long-horizon-evidence.js',location.href).href);
+          const claims=longHorizon.LONG_HORIZON_CLAIMS.filter(item=>item.chartEligible&&item.sourceStatus==='verified-primary'&&item.publishedAt<=longHorizon.LONG_HORIZON_REVIEW_DATE&&Number.isSafeInteger(item.targetYear)&&item.prices);
+          const references=claims.filter(item=>item.publisher==='WisdomTree'&&`${item.targetYear}-12-31`>asOfDate);
+          const methodRow=forecastRows.find(row=>Date.parse(row.date+'T00:00:00Z')-asOf>=90*DAY);
+          const expectedEvidence=[...(methodRow?[{id:'btc-forecast-method',date:methodRow.date}]:[]),...references.map(item=>({id:`btc-evidence-valuation-${item.id}`,date:`${item.targetYear}-12-31`})).filter(item=>forecastRows.some(row=>row.date===item.date))];
+          const scaleX=canvasBox.width/layout.width,scaleY=canvasBox.height/layout.height,canvases=[...host.querySelectorAll('canvas')];
+          const pixelAt=(x,y)=>canvases.flatMap(canvas=>{try{const d=canvas.getContext('2d').getImageData(Math.round(x*canvas.width/layout.width),Math.round(y*canvas.height/layout.height),1,1).data;return d[3]?[[d[0],d[1],d[2],d[3]]]:[];}catch{return [];}});
+          const near=(p,c,t)=>Math.abs(p[0]-c[0])<=t&&Math.abs(p[1]-c[1])<=t&&Math.abs(p[2]-c[2])<=t;
+          const evidenceTargets=[...svg.querySelectorAll('[data-funnest-hit-targets] [data-btc-overlay-target="evidence"]')].map(el=>el.dataset.id);
+          const evidenceItems=expectedEvidence.flatMap(item=>{
+            const point=pathPoints.find(p=>p.date===item.date);if(!point)return [];
+            const x=point.x,y=main.top+point.y;if(!(x>=0&&x<=layout.plotWidth&&point.y>=0&&point.y<=main.height))return [];
+            const center=pixelAt(x,y),ring=[0,1,2,3,4,5,6,7].flatMap(i=>pixelAt(x+7*Math.cos(i*Math.PI/4),y+7*Math.sin(i*Math.PI/4)));
+            const paintedDisc=center.some(p=>near(p,[32,32,39],6)),paintedRing=ring.filter(p=>near(p,[168,198,149],30)).length;
+            const r=7.75,cx=canvasBox.left+x*scaleX,cy=canvasBox.top+y*scaleY;
+            return [{id:item.id,date:item.date,x,y,target:evidenceTargets.includes(item.id),paintedDisc,paintedRing,centerPixel:center[0]||null,
+              left:Math.max(plot.left,cx-r*scaleX),right:Math.min(plot.right,cx+r*scaleX),top:Math.max(plot.top,cy-r*scaleY),bottom:Math.min(plot.bottom,cy+r*scaleY)}];
+          }).filter(item=>item.right>item.left&&item.bottom>item.top);
+          const evidence=evidenceItems;
+          const evidenceAudit={asOf:asOfDate,expected:expectedEvidence,targets:evidenceTargets,items:evidenceItems};
+          // Funnest keeps cycle/history tags as SVG label groups in its
+          // annotation-label layer ([data-cycle-marker-label], [data-history-event-label]);
+          // the legacy class names stay in the union for any retained SVG chart.
+          const cycleTags=boxes('.cycle-marker-label-bg,[data-funnest-annotation-labels] [data-cycle-marker-label] > rect'),historyTags=boxes('.history-event-marker.has-label > rect,[data-funnest-annotation-labels] [data-history-event-label] > rect');
           const headers=boxes('#lab-metrics,.workbench-market-info',svg.parentElement),badges=boxes('.chart-latest-price-tag > rect,.cross-price-tag > rect');
           const obstacles=[...cycleTags,...historyTags,...evidence,...headers,...badges],periodPaint=[],strokeCollisions=[];
           for(const el of svg.querySelectorAll('.cycle-interval-line,.cycle-interval-cap,.cycle-interval-continuation,.cycle-interval-end-arrow')){
@@ -1176,27 +1271,33 @@ export async function verifyWorkspaceSurface(api) {
             }
           }
           return {width:innerWidth,height:innerHeight,pageWidth:document.documentElement.scrollWidth,
-            chart:{left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height,viewWidth:v.width,viewHeight:v.height},
-            plotRight:b.left+(Number(svg.dataset.plotRight)-v.x)/v.width*b.width,
-            events:boxes('.history-event-marker.has-label > text'),periods:boxes('.cycle-interval-label'),
-            evidence,cycleTags,historyTags,periodPaint,strokeCollisions,headers,
-            ticks:boxes('[data-price-axis-label="tick"]'),badges,
+            chart:{left:canvasBox.left,right:canvasBox.right,top:canvasBox.top,bottom:canvasBox.bottom,width:canvasBox.width,height:canvasBox.height,layoutWidth:layout.width,layoutHeight:layout.height,engine:snapshot.engine,painted:snapshot.painted,barCount:snapshot.engineBars.length,sourceMode:snapshot.sourceMode},
+            overlaySvg:{left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height},plotRight:plot.right,axisBounds,legacyAxisTicks:boxes('[data-price-axis-label="tick"]'),
+            events:boxes('.history-event-marker.has-label > text,[data-funnest-annotation-labels] [data-history-event-label] > text'),periods:boxes('.cycle-interval-label'),
+            evidence,evidenceAudit,cycleTags,historyTags,periodPaint,strokeCollisions,headers,badges,
             dates:boxes('.cross-date-tag > rect'),timeTicks:boxes('.price-time-label,.market-time-label')};
         });
+        const qaSource=await readBtcFunnestChart(evaluate,cdp,{svgSelector:'#lab-chart',allocationSelector:'#lab-chart-stage > .atlas-plot'});
+        qa.axisPaint=qaSource.actualCanvases.map(canvas=>({axisGutterPixelHash:canvas.axisGutterPixelHash,opaquePixels:canvas.axisGutterOpaquePixels,colors:canvas.axisGutterColors}));
+        qa.sourceCheck=qaSource.sourceCheck;
         const overlaps=(a,b)=>Math.min(a.right,b.right)-Math.max(a.left,b.left)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1;
         assert.equal(qa.width,qaWidth);assert.equal(qa.height,qaHeight);assert.ok(qa.pageWidth<=qaWidth+1,'Reported mobile viewport acquired horizontal overflow');
-        assert.ok(Math.abs(qa.chart.width-qa.chart.viewWidth)<=1&&Math.abs(qa.chart.height-qa.chart.viewHeight)<=1,'Reported mobile SVG must remain pixel-sized');
+        assert.equal(qa.chart.engine,'funnest');assert.equal(qa.chart.painted,true);assert.ok(qa.chart.barCount>0&&Math.abs(qa.chart.width-qa.chart.layoutWidth)<=1&&Math.abs(qa.chart.height-qa.chart.layoutHeight)<=1,'Reported mobile canvas must remain pixel-sized and paint real source bars');
+        assert.equal(qa.sourceCheck.matched,qa.chart.barCount);assert.deepEqual([qa.sourceCheck.missing.length,qa.sourceCheck.valueMismatches.length,qa.sourceCheck.volumeMismatches.length,qa.sourceCheck.volumeSourceMismatches.length,qa.sourceCheck.closeSourceMismatches.length],[0,0,0,0,0]);
         for(const event of qa.events)for(const period of qa.periods)assert.ok(!overlaps(event,period),'Historical label covers period comparison: '+JSON.stringify({qaWidth,qaHeight,event,period}));
-        assert.ok(qa.headers.length===2&&qa.ticks.length>0,'Source/quote headers and actual price ticks must be present');
-        assert.ok(qa.evidence.length>=4&&qa.periods.length>0,'Model evidence and visible period labels must be present for the collision check: '+JSON.stringify({qaWidth,qaHeight,evidence:qa.evidence.length,periods:qa.periods.length,chart:qa.chart}));
-        assert.ok(qa.cycleTags.length>0&&qa.periodPaint.length>0,'Cycle tags and visible period strokes must be present for the collision check');
+        assert.ok(qa.headers.length===2&&qa.axisBounds.right>qa.axisBounds.left&&qa.axisPaint.some(axis=>axis.axisGutterPixelHash&&axis.opaquePixels>0&&axis.colors>1),'Source/quote headers and actual Funnest price-axis canvas pixels must be present');
+        // Every evidence date inside the pane must own a hit target and real
+        // disc/ring pixels; the painted set is the collision obstacle set.
+        assert.ok(qa.evidence.length>=1&&qa.evidence.every(item=>item.target&&item.paintedDisc&&item.paintedRing>=1)&&qa.evidenceAudit.targets.length===qa.evidence.length&&qa.periods.length>0,'Painted Funnest model evidence and visible period labels must be present for the collision check: '+JSON.stringify({qaWidth,qaHeight,evidence:qa.evidenceAudit,periods:qa.periods.length,chart:qa.chart}));
+        assert.ok(qa.cycleTags.length>0&&qa.periodPaint.length>0,'Cycle tags and visible period strokes must be present for the collision check: '+JSON.stringify({qaWidth,qaHeight,cycleTags:qa.cycleTags.length,historyTags:qa.historyTags.length,periodPaint:qa.periodPaint.length}));
         assert.deepEqual(qa.strokeCollisions,[],'A period line or arrow crosses a cycle/history/evidence tag, HUD or price badge: '+JSON.stringify({qaWidth,qaHeight,collisions:qa.strokeCollisions}));
         for(const evidence of qa.evidence)for(const period of qa.periods)assert.ok(!overlaps(evidence,period),'Model evidence control covers period text: '+JSON.stringify({qaWidth,qaHeight,evidence,period}));
-        for(const tick of qa.ticks){
-          assert.ok(tick.left>=qa.plotRight-1&&tick.right<=qa.chart.right+1,'Price tick escapes its reserved axis gutter: '+JSON.stringify({qaWidth,qaHeight,tick,plotRight:qa.plotRight}));
-          for(const header of qa.headers)assert.ok(!overlaps(tick,header),'Quote/source header covers a visible price tick: '+JSON.stringify({qaWidth,qaHeight,tick,header}));
-          for(const badge of qa.badges)assert.ok(!overlaps(tick,badge),'Selected/latest price tag covers a visible price tick');
+        for(const tick of qa.legacyAxisTicks){
+          assert.ok(tick.left>=qa.plotRight-1&&tick.right<=qa.chart.right+1,'Any retained legacy price label escapes the reserved Funnest axis gutter: '+JSON.stringify({qaWidth,qaHeight,tick,plotRight:qa.plotRight}));
+          for(const header of qa.headers)assert.ok(!overlaps(tick,header),'Quote/source header covers a visible price label: '+JSON.stringify({qaWidth,qaHeight,tick,header}));
+          for(const badge of qa.badges)assert.ok(!overlaps(tick,badge),'Selected/latest price tag covers a visible price label');
         }
+        for(const header of qa.headers)assert.ok(!overlaps(qa.axisBounds,header),'Quote/source header covers the actual Funnest price-axis region: '+JSON.stringify({qaWidth,qaHeight,axis:qa.axisBounds,header}));
         for(const date of qa.dates)for(const tick of qa.timeTicks)assert.ok(!overlaps(date,tick),'Selected date badge covers a normal time tick');
         receipt.workspace.reportedQaViewports.push(qa);
         await screenshot(cdp,`workspace-btc-qa-${qaWidth}x${qaHeight}.png`,receipt);
@@ -1205,7 +1306,7 @@ export async function verifyWorkspaceSurface(api) {
     }finally{
       await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:receipt.touch});
       await settled(cdp);
-      await until(()=>evaluate(cdp,()=>{const svg=document.querySelector('#lab-chart'),b=svg.getBoundingClientRect(),v=svg.viewBox.baseVal;return Math.abs(b.width-v.width)<=1&&Math.abs(b.height-v.height)<=1;}),'restored desktop SVG resize',10000);
+      await until(()=>evaluate(cdp,()=>{const host=document.querySelector('#lab-chart').closest('.atlas-plot').querySelector('.atlas-funnest-canvas'),b=host.getBoundingClientRect(),layout=host.getAtlasFunnestSnapshot().layout;return Math.abs(b.width-layout.width)<=1&&Math.abs(b.height-layout.height)<=1;}),'restored desktop Funnest resize',10000);
     }
   }
 }

@@ -1,5 +1,33 @@
 import assert from 'node:assert/strict';
-import {verifyChartZoomBrowser} from './verify-chart-zoom-browser.mjs';
+import {readFile} from 'node:fs/promises';
+import {parseEthArchive} from '../dist/eth-market-data.js';
+import {parseEquityArchive} from '../dist/equity-market-data.js';
+import {readChart as readFunnestChart,verifyChartZoomBrowser} from './verify-chart-zoom-browser.mjs';
+import {assertNativeObservedEvidence,assertNativeOverlayEvidence,readNativeFunnestEvidence} from './funnest-browser-evidence.mjs';
+
+export function readNativeMeasurementTargets(svgSelector){
+  const svg=document.querySelector(svgSelector),plot=svg?.closest('.atlas-plot'),host=plot?.querySelector('.atlas-funnest-canvas');
+  if(!host||typeof host.getAtlasFunnestSnapshot!=='function')throw new Error('Native measurement requires the actual Funnest host');
+  const snapshot=host.getAtlasFunnestSnapshot(),bars=snapshot.engineBars||[],layout=snapshot.layout,range=snapshot.range,main=layout.panes.find(pane=>pane.kind==='main');
+  if(!bars.length||!range||!main)throw new Error('Native Funnest source bars or pane range are missing');
+  const gaps=bars.slice(1).map((bar,index)=>bar.time-bars[index].time).filter(value=>value>0),interval=Math.min(...gaps);
+  const indexAt=time=>{
+    if(time<=bars[0].time)return(time-bars[0].time)/interval;
+    if(time>=bars.at(-1).time)return bars.length-1+(time-bars.at(-1).time)/interval;
+    let lo=0,hi=bars.length-1;while(lo<=hi){const mid=(lo+hi)>>1;if(bars[mid].time<=time)lo=mid+1;else hi=mid-1;}
+    const left=bars[hi],right=bars[hi+1];return hi+(time-left.time)/(right.time-left.time);
+  };
+  const from=indexAt(Number(range.from)),to=indexAt(Number(range.to)),span=to-from,box=host.getBoundingClientRect();
+  if(!(span>1&&layout.plotWidth>0&&layout.width>layout.plotWidth))throw new Error('Native Funnest visible index range cannot support source-bar selection');
+  return [.2,.75].map((fraction,order)=>{
+    const index=Math.max(0,Math.min(bars.length-1,Math.max(Math.ceil(from),Math.min(Math.floor(to),Math.round(from+span*fraction))))),bar=bars[index],localX=(index-from)/span*layout.plotWidth;
+    if(!bar||localX<=0||localX>=layout.plotWidth)throw new Error('Native Funnest source bar lies outside the measured plot');
+    const x=Math.round(box.left+localX/layout.width*box.width),ys=[.35,.65,.5].map(value=>Math.round(box.top+(main.top+main.height*value)/layout.height*box.height));
+    const y=ys.find(value=>{const hit=document.elementFromPoint(x,value);return Boolean(hit&&(host.contains(hit)||hit===host||svg.contains(hit)||hit===svg)&&!hit.closest('button,a,input,select,textarea,[role="button"]'));});
+    if(y===undefined)throw new Error('Native source-bar coordinate is obstructed');
+    return {x,y,index,time:bar.time,date:new Date(bar.time).toISOString().slice(0,10),fraction,barCenter:x,selectionCell:{left:box.left+(index-.5-from)/span*layout.plotWidth/layout.width*box.width,right:box.left+(index+.5-from)/span*layout.plotWidth/layout.width*box.width},spacing:layout.plotWidth/span};
+  });
+}
 
 /** The checked-out native controllers run in the candidate browser. All state
  * changes below use real pointer/keyboard input; evaluation only reads DOM or
@@ -15,16 +43,27 @@ export async function verifyNativeChartWorkbench(api) {
   const symbol=await evaluate(cdp,()=>document.body.dataset.market);
   assert.ok(['ETHUSD','MSTR','BMNR'].includes(symbol),'Native parity verification requires an actual native instrument');
   const eth=symbol==='ETHUSD',svg=eth?'#eth-chart':'#equity-chart',prefix=eth?'eth':'equity',product=eth?'ETH-USD':symbol;
+  const archiveName=eth?'eth-ohlc.json':`${symbol.toLowerCase()}-ohlc.json`,sourceArchive=JSON.parse(await readFile(new URL('../dist/data/'+archiveName,import.meta.url),'utf8')),
+    sourceSeries=eth?parseEthArchive(sourceArchive,'daily'):parseEquityArchive(sourceArchive,{symbol,interval:'daily'});
+  assert.ok(Array.isArray(sourceSeries.candles)&&sourceSeries.candles.length>0,'Native symbol archive must contain source OHLCV bars');
   const record=receipt.nativeWorkbench={symbol,states:[],input:'native CDP pointer and keyboard'};
-  const state=()=>evaluate(cdp,({svg,prefix})=>{
-    const node=document.querySelector(svg),latest=node.querySelector('.market-last-price'),pane=node.querySelector('.volume-pane'),measure=node.querySelector('.chart-measurement');
-    return {product:node.dataset.product,interval:node.dataset.interval,type:node.dataset.chartType,scale:node.dataset.scale,invert:node.dataset.invertScale,
-      observed:Number(node.dataset.observedCandleCount),latest:latest?.querySelector('text')?.textContent,latestTitle:latest?.querySelector('title')?.textContent,
-      price:document.querySelector('#'+prefix+'-price').textContent,date:document.querySelector('#'+prefix+'-bar-time').textContent,
-      range:document.querySelector('#workbench-range-label').textContent,tool:node.closest('.atlas-plot').dataset.tool,
-      volume:pane?{unit:pane.dataset.volumeUnit,clock:pane.dataset.volumeClock,count:Number(pane.dataset.volumeObservedCount),projected:Number(pane.dataset.volumeProjectionCount),title:pane.querySelector('.volume-pane-title')?.textContent}:null,
-      measurement:measure&&measure.getAttribute('display')!=='none'?{pending:measure.dataset.pending,start:{...measure.querySelector('.measurement-start')?.dataset},end:{...measure.querySelector('.measurement-end')?.dataset},text:measure.querySelector('.measurement-label')?.textContent}:null};
-  },{svg,prefix});
+  const state=async()=>{
+    const chart=await evaluate(cdp,readFunnestChart,{svgSelector:svg,allocationSelector:'.atlas-plot'});
+    const ui=await evaluate(cdp,({svg,prefix,symbol})=>{
+      const node=document.querySelector(svg),plot=node.closest('.atlas-plot'),host=plot.querySelector('.atlas-funnest-canvas'),snapshot=host.getAtlasFunnestSnapshot(),layout=snapshot.layout;
+      const pane=layout.panes.find(item=>item.kind==='volume'),main=layout.panes.find(item=>item.kind==='main'),canvas=host.querySelector('canvas');
+      let volumePixels={readable:false,opaquePixels:0,sampledColors:0,pixelHash:null};
+      if(pane&&canvas){try{const data=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data,x0=0,x1=Math.min(canvas.width,Math.round(layout.plotWidth/layout.width*canvas.width)),y0=Math.round(pane.top/layout.height*canvas.height),y1=Math.min(canvas.height,Math.round((pane.top+pane.height)/layout.height*canvas.height));let hash=2166136261;const colors=new Set();volumePixels.readable=true;const step=Math.max(1,Math.floor(x1*(y1-y0)/12000));for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x+=step){const i=(y*canvas.width+x)*4;colors.add(`${data[i]},${data[i+1]},${data[i+2]},${data[i+3]}`);if(data[i+3])volumePixels.opaquePixels++;for(let j=0;j<4;j++){hash^=data[i+j]||0;hash=Math.imul(hash,16777619);}}volumePixels.sampledColors=colors.size;volumePixels.pixelHash=(hash>>>0).toString(16);}catch{}}
+      const measure=node.querySelector('.chart-measurement'),bars=snapshot.engineBars||[],overlay=plot.inspectAtlasOverlayRender?.()||null;
+      return {product:symbol==='ETHUSD'?'ETH-USD':symbol,interval:document.querySelector('#workbench-interval-select')?.value||'daily',type:snapshot.chartType,scale:snapshot.settings?.priceScale,invert:String(Boolean(snapshot.inverted)),
+        observed:bars.length,latest:document.querySelector('#'+prefix+'-price').textContent,latestTitle:document.querySelector('#'+prefix+'-bar-time').textContent,
+        price:document.querySelector('#'+prefix+'-price').textContent,date:document.querySelector('#'+prefix+'-bar-time').textContent,
+        range:`${snapshot.range?.from}/${snapshot.range?.to}`,tool:plot.dataset.tool,overlay,layout,
+        volume:{enabled:Boolean(snapshot.settings?.volume&&pane),painted:Boolean(pane&&volumePixels.readable&&volumePixels.opaquePixels>0&&volumePixels.sampledColors>1),unit:symbol==='ETHUSD'?'ETH':'주',clock:symbol==='ETHUSD'?'UTC':'뉴욕 세션',count:bars.filter(bar=>Number.isFinite(bar.volume)).length,projected:0,title:snapshot.source?.product||symbol,pixels:volumePixels},
+        measurement:measure&&measure.getAttribute('display')!=='none'?{pending:measure.dataset.pending,start:{...measure.querySelector('.measurement-start')?.dataset},end:{...measure.querySelector('.measurement-end')?.dataset},text:measure.querySelector('.measurement-label')?.textContent}:null};
+    },{svg,prefix,symbol});
+    return {...chart,...ui};
+  };
   async function key(key,code,number,modifiers=0) {
     for(const type of ['keyDown','keyUp'])await cdp.send('Input.dispatchKeyEvent',{type,key,code,windowsVirtualKeyCode:number,nativeVirtualKeyCode:number,modifiers,...(type==='keyDown'&&key==='Enter'?{text:'\r',unmodifiedText:'\r'}:{})});
     await settled(cdp);
@@ -49,7 +88,7 @@ export async function verifyNativeChartWorkbench(api) {
   async function shot(name){await screenshot(cdp,`native-${symbol.toLowerCase()}-${width}x${height}-${name}.png`,receipt);}
   function inside(box,label){assert.ok(box.width>0&&box.height>0&&box.display!=='none'&&box.visibility!=='hidden',label+' is not painted');assert.ok(box.left>=-1&&box.right<=width+1&&box.top>=-1&&box.bottom<=height+1,label+' exceeds the viewport '+JSON.stringify({...box,text:undefined}));}
 
-  await until(()=>evaluate(cdp,s=>Number(document.querySelector(s)?.dataset.observedCandleCount)>0,svg),symbol+' native observations');
+  await until(()=>evaluate(cdp,s=>{const host=document.querySelector(s)?.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas'),snapshot=host?.getAtlasFunnestSnapshot?.();return Boolean(snapshot?.painted&&snapshot.engineBars?.length>0&&snapshot.canvases?.some(canvas=>canvas.readable&&canvas.opaquePixels>0&&canvas.sampledColors>1));},svg),symbol+' painted Funnest observations');
   await settled(cdp);
   record.shell=await evaluate(cdp,()=>({
     shell:document.body.dataset.shell,page:document.body.dataset.page,centerTool:document.body.dataset.centerTool||null,
@@ -86,6 +125,21 @@ export async function verifyNativeChartWorkbench(api) {
     }
   }
   record.initial=await state();assert.equal(record.initial.product,product);
+  assert.equal(record.initial.engine,'funnest');assert.equal(record.initial.painted,true);assert.equal(record.initial.sourceCheck.matched,record.initial.barCount);
+  assert.deepEqual([record.initial.sourceCheck.missing.length,record.initial.sourceCheck.valueMismatches.length,record.initial.sourceCheck.volumeMismatches.length],[0,0,0],'Native Funnest OHLCV bars must match the symbol-specific archive');
+  const renderer=await evaluate(cdp,readNativeFunnestEvidence,'.atlas-plot');
+  record.renderer=assertNativeObservedEvidence(renderer,sourceSeries,{symbol:product,chartType:record.initial.type});
+  const overlay=renderer.overlay,overlayProof=assertNativeOverlayEvidence(overlay,{forecast:eth||symbol==='MSTR',baseline:eth});
+  record.overlay=overlayProof;
+  // BMNR has no forecast/baseline by contract (assertNativeOverlayEvidence just
+  // asserted zero segments), so the in-plot proof uses the painted geometry
+  // each symbol actually owns: forecast/baseline segments where expected, and
+  // the real event lines everywhere.
+  const insidePlot=point=>point.x>=0&&point.x<=renderer.snapshot.layout.plotWidth&&point.y>=-12&&point.y<=renderer.snapshot.layout.panesHeight+12;
+  const forecastPoints=[...overlay.forecastSegments.coordinates,...overlay.baselineSegments.coordinates].flatMap(segment=>[segment.from,segment.to]);
+  if(eth||symbol==='MSTR')assert.ok(forecastPoints.some(insidePlot),'Native painter coordinates have no rendered forecast segment inside the actual Funnest plot');
+  const eventPoints=(overlay.eventLines||[]).flatMap(line=>[{x:line.x,y:line.y1},{x:line.x,y:line.y2}]);
+  assert.ok([...forecastPoints,...eventPoints].some(insidePlot),'Native painter coordinates have no rendered segment inside the actual Funnest plot');
   await verifyChartZoomBrowser({...api,svgSelector:svg,allocationSelector:'.atlas-plot',label:symbol});
   await shot('layout');
 
@@ -100,58 +154,35 @@ export async function verifyNativeChartWorkbench(api) {
   assert.ok((await bounds(cdp,'#chart-reader')).text.includes(symbol),'Settings belong to a stale symbol');
   // Volume now starts visible on native ETH/equity charts, so the setting is
   // exercised in both directions and the lane always ends with real bars.
-  const volumeBefore=await evaluate(cdp,s=>Boolean(document.querySelector(s+' .volume-bar')),svg);
+  const volumeBefore=(await state()).volume.enabled;
   await click(cdp,'[data-native-setting="showVolume"]');
-  await until(()=>evaluate(cdp,([s,b])=>Boolean(document.querySelector(s+' .volume-bar'))!==b,[svg,volumeBefore]),'source volume bars toggled');
-  if(volumeBefore){await click(cdp,'[data-native-setting="showVolume"]');await until(()=>evaluate(cdp,s=>Boolean(document.querySelector(s+' .volume-bar')),svg),'source volume bars');}
+  await until(()=>evaluate(cdp,([s,b])=>{const host=document.querySelector(s)?.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas'),snapshot=host?.getAtlasFunnestSnapshot?.();return Boolean(snapshot?.settings?.volume&&snapshot.layout.panes.some(pane=>pane.kind==='volume'))!==b;},[svg,volumeBefore]),'native Funnest volume pane toggled');
+  if(volumeBefore){await click(cdp,'[data-native-setting="showVolume"]');await until(()=>evaluate(cdp,s=>{const host=document.querySelector(s)?.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas'),snapshot=host?.getAtlasFunnestSnapshot?.();return Boolean(snapshot?.settings?.volume&&snapshot.layout.panes.some(pane=>pane.kind==='volume'));},svg),'native Funnest source volume pane');}
   const volume=await state();record.states.push({action:'source-volume',...volume});
-  assert.equal(volume.product,product);assert.equal(volume.volume.unit,eth?'ETH':'주');assert.equal(volume.volume.clock,eth?'UTC':'뉴욕 세션');
-  assert.ok(volume.volume.count>0&&volume.volume.count<=volume.observed);assert.equal(volume.volume.projected,0);assert.doesNotMatch(volume.volume.title,/BTC/);
-  record.sourceVolumes=await evaluate(cdp,async({svg,symbol})=>{
-    const response=await fetch(new URL('./data/'+(symbol==='ETHUSD'?'eth':symbol.toLowerCase())+'-ohlc.json',location.href),{credentials:'omit',cache:'no-store'});
-    if(!response.ok)throw new Error('Native source archive HTTP '+response.status);
-    const source=await response.json(),rows=(source.dailyHistory||source).candles,map=new Map(rows.map(row=>[row.time,row]));
-    const rendered=[...document.querySelectorAll(svg+' .volume-bar')];
-    return {product:source.product,count:rendered.length,sourceCount:rows.length,mismatches:rendered.filter(node=>Number(node.dataset.volume)!==map.get(Number(node.dataset.time))?.volume).map(node=>node.dataset.time)};
-  },{svg,symbol});
-  assert.equal(record.sourceVolumes.product,product);assert.equal(record.sourceVolumes.count,volume.volume.count);assert.deepEqual(record.sourceVolumes.mismatches,[],'Native volume changed the archived source quantities');
-  const scaleBefore=volume.scale;
+  assert.equal(volume.product,product);assert.equal(volume.volume.enabled,true);assert.equal(volume.volume.unit,eth?'ETH':'주');assert.equal(volume.volume.clock,eth?'UTC':'뉴욕 세션');
+  assert.ok(volume.volume.count>0&&volume.volume.count<=volume.observed&&volume.volume.painted&&volume.volume.pixels.readable&&volume.volume.pixels.opaquePixels>0&&volume.volume.pixels.sampledColors>1);
+  assert.equal(volume.volume.projected,0);assert.doesNotMatch(volume.volume.title,/BTC/);
+  record.sourceVolumes={product:volume.sourceCheck.archiveProduct,count:volume.volume.count,sourceCount:volume.sourceCheck.sourceRows,mismatches:volume.sourceCheck.volumeMismatches,archiveUrl:volume.sourceCheck.archiveUrl};
+  assert.equal(record.sourceVolumes.product,product);assert.deepEqual(record.sourceVolumes.mismatches,[],'Native volume changed the archived source quantities');
+  const scaleBefore=volume.scale,scalePixels=volume.actualCanvases.map(canvas=>canvas.mainPanePixelHash).join('|');
   await click(cdp,'#chart-reader .native-reader-action');
-  assert.notEqual((await state()).scale,scaleBefore,'Settings must alter this symbol’s actual price axis');
+  const scaleChanged=await state();assert.notEqual(scaleChanged.scale,scaleBefore,'Settings must alter this symbol’s actual price scale');
+  assert.notEqual(scaleChanged.actualCanvases.map(canvas=>canvas.mainPanePixelHash).join('|'),scalePixels,'Native price-scale setting did not repaint the real Funnest canvas');
   await click(cdp,'#chart-reader .native-reader-action');
-  await click(cdp,'[data-native-setting="invertScale"]');assert.equal((await state()).invert,'true');
+  const invertBefore=await state(),invertPixels=invertBefore.actualCanvases.map(canvas=>canvas.mainPanePixelHash).join('|');
+  await click(cdp,'[data-native-setting="invertScale"]');const inverted=await state();assert.equal(inverted.invert,'true');
+  assert.notEqual(inverted.actualCanvases.map(canvas=>canvas.mainPanePixelHash).join('|'),invertPixels,'Native invert setting did not repaint the actual Funnest canvas');
   await click(cdp,'[data-native-setting="invertScale"]');assert.equal((await state()).invert,'false');
   await click(cdp,'#chart-reader .reader-heading button');await shot('volume');
 
   await tool('[data-chart-tool="measure"]');assert.equal((await state()).tool,'measure');
   for(let step=0;step<2;step++)await tool('#workbench-magnet');
   assert.equal(await evaluate(cdp,()=>document.querySelector('.workbench-magnet-badge').textContent),'강');
-  const points=await evaluate(cdp,s=>{
-    const chart=document.querySelector(s),b=chart.getBoundingClientRect(),v=chart.viewBox.baseVal,rows=[...chart.querySelectorAll('.volume-bar')];
-    const left=b.left+Number(chart.dataset.plotLeft)/v.width*b.width,right=b.left+Number(chart.dataset.plotRight)/v.width*b.width;
-    const top=b.top+Number(chart.dataset.plotTop)/v.height*b.height,bottom=b.top+Number(chart.dataset.priceBottom)/v.height*b.height;
-    const bars=rows.map(row=>{const r=row.getBoundingClientRect();return {time:Number(row.dataset.time),date:row.dataset.date,center:r.left+r.width/2};});
-    return [.2,.75].map((fraction,index)=>{
-      const desired=Math.floor((bars.length-1)*fraction),order=bars.map((_,i)=>i).sort((a,c)=>Math.abs(a-desired)-Math.abs(c-desired));
-      for(const i of order){
-        const bar=bars[i],cellLeft=i?(bars[i-1].center+bar.center)/2:left,cellRight=i+1<bars.length?(bar.center+bars[i+1].center)/2:right;
-        // A real mouse click may quantize fractional CSS coordinates. Choose
-        // an integer pixel strictly inside this actual bar's nearest-date cell
-        // instead of assuming every subpixel rectangle center is addressable.
-        const first=Math.ceil(cellLeft+.02),last=Math.floor(cellRight-.02);if(first>last)continue;
-        const x=Math.max(first,Math.min(last,Math.round(bar.center)));
-        const ys=[.35,.65,.5].map(f=>Math.round(top+(bottom-top)*f)),y=ys.find(y=>{
-          const hit=document.elementFromPoint(x,y);return hit&&(hit===chart||chart.contains(hit))&&!hit.closest('[data-history-event],[data-forecast-evidence],[data-research-annotation],button,[role="button"]');
-        });
-        if(y!==undefined)return {x,y,index,time:bar.time,date:bar.date,barCenter:bar.center,selectionCell:{left:cellLeft,right:cellRight}};
-      }
-      throw new Error('No unobscured integer mouse pixel selects a visible source bar');
-    });
-  },svg);
+  const points=await evaluate(cdp,readNativeMeasurementTargets,svg);
   record.measurementInputs=points;
   for(const point of points){assert.ok(Number.isFinite(point.x)&&Number.isFinite(point.y));for(const type of ['mouseMoved','mousePressed','mouseReleased'])await cdp.send('Input.dispatchMouseEvent',{type,x:point.x,y:point.y,...(type==='mouseMoved'?{}:{button:'left',clickCount:1})});await settled(cdp);}
   const measured=await state();assert.equal(measured.measurement?.pending,'false');
-  for(const [index,side]of ['start','end'].entries())assert.equal(Date.parse(measured.measurement[side].measureDate)/1000,points[index].time,'Measurement must retain the selected actual source date');
+  for(const [index,side]of ['start','end'].entries())assert.equal(Date.parse(measured.measurement[side].measureDate),points[index].time,'Measurement must retain the selected actual source date');
   record.states.push({action:'measure',...measured});await shot('measurement');
   await tool('#workbench-clear');assert.equal((await state()).measurement,null);
   await action('#workbench-undo','#workbench-undo');assert.deepEqual((await state()).measurement,measured.measurement,'Undo must restore only the native drawing state');

@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { readNativeInteractiveTarget } from './verify-workspace-browser.mjs';
-import { verifyChartZoomBrowser } from './verify-chart-zoom-browser.mjs';
 import { inNativeSelectPopupMode } from './native-select-keyboard.mjs';
 
 // Only an explicit pre-dispatch bounds rejection permits another native path.
@@ -75,6 +74,47 @@ export function assertConsolidatedObservationGeometry(result,symbol,unit) {
   }
 }
 
+/** Read the real diagnosis renderer, its accessible SVG, its source table and its source-index date control. */
+export function readConsolidatedDiagnosisChart() {
+  const chart=document.querySelector('.ml-price-card .atlas-funnest-observed-chart[data-chart="price"][data-chart-engine="funnest"]');
+  const frame=document.defaultView?.frameElement,parentDocument=frame?.ownerDocument||document;
+  const toolbar=frame?.dataset.toolbarId?parentDocument.getElementById(frame.dataset.toolbarId):document;
+  const selected=toolbar?.querySelector('[data-selected-date][data-selected-index]');
+  const svg=chart?.querySelector('svg[role="img"]'),input=parentDocument.querySelector('input[type="range"][data-date="price"]');
+  const seriesPaths=[...svg?.querySelectorAll('path')||[]].map(path=>{const box=path.getBoundingClientRect();return {dLength:path.getAttribute('d')?.length||0,stroke:path.style.stroke||'',visible:path.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})&&box.width>0&&box.height>0};});
+  const table=chart?.querySelector('.atlas-funnest-source-table table');
+  const rows=[...table?.querySelectorAll('tbody tr')||[]].map(row=>({date:row.querySelector('th[scope="row"]')?.textContent?.trim()||'',value:row.querySelector('td')?.textContent?.trim()||''}));
+  const sourceCount=Number(chart?.dataset.sourceCount),inputState=input?{min:Number(input.min),max:Number(input.max),index:Number(input.value),valueText:input.getAttribute('aria-valuetext')||''}:
+    selected?{min:0,max:sourceCount-1,index:Number(selected.dataset.selectedIndex),valueText:selected.dataset.selectedDate||''}:null;
+  return {ready:Boolean(chart&&svg&&inputState&&table),engine:chart?.dataset.chartEngine||null,id:chart?.dataset.chart||null,
+    sourceCount,renderer:{engine:chart?.dataset.chartEngine||null,svgPaths:seriesPaths},svg:{role:svg?.getAttribute('role')||null,tabindex:svg?.getAttribute('tabindex'),label:svg?.getAttribute('aria-label')||'',visible:Boolean(svg?.checkVisibility()),box:(()=>{if(!svg)return null;const r=svg.getBoundingClientRect();return {width:r.width,height:r.height};})()},
+    input:inputState,selectedDate:selected?.dataset.selectedDate||null,selectedIndex:selected?Number(selected.dataset.selectedIndex):null,
+    tableCaption:table?.querySelector('caption')?.textContent?.trim()||'',caption:chart?.querySelector('figure figcaption')?.textContent?.trim()||'',rows};
+}
+
+export function assertConsolidatedDiagnosisChart(result,label='diagnosis') {
+  const prefix=label+': actual Funnest diagnosis chart';
+  assert.ok(result?.ready&&result.engine==='funnest'&&result.id==='price',prefix+' must be ready in the active chart card');
+  assert.ok(Number.isInteger(result.sourceCount)&&result.sourceCount>0,prefix+' must retain its declared source count');
+  assert.equal(result.rows.length,result.sourceCount,prefix+' source table must contain every original row');
+  assert.equal(result.renderer?.engine,'funnest',prefix+' must retain the actual Funnest React renderer');
+  assert.ok(result.renderer.svgPaths?.some(path=>path.visible&&path.dLength>20&&path.stroke.includes('--data-gold')),
+    prefix+' must prove the observed-price series is painted as real Funnest SVG path geometry');
+  assert.ok(result.svg.visible&&result.svg.box?.width>0&&result.svg.box?.height>0,prefix+' accessible SVG must be visibly painted');
+  assert.equal(result.svg.role,'img',prefix+' native SVG keeps its image role');
+  assert.equal(result.svg.tabindex,'0',prefix+' native SVG remains keyboard focusable');
+  const validRows=result.rows.filter(row=>row.value!=='관측값 없음').length;
+  assert.match(result.svg.label,new RegExp(' · '+validRows+'개 관측$'),prefix+' accessible observation count matches original finite values');
+  assert.match(result.tableCaption,/(?:US\$|USD|KRW|지수|%|pt)/,prefix+' source table discloses its original unit');
+  assert.ok(result.input&&result.input.min===0&&result.input.max===result.sourceCount-1&&Number.isInteger(result.input.index)&&result.input.index>=0&&result.input.index<result.sourceCount,
+    prefix+' source-index date control spans every original row');
+  const selected=result.rows[result.input.index];
+  assert.ok(selected?.date&&result.input.valueText.startsWith(selected.date+','),prefix+' selected date control resolves to its exact source row');
+  assert.ok(result.caption.includes(selected.date)&&result.caption.includes(selected.value),prefix+' accessible selected readout matches the selected original row');
+  assert.ok(result.tableCaption.length>0,prefix+' table retains its source caption');
+  return selected;
+}
+
 // Preserve toolbar ownership across center-workspace switches. Phone charts
 // expose their original controls through the single bottom dock's disclosure;
 // direct market/data controls remain inside their own visible heading.
@@ -134,12 +174,16 @@ export function assertConsolidatedCanvasClearance(result,label='workspace') {
 }
 
 const layoutTolerance=1;
+export const consolidatedFunnestPriceSvgSelector='.rsi-chart-canvas .atlas-funnest-instrument-plot svg[role="img"][data-start][data-end]';
+export function isConsolidatedFunnestPriceSvg(svg,plot){return Boolean(svg&&plot&&svg.getAttribute('role')==='img'&&svg.hasAttribute('data-start')&&svg.hasAttribute('data-end')&&svg.closest('.atlas-funnest-instrument-plot')===plot);}
+export function findConsolidatedFunnestPriceSvg(plot){return [...plot?.querySelectorAll?.('svg[role="img"]')||[]].find(svg=>isConsolidatedFunnestPriceSvg(svg,plot))||null;}
 const validRect=r=>r&&['left','right','top','bottom','width','height'].every(k=>Number.isFinite(r[k]))&&r.width>0&&r.height>0;
 const insideRect=(r,owner)=>validRect(r)&&validRect(owner)&&r.left>=owner.left-layoutTolerance&&r.right<=owner.right+layoutTolerance&&r.top>=owner.top-layoutTolerance&&r.bottom<=owner.bottom+layoutTolerance;
 
 export function readConsolidatedChartAllocation() {
   const frame=document.querySelector('.atlas-center-frame:not([hidden])'),doc=frame?.contentDocument;
-  const svg=doc?.querySelector('.rsi-chart-canvas svg'),canvas=svg?.closest('.rsi-chart-canvas');
+  const canvas=doc?.querySelector('.rsi-chart-canvas'),plot=canvas?.querySelector('.atlas-funnest-instrument-plot');
+  const svg=[...plot?.querySelectorAll('svg[role="img"]')||[]].find(node=>node.hasAttribute('data-start')&&node.hasAttribute('data-end')&&node.closest('.atlas-funnest-instrument-plot')===plot)||null,rsiPanel=plot?.querySelector('.atlas-funnest-rsi[data-panel="rsi"]'),rsiSvg=rsiPanel?.querySelector('svg[role="img"]');
   const workbench=canvas?.closest('.rsi-workbench'),body=canvas?.closest('.rsi-workbench-body');
   const criteria=canvas?.querySelector(':scope > .rsi-trading-criteria');
   const rect=node=>{if(!node)return null;const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
@@ -152,10 +196,12 @@ export function readConsolidatedChartAllocation() {
     return {rect:r,content:{...content,width:content.right-content.left,height:content.bottom-content.top},
       visible:node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),marginTop:pixels(style.marginTop),marginBottom:pixels(style.marginBottom)};
   };
+  const lineCount=chart=>chart?[...chart.querySelectorAll('path[d]')].filter(path=>{const style=doc.defaultView.getComputedStyle(path);return (path.getAttribute('d')||'').length>20&&style.stroke!=='none'&&pixels(style.strokeOpacity||style.opacity||'1')>0&&path.checkVisibility({checkOpacity:true,checkVisibilityCSS:true});}).length:0;
   const style=workbench&&doc.defaultView.getComputedStyle(workbench);
   return {frame:{source:frame?.src,documentUrl:doc?.URL,parentUrl:document.URL,rect:rect(frame)},viewport:{width:doc?.defaultView.innerWidth,height:doc?.defaultView.innerHeight},
-    owners:{activeWindow:doc?.defaultView.frameElement===frame,svgInActiveFrame:svg?.ownerDocument===doc,canvasOwnsSvg:svg?.parentElement===canvas,bodyOwnsCanvas:canvas?.parentElement===body,criteriaSharesCanvas:criteria?.parentElement===canvas},
-    svg:measured(svg),canvas:measured(canvas),body:measured(body),workbench:measured(workbench),
+    owners:{activeWindow:doc?.defaultView.frameElement===frame,svgInActiveFrame:svg?.ownerDocument===doc,plotContainsSvg:Boolean(plot?.contains(svg)),canvasOwnsPlot:plot?.parentElement===canvas,bodyOwnsCanvas:canvas?.parentElement===body,criteriaSharesCanvas:criteria?.parentElement===canvas,
+      rsiPanelInPlot:Boolean(rsiPanel&&rsiPanel.parentElement===plot),plotContainsRsiSvg:Boolean(plot?.contains(rsiSvg)),rsiSvgInPanel:Boolean(rsiPanel?.contains(rsiSvg)),rsiSvgInActiveFrame:rsiSvg?.ownerDocument===doc},
+    svg:measured(svg),rsiPanel:measured(rsiPanel),rsiSvg:measured(rsiSvg),rsiLineCount:lineCount(rsiSvg),plot:measured(plot),canvas:measured(canvas),body:measured(body),workbench:measured(workbench),
     flow:{display:style?.display,direction:style?.flexDirection,gap:pixels(style?.rowGap),children:[...workbench?.children||[]].filter(node=>{
       const s=doc.defaultView.getComputedStyle(node);return s.display!=='none'&&!['absolute','fixed'].includes(s.position)&&node.getClientRects().length;
     }).map(node=>({kind:node===body?'body':node.classList?.contains('rsi-trading-criteria')?'criteria':node.matches('.rsi-workbench-status')?'status':'unexpected',...measured(node)}))},
@@ -166,20 +212,42 @@ export function readConsolidatedChartAllocation() {
 }
 
 export function assertConsolidatedChartAllocation(result,symbol) {
-  const label=symbol+': chart fills its allocated work area';
-  if(!['TQQQ','SOXL','233740'].includes(symbol)){
-    // These instruments have no trading-criteria overlay: preserve the original viewport gate.
-    assert.ok(result.svg.visible&&result.svg.height>=result.childHeight*.75,label);
-    return;
+  const label=symbol+': chart fills its allocated work area',a=result.allocation,tolerance=1,inside=insideRect;
+  // Only the RSI simulation instruments own an RSI pane (rsi-workbench starts
+  // with showRsi:true). General instruments (HYPE) and housing boards render
+  // through initialInstrumentView, whose default view is showRsi:false, so
+  // their painted price pane alone must meet the allocation gate.
+  const rsiRequired=['TQQQ','SOXL','233740'].includes(symbol);
+  assert.ok(a?.plot&&a.svg,symbol+': actual Funnest price pane and plot allocation must exist');
+  assert.ok(a.svg.visible&&inside(a.svg.rect,a.plot.content)&&a.owners?.plotContainsSvg,
+    symbol+': price pane is painted and contained by its active Funnest plot');
+  assert.ok(Math.abs(result.svg.height-a.svg.rect.height)<=tolerance&&Math.abs(result.svg.width-a.svg.rect.width)<=tolerance,
+    symbol+': price-axis receipt preserves the first native price SVG identity');
+  assert.equal(Boolean(a.rsiPanel),Boolean(a.rsiSvg),symbol+': RSI panel and its native SVG exist together');
+  if(rsiRequired)assert.ok(a.rsiPanel&&a.rsiSvg&&a.rsiPanel.visible&&a.rsiSvg.visible&&a.rsiLineCount>0,
+    symbol+': actual visible Funnest RSI pane has painted source data');
+  else assert.ok(!a.rsiPanel&&!a.rsiSvg&&a.rsiLineCount===0,
+    symbol+': default instrument view (showRsi:false) must not paint an RSI pane');
+  if(a.rsiPanel&&a.rsiSvg){
+    assert.ok(a.owners.rsiPanelInPlot&&a.owners.plotContainsRsiSvg&&a.owners.rsiSvgInPanel&&a.owners.rsiSvgInActiveFrame,
+      symbol+': RSI pane and SVG retain the same active Funnest plot owner');
+    assert.ok(inside(a.rsiPanel.rect,a.plot.content)&&inside(a.rsiSvg.rect,a.rsiPanel.content),
+      symbol+': RSI pane and its painted SVG stay inside their measured owners');
+    assert.ok(a.rsiPanel.rect.height>=119&&a.rsiSvg.rect.height>=119,
+      symbol+': RSI pane retains its native 120px layout instead of collapsing');
+    assert.ok(a.svg.rect.bottom<=a.rsiPanel.rect.top+tolerance,
+      symbol+': price and RSI panes are stacked without overlap');
   }
-  const a=result.allocation,tolerance=1;
+  const combinedPaneHeight=a.svg.rect.height+(a.rsiSvg?.rect.height||0);
+  const requiredHeight=['TQQQ','SOXL','233740'].includes(symbol)?a.plot.content.height:result.childHeight;
+  assert.ok(combinedPaneHeight>=requiredHeight*.75,label);
+  if(!['TQQQ','SOXL','233740'].includes(symbol))return;
   const valid=validRect;
-  const inside=insideRect;
   const same=(r,owner)=>inside(r,owner)&&['left','right','top','bottom'].every(k=>Math.abs(r[k]-owner[k])<=tolerance);
-  assert.ok(a?.criteria&&a.workbench&&a.body&&a.canvas&&a.svg,symbol+': actual in-chart trading criteria and chart allocation must exist');
+  assert.ok(a.criteria&&a.workbench&&a.body&&a.canvas&&a.plot&&a.svg,symbol+': actual in-chart trading criteria and Funnest plot allocation must exist');
   const sourceUrl=new URL(a.frame.source),documentUrl=new URL(a.frame.documentUrl),parentUrl=new URL(a.frame.parentUrl);
   assert.ok(documentUrl.origin===sourceUrl.origin&&sourceUrl.origin===parentUrl.origin&&documentUrl.pathname===sourceUrl.pathname&&documentUrl.pathname.startsWith(consolidatedPagesBase),symbol+': allocation retains the active iframe source application');
-  assert.ok(['activeWindow','svgInActiveFrame','canvasOwnsSvg','bodyOwnsCanvas','criteriaSharesCanvas'].every(key=>a.owners[key]===true),symbol+': criteria, body, canvas and SVG retain their active-frame owners');
+  assert.ok(['activeWindow','svgInActiveFrame','plotContainsSvg','canvasOwnsPlot','bodyOwnsCanvas','criteriaSharesCanvas'].every(key=>a.owners[key]===true),symbol+': criteria, workbench body and Funnest plot retain their actual active-frame owners');
   assert.ok(Math.abs(a.frame.rect.width-a.viewport.width)<=tolerance&&Math.abs(a.frame.rect.height-a.viewport.height)<=tolerance,symbol+': active iframe maps to its child viewport 1:1');
   const viewport={left:0,top:0,right:a.viewport.width,bottom:a.viewport.height,width:a.viewport.width,height:a.viewport.height};
   assert.ok(a.workbench.visible&&same(a.workbench.rect,viewport),symbol+': workbench fills the active child viewport');
@@ -200,9 +268,7 @@ export function assertConsolidatedChartAllocation(result,symbol) {
   assert.ok(remainingHeight>0&&Math.abs(a.body.rect.top-top)<=tolerance&&Math.abs(a.body.rect.bottom-bottom)<=tolerance,
     symbol+': chart body fills all remaining height after status, margins and gaps: '+JSON.stringify({top,bottom,remainingHeight,body:a.body.rect}));
   assert.ok(a.body.visible&&a.canvas.visible&&same(a.canvas.rect,a.body.content),symbol+': chart canvas fills its allocated body without blank space');
-  assert.ok(result.svg.visible&&a.svg.visible&&result.svg.height>=a.canvas.content.height*.75,label);
-  assert.ok(same(a.svg.rect,a.canvas.content),symbol+': SVG stays contained in and fills the actual canvas');
-  assert.ok(Math.abs(result.svg.height-a.svg.rect.height)<=tolerance&&Math.abs(result.svg.width-a.svg.rect.width)<=tolerance,symbol+': price-axis and allocation receipts measure the same SVG');
+  assert.ok(inside(a.svg.rect,a.plot.content),symbol+': Funnest price SVG stays inside the actual plot while its axis header and source table keep their own space');
   // cd53cad ownership: the trading criteria is a real overlay child of the chart
   // canvas, painted for this instrument and never escaping the plot it covers.
   assert.equal(a.criteria.symbol,symbol,symbol+': criteria overlay retains its selected instrument owner');
@@ -218,6 +284,53 @@ export function assertConsolidatedChartAllocation(result,symbol) {
       symbol+': every trading-criteria row remains present');
     for(const field of a.criteria.fields)assert.ok(field.text&&field.visible&&inside(field.rect,a.criteria.rect),symbol+': criteria row remains visible and contained: '+field.key);
   }
+}
+
+// Funnest evidence/judgment markers (apps/web FunnestInstrumentMarkers): each
+// marker is a native button group whose anchor circle sits on the band center
+// of its nearest observed source row, whose label glyph stays inside the plot
+// and whose optional connector starts at that anchor. The former bespoke
+// `.theme-event-mark` badge and `.theme-event-guide` line no longer exist.
+export function assertConsolidatedFunnestMarkers(result,symbol){
+  const markers=result.markers||[],plot=result.plot,group=result.markerGroup,tolerance=.01;
+  assert.ok(group&&group.role==='group'&&/근거·판정 표식/.test(group.label||''),symbol+': actual Funnest marker group must be present');
+  assert.ok(markers.length>0,symbol+': actual evidence and judgment badges must be present');
+  assert.ok(['evidence','judgment'].every(kind=>markers.some(marker=>marker.kind===kind)),symbol+': both evidence and judgment markers are painted');
+  assert.ok(Number.isInteger(result.markerRows)&&result.markerRows>0,symbol+': marker anchors need the actual source rows');
+  assert.ok(plot&&plot.axisBox&&Number.isFinite(plot.left)&&Number.isFinite(plot.right)&&plot.right>plot.left,symbol+': marker checks need the native plot geometry');
+  const band=(plot.right-plot.left)/result.markerRows,gutterLeft=plot.axisBox.x,finiteBox=box=>box&&['x','y','width','height'].every(key=>Number.isFinite(box[key]))&&box.width>0&&box.height>0;
+  const overlaps=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+a.height>b.y;
+  const targetMode=group.status!=='not-required';
+  for(const marker of markers){
+    const id=symbol+' '+marker.kind+' '+marker.date;
+    assert.equal(marker.role,'button',id+': marker is a native button');assert.equal(marker.tabIndex,'0',id+': active marker is keyboard reachable');assert.equal(marker.disabled,'false',id+': active marker is enabled');
+    assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(marker.date)&&(marker.ariaLabel||'').includes(marker.date)&&(marker.ariaLabel||'').includes(marker.kind==='judgment'?'판정':'근거')&&marker.title,id+': accessible name discloses the observed date and kind');
+    assert.ok(marker.anchor&&marker.anchor.visible&&finiteBox(marker.anchor.box)&&marker.anchor.r>0,id+': painted anchor circle must exist');
+    assert.ok(marker.rowIndex>=0&&marker.rowIndex<result.markerRows,id+': anchor binds to an actual source row');
+    const expected=plot.left+(marker.rowIndex+.5)*band;
+    assert.ok(Math.abs(marker.anchor.cx-expected)<tolerance,id+': moving a label must preserve its anchor on the observed source row: '+JSON.stringify({cx:marker.anchor.cx,expected}));
+    assert.ok(marker.anchor.cx>=plot.left&&marker.anchor.cx<=plot.right,id+': anchor center stays inside the plot band');
+    assert.ok(marker.anchor.box.x>=0&&marker.anchor.box.x+marker.anchor.box.width<=result.svg.viewWidth,id+': anchor glyph is not clipped by the SVG');
+    for(const text of result.gutterTexts||[])assert.ok(!overlaps(marker.anchor.box,text),id+': anchor glyph must not cover price-axis labels: '+JSON.stringify({anchor:marker.anchor.box,text}));
+    if(marker.text){
+      assert.ok(marker.text.visible&&finiteBox(marker.text.box)&&marker.text.pointerEvents==='none',id+': label glyph is painted and never a hit target');
+      assert.ok(marker.text.box.x>=plot.left-tolerance&&marker.text.box.x+marker.text.box.width<=gutterLeft+tolerance,id+': label glyph must not enter the price gutter: '+JSON.stringify({text:marker.text.box,plot}));
+    }else assert.equal(marker.hitTarget,'unplaced',id+': only a marker without room may omit its label');
+    if(marker.connector){
+      assert.equal(marker.connector.pointerEvents,'none',id+': connectors cannot become hit targets');
+      assert.ok(Math.abs(marker.connector.x1-marker.anchor.cx)<tolerance&&marker.connector.x2>=plot.left-tolerance&&marker.connector.x2<=gutterLeft+tolerance,id+': connector starts at the anchor and stays inside the plot');
+    }
+    if(marker.hitTarget==='44'){
+      assert.ok(targetMode&&marker.target&&marker.target.width===44&&marker.target.height===44&&marker.target.pointerEvents==='all'&&marker.target.fill==='transparent',id+': 44px touch target is a real transparent hit area');
+      assert.ok(finiteBox(marker.target.box)&&marker.target.box.x>=plot.left-tolerance&&marker.target.box.x+marker.target.box.width<=plot.right+tolerance,id+': touch target stays inside the plot band');
+    }else{assert.equal(marker.hitTarget,'unplaced',id+': hit-target state is disclosed');assert.equal(marker.target,null,id+': no undeclared hit rect');}
+  }
+  const placed=markers.filter(marker=>marker.hitTarget==='44').length;
+  if(targetMode){
+    assert.ok(['complete','limited'].includes(group.status)&&group.count===placed&&group.unplaced===markers.length-placed,symbol+': touch-target disclosure matches the painted targets');
+    assert.ok(/44px 터치 영역 \d+\/\d+/.test(group.label),symbol+': touch-target coverage is disclosed in the group name');
+    if(group.status==='complete')assert.equal(group.unplaced,0,symbol+': complete coverage leaves no unplaced marker');
+  }else assert.ok(placed===0&&group.count===0&&group.unplaced===0,symbol+': wide plots paint no hidden touch rects');
 }
 
 // Read the details dialog and the position HUD it now owns, whichever document
@@ -367,6 +480,21 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', button: 'left', clickCount: 1, ...point });
     await settled(context);
   }
+  async function focusPriceSvg(context){
+    const selector=consolidatedFunnestPriceSvgSelector;
+    await reveal(context,selector);
+    const local=await evaluate(context,selector=>{const svg=document.querySelector(selector);if(!svg||!svg.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}))return null;
+      const r=svg.getBoundingClientRect(),x=r.left+Math.min(3,r.width/2),y=r.top+Math.min(3,r.height/2),hit=document.elementFromPoint(x,y);
+      return {x,y,insideSvg:Boolean(hit&&(hit===svg||svg.contains(hit))),hit:hit?{tag:hit.tagName,role:hit.getAttribute?.('role')||'',className:typeof hit.className==='string'?hit.className:''}:null};},selector);
+    if(!local?.insideSvg)return {focused:false,local,active:null};
+    const point=await parentPoint(context,local);
+    evidence.inputs.push({kind:'native-pointer',selector,frame:context===cdp?'parent':childId,point,focusTarget:'visible price SVG upper-left interior'});
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',...point});
+    await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});
+    await settled(context);
+    return evaluate(context,selector=>{const svg=document.querySelector(selector),active=document.activeElement;return {focused:Boolean(svg&&active===svg),role:svg?.getAttribute('role')||null,start:svg?.dataset.start||null,end:svg?.dataset.end||null,visible:Boolean(svg?.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})),active:{tag:active?.tagName||null,id:active?.id||null,className:typeof active?.className==='string'?active.className:'',role:active?.getAttribute?.('role')||null}};},selector);
+  }
   async function key(key, code, number, modifiers = 0) {
     for (const type of ['keyDown', 'keyUp']) await cdp.send('Input.dispatchKeyEvent', { type, key, code, windowsVirtualKeyCode: number, nativeVirtualKeyCode: number, modifiers,
       ...(type==='keyDown'&&key==='Enter'&&!modifiers?{text:'\r',unmodifiedText:'\r'}:{}) });
@@ -462,7 +590,9 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
   await until(() => evaluate(cdp, () => Boolean(document.querySelector('.atlas-center-frame:not([hidden])')?.contentDocument?.querySelector('[data-workspace="market"]'))), 'legacy US URL enters the unified workspace');
   await bindChild();
   await verifyOfflineRefresh({ phase: 'consolidated-initial-document' });
-  await until(() => evaluate(child, () => Boolean(document.querySelector('[data-ztd-chart="observed"] svg'))), 'actual ztd diagnosis chart');
+  await until(() => evaluate(child, () => Boolean(document.querySelector('.ml-price-card .atlas-funnest-observed-chart[data-chart="price"][data-chart-engine="funnest"] svg[role="img"]'))), 'actual Funnest ZTD diagnosis chart');
+  evidence.diagnosisReadiness=await evaluate(child,readConsolidatedDiagnosisChart);
+  assertConsolidatedDiagnosisChart(evidence.diagnosisReadiness,'US diagnosis');
   const initial = await state('us');
   assert.equal(new URL(initial.url).pathname, `${consolidatedPagesBase}market-lab/`);
   assert.equal(initial.tab, 'market-us');
@@ -472,30 +602,46 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
   };
   assert.match(evidence.diagnosisHeading.activeTab.label, /미국/,'The active market remains named in the single header');
   assert.equal(await evaluate(child,()=>document.querySelector('.ml-price-card > header')?.checkVisibility()),false,'Market title and selection must not retain a second inner header');
-  await reveal(child, '[data-ztd-chart="observed"]'); await snap('market-us');
-  await pointer(child, '.ml-price-card .ztd-root'); await key('Home', 'Home', 36); await settled(child);
-  evidence.diagnosisFocus = await evaluate(child, readNativeInteractiveTarget, '.ml-price-card .ztd-root', true);
+  const diagnosisSvg='.ml-price-card .atlas-funnest-observed-chart[data-chart="price"] svg[role="img"][tabindex="0"]';
+  await reveal(child, diagnosisSvg); await snap('market-us');
+  await pointer(child, diagnosisSvg); await key('Home', 'Home', 36); await settled(child);
+  evidence.diagnosisFocus = await evaluate(child, readNativeInteractiveTarget, diagnosisSvg, true);
   evidence.diagnosisFocus.offset = await evaluate(child, () => getComputedStyle(document.activeElement).outlineOffset);
   assert.ok(complete(evidence.diagnosisFocus) && evidence.diagnosisFocus.inside && evidence.diagnosisFocus.outline !== 'none' && evidence.diagnosisFocus.outlineWidth >= 2,
-    'Diagnosis chart must retain a visible keyboard focus ring');
+    'Funnest diagnosis SVG must retain a visible keyboard focus ring');
   assert.equal(evidence.diagnosisFocus.offset, '-2px', 'Diagnosis focus must remain inside the clipped mobile figure');
+  evidence.diagnosisHome=assertConsolidatedDiagnosisChart(await evaluate(child,readConsolidatedDiagnosisChart),'US diagnosis Home');
+  assert.equal(evidence.diagnosisHome.date,evidence.diagnosisReadiness.rows[0].date,'Native Home selects the first original source index, including any source gap');
   const alternative = await evaluate(cdp, () => {
     const select = document.querySelector('[data-control="market"]');
     return [...select.options].find(option => option.value !== select.value)?.value;
   });
   assert.ok(alternative); await select(cdp, '[data-control="market"]', alternative);
+  evidence.diagnosisAlternative=assertConsolidatedDiagnosisChart(await evaluate(child,readConsolidatedDiagnosisChart),'US alternative instrument');
   await pointer(cdp,'[data-toolbar-open="market-date"]');
   await pointer(cdp, 'input[data-date="price"]'); await key('ArrowLeft', 'ArrowLeft', 37); await settled(child);
   await closeMenu('market-date');
   const selected = await state('us-selected');
   assert.match(selected.date,/\d{4}-\d{2}-\d{2}/,'Selected observed date must stay visible in the outer toolbar');
+  evidence.diagnosisSelected=assertConsolidatedDiagnosisChart(await evaluate(child,readConsolidatedDiagnosisChart),'US selected diagnosis');
+  assert.equal(selected.date.slice(0,10),evidence.diagnosisSelected.date,'Outer toolbar selection and the exact selected Funnest source row stay synchronized');
   await marketTab('market-kr'); await state('kr'); await marketTab('market-us');
   const restored = await state('us-restored'); assert.equal(restored.market, selected.market); assert.equal(restored.date, selected.date);
-  await marketTab('scenario'); await reveal(child, '[data-ztd-chart="contributions"]');
+  evidence.diagnosisRestored=assertConsolidatedDiagnosisChart(await evaluate(child,readConsolidatedDiagnosisChart),'US restored instrument');
+  assert.equal(evidence.diagnosisRestored.date,selected.date.slice(0,10),'Returning to US restores the same source-index selection and toolbar date');
+  await marketTab('scenario'); await reveal(child, '[data-presentation-chart="scenario-contributions"].atlas-funnest-contributions');
   const before = await evaluate(cdp, () => document.querySelector('.ml-index strong').textContent);
   await action('[data-action="negative"]');
   assert.notEqual(await evaluate(cdp, () => document.querySelector('.ml-index strong').textContent), before);
-  await reveal(child, '[data-ztd-chart="contributions"]'); await state('scenario'); await snap('scenario');
+  await reveal(child, '[data-presentation-chart="scenario-contributions"].atlas-funnest-contributions');
+  evidence.scenarioSource=await evaluate(child,()=>({engine:document.querySelector('[data-presentation-chart="scenario-contributions"]')?.dataset.chartEngine,
+    label:document.querySelector('[aria-label="축별 정규화 기여도, 0 기준"]')?.getAttribute('aria-label'),
+    rows:[...document.querySelector('.atlas-funnest-contributions .atlas-funnest-source-table tbody')?.querySelectorAll('tr')||[]].map(row=>[row.querySelector('th')?.textContent?.trim(),row.querySelector('td')?.textContent?.trim()])}));
+  assert.equal(evidence.scenarioSource.engine,'funnest','Scenario contributions use the actual Funnest renderer');
+  assert.match(evidence.scenarioSource.label,/0 기준/,'Scenario remains signed against its explicit zero baseline');
+  assert.equal(evidence.scenarioSource.rows.length,3,'All three actual contribution source rows remain');
+  assert.deepEqual(evidence.scenarioSource.rows.map(row=>row[1]),['-0.667','-0.667','0.000'],'The real negative example retains its three signed normalized contribution values');
+  await state('scenario'); await snap('scenario');
   await marketTab('cashflow'); await action('[data-action="economics-example"]');
   await until(() => evaluate(child, () => document.querySelectorAll('#ml-economics-output .ml-results > div').length === 5), 'calculated cashflow example');
   await reveal(child, '#ml-economics-output .ml-results');
@@ -505,7 +651,9 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
   await pointer(cdp, '.atlas-canvas-heading .symbol-selector-trigger');
   await type(cdp, '#symbol-search-dialog input', 'TQQQ');
   await pointer(cdp, '#symbol-option-TQQQ');
-  await until(() => evaluate(child, () => document.querySelector('.rsi-price-line')?.getAttribute('d')?.length > 20), 'TQQQ actual price path');
+  await until(() => evaluate(child, () => {const chart=document.querySelector('.rsi-chart-canvas .atlas-funnest-instrument-plot'),svg=[...chart?.querySelectorAll('svg[role="img"]')||[]].find(node=>node.getAttribute('aria-label')?.includes('TQQQ')),caption=chart?.querySelector('.atlas-funnest-source-table table caption')?.textContent?.trim()||'',rows=chart?.querySelectorAll('.atlas-funnest-source-table table tbody tr').length||0;return Boolean(svg&&caption.startsWith('TQQQ ·')&&rows>0&&[...svg.querySelectorAll('path')].some(path=>path.getAttribute('d')?.length>20&&path.style.stroke.includes('--data-gold')&&path.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})));}), 'TQQQ actual Funnest SVG price path and source table');
+  evidence.tqqqSvg=await evaluate(child,()=>{const chart=document.querySelector('.rsi-chart-canvas .atlas-funnest-instrument-plot'),svg=[...chart?.querySelectorAll('svg[role="img"]')||[]].find(node=>node.getAttribute('aria-label')?.includes('TQQQ'));return {engine:chart?.dataset.chartEngine||null,label:svg?.getAttribute('aria-label')||null,caption:chart?.querySelector('.atlas-funnest-source-table table caption')?.textContent?.trim()||null,rows:chart?.querySelectorAll('.atlas-funnest-source-table table tbody tr').length||0,pricePaths:[...svg?.querySelectorAll('path')||[]].filter(path=>path.getAttribute('d')?.length>20&&path.style.stroke.includes('--data-gold')).length};});
+  assert.equal(evidence.tqqqSvg.engine,'funnest');assert.match(evidence.tqqqSvg.caption,/^TQQQ · USD ·/);assert.ok(evidence.tqqqSvg.rows>0&&evidence.tqqqSvg.pricePaths>0,'TQQQ source rows and painted Funnest price geometry remain bound');
   assert.match((await state('tqqq')).instrument, /TQQQ/); await snap('tqqq');
   async function chartSearch(query, symbol, page) {
     await pointer(cdp,'.atlas-canvas-heading .symbol-selector-trigger');
@@ -520,7 +668,7 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
   // in-chart criteria overlay with real pointer and keyboard input, and closing
   // it must return the chart to its previous height.
   async function simulationDetailsContract(symbol){
-    const criteria='.rsi-trading-criteria',canvas='.rsi-chart-canvas svg';
+    const criteria='.rsi-trading-criteria',canvas=consolidatedFunnestPriceSvgSelector;
     async function keyboardFocus(selector){
       for(let attempt=0;attempt<16;attempt++){
         await key('Tab','Tab',9);await settled(child);
@@ -531,7 +679,7 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     for(const input of ['pointer','keyboard']){
       const before={allocation:await evaluate(cdp,readConsolidatedChartAllocation)};
       if(input==='pointer')await pointer(child,criteria);
-      else{await pointer(child,canvas);await keyboardFocus(criteria);await key('Enter','Enter',13);}
+      else{const focusedPrice=await focusPriceSvg(child);assert.ok(focusedPrice.focused,symbol+': Tab traversal starts from the visible Funnest price pane, not an RSI/icon SVG: '+JSON.stringify(focusedPrice));await keyboardFocus(criteria);await key('Enter','Enter',13);}
       await settled(child);
       let opened=await until(async()=>{const state=await evaluate(cdp,readSimulationDetailsState);return state?.dialog?.open&&state.hud?state:null;},symbol+': '+input+' opens the simulation details');
       const dialogContext=opened.owner==='parent'?cdp:child;
@@ -556,23 +704,33 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
   async function chartContract(symbol,unit,frequencies){
     await until(()=>evaluate(cdp,symbol=>document.body.dataset.chartControls==='ready'&&document.querySelector('#workbench-range-label')?.title.startsWith(symbol+' /'),symbol),'current price perimeter '+symbol);
     const result=await evaluate(cdp,()=>{
-      const doc=document.querySelector('.atlas-center-frame:not([hidden])').contentDocument,svg=doc.querySelector('.rsi-chart-canvas svg'),b=svg.getBoundingClientRect();
+      const doc=document.querySelector('.atlas-center-frame:not([hidden])').contentDocument,monthly=document.body.dataset.centerTool==='housing',container=doc.querySelector('.rsi-chart-canvas .atlas-funnest-instrument-plot'),svg=container?.querySelector('svg[role="img"]'),b=svg?.getBoundingClientRect();
       const interval=document.querySelector('#workbench-interval-select');
-      const box=node=>{if(!node)return null;const b=node.getBBox();return {x:b.x,y:b.y,width:b.width,height:b.height};};
-      const units=[...svg.querySelectorAll('.rsi-price-unit')],guides=[...svg.querySelectorAll('.theme-event-guide[data-date]')];
+      const box=node=>{if(!node)return null;const b=node.getBoundingClientRect(),o=container.getBoundingClientRect();return {x:b.left-o.left,y:b.top-o.top,width:b.width,height:b.height};};
+      const unitNode=container?.querySelector('.atlas-funnest-axis-unit'),unitRange=unitNode?doc.createRange():null;unitRange?.selectNodeContents(unitNode);
+      const units=unitNode?[{text:unitNode.textContent.trim(),box:box({getBoundingClientRect:()=>unitRange.getBoundingClientRect()}),visible:unitNode.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})}]:[];
+      // Funnest markers: an anchor circle on the nearest observed source row, a
+      // label glyph, an optional connector and (narrow plots) a 44px hit target.
+      // Measure horizontally in SVG coordinates so plot/gutter bounds compare 1:1.
+      const svgBox=node=>{if(!node||!b)return null;const r=node.getBoundingClientRect();return {x:r.left-b.left,y:r.top-b.top,width:r.width,height:r.height};};
+      const rowDates=[...container?.querySelectorAll('.atlas-funnest-source-table table tbody tr th[scope="row"]')||[]].map(node=>node.textContent.trim());
+      const nearestRow=date=>{let at=rowDates.indexOf(date);if(at>=0||!rowDates.length)return at;const target=Date.parse(date+'T00:00:00Z');return rowDates.reduce((best,stamp,i)=>Math.abs(Date.parse(stamp+'T00:00:00Z')-target)<Math.abs(Date.parse(rowDates[best]+'T00:00:00Z')-target)?i:best,0);};
+      const markerGroup=svg?.querySelector('.atlas-funnest-instrument-markers'),gutterTexts=svg?[...svg.querySelectorAll('text')].filter(node=>!node.closest('.atlas-funnest-instrument-markers')).map(svgBox).filter(box=>box.x>=Number(svg.dataset.plotRight)-1):[];
       return {nav:[...document.querySelectorAll('.atlas-nav [data-atlas-page]')].map(n=>n.dataset.atlasPage),active:[...document.querySelectorAll('.atlas-nav [aria-current=page]')].map(n=>n.dataset.atlasPage),
         range:document.querySelector('#workbench-range-label').title,frequencies:[...interval.options].filter(o=>!o.disabled&&!o.hidden).map(o=>o.value),frequency:interval.value,
-        rightRail:document.querySelector('.workbench-rail').getBoundingClientRect().width,svg:{width:b.width,height:b.height,viewWidth:svg.viewBox.baseVal.width,viewHeight:svg.viewBox.baseVal.height,start:svg.dataset.start,end:svg.dataset.end,visible:svg.checkVisibility()},
-        plot:{left:Number(svg.dataset.plotLeft),right:Number(svg.dataset.plotRight),top:Number(svg.dataset.plotTop),axisBox:box(svg.querySelector('[data-price-axis="true"] > rect'))},
-        units:units.map(node=>({text:node.textContent,box:box(node),visible:node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})})),
-        markers:[...svg.querySelectorAll('.theme-event-mark')].map(node=>{
-          const kind=node.classList.contains('evidence')?'evidence':'judgment',guide=guides.find(line=>line.dataset.date===node.dataset.date&&line.classList.contains(kind));
-          return {date:node.dataset.date,anchorX:Number(node.dataset.anchorX),kind,label:node.querySelector('text')?.textContent,
-            box:box(node),rectBox:box(node.querySelector('rect')),textBox:box(node.querySelector('text')),
-            strokeWidth:parseFloat(doc.defaultView.getComputedStyle(node.querySelector('rect')).strokeWidth),
-            role:node.getAttribute('role'),tabIndex:node.getAttribute('tabindex'),
-            guide:guide?{x1:Number(guide.getAttribute('x1')),x2:Number(guide.getAttribute('x2')),
-              pointerEvents:doc.defaultView.getComputedStyle(guide).pointerEvents,hidden:guide.getAttribute('aria-hidden')}:null};
+        rightRail:document.querySelector('.workbench-rail').getBoundingClientRect().width,svg:{width:b?.width||0,height:b?.height||0,viewWidth:parseFloat(getComputedStyle(svg).width)||0,viewHeight:parseFloat(getComputedStyle(svg).height)||0,start:svg?.dataset.start||container.querySelector('table tbody tr:first-child th[scope="row"]')?.textContent?.trim(),end:svg?.dataset.end||container.querySelector('table tbody tr:last-child th[scope="row"]')?.textContent?.trim(),visible:Boolean(svg?.checkVisibility())},
+        plot:{left:Number(svg?.dataset.plotLeft),right:Number(svg?.dataset.plotRight),top:Number(svg?.dataset.plotTop),axisBox:unitNode?{x:Number(svg.dataset.plotRight),y:0,width:b.width-Number(svg.dataset.plotRight),height:Number(svg.dataset.plotTop)}:null},unitCaption:container.querySelector('.atlas-funnest-source-table table caption')?.textContent?.trim()||'',sourceRows:container.querySelectorAll('.atlas-funnest-source-table table tbody tr').length,
+        units:units.map(node=>({text:node.text,box:node.box,visible:node.visible})),
+        markerRows:rowDates.length,gutterTexts,
+        markerGroup:markerGroup?{label:markerGroup.getAttribute('aria-label'),role:markerGroup.getAttribute('role'),status:markerGroup.dataset.hitTargetStatus,count:Number(markerGroup.dataset.hitTargetCount),unplaced:Number(markerGroup.dataset.hitTargetUnplaced)}:null,
+        markers:[...markerGroup?.querySelectorAll(':scope > g[role="button"][data-marker-kind][data-marker-date]')||[]].map(node=>{
+          const circle=node.querySelector('circle'),text=node.querySelector('text'),connector=node.querySelector('line'),target=node.querySelector('rect'),cs=el=>el?doc.defaultView.getComputedStyle(el):null;
+          return {date:node.dataset.markerDate,kind:node.dataset.markerKind,rowIndex:nearestRow(node.dataset.markerDate),label:text?.textContent??null,title:node.querySelector('title')?.textContent??null,
+            ariaLabel:node.getAttribute('aria-label'),role:node.getAttribute('role'),tabIndex:node.getAttribute('tabindex'),disabled:node.getAttribute('aria-disabled'),hitTarget:node.dataset.hitTarget,
+            anchor:circle?{cx:Number(circle.getAttribute('cx')),cy:Number(circle.getAttribute('cy')),r:Number(circle.getAttribute('r')),strokeWidth:parseFloat(cs(circle).strokeWidth)||0,box:svgBox(circle),visible:circle.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})}:null,
+            text:text?{box:svgBox(text),pointerEvents:cs(text).pointerEvents,visible:text.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})}:null,
+            connector:connector?{x1:Number(connector.getAttribute('x1')),x2:Number(connector.getAttribute('x2')),pointerEvents:cs(connector).pointerEvents}:null,
+            target:target?{box:svgBox(target),width:Number(target.getAttribute('width')),height:Number(target.getAttribute('height')),pointerEvents:cs(target).pointerEvents,fill:target.getAttribute('fill')}:null};
         }),
         childHeight:doc.defaultView.innerHeight,sourceClock:document.querySelector('#atlas-update-status').getAttribute('aria-label'),candles:!document.querySelector('#workbench-chart-type').disabled};
     });
@@ -595,61 +753,112 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     assert.deepEqual(result.frequencies,frequencies,symbol+': only observed source frequencies');
     assertConsolidatedChartAllocation(result,symbol);
     if(['TQQQ','SOXL','233740'].includes(symbol))await simulationDetailsContract(symbol);
-    assert.ok(Math.abs(result.svg.width-result.svg.viewWidth)<=1&&Math.abs(result.svg.height-result.svg.viewHeight)<=1,symbol+': pixel-sized chart labels');
-    assert.equal(result.units.length,1,symbol+': one visible price-axis unit');
-    const axisUnit=result.units[0],unitBox=axisUnit.box;
-    assert.ok(result.plot.axisBox&&Math.abs(result.plot.axisBox.x-result.plot.right)<.01,symbol+': actual price gutter matches its plot boundary');
-    assert.equal(axisUnit.text,unit,symbol+': axis retains the original source unit');
-    assert.ok(axisUnit.visible&&unitBox&&Object.values(unitBox).every(Number.isFinite)&&unitBox.width>0&&unitBox.height>0&&
-      unitBox.x>=result.plot.axisBox.x&&unitBox.x+unitBox.width<=result.svg.viewWidth&&unitBox.y>=0&&unitBox.y+unitBox.height<=result.plot.top,
-    symbol+': unit glyphs stay inside the existing upper price-gutter margin');
-    if(symbol==='HYPE'){
-      assert.ok(result.markers.length>0,'HYPE: actual evidence and judgment badges must be present');
-      for(const marker of result.markers){
-        const b=marker.box,stroke=marker.strokeWidth/2;
-        assert.ok(b&&Object.values(b).every(Number.isFinite)&&b.width>0&&b.height>0&&Number.isFinite(stroke)&&stroke>=0&&
-          b.x-stroke>=result.plot.left&&b.x+b.width+stroke<=result.plot.axisBox.x,'HYPE: painted badge glyphs and stroke must not enter the price gutter');
-        const start=Date.parse(result.svg.start+'T00:00:00Z'),end=Date.parse(result.svg.end+'T00:00:00Z'),stamp=Date.parse(marker.date+'T00:00:00Z');
-        const x=result.plot.left+(stamp-start)/Math.max(86400000,end-start)*(result.plot.right-result.plot.left);
-        assert.ok(Number.isFinite(x)&&Math.abs(marker.anchorX-x)<.01&&marker.guide&&Math.abs(marker.guide.x1-x)<.01&&Math.abs(marker.guide.x2-x)<.01,
-          'HYPE: moving a badge must preserve its original observed date guide');
-        assert.equal(marker.guide.pointerEvents,'none','HYPE: date guides cannot become button hit targets');
-        assert.equal(marker.guide.hidden,'true');assert.equal(marker.role,'button');assert.equal(marker.tabIndex,'0');
-      }
+    assert.ok(Math.abs(result.svg.width-result.svg.viewWidth)<=1&&Math.abs(result.svg.height-result.svg.viewHeight)<=1,symbol+': Funnest SVG uses pixel-sized rendered geometry');
+    assert.ok(result.sourceRows>0&&result.unitCaption.includes(unit),symbol+': complete source table discloses the actual source unit');
+    {
+      assert.equal(result.units.length,1,symbol+': one visible price-axis unit');
+      const axisUnit=result.units[0],unitBox=axisUnit.box;
+      assert.ok(result.plot.axisBox&&Math.abs(result.plot.axisBox.x-result.plot.right)<.01,symbol+': actual price gutter matches the native Funnest plot boundary');
+      assert.equal(axisUnit.text,unit,symbol+': axis retains the original source unit');
+      assert.ok(axisUnit.visible&&unitBox&&Object.values(unitBox).every(Number.isFinite)&&unitBox.width>0&&unitBox.height>0&&
+        unitBox.x>=result.plot.axisBox.x&&unitBox.x+unitBox.width<=result.svg.viewWidth&&unitBox.y>=0&&unitBox.y+unitBox.height<=result.plot.top,
+      symbol+': unit glyphs stay inside the existing upper price-gutter margin');
     }
+    if(symbol==='HYPE')assertConsolidatedFunnestMarkers(result,'HYPE');
     if(receipt.width>760)assert.equal(result.rightRail,45,symbol+': same narrow rail');
     if(frequencies[0]==='monthly'){assert.equal(result.candles,false);assert.match(result.sourceClock,/가격지수 \d{4}-\d{2} · 거래량 \d{4}-\d{2}/);}
     evidence.states.push({label:'common-chart-'+symbol,...result});
-    if(!zoomVerifiedSymbols.has(symbol)){
-      await verifyChartZoomBrowser({...api,context:child,parentPoint:point=>parentPoint(child,point),
-        svgSelector:'.rsi-chart-canvas svg',allocationSelector:'.rsi-chart-canvas',label:symbol});
+    const keyboardSelector='.rsi-chart-canvas .atlas-funnest-instrument-plot';
+    const keyboardEvidence=await evaluate(child,selector=>{const root=document.querySelector(selector),svg=root?.querySelector('svg[role="img"]'),table=root?.querySelector('.atlas-funnest-source-table table'),rows=[...table?.querySelectorAll('tbody tr')||[]];return {role:svg?.getAttribute('role')||null,tabindex:svg?.getAttribute('tabindex')||null,rows:rows.map(row=>[row.querySelector('th[scope="row"]')?.textContent?.trim()||'',...[...row.querySelectorAll('td')].map(cell=>cell.textContent.trim())]),headers:[...table?.querySelectorAll('thead th')||[]].map(cell=>cell.textContent.trim()),candles:svg?svg.querySelectorAll('rect[style*="--chart-candle"]').length:0,caption:table?.querySelector('caption')?.textContent?.trim()||''};},keyboardSelector);
+    assert.equal(keyboardEvidence.role,'img',symbol+': Funnest SVG exposes its accessible chart role');assert.equal(keyboardEvidence.tabindex,'0',symbol+': Funnest SVG is keyboard focusable');assert.ok(keyboardEvidence.rows.length>0,symbol+': keyboard selection is bound to source rows');
+    const focus=await focusPriceSvg(child);
+    const focusStyle=await evaluate(child,selector=>{const svg=document.querySelector(selector);return {boxShadow:getComputedStyle(svg).boxShadow,tabindex:svg.getAttribute('tabindex')};},consolidatedFunnestPriceSvgSelector);
+    assert.ok(focus.focused&&focusStyle.tabindex==='0'&&focusStyle.boxShadow!=='none',symbol+': visible Funnest price SVG receives native focus with a focus ring: '+JSON.stringify({focus,focusStyle}));
+    // Funnest candle charts disclose the scrubbed source row as its exact
+    // "저가 – 고가" range inside the SVG and the exact close in the live readout;
+    // line charts disclose the close inside the SVG. Both bind to the same table row.
+    const candleColumns=keyboardEvidence.candles>0?{high:keyboardEvidence.headers.indexOf('고가'),low:keyboardEvidence.headers.indexOf('저가')}:null;
+    if(candleColumns)assert.ok(candleColumns.high>0&&candleColumns.low>0,symbol+': candle source table discloses 고가/저가 columns');
+    const readCurrentDatum=async index=>{const row=keyboardEvidence.rows[index];return evaluate(child,([selector,date,value,range])=>{const root=document.querySelector(selector),svg=root?.querySelector('svg[role="img"]'),box=svg?.getBoundingClientRect(),topScrubber=svg&&[...svg.querySelectorAll('text')].find(node=>node.textContent.trim()===date&&node.getBoundingClientRect().top-box.top<40),outside=root?.querySelector('.atlas-sr-only')?.textContent?.trim()||root?.querySelector('figure figcaption span[data-selected-date]')?.textContent?.trim()||'',scrubberTexts=svg?[...svg.querySelectorAll('text')].filter(node=>node.getBoundingClientRect().top-box.top<40).map(node=>node.textContent.trim()):[];return {dateSeen:Boolean(topScrubber)||outside.startsWith(date+' ·'),valueSeen:value==='관측값 없음'?outside.startsWith(date+' ·')&&outside.includes('관측값 없음'):range?Boolean(value&&scrubberTexts.includes(range)&&outside.startsWith(date+' · '+value+' ')):Boolean(value&&svg?.textContent.includes(value)),outside,scrubberTexts};},[keyboardSelector,row[0],row[1]||'',candleColumns&&row[1]!=='관측값 없음'?row[candleColumns.low]+' – '+row[candleColumns.high]:null]);};
+    await key('Home','Home',36);await settled(child);
+    await until(async()=>{const current=await readCurrentDatum(0);return current.dateSeen&&current.valueSeen;},symbol+' keyboard Home renders the exact first source datum');
+    await key('End','End',35);await settled(child);
+    await until(async()=>{const current=await readCurrentDatum(keyboardEvidence.rows.length-1);return current.dateSeen&&current.valueSeen;},symbol+' keyboard End renders the exact last source datum');
+    evidence.funnestKeyboard??=[];evidence.funnestKeyboard.push({symbol,role:keyboardEvidence.role,tabindex:keyboardEvidence.tabindex,caption:keyboardEvidence.caption,sourceRows:keyboardEvidence.rows.length,first:keyboardEvidence.rows[0],last:keyboardEvidence.rows.at(-1),focus});
+    if(!zoomVerifiedSymbols.has(symbol)&&!symbol.startsWith('HOUSING-')){
+      const before=await evaluate(child,()=>{const plot=document.querySelector('.rsi-chart-canvas .atlas-funnest-instrument-plot'),svg=plot?.querySelector('svg[role="img"]'),table=plot?.querySelector('.atlas-funnest-source-table table');return {start:svg?.dataset.start,end:svg?.dataset.end,label:svg?.getAttribute('aria-label')||'',caption:table?.querySelector('caption')?.textContent?.trim()||'',source:[...table?.querySelectorAll('tbody tr')||[]].map(row=>[row.querySelector('th[scope="row"]')?.textContent?.trim()||'',...[...row.querySelectorAll('td')].map(cell=>cell.textContent.trim())]),box:(()=>{if(!svg)return null;const r=svg.getBoundingClientRect();return {left:r.left,top:r.top,width:r.width,height:r.height};})()};});
+      assert.ok(before.start&&before.end&&before.source.length>1&&before.box?.width>0&&before.box?.height>0,symbol+': Funnest React SVG must expose its observed range and complete source table before zoom');
+      const local={x:before.box.left+before.box.width*.45,y:before.box.top+before.box.height*.42},point=await parentPoint(child,local);
+      await dispatchNativeScroll(cdp,{point,deltaY:-160},()=>settled(child));
+      await until(()=>evaluate(child,range=>{const svg=document.querySelector('.rsi-chart-canvas .atlas-funnest-instrument-plot svg[role="img"]');return Boolean(svg?.dataset.start&&svg.dataset.end&&(svg.dataset.start!==range.start||svg.dataset.end!==range.end));},before),'Funnest React native plot-wheel range zoom '+symbol);
+      const zoomed=await evaluate(child,()=>{const plot=document.querySelector('.rsi-chart-canvas .atlas-funnest-instrument-plot'),svg=plot.querySelector('svg[role="img"]'),table=plot.querySelector('.atlas-funnest-source-table table');return {start:svg.dataset.start,end:svg.dataset.end,label:svg.getAttribute('aria-label')||'',caption:table.querySelector('caption')?.textContent?.trim()||'',source:[...table.querySelectorAll('tbody tr')].map(row=>[row.querySelector('th[scope="row"]')?.textContent?.trim()||'',...[...row.querySelectorAll('td')].map(cell=>cell.textContent.trim())])};});
+      assert.ok(zoomed.start!==before.start||zoomed.end!==before.end,symbol+': native Funnest wheel must change the visible observation range');
+      assert.equal(zoomed.caption,before.caption,symbol+': zoom retains the original unit/source disclosure');
+      assert.deepEqual(zoomed.source,before.source.filter(row=>row[0]>=zoomed.start&&row[0]<=zoomed.end),symbol+': zoomed source table is the exact original source-row subset, including all cell values and missing observations');
+      evidence.funnestReactZoom??=[];evidence.funnestReactZoom.push({symbol,before:{start:before.start,end:before.end,caption:before.caption,rowCount:before.source.length,first:before.source[0],last:before.source.at(-1)},zoomed:{start:zoomed.start,end:zoomed.end,caption:zoomed.caption,rowCount:zoomed.source.length,first:zoomed.source[0],last:zoomed.source.at(-1)}});
+      // boundedWindow clamps wheel windows to the observed timeline. An original
+      // window that equals its observed rows (TQQQ/SOXL/233740 full history) must
+      // come back exactly; a padded original window (HYPE: last row + 4 days) can
+      // never be reproduced by a wheel, so the expansion must instead re-cover
+      // every original source row with identical values.
+      const observedBounds={start:before.source[0][0],end:before.source.at(-1)[0]},paddedWindow=before.start<observedBounds.start||before.end>observedBounds.end;
+      const restoredWindow=range=>paddedWindow?range.start<=observedBounds.start&&range.end>=observedBounds.end:range.start===before.start&&range.end===before.end;
+      for(let attempt=0;attempt<8;attempt++){
+        const current=await evaluate(child,()=>{const svg=document.querySelector('.rsi-chart-canvas .atlas-funnest-instrument-plot svg[role="img"]');return {start:svg?.dataset.start,end:svg?.dataset.end};});
+        if(current.start&&current.end&&restoredWindow(current))break;
+        await dispatchNativeScroll(cdp,{point,deltaY:160},()=>settled(child));
+      }
+      await until(()=>evaluate(child,()=>{const svg=document.querySelector('.rsi-chart-canvas .atlas-funnest-instrument-plot svg[role="img"]');return svg?.dataset.start&&svg?.dataset.end?{start:svg.dataset.start,end:svg.dataset.end}:null;}).then(range=>Boolean(range&&restoredWindow(range))),'Funnest React wheel expansion restores original period '+symbol);
+      const restored=await evaluate(child,()=>{const plot=document.querySelector('.rsi-chart-canvas .atlas-funnest-instrument-plot'),svg=plot.querySelector('svg[role="img"]'),table=plot.querySelector('.atlas-funnest-source-table table');return {start:svg?.dataset.start,end:svg?.dataset.end,caption:table?.querySelector('caption')?.textContent?.trim()||'',source:[...table?.querySelectorAll('tbody tr')||[]].map(row=>[row.querySelector('th[scope="row"]')?.textContent?.trim()||'',...[...row.querySelectorAll('td')].map(cell=>cell.textContent.trim())])};});
+      if(paddedWindow){
+        assert.ok(restored.start<=observedBounds.start&&restored.end>=observedBounds.end,symbol+': opposite native wheel re-covers every original observed row: '+JSON.stringify({restored:{start:restored.start,end:restored.end},observedBounds}));
+        assert.equal(restored.caption,before.caption,symbol+': wheel expansion retains the original unit/source disclosure');
+        assert.deepEqual(restored.source.filter(row=>row[0]>=before.start&&row[0]<=before.end),before.source,symbol+': wheel expansion restores the exact original source rows, including all cell values');
+        assert.deepEqual(restored.source.filter(row=>row[0]>=zoomed.start&&row[0]<=zoomed.end),zoomed.source,symbol+': the zoomed rows remain the same source rows after expansion');
+      }else assert.deepEqual({start:restored.start,end:restored.end},{start:before.start,end:before.end},symbol+': opposite native wheel restores the exact original observed window');
+      evidence.funnestReactZoom.at(-1).restored={start:restored.start,end:restored.end,rowCount:restored.source.length,paddedWindow,observedBounds};
       zoomVerifiedSymbols.add(symbol);
     }
     return result;
   }
   async function commonChartActions(symbol,monthly){
-    const canvas='.rsi-chart-canvas svg',panel='.rsi-workbench-panel';
+    const canvas=consolidatedFunnestPriceSvgSelector,panel='.rsi-workbench-panel';
     if(receipt.width<=620){
       await pointer(cdp,'#mobile-tools-toggle');await key('k','KeyK',75,2);await settled(child);
       await until(()=>evaluate(child,()=>document.querySelector('.rsi-workbench-panel')?.getAttribute('aria-label')?.endsWith('명령 검색')),'keyboard command pane from mobile tray '+symbol);
       assert.equal(await evaluate(cdp,()=>Boolean(document.querySelector('.mobile-workbench-button[aria-expanded=true]'))),false,'mobile tray cannot obscure the selected chart command pane');
       await pointer(child,panel+' header button');
     }
-    await pointer(child,canvas);
+    const focusedPrice=await focusPriceSvg(child);
+    assert.ok(focusedPrice.focused,symbol+': keyboard chart commands start from the visible Funnest price pane: '+JSON.stringify(focusedPrice));
     await key('m','KeyM',77);await settled(child);
     assert.equal(await evaluate(child,()=>document.querySelector('.rsi-chart-canvas').dataset.tool),'measure');
     await key('c','KeyC',67);await settled(child);
-    const original=await evaluate(child,()=>{const s=document.querySelector('.rsi-chart-canvas svg');return [s.dataset.start,s.dataset.end];});
-    await key('+','Equal',187);await settled(child);
-    await until(()=>evaluate(child,before=>{const s=document.querySelector('.rsi-chart-canvas svg');return s.dataset.start!==before[0]||s.dataset.end!==before[1];},original),'zoom '+symbol);
-    await key('z','KeyZ',90,2);await settled(child);
-    assert.deepEqual(await evaluate(child,()=>{const s=document.querySelector('.rsi-chart-canvas svg');return [s.dataset.start,s.dataset.end];}),original,symbol+': undo restores exact observed range');
+    const original=await evaluate(child,selector=>{const s=document.querySelector(selector);return [s.dataset.start,s.dataset.end];},canvas);
+    const undoChord=process.platform==='darwin'?4:2;
+    await key('+','Equal',187,8);await settled(child);
+    await until(()=>evaluate(child,([selector,before])=>{const s=document.querySelector(selector);return s.dataset.start!==before[0]||s.dataset.end!==before[1];},[canvas,original]),'native plus key zooms the visible Funnest price range '+symbol);
+    const keyboardZoom=await evaluate(child,selector=>{const s=document.querySelector(selector);return [s.dataset.start,s.dataset.end];},canvas);
+    assert.ok(keyboardZoom[0]>=original[0]&&keyboardZoom[1]===original[1],symbol+': plus zoom keeps the source-period right edge and narrows the range');
+    await key('z','KeyZ',90,undoChord);await settled(child);
+    await until(()=>evaluate(child,([selector,before])=>{const s=document.querySelector(selector);return s.dataset.start===before[0]&&s.dataset.end===before[1];},[canvas,original]),'native Ctrl/Meta+Z restores exact pre-zoom range '+symbol);
+    assert.deepEqual(await evaluate(child,selector=>{const s=document.querySelector(selector);return [s.dataset.start,s.dataset.end];},canvas),original,symbol+': native undo restores exact pre-zoom source range');
+    await key('+','Equal',187,8);await settled(child);
+    const inward=await evaluate(child,selector=>{const s=document.querySelector(selector);return [s.dataset.start,s.dataset.end];},canvas);
+    await key('-','Minus',189);await settled(child);
+    await until(()=>evaluate(child,([selector,before])=>{const s=document.querySelector(selector);return s.dataset.start!==before[0]||s.dataset.end!==before[1];},[canvas,inward]),'native minus key expands the Funnest price range '+symbol);
+    const outward=await evaluate(child,selector=>{const s=document.querySelector(selector);return [s.dataset.start,s.dataset.end];},canvas);
+    assert.ok(outward[0]<=inward[0]&&outward[1]>=inward[1]&&(outward[0]<inward[0]||outward[1]>inward[1]),symbol+': minus zoom expands rather than narrows the keyboard-zoomed range');
+    await key('z','KeyZ',90,undoChord);await settled(child);
+    await until(()=>evaluate(child,([selector,before])=>{const s=document.querySelector(selector);return s.dataset.start===before[0]&&s.dataset.end===before[1];},[canvas,inward]),'native undo restores the keyboard-zoomed range '+symbol);
+    await key('z','KeyZ',90,undoChord);await settled(child);
+    await until(()=>evaluate(child,([selector,before])=>{const s=document.querySelector(selector);return s.dataset.start===before[0]&&s.dataset.end===before[1];},[canvas,original]),'native undo restores exact source range after plus/minus checks '+symbol);
     await key('g','KeyG',71,1);await settled(child);
     await until(()=>evaluate(child,()=>document.querySelector('.rsi-workbench-panel')?.getAttribute('aria-label')?.endsWith('날짜·기간')),'date pane '+symbol);
     assert.equal(await evaluate(child,()=>document.querySelector('.rsi-workbench-panel input').type),monthly?'month':'date');
     await pointer(child,panel+' header button');
     async function command(label){
-      await pointer(child,canvas);await key('k','KeyK',75,2);await settled(child);
+      const refocused=await focusPriceSvg(child);assert.ok(refocused.focused,symbol+': command shortcut refocuses the visible Funnest price pane');await key('k','KeyK',75,2);await settled(child);
       await type(child,panel+' input[type=search]',label);await pointer(child,panel+' .rsi-command-option');
     }
     await command('차트 설정');
@@ -672,7 +881,9 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     await chartSearch(symbol,symbol,'rsi');await chartContract(symbol,unit,['daily','weekly']);await snap(symbol.toLowerCase());
   }
   await chartSearch('서울', 'HOUSING-SEOUL', 'housing');
-  await until(() => evaluate(child, () => document.querySelector('.housing-chart .rsi-price-line')?.getAttribute('d')?.length > 20), 'Seoul observed price chart');
+  await until(() => evaluate(child, () => {const chart=document.querySelector('.housing-chart .atlas-funnest-instrument-plot[data-symbol="HOUSING-SEOUL"]'),svg=chart?.querySelector('svg[role="img"]'),caption=chart?.querySelector('.atlas-funnest-source-table table caption')?.textContent?.trim()||'',rows=chart?.querySelectorAll('.atlas-funnest-source-table table tbody tr').length||0;return Boolean(chart?.dataset.chartEngine==='funnest'&&svg&&caption.startsWith('HOUSING-SEOUL · 지수 ·')&&rows>0&&[...svg.querySelectorAll('path')].some(path=>path.getAttribute('d')?.length>20&&path.style.stroke.includes('--data-gold')&&path.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})));}), 'Seoul observed Funnest SVG price chart and source table');
+  evidence.housingSvg=await evaluate(child,()=>{const chart=document.querySelector('.housing-chart .atlas-funnest-instrument-plot[data-symbol="HOUSING-SEOUL"]'),svg=chart?.querySelector('svg[role="img"]');return {engine:chart?.dataset.chartEngine||null,symbol:chart?.dataset.symbol||null,label:svg?.getAttribute('aria-label')||null,caption:chart?.querySelector('.atlas-funnest-source-table table caption')?.textContent?.trim()||null,rows:chart?.querySelectorAll('.atlas-funnest-source-table table tbody tr').length||0,pricePaths:[...svg?.querySelectorAll('path')||[]].filter(path=>path.getAttribute('d')?.length>20&&path.style.stroke.includes('--data-gold')).length};});
+  assert.equal(evidence.housingSvg.engine,'funnest');assert.match(evidence.housingSvg.caption,/지수/);assert.ok(evidence.housingSvg.rows>0&&evidence.housingSvg.pricePaths>0,'Housing source rows and painted Funnest price geometry remain bound');
   await chartContract('HOUSING-SEOUL','지수',['monthly']);
   assert.equal(await evaluate(cdp, () => document.querySelector('[aria-label="부동산 지역"]').value), 'seoul');
   await state('housing-seoul'); await snap('housing');
@@ -689,7 +900,9 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
   }
   await commonChartActions('HOUSING-NATIONAL',true);
   await chartSearch('하이퍼리퀴드', 'HYPE', 'themes');
-  await until(() => evaluate(child, () => document.querySelectorAll('.theme-price-chart .theme-volume').length>0), 'HYPE actual chart');
+  await until(() => evaluate(child, () => {const chart=document.querySelector('.rsi-chart-canvas .atlas-funnest-instrument-plot[data-symbol="HYPE"]'),svg=chart?.querySelector('svg[role="img"]'),table=chart?.querySelector('.atlas-funnest-source-table table'),caption=table?.querySelector('caption')?.textContent?.trim()||'',rows=[...table?.querySelectorAll('tbody tr')||[]],candleBodies=[...svg?.querySelectorAll('rect')||[]].filter(node=>['var(--chart-candle-up)','var(--chart-candle-down)'].includes(node.style.fill)&&Number(node.getAttribute('height'))>0);return Boolean(chart?.dataset.chartEngine==='funnest'&&svg?.getAttribute('aria-label')?.includes('HYPE')&&caption.startsWith('HYPE · USDC ·')&&rows.length>0&&rows.every(row=>row.querySelectorAll('td').length>=5)&&candleBodies.length>0);}), 'HYPE actual Funnest SVG candles and source table');
+  evidence.hypeSvg=await evaluate(child,()=>{const chart=document.querySelector('.rsi-chart-canvas .atlas-funnest-instrument-plot[data-symbol="HYPE"]'),svg=chart?.querySelector('svg[role="img"]'),table=chart?.querySelector('.atlas-funnest-source-table table');return {engine:chart?.dataset.chartEngine||null,symbol:chart?.dataset.symbol||null,label:svg?.getAttribute('aria-label')||null,caption:table?.querySelector('caption')?.textContent?.trim()||null,rows:table?.querySelectorAll('tbody tr').length||0,candleBodies:[...svg?.querySelectorAll('rect')||[]].filter(node=>['var(--chart-candle-up)','var(--chart-candle-down)'].includes(node.style.fill)&&Number(node.getAttribute('height'))>0).length};});
+  assert.equal(evidence.hypeSvg.engine,'funnest');assert.equal(evidence.hypeSvg.symbol,'HYPE');assert.match(evidence.hypeSvg.caption,/^HYPE · USDC ·/);assert.ok(evidence.hypeSvg.rows>0&&evidence.hypeSvg.candleBodies>0,'HYPE candles and source table retain the original USDC series');
   assert.equal(new URL((await state('hype-selected')).url).searchParams.get('symbol'),'HYPE');
   await pointer(cdp,'[data-toolbar-open="theme-summary"]');
   assert.match(await evaluate(cdp,()=>document.querySelector('[data-toolbar-dialog="theme-summary"] .theme-identity').textContent),/HYPE\/USDC/,'The selected asset retains its actual quote currency');
