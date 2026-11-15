@@ -39,18 +39,24 @@ function disclosedBitcoinWeeks(rows, cursor) {
   });
 }
 
-// Focus the chart with native input inside the actual Funnest main pane. SVG
-// overlays may receive the event, but the point is never inferred from SVG axes.
 export function readChartReplayFocusTarget(selector) {
-  const svg=document.querySelector(selector),plot=svg.closest('.atlas-plot'),host=plot.querySelector('.atlas-funnest-canvas'),snapshot=host?.getAtlasFunnestSnapshot?.(),layout=snapshot?.layout,
-    main=layout?.panes?.find(pane=>pane.kind==='main'||pane.id==='main'),box=svg.getBoundingClientRect(),hostBox=host?.getBoundingClientRect();
+  const svg=document.querySelector(selector),plot=svg.closest('.atlas-plot'),box=svg.getBoundingClientRect(),replay=svg.dataset.chartReplayActive==='true',
+    funnestReplay=replay&&svg.dataset.replayRenderer==='funnest';
+  const interactive='a,button,input,select,textarea,[role="button"],[tabindex],[data-cycle-clock],[data-forecast-evidence],[data-research-annotation],[data-cycle-interval],[data-cycle-marker],[data-history-event],[data-next-turn]';
+  const owner=hit=>hit?{tag:hit.tagName,id:hit.id||null,className:hit.getAttribute('class'),control:hit.closest('[data-cr]')?.dataset.cr??null}:null;
+  const chart={left:box.left,right:box.right,top:box.top,bottom:box.bottom};
+  if(replay&&!funnestReplay){
+    const point={x:box.left+3,y:box.top+box.height*.25},hit=document.elementFromPoint(point.x,point.y),action=hit?.closest(interactive);
+    return {point,chart,surface:'replay-svg',reachesChart:svg.contains(hit),interactive:Boolean(action&&action!==svg),owner:owner(hit)};
+  }
+  const host=plot.querySelector(funnestReplay?'.atlas-funnest-canvas[data-chart-replay-host="true"]':'.atlas-funnest-canvas:not([data-chart-replay-host])'),snapshot=host?.getAtlasFunnestSnapshot?.(),layout=snapshot?.layout,
+    main=layout?.panes?.find(pane=>pane.kind==='main'||pane.id==='main'),hostBox=host?.getBoundingClientRect();
   if(!host||!snapshot||!main||!(layout?.width>0&&layout?.height>0&&layout?.plotWidth>0&&hostBox?.width>0&&hostBox?.height>0))return null;
   const point={x:hostBox.left+Math.min(layout.plotWidth*.03,3)/layout.width*hostBox.width,y:hostBox.top+(main.top+main.height*.25)/layout.height*hostBox.height};
-  const hit=document.elementFromPoint(point.x,point.y),action=hit?.closest('a,button,input,select,textarea,[role="button"],[tabindex],[data-cycle-clock],[data-forecast-evidence],[data-research-annotation],[data-cycle-interval],[data-cycle-marker],[data-history-event],[data-next-turn]');
-  return {point,chart:{left:box.left,right:box.right,top:box.top,bottom:box.bottom},pricePane:{left:hostBox.left,top:hostBox.top+main.top/layout.height*hostBox.height,
+  const hit=document.elementFromPoint(point.x,point.y),action=hit?.closest(interactive);
+  return {point,chart,surface:funnestReplay?'replay-svg':'live-chart',pricePane:{left:hostBox.left,top:hostBox.top+main.top/layout.height*hostBox.height,
     right:hostBox.left+layout.plotWidth/layout.width*hostBox.width,bottom:hostBox.top+(main.top+main.height)/layout.height*hostBox.height},
-    reachesChart:svg.contains(hit)||host.contains(hit)||hit===host,interactive:Boolean(action&&action!==svg&&action!==host),
-    owner:hit?{tag:hit.tagName,id:hit.id||null,className:hit.getAttribute('class'),control:hit.closest('[data-cr]')?.dataset.cr??null}:null};
+    reachesChart:svg.contains(hit)||!funnestReplay&&Boolean(hit&&host.contains(hit)),interactive:Boolean(action&&action!==svg&&action!==host),owner:owner(hit)};
 }
 
 // The compact row may hide these meanings behind +N. Read their actual clones
@@ -137,7 +143,7 @@ export function readChartReplayFloatingGeometry({ chartSelector, panel }) {
   const freeProbes = candidates.filter(point => point.excludedBy.length === 0);
   const hit = point => {
     const node = document.elementFromPoint(point.x, point.y), control = node?.closest('[data-cr]');
-    return { ...point, reachesChart: svg.contains(node)||Boolean(host&&(host.contains(node)||node===host)), owner: node ? { tag: node.tagName, id: node.id || null, className: node.getAttribute('class'), control: control?.dataset.cr ?? null } : null };
+    return { ...point, reachesChart: svg.contains(node), owner: node ? { tag: node.tagName, id: node.id || null, className: node.getAttribute('class'), control: control?.dataset.cr ?? null } : null };
   };
   const probes = freeProbes.map(hit), originalProbe = hit(originalPoint);
   return { chart: box, plot: { ...rect(plot), clientHeight: plot.clientHeight }, root: { ...rect(root), pointerEvents: getComputedStyle(root).pointerEvents, background: getComputedStyle(root).backgroundColor },
@@ -174,7 +180,7 @@ export function assertChartReplayPricePaneAccess(geometry) {
     assert.ok(geometry.priceMatrix&&Number.isFinite(geometry.priceMatrix.a)&&geometry.priceMatrix.a>0,'The SVG replay renderer must expose its real screen CTM');
   }
   for (const point of geometry.probes) assert.equal(point.reachesChart, true,
-    'An unobstructed ' + (geometry.renderer==='funnest'?'Funnest':'SVG') + ' price-pane probe cannot reach its chart input surface: ' + JSON.stringify({ ...point,
+    'An unobstructed ' + (geometry.renderer==='funnest'?'Funnest':'SVG') + ' price-pane probe cannot reach the SVG: ' + JSON.stringify({ ...point,
       geometry: { chart: geometry.chart, plot: geometry.plot, pricePane: geometry.pricePane, priceCoordinates: geometry.priceCoordinates,
         bar: geometry.bar, exit: geometry.exit, excludedRects: geometry.excludedRects, requiredProbeCount: geometry.requiredProbeCount } }));
   assert.equal(geometry.pointerReachesChart, true);
@@ -258,7 +264,7 @@ export async function verifyEarlyChartReplayCadence({ readFrame, readPersistence
   let fixture = null, measurement = null, result, failure;
   try {
     const before = await readFrame('early-10x-original-daily-baseline'), persistent = await readPersistence();
-    assert.equal(before.mode, 'atlas-chart'); assert.equal(before.renderer, 'atlas'); assert.equal(before.state, 'paused');
+    assert.equal(before.mode, 'atlas-chart'); assert.equal(before.renderer, 'funnest'); assert.equal(before.state, 'paused');
     assert.equal(before.frequency, 'daily'); assert.equal(before.chartType, 'candles'); assert.equal(before.speed, '1');
     assert.equal(before.origin, '2026-10-20'); assert.equal(before.playbackStartDate, '2026-10-21');
     assert.equal(before.cursor, before.origin); assert.equal(before.index, 0); assert.equal(before.actualCount, 0);
@@ -324,6 +330,19 @@ export async function verifyChartReplaySurface(api) {
   const archiveRows = mode => btc ? ['recorded', 'project-baseline'].includes(mode) ? priceArchive.prices.map(([date, price]) => ({ date, price })) : btcCandles.map(row => ({ ...row, price: row.close })) :
     (symbol === 'ETHUSD' ? priceArchive.dailyHistory.candles : priceArchive.candles).map(row => ({ ...row, date: row.date.slice(0, 10), price: row.close }));
   const storedBytes = () => evaluate(cdp, symbol => localStorage.getItem('atlas-chart-replay-v1:' + symbol), symbol);
+  const downloadNames = new Map(), completedDownloads = [];
+  browser.on('Browser.downloadWillBegin', event => downloadNames.set(event.guid, event.suggestedFilename));
+  browser.on('Browser.downloadProgress', event => { if (event.state === 'completed') completedDownloads.push(downloadNames.get(event.guid)); });
+  async function downloadedJson(directory, trigger, label) {
+    await browser.send('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: directory, eventsEnabled: true, browserContextId });
+    const completedBefore = completedDownloads.length;
+    await trigger();
+    const file = await until(async () => {
+      const files = (await readdir(directory)).filter(name => name.endsWith('.json')); assert.ok(files.length <= 1);
+      return files[0] && completedDownloads.slice(completedBefore).includes(files[0]) ? files[0] : null;
+    }, label);
+    return { file, bytes: await readFile(resolve(directory, file)) };
+  }
 
   const menuIsOpen = () => evaluate(cdp, selector => Boolean(document.querySelector(selector)?.getClientRects().length), control('select-panel'));
   async function openMenu(view = 'start') {
@@ -429,6 +448,7 @@ export async function verifyChartReplaySurface(api) {
     await revealOwnedControl(selector);
     if (btc && selector === chartSelector) {
       const focusTarget = await evaluate(connection, readChartReplayFocusTarget, selector);
+      assert.ok(focusTarget, 'The chart-focus click found no laid-out chart pane');
       const recorded = { label: 'native-chart-focus-click-in-left-svg-gutter', validated: false, ...focusTarget };
       evidence.lifecycle.push(recorded);
       assert.ok(focusTarget.point.x > 0 && focusTarget.point.x < width && focusTarget.point.y > 0 && focusTarget.point.y < height, 'Chart-focus click escaped the viewport');
@@ -1141,21 +1161,38 @@ export async function verifyChartReplaySurface(api) {
       }
     }
   }
+  const listEvidence = rows => ({ count: rows.length, first: rows[0] ?? null, last: rows.at(-1) ?? null, sha256: digest(JSON.stringify(rows)) });
+  const stateEvidence = (label, value) => ({ label, ...value, candles: listEvidence(value.candles), volumeBars: listEvidence(value.volumeBars),
+    observedIndicatorDates: listEvidence(value.observedIndicatorDates), annotationSignature: undefined,
+    annotationSha256: value.annotationSignature === null ? null : digest(value.annotationSignature) });
+  const valueIdentity = rows => {
+    if (!rows?.length) return null;
+    let a = 2166136261, b = 2246822507;
+    const text = JSON.stringify(rows.map(row => [row.date, row.price, row.lower ?? row.price, row.upper ?? row.price]));
+    for (let index = 0; index < text.length; index++) { const code = text.charCodeAt(index); a = Math.imul(a ^ code, 16777619); b = Math.imul(b ^ code, 3266489909); }
+    return (a >>> 0).toString(16).padStart(8, '0') + (b >>> 0).toString(16).padStart(8, '0');
+  };
+  const replayX = (state, date) => state.timeRange
+    ? state.plotLeft + (Date.parse(date + 'T00:00:00Z') - state.timeRange.from) / (state.timeRange.to - state.timeRange.from) * (state.plotRight - state.plotLeft)
+    : state.plotLeft + (day(date) - day(state.viewStart)) / (day(state.viewEnd) - day(state.viewStart)) * (state.plotRight - state.plotLeft);
   async function snapshot(label, capture = false) {
-    const value = await evaluate(cdp, ({ chartSelector, panel, btc }) => {
+    const value = await evaluate(cdp, ({ chartSelector, panel }) => {
       const svg=document.querySelector(chartSelector),controls=document.querySelector(panel),q=name=>controls.querySelector('[data-cr="'+name+'"]');
-      const plot=svg.closest('.atlas-plot'),box=svg.getBoundingClientRect(),btcHost=btc?plot.querySelector('.atlas-funnest-canvas[data-chart-replay-host="true"]'):null;
-      const btcRender=btc?btcHost?.getAtlasBtcRenderSnapshot?.()??null:null,funnest=btc?btcHost?.getAtlasFunnestSnapshot?.()??null:null;
-      const receiptRows=btcRender?.observed?.rows??[],visibleReceiptRows=receiptRows.filter(row=>row.date>=svg.dataset.replayViewStart&&row.date<=svg.dataset.replayViewEnd&&row.date<=svg.dataset.replayCursor);
-      const visibleVolumeRows=btcRender?.showVolume?(btcRender?.volumeByTime??receiptRows.filter(row=>Number.isFinite(row.volume))).filter(row=>receiptRows.some(item=>item.time===row.time&&item.date>=svg.dataset.replayViewStart&&item.date<=svg.dataset.replayViewEnd&&item.date<=svg.dataset.replayCursor)):[];
+      const plot=svg.closest('.atlas-plot'),box=svg.getBoundingClientRect(),onFunnest=svg.dataset.replayRenderer==='funnest',btcHost=onFunnest?plot.querySelector('.atlas-funnest-canvas[data-chart-replay-host="true"]'):null;
+      const btcRender=btcHost?.getAtlasBtcRenderSnapshot?.()??null,funnest=btcHost?.getAtlasFunnestSnapshot?.()??null,boundaries=btcRender?.paint?.boundaries??[];
+      const receiptRows=btcRender?.observed?.rows??[],visibleReceiptRows=receiptRows.filter(row=>row.date>=svg.dataset.replayViewStart&&row.date<=svg.dataset.replayViewEnd);
+      const volumeAt=new Map((btcRender?.volumeByTime??[]).map(row=>[row.time,row.volume])),volumeOf=row=>btcRender?.sourceMode==='ohlc'?row.volume:volumeAt.get(row.time);
+      const visibleVolumeRows=btcRender?.showVolume?visibleReceiptRows.filter(row=>Number.isFinite(volumeOf(row))&&Number.isFinite(row.x)&&row.x>=0&&row.x<=Number(funnest?.layout?.plotWidth)):[];
+      const cycleMarkers=(btcRender?.paint?.markers??[]).filter(row=>row.type!=='history'),forecastStrokes=btcRender?.paint?.paths?.forecast?.strokes??[],forecastBand=btcRender?.paint?.bands?.forecast??null;
+      const strokeOf=kind=>forecastStrokes.find(stroke=>stroke.kind===kind)??null;
       const svgCandles=[...svg.querySelectorAll('.observed-candle')].map(node => ({ date: node.dataset.date,
         open: Number(node.dataset.open), high: Number(node.dataset.high), low: Number(node.dataset.low), close: Number(node.dataset.close),
         volume: node.dataset.volume === undefined ? null : Number(node.dataset.volume),
         periodStart: node.dataset.periodStart ?? null, periodEnd: node.dataset.periodEnd ?? null,
         daysIncluded: node.dataset.daysIncluded === undefined ? null : Number(node.dataset.daysIncluded), complete: node.dataset.complete === undefined ? null : node.dataset.complete === 'true',
         x: Number(node.querySelector('line')?.getAttribute('x1')) }));
-      const candles=btc?(btcRender?.sourceMode==='ohlc'?visibleReceiptRows.map(row=>({date:row.date,open:row.open??null,high:row.high??null,low:row.low??null,close:row.close??null,volume:row.volume??null,
-        periodStart:row.periodStartDate??row.startDate??row.periodStart??row.sourceRow?.periodStartDate??row.sourceRow?.startDate??null,periodEnd:row.periodEndDate??row.endDate??row.periodEnd??row.sourceRow?.periodEndDate??row.sourceRow?.endDate??null,daysIncluded:row.daysIncluded??row.sourceRow?.daysIncluded??null,complete:row.complete??row.sourceRow?.complete??null,x:row.x??null})):[]):svgCandles;
+      const candles=onFunnest?(btcRender?.sourceMode==='ohlc'?visibleReceiptRows.map(row=>({date:row.date,open:row.open??null,high:row.high??null,low:row.low??null,close:row.close??null,volume:row.volume??null,
+        periodStart:row.sourceRow?.periodStartDate??null,periodEnd:row.sourceRow?.periodEndDate??null,daysIncluded:row.sourceRow?.daysIncluded??null,complete:row.sourceRow?.complete??null,x:row.x??null})):[]):svgCandles;
       const candleBatches = [...svg.querySelectorAll('.observed-candles-batched')];
       const wickXs = candleBatches.flatMap(group => [...group.querySelectorAll('path[stroke]')].flatMap(path =>
         [...(path.getAttribute('d') ?? '').matchAll(/M(-?\d+(?:\.\d+)?),/g)].map(match => Number(match[1]))));
@@ -1166,39 +1203,41 @@ export async function verifyChartReplaySurface(api) {
         frequency: svg.dataset.replayFrequency ?? svg.dataset.interval ?? 'daily',
         headerFrequency: document.querySelector('#workbench-interval-select')?.value ?? null,
         headerPressedFrequency: document.querySelector('#workbench-frequency [data-lab-frequency][aria-pressed="true"]')?.dataset.labFrequency ?? null,
-        priceMinimum: btc?(btcRender?.priceScale?.min??null):(svg.dataset.replayPriceMin === undefined ? null : Number(svg.dataset.replayPriceMin)),
-        priceMaximum: btc?(btcRender?.priceScale?.max??null):(svg.dataset.replayPriceMax === undefined ? null : Number(svg.dataset.replayPriceMax)),
+        priceMinimum: onFunnest?(btcRender?.priceScale?.min??null):(svg.dataset.replayPriceMin === undefined ? null : Number(svg.dataset.replayPriceMin)),
+        priceMaximum: onFunnest?(btcRender?.priceScale?.max??null):(svg.dataset.replayPriceMax === undefined ? null : Number(svg.dataset.replayPriceMax)),
         formingWeekCount: Number(svg.dataset.replayFormingWeekCount ?? 0), missingWeekCount: Number(svg.dataset.replayMissingWeekCount ?? 0),
         index: Number(q('scrub').value), lastIndex: Number(q('scrub').max), outputHash: svg.dataset.replayOutputHash,
         mode: q('mode').value, model: q('model')?.value ?? null, dateInput: q('date').value, dateMinimum: q('date').min, dateMaximum: q('date').max,
         menuView: q('select-panel').dataset.menuView, menuHidden: q('select-panel').hidden, dateContext: q('date-context').textContent,
         source: q('source').textContent, metric: q('metric').textContent,
         updateInterval: q('update-interval')?.value ?? null, updateIntervalLocked: q('update-interval')?.disabled ?? false,
-        renderer: btc?'funnest':(svg.dataset.replayRenderer ?? null), viewStart: svg.dataset.replayViewStart ?? null, viewEnd: svg.dataset.replayViewEnd ?? null,
-        scale: btc?(btcRender?.priceScale?.scale??svg.dataset.scale):svg.dataset.scale, unit: btc?(btcRender?.unit??svg.dataset.unit):svg.dataset.unit, chartType: btc?(btcRender?.chartType??svg.dataset.chartType):svg.dataset.chartType,
-        forecastValueSignature: btc?JSON.stringify((btcRender?.forecastRows??[]).map(row=>[row.date,row.price,row.lower??null,row.upper??null])):(svg.dataset.forecastValueSignature ?? null),
+        renderer: svg.dataset.replayRenderer ?? null, viewStart: svg.dataset.replayViewStart ?? null, viewEnd: svg.dataset.replayViewEnd ?? null,
+        scale: onFunnest?(btcRender?.priceScale?.scale??svg.dataset.scale):svg.dataset.scale, unit: onFunnest?(btcRender?.unit??svg.dataset.unit):svg.dataset.unit, chartType: onFunnest?(btcRender?.chartType??svg.dataset.chartType):svg.dataset.chartType,
+        forecastValueSignature: onFunnest?null:(svg.dataset.forecastValueSignature ?? null),
         snapshotDigest: svg.dataset.replaySnapshotHash ?? null,
         annotationSignature: svg.dataset.replayAnnotationSignature ?? null,
-        atlasPriceLayer: btc?0:svg.querySelectorAll('.price-series-layer').length,
-        cycleMarkerCount: btc?(btcRender?.paint?.markers?.length??0):Number(svg.dataset.cycleMarkerCount ?? 0), cycleIntervalCount: btc?(btcRender?.paint?.intervals?.length??0):Number(svg.dataset.cycleIntervalCount ?? 0),
-        cycleMarkerLayers: btc?(btcRender?.paint?.markers?.length?1:0):svg.querySelectorAll('[data-indicator-layer="cycle-landmarks"]').length,
-        cycleIntervalLayers: btc?(btcRender?.paint?.intervals?.length?1:0):svg.querySelectorAll('.cycle-interval-overlay-layer').length,
-        actualThrough: btc?(receiptRows.filter(row=>row.date<=svg.dataset.replayCursor).at(-1)?.date??svg.dataset.replayActualThrough):svg.dataset.replayActualThrough, actualCount: btc?receiptRows.filter(row=>row.date>svg.dataset.replayOrigin&&row.date<=svg.dataset.replayCursor).length:Number(svg.dataset.replayActualCount ?? 0), forecastCount: btc?(btcRender?.forecastRows?.length??0):Number(svg.dataset.replayForecastPoints ?? 0), candles,
-        btcRender:btc?{...btcRender,funnest:{engine:funnest?.engine??null,version:funnest?.version??null,state:funnest?.state??null,painted:funnest?.painted??false,range:funnest?.range??null,layout:funnest?.layout??null,engineBars:funnest?.engineBars??[],canvases:funnest?.canvases??[],legacy:funnest?.legacy??null}}:null,
-        observedCandleCount: btc?(btcRender?.sourceMode==='ohlc'?visibleReceiptRows.length:0):Number(svg.dataset.observedCandleCount ?? 0), batchedCandleCount: btc?0:candleBatches.reduce((count, node) => count + Number(node.dataset.count), 0),
-        batchedWickCount: btc?0:wickXs.length, lastBatchedCandleX: btc?null:(wickXs.length ? Math.max(...wickXs) : null),
-        plotLeft: btc?0:Number(svg.dataset.plotLeft), plotRight: btc?(funnest?.layout?.plotWidth??Number(svg.dataset.plotRight)):Number(svg.dataset.plotRight),
-        forecastPath: btc?null:(svg.querySelector('[data-replay-forecast-path]')?.getAttribute('d') ?? null),
-        forecastAboveActuals: btc?null:(() => { const path = svg.querySelector('[data-replay-forecast-path]'); return path ? [...svg.querySelectorAll('.observed-candle,.observed-candles-batched,.observed-close-line')].every(node => Boolean(path.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_PRECEDING)) : null; })(),
-        forecastPointerEvents: btc?null:(svg.querySelector('[data-replay-forecast-path]')?.getAttribute('pointer-events') ?? null),
-        forecastBandEnabled: btc?Boolean(btcRender?.paint?.bands?.forecast):document.querySelector('#lab-band')?.checked ?? null,
-        forecastRangeBelowActuals: btc?(btcRender?.paint?.bands?.forecast?.layer==='below'||null):(() => { const range = svg.querySelector('[data-indicator-layer="range"] [data-indicator-fill]'); return range ? [...svg.querySelectorAll('.observed-candle,.observed-candles-batched,.observed-close-line')].every(node => Boolean(range.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING)) : null; })(),
-        forecastHaloMatchesPath: btc?Boolean(btcRender?.paint?.paths?.forecast?.strokes?.some(stroke=>stroke.kind==='halo')):(() => { const halo = svg.querySelector('[data-replay-forecast-halo]'), path = svg.querySelector('[data-replay-forecast-path]'); return Boolean(halo && path && halo.getAttribute('d') === path.getAttribute('d')); })(),
-        forecastHaloPointerEvents: btc?null:(svg.querySelector('[data-replay-forecast-halo]')?.getAttribute('pointer-events') ?? null),
-        forecastHaloAboveActuals: btc?(btcRender?.paint?.layer==='above'||null):(() => { const halo = svg.querySelector('[data-replay-forecast-halo]'); return halo ? [...svg.querySelectorAll('.observed-candle,.observed-candles-batched,.observed-close-line')].every(node => Boolean(halo.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_PRECEDING)) : null; })(),
-        forecastHaloBelowPath: btc?(btcRender?.paint?.paths?.forecast?.strokes?.findIndex(stroke=>stroke.kind==='halo')<btcRender?.paint?.paths?.forecast?.strokes?.findIndex(stroke=>stroke.kind==='path')):(() => { const halo = svg.querySelector('[data-replay-forecast-halo]'), path = svg.querySelector('[data-replay-forecast-path]'); return Boolean(halo && path && (halo.compareDocumentPosition(path) & Node.DOCUMENT_POSITION_FOLLOWING)); })(),
-        retrospectiveLabel: btc?(()=>{const node=svg.querySelector('[data-replay-retrospective-origin-label]'),text=node?.querySelector('[data-replay-retrospective-input-date]');const visible=Boolean(node&&node.getClientRects().length&&getComputedStyle(node).display!=='none'&&getComputedStyle(node).visibility!=='hidden'&&Number(getComputedStyle(node).opacity)>0);return{visible,text:text?.textContent??null,inputThrough:node?.dataset.inputThrough??null,anchorX:node?Number(node.dataset.anchorX):null,status:svg.dataset.replayRetrospectiveStatus??null,origin:svg.dataset.replayRetrospectiveOrigin??null,through:svg.dataset.replayRetrospectiveThrough??null,points:Number(svg.dataset.replayRetrospectivePoints??0),inputHash:svg.dataset.replayRetrospectiveInputHash??null,outputHash:svg.dataset.replayRetrospectiveOutputHash??null,createdAt:svg.dataset.replayRetrospectiveCreatedAt??null,issuedAt:svg.dataset.replayRetrospectiveIssuedAt??null,scoringEnabled:svg.dataset.replayRetrospectiveScoringEnabled??null,valueSignature:svg.dataset.retrospectiveForecastValueSignature??null};})():null,
-        retrospective: btc?null:(() => {
+        atlasPriceLayer: svg.querySelectorAll('.price-series-layer').length,
+        cycleMarkerCount: onFunnest?cycleMarkers.length:Number(svg.dataset.cycleMarkerCount ?? 0), cycleIntervalCount: onFunnest?(btcRender?.paint?.intervals?.length??0):Number(svg.dataset.cycleIntervalCount ?? 0),
+        cycleMarkerLayers: onFunnest?(cycleMarkers.length?1:0):svg.querySelectorAll('[data-indicator-layer="cycle-landmarks"]').length,
+        cycleIntervalLayers: onFunnest?(btcRender?.paint?.intervals?.length?1:0):svg.querySelectorAll('.cycle-interval-overlay-layer').length,
+        actualThrough: svg.dataset.replayActualThrough, actualCount: Number(svg.dataset.replayActualCount ?? 0), forecastCount: onFunnest?(btcRender?.forecastRows?.length??0):Number(svg.dataset.replayForecastPoints ?? 0), candles,
+        btcRender:onFunnest?{...btcRender,funnest:{engine:funnest?.engine??null,version:funnest?.version??null,state:funnest?.state??null,painted:funnest?.painted??false,range:funnest?.range??null,layout:funnest?.layout??null,engineBars:funnest?.engineBars??[],canvases:funnest?.canvases??[],legacy:funnest?.legacy??null}}:null,
+        observedRowCount: onFunnest?visibleReceiptRows.length:null,
+        observedCandleCount: onFunnest?(btcRender?.sourceMode==='ohlc'?visibleReceiptRows.length:0):Number(svg.dataset.observedCandleCount ?? 0), batchedCandleCount: onFunnest?0:candleBatches.reduce((count, node) => count + Number(node.dataset.count), 0),
+        batchedWickCount: onFunnest?0:wickXs.length, lastBatchedCandleX: onFunnest?(receiptRows.length?Math.max(...receiptRows.map(row=>row.x)):null):(wickXs.length ? Math.max(...wickXs) : null),
+        plotLeft: onFunnest?0:Number(svg.dataset.plotLeft), plotRight: onFunnest?Number(funnest?.layout?.plotWidth):Number(svg.dataset.plotRight), timeRange: onFunnest?(funnest?.range??null):null,
+        forecastPath: onFunnest?null:(svg.querySelector('[data-replay-forecast-path]')?.getAttribute('d') ?? null),
+        forecastAboveActuals: onFunnest?(forecastStrokes.length?forecastStrokes.every(stroke=>stroke.layer==='above'):null):(() => { const path = svg.querySelector('[data-replay-forecast-path]'); return path ? [...svg.querySelectorAll('.observed-candle,.observed-candles-batched,.observed-close-line')].every(node => Boolean(path.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_PRECEDING)) : null; })(),
+        forecastPointerEvents: onFunnest?(svg.querySelector('[data-replay-forecast-path]')?'svg-node':'none'):(svg.querySelector('[data-replay-forecast-path]')?.getAttribute('pointer-events') ?? null),
+        forecastBandEnabled: document.querySelector('#lab-band')?.checked ?? null,
+        forecastRangeBelowActuals: onFunnest?(forecastBand?forecastBand.layer==='below'&&forecastBand.order<(btcRender?.paint?.order??-Infinity):null):(() => { const range = svg.querySelector('[data-indicator-layer="range"] [data-indicator-fill]'); return range ? [...svg.querySelectorAll('.observed-candle,.observed-candles-batched,.observed-close-line')].every(node => Boolean(range.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING)) : null; })(),
+        forecastHaloMatchesPath: onFunnest?Boolean(strokeOf('halo')&&strokeOf('path')&&JSON.stringify(strokeOf('halo').dash)===JSON.stringify(strokeOf('path').dash)):(() => { const halo = svg.querySelector('[data-replay-forecast-halo]'), path = svg.querySelector('[data-replay-forecast-path]'); return Boolean(halo && path && halo.getAttribute('d') === path.getAttribute('d')); })(),
+        forecastHaloPointerEvents: onFunnest?(svg.querySelector('[data-replay-forecast-halo]')?'svg-node':'none'):(svg.querySelector('[data-replay-forecast-halo]')?.getAttribute('pointer-events') ?? null),
+        forecastHaloAboveActuals: onFunnest?(strokeOf('halo')?strokeOf('halo').layer==='above':null):(() => { const halo = svg.querySelector('[data-replay-forecast-halo]'); return halo ? [...svg.querySelectorAll('.observed-candle,.observed-candles-batched,.observed-close-line')].every(node => Boolean(halo.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_PRECEDING)) : null; })(),
+        forecastHaloBelowPath: onFunnest?Boolean(strokeOf('halo')&&strokeOf('path')&&strokeOf('halo').order<strokeOf('path').order):(() => { const halo = svg.querySelector('[data-replay-forecast-halo]'), path = svg.querySelector('[data-replay-forecast-path]'); return Boolean(halo && path && (halo.compareDocumentPosition(path) & Node.DOCUMENT_POSITION_FOLLOWING)); })(),
+        retrospectiveLabel: onFunnest?(()=>{const node=svg.querySelector('[data-replay-retrospective-origin-label]'),text=node?.querySelector('[data-replay-retrospective-input-date]');const visible=Boolean(node&&node.getClientRects().length&&getComputedStyle(node).display!=='none'&&getComputedStyle(node).visibility!=='hidden'&&Number(getComputedStyle(node).opacity)>0);return{visible,text:text?.textContent??null,inputThrough:node?.dataset.inputThrough??null,anchorX:node?Number(node.dataset.anchorX):null,status:svg.dataset.replayRetrospectiveStatus??null,origin:svg.dataset.replayRetrospectiveOrigin??null,through:svg.dataset.replayRetrospectiveThrough??null,points:Number(svg.dataset.replayRetrospectivePoints??0),inputHash:svg.dataset.replayRetrospectiveInputHash??null,outputHash:svg.dataset.replayRetrospectiveOutputHash??null,createdAt:svg.dataset.replayRetrospectiveCreatedAt??null,issuedAt:svg.dataset.replayRetrospectiveIssuedAt??null,scoringEnabled:svg.dataset.replayRetrospectiveScoringEnabled??null,
+          svgNodes:svg.querySelectorAll('[data-replay-retrospective-path],[data-replay-retrospective-band],[data-replay-retrospective-halo]').length};})():null,
+        retrospective: onFunnest?null:(() => {
           const path = svg.querySelector('[data-replay-retrospective-path]'), band = svg.querySelector('[data-replay-retrospective-band]'), halo = svg.querySelector('[data-replay-retrospective-halo]');
           const originLabel = svg.querySelector('[data-replay-retrospective-origin-label]');
           const actuals = [...svg.querySelectorAll('.observed-candle,.observed-candles-batched,.observed-close-line')];
@@ -1225,13 +1264,13 @@ export async function verifyChartReplaySurface(api) {
             haloBelowPath: Boolean(halo && path && (halo.compareDocumentPosition(path) & Node.DOCUMENT_POSITION_FOLLOWING)),
             independentCurrentPath: Boolean(path && svg.querySelector('[data-replay-forecast-path]') && path !== svg.querySelector('[data-replay-forecast-path]')) };
         })(),
-        origins: btc?(btcRender?.paint?.boundaries??[]).filter(row=>/origin/i.test(row.name??'')).length:svg.querySelectorAll('[data-replay-origin-boundary]').length, cursors: btc?(btcRender?.paint?.boundaries??[]).filter(row=>row.date===btcRender?.replay?.cursorDate).length:svg.querySelectorAll('[data-replay-cursor-line]').length,
-        confirmedCursorXs: btc?(btcRender?.paint?.boundaries??[]).filter(row=>row.date===btcRender?.replay?.cursorDate).map(row=>row.x):[...svg.querySelectorAll('[data-replay-cursor-line]')].map(node => node.getAttribute('x1')),
+        origins: onFunnest?boundaries.filter(row=>row.name==='data-replay-origin-boundary').length:svg.querySelectorAll('[data-replay-origin-boundary]').length, cursors: onFunnest?boundaries.filter(row=>row.name==='data-replay-cursor-line').length:svg.querySelectorAll('[data-replay-cursor-line]').length,
+        confirmedCursorXs: onFunnest?boundaries.filter(row=>row.name==='data-replay-cursor-line').map(row=>String(row.x)):[...svg.querySelectorAll('[data-replay-cursor-line]')].map(node => node.getAttribute('x1')),
         pickerCount: svg.querySelectorAll('[data-chart-replay-picker]').length,
-        volumeCount: btc?visibleVolumeRows.length:Number(svg.querySelector('.volume-pane')?.dataset.volumeObservedCount ?? 0),
-        volumeBars: btc?visibleVolumeRows.map(row=>{const source=receiptRows.find(item=>item.time===row.time)||receiptRows.find(item=>item.date===row.date);return {date:source?.date??row.date??null,volume:row.volume,x:source?.x??null};}):[...svg.querySelectorAll('.volume-bar')].map(node => ({ date: node.dataset.date, volume: Number(node.dataset.volume), x: Number(node.getAttribute('x')) + Number(node.getAttribute('width')) / 2 })),
-        observedIndicatorDates: btc?(btcRender?.paint?.turns??[]).map(row=>row.date):[...svg.querySelectorAll('[data-indicator-layer="turns"] circle[data-date]')].filter(node => node.querySelector('title')?.textContent.startsWith('관측 ')).map(node => node.dataset.date),
-        invalidPaths: btc?0:[...svg.querySelectorAll('path')].filter(node => /NaN|Infinity/.test(node.getAttribute('d') ?? '')).length,
+        volumeCount: onFunnest?visibleVolumeRows.length:Number(svg.querySelector('.volume-pane')?.dataset.volumeObservedCount ?? 0),
+        volumeBars: onFunnest?visibleVolumeRows.map(row=>({date:row.date,volume:volumeOf(row),x:row.x})):[...svg.querySelectorAll('.volume-bar')].map(node => ({ date: node.dataset.date, volume: Number(node.dataset.volume), x: Number(node.getAttribute('x')) + Number(node.getAttribute('width')) / 2 })),
+        observedIndicatorDates: onFunnest?(btcRender?.paint?.turns??[]).filter(row=>row.replaySource==='observed').map(row=>row.date):[...svg.querySelectorAll('[data-indicator-layer="turns"] circle[data-date]')].filter(node => node.querySelector('title')?.textContent.startsWith('관측 ')).map(node => node.dataset.date),
+        invalidPaths: [...svg.querySelectorAll('path')].filter(node => /NaN|Infinity/.test(node.getAttribute('d') ?? '')).length,
         separateReplayCharts: document.querySelectorAll('[data-forecast-replay] [data-replay-chart]').length, dialogs: document.querySelectorAll('dialog[open]').length,
         liveReadouts: [...plot.querySelectorAll('.atlas-readout,.eth-readout,.workbench-market-info,.equity-legend,.eth-forecast-note')].filter(node => node.getClientRects().length && getComputedStyle(node).display !== 'none' && getComputedStyle(node).visibility !== 'hidden').length,
         width: innerWidth, height: innerHeight, pageWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth),
@@ -1241,11 +1280,16 @@ export async function verifyChartReplaySurface(api) {
         playDisabled: q('play').disabled, nextDisabled: q('next').disabled, liveDisabled: q('live').disabled,
         playLabel: q('play').getAttribute('aria-label'), playTitle: q('play').title, speed: q('speed').value,
         visibleReplayDialogs: [...controls.querySelectorAll('[role="dialog"]')].filter(node => node.getClientRects().length && getComputedStyle(node).visibility !== 'hidden').map(node => node.dataset.cr),
-        nativeCrosshairVisible: btc?null:(() => { const node = svg.querySelector('[id$="-cross"]'); return Boolean(node && getComputedStyle(node).display !== 'none' && getComputedStyle(node).visibility !== 'hidden'); })(),
-        crosshairEvent:btc?funnest?.crosshair??null:null,crosshairEventSequence:btc?funnest?.crosshairEventSequence??0:0,selectionPreview:btc?btcRender?.replay?.selectionPreview??false:false,
+        nativeCrosshairVisible: onFunnest?(funnest?funnest.crosshair!==null||(funnest.canvases?.at(-1)?.opaquePixels??0)>0:null):(() => { const node = svg.querySelector('[id$="-cross"]'); return Boolean(node && getComputedStyle(node).display !== 'none' && getComputedStyle(node).visibility !== 'hidden'); })(),
+        crosshairEvent:onFunnest?funnest?.crosshair??null:null,crosshairEventSequence:onFunnest?funnest?.crosshairEventSequence??0:0,selectionPreview:onFunnest?btcRender?.replay?.selectionPreview??false:false,
         previousPresent: Boolean(q('previous')) };
-    }, { chartSelector, panel, btc });
-    if(btc){
+    }, { chartSelector, panel });
+    // Funnest has no time scale without a bar.
+    const requiredRenderer=btc&&['atlas-chart','project-baseline'].includes(value.mode)?(!value.cursor||archiveRows(value.mode).some(row=>row.date<=value.cursor)?'funnest':'atlas')
+      :['recorded','historical-reconstruction'].includes(value.mode)?null:undefined;
+    assert.notEqual(requiredRenderer,undefined,'Replay captured a frame in an unexpected mode: '+value.mode);
+    assert.equal(value.renderer,requiredRenderer,'Replay '+value.mode+' changed the required price renderer');
+    if(value.renderer==='funnest'){
       const raw=value.btcRender,engine=raw?.funnest,paint=raw?.paint,rows=raw?.observed?.rows??[];
       assert.ok(raw,'BTC replay omitted the parent-owned render snapshot');assert.equal(raw.engine,'funnest');assert.equal(raw.rendered,true);assert.ok(raw.instance&&raw.sequence>0);
       assert.equal(engine?.engine,'funnest');assert.equal(engine?.painted,true,'Funnest did not confirm actual canvas paint');
@@ -1253,16 +1297,19 @@ export async function verifyChartReplaySurface(api) {
       assert.equal(engine?.legacy?.priceNodes,0,'A legacy SVG price shape is being treated as BTC paint');
       assert.equal(raw.observed?.coordinateBasis,'projection through the real rendered Funnest PaneCoords; not intercepted core draw calls');
       assert.ok(raw.priceScale&&Number.isFinite(raw.priceScale.min)&&Number.isFinite(raw.priceScale.max)&&raw.priceScale.min<raw.priceScale.max,'BTC snapshot omitted actual mainScale domain');
-      assert.ok(raw.pane?.width>0&&raw.pane?.height>0);assert.ok(raw.nativeRange&&Number.isFinite(raw.nativeRange.from)&&Number.isFinite(raw.nativeRange.to)&&raw.nativeRange.to>raw.nativeRange.from,'BTC render snapshot omitted the real Funnest time range');assert.equal(raw.replay?.cursorDate??null,value.cursor??null,'BTC render snapshot disagrees with replay cursor');
-      // A committed session discloses through its cursor. An unconfirmed start preview has no
-      // cursor; its Funnest mount still reports the disclosure limit it actually painted with.
-      const disclosedThrough=value.cursor??(value.selecting||raw.replay?.selectionPreview?raw.replay?.previewDisclosureThrough??null:null);
+      assert.ok(raw.pane?.width>0&&raw.pane?.height>0);assert.ok(raw.nativeRange&&Number.isFinite(raw.nativeRange.from)&&Number.isFinite(raw.nativeRange.to)&&raw.nativeRange.to>raw.nativeRange.from,'BTC render snapshot omitted the real Funnest time range');
+      assert.ok(Math.abs(raw.nativeRange.from-Date.parse(value.viewStart+'T00:00:00Z'))<1000&&Math.abs(raw.nativeRange.to-(Date.parse(value.viewEnd+'T00:00:00Z')+86399999))<1000,
+        'The Funnest time range differs from the declared replay view: '+JSON.stringify({range:raw.nativeRange,viewStart:value.viewStart,viewEnd:value.viewEnd}));
+      const disclosedThrough=raw.replay?.cursorDate;
       assert.ok(typeof disclosedThrough==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(disclosedThrough),'BTC render snapshot omitted its disclosure limit');
-      if(!value.cursor)assert.equal(raw.replay?.selectionPreview,true,'A BTC frame without a committed cursor must be an unconfirmed preview');
+      if(value.cursor)assert.equal(disclosedThrough,value.cursor,'BTC render snapshot disagrees with replay cursor');
+      else{assert.equal(value.state,'selecting','A BTC frame without a committed cursor must be an unconfirmed preview');assert.equal(raw.replay?.selectionPreview,true,'A BTC frame without a committed cursor must be an unconfirmed preview');}
       assert.ok(rows.every(r=>typeof r.date==='string'&&r.date<=disclosedThrough),'BTC snapshot exposed future source rows');
-      const visibleRows=rows.filter(row=>row.date>=value.viewStart&&row.date<=value.viewEnd&&row.date<=disclosedThrough);
+      const visibleRows=rows.filter(row=>row.date>=value.viewStart&&row.date<=value.viewEnd);
       if(raw.sourceMode==='ohlc'){const oracle=value.frequency==='weekly'?disclosedBitcoinWeeks(btcCandles,disclosedThrough):btcCandles,byDate=new Map(oracle.map(row=>[row.date,row]));for(const row of visibleRows){const source=byDate.get(row.date);assert.ok(source,'BTC render row is absent from the disclosed venue prefix: '+row.date);for(const key of ['open','high','low','close','volume'])assert.equal(row[key],source[key],'BTC renderer changed disclosed '+key+' on '+row.date);if(value.frequency==='weekly'){const metadata=row.sourceRow??row;for(const [key,actual] of [['periodStart',metadata.periodStartDate??metadata.startDate??metadata.periodStart],['periodEnd',metadata.periodEndDate??metadata.endDate??metadata.periodEnd],['daysIncluded',metadata.daysIncluded],['complete',metadata.complete]])assert.equal(actual,source[key],'BTC weekly prefix metadata changed '+key);}}}
-      else {assert.ok(String(raw.source?.name??'').includes('Coin Metrics'),'BTC close-only row source is not Coin Metrics');let oracle=priceArchive.prices.filter(([date])=>date<=disclosedThrough).map(([date,price])=>({date,price}));if(value.frequency==='weekly'){const weeks=new Map();for(const row of oracle){const monday=day(row.date)-(new Date(row.date+'T00:00:00Z').getUTCDay()+6)%7;weeks.set(monday,row);}oracle=[...weeks.values()];}const byDate=new Map(oracle.map(row=>[row.date,row.price]));for(const row of visibleRows)assert.equal(row.close,byDate.get(row.date),'BTC Coin Metrics close changed its exact disclosed prefix on '+row.date);}
+      else {const provider=['recorded','project-baseline'].includes(value.mode)?'Coin Metrics':'Bitstamp';assert.ok(String(raw.source?.name??'').includes(provider),'BTC close-only row source is not '+provider);let oracle=archiveRows(value.mode).filter(row=>row.date<=disclosedThrough).map(row=>({date:row.date,price:row.price}));if(value.frequency==='weekly'){const weeks=new Map();for(const row of oracle){const monday=day(row.date)-(new Date(row.date+'T00:00:00Z').getUTCDay()+6)%7;weeks.set(monday,row);}oracle=[...weeks.values()];}const byDate=new Map(oracle.map(row=>[row.date,row.price]));for(const row of visibleRows)assert.equal(row.close,byDate.get(row.date),'BTC '+provider+' close changed its exact disclosed prefix on '+row.date);
+        const painted=new Set(visibleRows.map(row=>row.date)),unpainted=oracle.filter(row=>row.date>=value.viewStart&&row.date<=value.viewEnd&&!painted.has(row.date)).map(row=>row.date);
+        assert.deepEqual(unpainted,[],'Funnest left disclosed BTC '+provider+' closes unpainted inside the view');}
       assert.ok(rows.every(r=>Number.isFinite(r.x)&&Object.values(r.projectedY??{}).some(Number.isFinite)),'BTC source rows lack rendered PaneCoords projections');
       assert.ok(engine.engineBars.length===rows.length,'Funnest engine bars do not match source row count');
       for(let i=0;i<rows.length;i++)assert.equal(engine.engineBars[i].time,rows[i].time,'Funnest engine bar time differs from source receipt');
@@ -1273,19 +1320,25 @@ export async function verifyChartReplaySurface(api) {
       const points=paint.paths?.retrospective,band=paint.bands?.retrospective,forecast=paint.paths?.forecast;
       const coords=path=>(path?.subpaths??[]).flat();const bounds=list=>{if(!list.length)return null;const xs=list.map(p=>p.x),ys=list.map(p=>p.y);return{x:Math.min(...xs),y:Math.min(...ys),width:Math.max(...xs)-Math.min(...xs),height:Math.max(...ys)-Math.min(...ys)};};
       const line=points?.strokes?.find(s=>s.kind==='path'),halo=points?.strokes?.find(s=>s.kind==='halo'),current=forecast?.strokes?.find(s=>s.kind==='path'),label=value.retrospectiveLabel;
-      value.retrospective={status:value.retrospectiveLabel?.status??'ready',origin:value.retrospectiveLabel?.origin??null,through:value.retrospectiveLabel?.through??null,points:raw.retrospectiveRows?.length??value.retrospectiveLabel?.points??0,
-        inputHash:value.retrospectiveLabel?.inputHash??null,outputHash:value.retrospectiveLabel?.outputHash??null,createdAt:value.retrospectiveLabel?.createdAt??null,issuedAt:value.retrospectiveLabel?.issuedAt??'null',scoringEnabled:value.retrospectiveLabel?.scoringEnabled??'false',valueSignature:value.retrospectiveLabel?.valueSignature??null,
+      if(points){const expected=new Map((raw.retrospectiveRows??[]).map(r=>[r.date,r]));for(const point of coords(points)){const row=expected.get(point.date);assert.ok(row,'Retrospective painter added an unknown source date');assert.equal(point.value,row.price);assert.equal(point.time,row.time);}}
+      const retrospectivePointer=label.svgNodes===0?'none':'svg-node';
+      value.retrospective={status:label.status,origin:label.origin,through:label.through,points:raw.retrospectiveRows?.length??0,
+        inputHash:label.inputHash,outputHash:label.outputHash,createdAt:label.createdAt,issuedAt:label.issuedAt,scoringEnabled:label.scoringEnabled,
+        valueSignature:valueIdentity(raw.retrospectiveRows),
         pathCount:points?.subpaths?.length?1:0,bandCount:band?1:0,pathVisible:coords(points).length>1,bandVisible:Boolean(band),pathLength:coords(points).slice(1).reduce((n,p,i,a)=>n+Math.hypot(p.x-(i?a[i-1].x:coords(points)[0].x),p.y-(i?a[i-1].y:coords(points)[0].y)),0),
-        dash:line?.dash?.join(' ')??null,haloDash:halo?.dash?.join(' ')??null,originalDash:current?.dash?.join(' ')??null,originLabelVisible:label?.visible??false,originLabelText:label?.text??null,originLabelInputThrough:label?.inputThrough??null,originAnchorX:coords(points)[0]?.x??null,
-        pathBounds:bounds(coords(points)),bandBounds:bounds(band?.polygon??[]),pointerEvents:'canvas-native-input',bandPointerEvents:'canvas-native-input',aboveActuals:line?.layer==='above',bandBelowActuals:band?.layer==='below'&&(band.order??0)<(paint.order??Infinity),
-        haloMatchesPath:Boolean(halo&&line&&coords(points).length>1),haloPointerEvents:'canvas-native-input',haloAboveActuals:line?.layer==='above',haloBelowPath:Boolean(halo&&line&&halo.order<line.order),independentCurrentPath:Boolean(points&&forecast&&points!==forecast)};
-      value.forecastReceiptPathExists=Boolean(forecast&&coords(forecast).length>1);value.sourceMode=raw.sourceMode;value.btcObservedRows=rows.length;value.crosshairEvent=engine.crosshair??null;value.crosshairEventSequence=engine.crosshairEventSequence??0;
+        dash:line?.dash?.join(' ')??null,haloDash:halo?.dash?.join(' ')??null,originalDash:current?.dash?.join(' ')??null,originLabelVisible:label.visible,originLabelText:label.text,originLabelInputThrough:label.inputThrough,originAnchorX:label.anchorX,pathOriginX:coords(points)[0]?.x??null,
+        pathBounds:bounds(coords(points)),bandBounds:bounds(band?.polygon??[]),pointerEvents:points?retrospectivePointer:null,bandPointerEvents:band?retrospectivePointer:null,aboveActuals:line?line.layer==='above':null,bandBelowActuals:band?band.layer==='below'&&band.order<paint.order:null,
+        haloMatchesPath:Boolean(halo&&line&&coords(points).length>1),haloPointerEvents:halo?retrospectivePointer:null,haloAboveActuals:halo?halo.layer==='above':null,haloBelowPath:Boolean(halo&&line&&halo.order<line.order),
+        independentCurrentPath:Boolean(points&&forecast&&points.sourceCount===raw.retrospectiveRows.length&&forecast.sourceCount===raw.forecastRows.length)};
+      const forecastXs=coords(forecast).map(point=>point.x),plotWidth=engine.layout?.plotWidth;
+      value.forecastReceiptPathExists=forecastXs.length>1&&(forecastXs.some(x=>x>=0&&x<=plotWidth)||Math.min(...forecastXs)<0&&Math.max(...forecastXs)>plotWidth);
+      value.forecastValueSignature=valueIdentity(raw.forecastRows);
+      const bandEvidence=item=>item?{layer:item.layer,order:item.order,color:item.color,sourceCount:item.sourceCount,points:item.polygon.length,polygonSha256:digest(JSON.stringify(item.polygon))}:null;value.sourceMode=raw.sourceMode;value.btcObservedRows=rows.length;value.crosshairEvent=engine.crosshair??null;value.crosshairEventSequence=engine.crosshairEventSequence??0;
       const interaction=raw.interaction??{};assert.ok(typeof interaction.pointerBasis==='string'&&interaction.pointerBasis.length>0,'BTC pointer receipt omitted its explicit projection basis');if(interaction.pointer&&engine.crosshair){assert.equal(interaction.pointer.time,engine.crosshair.time,'BTC adapter pointer time differs from the public Funnest crosshair event');assert.ok(Math.abs(interaction.pointer.x-engine.crosshair.x)<1e-6&&Math.abs(interaction.pointer.y-engine.crosshair.y)<1e-6,'BTC adapter pointer coordinates differ from the public Funnest crosshair event');}value.pointerBasis=interaction.pointerBasis??null;value.interactionPointer=interaction.pointer??null;value.selectionPreview=raw.replay?.selectionPreview??false;value.retrospectiveLabel=undefined;
       value.btcRender={engine:raw.engine,version:raw.version,instance:raw.instance,sequence:raw.sequence,sourceMode:raw.sourceMode,source:raw.source,frequency:raw.frequency,chartType:raw.chartType,unit:raw.unit,priceScale:raw.priceScale,nativeRange:raw.nativeRange,painted:engine.painted,state:engine.state,legacy:engine.legacy,observedRows:rows.length,engineBars:engine.engineBars.length,interactionPointer:value.interactionPointer,pointerBasis:value.pointerBasis,sourceRowsSha256:digest(JSON.stringify(rows)),engineBarsSha256:digest(JSON.stringify(engine.engineBars)),
-        canvas:engine.canvases.map(c=>({width:c.width,height:c.height,visible:c.visible,readable:c.readable,opaquePixels:c.opaquePixels,sampledColors:c.sampledColors})),overlay:{sequence:paint.sequence,layer:paint.layer,order:paint.order,paths:Object.fromEntries(Object.entries(paint.paths??{}).map(([key,path])=>[key,{subpaths:path.subpaths.length,points:coords(path).length,sourceCount:path.sourceCount,strokes:path.strokes}])),bands:paint.bands,markers:paint.markers.length,intervals:paint.intervals.length,turns:paint.turns.length,boundaries:paint.boundaries.length}};
+        canvas:engine.canvases.map(c=>({width:c.width,height:c.height,visible:c.visible,readable:c.readable,opaquePixels:c.opaquePixels,sampledColors:c.sampledColors})),overlay:{sequence:paint.sequence,layer:paint.layer,order:paint.order,paths:Object.fromEntries(Object.entries(paint.paths??{}).map(([key,path])=>[key,{subpaths:path.subpaths.length,points:coords(path).length,sourceCount:path.sourceCount,strokes:path.strokes}])),bands:paint.bands?{layer:paint.bands.layer,order:paint.bands.order,forecast:bandEvidence(paint.bands.forecast),retrospective:bandEvidence(paint.bands.retrospective)}:null,markers:paint.markers.length,intervals:paint.intervals.length,turns:paint.turns.length,boundaries:paint.boundaries.length}};
     }
-    evidence.lastObservation = { label, ...value, candles: value.candles.map(row => row.date), annotationSignature: undefined,
-      annotationSha256: value.annotationSignature === null ? null : digest(value.annotationSignature) };
+    evidence.lastObservation = stateEvidence(label, value);
     assert.ok(value.sameNode && value.sameDocument, 'Replay replaced the main chart or document');
     assert.equal(value.updateInterval, 'daily'); assert.equal(value.updateIntervalLocked, true, 'The source advances by completed daily observations');
     assert.equal(value.active, true); assert.equal(value.separateReplayCharts, 0); assert.equal(value.dialogs, 0);
@@ -1293,7 +1346,7 @@ export async function verifyChartReplaySurface(api) {
     assert.equal(value.playLabel, value.state === 'playing' ? '리플레이 일시정지' : '리플레이 재생', 'The transport label contradicts its playback state');
     if (value.state === 'playing') assert.equal(value.playDisabled, false, 'Pause must stay available while playing');
     assert.equal(value.previousPresent, false, 'The removed previous-bar action is still mounted');
-    if (value.renderer === 'atlas' && value.forecastPath) {
+    if (value.renderer === 'atlas' && value.forecastPath || value.renderer === 'funnest' && value.forecastReceiptPathExists) {
       assert.equal(value.forecastAboveActuals, true, 'The intact immutable comparison curve must stay readable above actual candles');
       assert.equal(value.forecastPointerEvents, 'none', 'The fixed forecast intercepts native chart selection');
       if (value.forecastBandEnabled || value.forecastRangeBelowActuals !== null) assert.equal(value.forecastRangeBelowActuals, true, 'The forecast range must remain below actual candles');
@@ -1317,7 +1370,7 @@ export async function verifyChartReplaySurface(api) {
       // before the fixed current forecast begins. Off-screen assumptions must
       // remain in the fixed export without acquiring invented earlier values.
       const fixedOutsideView = value.mode === 'atlas-chart' && currentAtlasModel && !currentAtlasModel.path.some(row => row.date >= value.viewStart && row.date <= value.viewEnd);
-      if(btc){if(fixedOutsideView)assert.equal(value.forecastReceiptPathExists,false,'The Funnest painter drew an out-of-view current forecast');else assert.ok(value.forecastReceiptPathExists||value.forecastCount===0,'BTC current forecast lacks actual painter arguments');}
+      if(value.renderer==='funnest'){if(fixedOutsideView)assert.equal(value.forecastReceiptPathExists,false,'The current forecast acquired a fake earlier visible segment');else assert.ok(value.forecastReceiptPathExists,'BTC current forecast lacks actual painter arguments inside the plot');}
       else if (fixedOutsideView) assert.equal(value.forecastPath, null, 'The current forecast acquired a fake earlier visible segment');
       else assert.ok(value.forecastPath);
       assert.ok(value.actualThrough <= value.cursor, 'Main chart exposed an actual beyond the cursor');
@@ -1332,26 +1385,25 @@ export async function verifyChartReplaySurface(api) {
       }
       for (const row of value.volumeBars) assert.equal(row.volume, source.get(row.date)?.volume, 'Volume used another day or an undisclosed completed week');
       if (value.mode === 'atlas-chart') {
-        assert.equal(value.renderer, btc?'funnest':'atlas', 'Direct replay changed the required price renderer');
+        assert.equal(value.renderer, requiredRenderer, 'Direct replay changed the required price renderer');
         const expectedCandles = sourceRows.filter(row => row.date >= value.viewStart && row.date <= value.viewEnd && row.date <= value.cursor);
         const expectedObservedRows = archiveRows(value.mode).filter(row => row.date >= value.viewStart && row.date <= value.viewEnd && row.date <= value.cursor);
-        if(!btc)assert.equal(value.atlasPriceLayer,fixedOutsideView&&expectedObservedRows.length===0?0:1,'The original Atlas SVG price layer does not match visible data availability');
-        else {assert.equal(value.atlasPriceLayer,0,'BTC must not claim an SVG price layer');assert.ok(value.btcRender.painted&&value.btcRender.engineBars>0,'BTC source rows were not rendered by Funnest canvas');}
+        if(value.renderer==='funnest'){assert.equal(value.atlasPriceLayer,0,'A legacy SVG price layer remains beside the Funnest canvas');
+          assert.equal(value.forecastReceiptPathExists||value.observedRowCount>0,!(fixedOutsideView&&expectedObservedRows.length===0),'The Funnest price layer does not match visible data availability');}
+        else assert.equal(value.atlasPriceLayer,fixedOutsideView&&expectedObservedRows.length===0?0:1,'The original Atlas price layer does not match visible data availability');
         if (originalAtlasViewport?.[0] === value.viewStart && originalAtlasViewport?.[1] === value.viewEnd) {
           assert.ok(value.cycleMarkerLayers > 0 && value.cycleMarkerCount > 0, 'Direct replay removed the cycle landmarks');
           assert.ok(value.cycleIntervalLayers > 0 && value.cycleIntervalCount > 0, 'Direct replay removed the cycle period lines');
         }
         assert.ok(value.annotationSignature, 'Frozen cycle annotation identity is missing');
-        assert.equal(value.observedCandleCount, btc?(value.sourceMode==='ohlc'?expectedCandles.length:0):expectedCandles.length, 'The current-chart source layer omitted or invented source bars');
-        if(!btc){assert.equal(value.observedCandleCount,value.candles.length+value.batchedCandleCount);assert.equal(value.batchedWickCount,value.batchedCandleCount,'Dense rendering dropped genuine candle wicks');}
-        else assert.ok(value.btcRender.engineBars>=0&&value.priceMinimum<value.priceMaximum);
-        const cursorX = value.plotLeft + (Date.parse(value.cursor) - Date.parse(value.viewStart)) / (Date.parse(value.viewEnd) - Date.parse(value.viewStart)) * (value.plotRight - value.plotLeft);
+        assert.equal(value.observedCandleCount, expectedCandles.length, 'The current-chart candle layer omitted or invented source bars');
+        assert.equal(value.observedCandleCount,value.candles.length+value.batchedCandleCount);assert.equal(value.batchedWickCount,value.batchedCandleCount,'Dense rendering dropped genuine candle wicks');
+        const cursorX = replayX(value, value.cursor);
         if (value.lastBatchedCandleX !== null) assert.ok(value.lastBatchedCandleX <= cursorX + .02, 'A dense actual candle painted beyond the reveal cursor');
         assert.ok(Number.isFinite(value.priceMinimum) && Number.isFinite(value.priceMaximum) && value.priceMinimum < value.priceMaximum, 'Replay omitted its actual displayed price-domain evidence');
       }
     }
-    evidence.states.push({ label, ...value, candles: value.candles.map(row => row.date), forecastPath: undefined, forecastPathSha256: value.forecastPath === null ? null : digest(value.forecastPath),
-      annotationSignature: undefined, annotationSha256: value.annotationSignature === null ? null : digest(value.annotationSignature) });
+    evidence.states.push({ ...stateEvidence(label, value), forecastPath: undefined, forecastPathSha256: value.forecastPath === null ? null : digest(value.forecastPath) });
     if (capture) await screenshot(cdp, prefix + '-' + label + '.png', receipt);
     return value;
   }
@@ -1360,10 +1412,7 @@ export async function verifyChartReplaySurface(api) {
     await click(cdp, control('details'));
     const parent = resolve(outputDirectory, 'chart-replay-downloads', prefix); await mkdir(parent, { recursive: true });
     const directory = await mkdtemp(resolve(parent, label + '-'));
-    await browser.send('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: directory, eventsEnabled: true, browserContextId });
-    await click(cdp, control('export'));
-    const file = await until(async () => { const files = (await readdir(directory)).filter(name => name.endsWith('.json')); assert.ok(files.length <= 1); return files[0]; }, 'main-chart replay JSON download');
-    const bytes = await readFile(resolve(directory, file)), payload = JSON.parse(bytes.toString('utf8'));
+    const { file, bytes } = await downloadedJson(directory, () => click(cdp, control('export')), 'main-chart replay JSON download'), payload = JSON.parse(bytes.toString('utf8'));
     assert.equal(payload.kind, 'atlas-visible-chart-replay'); assert.equal(payload.identity.symbol, symbol); assert.equal(payload.identity.outputHash, before.outputHash);
     assert.equal(payload.frame.cursorDate, before.cursor); assert.ok(payload.frame.actual.every(row => row.date > before.origin && row.date <= before.cursor));
     const observed = new Map(archiveRows(before.mode).map(row => [row.date, row]));
@@ -1412,17 +1461,26 @@ export async function verifyChartReplaySurface(api) {
     }
     await settled(cdp);
   }
+  const originBoundaryX = () => evaluate(cdp, selector => {
+    const svg = document.querySelector(selector);
+    if (svg.dataset.replayRenderer !== 'funnest') return Number(svg.querySelector('[data-replay-origin-boundary]').getAttribute('x1'));
+    const row = svg.closest('.atlas-plot').querySelector('.atlas-funnest-canvas[data-chart-replay-host="true"]')?.getAtlasBtcRenderSnapshot?.()?.paint?.boundaries?.find(row => row.name === 'data-replay-origin-boundary');
+    if (!row) throw new Error('The Funnest painter receipt has no committed replay origin line');
+    return row.x;
+  }, chartSelector);
   async function touchPan(label) {
     const before = await snapshot(label + '-before-hold');
-    const gesture = await evaluate(cdp, ({ selector, btc }) => {
-      const svg=document.querySelector(selector),host=svg.closest('.atlas-plot').querySelector('.atlas-funnest-canvas[data-chart-replay-host="true"]'),box=host?.getBoundingClientRect(),snap=host?.getAtlasFunnestSnapshot?.(),layout=snap?.layout;
-      if(btc){const main=layout?.panes?.find(pane=>pane.kind==='main'||pane.id==='main');if(!snap||!main||!(layout.plotWidth>0&&layout.width>0&&box?.width>0&&box?.height>0))throw new Error('Touch pan lacks a real Funnest pane snapshot');
-        return {x:box.left+layout.plotWidth*.5/layout.width*box.width,y:box.top+(main.top+main.height*.5)/layout.height*box.height,
-          delta:Math.min(55,layout.plotWidth/layout.width*box.width*.18),originX:Number(svg.querySelector('[data-replay-origin-boundary]').getAttribute('x1'))};}
+    const gesture = await evaluate(cdp, selector => {
+      const svg=document.querySelector(selector);
+      if(svg.dataset.replayRenderer==='funnest'){
+        const host=svg.closest('.atlas-plot').querySelector('.atlas-funnest-canvas[data-chart-replay-host="true"]'),box=host?.getBoundingClientRect(),snap=host?.getAtlasFunnestSnapshot?.(),layout=snap?.layout,main=layout?.panes?.find(pane=>pane.kind==='main'||pane.id==='main');
+        if(!snap||!main||!(layout.plotWidth>0&&layout.width>0&&box?.width>0&&box?.height>0))throw new Error('Touch pan lacks a real Funnest pane snapshot');
+        return {x:box.left+layout.plotWidth*.5/layout.width*box.width,y:box.top+(main.top+main.height*.5)/layout.height*box.height,delta:Math.min(55,layout.plotWidth/layout.width*box.width*.18)};
+      }
       const boxSvg=svg.getBoundingClientRect(),view=svg.viewBox.baseVal,left=Number(svg.dataset.plotLeft),right=Number(svg.dataset.plotRight);
-      return {x:boxSvg.left+(left+right)/2/view.width*boxSvg.width,y:boxSvg.top+(Number(svg.dataset.plotTop)+Number(svg.dataset.priceBottom))/2/view.height*boxSvg.height,
-        delta:Math.min(55,(right-left)/view.width*boxSvg.width*.18),originX:Number(svg.querySelector('[data-replay-origin-boundary]').getAttribute('x1'))};
-    }, {selector:chartSelector,btc});
+      return {x:boxSvg.left+(left+right)/2/view.width*boxSvg.width,y:boxSvg.top+(Number(svg.dataset.plotTop)+Number(svg.dataset.priceBottom))/2/view.height*boxSvg.height,delta:Math.min(55,(right-left)/view.width*boxSvg.width*.18)};
+    }, chartSelector);
+    gesture.originX = await originBoundaryX();
     const hints = () => evaluate(cdp, () => document.querySelectorAll('.chart-touch-tracking-hint:not([hidden])').length);
     assert.equal(await hints(), 0);
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: gesture.x, y: gesture.y, id: 0, radiusX: 1, radiusY: 1, force: 1 }] });
@@ -1434,7 +1492,7 @@ export async function verifyChartReplaySurface(api) {
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); await settled(cdp);
     assert.equal(await hints(), 0);
     const after = await snapshot(label + '-hold-pan', true);
-    const originX = await evaluate(cdp, selector => Number(document.querySelector(selector).querySelector('[data-replay-origin-boundary]').getAttribute('x1')), chartSelector);
+    const originX = await originBoundaryX();
     assert.ok(Math.abs(originX - gesture.originX) > 8, 'Replay chart did not pan after native touch hold');
     assert.equal(after.index, before.index); assert.equal(after.outputHash, before.outputHash); assert.equal(after.actualThrough, before.actualThrough);
     if (before.mode === 'atlas-chart') {
@@ -1451,12 +1509,11 @@ export async function verifyChartReplaySurface(api) {
       const fraction=(Date.parse(date)-Date.parse(svg.dataset.replayViewStart))/(Date.parse(svg.dataset.replayViewEnd)-Date.parse(svg.dataset.replayViewStart));
       if(!(fraction>=0&&fraction<=1))throw new Error('Requested native pointer date is outside the current chart');
       const plot=svg.closest('.atlas-plot'),host=plot.querySelector('.atlas-funnest-canvas[data-chart-replay-host="true"]');
-      let x,yAt;
-      if(btc){
+      let x,yAt;const onFunnest=svg.dataset.replayRenderer==='funnest';
+      if(onFunnest){
         const funnest=host?.getAtlasFunnestSnapshot?.(),render=host?.getAtlasBtcRenderSnapshot?.(),layout=funnest?.layout,main=layout?.panes?.find(pane=>pane.kind==='main'||pane.id==='main'),hostBox=host?.getBoundingClientRect();
         if(!funnest||!render||!main||!(layout?.plotWidth>0&&layout?.width>0&&hostBox?.width>0&&hostBox?.height>0))throw new Error('BTC pointer mapping lacks the actual Funnest PaneCoords snapshot');
-        // Weekly source rows carry their Monday as startDate; the projected x belongs to that period bar.
-        const row=render.observed?.rows?.find(item=>item.date===date||item.startDate===date||item.sourceRow?.periodStartDate===date||item.sourceRow?.startDate===date);
+        const row=render.observed?.rows?.find(item=>(render.sourceMode==='ohlc'&&render.frequency==='weekly'?item.startDate:item.date)===date);
         if(!row||!Number.isFinite(row.x))throw new Error('Requested BTC pointer date has no projected source row: '+date);
         x=hostBox.left+row.x/layout.width*hostBox.width;
         yAt=yFraction=>hostBox.top+(main.top+main.height*yFraction)/layout.height*hostBox.height;
@@ -1483,8 +1540,8 @@ export async function verifyChartReplaySurface(api) {
       const chosen = candidates.find(point => point.excludedBy.length === 0) ?? null;
       const hit = chosen ? document.elementFromPoint(chosen.x, chosen.y) : null;
       return { date,dateFraction:fraction,x,candidates,excludedRects,chosenYFraction:chosen?.yFraction??null,
-        point:chosen?{x:chosen.x,y:chosen.y}:null,reachesChart:svg.contains(hit)||Boolean(host?.contains(hit)),
-        coordinateBasis:'Funnest PaneCoords observed-row x with native host bounds',
+        point:chosen?{x:chosen.x,y:chosen.y}:null,reachesChart:svg.contains(hit),
+        coordinateBasis:onFunnest?'Funnest PaneCoords observed-row x with native host bounds':'SVG plot dataset over the declared view',
         owner:hit?{tag:hit.tagName,id:hit.id||null,className:hit.getAttribute('class'),control:hit.closest('[data-cr]')?.dataset.cr??null}:null };
     }, { selector: chartSelector, date, btc });
     if (btc) {
@@ -1508,17 +1565,15 @@ export async function verifyChartReplaySurface(api) {
   }
   async function previewStart(label, target, expectedDate) {
     const hit = await evaluate(cdp, ({ selector, target }) => {
-      const node = document.elementFromPoint(target.x, target.y), svg = document.querySelector(selector);
-      // The Funnest replay host (its canvases) is the actual pointer surface in BTC replay; the SVG remains the surface for the SVG renderer.
-      const host = svg.dataset.replayRenderer === 'funnest' ? svg.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas[data-chart-replay-host="true"]') : null;
-      return { chart: Boolean(node && (svg.contains(node) || (host && (host === node || host.contains(node))))), tag: node?.tagName, surface: host && node && (host === node || host.contains(node)) ? 'funnest-replay-host' : svg.contains(node) ? 'svg' : null,
+      const node = document.elementFromPoint(target.x, target.y);
+      return { chart: Boolean(node && document.querySelector(selector).contains(node)), tag: node?.tagName,
         control: node?.closest('[data-cr]')?.dataset.cr ?? null };
     }, { selector: chartSelector, target });
     assert.equal(hit.chart, true, 'Native picker target is covered by another control: ' + JSON.stringify({ target, hit }));
     await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', ...target }); await settled(cdp);
-    const value = await evaluate(cdp, ({ selector, panel, btc }) => {
-      const svg = document.querySelector(selector), line = svg.querySelector('[data-chart-replay-picker] line.chart-replay-picker');
-      const cross=svg.querySelector('[id$="-cross"]'),controls=document.querySelector(panel),q=name=>controls.querySelector('[data-cr="'+name+'"]'),host=btc?svg.closest('.atlas-plot').querySelector('.atlas-funnest-canvas[data-chart-replay-host="true"]'):null,engineSnapshot=btc?host?.getAtlasFunnestSnapshot?.():null,renderSnapshot=btc?host?.getAtlasBtcRenderSnapshot?.():null;
+    const value = await evaluate(cdp, ({ selector, panel }) => {
+      const svg = document.querySelector(selector), line = svg.querySelector('[data-chart-replay-picker] line.chart-replay-picker'),onFunnest=svg.dataset.replayRenderer==='funnest';
+      const cross=svg.querySelector('[id$="-cross"]'),controls=document.querySelector(panel),q=name=>controls.querySelector('[data-cr="'+name+'"]'),host=onFunnest?svg.closest('.atlas-plot').querySelector('.atlas-funnest-canvas[data-chart-replay-host="true"]'):null,engineSnapshot=host?.getAtlasFunnestSnapshot?.()??null,boundaries=host?.getAtlasBtcRenderSnapshot?.()?.paint?.boundaries??null;
       return { cursor: svg.dataset.replayCursor ?? null, origin: svg.dataset.replayOrigin ?? null,
         pickerDate: svg.dataset.pickerDate ?? svg.dataset.replayPickerDate ?? null,
         selecting: svg.dataset.replaySelecting, stroke: line ? getComputedStyle(line).stroke : null,
@@ -1526,16 +1581,12 @@ export async function verifyChartReplaySurface(api) {
         scissorsLabel: svg.querySelector('[data-chart-replay-scissors]')?.textContent ?? null,
         inspect: document.querySelector('.chart-replay-inspect')?.textContent ?? null,
         playDisabled: q('play').disabled, nextDisabled: q('next').disabled, liveDisabled: q('live').disabled,
-        nativeCrosshairVisible: btc?null:Boolean(cross && getComputedStyle(cross).display !== 'none' && getComputedStyle(cross).visibility !== 'hidden'),
-        crosshairEvent:btc?(engineSnapshot?.crosshair??null):null,
-        crosshairEventSequence:btc?(engineSnapshot?.crosshairEventSequence??0):0,
-        crosshairSourceRow:btc?(renderSnapshot?.observed?.rows?.find(row=>row.date===(svg.dataset.pickerDate??svg.dataset.replayPickerDate))?(({time,x,date})=>({time,x,date}))(renderSnapshot.observed.rows.find(row=>row.date===(svg.dataset.pickerDate??svg.dataset.replayPickerDate))):null):null,
-        interactionPointer:btc?(renderSnapshot?.interaction?.pointer??null):null,pointerBasis:btc?(renderSnapshot?.interaction?.pointerBasis??null):null,
-        selectionPreview:btc?(svg.dataset.replaySelectionPreview==='true'):false,
-        confirmedXs: [...svg.querySelectorAll('[data-replay-cursor-line]')].map(node => node.getAttribute('x1')),
-        origins: svg.querySelectorAll('[data-replay-origin-boundary]').length,
+        nativeCrosshairVisible: onFunnest?(engineSnapshot?engineSnapshot.crosshair!==null||(engineSnapshot.canvases?.at(-1)?.opaquePixels??0)>0:null):Boolean(cross && getComputedStyle(cross).display !== 'none' && getComputedStyle(cross).visibility !== 'hidden'),
+        renderer: svg.dataset.replayRenderer ?? null, selectionPreview: svg.dataset.replaySelectionPreview ?? null,
+        confirmedXs: onFunnest?(boundaries?boundaries.filter(row=>row.name==='data-replay-cursor-line').map(row=>String(row.x)):null):[...svg.querySelectorAll('[data-replay-cursor-line]')].map(node => node.getAttribute('x1')),
+        origins: onFunnest?(boundaries?boundaries.filter(row=>row.name==='data-replay-origin-boundary').length:null):svg.querySelectorAll('[data-replay-origin-boundary]').length,
         line: line ? { x1: line.getAttribute('x1'), x2: line.getAttribute('x2'), y1: line.getAttribute('y1'), y2: line.getAttribute('y2') } : null };
-    }, { selector: chartSelector, panel, btc });
+    }, { selector: chartSelector, panel });
     evidence.selections.push({ label, validated: false, target, hit, ...value });
     assert.equal(value.selecting, 'true'); assert.ok(value.line); assert.equal(value.line.x1, value.line.x2); assert.notEqual(value.line.y1, value.line.y2);
     assert.ok(value.scissors, 'Start-point preview omitted the scissors indicator');
@@ -1545,8 +1596,8 @@ export async function verifyChartReplaySurface(api) {
     if (expectedDate) assert.equal(value.pickerDate, expectedDate, 'The start preview did not identify the pointed-to source candle');
     assert.ok(value.scissorsLabel?.includes(value.pickerDate), 'The blue scissors line omitted its pointed-to bar date');
     assert.ok(value.inspect?.includes(value.pickerDate), 'The displayed preview readout disagrees with the pointed-to bar');
-    if(btc){assert.equal(value.selectionPreview,true,'BTC native input did not remain in unconfirmed start-preview mode');assert.ok(value.crosshairEvent&&value.crosshairEvent.source==='mouse'&&value.crosshairEvent.pane==='main','Funnest did not report the actual native BTC pointer event');assert.ok(value.crosshairEventSequence>0);assert.ok(value.crosshairSourceRow,'The hovered picker date has no source row projection');assert.equal(value.crosshairEvent.time,value.crosshairSourceRow.time,'Native Funnest crosshair time differs from the selected BTC source row');assert.ok(Math.abs(value.crosshairEvent.x-value.crosshairSourceRow.x)<1e-6,'Native Funnest crosshair x differs from its PaneCoords source-row projection');assert.ok(value.interactionPointer&&value.pointerBasis,'BTC input did not yield an actual adapter pointer receipt');assert.equal(value.interactionPointer.time,value.crosshairEvent.time);assert.ok(Math.abs(value.interactionPointer.x-value.crosshairEvent.x)<1e-6&&Math.abs(value.interactionPointer.y-value.crosshairEvent.y)<1e-6);}
-    else assert.equal(value.nativeCrosshairVisible,false,'A fixed ordinary chart crosshair competes with the unconfirmed scissors preview');
+    assert.equal(value.nativeCrosshairVisible, false, 'A fixed ordinary chart crosshair competes with the unconfirmed scissors preview');
+    if (value.renderer === 'funnest') assert.equal(value.selectionPreview, 'true', 'The Funnest replay left its inert start-preview mode during the hover');
     assert.equal(value.playDisabled, true); assert.equal(value.nextDisabled, true); assert.equal(value.liveDisabled, true, 'Jump to real-time remained enabled before the start click');
     assert.deepEqual(value.confirmedXs, []); assert.equal(value.origins, 0);
     evidence.selections.at(-1).validated = true;
@@ -1557,7 +1608,7 @@ export async function verifyChartReplaySurface(api) {
     assert.equal(before.state, 'selecting'); assert.equal(before.selecting, true); assert.equal(before.frequency, frequency);
     assert.equal(before.origin ?? null, null); assert.equal(before.cursor ?? null, null);
     assert.equal(before.origins, 0); assert.equal(before.cursors, 0, 'Unconfirmed selection invented a committed cutoff');
-    if(!btc)assert.equal(before.nativeCrosshairVisible,false,'Initial selection paints a fixed last-observed crosshair');
+    assert.equal(before.nativeCrosshairVisible, false, 'Initial selection paints a fixed last-observed crosshair');
     assert.equal(before.playDisabled, true); assert.equal(before.nextDisabled, true); assert.equal(before.liveDisabled, true);
     assert.equal(before.forecastValueSignature, liveContext.forecastValueSignature);
     const source = frequency === 'weekly' ? disclosedBitcoinWeeks(btcCandles, btcCandles.at(-1).date) : btcCandles;
@@ -1572,7 +1623,7 @@ export async function verifyChartReplaySurface(api) {
     const center = await previewStart(label + '-center-bar-hover', centerPoint, centerDate);
     assert.notEqual(left.pickerDate, center.pickerDate); assert.notEqual(left.line.x1, center.line.x1, 'The blue scissors line is stuck while the pointer crosses source bars');
     assert.equal(left.cursor, null); assert.equal(center.cursor, null); assert.equal(left.origin, null); assert.equal(center.origin, null);
-    const expectedX = date => before.plotLeft + (day(date) - day(before.viewStart)) / (day(before.viewEnd) - day(before.viewStart)) * (before.plotRight - before.plotLeft);
+    const expectedX = date => replayX(before, date);
     for (const hover of [left, center]) assert.ok(Math.abs(Number(hover.line.x1) - expectedX(hover.pickerDate)) < .01, 'Scissors line does not align with its actual bar coordinate');
     const after = await snapshot(label + '-hover-is-still-unconfirmed', true);
     for (const field of ['state', 'origin', 'cursor', 'outputHash', 'forecastValueSignature', 'annotationSignature', 'actualThrough', 'observedCandleCount', 'volumeCount']) assert.equal(after[field], before[field], 'Pointer movement silently committed or changed ' + field);
@@ -1691,7 +1742,7 @@ export async function verifyChartReplaySurface(api) {
       outputHash: paused.outputHash, forecastValueSignature: paused.forecastValueSignature });
     await select(control('speed'), initial.speed);
   }
-  async function verifyRetrospectiveOverlap(start, scenario) {
+  async function verifyRetrospectiveOverlap(start, scenario, liveContext) {
     const asOf = dateAt(day(start) - 1), next = dateAt(day(start) + 1), savedBefore = await storedBytes();
     assert.ok(savedBefore, 'The selected-origin scenario must preserve the already explicitly saved replay');
     assert.ok(btcCandles.some(row => row.date === start) && btcCandles.some(row => row.date === next), 'The selected-origin comparison needs both genuine source days');
@@ -1732,23 +1783,24 @@ export async function verifyChartReplaySurface(api) {
       assert.equal(retrospective.issuedAt, 'null'); assert.equal(retrospective.scoringEnabled, 'false');
       assert.equal(retrospective.pathCount, 1); assert.equal(retrospective.bandCount, 1);
       assert.equal(retrospective.pathVisible, true); assert.equal(retrospective.bandVisible, true); assert.ok(retrospective.pathLength > 0);
-      assert.equal(retrospective.originalDash, btc?'7 5':'5 3', 'The original current-forecast dash pattern changed');
+      assert.equal(retrospective.originalDash, liveContext.forecastDash, 'The original current-forecast dash pattern changed');
       assert.equal(retrospective.dash, '1 5'); assert.equal(retrospective.haloDash, retrospective.dash);
       assert.notEqual(retrospective.dash, retrospective.originalDash, 'The separate retrospective needs a distinct dot spacing');
       assert.equal(retrospective.originLabelVisible, true); assert.equal(retrospective.originLabelInputThrough, asOf);
       assert.equal(retrospective.originLabelText, '회고 · 입력 ' + asOf);
-      const originX = state.plotLeft + (day(asOf) - day(state.viewStart)) / (day(state.viewEnd) - day(state.viewStart)) * (state.plotRight - state.plotLeft);
+      const originX = replayX(state, asOf);
       assert.ok(Math.abs(retrospective.originAnchorX - originX) < .02, 'The input-date label moved away from the fixed path origin');
+      assert.equal(state.renderer, 'funnest'); assert.ok(Math.abs(retrospective.pathOriginX - originX) < .02, 'The painted retrospective path does not start at its fixed origin');
       assert.equal(retrospective.independentCurrentPath, true, 'The retrospective path was spliced into the current forecast');
-      assert.equal(retrospective.pointerEvents, btc?'canvas-native-input':'none'); assert.equal(retrospective.bandPointerEvents, btc?'canvas-native-input':'none');
+      assert.equal(retrospective.pointerEvents, 'none'); assert.equal(retrospective.bandPointerEvents, 'none');
       assert.equal(retrospective.aboveActuals, true); assert.equal(retrospective.bandBelowActuals, true);
-      assert.equal(retrospective.haloMatchesPath, true); assert.equal(retrospective.haloPointerEvents, btc?'canvas-native-input':'none');
+      assert.equal(retrospective.haloMatchesPath, true); assert.equal(retrospective.haloPointerEvents, 'none');
       assert.equal(retrospective.haloAboveActuals, true); assert.equal(retrospective.haloBelowPath, true);
       for (const field of ['inputHash', 'outputHash', 'createdAt', 'valueSignature']) assert.equal(retrospective[field], initial.retrospective[field], 'One actual source day changed retrospective ' + field);
       assert.ok(retrospective.valueSignature, 'The frozen retrospective price identity is missing');
       assert.equal(state.snapshotDigest, initial.snapshotDigest, 'Revealing actuals replaced the fixed retrospective capture');
       for (const date of [start, next]) {
-        const x = state.plotLeft + (day(date) - day(state.viewStart)) / (day(state.viewEnd) - day(state.viewStart)) * (state.plotRight - state.plotLeft);
+        const x = replayX(state, date);
         for (const [name, box] of [['line', retrospective.pathBounds], ['band', retrospective.bandBounds]])
           assert.ok(box && box.width > 0 && x >= box.x - .02 && x <= box.x + box.width + .02, 'The retrospective ' + name + ' does not cover the selected-origin comparison date ' + date);
       }
@@ -1841,7 +1893,7 @@ export async function verifyChartReplaySurface(api) {
       }
       return { cursor: state.cursor, expectedVisibleVolumeCount: visible.length,
         outsideCandleCoordinates: outside.map(row => ({ date: row.date, periodStart: row.periodStart,
-          x: state.plotLeft + (day(row.periodStart) - day(state.viewStart)) / (day(state.viewEnd) - day(state.viewStart)) * (state.plotRight - state.plotLeft) })),
+          x: replayX(state, row.periodStart) })),
         priceCandidateMeaning: 'Price candle metadata retains end-date candidates; volume excludes Monday coordinates outside the plot. Both use the same disclosed daily prefixes.' };
     };
     const firstVolumeScope = volumeScope(first), nextVolumeScope = volumeScope(second);
@@ -1869,10 +1921,13 @@ export async function verifyChartReplaySurface(api) {
     for (const span of ['near', 'all', 'history', 'focus']) {
       await click(cdp, '[data-chart-span="' + span + '"]'); await settled(cdp);
       const value = await evaluate(cdp, ({ selector, span }) => {
-        const svg = document.querySelector(selector); return { span, selected: document.querySelector('[data-chart-span="' + span + '"]').getAttribute('aria-pressed'),
+        const svg = document.querySelector(selector), host = svg.dataset.replayRenderer === 'funnest' ? svg.closest('.atlas-plot').querySelector('.atlas-funnest-canvas[data-chart-replay-host="true"]') : null, rows = host?.getAtlasBtcRenderSnapshot?.()?.forecastRows;
+        return { span, selected: document.querySelector('[data-chart-span="' + span + '"]').getAttribute('aria-pressed'),
           start: svg.dataset.replayViewStart, end: svg.dataset.replayViewEnd, cursor: svg.dataset.replayCursor,
-          signature: svg.dataset.forecastValueSignature, hash: svg.dataset.replayOutputHash, sameNode: svg === globalThis.__mainReplayNode };
+          signature: host ? null : svg.dataset.forecastValueSignature, forecastRows: host ? rows ?? null : undefined,
+          hash: svg.dataset.replayOutputHash, sameNode: svg === globalThis.__mainReplayNode };
       }, { selector: chartSelector, span });
+      if (value.forecastRows !== undefined) { value.signature = valueIdentity(value.forecastRows); delete value.forecastRows; }
       assert.equal(value.selected, 'true'); assert.equal(value.sameNode, true); assert.equal(value.cursor, completed.cursor);
       assert.equal(value.signature, liveContext.forecastValueSignature); assert.equal(value.hash, direct.outputHash);
       assert.ok(value.start < value.end); ranges.push(value);
@@ -1957,10 +2012,12 @@ export async function verifyChartReplaySurface(api) {
     const unavailable = await until(async () => {
       const value = await evaluate(cdp, ({ selector, panel }) => {
         const svg = document.querySelector(selector), controls = document.querySelector(panel);
+        const host = svg.dataset.replayRenderer === 'funnest' ? svg.closest('.atlas-plot').querySelector('.atlas-funnest-canvas[data-chart-replay-host="true"]') : null, render = host?.getAtlasBtcRenderSnapshot?.();
         return { selected: document.querySelector('#workbench-interval-select').value,
           message: document.querySelector('.chart-replay-notice:not([hidden])')?.textContent ?? document.querySelector('.chart-replay-hud [role="status"]').textContent,
           playDisabled: controls.querySelector('[data-cr="play"]').disabled, nextDisabled: controls.querySelector('[data-cr="next"]').disabled,
-          candleCount: Number(svg.dataset.observedCandleCount ?? 0), sameNode: svg === globalThis.__mainReplayNode };
+          candleCount: host ? (render?.sourceMode === 'ohlc' ? render.observed.rows.filter(row => row.date >= svg.dataset.replayViewStart && row.date <= svg.dataset.replayViewEnd).length : render ? 0 : null) : Number(svg.dataset.observedCandleCount ?? 0),
+          sameNode: svg === globalThis.__mainReplayNode };
       }, { selector: chartSelector, panel });
       return /자료|확보|지원/.test(value.message) && /없|미확보|지원하지|불가/.test(value.message) ? value : false;
     }, 'unavailable real intraday replay is explicitly disclosed');
@@ -2011,8 +2068,8 @@ export async function verifyChartReplaySurface(api) {
   // own canvas paint with real engine bars. The suspended replay host never counts here.
   const livePainted = () => evaluate(cdp, selector => {
     const svg = document.querySelector(selector); if (!svg) return false;
-    if (svg.querySelector('path')) return true;
     const host = svg.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas:not([data-chart-replay-host])'), snap = host?.getAtlasFunnestSnapshot?.(), box = host?.getBoundingClientRect();
+    if (!host) return Boolean(svg.querySelector('path'));
     return Boolean(snap?.engine === 'funnest' && snap.painted && snap.engineBars?.length > 0 && box?.width > 0 && box?.height > 0 && snap.canvases?.some(c => c.visible && c.readable && c.opaquePixels > 0 && c.sampledColors > 1));
   }, chartSelector);
   await until(async () => await livePainted() && await evaluate(cdp, () => Boolean(document.querySelector('#workbench-replay'))), 'main price chart and replay control');
@@ -2082,38 +2139,41 @@ export async function verifyChartReplaySurface(api) {
     // The replay export must retain every value, not just a matching label/hash.
     const parent = resolve(outputDirectory, 'chart-replay-downloads', prefix); await mkdir(parent, { recursive: true });
     const directory = await mkdtemp(resolve(parent, 'current-model-before-replay-'));
-    await browser.send('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: directory, eventsEnabled: true, browserContextId });
-    if (width < 620) {
-      await click(cdp, chartSelector); await key('k', 'KeyK', 75, 2);
-      await until(() => evaluate(cdp, () => document.querySelector('#workspace-dialog')?.open), 'native compact chart command palette');
-      await click(cdp, '[aria-label="차트 명령 검색"]');
-      await cdp.send('Input.insertText', { text: '차트 레이어' }); await settled(cdp); await key('Enter', 'Enter', 13);
-    } else await click(cdp, '[aria-label="차트 레이어"]');
-    await click(cdp, '#lab-json');
-    const file = await until(async () => { const files = (await readdir(directory)).filter(name => name.endsWith('.json')); assert.ok(files.length <= 1); return files[0]; }, 'native current Atlas model JSON download');
-    const bytes = await readFile(resolve(directory, file)); currentAtlasModel = JSON.parse(bytes.toString('utf8'));
+    const { file, bytes } = await downloadedJson(directory, async () => {
+      if (width < 620) {
+        await click(cdp, chartSelector); await key('k', 'KeyK', 75, 2);
+        await until(() => evaluate(cdp, () => document.querySelector('#workspace-dialog')?.open), 'native compact chart command palette');
+        await click(cdp, '[aria-label="차트 명령 검색"]');
+        await cdp.send('Input.insertText', { text: '차트 레이어' }); await settled(cdp); await key('Enter', 'Enter', 13);
+      } else await click(cdp, '[aria-label="차트 레이어"]');
+      await click(cdp, '#lab-json');
+    }, 'native current Atlas model JSON download');
+    currentAtlasModel = JSON.parse(bytes.toString('utf8'));
     assert.ok(Array.isArray(currentAtlasModel.path) && currentAtlasModel.path.length > 1);
     evidence.currentModelExport = { file: relative(outputDirectory, resolve(directory, file)), bytes: bytes.length, sha256: digest(bytes),
       asOf: currentAtlasModel.asOf, scenario: currentAtlasModel.scenario.id, pathPoints: currentAtlasModel.path.length };
     await click(cdp, '[aria-label="상세 패널 닫기"]'); await settled(cdp);
   }
-  const liveContext = btc ? await evaluate(cdp, selector => {
+  const readLiveChart = async () => { const live = await evaluate(cdp, selector => {
     const svg = document.querySelector(selector);
-    // The live BTC chart is the same Funnest mount family as replay. Its forecast identity comes from
-    // the mounted chart's own frozen forecast rows, in the same value signature replay reports.
     const liveHost = svg.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas:not([data-chart-replay-host])'), liveRender = liveHost?.getAtlasBtcRenderSnapshot?.() ?? null;
-    const liveSignature = liveRender ? JSON.stringify((liveRender.forecastRows ?? []).map(row => [row.date, row.price, row.lower ?? null, row.upper ?? null])) : null;
-    return { range: document.querySelector('#workbench-range-label').textContent, scale: svg.dataset.scale, unit: liveRender?.unit ?? svg.dataset.unit ?? null,
-      chartType: svg.dataset.chartType, atlasPriceLayer: svg.querySelectorAll('.price-series-layer').length,
-      forecastValueSignature: svg.dataset.forecastValueSignature ?? liveSignature, liveEngine: liveRender?.engine ?? null, liveForecastRows: liveRender?.forecastRows?.length ?? 0,
-        snapshotDigest: svg.dataset.replaySnapshotHash ?? null,
+    const dash = liveRender?.paint?.paths?.forecast?.strokes?.find(stroke => stroke.kind === 'path')?.dash ?? null;
+    return { sameNode: svg === globalThis.__mainReplayNode, range: document.querySelector('#workbench-range-label').textContent,
+      scale: liveRender?.priceScale?.scale ?? null, unit: liveRender?.unit ?? null, chartType: liveRender?.chartType ?? null,
+      atlasPriceLayer: svg.querySelectorAll('.price-series-layer').length,
+      forecastRows: liveRender?.forecastRows ?? null,
+      forecastDash: dash ? dash.join(' ') : null, liveEngine: liveRender?.engine ?? null, liveForecastRows: liveRender?.forecastRows?.length ?? 0,
+      snapshotDigest: svg.dataset.replaySnapshotHash ?? null,
       frequency: document.querySelector('#workbench-interval-select').value,
       cycleMarkers: Number(svg.dataset.cycleMarkerCount), cycleIntervals: Number(svg.dataset.cycleIntervalCount) };
-  }, chartSelector) : null;
+  }, chartSelector); const { forecastRows, ...context } = live; return { ...context, forecastValueSignature: valueIdentity(forecastRows) }; };
+  const liveContext = btc ? await readLiveChart() : null;
   if (btc) {
     evidence.liveContext = liveContext;
-    assert.ok(typeof liveContext.forecastValueSignature === 'string' && liveContext.forecastValueSignature.length > 2 && liveContext.forecastValueSignature !== '[]', 'The live BTC chart must expose its actual current forecast values before replay');
+    assert.ok(liveContext.liveForecastRows > 1 && /^[a-f0-9]{16}$/.test(liveContext.forecastValueSignature), 'The live BTC chart must expose its actual current forecast values before replay');
     assert.equal(liveContext.liveEngine, 'funnest', 'The live BTC chart must be the actual Funnest mount');
+    assert.equal(liveContext.forecastDash, '7 5', 'The live BTC chart must stroke its current forecast with the 7 5 dash');
+    for (const key of ['scale', 'unit', 'chartType']) assert.ok(liveContext[key], 'The live BTC chart omitted its ' + key);
     originalAtlasViewport = liveContext.range.match(/\d{4}\.\d{2}\.\d{2}/g)?.map(date => date.replaceAll('.', '-'));
     assert.equal(originalAtlasViewport?.length, 2);
     await screenshot(cdp, prefix + '-current-chart-before-replay.png', receipt);
@@ -2230,15 +2290,10 @@ export async function verifyChartReplaySurface(api) {
     if (touch) pausedAtlas = await touchPan('atlas-touch');
     visibleBounds(await bounds(cdp, control('exit')), width, height);
     await exitReplay('atlas-explicit-save', { cancelFirst: true });
-    await until(() => evaluate(cdp, selector => document.querySelector(selector)?.dataset.chartReplayActive !== 'true' && document.querySelector(selector)?.querySelector('.price-series-layer'), chartSelector), 'restore the same current Atlas chart');
-    const restoredAtlas = await evaluate(cdp, selector => {
-      const svg = document.querySelector(selector); return { sameNode: svg === globalThis.__mainReplayNode,
-        range: document.querySelector('#workbench-range-label').textContent, scale: svg.dataset.scale, unit: svg.dataset.unit, chartType: svg.dataset.chartType,
-        frequency: document.querySelector('#workbench-interval-select').value,
-        cycleMarkers: Number(svg.dataset.cycleMarkerCount), cycleIntervals: Number(svg.dataset.cycleIntervalCount) };
-    }, chartSelector);
-    assert.equal(restoredAtlas.sameNode, true);
-    for (const key of ['range', 'scale', 'unit', 'chartType', 'frequency', 'cycleMarkers', 'cycleIntervals']) assert.equal(restoredAtlas[key], liveContext[key], 'Returning from Atlas replay changed ' + key);
+    await until(async () => await evaluate(cdp, selector => document.querySelector(selector)?.dataset.chartReplayActive !== 'true', chartSelector) && await livePainted(), 'restore the same current Atlas chart');
+    const restoredAtlas = await readLiveChart();
+    assert.equal(restoredAtlas.sameNode, true); assert.equal(restoredAtlas.liveEngine, 'funnest', 'Returning from Atlas replay did not restore the live Funnest chart');
+    for (const key of ['range', 'scale', 'unit', 'chartType', 'frequency', 'cycleMarkers', 'cycleIntervals', 'forecastValueSignature', 'forecastDash']) assert.equal(restoredAtlas[key], liveContext[key], 'Returning from Atlas replay changed ' + key);
     evidence.lifecycle.push({ label: 'current-chart-restored-with-original-presentation', ...restoredAtlas });
     const persistedCapture=JSON.parse(await storedBytes()).forecastSnapshot;
     assert.ok(persistedCapture,'Explicit save must preserve the full forecast or its verified database reference');
@@ -2259,14 +2314,14 @@ export async function verifyChartReplaySurface(api) {
       firstRevealedDate: firstAtlas.cursor, finalObservedDate: endAtlas.cursor, outputHash: direct.outputHash, annotationSha256: digest(direct.annotationSignature) });
     await verifyCurrentControls(direct, liveContext);
     if (!touch) {
-      await verifyRetrospectiveOverlap('2026-08-17', 'weekly-august-retrospective');
-      await verifyRetrospectiveOverlap('2026-06-01', 'weekly-june-retrospective');
+      await verifyRetrospectiveOverlap('2026-08-17', 'weekly-august-retrospective', liveContext);
+      await verifyRetrospectiveOverlap('2026-06-01', 'weekly-june-retrospective', liveContext);
     }
     // The old prediction is a separate, explicit choice. It must retain the
     // actual original artifact and its Coin Metrics comparison source.
     await select(control('mode'), 'project-baseline'); await ready();
     const originalProject = await snapshot('original-project-forecast', true);
-    assert.equal(originalProject.mode, 'project-baseline'); assert.equal(originalProject.renderer, 'atlas');
+    assert.equal(originalProject.mode, 'project-baseline'); assert.equal(originalProject.renderer, 'funnest');
     assert.equal(originalProject.origin, '2026-10-20'); assert.equal(originalProject.dateInput, '2026-10-21');
     assert.equal(originalProject.index, 0); assert.equal(originalProject.actualCount, 0); assert.equal(originalProject.observedCandleCount, 0);
     assert.notEqual(originalProject.outputHash, direct.outputHash, 'Selecting the original artifact reused the current forecast');

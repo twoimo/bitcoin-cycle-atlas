@@ -101,6 +101,15 @@ test('BTC Funnest replay probes use the marked replay host pane, never the suspe
   const unmarked=f.read();assert.equal(unmarked.pricePane,null);assert.throws(()=>assertChartReplayPricePaneAccess(unmarked),/transformable price-pane bounds/);
 });
 
+test('a Funnest input canvas stacked over the replay SVG fails the input-surface gate',()=>{
+  const f=fixture('BTCUSD',{renderer:'funnest'}),document=f.svg.ownerDocument,inputCanvas=document.createElement('canvas');f.host.append(inputCanvas);
+  assert.doesNotThrow(()=>assertChartReplayPricePaneAccess(f.read()));
+  document.elementFromPoint=()=>inputCanvas;
+  const covered=f.read();
+  assert.ok(covered.probes.length>=3&&covered.probes.every(point=>point.reachesChart===false&&point.owner.tag==='CANVAS'));
+  assert.throws(()=>assertChartReplayPricePaneAccess(covered),/unobstructed Funnest price-pane probe cannot reach the SVG/);
+});
+
 test('replay probes transform native viewBox coordinates into the actual screen coordinate system',()=>{
   const f=fixture();f.setMatrix({a:.75,b:0,c:0,d:.5,e:30,f:90});
   const geometry=f.read();
@@ -135,18 +144,38 @@ test('missing or detached Funnest layout geometry fails instead of silently prob
 test('the pre-replay focus click uses an actual Funnest plot point even when its center opens a research article',()=>{
   const f=fixture('ETHUSD',{live:true}),document=f.svg.ownerDocument;
   const article=document.createElementNS('http://www.w3.org/2000/svg','g');article.setAttribute('role','button');article.dataset.forecastEvidence='model-method';f.svg.append(article);
+  const liveCanvas=document.createElement('canvas');f.liveHost.append(liveCanvas);
   document.elementFromPoint=x=>x<20?f.svg:article;
   const nativeContext=vm.createContext({document});
   const read=()=>vm.runInContext(`(${readChartReplayFocusTarget.toString()})('#eth-chart')`,nativeContext);
   assert.equal(document.elementFromPoint(160,286),article,'the old center click would open the source-owned article');
-  const live=read();assert.ok(live,'the live chart needs the same safe native focus entrance as replay');
-  assert.equal(live.reachesChart,true);assert.equal(live.interactive,false);assert.ok(live.point.x<f.layout.plotWidth);
-  f.svg.dataset.chartReplayActive='true';
-  assert.deepEqual(read(),live,'replay does not move the native focus entrance');
+  const live=read();assert.ok(live,'the live chart needs a safe native focus entrance');
+  assert.equal(live.surface,'live-chart');assert.equal(live.reachesChart,true);assert.equal(live.interactive,false);assert.ok(live.point.x<f.layout.plotWidth);
+  document.elementFromPoint=()=>liveCanvas;
+  assert.equal(read().reachesChart,true,'the live chart takes native input on its own Funnest canvas');
   document.elementFromPoint=()=>article;
   assert.equal(read().interactive,true,'an interactive SVG descendant cannot masquerade as an inert focus target');
   document.elementFromPoint=()=>document.querySelector('#unexpected-blocker');
   assert.equal(read().reachesChart,false,'an overlay blocker cannot be bypassed by programmatic focus');
+});
+
+test('an SVG replay focuses through its left SVG gutter and a Funnest replay through its marked pane, both on the SVG only',()=>{
+  const svgReplay=fixture('ETHUSD'),svgDocument=svgReplay.svg.ownerDocument;svgReplay.svg.dataset.chartReplayActive='true';
+  const readSvg=()=>vm.runInContext(`(${readChartReplayFocusTarget.toString()})('#eth-chart')`,vm.createContext({document:svgDocument}));
+  const gutter=readSvg();
+  assert.equal(gutter.surface,'replay-svg');assert.deepEqual({...gutter.point},{x:3,y:48+476*.25});assert.equal(gutter.reachesChart,true);assert.equal(gutter.interactive,false);
+  svgDocument.elementFromPoint=()=>svgDocument.querySelector('#unexpected-blocker');
+  assert.equal(readSvg().reachesChart,false);
+  const f=fixture('BTCUSD',{renderer:'funnest'}),document=f.svg.ownerDocument;f.svg.dataset.chartReplayActive='true';
+  const inputCanvas=document.createElement('canvas');f.host.append(inputCanvas);
+  const read=()=>vm.runInContext(`(${readChartReplayFocusTarget.toString()})('#lab-chart')`,vm.createContext({document}));
+  const pane=read();
+  assert.equal(pane.surface,'replay-svg');assert.equal(pane.reachesChart,true);
+  assert.ok(pane.point.x>0&&pane.point.x<f.layout.plotWidth&&pane.point.y>pane.pricePane.top&&pane.point.y<pane.pricePane.bottom,'the point lies in the marked replay host pane');
+  document.elementFromPoint=()=>inputCanvas;
+  assert.equal(read().reachesChart,false,'the replay coordinator ignores pointers that land on the Funnest input canvas');
+  f.host.removeAttribute('data-chart-replay-host');
+  assert.equal(read(),null,'the suspended live host is never the replay focus pane');
 });
 
 test('replay keeps the live pane allocation unchanged unless its footer inset is explicitly requested',()=>{
