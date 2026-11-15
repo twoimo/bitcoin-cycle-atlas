@@ -3,10 +3,11 @@
  * This is not a trading-strategy backtest or a test of a future price law.
  */
 import assert from 'node:assert/strict';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { getMacroCycles } from '../dist/market-structure.js';
+import { writeOrCheckFile } from './atomic-file.mjs';
 
 const root = new URL('../', import.meta.url);
 const inputPath = new URL('dist/data/btc-daily.json', root);
@@ -113,8 +114,7 @@ const report = {
   ],
 };
 const serialized = `${JSON.stringify(report, null, 2)}\n`;
-if (process.argv.includes('--check')) assert.equal(readFileSync(outputPath, 'utf8'), serialized, 'Cycle research artifact is stale.');
-else writeFileSync(outputPath, serialized);
+await writeOrCheckFile(outputPath, serialized, { check: process.argv.includes('--check'), stale: 'Cycle research artifact is stale.' });
 console.log(JSON.stringify({ status: 'PASS', file: fileURLToPath(outputPath), asOf: report.asOf,
   closed: report.closed, matureClosed: report.matureClosed,
   risePathMdd: independent.map(row => ({ peakYear: row.peakYear, ...row.risePathMdd })) }, null, 2));

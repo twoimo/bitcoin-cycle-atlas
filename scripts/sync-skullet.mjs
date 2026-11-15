@@ -1,5 +1,6 @@
-import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
+import {writeOrCheckFile} from './atomic-file.mjs';
 
 const check=process.argv.includes('--check');
 if(process.argv.length!==(check?3:2))throw new Error('Usage: node scripts/sync-skullet.mjs [--check]');
@@ -11,13 +12,7 @@ if(pkg.version!==provenance.version||pkg.license!==provenance.license)throw new 
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const hashes={};
 async function sync(target,bytes){
-  const output=new URL(target,root);
-  if(check){
-    if(!bytes.equals(await readFile(output)))throw new Error('Skullet file mismatch: '+target);
-  }else{
-    await mkdir(new URL('.',output),{recursive:true});
-    await writeFile(output,bytes);
-  }
+  await writeOrCheckFile(new URL(target,root),bytes,{check,stale:'Skullet file mismatch: '+target});
   hashes[target]=hash(bytes);
 }
 

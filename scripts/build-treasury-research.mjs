@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
-import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {readFile,mkdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {writeFileAtomic,writeOrCheckFile} from './atomic-file.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),check=process.argv.includes('--check');
 const readJson=async file=>JSON.parse(await readFile(path.join(root,file),'utf8'));
 const data={MSTR:await readJson('research-data/treasury-mstr.json'),BMNR:await readJson('research-data/treasury-bmnr.json')};
@@ -24,9 +25,9 @@ assert(lastBtc&&lastEth,'Missing crypto observation at or before equity session'
 const anchors={MSTR:{date:lastBtc[0],price:lastBtc[1],source:'Coin Metrics · UTC 일말',url:btc.meta.source,retrievedAt:btc.meta.retrievedAt},BMNR:{date:lastEth.date.slice(0,10),price:lastEth.close,source:'Coinbase ETH-USD · UTC 일말',url:'https://api.exchange.coinbase.com/products/ETH-USD/candles',retrievedAt:eth.retrievedAt}};
 const text=`// Generated from reviewed research-data/treasury-*.json. Do not edit by hand.\nexport const TREASURY_DATA=${JSON.stringify(data)};\nexport const MARKET_ANCHORS=${JSON.stringify(anchors)};\n`;
 const out=path.join(root,'dist/treasury-catalog.js');
-if(check)assert.equal(await readFile(out,'utf8'),text,'Treasury catalog is stale');else await writeFile(out,text);
+await writeOrCheckFile(out,text,{check,stale:'Treasury catalog is stale'});
 const manifest={version:1,reviewDate:'2026-10-24',scope:'source metadata and original research summaries; no complete third-party text or media copies',sources:allSources.length,historicalEvents:Object.values(data).reduce((n,item)=>n+item.events.length,0),inputs:[]};
 for(const name of ['research-data/treasury-mstr.json','research-data/treasury-bmnr.json'])manifest.inputs.push({path:name,sha256:createHash('sha256').update(await readFile(path.join(root,name))).digest('hex')});
 await mkdir(path.join(root,'dist/research'),{recursive:true});
-if(!check)await writeFile(path.join(root,'dist/research/treasury-manifest.json'),JSON.stringify(manifest,null,2)+'\n');
+if(!check)await writeFileAtomic(path.join(root,'dist/research/treasury-manifest.json'),JSON.stringify(manifest,null,2)+'\n');
 console.log(JSON.stringify({status:'ok',check,sources:manifest.sources,historicalEvents:manifest.historicalEvents}));
