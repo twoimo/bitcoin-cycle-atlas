@@ -488,6 +488,39 @@ test('BTC annotation counts, cycle colors, labels, and keyboard targets reflect 
 });
 
 
+test('a period line is cut around a priced model-evidence disc instead of being painted through it', async () => {
+  await withFunnestFixture(async ({ stage, svg }) => {
+    const observedRows = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(day => ({ date: `2024-01-0${day}`, price: 100 + day }));
+    const interval = { id: 'interval-under-evidence', relation: 'bottom-cycle-top', fromId: 'from', toId: 'to', startDate: '2024-01-02', endDate: '2024-01-08',
+      startTime: date('2024-01-02'), endTime: date('2024-01-08'), from: { price: 102 }, to: { price: 108 }, label: 'Interval under evidence' };
+    const mount = forecastEvidence => mountAtlasBtcFunnestChart({ container: stage, svg, sourceMode: 'close-only', frequency: 'daily', chartType: 'line',
+      observedRows, start: '2024-01-01', end: '2024-01-09', cycleIntervals: [interval], forecastEvidence });
+    const strokes = () => [...svg.querySelectorAll('[data-cycle-interval="interval-under-evidence"] .cycle-interval-line')]
+      .map(line => ({ x1: Number(line.getAttribute('x1')), x2: Number(line.getAttribute('x2')), y: Number(line.getAttribute('y1')) }));
+    let mounted;
+    try {
+      mounted = mount([]);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      const plain = mounted.host.getAtlasBtcRenderSnapshot(), [whole] = strokes();
+      assert.equal(strokes().length, 1, 'without evidence the period line is one continuous stroke');
+      const [low, high] = [plain.observed.rows[1], plain.observed.rows[7]], anchor = plain.observed.rows.find(row => row.date === '2024-01-05');
+      assert.ok(anchor.x > whole.x1 + 20 && anchor.x < whole.x2 - 20, 'the evidence date lies inside the period line');
+      const slope = (high.projectedY.close - low.projectedY.close) / (high.price - low.price), priceOnLine = low.price + (whole.y - low.projectedY.close) / slope;
+      assert.ok(Number.isFinite(priceOnLine) && priceOnLine > 0, 'the linear scale yields a real price on the period row');
+      mounted.destroy();
+      mounted = mount([{ id: 'model-evidence', date: anchor.date, price: priceOnLine, title: 'Model evidence' }]);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      const withEvidence = mounted.host.getAtlasBtcRenderSnapshot();
+      assert.deepEqual(withEvidence.priceScale, plain.priceScale, 'an evidence disc does not rescale the chart');
+      const disc = { left: anchor.x - 10, right: anchor.x + 10 }, cut = strokes();
+      assert.ok(cut.every(part => Math.abs(part.y - whole.y) < 1e-6), 'the period row keeps its original position');
+      assert.ok(cut.length >= 2, 'the period line is split around the disc');
+      assert.ok(cut.every(part => part.x2 <= disc.left || part.x1 >= disc.right), 'no visible period stroke crosses the 20px evidence disc box: ' + JSON.stringify({ disc, cut }));
+      assert.equal(Math.min(...cut.map(part => part.x1)), whole.x1); assert.equal(Math.max(...cut.map(part => part.x2)), whole.x2);
+    } finally { mounted?.destroy(); }
+  });
+});
+
 test('BTC event, cycle-marker, and cycle-clock labels meet 11px typography and fit their measured boxes', async () => {
   await withFunnestFixture(async ({ stage, svg }) => {
     let mounted;

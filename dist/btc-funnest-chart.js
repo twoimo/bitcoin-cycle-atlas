@@ -440,6 +440,10 @@ export function mountAtlasBtcFunnestChart({
       const intervalObstacles = [
         ...cycleOverlayObstaclesLocal,
         ...historyLayout.markers.filter(marker => marker.box).map(marker => marker.box),
+        ...evidenceRows.flatMap(row => {
+          const x = coords.timeToX(row.time), y = finitePositive(row.price) ? coords.priceToY(scaleValue(row.price, display)) : NaN;
+          return Number.isFinite(x) && Number.isFinite(y) ? [{ x: x - 10, y: y - 10, width: 20, height: 20 }] : [];
+        }),
         ...cycleLayout.markers.flatMap(point => [
           { x: point.x - point.radius - 3, y: point.y - point.radius - 3, width: 2 * point.radius + 6, height: 2 * point.radius + 6 },
           ...(point.box ? [point.box] : []),
