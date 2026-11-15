@@ -598,7 +598,7 @@ async function verifyNativeCommonLegend(cdp,width,receipt){
     const painted=node=>Boolean(node&&!node.hidden&&!node.closest('[hidden]')&&node.getClientRects().length);
     const observed=source?.querySelector('.price-legend-item .price-legend-swatch')?.closest('.price-legend-item');
     return {dock:dock?{...box(dock),painted:painted(dock),mode:dock.dataset.legendMode,scrollWidth:dock.scrollWidth,clientWidth:dock.clientWidth}:null,
-      priceWidth:native.layout.plotWidth*host.getBoundingClientRect().width/native.layout.width,
+      priceWidth:native.layout.plotWidth*host.getBoundingClientRect().width/native.layout.width,nativeLayout:{width:native.layout.width,plotWidth:native.layout.plotWidth},plotClientWidth:plot.clientWidth,
       geometrySource:'painted Funnest layout scaled to the actual host CSS width',
       observedEntry:observed?{label:observed.textContent.trim(),title:observed.getAttribute('title')||''}:null,
       text:source?.textContent||'',entries:[...source?.querySelectorAll('.chart-legend-entry')||[]].filter(painted).map(box),
@@ -607,7 +607,7 @@ async function verifyNativeCommonLegend(cdp,width,receipt){
   assert.ok(state.dock?.painted,'Native instrument needs the shared visible legend dock');
   assert.ok(state.dock.left>=0&&state.dock.right<=width+1);
   assert.ok(Number.isFinite(state.priceWidth)&&state.priceWidth>0,'Native price-pane CSS width must be positive and finite');
-  assert.ok(state.dock.width<=state.priceWidth*.42+1,'Native legend exceeds 42% of its price pane');
+  assert.ok(state.dock.width<=state.priceWidth*.42+1,'Native legend exceeds 42% of its price pane '+JSON.stringify({dock:state.dock.width,priceWidth:state.priceWidth,nativeLayout:state.nativeLayout,plotClientWidth:state.plotClientWidth}));
   assert.ok(state.dock.scrollWidth<=state.dock.clientWidth+1,'Native legend content overflows');
   for(const entry of state.entries)assert.ok(entry.width>0&&entry.left>=state.dock.left-1&&entry.right<=state.dock.right+1);
   if(state.disclosure){

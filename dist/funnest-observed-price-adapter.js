@@ -1,5 +1,6 @@
 import { mountAtlasFunnestChart } from './funnest-chart-runtime.bundle.js';
 import { advanceMeasurement, measurePriceAnchors, resolveMagnetPoint } from './chart-magnet.js';
+import { refreshChartLegendGeometry } from './ui/chart-legend.js?v=1.36.1';
 
 let futureCrosshairSequence = 0;
 
@@ -521,6 +522,12 @@ export function mountObservedPriceChart(plot, { series, symbol, currency = 'USD'
     interactionHandle?.redraw?.();
   });
   listenInteraction('pointercancel', event => { if (measurePointer?.pointerId === event.pointerId) measurePointer = null; });
+  interactionCleanups.push(mounted.chart.on('layoutChange', () => {
+    const layout = mounted.chart.layout, box = plot.getBoundingClientRect(), hostBox = mounted.host.getBoundingClientRect();
+    const width = plot.clientWidth || box.width, height = plot.clientHeight || box.height, left = hostBox.left - box.left - (plot.clientLeft || 0);
+    if (!(layout?.width > 0 && layout.plotWidth > 0 && hostBox.width > 0 && width > 0 && height > 0)) return;
+    refreshChartLegendGeometry(plot, { width, height, left, right: left + layout.plotWidth * hostBox.width / layout.width });
+  }));
   listenInteraction('pointerleave', () => { if (clearingNativeCrosshair) return; if (!measurePointer) { pointer = null; lastInspectionKey = null; lastFutureCrosshairKey = null; nativeCrosshairCleared = false; clearFutureCrosshair?.(); interactionHandle?.redraw?.(); } });
   let overlayHandlesRemoved = false;
   mounted.destroy = () => {

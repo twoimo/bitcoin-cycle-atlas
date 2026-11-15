@@ -1,8 +1,7 @@
 const finite=(value,fallback=0)=>Number.isFinite(Number(value))?Number(value):fallback;
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
 
-/** The axis gutter is outside this rectangle. A legend never owns another pane. */
-export function chartLegendSlot({width=0,height=0,left=0,right=width,top=0,bottom=height,viewportWidth=width,protectedAnchors=[]}={}){
+export function chartLegendSlot({width=0,height=0,left=0,right=width,top=18,bottom=height,viewportWidth=width,protectedAnchors=[]}={}){
   width=Math.max(0,finite(width));height=Math.max(0,finite(height));
   left=clamp(finite(left),0,width);right=clamp(finite(right,width),left,width);
   bottom=clamp(finite(bottom,height),0,height);top=clamp(finite(top),0,bottom);
