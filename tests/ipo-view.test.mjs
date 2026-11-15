@@ -172,3 +172,29 @@ test('a reversed date range fails closed rather than showing a misleading next m
   assert.equal(view.state.status, 'error');
   assert.match(body.innerHTML, /종료일이 시작일보다 빠릅니다/);
 });
+
+test('a hung calendar request becomes the error row and the next refresh sends a new request', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const requests = [];
+  t.mock.method(globalThis, 'fetch', (url, options = {}) => {
+    requests.push({ url, signal: options.signal });
+    return requests.length === 1 ? new Promise(() => {}) : Promise.resolve({ ok: true, json: async () => doc });
+  });
+  const flush = async () => { for (let i = 0; i < 20; i++) await new Promise(setImmediate); };
+  const { root, body } = surface();
+  const view = initIpoView({ root, now: () => new Date('2026-11-01T06:00:00+09:00') });
+  void view.render();
+  await flush();
+  assert.equal(view.state.status, 'loading');
+
+  t.mock.timers.tick(15000);
+  await flush();
+  assert.equal(view.state.status, 'error', 'a hang must not stay in the loading state');
+  assert.match(body.innerHTML, /공모주 일정을 불러오지 못했습니다/);
+  assert.equal(requests[0].signal?.aborted, true, 'the hung connection is released');
+
+  await view.refresh();
+  assert.equal(requests.length, 2);
+  assert.equal(view.state.status, 'ready');
+  assert.match(body.innerHTML, /아델/);
+});
