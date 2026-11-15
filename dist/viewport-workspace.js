@@ -7,9 +7,9 @@ import { mountIndicatorWorkbench } from './indicator-workbench.js?v=1.29.0';
 import { inspectionPanelAction } from './inspection-policy.js?v=1.29.0';
 import { mountMobileWorkspace } from './mobile-workspace.js?v=1.29.0';
 import { mountChartLegend } from './ui/chart-legend.js?v=1.36.1';
+import { esc } from './ui/html-escape.js';
 
 const $ = selector => document.querySelector(selector);
-const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const kst = value => value ? new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(value)) : '확인 기록 없음';
 const compactKst = value => {
   const parts=Object.fromEntries(new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Seoul',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(value)).map(part=>[part.type,part.value]));

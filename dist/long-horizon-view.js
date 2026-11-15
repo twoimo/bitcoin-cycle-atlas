@@ -1,6 +1,6 @@
 import { LONG_HORIZON_CLAIMS } from './long-horizon-evidence.js?v=1.29.0';
+import { esc } from './ui/html-escape.js';
 
-const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
 const number = (value, digits = 0) => Number.isFinite(value) ? new Intl.NumberFormat('en-US', { maximumFractionDigits: digits }).format(value) : '—';
 const usd = value => Number.isFinite(value) ? `$${number(value)}` : '—';
 const percent = (value, digits = 1) => `${number(value, digits)}%`;
