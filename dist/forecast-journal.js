@@ -5,6 +5,7 @@ import { mountDialogViewport } from './dialog-viewport.js?v=1.29.0';
 import { describeFreshness } from './data-freshness.js?v=1.29.0';
 import { performanceSnapshot, downloadPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
 import {mountForecastReplay} from './forecast-replay-view.js?v=1.29.0';
+import {withRequestTimeout} from './ui/request-timeout.js';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const price=value=>Number.isFinite(value)?'$'+value.toLocaleString('en-US',{maximumFractionDigits:2}):'—';
@@ -28,8 +29,17 @@ async function resource(name,{signal}={}) {
 }
 function cached(name,loader) {
   if(!resources.has(name)&&resources.size>=32)resources.delete(resources.keys().next().value);
-  if(!resources.has(name))resources.set(name,Promise.resolve().then(loader).catch(error=>{resources.delete(name);throw error;}));
-  return resources.get(name);
+  if(!resources.has(name)){
+    const entry={loaded:false,request:new AbortController()};
+    entry.promise=withRequestTimeout(loader,'기록 확인 시간이 초과되었습니다. 다시 시도해 주세요.',{signal:entry.request.signal})
+      .then(value=>{entry.loaded=true;return value;},error=>{if(resources.get(name)===entry)resources.delete(name);throw error;});
+    resources.set(name,entry);
+  }
+  return resources.get(name).promise;
+}
+// A browser holds a new request for a URL until the pending one ends, so an abandoned request is aborted as well as forgotten.
+function abandonPending() {
+  for(const [name,entry]of resources)if(!entry.loaded){entry.request.abort();resources.delete(name);}
 }
 function download(name,value) {
   const url=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)+'\n'],{type:'application/json'}));
@@ -46,10 +56,10 @@ function mount() {
   const content=dialog.querySelector('.journal-body');
   let generation=0,currentTab='records',opener=null,selectedId=null,comparisonId=null,days=180,selectedDate=null,resizeObserver=null,draw=null,replay=null;
   const checkedEntry=async entry=>{
-    const [record,snapshot]=await Promise.all([cached('record:'+entry.id,()=>loadForecastRecord(entry)),cached('snapshot:'+entry.snapshotId,()=>loadForecastSnapshot(entry))]);
+    const [record,snapshot]=await Promise.all([cached('record:'+entry.id,options=>loadForecastRecord(entry,options)),cached('snapshot:'+entry.snapshotId,options=>loadForecastSnapshot(entry,options))]);
     await verifyForecastRecord(record,snapshot);return {record,snapshot};
   };
-  const indexData=()=>cached('index',()=>loadForecastIndex());
+  const indexData=()=>cached('index',loadForecastIndex);
   const selectMarkup=(entries,value,attribute)=>`<select ${attribute} aria-label="${attribute==='data-journal-record'?'보존한 예측 선택':'비교할 이전 예측 선택'}">${entries.map(entry=>`<option value="${entry.id}"${value===entry.id?' selected':''}>${esc(entry.asOf)} · ${esc(entry.scenarioLabel)} · ${entry.kind==='issued'?'생성·보존':'회고'}</option>`).join('')}</select>`;
   async function replayBody(index,token){
     const entries=[...index.entries].sort((a,b)=>b.issuedAt.localeCompare(a.issuedAt)||a.scenario.localeCompare(b.scenario));
@@ -67,7 +77,7 @@ function mount() {
     const cadence=index.refresh?.publicationPolicy;
     const archiveNote=cadence?`공식 보존은 완료 관측 ${cadence.intervalObservationDays}일 간격이며 모델·설정 변경과 입력 정정은 즉시 추가합니다. 매일 기존 목표를 재평가합니다. 개별 화면에서 실행한 모든 계산을 수집한 기록은 아닙니다. 다음 가능 기준일 ${index.refresh.nextEligibleAsOf||'확인 중'}은 관측이 빠짐없이 추가될 때의 가장 이른 날짜입니다.`:'';
     const {record,snapshot}=await checkedEntry(entry);
-    const observed=await cached('observed',()=>resource('observed'));
+    const observed=await cached('observed',options=>resource('observed',options));
     if(token!==generation||!dialog.open)return;
     content.innerHTML=`<div class="journal-controls">${selectMarkup(entries,selectedId,'data-journal-record')}<select data-journal-range aria-label="기록 차트 표시 기간">${[[90,'90일'],[180,'180일'],[365,'1년'],[0,'전체 가정']].map(([value,label])=>`<option value="${value}"${days===value?' selected':''}>${label}</option>`).join('')}</select><button type="button" data-journal-export>기록 JSON</button></div><p class="journal-note">${esc(archiveNote)}</p><p class="journal-note"><strong>${record.recordKind==='issued'?'실제 생성·보존본':'현재 모델의 회고 재구성'}</strong> · 관측 ${esc(record.asOf)} · 생성 ${esc(stamp(record.issuedAt))}</p><div class="journal-chart"><svg id="journal-price-chart" tabindex="0" role="group" aria-label="고정된 예측 경로. 방향키로 날짜와 값을 확인하세요."></svg></div><p class="journal-selection" id="journal-selection"></p><p class="journal-note">흰색은 생성 당시 관측, 금색은 보존한 조건부 경로, 파란색은 이후 확보한 실제 관측입니다. 음영은 경제 가정 범위이며 포함확률이 아닙니다.</p>${table(['기간','목표일','보존한 경로','가격 유지','축소 추세'],record.targets.map(target=>[target.horizonDays+'일',target.targetDate,price(target.price),price(target.flat),price(target.shrunkenTrend)]))}<details class="journal-details"><summary>입력·모델·보존 근거</summary><dl><dt>자료 수집</dt><dd>${esc(stamp(snapshot.observedAt))}</dd><dt>공급원 공개시각</dt><dd>${esc(stamp(snapshot.availableAt))}</dd><dt>모델</dt><dd>${esc(record.model.version)}</dd><dt>생성 원본 커밋</dt><dd><code>${esc(record.model.sourceCommit)}</code></dd><dt>모델 소스 목록 해시</dt><dd>${esc(record.model.sourceHash)}</dd><dt>입력 해시</dt><dd>${esc(record.snapshotDataHash)}</dd><dt>출력 해시</dt><dd>${esc(record.outputHash)}</dd></dl><p>생성시각은 실제 공개 배포 완료시각과 다릅니다. 과거 공급원 판본을 소급 확보한 기록은 아닙니다. 입력·출력 해시는 열 때 검증합니다.</p><p><a href="https://github.com/twoimo/bitcoin-cycle-atlas/blob/main/docs/evolution-2026-10-26/SOURCE_PROVENANCE.md" target="_blank" rel="noopener noreferrer">원본 코드 보존·복원 방법</a></p></details>`;
     content.querySelector('[data-journal-export]').onclick=()=>download(`atlas-forecast-${record.asOf}-${record.scenario.id}.json`,{record,snapshot});
@@ -88,7 +98,7 @@ function mount() {
     draw();resizeObserver?.disconnect();if(typeof ResizeObserver==='function'){resizeObserver=new ResizeObserver(()=>draw?.());resizeObserver.observe(svg.parentElement);}
   }
   async function evaluationBody(token) {
-    const report=await cached('evaluation',()=>loadForecastEvaluation());
+    const report=await cached('evaluation',loadForecastEvaluation);
     if(token!==generation||!dialog.open)return;
     if(report.kind!=='atlas-forecast-evaluation'||!Array.isArray(report.summaries))throw new Error('평가 자료 형식이 다릅니다.');
     content.innerHTML=`<h3>생성·보존 후 누적 평가</h3><p class="journal-note">평가 관측 ${esc(report.observationThrough)} · 기록 ${report.records}개 · 고유 기준일 ${report.uniqueOrigins}개 · 확정 결과 ${report.maturedTargets}개. 겹친 예측 오차는 독립 실험이 아닙니다.</p>${table(['가정','모델 판본','기간','확정 / 대기','로그 오차','유지 기준','축소 추세','유지 대비 개선'],report.summaries.map(row=>[row.scenarioLabel,row.modelVersion+' · '+row.modelSourceHash.slice(0,10),row.horizonDays+'일',row.scoredCount+' / '+row.pendingCount,decimal(row.meanAbsoluteLogError),decimal(row.flatMeanAbsoluteLogError),decimal(row.trendMeanAbsoluteLogError),percent(row.skillVersusFlat)]))}<p class="journal-note">로그 오차는 작을수록 좋고, 기준 대비 개선은 양수일 때 유리합니다. 모델 코드와 비교 기준 판본이 다른 결과는 합산하지 않습니다. 직전 완료 일봉으로 실제 생성한 뒤 확정된 목표만 점수에 넣고, 미도래 목표는 미평가로 남깁니다. 표의 기간은 기준 종가부터 세며, 생성 이후 남은 실제 기간은 목표별 표에서 확인합니다. 조건부 음영과 2050년 경로의 정확도·포함확률을 검증한 점수는 아닙니다.</p><details class="journal-details"><summary>목표별 상태와 표본</summary>${table(['기준일','가정','목표일','생성 후 남은 일수','상태','실제','예측'],report.rows.slice(-300).map(row=>[row.asOf,row.scenarioLabel,row.targetDate,Number.isFinite(row.actualLeadDays)?row.actualLeadDays.toFixed(2):'미상',({pending:'결과 대기',scored:'확정',retrospective:'회고', 'missing-observation':'관측 결측'})[row.status]||row.status,price(row.actual),price(row.predicted)]))}<p>최근 최대 300개 목표를 표시합니다. 전체 결과와 비교 기준 판본은 JSON에 포함됩니다.</p></details><button type="button" data-evaluation-export>평가 JSON</button>`;
@@ -105,7 +115,7 @@ function mount() {
     content.innerHTML=`<h3>보존본의 변경 이유</h3><label class="journal-field">기준 ${selectMarkup(choices,before.id,'data-journal-compare')}</label><label class="journal-field">비교 ${selectMarkup(entries,next.id,'data-journal-record')}</label><p class="journal-note">${result.sameScenario?'같은 가정의 두 기록':'서로 다른 경제 가정의 비교'} · 입력 ${result.inputChanged?'변경':'동일'} · 모델 코드 ${result.modelChanged?'변경':'동일'} · 설정 ${result.optionsChanged?'변경':'동일'} · 관측 기준일 ${result.originChanged?'변경':'동일'}</p>${table(['공통 목표일','기준 가격','비교 가격','전체 Δlog','기준선','주기','잔차 경로','나머지'],result.changes.map(row=>[row.targetDate,price(row.beforePrice),price(row.afterPrice),decimal(row.totalLogChange),decimal(row.baselineLogChange),decimal(row.cycleLogChange),decimal(row.residualLogChange),decimal(row.remainderLogChange)]))}<p class="journal-note">같은 목표일의 로그가격 차이를 산술 분해합니다. 각 성분은 같은 입력 변화의 영향을 함께 받을 수 있습니다. 시장 사건의 인과적 기여도를 추정한 값은 아닙니다.</p>`;
   }
   async function dataBody(token) {
-    const publication=await cached('publication',()=>resource('publication'));
+    const publication=await cached('publication',options=>resource('publication',options));
     if(token!==generation||!dialog.open)return;
     if(publication.kind!=='atlas-publication'||!Array.isArray(publication.assets))throw new Error('공개 자료 명세 형식이 다릅니다.');
     const now=new Date().toISOString();
@@ -114,7 +124,7 @@ function mount() {
     content.querySelector('[data-publication-export]').onclick=()=>download('atlas-publication.json',publication);
   }
   async function experimentBody(token) {
-    const report=await cached('experiments',()=>loadForecastExperiments());
+    const report=await cached('experiments',loadForecastExperiments);
     if(token!==generation||!dialog.open)return;
     const sequential=report.sequential,cycle=report.cycleAblation,policy=sequential?.policy;
     if(!Array.isArray(sequential?.summaries)||!Array.isArray(cycle?.summaries)||!policy)throw new Error('실험 요약 형식이 다릅니다.');
@@ -152,7 +162,7 @@ function mount() {
   dialog.addEventListener('click',event=>{
     if(event.target.closest('[data-journal-close]'))dialog.close();
     const tab=event.target.closest('[data-journal-tab]');if(tab)void render(tab.dataset.journalTab);
-    if(event.target.closest('[data-journal-retry]')){resources.clear();void render();}
+    if(event.target.closest('[data-journal-retry]')){abandonPending();resources.clear();void render();}
   });
   dialog.addEventListener('change',event=>{
     if(event.target.matches('[data-journal-record]'))selectedId=event.target.value;
@@ -166,6 +176,6 @@ function mount() {
   dialog.addEventListener('keydown',event=>event.stopPropagation());
   document.addEventListener('atlas:modal-open',event=>{if(event.detail?.id!==dialog.id&&dialog.open)dialog.close();});
   window.addEventListener('pagehide',()=>{replay?.destroy();replay=null;if(dialog.open)dialog.close();});
-  return {open({tab='records',opener:source=document.activeElement}={}){opener=source;for(const key of ['index','evaluation','experiments','publication','observed'])resources.delete(key);document.dispatchEvent(new CustomEvent('atlas:modal-open',{detail:{id:dialog.id}}));if(!dialog.open)dialog.showModal();dialog.querySelector('[data-journal-close]').focus({preventScroll:true});void render(tab);}};
+  return {open({tab='records',opener:source=document.activeElement}={}){opener=source;abandonPending();for(const key of ['index','evaluation','experiments','publication','observed'])resources.delete(key);document.dispatchEvent(new CustomEvent('atlas:modal-open',{detail:{id:dialog.id}}));if(!dialog.open)dialog.showModal();dialog.querySelector('[data-journal-close]').focus({preventScroll:true});void render(tab);}};
 }
 export function openForecastJournal(options={}) {instance ||= mount();instance.open(options);}
