@@ -25,7 +25,7 @@ test('log/linear and inverted price axes round trip measured values; OHLC auto-f
   }
   const altered=structuredClone(bars);altered[0][2]=10000;
   const g=chartGeometry(prices,altered,rows,{...view,chartType:'candles'},900,500);assert(g.max<10000,'an offscreen high must not flatten the visible chart');
-  const outside=applyChartCommand(initialChartView(prices),prices,'pan',2),empty=chartGeometry(prices,bars,rows,outside,900,500);assert.equal(empty.visible.length,0);assert.equal(empty.visibleBars.length,0);
+  const outside={...initialChartView(prices),start:'2025-12-25',end:'2026-06-22'},empty=chartGeometry(prices,bars,rows,outside,900,500);assert.equal(empty.visible.length,0);assert.equal(empty.visibleBars.length,0);
 });
 test('weekly OHLC preserves actual first open, high/low extremes, final close and volume, including incomplete periods',()=>{
   const quotes:Point[]=[['2025-01-06',10],['2025-01-07',12],['2025-01-10',11],['2025-01-13',13]];

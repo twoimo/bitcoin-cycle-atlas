@@ -22,7 +22,7 @@ export function initialChartView(prices:readonly Point[]):RsiChartView {
 }
 export function chartRange(view:RsiChartView,prices:readonly Point[]):ChartRange|null {
   if(!prices.length)return null;
-  return {start:view.start||prices[0][0],end:view.end||prices.at(-1)![0],min:prices[0][0],max:prices.at(-1)![0],minSpan:10,allowEmpty:true,maxSpan:Math.max(10,day(prices.at(-1)![0])-day(prices[0][0])+1),...(view.spacingBounds?{spacingBounds:view.spacingBounds}:{})};
+  return {start:view.start||prices[0][0],end:view.end||prices.at(-1)![0],min:prices[0][0],max:prices.at(-1)![0],minSpan:10,maxSpan:Math.max(10,day(prices.at(-1)![0])-day(prices[0][0])+1),...(view.spacingBounds?{spacingBounds:view.spacingBounds}:{})};
 }
 export function boundedDates(prices:readonly Point[],start:string,end:string) {
   if(!prices.length)return {start:'',end:''};

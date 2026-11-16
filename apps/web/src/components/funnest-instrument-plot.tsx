@@ -180,12 +180,6 @@ function PriceAxis({ reflect }: { reflect: (value: number) => number }) {
 PriceAxis.axisSpace = () => YAxis.axisSpace({ width: 68 });
 
 const statusColor = (state?: string) => state === 'above' ? 'var(--housing-above,var(--green))' : state === 'below' ? 'var(--housing-below,var(--red))' : 'var(--housing-neutral,var(--muted))';
-function boundedWindow(start: number, end: number, timeline: readonly string[]) {
-  const min = Date.parse(`${timeline[0]}T00:00:00Z`), max = Date.parse(`${timeline.at(-1)}T00:00:00Z`);
-  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min || end <= start) return null;
-  const span = Math.min(end - start, max - min); start = Math.max(min, Math.min(max - span, start)); end = start + span;
-  return { start: new Date(start).toISOString().slice(0, 10), end: new Date(end).toISOString().slice(0, 10) };
-}
 
 interface ClientBox { left: number; top: number; width: number; height: number }
 /** The price SVG's plot and axis gutters in client pixels, measured from the plot box NativePricePaneLayout publishes. */
@@ -222,7 +216,7 @@ function keyCommand(event: { key: string; shiftKey: boolean; ctrlKey: boolean; m
 
 /** Axis gestures wait for 3px of movement before they edit the view, as main's navigation controller did. */
 type PlotGesture =
-  | { kind: 'pan'; x: number; start: string; end: string; width: number }
+  | { kind: 'pan'; x: number; range: ChartRange; width: number }
   | { kind: 'price'; y: number; height: number; domain: { min: number; max: number }; active: boolean }
   | { kind: 'time'; x: number; width: number; anchor: number; range: ChartRange; active: boolean }
   | { kind: 'pinch'; range: ChartRange; distance: number; centre: number; left: number; width: number; active: true };
@@ -324,10 +318,8 @@ export function FunnestInstrumentPlot(props: Props) {
         return;
       }
       if (state.kind === 'pan') {
-        const elapsed = Date.parse(state.end) - Date.parse(state.start);
-        const shift = -(event.clientX - state.x) / Math.max(1, state.width) * elapsed;
-        const next = boundedWindow(Date.parse(state.start) + shift, Date.parse(state.end) + shift, timeline);
-        if (next) onView({ ...view, ...next });
+        const next = panRange(state.range, -(event.clientX - state.x) / Math.max(1, state.width));
+        onView({ ...view, start: next.start, end: next.end, spacingBounds: next.spacingBounds });
         return;
       }
       const delta = state.kind === 'price' ? event.clientY - state.y : event.clientX - state.x;
@@ -378,8 +370,9 @@ export function FunnestInstrumentPlot(props: Props) {
       if (range) { event.preventDefault(); gesture.current = { kind: 'time', x: event.clientX, width: regions.time.width, anchor: clamp((event.clientX - regions.time.left) / regions.time.width, 0, 1), range, active: false }; }
       return;
     }
-    if (view.tool !== 'pan') return;
-    gesture.current = { kind: 'pan', x: event.clientX, start: view.start, end: view.end, width: event.currentTarget.getBoundingClientRect().width }; onStart();
+    const range = view.tool === 'pan' ? spacedRange() : null;
+    if (!range) return;
+    gesture.current = { kind: 'pan', x: event.clientX, range, width: event.currentTarget.getBoundingClientRect().width }; onStart();
   };
   const scalePriceAxis = (event: React.WheelEvent<HTMLDivElement>) => {
     const svg = priceSvg(), gutter = plotRegions(svg)?.price;
@@ -389,6 +382,12 @@ export function FunnestInstrumentPlot(props: Props) {
     const domain = shown && event.deltaY ? scalePriceDomain({ ...shown, scale: view.scale }, Math.exp(clamp(event.deltaY * unit, -600, 600) * .0015), view.inverted ? y : 1 - y) : null;
     if (domain) applyEdit({ ...view, autoScale: false, domain });
     return true;
+  };
+  const zoomByWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+    const range = spacedRange(), plot = plotRegions(priceSvg())?.plot ?? event.currentTarget.getBoundingClientRect();
+    if (!range) return;
+    const next = zoomRange(range, event.deltaY < 0 ? 0.82 : 1.22, clamp((event.clientX - plot.left) / Math.max(1, plot.width), 0, 1));
+    applyEdit({ ...view, start: next.start, end: next.end, spacingBounds: next.spacingBounds });
   };
   const navigateByKey = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const state = gesture.current;
@@ -443,7 +442,7 @@ export function FunnestInstrumentPlot(props: Props) {
   };
   return <div ref={host} className="atlas-funnest-instrument-plot" data-chart-engine="funnest" data-symbol={symbol} data-range-start={view.start} data-range-end={view.end}
     role="group" aria-label={`${description || `${symbol} 가격 차트`} · ${view.start}부터 ${view.end}`}
-    onWheel={event => { if (isPlotControlTarget(event.target)) return; event.preventDefault(); if (scalePriceAxis(event)) return; const first = Date.parse(view.start), last = Date.parse(view.end), duration = last - first; if (!Number.isFinite(duration) || duration <= 0) return; const plot = plotRegions(priceSvg())?.plot ?? event.currentTarget.getBoundingClientRect(); const factor = event.deltaY < 0 ? 0.82 : 1.22; const anchor = clamp((event.clientX - plot.left) / Math.max(1, plot.width), 0, 1); const nextDuration = Math.max(86400000, duration * factor); const point = first + duration * anchor; const next = boundedWindow(point - nextDuration * anchor, point + nextDuration * (1-anchor), timeline); if (!next) return; onStart(); onView({ ...view, ...next }); onEnd(); }}
+    onWheel={event => { if (isPlotControlTarget(event.target)) return; event.preventDefault(); if (scalePriceAxis(event)) return; zoomByWheel(event); }}
     onPointerDown={event => { if (isPlotControlTarget(event.target) || !active || event.button !== 0) return; startGesture(event); }}
     onClick={event => { if (isPlotControlTarget(event.target)) return; if (axisOwnsClick(event)) return; choose(current.current ?? selectedIndex, (event.target as Element).closest('[data-panel="rsi"]') ? 'rsi' : 'price'); }}
     onDoubleClick={event => { if (isPlotControlTarget(event.target) || !active || event.ctrlKey || event.metaKey || event.altKey) return; resetOnDoubleClick(event); }}

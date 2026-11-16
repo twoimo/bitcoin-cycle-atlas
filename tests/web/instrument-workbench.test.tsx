@@ -436,9 +436,9 @@ test('instrument cache restores each housing region range, settings and undo his
   const series = housingChartSeries(monthlyRows), seoul: InstrumentChartCache = {}, busan: InstrumentChartCache = {};
   const content = (symbol: string, cache: InstrumentChartCache, epoch: number, active = true) => <InstrumentWorkbench key={symbol} symbol={symbol} unit="지수" timezone="Asia/Seoul" series={series} volumeUnit="건" description="월별 가격" cache={cache} embedded epoch={epoch} active={active}/>;
   const fixture = await mount(content('HOUSING-SEOUL', seoul, 1)); t.after(fixture.cleanup);
-  // The short monthly fixture is already beyond the maximum candle spacing.
-  // Pan creates a distinct cached viewport without bypassing that UI limit.
-  await fixture.message({ kind: 'atlas:center-command', epoch: 1, symbol: 'HOUSING-SEOUL', action: 'pan', value: .25 });
+  // The short monthly fixture is already beyond the maximum candle spacing, and
+  // its full range cannot pan. A 90-day span is a distinct viewport inside the data.
+  await fixture.message({ kind: 'atlas:center-command', epoch: 1, symbol: 'HOUSING-SEOUL', action: 'span', value: 90 });
   await fixture.message({ kind: 'atlas:center-command', epoch: 1, symbol: 'HOUSING-SEOUL', action: 'scale' });
   const saved = structuredClone(seoul.view), savedUndo = structuredClone(seoul.undo);
   await fixture.render(content('HOUSING-BUSAN', busan, 2)); assert.equal(busan.view?.scale, 'linear'); assert.notEqual(busan.view?.start, seoul.view?.start);

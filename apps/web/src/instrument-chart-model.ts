@@ -49,7 +49,7 @@ export function instrumentRange(view: RsiChartView, series: InstrumentSeries): C
   if (!series.timeline.length) return null;
   const min = series.timeline[0], max = series.timeline.at(-1)!;
   return { start: view.start, end: view.end, min, max, minSpan: series.frequency === 'monthly' ? 60 : 10,
-    allowEmpty: true, maxSpan: Math.max(series.frequency === 'monthly' ? 60 : 10, day(max) - day(min) + 1), ...(view.spacingBounds?{spacingBounds:view.spacingBounds}:{}) };
+    maxSpan: Math.max(series.frequency === 'monthly' ? 60 : 10, day(max) - day(min) + 1), ...(view.spacingBounds?{spacingBounds:view.spacingBounds}:{}) };
 }
 
 export function displayInstrumentSeries(series: InstrumentSeries, frequency: RsiChartView['frequency']): InstrumentSeries {
