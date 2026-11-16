@@ -87,6 +87,14 @@ export function canonicalWorkspaceChartEntry(location) {
   if(instrument.page==='housing')query.set('region',instrument.region);
   return `${root}market-lab/charts/?${query}${location?.hash||''}`;
 }
+const retiredConferenceParams=['page','t','deck'];
+export function canonicalRetiredPageEntry(location) {
+  const query=new URLSearchParams(location?.search||'');
+  if(query.get('page')!=='conference')return null;
+  for(const key of retiredConferenceParams)query.delete(key);
+  const rest=String(query);
+  return `${location.pathname}${rest?'?'+rest:''}${location.hash||''}`;
+}
 export function labPageFromLocation(location) {
   const pathname=location?.pathname||'';
   const query=new URLSearchParams(location?.search||'');

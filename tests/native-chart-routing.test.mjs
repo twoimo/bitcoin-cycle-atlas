@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
-import { canonicalNativeChartEntry, canonicalWorkspaceChartEntry, labPageFromLocation } from '../dist/atlas-navigation.js';
+import { canonicalNativeChartEntry, canonicalRetiredPageEntry, canonicalWorkspaceChartEntry, labPageFromLocation } from '../dist/atlas-navigation.js';
 
 const entrySource = (await readFile(new URL('../dist/site-entry.js', import.meta.url), 'utf8'))
   .replace(/^import [^\n]+;\s*$/gm, '')
@@ -17,7 +17,7 @@ async function boot(url) {
   const symbolNode = { textContent: '' };
   const document = { documentElement: { dataset: {} }, querySelector: () => symbolNode, dispatchEvent: event => events.push(event.type) };
   await runInNewContext(`(async () => {${entrySource}\n})()`, {
-    location, document, URLSearchParams, canonicalNativeChartEntry, canonicalWorkspaceChartEntry, console,
+    location, document, URLSearchParams, canonicalNativeChartEntry, canonicalRetiredPageEntry, canonicalWorkspaceChartEntry, console,
     initTheme: () => {},
     enhanceBootSkeleton: () => calls.push('skeleton'), initAtlasShell: () => calls.push('shell'),
     initPerformanceDiagnostics: () => calls.push('diagnostics'), mountJournalEntry: () => calls.push('journal'),
@@ -27,6 +27,21 @@ async function boot(url) {
     }; },
   });
   return { calls, redirects, modules, events, document, symbolNode };
+}
+
+for (const search of ['?page=conference&t=0&deck=final-290', '?page=conference']) {
+  test(`${search} leaves before the shell boots and reopens on the BTC price chart`, async () => {
+    const first = await boot(new URL(search, 'https://atlas.example').href);
+    assert.deepEqual(first.redirects, ['/']);
+    assert.deepEqual(first.calls, [], 'redirect must precede shell, skeleton and journal initialization');
+    assert.deepEqual(first.modules, []);
+    const chart = await boot(new URL(first.redirects[0], 'https://atlas.example').href);
+    assert.deepEqual(chart.redirects, []);
+    assert.deepEqual(chart.calls, ['skeleton', 'shell', 'diagnostics', 'journal']);
+    assert.equal(chart.modules.length, 1);
+    assert.match(chart.modules[0], /^\.\/app\.js\?v=/);
+    assert.equal(chart.document.documentElement.dataset.symbol, 'BTCUSD');
+  });
 }
 
 for (const symbol of ['MSTR', 'BMNR']) for (const path of ['/', '/market-lab/charts/']) {

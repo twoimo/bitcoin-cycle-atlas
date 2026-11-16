@@ -63,7 +63,7 @@ The current visual direction uses only the user-requested [UI/UX Pro Max](https:
 - Reuse the shared type, surface, text, state and focus tokens. Component paint tokens live in `dist/styles.css`; the first-paint boot shell and standalone preview keep the small token sets needed to work independently.
 - Keep viewport ownership, dynamic-height behavior, sticky headers and asset identity columns. The current 20-asset board keeps BTC first and displays its current Korean name, 비트코인. ETH is quoted in USD and HYPE in USDC; preserve the original 18-asset historical records.
 - Preserve every route, input, event handler and source disclosure. Make link labels describe the actual destination.
-- Keep the six navigation destinations in their order: 가격 차트, 시장 분석, 리서치, 자산 비교, 공모주 and 릴레이 콘텐츠. `atlasNavigationPages` in `dist/atlas-navigation.js` defines them.
+- Keep the six navigation destinations in their order: 가격 차트, 시장 분석, 리서치, 자산 비교, 공모주 and 릴레이 콘텐츠. `atlasNavigationPages` in `dist/atlas-navigation.js` defines them. Links to the removed 컨퍼런스 복습 page open the price chart.
 - Cover the app's implemented loading, empty, error and populated states. Use native keyboard and pointer behavior when checking menus and dialogs. Visible focus and a visible close action must survive internal scrolling and short viewports.
 - Treat chart axes, observed values, forecasts, pending outcomes and source clocks as product data. Style work cannot invent, relabel or silently discard those values, and cannot change the price renderer's coordinate transforms to satisfy a visual check.
 
