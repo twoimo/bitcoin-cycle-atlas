@@ -309,7 +309,7 @@ export function mountObservedPriceChart(plot, { series, symbol, currency = 'USD'
         row = { ...row, date: sourceRow?.date || new Date(bar.time).toISOString(), time: bar.time, kind: 'observed' };
       }
     } else {
-      const forecastRows = (overlayData.forecast?.path || []).filter(item => Number.isFinite(pointTime(item)) && Number.isFinite(item.price) && item.price > 0);
+      const forecastRows = (overlayData.forecast?.path || []).filter(item => Number.isFinite(pointTime(item)) && valid(item, 'price', false));
       if (forecastRows.length) {
         const timed = forecastRows.map(item => ({ item, time: pointTime(item), x: coords.timeToX(pointTime(item)) })).filter(item => Number.isFinite(item.x));
         const first = timed[0], last = timed.at(-1);
@@ -373,7 +373,7 @@ export function mountObservedPriceChart(plot, { series, symbol, currency = 'USD'
     futureCrosshairNodes.group.setAttribute('display', 'inline');
   };
   const emitFutureCrosshair = (point, anchor) => {
-    const row = (overlayData.forecast?.path || []).find(item => pointTime(item) === anchor.time && Number.isFinite(item.price) && item.price > 0);
+    const row = (overlayData.forecast?.path || []).find(item => pointTime(item) === anchor.time && valid(item, 'price', false));
     if (!row) return emitBlankFuture();
     const modelTime = pointTime(row), modelPrice = row.price, modelAnchor = { ...row, time: modelTime, kind: 'simulated', field: 'model', forecast: true, cursor: { price: anchor.price, field: anchor.field || 'free' } };
     const position = pointXY(paneCoords, modelTime, modelPrice);
