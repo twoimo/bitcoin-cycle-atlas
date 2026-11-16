@@ -224,7 +224,8 @@ function keyCommand(event: { key: string; shiftKey: boolean; ctrlKey: boolean; m
 type PlotGesture =
   | { kind: 'pan'; x: number; start: string; end: string; width: number }
   | { kind: 'price'; y: number; height: number; domain: { min: number; max: number }; active: boolean }
-  | { kind: 'time'; x: number; width: number; anchor: number; range: ChartRange; active: boolean };
+  | { kind: 'time'; x: number; width: number; anchor: number; range: ChartRange; active: boolean }
+  | { kind: 'pinch'; range: ChartRange; distance: number; centre: number; left: number; width: number; active: true };
 
 /** Funnest SVG chart components render the source slots directly; no synthetic candle values. */
 export function FunnestInstrumentPlot(props: Props) {
@@ -295,6 +296,7 @@ export function FunnestInstrumentPlot(props: Props) {
   }, [svgRef, dates.length, view.chartType, view.start, view.end, view.autoScale, description, symbol, unit, chartWidth, chartHeight, hasVolume, volumeAxisWidth]);
   useEffect(() => { if (menuPulse > 0) setMenuOpen(true); }, [menuPulse]);
   const gesture = useRef<PlotGesture | null>(null), suppressClickUntil = useRef(0), lastPointerX = useRef<number | null>(null);
+  const touches = useRef(new Map<number, { x: number; y: number }>());
   const priceSvg = () => host.current?.querySelector<SVGSVGElement>('svg[data-plot-right]');
   const fullView = (): RsiChartView => ({ ...view, start: timeline[0] ?? view.start, end: timeline.at(-1) ?? view.end, autoScale: true, domain: null });
   const applyEdit = (next: RsiChartView) => { onStart(); onView(next); onEnd(); };
@@ -313,6 +315,14 @@ export function FunnestInstrumentPlot(props: Props) {
     const move = (event: PointerEvent) => {
       const state = gesture.current;
       if (!state) return;
+      if (state.kind === 'pinch') {
+        if (!touches.current.has(event.pointerId)) return;
+        touches.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+        const [a, b] = [...touches.current.values()], distance = Math.max(16, Math.hypot(a.x - b.x, a.y - b.y)), centre = (a.x + b.x) / 2;
+        const next = panRange(zoomRange(state.range, state.distance / distance, (state.centre - state.left) / state.width), (state.centre - centre) / state.width);
+        onView({ ...view, start: next.start, end: next.end, spacingBounds: next.spacingBounds });
+        return;
+      }
       if (state.kind === 'pan') {
         const elapsed = Date.parse(state.end) - Date.parse(state.start);
         const shift = -(event.clientX - state.x) / Math.max(1, state.width) * elapsed;
@@ -332,15 +342,32 @@ export function FunnestInstrumentPlot(props: Props) {
     };
     const up = (event: PointerEvent) => {
       const state = gesture.current;
-      if (!state) return;
-      if (state.kind !== 'pan' && event.type === 'pointerup') move(event);
-      releaseGesture(state);
+      if (state?.kind === 'pinch' && !touches.current.has(event.pointerId)) return;
+      if (state && state.kind !== 'pan' && event.type === 'pointerup') move(event);
+      if (state?.kind === 'pinch') touches.current.clear(); else touches.current.delete(event.pointerId);
+      if (state) releaseGesture(state);
     };
     win.addEventListener('pointermove', move as EventListener); win.addEventListener('pointerup', up as EventListener); win.addEventListener('pointercancel', up as EventListener);
     return () => { win.removeEventListener('pointermove', move as EventListener); win.removeEventListener('pointerup', up as EventListener); win.removeEventListener('pointercancel', up as EventListener); };
   }, [view, onView, onStart, onEnd]);
+  /** A second finger turns the gesture into a pinch; any other finger touching during or after a pinch is ignored, as on main. */
+  const pinchTouch = (event: React.PointerEvent<HTMLDivElement>, plot: ClientBox | undefined) => {
+    const fingers = touches.current, previous = gesture.current;
+    if (event.isPrimary) fingers.clear();
+    if (previous?.kind === 'pinch' || fingers.size >= 2 || !event.isPrimary && !fingers.size) { event.preventDefault(); return true; }
+    fingers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (fingers.size < 2) return false;
+    event.preventDefault();
+    const range = spacedRange();
+    if (previous && previous.kind !== 'pan' || !range || !plot) { if (previous) releaseGesture(previous); fingers.clear(); return true; }
+    const [a, b] = [...fingers.values()];
+    gesture.current = { kind: 'pinch', range, distance: Math.max(16, Math.hypot(a.x - b.x, a.y - b.y)), centre: (a.x + b.x) / 2, left: plot.left, width: plot.width, active: true };
+    if (!previous) onStart();
+    return true;
+  };
   const startGesture = (event: React.PointerEvent<HTMLDivElement>) => {
     const svg = priceSvg(), regions = plotRegions(svg);
+    if (event.pointerType === 'touch' && view.tool !== 'measure' && pinchTouch(event, regions?.plot)) return;
     if (svg && regions && within(regions.price, event)) {
       const domain = shownPriceRange(svg);
       if (domain) { event.preventDefault(); gesture.current = { kind: 'price', y: event.clientY, height: regions.price.height, domain, active: false }; }
