@@ -48,6 +48,7 @@ async function models(work) {
     { id: 'hidden-paint', values: { GuardPaintSuspension: false }, broken: ['NoHiddenPublication'] },
     { id: 'stale-mount-paint', values: { GuardPaintMount: false }, broken: ['NoStalePublication'] },
     { id: 'hidden-viewport', values: { GuardViewport: false }, broken: ['NoHiddenPublication'] },
+    { id: 'lost-native-navigation', values: { TrackNativeNavigation: false }, broken: ['NativeNavigationSurvivesRefresh'] },
   ];
   const results = {};
   let searches = 0;
@@ -179,6 +180,10 @@ async function implementation(work) {
     {
       id: 'hidden-viewport', from: 'onViewport:visible=>{if(!visible||suspended)return;', to: 'onViewport:visible=>{if(!visible)return;',
       failure: /a suspended chart window report must not refresh the workbench/,
+    },
+    {
+      id: 'untracked-native-navigation', from: '{++navigationRevision;state.range={...state.range,start,end};', to: '{state.range={...state.range,start,end};',
+      failure: /a live refresh must not reset a window chosen on the chart while it was pending/,
     },
     {
       id: 'leaked-mount', from: 'if(!event.persisted){state.funnestMount?.destroy();state.funnestMount=null;', to: 'if(!event.persisted){',

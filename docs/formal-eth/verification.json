@@ -16,72 +16,63 @@
       "custom"
     ]
   },
-  "verdict": "fail",
-  "failures": [
-    {
-      "id": "current/NativeNavigationSurvivesRefresh",
-      "reason": "unexpected invariant violation"
-    },
-    {
-      "id": "replay/original",
-      "reason": "failed cases: ETH refresh preserves a date window chosen on the chart while its request was pending"
-    }
-  ],
+  "verdict": "pass",
+  "failures": [],
   "model": {
-    "current/NativeNavigationSurvivesRefresh": {
-      "status": "unexpected invariant violation",
-      "invariant": "NativeNavigationSurvivesRefresh",
-      "exitStatus": 12,
-      "generated": 3476,
-      "distinct": 1402,
-      "remaining": 959
-    },
     "current/TypeOK": {
       "status": "pass",
       "invariant": "TypeOK",
       "exitStatus": 0,
-      "generated": 3095573,
-      "distinct": 276126,
+      "generated": 2146710,
+      "distinct": 191460,
       "remaining": 0
     },
     "current/ReadyHasUsableView": {
       "status": "pass",
       "invariant": "ReadyHasUsableView",
       "exitStatus": 0,
-      "generated": 3095573,
-      "distinct": 276126,
+      "generated": 2146710,
+      "distinct": 191460,
       "remaining": 0
     },
     "current/NoHiddenPublication": {
       "status": "pass",
       "invariant": "NoHiddenPublication",
       "exitStatus": 0,
-      "generated": 3095573,
-      "distinct": 276126,
+      "generated": 2146710,
+      "distinct": 191460,
       "remaining": 0
     },
     "current/NoStalePublication": {
       "status": "pass",
       "invariant": "NoStalePublication",
       "exitStatus": 0,
-      "generated": 3095573,
-      "distinct": 276126,
+      "generated": 2146710,
+      "distinct": 191460,
       "remaining": 0
     },
     "current/NavigationSurvivesRefresh": {
       "status": "pass",
       "invariant": "NavigationSurvivesRefresh",
       "exitStatus": 0,
-      "generated": 3095573,
-      "distinct": 276126,
+      "generated": 2146710,
+      "distinct": 191460,
+      "remaining": 0
+    },
+    "current/NativeNavigationSurvivesRefresh": {
+      "status": "pass",
+      "invariant": "NativeNavigationSurvivesRefresh",
+      "exitStatus": 0,
+      "generated": 2146710,
+      "distinct": 191460,
       "remaining": 0
     },
     "current/ReadinessOnce": {
       "status": "pass",
       "invariant": "ReadinessOnce",
       "exitStatus": 0,
-      "generated": 3095573,
-      "distinct": 276126,
+      "generated": 2146710,
+      "distinct": 191460,
       "remaining": 0
     },
     "baseline/ReadyHasUsableView": {
@@ -104,32 +95,32 @@
       "status": "expected invariant violation",
       "invariant": "NavigationSurvivesRefresh",
       "exitStatus": 12,
-      "generated": 1380,
-      "distinct": 625,
-      "remaining": 431
+      "generated": 1393,
+      "distinct": 627,
+      "remaining": 432
     },
     "baseline/TypeOK": {
       "status": "pass",
       "invariant": "TypeOK",
       "exitStatus": 0,
-      "generated": 7659682,
-      "distinct": 777360,
+      "generated": 5724106,
+      "distinct": 582152,
       "remaining": 0
     },
     "baseline/NoStalePublication": {
       "status": "pass",
       "invariant": "NoStalePublication",
       "exitStatus": 0,
-      "generated": 7659682,
-      "distinct": 777360,
+      "generated": 5724106,
+      "distinct": 582152,
       "remaining": 0
     },
     "baseline/ReadinessOnce": {
       "status": "pass",
       "invariant": "ReadinessOnce",
       "exitStatus": 0,
-      "generated": 7659682,
-      "distinct": 777360,
+      "generated": 5724106,
+      "distinct": 582152,
       "remaining": 0
     },
     "unguarded-response/NoStalePublication": {
@@ -160,8 +151,8 @@
       "status": "expected invariant violation",
       "invariant": "NavigationSurvivesRefresh",
       "exitStatus": 12,
-      "generated": 3461,
-      "distinct": 1394,
+      "generated": 3484,
+      "distinct": 1396,
       "remaining": 952
     },
     "unpainted-ready/ReadyHasUsableView": {
@@ -177,50 +168,56 @@
       "invariant": "NoHiddenPublication",
       "exitStatus": 12,
       "generated": 338,
-      "distinct": 176,
-      "remaining": 114
+      "distinct": 177,
+      "remaining": 115
     },
     "stale-mount-paint/NoStalePublication": {
       "status": "expected invariant violation",
       "invariant": "NoStalePublication",
       "exitStatus": 12,
-      "generated": 16755,
-      "distinct": 5610,
-      "remaining": 3867
+      "generated": 16697,
+      "distinct": 5553,
+      "remaining": 3814
     },
     "hidden-viewport/NoHiddenPublication": {
       "status": "expected invariant violation",
       "invariant": "NoHiddenPublication",
       "exitStatus": 12,
       "generated": 336,
-      "distinct": 175,
-      "remaining": 113
+      "distinct": 176,
+      "remaining": 114
+    },
+    "lost-native-navigation/NativeNavigationSurvivesRefresh": {
+      "status": "expected invariant violation",
+      "invariant": "NativeNavigationSurvivesRefresh",
+      "exitStatus": 12,
+      "generated": 3476,
+      "distinct": 1402,
+      "remaining": 959
     }
   },
   "implementation": {
     "tests": 24,
-    "original": "fail",
-    "restored": "fail",
+    "original": "pass",
+    "restored": "pass",
     "originalCounts": {
       "tests": 24,
-      "pass": 23,
-      "fail": 1,
+      "pass": 24,
+      "fail": 0,
       "cancelled": 0,
       "skipped": 0,
       "todo": 0
     },
     "restoredCounts": {
       "tests": 24,
-      "pass": 23,
-      "fail": 1,
+      "pass": 24,
+      "fail": 0,
       "cancelled": 0,
       "skipped": 0,
       "todo": 0
     },
-    "failedCases": [
-      "ETH refresh preserves a date window chosen on the chart while its request was pending"
-    ],
-    "sourceSha256": "4df3eaf1f09ea002ddfa038a6b605efbae8c54fb5a4c2ee72c56fe66b3f639e8",
+    "failedCases": [],
+    "sourceSha256": "92d21451759ffa84d0201604e2f8138395a6aa41a2f92865dd4485aaa081e9de",
     "mutations": {
       "premature-ready": "expected assertion failure",
       "hidden-render": "expected assertion failure",
@@ -235,6 +232,7 @@
       "hidden-paint-failure": "expected assertion failure",
       "stale-mount-paint": "expected assertion failure",
       "hidden-viewport": "expected assertion failure",
+      "untracked-native-navigation": "expected assertion failure",
       "leaked-mount": "expected assertion failure"
     },
     "mutationExitStatuses": {
@@ -251,6 +249,7 @@
       "hidden-paint-failure": 1,
       "stale-mount-paint": 1,
       "hidden-viewport": 1,
+      "untracked-native-navigation": 1,
       "leaked-mount": 1
     }
   },

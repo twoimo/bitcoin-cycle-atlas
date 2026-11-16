@@ -1,12 +1,13 @@
 ------------------------------ MODULE EthLoad ------------------------------
 EXTENDS Naturals, FiniteSets
 
-\* Line citations refer to dist/eth-view.js at 856e77422e0a43a77470aed2e3f64fa1e522880b
+\* Line citations refer to dist/eth-view.js at d4f667d2, which has the line numbers of
+\* 856e77422e0a43a77470aed2e3f64fa1e522880b,
 \* unless another file is named. src/charts/funnest-chart-runtime.js is the source
 \* of the shipped dist/funnest-chart-runtime.bundle.js.
 CONSTANTS RequestLimit, BootOnRender, RespectSuspension, PreserveNavigation,
           GuardResponses, GuardErrors, WaitForPaint, GuardPaintSuspension,
-          GuardPaintMount, GuardViewport
+          GuardPaintMount, GuardViewport, TrackNativeNavigation
 Ids == 1..RequestLimit
 Phases == {"unused", "archive", "live", "done"}
 Intervals == {"daily", "weekly"}
@@ -150,7 +151,7 @@ ArchiveFails(id) ==
 \* still matches. A navigation token records whether user input happened since start.
 \* The token (line 350) sees only navigation that incremented navigationRevision.
 \* native is a window the user chose on the mounted chart after the active request
-\* began, which line 310 does not count.
+\* began. Line 310 counts it by incrementing navigationRevision.
 \* If an interval viewport is still pending (render obscured), its retarget can
 \* bring back the earlier range; "auto" then understates preservation, which
 \* cannot hide a lost navigation because that requires a navigated request.
@@ -197,20 +198,22 @@ Pan ==
 
 \* A zoom or pan on the mounted chart moves the engine's own window, and the mount
 \* reports it through onViewport (line 310; src/charts/funnest-chart-runtime.js:391-399).
-\* That handler writes state.range. It neither increments navigationRevision nor
-\* schedules a paint.
+\* When the window changes, that handler increments navigationRevision and writes
+\* state.range. It does not schedule a paint.
 NativePan ==
   /\ s.ready /\ s.attached /\ s.mounted \* lines 58, 310
   /\ s' = [s EXCEPT !.range = "custom",
+             !.navigated = IF TrackNativeNavigation THEN [i \in Ids |-> TRUE] ELSE s.navigated, \* line 310
              !.native = s.native \/ (s.active > 0 /\ s.phase[s.active] = "live")]
 
 \* The mount also reports windows that it sets itself, such as the range it
 \* restores one frame after setData (src/charts/funnest-chart-runtime.js:496). That
 \* callback can run after pagehide. Line 310 drops it while suspended; without that
 \* guard it writes state.range and refreshes the workbench footer. On a visible
-\* page the same report repeats the range that render pushed or returns to an
-\* earlier window. Neither adds or hides a reset in LiveArrives, so only the
-\* suspended report is a step.
+\* page the same report repeats the range that render pushed, which line 310 ignores,
+\* or returns to an earlier window, which line 310 counts as navigation. Counting it
+\* can only keep a window that LiveArrives would reset, and no invariant requires a
+\* reset, so only the suspended report is a step.
 ViewportEcho ==
   /\ s.mounted \* src/charts/funnest-chart-runtime.js:392 a destroyed mount is silent
   /\ ~s.attached /\ ~GuardViewport \* line 310
@@ -366,8 +369,8 @@ NoStalePublication == ~s.stalePublication
 \* Guarded by lines 109-110, 144, 152, 350, 361, 368-369, 380, 382, 408-409.
 NavigationSurvivesRefresh == ~s.lostNavigation
 
-\* The same promise for a window chosen on the mounted chart. Line 310 records it
-\* in state.range without a navigation revision, so no line guards it.
+\* The same promise for a window chosen on the mounted chart. Guarded by line 310,
+\* which increments navigationRevision when the chart window changes.
 NativeNavigationSurvivesRefresh == ~s.lostNative
 
 \* One document announces readiness once, including retry and BFCache restore.

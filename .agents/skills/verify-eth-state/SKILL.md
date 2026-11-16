@@ -32,14 +32,16 @@ post-await focusHistoricalEvent writer whenever either changes: daily coverage
 and cached daily loading establish the current abstraction's focus boundary.
 
 Baseline commit: 64c8207cb044d8990289c5a7d39972e21b74c240.
-Last code/model synchronization commit: 856e77422e0a43a77470aed2e3f64fa1e522880b
-(2026-11-16, tree 01720549f0a5f4e7fb05129b1c97f80389d993b6).
+Last code/model synchronization commit: d4f667d2 (2026-11-16), the onViewport fix
+on top of the review at 856e77422e0a43a77470aed2e3f64fa1e522880b (tree
+01720549f0a5f4e7fb05129b1c97f80389d993b6). The fix changed one statement on
+dist/eth-view.js:310 and no line numbers.
 Previous synchronization: fe93a5727277d15a934b7472588fb907e30b02b8. That commit is
 not an ancestor of this history. Its covered files equal those of c92c4871, so
 the review read c92c4871..856e7742.
 Reviewed SHA-256:
 
-- dist/eth-view.js 4df3eaf1f09ea002ddfa038a6b605efbae8c54fb5a4c2ee72c56fe66b3f639e8
+- dist/eth-view.js 92d21451759ffa84d0201604e2f8138395a6aa41a2f92865dd4485aaa081e9de
 - dist/index.html 5e0f6b3b72a2c5b7862b1560d90aa74af9ed7cfa8a5f80b5a28cd85455f47dcd
 - dist/native-chart-workbench.js 2e3c57fb39748c8ae30e42786d522789f2383c4b9623c5d55f1d70d2a4c5d246
 - dist/chart-replay.js de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d
@@ -53,39 +55,44 @@ Reviewed SHA-256:
 synchronization added the chart mount, its paint watch, the two chart window
 reports and the refresh retry to EthLoad.tla. It also added four constants that
 each remove one new guard, and a seventh invariant,
-NativeNavigationSurvivesRefresh. The readiness promise changed on purpose. It
+NativeNavigationSurvivesRefresh. d4f667d2 made onViewport increment
+navigationRevision, and a fifth constant, TrackNativeNavigation, removes that
+increment. The readiness promise changed on purpose. It
 read "only after it renders observed prices or an actionable retry error".
 render now announces only when state.funnestReady holds a painted confirmation
 (dist/eth-view.js:253, 337), and
 tests/funnest-observed-price-adapter.test.mjs:436-437 pins the source text of
 that paint watch. The bounds are unchanged. Model comments cite current line
 numbers. docs/formal-eth/verification.json is the receipt of the run at
-856e7742. The charts in docs/formal-eth/statechart and
+d4f667d2. The charts in docs/formal-eth/statechart and
 docs/evolution-2026-10-26/eth-state-final.json still describe 7261c180.
 The new ETH future-price engine, scenario calculations and future visibility are
 outside this finite lifecycle model; their dedicated tests are separate evidence.
-See docs/formal-eth/README.md for the chart mount's code mapping, the open
+See docs/formal-eth/README.md for the chart mount's code mapping, the fixed
 finding's replay, and the earlier review revisions, bug replays and receipts.
 
-## Open finding at 856e7742
+## Finding at 856e7742, fixed in d4f667d2
 
-The command exits 1 on 856e7742 with two failures. Both show one product defect.
+The command exited 1 on 856e7742 with two failures. Both showed one product defect.
 
-- `current/NativeNavigationSurvivesRefresh` is violated.
+- `current/NativeNavigationSurvivesRefresh` was violated.
 - The replay case "ETH refresh preserves a date window chosen on the chart while
-  its request was pending" fails.
+  its request was pending" failed.
 
 A zoom or pan on the mounted chart reaches the view only through onViewport
-(dist/eth-view.js:310). That callback writes state.range and does not increment
+(dist/eth-view.js:310). That callback wrote state.range and did not increment
 navigationRevision. onRangeChange (line 109) does increment it, but getRange
 (line 108) returns null once a mount exists, so bindChartNavigation never
 delivers it. A live response then finds navigationToken===navigationRevision and
 clears the range (lines 361 and 368), and the next render pushes the default
 window with setAtlasRange (line 316). 931ed189 introduced the path.
 
-Do not change the model or the case to make them pass. After the product
-records that navigation, make NativePan in EthLoad.tla describe the new code
-and rerun.
+d4f667d2 makes onViewport increment navigationRevision when the chart window
+changes. NativePan in EthLoad.tla now marks every pending request navigated when
+TrackNativeNavigation holds. Two controls remove that increment and must fail:
+verification/eth-state/lost-native-navigation.cfg must break
+NativeNavigationSurvivesRefresh, and the untracked-native-navigation mutation
+must fail the replay case above.
 
 ## Run the check
 
@@ -102,7 +109,7 @@ JAVA may select a Java binary. A supplied jar with a different hash fails.
 TLC 1.7.4 exits 255 with an ArithmeticException after a complete search under
 Java 25, so use Java 11 to 21. scripts/verification-process.mjs holds the
 download, the hash check and the process-exit rule. This runner gives each
-process 180 s. Its largest search is the baseline, at about 7.7 million
+process 180 s. Its largest search is the baseline, at about 5.7 million
 generated states.
 
 An optional output argument writes a machine-readable receipt:
@@ -116,12 +123,12 @@ A pass exits 0 and reports all of the following:
 2. The original baseline still fails its three recorded safety properties and
    passes the other three. Each configuration that removes one guard fails its
    named invariant: the response, error, suspension and navigation guards, then
-   the paint wait, the paint suspension guard, the paint mount guard and the
-   viewport suspension guard. Do not weaken a property to make a failure pass.
+   the paint wait, the paint suspension guard, the paint mount guard, the
+   viewport suspension guard and the native navigation revision. Do not weaken a property to make a failure pass.
 3. All 24 complete-initializer replay cases pass, including intraday refresh
    integration, the information dialog's escaped data link and the chart mount
    cases.
-4. All 14 mutations of a temporary copy of the real production module fail
+4. All 15 mutations of a temporary copy of the real production module fail
    their intended assertions. The restored temporary module behaves like the
    working runtime. The working runtime is never mutated by the checker.
 
@@ -199,7 +206,8 @@ under linkedom, the engine restores the earlier window one frame after setData,
 and the next layout change returns to the range that setAtlasRange set.
 
 The model's navigated flag is the code's navigationRevision mismatch. The native
-flag covers the one path known to skip it, a window chosen on the mounted chart.
+flag covers a window chosen on the mounted chart, the path that skipped it until
+d4f667d2.
 Another navigation path that forgets ++navigationRevision needs its own flag.
 Replay cases that call f.pan or f.priceRange invoke the Atlas navigation
 callbacks directly, which bindChartNavigation cannot deliver once a chart is

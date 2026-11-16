@@ -18,7 +18,7 @@ numbers.
 | GuardPaintSuspension | dist/eth-view.js:253 | Both handlers drop a result that arrives while the page is suspended |
 | StalePaintFailed, GuardPaintMount | dist/eth-view.js:253; src/charts/funnest-chart-runtime.js:471 | A destroyed mount rejects its pending watch. Both handlers drop a result whose mount is no longer state.funnestMount |
 | Refresh after a chart error | dist/eth-view.js:388 | The retry destroys the mount and clears the error before it loads |
-| NativePan | dist/eth-view.js:108,310; dist/chart-navigation.js:86,225-233; src/charts/funnest-chart-runtime.js:391-399 | A zoom or pan on the mounted chart reaches the view through onViewport, which writes state.range without a navigation revision. bindChartNavigation delivers no range callback once a mount exists |
+| NativePan, TrackNativeNavigation | dist/eth-view.js:108,310; dist/chart-navigation.js:86,225-233; src/charts/funnest-chart-runtime.js:391-399 | A zoom or pan on the mounted chart reaches the view through onViewport. Since d4f667d2 it increments navigationRevision and writes state.range when the window changes. At 856e7742 it wrote state.range without a navigation revision. bindChartNavigation delivers no range callback once a mount exists |
 | ViewportEcho, GuardViewport | dist/eth-view.js:310; src/charts/funnest-chart-runtime.js:392,496 | The mount also reports windows that it sets itself. onViewport drops a report that arrives while the page is suspended |
 | Hide for a discarded document | dist/eth-view.js:419 | A pagehide that is not persisted also destroys the mount. The model covers it with a Hide that no Show follows |
 
@@ -32,10 +32,10 @@ only for `painted===true` (line 253).
 tests/funnest-observed-price-adapter.test.mjs:436-437 pins the source text of
 that watch.
 
-### Open finding: refresh resets a window chosen on the chart
+### Finding at 856e7742, fixed in d4f667d2: refresh reset a window chosen on the chart
 
 NativeNavigationSurvivesRefresh is new. It states the navigation promise for a
-window that the user chooses on the mounted chart, and it fails at 856e7742.
+window that the user chooses on the mounted chart, and it failed at 856e7742.
 TLC's shortest path has seven steps:
 
 1. Open. initEthView starts the first load (dist/eth-view.js:428).
@@ -83,7 +83,28 @@ one frame later, because setData restores the previous range. The next layout
 change shows the default window again, because setAtlasRange left the runtime
 owning it.
 
-### Results at 856e7742
+### Results at d4f667d2
+
+d4f667d2 makes onViewport increment navigationRevision when the chart window
+changes (dist/eth-view.js:310). NativePan now marks every pending request
+navigated when TrackNativeNavigation holds.
+`node scripts/verify-eth-state.mjs docs/formal-eth/verification.json` wrote
+verification.json and exited 0.
+
+- The current model generated 2,146,710 states, 191,460 of them distinct, and
+  left none on the queue. All seven invariants hold.
+- The baseline breaks its three recorded properties and passes the other three
+  over 582,152 distinct states.
+- Each of the nine configurations that removes one guard breaks its named
+  invariant. lost-native-navigation.cfg, which drops the new increment, breaks
+  NativeNavigationSurvivesRefresh after 3,476 generated states.
+- All 24 replay cases pass.
+- All 15 mutations of a temporary copy of dist/eth-view.js fail an intended
+  assertion in a case that the unmutated module passes. The new
+  untracked-native-navigation mutation removes the increment and fails the case
+  above.
+
+### Results at 856e7742, before the fix
 
 `node scripts/verify-eth-state.mjs docs/formal-eth/verification.json` wrote
 verification.json and exited 1 with two failures, the invariant and the replay
