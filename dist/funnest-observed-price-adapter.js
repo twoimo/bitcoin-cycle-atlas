@@ -597,6 +597,10 @@ export function mountObservedPriceChart(plot, { series, symbol, currency = 'USD'
   mounted.getExportSurface = () => ({ canvas: mounted.getCanvas(), svg: mounted.getOverlaySvg() });
   mounted.getSelection = () => { const selection = lastSelection || (() => { const bar = mounted.getBars().at(-1); return bar ? { bar, time: bar.time } : null; })(); if (!selection) return null; const { bar, time } = selection, stamp = new Date(time).toISOString().replace('T', ' ').slice(0, 16); const fields = [['시각', stamp], ['시가', bar.open], ['고가', bar.high], ['저가', bar.low], ['종가', bar.close], ...(bar.volume === undefined ? [] : [['거래량', bar.volume]])].filter(([, value]) => value !== undefined); return { label: `${symbol} · 실제 관측 봉`, fields: fields.map(([label, value]) => ({ label, value: String(value) })), copyText: fields.map(([label, value]) => `${label}: ${value}`).join('\n') }; };
   mounted.getPriceScale = () => overlayData.priceDomain ? { ...overlayData.priceDomain } : forecastDomain();
-  mounted.syncAtlasViewport = () => { syncPriceDomain(); bandHandle?.redraw?.(); lineHandle?.redraw?.(); }; 
+  mounted.syncAtlasViewport = () => { syncPriceDomain(); bandHandle?.redraw?.(); lineHandle?.redraw?.(); };
+  const setNativeScale = mounted.setScale;
+  // Funnest switches mainScale.mode on its next frame and resets it to auto-scale, which drops the
+  // forecast-aware domain. Switch the mode now, as the runtime does at mount, and set the domain again.
+  mounted.setScale = nextScale => { setNativeScale(nextScale); mounted.chart.mainScale.mode = mounted.chart.settings.priceScale; mounted.syncAtlasViewport(); };
   return mounted;
 }
