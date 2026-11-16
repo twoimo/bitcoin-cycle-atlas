@@ -82,13 +82,24 @@ test('selecting another room pushes one entry and Back returns to the list addre
   assert.equal(heading(root), '소수의견(26년 4분기)', 'split shows the default room for the list address');
 });
 
-test('clicking the room split already shows writes no history entry', async () => {
+function countWrites(address) {
+  const write = address.write;
+  let writes = 0;
+  address.write = (...args) => { writes += 1; write(...args); };
+  return () => writes;
+}
+
+test('clicking the room split already shows makes its address shareable without a history entry', async () => {
   const { root, window, address } = await mount();
+  const writes = countWrites(address);
   click(root, window, '[data-room="telegram"]');
-  assert.deepEqual([address.href, address.length], ['', 1]);
+  assert.deepEqual([address.href, address.length], ['?room=telegram', 1], 'the shown room is written in place');
+  assert.equal(heading(root), '소수의견(26년 4분기)');
+  click(root, window, '[data-room="telegram"]');
+  assert.equal(writes(), 1, 'a second click on the same room writes nothing');
   click(root, window, '[data-room="naver"]');
   click(root, window, '[data-room="naver"]');
-  assert.deepEqual([address.href, address.length], ['?room=naver', 2], 'only the visible change is a step');
+  assert.deepEqual([address.href, address.length, writes()], ['?room=naver', 2, 2], 'only the visible change is a step');
 });
 
 test('an unknown room or a post outside an articles room is replaced with what the data honors', async () => {

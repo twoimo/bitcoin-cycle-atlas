@@ -795,7 +795,12 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
   function selectRoom(id) {
     const next = withAddress(model, normalizeAddress({ room: id, post: null }, model.phase.data));
     const layout = readLayout(), nextView = deriveView(next);
-    if (screenKey(nextView, layout) === screenKey(view, layout)) return;
+    if (screenKey(nextView, layout) === screenKey(view, layout)) {
+      if (view.address.room !== null) return;
+      port.write(next.phase.address, 'replace');
+      commit(next);
+      return;
+    }
     port.write(next.phase.address, 'push', view.address);
     commit(next, { focus: layout === 'stack' ? CONTENT : KEEP, reveal: revealsLatest(view, nextView, layout) });
   }
