@@ -14,16 +14,18 @@ test('the shared legend follows the native price-plot width when the Funnest pri
     const dock = () => ({ width: foot.style.getPropertyValue('--chart-legend-width'), right: foot.style.getPropertyValue('--chart-legend-right'), top: foot.style.getPropertyValue('--chart-legend-top') });
     const expected = () => {
       const priceWidth = mounted.chart.layout.plotWidth * bounds.width / mounted.chart.layout.width;
-      return { priceWidth, dock: { width: `${Math.round(priceWidth * .42 * 100) / 100}px`, right: `${Math.round((bounds.width - priceWidth + 12) * 100) / 100}px`, top: '30px' } };
+      return { priceWidth, gap: `${Math.round((bounds.width - priceWidth + 7) * 100) / 100}px`, dock: { width: `${Math.round(priceWidth * .42 * 100) / 100}px`, right: `${Math.round((bounds.width - priceWidth + 12) * 100) / 100}px`, top: '30px' } };
     };
     try {
       await settle(80);
       const before = expected();
       assert.deepEqual(dock(), before.dock, 'the legend is laid out against the painted native plot, below the default 30px band');
-      await relayout(mounted, 11);
+      assert.equal(container.style.getPropertyValue('--plot-right-gap'), before.gap, 'readouts and notes get the measured axis width plus 7px, as the SVG renderers set it');
+      await relayout(mounted, 16);
       const after = expected();
-      assert.ok(after.priceWidth < before.priceWidth, 'wider tick labels grew the held native price axis');
+      assert.ok(after.priceWidth < before.priceWidth, 'labels wider than the shared minimum grew the held native price axis');
       assert.deepEqual(dock(), after.dock, 'a native plot-width change re-lays out the legend at 42% of the new price pane');
+      assert.equal(container.style.getPropertyValue('--plot-right-gap'), after.gap, 'the gap follows the axis when it grows');
     } finally { mounted.destroy(); legend.destroy(); }
   });
 });

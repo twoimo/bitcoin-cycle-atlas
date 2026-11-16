@@ -3,6 +3,8 @@ import { createChart } from '@funnest/charts';
 const BAR_FIELDS = ['time', 'open', 'high', 'low', 'close'];
 const TIME_SCALE_BUDGET = Object.freeze({ minBarSpacing: 0.5, maxBarSpacing: 64, maxBars: 6000 });
 const NATIVE_TIME_LABEL_MIN_GAP = 72; // Pinned Funnest 0.6.22 TIME_LABEL_MIN_GAP.
+// Fits the widest price label any chart shows, up to a six-digit BTC price with cents, plus the engine's 20px padding.
+export const ATLAS_PRICE_AXIS_MIN_WIDTH = 96;
 function sourceInterval(bars) {
   let interval = Infinity;
   for (let index = Math.max(1, bars.length - 20); index < bars.length; index++) interval = Math.min(interval, bars[index].time - bars[index - 1].time);
@@ -156,12 +158,15 @@ export function setFunnestPriceExtrema(chart, domain) {
  * `priceAxisWidth` is a TypeScript-private own field in this exact build, with no public option.
  * While `viewerOwnsViewport()` is true the width grows to fit a wider label and is never given back.
  * Until then the caller's range is refit after every layout, so the engine's own width passes through.
+ * The width never falls below `minWidth`, so every instrument shares one gutter: the engine otherwise sizes
+ * it from the widest label (88px for BTC, 80px for ETH) and the same axis sits at different x per chart.
  */
-export function holdFunnestPriceAxisWidth(chart, viewerOwnsViewport) {
+export function holdFunnestPriceAxisWidth(chart, viewerOwnsViewport, minWidth = 0) {
   if (!chart || typeof chart.priceAxisWidth !== 'number') throw new TypeError('Funnest 0.6.22 price-axis width field is unavailable');
   if (typeof viewerOwnsViewport !== 'function') throw new TypeError('A viewport-ownership predicate is required');
-  let held = chart.priceAxisWidth;
-  Object.defineProperty(chart, 'priceAxisWidth', { configurable: true, enumerable: true, get: () => held, set(next) { held = viewerOwnsViewport() ? Math.max(held, next) : next; } });
+  if (!Number.isFinite(minWidth) || minWidth < 0) throw new RangeError('The price-axis minimum width must be a finite nonnegative number');
+  let held = Math.max(chart.priceAxisWidth, minWidth);
+  Object.defineProperty(chart, 'priceAxisWidth', { configurable: true, enumerable: true, get: () => held, set(next) { held = Math.max(minWidth, viewerOwnsViewport() ? Math.max(held, next) : next); } });
 }
 
 /** Read-only evidence snapshot for QA: copied source values, actual engine state and canvas ink. */
@@ -213,7 +218,7 @@ export function exposeAtlasFunnestSnapshot(host, readSnapshot) {
 export function mountAtlasFunnestChart(container, options = {}) {
   if (!container?.ownerDocument || !container.isConnected) throw new TypeError('A connected chart host is required');
   const { bars = [], symbol = 'BTCUSD', currency = 'USD', timezone = 'Asia/Seoul', locale = 'ko',
-    precision = 2, tickSize = 0, chartType = 'candles', scale = 'normal', invertScale = false, theme = {}, range = null, source = {}, sourceMode = 'ohlc',
+    precision = 2, tickSize = 0, chartType = 'candles', scale = 'normal', invertScale = false, theme = {}, range = null, source = {}, sourceMode = 'ohlc', minPriceAxisWidth = ATLAS_PRICE_AXIS_MIN_WIDTH,
     volumeByTime = null, volumeSource = null,
     accessibleName = `${symbol} 실제 관측 가격 차트`, onCrosshair = () => {}, onViewport = () => {},
     onError = () => {}, volume = true } = options;
@@ -273,7 +278,7 @@ export function mountAtlasFunnestChart(container, options = {}) {
     // including windows above the normal 6,000-bar navigation budget.
     chart.timeScale.options.minBarSpacing = Math.min(TIME_SCALE_BUDGET.minBarSpacing, width / span);
   };
-  holdFunnestPriceAxisWidth(chart, () => !initialRangeOwned);
+  holdFunnestPriceAxisWidth(chart, () => !initialRangeOwned, minPriceAxisWidth);
   mapData(bars);
   chart.setData(currentBars);
   chart.setChartType(chartType);
