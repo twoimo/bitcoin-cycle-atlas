@@ -255,8 +255,12 @@ test('actual Funnest BTC below/above callbacks match the detached render receipt
       const pointerReceipt = host[key]().interaction;
       assert.equal(pointerReceipt.selectedDate, pointerDate);
       assert.equal(pointerReceipt.pointerBasis, 'Funnest PaneCoords.pointAt; not an observed source bar');
+      // Client pixels and SVG units do not round-trip bit for bit, so the receipt holds the point the event delivered.
+      const deliveredX = (clientPoint.clientX - svgRect.left) / svgRect.width * view.width, deliveredY = (clientPoint.clientY - svgRect.top) / svgRect.height * view.height;
+      assert.ok(Math.abs(deliveredX - pointerX) <= 2 * Number.EPSILON * pointerX && Math.abs(deliveredY - pointerY) <= 2 * Number.EPSILON * pointerY,
+        'the delivered pointer is the selected date and price to floating-point precision');
       assert.deepEqual([pointerReceipt.pointer.time, pointerReceipt.pointer.value, pointerReceipt.pointer.x, pointerReceipt.pointer.y],
-        [date(pointerDate), pointerPrice, pointerX, pointerY]);
+        [date(pointerDate), pointerPrice, deliveredX, deliveredY]);
       assert.ok(pointerReceipt.pointer.value !== nativeMove.crosshair.bar.close,
         'the BTC interaction receipt preserves the free pointer price separately from the observed close');
       assert.ok(readouts.length > 1, 'native pointer movement may update readouts after the initial source-derived value');
