@@ -51,7 +51,9 @@ Reviewed SHA-256:
 - dist/chart-replay.js de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d
 - dist/center-workbench.js 2decc81ec9db604edb6dd95b6beb92a9582b25e76f60f8c65b2506a6ffaa8f6c
 - dist/chart-navigation.js f6a987a9fc14e72f8de01fe0e21d0d142b872939188f8328cf153b7b8f7a03c0
-- dist/funnest-observed-price-adapter.js 6b4d25b84f99728987bde5d989cad191bd8059cf9e62b328da53cdef185fa683
+- dist/funnest-observed-price-adapter.js 4b624623f4b9198e11cb3232cb630afab693dd7ac961595cb7b7f65786799c76
+  (a5a95fa5, 33e74ddc and 01cf30d3 changed forecast painting, the scale toggle and hover.
+  None of them touches the mount's paint watch, its window reports or its teardown.)
 - src/charts/funnest-chart-runtime.js f44846672c8c0435e5c4fb8b8ab70c2e6b7952e460b06c43b082063ba17fc958
 - dist/ethereum-history.js 196e860ce7f4485071ca54685e8b5bf48e62ed9c9d00dc1012f8183de44053a6
 
