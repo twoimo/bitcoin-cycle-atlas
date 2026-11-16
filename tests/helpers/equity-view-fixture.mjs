@@ -66,8 +66,8 @@ export function equityPayload(symbol, revision) {
   };
 }
 
-export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname = '/', project, useActualSufficiency = false } = {}) {
-  const requests = [], frames = new Map(), draws = [], calculations = [], errors = [], events = [], articles = [];
+export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname = '/', project, useActualSufficiency = false, manualPaint = false } = {}) {
+  const requests = [], frames = new Map(), draws = [], paints = [], calculations = [], errors = [], events = [], articles = [];
   const window = new Surface(), document = new Surface();
   const bootTimers = new Map(); let bootTimerId = 0;
   window.setTimeout = callback => { bootTimers.set(++bootTimerId, callback); return bootTimerId; };
@@ -91,7 +91,10 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
   const atlasCandlesToFunnestBars = series => { const bars=series.candles.map(row=>({...row,time:row.time*1000}));barsToSeries.set(bars,series);return bars; };
   const mountObservedPriceChart = (_plot,options) => {
     const record={...options,setAtlasRangeCalls:0,nativeRange:options.range?{from:options.range.start*1000,to:options.range.end*1000}:null,nativeMagnet:false,atlasMagnet:options.magnet||'off',chart:{layout:{plotWidth:554},setMagnet(value){record.nativeMagnet=value;},getVisibleTimeRange(){return record.nativeRange;}}};draws.push(record);
-    return {chart:record.chart,ready:async()=>({painted:true,status:'ready',bars:record.series.candles.length}),setData(bars){record.series=barsToSeries.get(bars);},setRange(range){const start=range.from/1000,end=range.to/1000;if(record.range?.start!==start||record.range?.end!==end)record.range={...record.range,start,end};},setAtlasRange(range){record.setAtlasRangeCalls++;record.range=range;record.nativeRange={from:range.start*1000,to:range.end*1000};},setChartType(value){record.chartType=value;},setScale(value){record.scale=value;},setAtlasInteraction(value){record.interaction={...value};record.atlasMagnet=value.magnet;},setAtlasRows(rows){record.sourceRows=rows;},setPriceExtrema(value){record.priceDomain=value;},setAtlasOverlays(value){Object.assign(record,value);},addOverlay(){return {redraw(){},remove(){}};},destroy(){record.destroyed=true;}};
+    const painted=()=>({painted:true,status:'ready',bars:record.series.candles.length});
+    // manualPaint leaves each confirmation pending, so a test can deliver it late, to a hidden page or after the mount is destroyed.
+    const ready=manualPaint?()=>{const pending=deferred();paints.push({chart:record,confirm:()=>pending.resolve(painted()),fail:message=>pending.reject(new Error(message))});return pending.promise;}:async()=>painted();
+    return {chart:record.chart,ready,setData(bars){record.series=barsToSeries.get(bars);},setRange(range){const start=range.from/1000,end=range.to/1000;if(record.range?.start!==start||record.range?.end!==end)record.range={...record.range,start,end};},setAtlasRange(range){record.setAtlasRangeCalls++;record.range=range;record.nativeRange={from:range.start*1000,to:range.end*1000};},setChartType(value){record.chartType=value;},setScale(value){record.scale=value;},setAtlasInteraction(value){record.interaction={...value};record.atlasMagnet=value.magnet;},setAtlasRows(rows){record.sourceRows=rows;},setPriceExtrema(value){record.priceDomain=value;},setAtlasOverlays(value){Object.assign(record,value);},addOverlay(){return {redraw(){},remove(){}};},destroy(){record.destroyed=true;}};
   };
   const deps = {
     withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,writeChartUrlState,nativeDateRange,mountObservedPriceChart,atlasCandlesToFunnestBars,
@@ -162,7 +165,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     app.dispatchEvent({ type: 'click', target });
   };
   return {
-    requests, frames, draws, calculations, errors, events, articles, initialization, document, app, location, urlWrites, indicator:indicatorElement,indicatorRect,workbenchUpdates:()=>workbenchUpdates,workbench:()=>workbenchOptions,
+    requests, frames, draws, paints, calculations, errors, events, articles, initialization, document, app, location, urlWrites, indicator:indicatorElement,indicatorRect,workbenchUpdates:()=>workbenchUpdates,workbench:()=>workbenchOptions,
     microtasks, frame, settle,
     reply: (index, value) => requests[index].resolve({ ok: true, json: async () => value }),
     reject: (index, message = 'Archive failed') => requests[index].reject(new Error(message)),
@@ -177,6 +180,8 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     replayAvailability: () => replayOptions.getForecastAvailability(),
     priceRange: range => navigation.onPriceRangeChange(range),
     latest: () => draws.at(-1),
+    // The mount is one live record that every later render rewrites. Copy it to compare a view with a later one.
+    snapshot: () => ({ ...draws.at(-1) }),
     status: () => app.querySelector('#equity-status').textContent,
     info: () => { click('action', 'info'); return document.body.nodes.get('equity-detail-dialog'); },
     forecastDialog: () => { click('action', 'forecast'); return document.body.nodes.get('equity-detail-dialog').querySelector('#equity-detail-content').innerHTML; },

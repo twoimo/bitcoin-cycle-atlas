@@ -38,8 +38,8 @@ export async function copyEquityFixtureDependencies(copy, { sourceRoot = root, e
   return [...files].sort();
 }
 
+// The current model runs last, after the replay and every control, so a failing property hides neither.
 const variants = [
-  { id: 'current', values: {}, invariant: null },
   { id: 'original-boot-order', values: { BootOnRender: false, RespectSuspension: false }, invariant: 'UsableRenderReleasesBoot' },
   { id: 'unguarded-prices', values: { GuardPrices: false }, invariant: 'NoStalePublication' },
   { id: 'unguarded-projection', values: { GuardProjection: false }, invariant: 'NoStalePublication' },
@@ -47,6 +47,9 @@ const variants = [
   { id: 'retained-old-projection', values: { ClearProjection: false }, invariant: 'ProjectionMatchesPrices' },
   { id: 'hidden-ready', values: { RespectSuspension: false }, invariant: 'NoHiddenReadiness' },
   { id: 'overwritten-range', values: { PreserveRange: false }, invariant: 'UserRangePreserved' },
+  { id: 'stale-paint-failure', values: { GuardPaint: false }, invariant: 'NoStalePublication' },
+  { id: 'hidden-paint-failure', values: { GuardPaint: false }, invariant: 'NoHiddenReadiness' },
+  { id: 'current', values: {}, invariant: null },
 ];
 
 async function models(work) {
@@ -82,7 +85,7 @@ async function models(work) {
 async function implementation(work) {
   const original = runVerification(process.execPath, ['tests/equity-load-ownership.test.mjs']);
   assert.equal(original.status, 0, original.output);
-  assert.match(original.output, /tests 28/);
+  assert.match(original.output, /tests 36/);
   console.log(original.output.trim());
   const copy = path.join(work, 'implementation');
   // Follow real module dependencies, including shared UI helpers added to the
@@ -90,13 +93,25 @@ async function implementation(work) {
   const fixtureModules = await copyEquityFixtureDependencies(copy);
   const pristine = runVerification(process.execPath, ['tests/equity-load-ownership.test.mjs'], { cwd: copy });
   assert.equal(pristine.status, 0, pristine.output);
-  assert.match(pristine.output, /tests 28/);
+  assert.match(pristine.output, /tests 36/);
   checkTap(runVerification(process.execPath, viewportArgs, { cwd: copy }), 2);
   const viewFile = path.join(copy, 'dist/equity-view.js'), source = await readFile(viewFile, 'utf8');
   const changes = [
     {
       id: 'deferred-readiness', from: 'navigation.update();workbench?.update();revealReady();}', to: 'navigation.update();workbench?.update();}',
       failure: /a completed observed render must release the boot shell/,
+    },
+    {
+      id: 'unconfirmed-readiness', from: '}else{navigation.update();workbench?.update();}}', to: '}else{navigation.update();workbench?.update();revealReady();}}',
+      failure: /an unconfirmed chart must keep the boot shell/,
+    },
+    {
+      id: 'hidden-paint-failure', from: '.catch(error=>{if(state.funnestMount!==mount||suspended)return;', to: '.catch(error=>{if(state.funnestMount!==mount)return;',
+      failure: /a hidden paint failure must not release the boot shell/,
+    },
+    {
+      id: 'stale-paint-failure', from: '.catch(error=>{if(state.funnestMount!==mount||suspended)return;', to: '.catch(error=>{if(suspended)return;',
+      failure: /a destroyed chart must not publish its paint failure/,
     },
     {
       id: 'unguarded-prices', from: 'if(token!==generation)return;\n      daily=nextDaily;', to: 'daily=nextDaily;',
@@ -138,22 +153,23 @@ async function implementation(work) {
     assert.match(result.output, change.failure, `Mutation failed for an unrelated reason: ${change.id}\n${result.output}`);
     mutations[change.id] = 'expected assertion failure';
     mutationExitStatuses[change.id] = result.status;
+    console.log(`${change.id}: ${mutations[change.id]}`);
   }
   await writeFile(viewFile, source);
   const restored = runVerification(process.execPath, ['tests/equity-load-ownership.test.mjs'], { cwd: copy });
   assert.equal(restored.status, 0, restored.output);
   checkTap(runVerification(process.execPath, viewportArgs, { cwd: copy }), 2);
-  return { tests: 28, viewportTests: 2, original: 'pass', isolated: 'pass', restored: 'pass', fixtureModules, sourceSha256: hash(source), mutations, mutationExitStatuses };
+  return { tests: 36, viewportTests: 2, original: 'pass', isolated: 'pass', restored: 'pass', fixtureModules, sourceSha256: hash(source), mutations, mutationExitStatuses };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
 await prepareTlc();
 const work = await mkdtemp(path.join(tmpdir(), 'atlas-equity-proof-'));
 try {
-  const model = await models(work), replay = await implementation(work);
+  const replay = await implementation(work), model = await models(work);
   const report = {
     tool: { name: 'TLC', release: '1.7.4', jarSha256: TLC_SHA256 },
-    bounds: { requestGenerations: 3, intervals: ['daily', 'weekly'], rangeChoices: ['auto', 'custom'] },
+    bounds: { requestGenerations: 3, intervals: ['daily', 'weekly'], rangeChoices: ['auto', 'custom'], chartFailureRequestGenerations: 2 },
     model, implementation: replay,
     limitations: ['Finite request-state model, not an unbounded proof', 'UI replay injects import, HTTP, animation-frame and DOM boundaries', 'No economic accuracy, visual pixels, browser timing or liveness proof'],
   };
