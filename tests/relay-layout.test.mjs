@@ -233,3 +233,54 @@ test('each row previews and dates its newest entry, and the editions room opens 
   assert.equal(time.getAttribute('datetime'), now);
   assert.match(time.textContent, /^\d{2}:\d{2}$/, 'an entry from today shows its time');
 });
+
+// A History double with the browser's semantics: a push drops forward entries, and back() reports
+// the traversal later through popstate. Linkedom windows share properties, so each test removes it.
+function installHistory(window, href, { refuseWrites = false } = {}) {
+  const entries = [{ url: href, state: null }];
+  let index = 0, backs = 0;
+  const refuse = () => { if (refuseWrites) throw new DOMException('URL writes are not allowed here', 'SecurityError'); };
+  window.location = { get href() { return entries[index].url; }, get search() { return new URL(entries[index].url).search; } };
+  window.history = {
+    get state() { return entries[index].state; },
+    pushState(state, title, url) { refuse(); entries.splice(index + 1, Infinity, { url: String(url), state: structuredClone(state) }); index += 1; },
+    replaceState(state, title, url) { refuse(); entries[index] = { url: String(url), state: structuredClone(state) }; },
+    back() { backs += 1; if (index === 0) return; index -= 1; setTimeout(() => window.dispatchEvent(new window.Event('popstate'))); },
+  };
+  return { entries, index: () => index, backs: () => backs, url: () => entries[index].url, remove() { delete window.history; delete window.location; } };
+}
+async function mountOnWindow(href, options) {
+  const { document, window } = parseHTML('<html><body><section id="relay"></section></body></html>');
+  const history = installHistory(window, href, options), root = document.getElementById('relay');
+  let resolve; const ready = new Promise(done => { resolve = done; });
+  initRelayRoomView({ root, embeddedData: () => JSON.stringify(sample()), onReady: resolve }).show(true);
+  await ready;
+  return { root, window, history };
+}
+
+test('the page address keeps other params, marks each push and pops it on the in-app back', async t => {
+  const { root, window, history } = await mountOnWindow('https://atlas.test/?page=relay&room=naver');
+  t.after(history.remove);
+  assert.equal(heading(root), '인생의 방');
+  click(root, window, '[data-article="n1"]');
+  assert.equal(history.url(), 'https://atlas.test/?page=relay&room=naver&post=n1');
+  assert.deepEqual(history.entries[1].state, { relay: { from: 'room=naver' } });
+  click(root, window, '[data-relay-action="article-back"]');
+  assert.equal(history.backs(), 1, 'the entry below shows the stream, so the back pops');
+  await new Promise(done => setTimeout(done, 5));
+  assert.equal(history.url(), 'https://atlas.test/?page=relay&room=naver');
+  assert.equal(root.querySelectorAll('.relay-reader').length, 0, 'the popstate traversal closes the reader');
+  click(root, window, '[data-room="hankyung"]');
+  assert.deepEqual(history.entries.map(entry => entry.url), ['https://atlas.test/?page=relay&room=naver', 'https://atlas.test/?page=relay&room=hankyung']);
+});
+
+test('a document that refuses URL writes still opens rooms and never pops history', async t => {
+  const { root, window, history } = await mountOnWindow('https://atlas.test/?page=relay', { refuseWrites: true });
+  t.after(history.remove);
+  click(root, window, '[data-room="naver"]');
+  assert.equal(heading(root), '인생의 방');
+  click(root, window, '[data-article="n1"]');
+  click(root, window, '[data-relay-action="article-back"]');
+  assert.equal(root.querySelectorAll('.relay-reader').length, 0);
+  assert.deepEqual([history.backs(), history.entries.length, history.url()], [0, 1, 'https://atlas.test/?page=relay']);
+});

@@ -330,7 +330,8 @@ function relayAddressFor(win) {
       // `from` proves which screen the entry below shows, so the in-app back may pop it.
       const state = how === 'push' ? { relay: { from: serializeAddress(from) } } : target.history.state;
       writing = true;
-      try { target.history[how === 'push' ? 'pushState' : 'replaceState'](state, '', url); } finally { writing = false; }
+      // A document that may not rewrite its URL keeps the old one and stores no `from`, so leaving replaces.
+      try { target.history[how === 'push' ? 'pushState' : 'replaceState'](state, '', url); } catch {} finally { writing = false; }
     },
     back: () => target.history.back(),
     subscribe(listener) {
