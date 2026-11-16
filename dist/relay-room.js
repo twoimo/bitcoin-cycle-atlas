@@ -1,11 +1,5 @@
 import { RELAY_TOPICS, classifyRelayEntry, relayEntries, relayMatches } from './relay-topics.js';
 
-// 릴레이 콘텐츠 방(Relay room).
-//
-// RelayDeck은 텔레그램(소수의견)·인생의 방(네이버 프리미엄)·모바일한경 세 원천을 한 리서치룸으로
-// 보낸다. 카카오톡은 분류가 안 되므로, 이 화면이 세 원천을 좌측 채널 목록 → 우측 방으로 나눠 보여 준다.
-// 데이터는 RelayDeck가 내보낸 ./data/relay/index.json을 읽기만 하며(사이트는 계산하지 않음),
-// 값이 없거나 형식이 다르면 조용히 빈 상태를 보여 준다.
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 const KST = 9 * 3600000;
@@ -219,7 +213,6 @@ const graphemes = new Intl.Segmenter('ko', { granularity: 'grapheme' });
 const initial = room => graphemes.segment(shortTitle(room))[Symbol.iterator]().next().value?.segment ?? '';
 const entryTime = entry => String(entry?.at || entry?.published_date || entry?.date || '');
 
-// The row preview is the entry the room shows last, at the bottom of its stream.
 function roomPreview(room) {
   const last = relayEntries(room).at(-1);
   if (room.kind === 'chat') {
@@ -232,7 +225,6 @@ function roomPreview(room) {
   if (room.kind === 'articles') return last?.title ? String(last.title).slice(0, 64) : '아직 받은 글이 없습니다';
   return last ? `${last.version || ''} ${dayLabel(last.date)}`.trim() : '아직 받은 판본이 없습니다';
 }
-// Telegram's list clock: the time for today, else the date. A date-only source never gains a time.
 function rowTime(raw) {
   const now = new Date(Date.now() + KST);
   const today = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-${String(now.getUTCDate()).padStart(2, '0')}`;
@@ -243,30 +235,10 @@ function rowTime(raw) {
   return Number(year) === now.getUTCFullYear() ? `${month}.${day}` : `${year}.${month}.${day}`;
 }
 
-/** @typedef {'chat'|'articles'|'editions'} RoomKind */
-/** @typedef {{id:string, kind:RoomKind, title?:string, subtitle?:string, messages?:object[], articles?:object[], editions?:object[]}} Room */
-/** @typedef {{generatedAt:string|null, rooms:Room[], token:number, assets:Record<string,string>}} RelayData */
 /** The relay's two URL params as read, before the data can vouch for them.
  * @typedef {{room:string|null, post:string|null}} RawAddress */
 /** A RawAddress the ready data honors: `room` exists, `post` is an article of that articles room.
  * @typedef {{room:string|null, post:string|null}} Address */
-/** @typedef {{topic:string, query:string}} Filters */
-/** Source-order indexes into room.editions and its pages, valid only for `room`.
- * @typedef {{room:string, edition:number, page:number}} EditionCursor */
-/**
- * Only `ready` has panes, so a status can never sit inside a pane the stacked layout hides.
- * @typedef {{kind:'idle'|'loading', pending:RawAddress}
- *   | {kind:'error', pending:RawAddress, message:string}
- *   | {kind:'empty', pending:RawAddress, generatedAt:string|null}
- *   | {kind:'ready', data:RelayData, address:Address, edition:EditionCursor|null}} Phase */
-/** @typedef {{phase:Phase, filters:Filters}} Model */
-/** CSS owns the threshold; JS only reads `--relay-layout` back. @typedef {'split'|'stack'} Layout */
-/**
- * Derived from a ready Model on every commit and never stored.
- * @typedef {{data:RelayData, address:Address, room:Room, pane:'list'|'room', article:object|null,
- *   edition:{index:number, page:number}|null, filters:Filters, filtering:boolean,
- *   shown:object[], byRoom:Map<string, object[]>, mode:'default'|'articles'|'reading'}} View */
-/** @typedef {{kind:'keep'}|{kind:'row', room:string}|{kind:'card', article:string}|{kind:'content'}|{kind:'control', name:'query'|'topic'}} FocusIntent */
 
 const HOME = Object.freeze({ room: null, post: null });
 const NO_FILTERS = Object.freeze({ topic: 'all', query: '' });
@@ -278,7 +250,6 @@ const CONTENT = Object.freeze({ kind: 'content' });
 function parseRelayPayload(json, token, assets) {
   const seen = new Set(), rooms = [];
   for (const room of Array.isArray(json?.rooms) ? json.rooms : []) {
-    // A repeated id would make `[data-room]` and the `room` param ambiguous.
     if (!room || typeof room.id !== 'string' || !room.id || seen.has(room.id)) continue;
     seen.add(room.id);
     rooms.push(ROOM_KINDS.has(room.kind) ? room : { ...room, kind: 'chat' });
@@ -287,7 +258,6 @@ function parseRelayPayload(json, token, assets) {
   return rooms.length ? { kind: 'ready', data: { generatedAt, rooms, token, assets } } : { kind: 'empty', generatedAt };
 }
 
-/** @param {'center'|'page'|'any'} scope @returns {RawAddress|null} null when the entry belongs to another page */
 function readRelayParams(search, scope) {
   const params = new URLSearchParams(search);
   if (scope === 'center' && params.get('center') !== 'relay') return null;
@@ -302,20 +272,18 @@ function serializeAddress(address) {
 const sameAddress = (a, b) => serializeAddress(a) === serializeAddress(b);
 
 /**
- * The navigation port, the only code that touches `history` or `location`.
  * @typedef {{read:() => RawAddress|null, from:() => RawAddress|null,
  *   write:(next:Address, how:'push'|'replace', from?:Address) => void,
  *   back:() => void, subscribe:(listener:(raw:RawAddress) => void) => () => void}} RelayAddressPort
  */
 
-/** Embedded, the relay writes the shell's URL, the one the user sees and shares. @returns {RelayAddressPort} */
 function relayAddressFor(win) {
   if (!win?.history || !win.location) return createMemoryRelayAddress('');
   let target = win, scope = 'page';
   try {
     if (win.parent !== win && new URLSearchParams(win.location.search).get('embedded') === '1'
       && win.parent.location.origin === win.location.origin) { target = win.parent; scope = 'center'; }
-  } catch { /* a cross-origin parent keeps the relay on its own document */ }
+  } catch {}
   let writing = false;
   const read = () => readRelayParams(target.location.search, scope);
   return {
@@ -327,16 +295,13 @@ function relayAddressFor(win) {
     write(next, how, from = HOME) {
       const url = new URL(target.location.href);
       for (const key of RELAY_PARAMS) if (next[key]) url.searchParams.set(key, next[key]); else url.searchParams.delete(key);
-      // `from` proves which screen the entry below shows, so the in-app back may pop it.
       const state = how === 'push' ? { relay: { from: serializeAddress(from) } } : target.history.state;
       writing = true;
-      // A document that may not rewrite its URL keeps the old one and stores no `from`, so leaving replaces.
+      // Chrome refuses URL writes in opaque-origin documents, such as the standalone file opened from disk or a sandboxed frame.
       try { target.history[how === 'push' ? 'pushState' : 'replaceState'](state, '', url); } catch {} finally { writing = false; }
     },
     back: () => target.history.back(),
     subscribe(listener) {
-      // currententrychange also reports the shell's own push of a bare `center=relay`;
-      // popstate only reports traversals. Listening to one keeps each traversal single.
       const source = target.navigation?.addEventListener ? target.navigation : target;
       const type = source === target ? 'popstate' : 'currententrychange';
       const stop = () => source.removeEventListener(type, handler);
@@ -378,7 +343,6 @@ export function createMemoryRelayAddress(search = '') {
   };
 }
 
-/** @param {RawAddress} raw @param {RelayData} data @returns {Address} */
 function normalizeAddress(raw, data) {
   const room = data.rooms.find(item => item.id === raw.room);
   if (!room) return HOME;
@@ -391,7 +355,6 @@ function withAddress(model, address) {
 }
 const filtering = filters => filters.topic !== 'all' || filters.query.trim() !== '';
 const shownMemo = new WeakMap();
-/** @returns {Map<string, object[]>} each room's matching entries in source order */
 function shownByRoom(data, filters) {
   const key = `${filters.topic}\u0000${filters.query}`, memo = shownMemo.get(data);
   if (memo?.key === key) return memo.byRoom;
@@ -410,7 +373,6 @@ function deriveView(model) {
   if (room.kind === 'editions' && shown.length) {
     const editions = relayEntries(room);
     const cursor = phase.edition?.room === room.id && shown.includes(editions[phase.edition.edition]) ? phase.edition : null;
-    // The newest edition is the default, so the row preview and the open room agree on "latest".
     const index = cursor ? cursor.edition : editions.indexOf(shown.at(-1));
     const pages = Array.isArray(editions[index].pages) ? editions[index].pages.length : 0;
     edition = { index, page: cursor ? Math.max(0, Math.min(cursor.page, pages - 1)) : 0 };
@@ -422,7 +384,6 @@ function deriveView(model) {
     mode: article ? 'reading' : room.kind === 'articles' ? 'articles' : 'default',
   };
 }
-/** What the reader sees. Writing history between two views with one key would make a dead Back press. */
 function screenKey(view, layout) {
   const shown = `${view.room.id}\u0000${view.article?.id ?? ''}`;
   if (layout === 'split') return shown;
@@ -432,8 +393,6 @@ function leaveTarget(view) {
   if (view.article) return { room: view.room.id, post: null };
   return view.address.room === null ? null : HOME;
 }
-/** history.back() only when the entry's `from` proves the entry below shows the target screen,
- * so the in-app back never lands on another page. @returns {'back'|'replace'} */
 function leaveStep(from, target, model, layout) {
   if (!from) return 'replace';
   const below = deriveView(withAddress(model, normalizeAddress(from, model.phase.data)));
@@ -445,7 +404,6 @@ function focusAfterTraversal(prev, next, layout) {
   const entered = next.article || (layout === 'stack' && next.pane === 'room');
   return entered && screenKey(prev, layout) !== screenKey(next, layout) ? CONTENT : KEEP;
 }
-/** Entering a room shows its newest entry. Filters, readers and editions keep their own position. */
 function revealsLatest(prev, next, layout) {
   if (next.article || next.room.kind === 'editions') return false;
   if (!prev) return true;
@@ -468,7 +426,6 @@ function renderPhase(phase) {
   return `<div class="relay-blank-state"><p class="relay-empty" role="status">${esc(message)}</p>${settled ? '<button type="button" class="relay-retry" data-relay-action="reload">다시 불러오기</button>' : ''}${clock ? `<p class="relay-blank-clock"><span>15분마다 갱신</span> <time datetime="${esc(phase.generatedAt)}">${esc(clock)}</time></p>` : ''}</div>`;
 }
 
-/** Rendered once per data load. The form is never rebuilt while ready, so IME composition and an open select survive. */
 function renderFrame(view) {
   const { data, filters } = view, entries = data.rooms.flatMap(room => relayEntries(room));
   const topics = entries.map(entry => classifyRelayEntry(entry).topics.map(match => match.id));
@@ -492,8 +449,6 @@ function renderFrame(view) {
   </div>`;
 }
 
-/** One row per room in data order. No <img>, so a room renders only its own images. No unread badge:
- * the data has no unread counts, and a count pill in that place reads as one. */
 function renderRows(view) {
   return view.data.rooms.map(room => {
     const total = relayEntries(room).length, raw = entryTime(relayEntries(room).at(-1));
@@ -655,7 +610,6 @@ function articleStream(view, imageSource) {
   return `<div class="relay-feed"><ol class="relay-articles">${view.shown.map(article => articleCard(article, imageSource)).join('')}</ol></div>`;
 }
 
-/** `data-edition` is a source index, so a filter cannot shift which edition a chip opens. */
 function editionDetail(item, view, imageSource) {
   if (!view.edition) return view.filtering ? NO_MATCHES : '<p class="relay-empty">아직 받은 판본이 없습니다.</p>';
   const editions = relayEntries(item), { index, page: pageIndex } = view.edition, edition = editions[index];
@@ -680,7 +634,6 @@ function editionDetail(item, view, imageSource) {
     </div>`;
 }
 
-/* Focus that survives a region repaint, keyed by what the control does rather than by node identity. */
 const FOCUS_TARGETS = [
   ['[data-room]', el => el.dataset.room],
   ['[data-article]', el => el.dataset.article],
@@ -705,13 +658,9 @@ const ROW_KEYS = new Set(['ArrowDown', 'ArrowUp', 'Home', 'End']);
 export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady, address } = {}) {
   if (!root) throw new TypeError('relay view root is required');
   const port = address ?? relayAddressFor(root.ownerDocument?.defaultView);
-  /** @type {Model} */
   let model = { phase: { kind: 'idle', pending: port.read() ?? HOME }, filters: NO_FILTERS };
-  /** @type {View|null} */
   let view = null;
   let token = 0, fetching = false, readySent = false, version = 0;
-  // Tracked on focusin and cleared only when focus moves to another element outside the relay,
-  // so the shell's inert blip on a history traversal cannot erase it.
   let lastFocus = null;
   let streamBeforeReader = null;
   const painted = { frame: null, rows: null, selected: null, room: null };
@@ -723,7 +672,6 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     return style?.getPropertyValue('--relay-layout').trim() === 'stack' ? 'stack' : 'split';
   }
 
-  /** The only writer of the screen. Committing the same model twice paints nothing the second time. */
   function commit(next, { focus = KEEP, reveal = false, deferFocus = false } = {}) {
     const prev = view, top = root.querySelector('.relay-detail-body')?.scrollTop ?? 0;
     model = next;
@@ -739,7 +687,6 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     else applyFocus(focus);
   }
 
-  /** Region updates by key. @returns {boolean} whether the room region was rebuilt */
   function paint(next) {
     const { phase } = model;
     root.dataset.relayState = phase.kind === 'idle' ? 'loading' : phase.kind;
@@ -794,7 +741,6 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
   function rove(row) {
     for (const item of root.querySelectorAll('.relay-room-item')) item.setAttribute('tabindex', item === row ? '0' : '-1');
   }
-  /** @param {FocusIntent} intent */
   function applyFocus(intent) {
     if (intent.kind === 'keep') {
       const doc = root.ownerDocument, active = doc.activeElement;
@@ -811,7 +757,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     target?.focus({ preventScroll: intent.kind === 'content' });
   }
 
-  const signalReady = () => { if (!readySent) { readySent = true; try { onReady?.(); } catch { /* optional */ } } };
+  const signalReady = () => { if (!readySent) { readySent = true; try { onReady?.(); } catch {} } };
 
   async function load() {
     if (fetching) return;
@@ -819,7 +765,6 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     if (model.phase.kind !== 'ready') commit({ ...model, phase: { kind: 'loading', pending: model.phase.pending } });
     let parsed;
     try {
-      // The embedded path never awaits: the standalone build and the state tests settle synchronously.
       const inline = embeddedData?.();
       if (inline) {
         const assets = embeddedAssets?.();
@@ -865,27 +810,23 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
   function leave(layout = readLayout()) {
     const target = leaveTarget(view);
     if (!target) return;
-    // The traversal comes back through adopt(), synchronously for the memory port.
     if (leaveStep(port.from(), target, model, layout) === 'back') { port.back(); return; }
     port.write(target, 'replace');
     const next = withAddress(model, target), nextView = deriveView(next);
     commit(next, { focus: focusAfterTraversal(view, nextView, layout), reveal: revealsLatest(view, nextView, layout) });
   }
 
-  /** An address change the relay did not write: Back, Forward, the shell's nav push. */
   function adopt(raw) {
     if (model.phase.kind !== 'ready') { model = { ...model, phase: { ...model.phase, pending: raw } }; return; }
     const normalized = normalizeAddress(raw, model.phase.data);
     if (sameAddress(normalized, model.phase.address)) return;
     if (!sameAddress(normalized, raw)) port.write(normalized, 'replace');
     const next = withAddress(model, normalized), layout = readLayout(), nextView = deriveView(next);
-    // Deferred past the shell's own popstate re-run of open(), whose inert toggle would drop it.
     commit(next, { focus: focusAfterTraversal(view, nextView, layout), reveal: revealsLatest(view, nextView, layout), deferFocus: true });
   }
 
   function applyFilters(filters, origin) {
     let next = { ...model, filters };
-    // Replace, not push, so Back never reopens a reader the filter just closed.
     if (view.article) { port.write({ room: view.room.id, post: null }, 'replace'); next = withAddress(next, { room: view.room.id, post: null }); }
     commit({ ...next, phase: { ...next.phase, edition: null } }, { focus: { kind: 'control', name: origin } });
   }

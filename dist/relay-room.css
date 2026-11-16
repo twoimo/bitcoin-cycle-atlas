@@ -1,9 +1,6 @@
-/* 릴레이 콘텐츠 방(Relay room): 텔레그램 웹의 채널 목록과 방을 아틀라스 토큰으로 그린다. */
 #relay-view[hidden]{display:none!important}
 body[data-page="relay"]{overflow:hidden}
 
-/* The relay's own box picks the layout, not the viewport. Embedded in the chart shell's iframe or
-   beside the dashboard sidebar, the box is narrower than the device. */
 .relay-room{
   container:relay/inline-size;
   display:grid;grid-template:minmax(0,1fr)/minmax(0,1fr);
@@ -13,9 +10,7 @@ body[data-page="relay"]{overflow:hidden}
 }
 .relay-room *{box-sizing:border-box}
 
-/* --relay-layout is the one value JS reads back. Telegram Web K docks a 360px list (320px at least)
-   beside the chat and caps the message column at 696px (tweb mediaSizes.ts, updateColumnWidths.ts).
-   A narrow split gives the list its 320px floor first, so the room keeps 520px. */
+/* Telegram Web K geometry from tweb updateColumnWidths.ts. The list is 360px with a 320px minimum, and the message column is 696px. */
 .relay-panes{
   --relay-layout:split;
   --relay-list-width:clamp(320px,100cqi - 520px,360px);
@@ -68,7 +63,6 @@ body[data-page="relay"]{overflow:hidden}
 .relay-rooms-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 16px;border-top:1px solid var(--border);color:var(--muted);font-size:var(--type-meta);font-variant-numeric:tabular-nums}
 .relay-rooms-foot time{color:var(--text)}
 
-/* 방 머리말과 본문 */
 .relay-detail{container:relay-pane/inline-size;display:grid;grid-template-rows:auto auto minmax(0,1fr);min-width:0;min-height:0;background:var(--bg)}
 .relay-detail-head{display:flex;align-items:center;gap:12px;min-width:0;height:56px;padding:0 16px;border-bottom:1px solid var(--border);background:var(--surface)}
 .relay-peer{display:grid;gap:1px;min-width:0;flex:1}
@@ -81,12 +75,10 @@ body[data-page="relay"]{overflow:hidden}
 :is(.relay-room-back,.relay-detail-back):hover{background:var(--surface-hover)}
 :is(.relay-room-back,.relay-detail-back) .icon{width:20px;height:20px}
 .relay-filter-note{margin:0;padding:6px 16px;border-bottom:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:var(--type-meta);line-height:1.4;overflow-wrap:anywhere}
-/* The only content scroll owner. Its clip keeps scrolled paint below the page heading. */
 .relay-detail-body{min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;clip-path:inset(0);padding:0 16px;background:var(--bg);scrollbar-width:thin;scrollbar-color:var(--subtle) transparent}
 .relay-empty{margin:0;padding:24px;border:1px solid var(--border);border-radius:2px;background:var(--surface);color:var(--muted);font-size:var(--type-body-sm);line-height:var(--copy-leading);overflow-wrap:anywhere}
 .relay-detail-body>.relay-empty{max-width:var(--relay-column);margin:16px auto}
 
-/* 텔레그램 대화: 가운데 칸, 오래된 글이 위, 최신 글이 아래 */
 .relay-chat{list-style:none;margin:0 auto;padding:8px 0 24px;display:grid;grid-template-columns:minmax(0,1fr);align-content:end;gap:6px;width:100%;max-width:var(--relay-column);min-height:100%}
 .relay-day{position:sticky;top:0;z-index:2;display:flex;justify-content:center;padding:8px 0;background:var(--bg);pointer-events:none}
 .relay-day span{padding:4px 12px;border:1px solid var(--border);border-radius:var(--pill-radius);background:var(--surface);color:var(--muted);font-size:var(--type-meta);font-weight:550;letter-spacing:0;box-shadow:none}
@@ -129,7 +121,6 @@ body[data-page="relay"]{overflow:hidden}
 .relay-preview-description{display:-webkit-box;overflow:hidden;color:var(--muted);font-size:var(--type-body-sm);line-height:var(--copy-leading);-webkit-box-orient:vertical;-webkit-line-clamp:3}
 .relay-preview-url{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:var(--type-meta)}
 
-/* 인생의 방: 대화와 같은 칸의 채널 글 목록 */
 .relay-feed{width:100%;max-width:var(--relay-column);margin:0 auto;padding:16px 0 24px}
 .relay-articles{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .relay-article{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:16px;align-items:start;width:100%;min-height:44px;padding:14px 16px;border:1px solid var(--border);border-radius:2px;background:var(--surface-raised);color:inherit;text-align:left;cursor:pointer;font:inherit;transition:background .15s ease,border-color .15s ease}
@@ -145,7 +136,6 @@ body[data-page="relay"]{overflow:hidden}
 .relay-article:hover .relay-article-thumb img{opacity:.88}
 .relay-article-thumb--empty{display:none}
 
-/* 글 읽기: 680px 본문 칸 */
 .relay-reader{width:100%;max-width:680px;margin:0 auto;padding:32px 0 56px;color:var(--text)}
 .relay-reader-head>h2{margin:0;color:var(--text);font:700 32px/40px var(--font);letter-spacing:-.014em;word-break:keep-all;overflow-wrap:break-word}
 .relay-reader-byline{display:flex;align-items:center;gap:12px;margin-top:24px;padding-bottom:24px;border-bottom:1px solid var(--border)}
@@ -170,7 +160,6 @@ body[data-page="relay"]{overflow:hidden}
 .relay-reader-foot a{display:inline-flex;align-items:center;min-width:44px;min-height:44px;max-width:100%;color:var(--text);text-decoration:none;overflow-wrap:anywhere}
 .relay-reader-foot a:hover{text-decoration:underline;text-underline-offset:3px}
 
-/* 모바일한경: 판본과 면 넘기기 */
 .relay-paper{display:grid;gap:12px;width:100%;max-width:960px;min-width:0;margin:0 auto;padding:16px 0 24px}
 .relay-paper-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
 .relay-edition-list{display:flex;flex-wrap:wrap;gap:8px;min-width:0}
@@ -187,7 +176,6 @@ body[data-page="relay"]{overflow:hidden}
 :is(.relay-edition-chip,.relay-page-chip):hover{border-color:var(--border-strong);color:var(--text)}
 :is(.relay-edition-chip,.relay-page-chip).active{border-color:var(--accent-ink);background:var(--accent-soft);color:var(--accent-ink);font-weight:600}
 
-/* R22: 원문 키워드 분류 근거 */
 .relay-topic-evidence{min-width:0;max-width:100%;color:var(--muted);font-size:12px;line-height:1.5;overflow-wrap:break-word;word-break:keep-all}
 .relay-topic-evidence summary{min-height:44px;align-content:center;color:var(--text);cursor:pointer}
 .relay-topic-evidence summary:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
@@ -195,8 +183,6 @@ body[data-page="relay"]{overflow:hidden}
 .relay-topic-evidence p{margin:4px 0}
 .relay-topic-evidence .relay-topic-evidence-quote{margin:3px 0 4px;padding:0 0 0 8px;border-radius:0;background:transparent;color:inherit;font-size:inherit;line-height:inherit}
 
-/* Below the split width the list and the room take turns. The URL picks which (root[data-relay-pane]),
-   and the open room fills the whole relay box. */
 @container relay (width < 840px){
   .relay-panes{--relay-layout:stack;--relay-list-width:360px;--relay-media-max:340px;grid-template-columns:minmax(0,1fr)}
   .relay-rooms{border-right:0}
@@ -206,7 +192,6 @@ body[data-page="relay"]{overflow:hidden}
   .relay-room-item[aria-current="true"]{background:transparent}
   .relay-room-item[aria-current="true"]:hover{background:var(--surface-hover)}
   .relay-room-item[aria-current="true"] .relay-room-name{color:var(--text)}
-  /* Telegram's medium band keeps the list at its docked width beside an empty chat area. */
   @container relay (width >= 600px){
     .relay-room[data-relay-pane="list"] .relay-panes{grid-template-columns:var(--relay-list-width) minmax(0,1fr)}
     .relay-room[data-relay-pane="list"] .relay-rooms{border-right:1px solid var(--border)}
@@ -214,7 +199,6 @@ body[data-page="relay"]{overflow:hidden}
   }
 }
 
-/* Density follows the room pane, so a narrow split pane and a phone-width room read the same. */
 @container relay-pane (width < 560px){
   .relay-detail-head{gap:8px;padding:0 8px}
   .relay-peer-updated{display:none}
@@ -237,7 +221,6 @@ body[data-page="relay"]{overflow:hidden}
 
 .relay-room :is(button,a,.relay-detail-body):focus-visible{outline:2px solid var(--focus);outline-offset:-3px}
 
-/* 불러오는 중·오류·빈 상태: 칸 없이 상자 전체에 하나 */
 .relay-blank-state{display:grid;align-content:start;justify-items:start;gap:12px;min-width:0;padding:20px}
 .relay-blank-clock{margin:0;color:var(--muted);font-size:var(--type-meta);font-variant-numeric:tabular-nums}
 .relay-retry{min-width:44px;min-height:44px;padding:8px 12px;border:1px solid var(--border-strong);border-radius:var(--pill-radius);background:var(--surface);color:var(--text);font:inherit;font-size:var(--type-meta);cursor:pointer}

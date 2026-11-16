@@ -1,7 +1,4 @@
 #!/usr/bin/env node
-// Native Chrome check of the Telegram-style relay: list and room panes, the `room` URL param,
-// browser Back, keyboard rows and Esc, and the loading, error, empty and ready states.
-// Real input only (CDP mouse, keys and history traversal); no DOM, style or state overrides.
 import {spawn} from 'node:child_process';
 import {createServer} from 'node:http';
 import {createHash} from 'node:crypto';
@@ -49,8 +46,6 @@ function serve(){
   return new Promise((done,reject)=>{server.once('error',reject);server.listen(0,'127.0.0.1',()=>done(server));});
 }
 
-// Runs in the page. Finds the relay document (the visible center frame, else the page itself)
-// and measures geometry, scroll owners, URL and focus without changing anything.
 function snapshot(){
   const frame=document.querySelector('.atlas-center-frame:not([hidden])');
   const doc=frame?.contentDocument||document,win=doc.defaultView,relay=doc.querySelector('.relay-room');
@@ -206,7 +201,6 @@ async function keyboardCase(row,layout){
   row.steps.keyboard=steps;
 }
 
-// Loading, error, empty and ready states of the embedded relay, with the data request held or failed.
 async function stateCase(viewport){
   const row={route:'embedded-states',viewport,failures:[],steps:{}};report.cases.push(row);let context,requests=0,held=null;
   const name=`states-${viewport.width}x${viewport.height}`;

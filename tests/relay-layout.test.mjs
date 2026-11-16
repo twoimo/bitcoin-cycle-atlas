@@ -19,9 +19,7 @@ const sample = () => ({ generated_at: '2026-11-13T12:00:00+09:00', rooms: [
   ] },
 ] });
 
-// Linkedom has no focus model or CSS, and every parseHTML window shares its properties. Both stubs
-// therefore key on the document: focus() sets activeElement and fires focusin as a browser does,
-// and getComputedStyle reports the `--relay-layout` band the container query would pick.
+// Linkedom has no focus model or CSS, and every parseHTML window shares its properties.
 const focused = new WeakMap(), stacked = new WeakSet();
 function trackFocus(window, document) {
   Object.defineProperty(document, 'activeElement', { configurable: true, get: () => focused.get(document) ?? document.body });
@@ -40,7 +38,6 @@ async function mount({ search = '', stack = false, data = sample() } = {}) {
   let resolve; const ready = new Promise(done => { resolve = done; });
   initRelayRoomView({ root, address, embeddedData: () => JSON.stringify(data), onReady: resolve }).show(true);
   await ready;
-  // A string, so a failed assertion never asks node to diff a whole DOM graph.
   const focus = () => {
     const el = document.activeElement;
     if (!el || !root.contains(el)) return 'outside the relay';
@@ -234,8 +231,7 @@ test('each row previews and dates its newest entry, and the editions room opens 
   assert.match(time.textContent, /^\d{2}:\d{2}$/, 'an entry from today shows its time');
 });
 
-// A History double with the browser's semantics: a push drops forward entries, and back() reports
-// the traversal later through popstate. Linkedom windows share properties, so each test removes it.
+// Linkedom windows share properties, so each test removes it.
 function installHistory(window, href, { refuseWrites = false } = {}) {
   const entries = [{ url: href, state: null }];
   let index = 0, backs = 0;
