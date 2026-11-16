@@ -136,6 +136,39 @@ test('stacked, opening a room focuses its content and Esc returns focus to that 
   assert.equal(focus(), 'row telegram');
 });
 
+function deferBack(address) {
+  const requested = [], back = address.back;
+  address.back = () => { requested.push(back); };
+  return { requested: () => requested.length, land: () => { while (requested.length) requested.shift()(); } };
+}
+
+test('a second back before the traversal lands requests no second history step', async () => {
+  const { root, window, address, active } = await mount({ stack: true });
+  const traversal = deferBack(address);
+  click(root, window, '[data-room="telegram"]');
+  click(root, window, '[data-relay-action="room-back"]');
+  click(root, window, '[data-relay-action="room-back"]');
+  assert.equal(traversal.requested(), 1, 'a double tap asks for one Back');
+  traversal.land();
+  assert.deepEqual([address.href, address.index, root.dataset.relayPane], ['', 0, 'list']);
+
+  click(root, window, '[data-room="naver"]');
+  key(active(), window, 'Escape');
+  key(active(), window, 'Escape');
+  assert.equal(traversal.requested(), 1, 'a landed traversal allows the next Back, once');
+  traversal.land();
+  assert.deepEqual([address.href, address.index, root.dataset.relayPane], ['', 0, 'list']);
+
+  const split = await mount(), reader = deferBack(split.address);
+  click(split.root, split.window, '[data-room="naver"]');
+  click(split.root, split.window, '[data-article="n1"]');
+  click(split.root, split.window, '[data-relay-action="article-back"]');
+  search(split.root, split.window, '세금');
+  assert.equal(reader.requested(), 1, 'a filter applied while the Back is pending asks for no second one');
+  reader.land();
+  assert.deepEqual([split.address.href, split.address.index], ['?room=naver', 1]);
+});
+
 test('Esc closes a reader onto its card, then in split focuses the room row without navigating', async () => {
   const { root, window, address, focus, active } = await mount();
   click(root, window, '[data-room="naver"]');

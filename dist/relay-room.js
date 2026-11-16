@@ -663,6 +663,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
   let token = 0, fetching = false, readySent = false, version = 0;
   let lastFocus = null;
   let streamBeforeReader = null;
+  let backPending = false;
   const painted = { frame: null, rows: null, selected: null, room: null };
   const repaintAll = frame => Object.assign(painted, { frame, rows: null, selected: null, room: null });
 
@@ -812,16 +813,23 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     commit(next, { focus: CONTENT });
   }
 
+  function requestBack() {
+    if (backPending) return;
+    backPending = true;
+    port.back();
+  }
+
   function leave(layout = readLayout()) {
     const target = leaveTarget(view);
-    if (!target) return;
-    if (leaveStep(port.from(), target, model, layout) === 'back') { port.back(); return; }
+    if (!target || backPending) return;
+    if (leaveStep(port.from(), target, model, layout) === 'back') { requestBack(); return; }
     port.write(target, 'replace');
     const next = withAddress(model, target), nextView = deriveView(next);
     commit(next, { focus: focusAfterTraversal(view, nextView, layout), reveal: revealsLatest(view, nextView, layout) });
   }
 
   function adopt(raw) {
+    backPending = false;
     if (model.phase.kind !== 'ready') { model = { ...model, phase: { ...model.phase, pending: raw } }; return; }
     const normalized = normalizeAddress(raw, model.phase.data);
     if (sameAddress(normalized, model.phase.address)) return;
@@ -836,7 +844,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     if (step === 'replace') port.write(target, 'replace');
     const next = target ? withAddress({ ...model, filters }, target) : { ...model, filters };
     commit({ ...next, phase: { ...next.phase, edition: null } }, { focus: { kind: 'control', name: origin } });
-    if (step === 'back') port.back();
+    if (step === 'back') requestBack();
   }
 
   function setCursor(edition, page) {
