@@ -392,3 +392,28 @@ for (const symbol of ['TQQQ', 'HYPE'] as const) for (const ctrlKey of [false, tr
   assert(daySpan(zoomed) < daySpan(before), `the wheel zooms in: ${JSON.stringify({ before, zoomed })}`);
   assert(Math.abs(pointed - (utcDay(zoomed.start) + daySpan(zoomed) * fraction)) <= 1, `the date under the pointer stays under it: ${JSON.stringify({ before, zoomed })}`);
 });
+
+const chartHelp = [
+  ['휠 / Ctrl + 휠', '가리킨 날짜를 유지하며 확대·축소'],
+  ['+ / −', '시간 구간 확대 / 축소'],
+  ['두 손가락 벌리기 / 모으기', '시간 구간 확대 / 축소'],
+  ['이동 도구(H) 드래그', '날짜 위치 이동'],
+  ['가격축 드래그 / 휠', '가격 눈금 조절'],
+  ['가격축 두 번 클릭', '가격 자동 맞춤'],
+  ['시간축 드래그', '표시 기간 조절'],
+  ['C / H / M', '십자선 / 이동 / 두 점 측정'],
+  ['← / →', '이전 / 다음 관측'],
+  ['Shift + ← / →', '이전 / 다음 구간'],
+  ['0 / Alt+R / 두 번 클릭', '전체 범위'],
+  ['Alt+G / Alt+M', '날짜 이동 / 자석'],
+  ['Ctrl/⌘ Z', '실행 취소'],
+  ['Shift Ctrl/⌘ Z', '다시 실행'],
+];
+for (const symbol of ['TQQQ', 'HYPE'] as const) test(`${symbol} help lists the inputs the hosted chart handles`, async t => {
+  const chart = await hostedChart(t, '', symbol);
+  await chart.fixture.message({ kind: 'atlas:center-command', symbol, epoch: 7, action: 'pane', value: 'help' });
+  const list = chart.fixture.document.querySelector('.rsi-workbench-panel .rsi-data-list');
+  assert(list, 'the help pane is open');
+  const rendered = [...list.querySelectorAll('dt')].map(term => [term.textContent, term.nextElementSibling?.textContent]);
+  assert.deepEqual(rendered, chartHelp, 'each help line describes an input the chart handles, as the tests above check');
+});
