@@ -24,7 +24,7 @@ test('the actual formal fixture runs in isolation with its complete UI dependenc
   });
   assert.ifError(result.error);
   assert.equal(result.status, 0, result.stdout + result.stderr);
-  assert.match(result.stdout, /tests 36/);
+  assert.match(result.stdout, /tests 40/);
   assert.match(result.stdout, /fail 0/);
 });
 

@@ -98,17 +98,32 @@ for (const symbol of ['MSTR', 'BMNR']) {
     assert.deepEqual(f.events, ['atlas:ready']);
   });
 
-  test(`${symbol} ignores a paint failure delivered to a suspended document`, { timeout: 2000 }, async () => {
+  test(`${symbol} holds a paint failure delivered to a suspended document until the page returns`, { timeout: 2000 }, async () => {
     const f = await equityViewFixture(symbol, { manualPaint: true });
     f.reply(0, equityPayload(symbol, 1)); await f.microtasks(); await f.frame();
     f.hide(); f.paints[0].fail('Funnest chart did not paint within 5 seconds');
     f.reply(1, { revision: 1 }); await f.settle(); await f.initialization;
     assert.equal(f.document.documentElement.dataset.boot, 'loading', 'a hidden paint failure must not release the boot shell');
     assert.deepEqual(f.events, []);
-    f.show(); await complete(f, symbol, 2, 2);
-    assert.doesNotMatch(f.status(), /차트 표시 실패/, 'a hidden paint failure must not publish a chart error');
-    f.paints.at(-1).confirm(); await f.microtasks();
-    assert.equal(f.document.documentElement.dataset.boot, 'ready');
+    f.show(); await f.microtasks(); await f.frame();
+    assert.equal(f.document.documentElement.dataset.boot, 'ready', 'pageshow must publish the paint failure that arrived while hidden');
+    assert.match(f.status(), /차트 표시 실패/);
+    await complete(f, symbol, 2, 2);
+    f.paints.at(-1).confirm(); await f.settle();
+    assert.doesNotMatch(f.status(), /차트 표시 실패/, 'a confirmed repaint must clear the earlier paint failure');
+    assert.deepEqual(f.events, ['atlas:ready']);
+  });
+
+  test(`${symbol} releases a paint that Funnest confirmed while the document was suspended`, { timeout: 2000 }, async () => {
+    const f = await equityViewFixture(symbol, { manualPaint: true });
+    await complete(f, symbol, 0, 1); await f.initialization;
+    f.hide(); f.paints[0].confirm(); await f.settle();
+    assert.equal(f.document.documentElement.dataset.boot, 'loading', 'a hidden paint confirmation must not release the boot shell');
+    assert.deepEqual(f.events, []);
+    f.show(); await f.settle();
+    assert.equal(f.document.documentElement.dataset.boot, 'ready', 'a paint confirmed while hidden must release the boot shell after pageshow');
+    assert.equal(f.app.inert, false);
+    assert.equal(f.requests.length, 2, 'a loaded projection must not start a reload');
     assert.deepEqual(f.events, ['atlas:ready']);
   });
 
@@ -201,6 +216,16 @@ for (const symbol of ['MSTR', 'BMNR']) {
     assert.equal(f.latest().range.start, range.start);
     assert.equal(f.latest().range.end, range.end);
     assert.equal(f.calculations.length, 1);
+  });
+
+  test(`${symbol} keeps a pan or zoom made on the chart while the projection is pending`, { timeout: 2000 }, async () => {
+    const f = await equityViewFixture(symbol);
+    f.reply(0, equityPayload(symbol, 1)); await f.microtasks(); await f.frame();
+    const shown = f.latest().range, chosen = { start: shown.start + 2 * 86400, end: shown.start + 4 * 86400 };
+    f.gesture(chosen);
+    f.reply(1, { revision: 1 }); await f.settle(); await f.initialization;
+    assert.equal(f.latest().forecast.scenario, 'base');
+    assert.deepEqual(f.latest().nativeRange, { from: chosen.start * 1000, to: chosen.end * 1000 }, 'a pan or zoom on the chart must survive the projection');
   });
 
   test(`${symbol} keeps observed prices after coin failure and recovers on retry`, { timeout: 2000 }, async () => {

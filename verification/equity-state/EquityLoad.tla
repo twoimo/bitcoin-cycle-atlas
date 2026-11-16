@@ -1,10 +1,11 @@
 ------------------------------ MODULE EquityLoad ------------------------------
 EXTENDS Naturals
 
-\* Line citations refer to dist/equity-view.js at 856e77422e0a43a77470aed2e3f64fa1e522880b
+\* Line citations refer to dist/equity-view.js at 1722f1fc7aa29edb4f9a9246b15f885bb9e14320
 \* unless another file is named.
 CONSTANTS RequestLimit, BootOnRender, RespectSuspension, PreserveRange,
-          GuardPrices, GuardProjection, GuardErrors, GuardPaint, ClearProjection
+          GuardPrices, GuardProjection, GuardErrors, GuardPaint, ClearProjection,
+          MarkGesture, RereadPaint
 Ids == 1..RequestLimit
 Phases == {"unused", "prices", "coin", "paint1", "paint2", "project", "done"}
 VARIABLES issued, active, phase, attached, loading, prices, projection,
@@ -21,8 +22,8 @@ vars == <<issued, active, phase, attached, loading, prices, projection,
 \* mounted: a Funnest mount exists (line 197, state.funnestMount). orphan: a destroyed
 \* mount may still owe a paint confirmation (line 166, mount.ready()). funnestReady and
 \* chartError are state.funnestReady and state.chartError. discarded: Funnest confirmed
-\* the paint while the document was suspended, the view dropped that confirmation and
-\* the loading shell is still up.
+\* the paint while the document was suspended, the view returned without acting on
+\* that confirmation and the loading shell is still up.
 \* painted: the prices of the last render of a chart whose paint Funnest confirmed.
 \* The model does not count confirmations or track which series Funnest holds. One may
 \* settle whenever a chart is mounted, and a render of a mounted chart may start a watch.
@@ -180,14 +181,15 @@ CanRender == (attached \/ ~RespectSuspension) /\ ~obscured
 \* Lines 187-211 the rest of render() is one synchronous body with three callers: the
 \* scheduled frame (line 212), the paint confirmation (line 166) and the last
 \* initialization frame (line 288). confirmed and failed are state.funnestReady and
-\* state.chartError on entry, dropped is discarded on entry and legacy is the original
-\* boot order's unconditional release.
+\* state.chartError on entry, dropped is discarded on entry, legacy is the original
+\* boot order's unconditional release and visible says that the document is attached
+\* when the body runs.
 \* Without a series, line 187 releases only for a price error. No mount exists then,
 \* because prices never clear. With a series, line 197 mounts Funnest or hands a
 \* mounted chart a changed series. Each starts a watch that clears state.funnestReady
 \* (line 166). Line 211 releases only while that flag is set, so a chart whose
-\* confirmation the view dropped is rendered without a release.
-RenderBody(confirmed, failed, dropped, legacy) ==
+\* confirmation the view has not acted on is rendered without a release.
+RenderBody(confirmed, failed, dropped, legacy, visible) ==
   LET series == prices > 0 \* line 187 current()
       apply == UrlApplies
   IN \E watch \in IF ~series THEN {FALSE} ELSE IF mounted THEN BOOLEAN ELSE {TRUE}: \* line 197
@@ -197,7 +199,7 @@ RenderBody(confirmed, failed, dropped, legacy) ==
        IN /\ painted' = IF shown THEN prices ELSE painted
           /\ errorPainted' = IF series THEN failed ELSE priceError
           /\ ready' = (ready \/ release)
-          /\ hiddenReady' = (hiddenReady \/ (~ready /\ release /\ ~attached))
+          /\ hiddenReady' = (hiddenReady \/ (~ready /\ release /\ ~visible))
           /\ funnestReady' = IF series THEN usable ELSE confirmed
           /\ discarded' = (dropped /\ ~watch /\ ~release)
           /\ mounted' = (mounted \/ series)
@@ -209,7 +211,7 @@ RenderBody(confirmed, failed, dropped, legacy) ==
 Render ==
   /\ renderPending /\ CanRender
   /\ renderPending' = FALSE
-  /\ RenderBody(funnestReady, chartError, discarded, FALSE)
+  /\ RenderBody(funnestReady, chartError, discarded, FALSE, attached)
   /\ UNCHANGED <<issued, active, phase, attached, loading, prices, projection, priceError,
                  forecastError, initialFrameDone, staleWrite, frequency, obscured,
                  orphan, chartError, rangeLost>>
@@ -231,7 +233,7 @@ InitialFrame ==
   /\ ~initialFrameDone
   /\ initialFrameDone' = TRUE
   /\ IF CanRender
-       THEN RenderBody(funnestReady, chartError, discarded, ~BootOnRender)
+       THEN RenderBody(funnestReady, chartError, discarded, ~BootOnRender, attached)
        ELSE UNCHANGED <<painted, errorPainted, ready, hiddenReady, funnestReady, discarded,
                         mounted, urlRange, customRange, range>>
   /\ UNCHANGED <<issued, active, phase, attached, loading, prices, projection, priceError,
@@ -239,16 +241,16 @@ InitialFrame ==
                  orphan, chartError, rangeLost>>
 
 \* Line 166 mount.ready() resolves with painted pixels for the current mount
-\* (src/charts/funnest-chart-runtime.js:482). The continuation returns while the
-\* document is suspended and keeps no record of the confirmation. Otherwise it clears
-\* the chart error, sets state.funnestReady, cancels the queued frame and calls
-\* render() itself.
+\* (src/charts/funnest-chart-runtime.js:483). The continuation returns while the
+\* document is suspended and keeps no record of the confirmation. Show reads that
+\* result again. Otherwise the continuation clears the chart error, sets
+\* state.funnestReady, cancels the queued frame and calls render() itself.
 PaintConfirmed ==
   /\ mounted
   /\ IF attached \/ ~GuardPaint \* line 166
        THEN /\ chartError' = FALSE /\ renderPending' = FALSE
             /\ IF CanRender
-                 THEN RenderBody(TRUE, FALSE, FALSE, FALSE)
+                 THEN RenderBody(TRUE, FALSE, FALSE, FALSE, attached)
                  ELSE /\ funnestReady' = TRUE /\ discarded' = FALSE
                       /\ UNCHANGED <<painted, errorPainted, ready, hiddenReady, mounted,
                                      urlRange, customRange, range>>
@@ -261,7 +263,7 @@ PaintConfirmed ==
 
 \* Line 166 the .catch continuation: ready() rejects for the current mount at the
 \* runtime's five-second limit or on a canvas read error
-\* (src/charts/funnest-chart-runtime.js:469, 483). The .then branch without painted
+\* (src/charts/funnest-chart-runtime.js:470, 484). The .then branch without painted
 \* pixels writes the same. Both return while the document is suspended. Otherwise they
 \* publish the chart error and readiness directly, then schedule.
 PaintFails ==
@@ -277,7 +279,7 @@ PaintFails ==
                  forecastError, painted, errorPainted, initialFrameDone, staleWrite,
                  frequency, customRange, range, obscured, urlRange, mounted, orphan, rangeLost>>
 
-\* src/charts/funnest-chart-runtime.js:471 a destroyed mount rejects its pending
+\* src/charts/funnest-chart-runtime.js:472 a destroyed mount rejects its pending
 \* ready(). Line 166 compares state.funnestMount with the mount that owns the
 \* continuation and returns.
 OrphanSettles ==
@@ -305,12 +307,26 @@ Hide ==
                  obscured, urlRange, mounted, orphan, funnestReady, chartError, discarded, rangeLost>>
 
 \* Line 285 pageshow resumes the document; Load models a missing projection retry.
+\* With a mounted chart whose paint is not confirmed, it first starts the paint watch
+\* again (line 166). mount.ready() returns its settled promise until the data changes
+\* (src/charts/funnest-chart-runtime.js:466-468 and 498), so the continuation for a
+\* confirmation that arrived while suspended runs in the same task, before any frame.
+\* It cancels the frame that the handler queued and calls render() itself. A failure
+\* that arrived while suspended is read the same way. PaintFails after Show covers it.
 Show ==
-  /\ attached' = TRUE /\ renderPending' = TRUE
+  /\ attached' = TRUE
+  /\ IF RereadPaint /\ mounted /\ ~funnestReady /\ discarded \* line 285
+       THEN /\ chartError' = FALSE /\ renderPending' = FALSE
+            /\ IF ~obscured \* line 187
+                 THEN RenderBody(TRUE, FALSE, FALSE, FALSE, TRUE)
+                 ELSE /\ funnestReady' = TRUE /\ discarded' = FALSE
+                      /\ UNCHANGED <<painted, errorPainted, ready, hiddenReady, mounted,
+                                     urlRange, customRange, range>>
+       ELSE /\ renderPending' = TRUE
+            /\ UNCHANGED <<chartError, painted, errorPainted, ready, hiddenReady, funnestReady,
+                           discarded, mounted, urlRange, customRange, range>>
   /\ UNCHANGED <<issued, active, phase, loading, prices, projection, priceError, forecastError,
-                 painted, errorPainted, ready, initialFrameDone, staleWrite, hiddenReady,
-                 frequency, customRange, range, obscured, urlRange,
-                 mounted, orphan, funnestReady, chartError, discarded, rangeLost>>
+                 initialFrameDone, staleWrite, frequency, obscured, orphan, rangeLost>>
 
 \* The workbench go-to command (dist/native-chart-workbench.js:242) and the event and
 \* forecast jumps (lines 88 and 95) set the range and rangeTouched independently of
@@ -323,18 +339,21 @@ Pan ==
                  obscured, urlRange, mounted, orphan, funnestReady, chartError, discarded, rangeLost>>
 
 \* Line 197 onViewport: Funnest reports the visible range after a wheel, drag or key
-\* gesture (src/charts/funnest-chart-runtime.js:391-398 and 412-425). The callback
-\* returns while the document is suspended. Otherwise it stores the reported start and
-\* end in state.range. It does not write state.rangeTouched and does not schedule. The
-\* boot script keeps the app inert until ready (dist/index.html, ready()).
-\* Funnest reports its own range changes through the same callback. Those follow the
-\* range that the view handed it, are not the user's choice and change nothing here.
+\* gesture (src/charts/funnest-chart-runtime.js:391-398 and 412-425). A pointer, wheel
+\* or key event first hands the range to the user (line 423 there), and
+\* userOwnsRange() says so until setRange takes it back (lines 465 and 500 there).
+\* The callback returns while the document is suspended. Otherwise it stores the
+\* reported start and end in state.range, and sets state.rangeTouched while
+\* userOwnsRange() holds. It does not schedule. The boot script keeps the app inert
+\* until ready (dist/index.html, ready()).
+\* Funnest reports its own range changes through the same callback. This model has no
+\* step for those reports.
 NativePan ==
   /\ mounted /\ attached /\ ready
-  /\ range' = "custom"
+  /\ range' = "custom" /\ customRange' = (customRange \/ MarkGesture)
   /\ UNCHANGED <<issued, active, phase, attached, loading, prices, projection, priceError,
                  forecastError, renderPending, painted, errorPainted, ready, initialFrameDone,
-                 staleWrite, hiddenReady, frequency, customRange, obscured, urlRange,
+                 staleWrite, hiddenReady, frequency, obscured, urlRange,
                  mounted, orphan, funnestReady, chartError, discarded, rangeLost>>
 
 \* Lines 265-273 an interval change retargets the previous visible range and marks it

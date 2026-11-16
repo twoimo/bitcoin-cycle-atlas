@@ -90,11 +90,14 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
   const barsToSeries = new WeakMap();
   const atlasCandlesToFunnestBars = series => { const bars=series.candles.map(row=>({...row,time:row.time*1000}));barsToSeries.set(bars,series);return bars; };
   const mountObservedPriceChart = (_plot,options) => {
-    const record={...options,setAtlasRangeCalls:0,nativeRange:options.range?{from:options.range.start*1000,to:options.range.end*1000}:null,nativeMagnet:false,atlasMagnet:options.magnet||'off',chart:{layout:{plotWidth:554},setMagnet(value){record.nativeMagnet=value;},getVisibleTimeRange(){return record.nativeRange;}}};draws.push(record);
+    const record={...options,setAtlasRangeCalls:0,userRange:false,nativeRange:options.range?{from:options.range.start*1000,to:options.range.end*1000}:null,nativeMagnet:false,atlasMagnet:options.magnet||'off',chart:{layout:{plotWidth:554},setMagnet(value){record.nativeMagnet=value;},getVisibleTimeRange(){return record.nativeRange;}}};draws.push(record);
     const painted=()=>({painted:true,status:'ready',bars:record.series.candles.length});
-    // manualPaint leaves each confirmation pending, so a test can deliver it late, to a hidden page or after the mount is destroyed.
-    const ready=manualPaint?()=>{const pending=deferred();paints.push({chart:record,confirm:()=>pending.resolve(painted()),fail:message=>pending.reject(new Error(message))});return pending.promise;}:async()=>painted();
-    return {chart:record.chart,ready,setData(bars){record.series=barsToSeries.get(bars);},setRange(range){const start=range.from/1000,end=range.to/1000;if(record.range?.start!==start||record.range?.end!==end)record.range={...record.range,start,end};},setAtlasRange(range){record.setAtlasRangeCalls++;record.range=range;record.nativeRange={from:range.start*1000,to:range.end*1000};},setChartType(value){record.chartType=value;},setScale(value){record.scale=value;},setAtlasInteraction(value){record.interaction={...value};record.atlasMagnet=value.magnet;},setAtlasRows(rows){record.sourceRows=rows;},setPriceExtrema(value){record.priceDomain=value;},setAtlasOverlays(value){Object.assign(record,value);},addOverlay(){return {redraw(){},remove(){}};},destroy(){record.destroyed=true;}};
+    // Like the runtime, ready() keeps one promise until setData drops it, so a later call rereads the same result.
+    // manualPaint leaves that promise pending, so a test can settle it late, on a hidden page or after the mount is destroyed.
+    let readyPromise=null;
+    const ready=()=>{if(readyPromise)return readyPromise;if(!manualPaint)return readyPromise=Promise.resolve(painted());const pending=deferred();paints.push({chart:record,confirm:()=>pending.resolve(painted()),fail:message=>pending.reject(new Error(message))});return readyPromise=pending.promise;};
+    // Like the runtime, a valid setRange takes the range back from the user. gesture() below hands it to the user.
+    return {chart:record.chart,ready,userOwnsRange:()=>record.userRange,setData(bars){record.series=barsToSeries.get(bars);readyPromise=null;},setRange(range){if(!range||!(range.to>range.from))return false;record.userRange=false;const start=range.from/1000,end=range.to/1000;if(record.range?.start!==start||record.range?.end!==end)record.range={...record.range,start,end};return true;},setAtlasRange(range){if(!range)return false;record.setAtlasRangeCalls++;record.range=range;if(!(range.end>range.start))return false;record.userRange=false;record.nativeRange={from:range.start*1000,to:range.end*1000};return true;},setChartType(value){record.chartType=value;},setScale(value){record.scale=value;},setAtlasInteraction(value){record.interaction={...value};record.atlasMagnet=value.magnet;},setAtlasRows(rows){record.sourceRows=rows;},setPriceExtrema(value){record.priceDomain=value;},setAtlasOverlays(value){Object.assign(record,value);},addOverlay(){return {redraw(){},remove(){}};},destroy(){record.destroyed=true;}};
   };
   const deps = {
     withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,writeChartUrlState,nativeDateRange,mountObservedPriceChart,atlasCandlesToFunnestBars,
@@ -176,6 +179,8 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     span: value => click('span', value), action: value => click('action', value),
     scenario: value => app.querySelector('#equity-scenario').onchange({ target: { value } }),
     pan: range => navigation.onRangeChange(range),
+    // For a wheel, drag or key gesture on the chart, the runtime marks the range as the user's and then reports the new window.
+    gesture: ({ start, end }) => { const chart = draws.at(-1); chart.userRange = true; chart.nativeRange = { from: start * 1000, to: end * 1000 }; chart.onViewport(chart.nativeRange); },
     navigationRange: () => navigation.getRange(),
     replayAvailability: () => replayOptions.getForecastAvailability(),
     priceRange: range => navigation.onPriceRangeChange(range),

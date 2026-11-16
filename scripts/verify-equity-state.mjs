@@ -49,6 +49,8 @@ const variants = [
   { id: 'overwritten-range', values: { PreserveRange: false }, invariant: 'UserRangePreserved' },
   { id: 'stale-paint-failure', values: { GuardPaint: false }, invariant: 'NoStalePublication' },
   { id: 'hidden-paint-failure', values: { GuardPaint: false }, invariant: 'NoHiddenReadiness' },
+  { id: 'unmarked-gesture', values: { MarkGesture: false }, invariant: 'UserRangePreserved' },
+  { id: 'dropped-confirmation', values: { RereadPaint: false }, invariant: 'UsableRenderReleasesBoot' },
   { id: 'current', values: {}, invariant: null },
 ];
 
@@ -85,7 +87,7 @@ async function models(work) {
 async function implementation(work) {
   const original = runVerification(process.execPath, ['tests/equity-load-ownership.test.mjs']);
   assert.equal(original.status, 0, original.output);
-  assert.match(original.output, /tests 36/);
+  assert.match(original.output, /tests 40/);
   console.log(original.output.trim());
   const copy = path.join(work, 'implementation');
   // Follow real module dependencies, including shared UI helpers added to the
@@ -93,7 +95,7 @@ async function implementation(work) {
   const fixtureModules = await copyEquityFixtureDependencies(copy);
   const pristine = runVerification(process.execPath, ['tests/equity-load-ownership.test.mjs'], { cwd: copy });
   assert.equal(pristine.status, 0, pristine.output);
-  assert.match(pristine.output, /tests 36/);
+  assert.match(pristine.output, /tests 40/);
   checkTap(runVerification(process.execPath, viewportArgs, { cwd: copy }), 2);
   const viewFile = path.join(copy, 'dist/equity-view.js'), source = await readFile(viewFile, 'utf8');
   const changes = [
@@ -112,6 +114,18 @@ async function implementation(work) {
     {
       id: 'stale-paint-failure', from: '.catch(error=>{if(state.funnestMount!==mount||suspended)return;', to: '.catch(error=>{if(suspended)return;',
       failure: /a destroyed chart must not publish its paint failure/,
+    },
+    {
+      id: 'dropped-confirmation', from: 'if(state.funnestMount&&!state.funnestReady)watchFunnestPaint(state.funnestMount);', to: '',
+      failure: /a paint confirmed while hidden must release the boot shell after pageshow/,
+    },
+    {
+      id: 'unmarked-gesture', from: 'if(state.funnestMount?.userOwnsRange?.())state.rangeTouched=true;', to: '',
+      failure: /a pan or zoom on the chart must survive the projection/,
+    },
+    {
+      id: 'every-report-marked', from: 'if(state.funnestMount?.userOwnsRange?.())state.rangeTouched=true;', to: 'state.rangeTouched=true;',
+      failure: /initial viewport sync must not freeze the later forecast range/,
     },
     {
       id: 'unguarded-prices', from: 'if(token!==generation)return;\n      daily=nextDaily;', to: 'daily=nextDaily;',
@@ -159,7 +173,7 @@ async function implementation(work) {
   const restored = runVerification(process.execPath, ['tests/equity-load-ownership.test.mjs'], { cwd: copy });
   assert.equal(restored.status, 0, restored.output);
   checkTap(runVerification(process.execPath, viewportArgs, { cwd: copy }), 2);
-  return { tests: 36, viewportTests: 2, original: 'pass', isolated: 'pass', restored: 'pass', fixtureModules, sourceSha256: hash(source), mutations, mutationExitStatuses };
+  return { tests: 40, viewportTests: 2, original: 'pass', isolated: 'pass', restored: 'pass', fixtureModules, sourceSha256: hash(source), mutations, mutationExitStatuses };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
