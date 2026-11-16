@@ -64,7 +64,7 @@ function snapshot(){
     viewport:{width:innerWidth,height:innerHeight},
     state:relay.dataset.relayState,pane:relay.dataset.relayPane||null,mode:relay.dataset.relayMode||null,
     layout:panes?win.getComputedStyle(panes).getPropertyValue('--relay-layout').trim():null,
-    relay:box(relay),list:box(q('.relay-rooms')),room:box(q('.relay-detail')),backdrop:box(q('.relay-backdrop')),
+    relay:box(relay),inner:(()=>{const r=relay.getBoundingClientRect();return {x:Math.round(r.x+relay.clientLeft+offset.x),y:Math.round(r.y+relay.clientTop+offset.y),width:relay.clientWidth,height:relay.clientHeight};})(),list:box(q('.relay-rooms')),room:box(q('.relay-detail')),backdrop:box(q('.relay-backdrop')),
     column:box(q('.relay-chat')||q('.relay-feed')||q('.relay-reader')||q('.relay-paper')),
     search:box(q('[name="query"]')),refresh:box(q('.relay-refresh')),roomBack:box(q('[data-relay-action="room-back"]')),
     rows:rows.map(row=>({room:row.dataset.room,current:row.getAttribute('aria-current')==='true',tabindex:row.getAttribute('tabindex'),...box(row),time:row.querySelector('time')?.getAttribute('datetime')||null,timeText:row.querySelector('time')?.textContent||null,sub:row.querySelector('.relay-room-sub')?.textContent||''})),
@@ -91,6 +91,7 @@ async function point(selector){return evaluate(sel=>{const frame=document.queryS
 async function click(selector){const at=await point(selector);for(const type of ['mouseMoved','mousePressed','mouseReleased'])await cdp.send('Input.dispatchMouseEvent',{type,...at,button:'left',clickCount:type==='mouseMoved'?0:1});}
 const KEYS={ArrowDown:40,ArrowUp:38,Home:36,End:35,Enter:13,Escape:27,Tab:9};
 async function key(name){await cdp.send('Input.dispatchKeyEvent',{type:'keyDown',key:name,code:name,windowsVirtualKeyCode:KEYS[name],...(name==='Enter'?{text:'\r',unmodifiedText:'\r'}:{})});await cdp.send('Input.dispatchKeyEvent',{type:'keyUp',key:name,code:name,windowsVirtualKeyCode:KEYS[name]});}
+async function historyForward(){const {currentIndex,entries}=await cdp.send('Page.getNavigationHistory');if(currentIndex>=entries.length-1)throw Error('no forward entry');await cdp.send('Page.navigateToHistoryEntry',{entryId:entries[currentIndex+1].id});}
 async function historyBack(){const {currentIndex,entries}=await cdp.send('Page.getNavigationHistory');if(currentIndex<1)throw Error('no history entry to go back to');await cdp.send('Page.navigateToHistoryEntry',{entryId:entries[currentIndex-1].id});}
 async function shot(name){const bytes=Buffer.from((await cdp.send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false})).data,'base64');await writeFile(resolve(out,name),bytes);return {file:name,bytes:bytes.length,sha256:sha(bytes)};}
 const ready=s=>s.state==='ready'&&(!s.centerStatus||s.centerStatus==='ready');
@@ -138,7 +139,7 @@ async function layoutCase(route,viewport){
       check(row,s.atLatest===true,'default chat not scrolled to the latest message');
     }else{
       check(row,!s.room.shown,'stacked list shows the room pane');
-      check(row,s.relay.width<600?Math.abs(s.list.width-s.relay.width)<=1:(s.list.width===360&&s.backdrop.shown),`stacked list width ${s.list.width} in a ${s.relay.width}px box`);
+      check(row,s.relay.width<600?Math.abs(s.list.width-s.inner.width)<=1:(s.list.width===360&&s.backdrop.shown),`stacked list width ${s.list.width} in a ${s.relay.width}px box`);
     }
     await click('[data-room="naver"]');
     s=await until('room open',v=>/[?&]room=naver/.test(v.url)&&v.roomTitle==='인생의 방');await settle();s=await evaluate(snapshot);
@@ -150,7 +151,7 @@ async function layoutCase(route,viewport){
       check(row,s.list.shown&&s.room.shown,'split room hides the list');
       check(row,s.focus?.room==='naver','split: focus left the opened row');
     }else{
-      check(row,!s.list.shown&&s.room.shown&&Math.abs(s.room.width-s.relay.width)<=1&&Math.abs(s.room.height-s.relay.height)<=1,`stacked room does not fill the relay box ${JSON.stringify([s.room,s.relay])}`);
+      check(row,!s.list.shown&&s.room.shown&&Math.abs(s.room.width-s.inner.width)<=1&&Math.abs(s.room.height-s.inner.height)<=1,`stacked room does not fill the relay box ${JSON.stringify([s.room,s.inner])}`);
       check(row,s.roomBack.shown,'stacked room has no back button');
       check(row,s.focus?.className.includes('relay-detail-body'),'stacked: focus not in the room content');
     }
@@ -161,6 +162,17 @@ async function layoutCase(route,viewport){
     geometry(row,s,'back');
     if(s.layout==='stack')check(row,s.list.shown&&!s.room.shown&&s.focus?.room==='naver','stacked Back did not return to the list with focus on the row');
     else check(row,s.room.shown&&s.rows.find(item=>item.room==='telegram')?.current&&s.roomTitle==='소수의견(26년 4분기)','split Back did not restore the default room');
+    await historyForward();
+    s=await until('forward',v=>/[?&]room=naver/.test(v.url)&&v.roomTitle==='인생의 방'&&(v.layout==='split'||v.room.shown));
+    row.steps.forward={url:s.url,pane:s.pane,roomShown:s.room.shown,listShown:s.list.shown};
+    await click('[data-article]');
+    s=await until('reader',v=>/[?&]post=/.test(v.url)&&v.mode==='reading');await settle();s=await evaluate(snapshot);
+    row.steps.reader={url:s.url,mode:s.mode,column:s.column,focus:s.focus,screenshot:await shot(`${name}-5-reader.png`)};
+    geometry(row,s,'reader');
+    await historyBack();
+    s=await until('reader back',v=>!/[?&]post=/.test(v.url)&&v.mode==='articles');await delay(120);s=await evaluate(snapshot);
+    row.steps.readerBack={url:s.url,mode:s.mode,focus:s.focus};
+    check(row,/[?&]room=naver/.test(s.url)&&s.focus?.className.includes('relay-article'),'Back from the reader did not return to the post stream with focus on the card');
     if(route==='embedded'){
       await cdp.send('Page.navigate',{url:base+ROUTES.embedded+'&room=hankyung'});
       s=await until('deep link',v=>ready(v)&&v.roomTitle==='모바일한경');await settle();s=await evaluate(snapshot);
@@ -194,7 +206,7 @@ async function keyboardCase(row,layout){
   await key('ArrowDown');await key('Enter');
   s=await until('Enter opens',v=>/[?&]room=naver/.test(v.url));await settle();s=await evaluate(snapshot);steps.push({enter:s.focus,url:s.url,pane:s.pane});
   check(row,layout==='stack'?s.focus?.className.includes('relay-detail-body'):s.focus?.room==='naver',`Enter focus ${JSON.stringify(s.focus)}`);
-  if(layout==='split')await click('.relay-detail-body');
+  if(layout==='split'){await key('Tab');s=await evaluate(snapshot);steps.push({tabIntoRoom:s.focus});check(row,s.focus?.className.includes('relay-detail-body'),'Tab from the row did not reach the room content');}
   await key('Escape');await delay(150);s=await evaluate(snapshot);steps.push({escape:s.focus,url:s.url,pane:s.pane});
   if(layout==='stack')check(row,s.pane==='list'&&!/[?&]room=/.test(s.url)&&s.focus?.room==='naver','Esc did not return to the list');
   else check(row,s.focus?.room==='naver'&&/[?&]room=naver/.test(s.url),'Esc in the split room did not return focus to the row');
