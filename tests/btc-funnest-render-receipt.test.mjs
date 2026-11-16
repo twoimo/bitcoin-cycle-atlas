@@ -837,6 +837,36 @@ test('a measurement that starts on a close with no candle is anchored to an obse
   });
 });
 
+test('daily candle mode labels the months of the closes older than the first candle on the time axis', async () => {
+  const closes = Array.from({ length: 213 }, (_, index) => ({ date: isoDay(date('2023-09-01') + index * DAY), price: 500 + index }));
+  const candleOf = row => ({ date: row.date, time: date(row.date) / 1000, open: row.price - 2, high: row.price + 6, low: row.price - 6, close: row.price, volume: 1 });
+  const monthLabels = svg => [...svg.querySelectorAll('[data-btc-observed-line-dates] text')].map(node => ({ label: node.textContent,
+    x: Number(node.getAttribute('x')), y: Number(node.getAttribute('y')), fontSize: Number(node.getAttribute('font-size')) }));
+  const mount = (fixture, observedCandles) => mountAtlasBtcFunnestChart({ container: fixture.stage, svg: fixture.svg, sourceMode: 'ohlc', frequency: 'daily', chartType: 'candles',
+    observedRows: closes, observedCandles, candleSource: 'Bitstamp', start: closes[0].date, end: closes.at(-1).date });
+  await withFunnestFixture(async fixture => {
+    let mounted;
+    try {
+      mounted = mount(fixture, closes.filter(row => row.date >= '2024-01-15').map(candleOf));
+      await settle(150);
+      const labels = monthLabels(fixture.svg), layout = mounted.chart.layout, firstCandleX = mounted.x('2024-01-15');
+      assert.deepEqual(labels.map(item => item.label), ['2023-10', '2023-11', '2023-12'],
+        'each month that starts between the first close and the first candle has a label, unless the plot edge would cut it or it would crowd the first candle');
+      for (const item of labels) {
+        assert.equal(item.x, mounted.x(`${item.label}-01`), `${item.label} is centered under the first day of its month`);
+        assert.ok(item.y > layout.panesHeight && item.y < layout.panesHeight + layout.timeAxisHeight, `${item.label} is on the time-axis row`);
+        assert.equal(item.fontSize, 12, `${item.label} has the size of the engine's own axis labels`);
+      }
+      assert.ok(mounted.x('2024-01-01') > 0 && firstCandleX - mounted.x('2024-01-01') < 72 && firstCandleX - labels.at(-1).x >= 72,
+        'a label keeps the 72px gap that the engine keeps between its own time labels, so 2024-01 gives way to the first candle');
+      mounted.destroy();
+      mounted = mount(fixture, closes.map(candleOf));
+      await settle(150);
+      assert.deepEqual(monthLabels(fixture.svg), [], 'a chart with a candle on every date adds no label to the engine axis');
+    } finally { mounted?.destroy(); }
+  });
+});
+
 const historyEvents = [
   { id: 'before-first-candle', date: '2024-01-03', title: 'Before the first candle', label: 'Before', category: 'market' },
   { id: 'on-candle-date', date: '2024-01-06', title: 'On a candle date', label: 'On candle', category: 'protocol' },
