@@ -62,6 +62,22 @@ function closesWithoutCandle(closePoints, candles) {
   });
 }
 
+const TIME_LABEL_MIN_GAP = 72; // Funnest 0.6.22 keeps this gap between its own time labels.
+
+/** UTC month starts in [from, before) that fit the plot and keep the engine's label gap from `beforeX` and from each other. */
+function monthTicksBefore({ from, before, beforeX, plotWidth, timeToX, measure }) {
+  const starts = [], first = new Date(from);
+  for (let month = first.getUTCFullYear() * 12 + first.getUTCMonth(), time; (time = Date.UTC(Math.floor(month / 12), month % 12, 1)) < before; month++) if (time >= from) starts.push(time);
+  const ticks = [];
+  for (const time of starts.reverse()) {
+    const label = new Date(time).toISOString().slice(0, 7), x = timeToX(time), width = measure(label), right = ticks.at(-1);
+    if (!Number.isFinite(x) || x - width / 2 < 0 || x + width / 2 > plotWidth || beforeX - x < TIME_LABEL_MIN_GAP) continue;
+    if (right && right.x - x < Math.max(TIME_LABEL_MIN_GAP, (width + right.width) / 2 + 4)) continue;
+    ticks.push({ time, label, x, width });
+  }
+  return ticks.reverse();
+}
+
 // A number is an exact Unix second on the intraday candle grid. A UTC date as the end covers its whole day.
 function rangeTime(value, end = false) {
   if (typeof value === 'number') return value * 1000;
@@ -281,6 +297,7 @@ export function mountAtlasBtcFunnestChart({
   const replayBoundaryLayer = svgNode(svg.ownerDocument, 'g', { 'data-replay-boundaries': 'true', 'pointer-events': 'none' });
   const replayTimingLayer = svgNode(svg.ownerDocument, 'g', { 'data-replay-cycle-timing': 'true', role: 'img', 'aria-label': '사이클 시계 · 관측 기반 보정 · 매매 신호 아님', 'pointer-events': 'none' });
   const retrospectiveLabelLayer = svgNode(svg.ownerDocument, 'g', { 'data-replay-retrospective-labels': 'true', 'pointer-events': 'none' });
+  const lineDateLayer = svgNode(svg.ownerDocument, 'g', { 'data-btc-observed-line-dates': 'true', 'pointer-events': 'none', 'aria-hidden': 'true' });
   svg.style.position = 'absolute'; svg.style.inset = '0'; svg.style.zIndex = '2'; svg.style.pointerEvents = 'auto';
   svg.setAttribute('viewBox', '0 0 1000 500');
   svg.dataset.chartEngine = 'funnest'; svg.dataset.observedMode = sourceMode; svg.dataset.source = actualSource; svg.dataset.replaySelectionPreview = String(Boolean(selectionPreview));
@@ -304,7 +321,7 @@ export function mountAtlasBtcFunnestChart({
   const annotationLabelLayer = svgNode(svg.ownerDocument, 'g', { 'data-funnest-annotation-labels': 'true', 'pointer-events': 'none' });
   const intervalLayer = svgNode(svg.ownerDocument, 'g', { 'data-funnest-cycle-intervals': 'true' });
   Object.assign(svg.dataset, { historyLabelCount: '0', historyEventCount: '0', historyLabelMode: 'off', historyHiddenLabelCount: '0', cycleMarkerCount: '0', cycleMarkerLabelCount: '0', cycleIntervalCount: '0', cycleIntervalLabelCount: '0' });
-  svg.append(targetLayer, annotationLabelLayer, intervalLayer, replayBoundaryLayer, replayTimingLayer, retrospectiveLabelLayer, futurePreviewLayer);
+  svg.append(targetLayer, annotationLabelLayer, intervalLayer, replayBoundaryLayer, replayTimingLayer, retrospectiveLabelLayer, lineDateLayer, futurePreviewLayer);
   const forecastValueRows = [...forecastRows, ...retrospectiveRows];
   const expectedGap = gapSize(frequency);
   // Funnest invokes this real underlay before its observed-price series.
@@ -391,6 +408,13 @@ export function mountAtlasBtcFunnestChart({
         // A one-point path strokes nothing, so a close with no neighbor to join is a dot.
         for (const [point, next] of receipt.paths.observedLine.subpaths) if (!next) painter.circle(point.x, point.y, width, lineColor);
       }
+      // The engine labels the dates of its own bars only, so the closes older than the first candle get month labels on the same axis row.
+      const axisLayout = mounted.chart.layout, axisY = Number(axisLayout?.panesHeight) + Number(axisLayout?.timeAxisHeight) / 2;
+      const lineDates = lineRows[0]?.time < rawRows[0].time && Number.isFinite(axisY) ? monthTicksBefore({ from: lineRows[0].time, before: rawRows[0].time,
+        beforeX: coords.timeToX(rawRows[0].time), plotWidth: coords.plotWidth, timeToX: coords.timeToX, measure: text => painter.measure(text) }) : [];
+      reconcileAnnotationChildren(lineDateLayer, lineDates.map(tick => svgNode(svg.ownerDocument, 'text', { x: tick.x, y: axisY, 'text-anchor': 'middle', 'dominant-baseline': 'middle',
+        fill: chartTheme.textSecondary, 'font-size': chartTheme.fontSize, 'data-utc-date': new Date(tick.time).toISOString().slice(0, 10) }, tick.label)));
+      receipt.observedLineDates = lineDates.map(({ time, label, x }) => ({ time, label, x }));
       path(forecastRows, 'price', '#e2b66c', 1.8, [7, 5], 'forecast', true);
       path(retrospectiveRows, 'price', '#74a7ee', 1.7, [1, 5], 'retrospective', true);
       const retrospectiveAnchor = retrospectiveOrigin ? retrospectiveRows.find(row => row.date === retrospectiveOrigin) : null;
@@ -856,7 +880,7 @@ export function mountAtlasBtcFunnestChart({
       clearTimeout(redrawTimer); cleanupLayout?.(); cleanupReplayViewport?.(); cleanupCrosshair?.(); overlayHandle?.remove?.(); bandOverlayHandle?.remove?.();
       if (Object.getOwnPropertyDescriptor(host, 'getAtlasBtcRenderSnapshot')?.value === readRenderSnapshot) delete host.getAtlasBtcRenderSnapshot;
       svg.removeEventListener('pointermove', onPointerMove); svg.removeEventListener('pointerleave', onPointerLeave); svg.removeEventListener('click', onClick); svg.removeEventListener('keydown', onKeyDown);
-      hideFuturePreview({ clearPointer: true }); targetLayer.remove(); annotationLabelLayer.remove(); intervalLayer.remove(); replayBoundaryLayer.remove(); replayTimingLayer.remove(); retrospectiveLabelLayer.remove(); futurePreviewLayer.remove(); mounted.destroy();
+      hideFuturePreview({ clearPointer: true }); targetLayer.remove(); annotationLabelLayer.remove(); intervalLayer.remove(); replayBoundaryLayer.remove(); replayTimingLayer.remove(); retrospectiveLabelLayer.remove(); lineDateLayer.remove(); futurePreviewLayer.remove(); mounted.destroy();
     },
   };
   // Publish the selected real observation on mount; a price readout must not
