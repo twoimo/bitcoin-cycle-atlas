@@ -6,6 +6,7 @@ import {readFile} from 'node:fs/promises';
 import {migrate} from '../../apps/api/src/db.js';
 import {publishThemes,readThemes,saveThemeJudgment,readThemeReceipt} from '../../apps/api/src/theme-repository.js';
 import {buildServer} from '../../apps/api/src/server.js';
+import {ApiError} from '../../apps/api/src/api-error.js';
 const snapshot=JSON.parse(await readFile(new URL('../../dist/data/themes.json',import.meta.url),'utf8'));
 test('themes DB/API: append-only decisions, concurrent idempotency, rejected future evidence, readback and route',async()=>{
   if(!process.env.TEST_DATABASE_URL)throw new Error('TEST_DATABASE_URL required');const admin=new pg.Pool({connectionString:process.env.TEST_DATABASE_URL}),schema=`themes_check_${process.pid}_${Date.now()}`;await admin.query(`CREATE SCHEMA ${schema}`);const pool=new pg.Pool({connectionString:process.env.TEST_DATABASE_URL,options:`-c search_path=${schema}`}),clock=()=>new Date(Date.parse(snapshot.generatedAt)+60000),app=await buildServer({pool,clock,serveWeb:true});
@@ -22,4 +23,17 @@ test('themes DB/API: append-only decisions, concurrent idempotency, rejected fut
     assert.equal((await app.inject({url:'/market-lab/themes/'})).statusCode,200);assert.equal((await app.inject({url:'/market-lab/themes/?embedded=1'})).statusCode,200);
     const corrupted=JSON.stringify({...writes[0].judgment,title:'tampered'});await pool.query('UPDATE theme_judgments SET canonical_body=$1 WHERE request_id=$2',[corrupted,payload.requestId]);assert.equal((await app.inject({url:`/api/v1/themes/receipts/${payload.requestId}`})).statusCode,503);assert.equal((await app.inject({url:'/api/v1/themes'})).statusCode,503);
   }finally{await app.close();await pool.end();await admin.query(`DROP SCHEMA ${schema} CASCADE`);await admin.end();}
+});
+test('themes save: only domain validation errors become 422 and any other failure propagates to the 503 path',async()=>{
+  if(!process.env.TEST_DATABASE_URL)throw new Error('TEST_DATABASE_URL required');const admin=new pg.Pool({connectionString:process.env.TEST_DATABASE_URL}),schema=`themes_errors_${process.pid}_${Date.now()}`;await admin.query(`CREATE SCHEMA ${schema}`);const pool=new pg.Pool({connectionString:process.env.TEST_DATABASE_URL,options:`-c search_path=${schema}`}),clock=()=>new Date(Date.parse(snapshot.generatedAt)+60000);
+  try{await migrate(pool,['003_themes']);const {revision}=await publishThemes(pool,snapshot);
+    const draft={title:'예외 구분',criteria:structuredClone(snapshot.judgments[2].criteria)},saved=()=>readThemes(pool).then(stored=>stored!.judgments.length);
+    const invalid=await saveThemeJudgment(pool,{requestId:randomUUID(),revision,draft:{...draft,title:' '}},clock).catch(error=>error);
+    assert.ok(invalid instanceof ApiError);assert.deepEqual({status:invalid.status,body:invalid.body},{status:422,body:{code:'INVALID_JUDGMENT',message:'판정 이름을 확인하세요.'}});
+    const injected=new TypeError('injected runtime failure'),criteria=structuredClone(draft.criteria);Object.defineProperty(criteria,'novelty',{enumerable:true,get(){throw injected;}});
+    const before=await saved();
+    const unexpected=await saveThemeJudgment(pool,{requestId:randomUUID(),revision,draft:{...draft,criteria}},clock).catch(error=>error);
+    assert.equal(unexpected,injected,'the original error reaches the route, which answers 503 SAVE_UNAVAILABLE');
+    assert.equal(await saved(),before,'a failed save leaves no record');
+  }finally{await pool.end();await admin.query(`DROP SCHEMA ${schema} CASCADE`);await admin.end();}
 });

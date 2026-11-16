@@ -1,5 +1,5 @@
 import type pg from 'pg';
-import { validateThemeSnapshot, validateThemeJudgment, normalizeThemeDraft, type ThemeDraft, type ThemeJudgment } from '@atlas/domain/themes';
+import { validateThemeSnapshot, validateThemeJudgment, normalizeThemeDraft, ThemeValidationError, type ThemeDraft, type ThemeJudgment } from '@atlas/domain/themes';
 import { locks, revisionIdentity, sha256, withTransaction } from './db.js';
 import { ApiError } from './api-error.js';
 
@@ -68,5 +68,8 @@ export async function saveThemeJudgment(pool: pg.Pool, { requestId, revision, dr
 
 function invalidJudgment<T>(check: () => T) {
   try { return check(); }
-  catch (error) { throw new ApiError(422, 'INVALID_JUDGMENT', error instanceof Error ? error.message : String(error)); }
+  catch (error) {
+    if (error instanceof ThemeValidationError) throw new ApiError(422, 'INVALID_JUDGMENT', error.message);
+    throw error;
+  }
 }
