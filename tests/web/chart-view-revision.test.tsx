@@ -417,3 +417,17 @@ for (const symbol of ['TQQQ', 'HYPE'] as const) test(`${symbol} help lists the i
   const rendered = [...list.querySelectorAll('dt')].map(term => [term.textContent, term.nextElementSibling?.textContent]);
   assert.deepEqual(rendered, chartHelp, 'each help line describes an input the chart handles, as the tests above check');
 });
+
+for (const symbol of ['TQQQ', 'HYPE'] as const) for (const pointed of [false, true]) test(`${symbol} + and - keep the right edge ${pointed ? 'after the pointer crossed the plot' : 'with no pointer over the plot'}`, async t => {
+  const chart = await hostedChart(t, '', symbol);
+  if (pointed) await chart.fixture.hover(chart.plot.left + chart.plot.width * .25, chart.plot.y);
+  const before = chart.range();
+  await chart.fixture.press('+');
+  const zoomed = chart.range();
+  assert.equal(zoomed.end, before.end, `+ keeps the right edge: ${JSON.stringify({ before, zoomed })}`);
+  assert(zoomed.start > before.start, `+ narrows the range from the left: ${JSON.stringify({ before, zoomed })}`);
+  await chart.fixture.press('-');
+  const widened = chart.range();
+  assert.equal(widened.end, before.end, `- keeps the right edge: ${JSON.stringify({ zoomed, widened })}`);
+  assert(widened.start < zoomed.start, `- widens the range to the left: ${JSON.stringify({ zoomed, widened })}`);
+});
