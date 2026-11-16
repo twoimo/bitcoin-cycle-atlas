@@ -26,7 +26,8 @@ export interface AxisSeries {
   staleAfterDays: number;
   values: Point[];
 }
-export type MarketId = 'spx' | 'nasdaq' | 'kospi' | 'kosdaq' | 'tqqq' | 'soxl' | 'kodex-kosdaq150';
+export const MARKET_IDS = ['spx', 'nasdaq', 'kospi', 'kosdaq', 'tqqq', 'soxl', 'kodex-kosdaq150'] as const;
+export type MarketId = (typeof MARKET_IDS)[number];
 export interface Market {
   id: MarketId;
   sourceId: string;

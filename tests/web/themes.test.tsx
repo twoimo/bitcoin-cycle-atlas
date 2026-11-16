@@ -2,7 +2,7 @@ import test from 'node:test';
 import {parseHTML} from 'linkedom';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {axes,evidenceAvailableAt,normalizeThemeDraft,themeComparison,themePerformance,themeStatus,validateThemeSnapshot,type ThemeJudgment} from '@atlas/domain/themes';
+import {axes,evidenceAvailableAt,normalizeThemeDraft,themeComparison,themePerformance,themeStatus,ThemeValidationError,validateThemeSnapshot,type ThemeJudgment} from '@atlas/domain/themes';
 import {themeIdentity} from '../../apps/api/src/theme-repository.js';
 import {loadThemes} from '../../apps/web/src/theme-loader.js';
 import {readThemePending,persistThemePending,clearThemePending} from '../../apps/web/src/theme-write.js';
@@ -16,7 +16,7 @@ test('themes: true spot identity, complete candles and conservative evidence clo
 test('themes: past decisions cannot use undated current docs or future releases',()=>{
   const s=validateThemeSnapshot(fixture),j=s.judgments[0];const draft={title:'검사',criteria:structuredClone(j.criteria)};draft.criteria.continuity.evidenceIds=['hip3-docs'];assert.throws(()=>normalizeThemeDraft(draft,s.evidence,j.asOf),/이후/);
   draft.criteria.continuity.evidenceIds=['sdk-0240'];assert.throws(()=>normalizeThemeDraft(draft,s.evidence,j.asOf),/이후/);
-  draft.criteria.continuity.evidenceIds=['not-a-source'];assert.throws(()=>normalizeThemeDraft(draft,s.evidence,j.asOf));
+  draft.criteria.continuity.evidenceIds=['not-a-source'];assert.throws(()=>normalizeThemeDraft(draft,s.evidence,j.asOf),ThemeValidationError);
 });
 test('themes: next entire day close, no pre-entry low, missing benchmark and immature outcomes',()=>{
   const s=validateThemeSnapshot(fixture),j=s.judgments[0],p=themePerformance(s,j);assert.equal(p[0].entryDate,'2026-04-10');assert.equal(p[0].exitDate,'2026-04-11');
@@ -33,7 +33,7 @@ test('themes: separate reconstructed/recorded groups and empty denominators',()=
   const j=structuredClone(s.judgments[2]);for(const a of axes)j.criteria[a].state='pass';assert.equal(themeStatus(j),'pass');j.criteria.novelty.state='fail';assert.equal(themeStatus(j),'fail');
 });
 test('themes: malformed prices and source URLs, time-travel and repeated IDs reject',()=>{
-  for(const change of [(d:any)=>d.asset.bars.push(d.asset.bars.at(-1)),(d:any)=>d.asset.bars[0][3]=-1,(d:any)=>d.asset.pair='BTC',(d:any)=>d.evidence[0].url='javascript:alert(1)',(d:any)=>d.judgments[2].recordedAt='2026-01-01T00:00:00Z']){const s=structuredClone(fixture);change(s);assert.throws(()=>validateThemeSnapshot(s));}
+  for(const change of [(d:any)=>d.asset.bars.push(d.asset.bars.at(-1)),(d:any)=>d.asset.bars[0][3]=-1,(d:any)=>d.asset.pair='BTC',(d:any)=>d.evidence[0].url='javascript:alert(1)',(d:any)=>d.judgments[2].recordedAt='2026-01-01T00:00:00Z']){const s=structuredClone(fixture);change(s);assert.throws(()=>validateThemeSnapshot(s),ThemeValidationError);}
 });
 test('themes: API calculation/integrity checks, saved fallback and no fallback after abort',async()=>{
   const s=validateThemeSnapshot(fixture),{revision}=themeIdentity(s),body={schemaVersion:1,revision,snapshot:s,judgments:s.judgments,comparison:themeComparison(s,s.judgments),performance:s.judgments.map(j=>({id:j.id,result:themePerformance(s,j)}))};

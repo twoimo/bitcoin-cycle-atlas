@@ -360,7 +360,7 @@ NativePan ==
                  mounted, orphan, funnestReady, chartError, discarded, rangeLost>>
 
 \* Lines 265-273 an interval change retargets the previous visible range and marks it
-\* touched when one existed (tests/native-chart-viewport.test.mjs). A touched or custom
+\* touched when one existed (tests/equity-viewport-interval.test.mjs). A touched or custom
 \* range is never null, so it always carries over. No calculation restarts.
 ChangeInterval ==
   /\ frequency' = IF frequency = "daily" THEN "weekly" ELSE "daily"
