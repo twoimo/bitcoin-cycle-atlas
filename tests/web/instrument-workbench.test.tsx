@@ -216,6 +216,18 @@ test('the React chart mounts one common legend and cleans up its dialog when the
   assert.equal(fixture.document.querySelector('#chart-legend-dialog'),null);
 });
 
+test('the price SVG publishes its plot box on first mount when the measured size equals the initial size',async()=>{
+  const series:InstrumentSeries={frequency:'daily',prices:[['2025-01-01',10],['2025-12-31',20]],bars:[],timeline:['2025-01-01','2025-12-31'],volumes:[]};
+  const props={symbol:'HYPE',unit:'USDC',series,prices:series.prices,bars:[],rows:[],view:initialInstrumentView(series),active:true,menuPulse:0,hover:null,svgRef:{current:null},
+    onView:()=>{},onStart:()=>{},onEnd:()=>{},onHover:()=>{},onPick:()=>{}};
+  const fixture=await mount(<RsiChartCanvas {...props}/>,undefined,undefined,{width:900,height:520});
+  try{
+    const svg=fixture.document.querySelector('.atlas-funnest-instrument-plot svg')!;
+    assert.deepEqual(['data-plot-left','data-plot-right','data-plot-top','data-plot-bottom','data-time-axis-top'].map(key=>svg.getAttribute(key)),['12','832','20','394','394'],
+      'the drawn plot box is published without waiting for a resize');
+  }finally{await fixture.cleanup();}
+});
+
 test('the React quote HUD keeps the shared field nodes across updates and reserves the price plot header',async()=>{
   const series:InstrumentSeries={frequency:'daily',prices:[['2025-01-01',10],['2025-12-31',20]],bars:[],timeline:['2025-01-01','2025-12-31'],volumes:[]};
   const props={symbol:'HYPE',unit:'USDC',series,prices:series.prices,bars:[],rows:[],view:initialInstrumentView(series),active:true,menuPulse:0,hover:null,svgRef:{current:null},
