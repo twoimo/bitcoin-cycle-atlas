@@ -297,7 +297,7 @@ function relayAddressFor(win) {
       for (const key of RELAY_PARAMS) if (next[key]) url.searchParams.set(key, next[key]); else url.searchParams.delete(key);
       const state = how === 'push' ? { relay: { from: serializeAddress(from) } } : target.history.state;
       writing = true;
-      // Chrome refuses URL writes in opaque-origin documents, such as the standalone file opened from disk or a sandboxed frame.
+      // Chrome throws SecurityError on URL writes in a sandboxed frame, whose origin is opaque.
       try { target.history[how === 'push' ? 'pushState' : 'replaceState'](state, '', url); } catch {} finally { writing = false; }
     },
     back: () => target.history.back(),
