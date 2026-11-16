@@ -1,5 +1,105 @@
 # ETH lifecycle and refresh verification
 
+## Chart mount correspondence at 856e7742
+
+Commit 931ed189 moved ETH drawing from drawIntradayChart to the Funnest
+observed-price adapter. This section maps the paths that the move added, at
+`856e77422e0a43a77470aed2e3f64fa1e522880b`. The comments in
+verification/eth-state/EthLoad.tla carry the current line of every other action.
+The sections after this one describe earlier revisions and cite their own line
+numbers.
+
+| Model action or guard | Runtime at 856e7742 | Meaning and assumption |
+| --- | --- | --- |
+| Paint, inside Render, InitialFrame and PaintConfirmed | dist/eth-view.js:254-338 | render creates the mount once (309-311) or hands it a changed series (313). Both start a paint watch and clear state.funnestReady |
+| WaitForPaint | dist/eth-view.js:337 | render announces readiness only when state.funnestReady holds a painted confirmation |
+| PaintConfirmed | dist/eth-view.js:253 | The then handler clears the chart error, sets state.funnestReady, cancels the tracked frame and calls render |
+| PaintFailed | dist/eth-view.js:253; src/charts/funnest-chart-runtime.js:469,483 | A result without painted pixels, a rejection, or a throw from render records the chart error, announces readiness for the retry and schedules its paint |
+| GuardPaintSuspension | dist/eth-view.js:253 | Both handlers drop a result that arrives while the page is suspended |
+| StalePaintFailed, GuardPaintMount | dist/eth-view.js:253; src/charts/funnest-chart-runtime.js:471 | A destroyed mount rejects its pending watch. Both handlers drop a result whose mount is no longer state.funnestMount |
+| Refresh after a chart error | dist/eth-view.js:388 | The retry destroys the mount and clears the error before it loads |
+| NativePan | dist/eth-view.js:108,310; dist/chart-navigation.js:86,225-233; src/charts/funnest-chart-runtime.js:391-399 | A zoom or pan on the mounted chart reaches the view through onViewport, which writes state.range without a navigation revision. bindChartNavigation delivers no range callback once a mount exists |
+| ViewportEcho, GuardViewport | dist/eth-view.js:310; src/charts/funnest-chart-runtime.js:392,496 | The mount also reports windows that it sets itself. onViewport drops a report that arrives while the page is suspended |
+| Hide for a discarded document | dist/eth-view.js:419 | A pagehide that is not persisted also destroys the mount. The model covers it with a Hide that no Show follows |
+
+### Readiness waits for a painted chart
+
+ReadyHasUsableView accepted observed prices or a load error. It now needs a
+painted confirmation for those prices, a load error, or a chart error. The
+promise changed on purpose in 931ed189. render announces only when
+state.funnestReady is set (dist/eth-view.js:337), and the paint watch sets it
+only for `painted===true` (line 253).
+tests/funnest-observed-price-adapter.test.mjs:436-437 pins the source text of
+that watch.
+
+### Open finding: refresh resets a window chosen on the chart
+
+NativeNavigationSurvivesRefresh is new. It states the navigation promise for a
+window that the user chooses on the mounted chart, and it fails at 856e7742.
+TLC's shortest path has seven steps:
+
+1. Open. initEthView starts the first load (dist/eth-view.js:428).
+2. ArchiveArrives. The saved archive publishes prices (line 356).
+3. Render. render mounts the chart and starts its paint watch (lines 309-311).
+4. PaintConfirmed. The watch reports painted pixels, and render announces
+   readiness (lines 253, 337).
+5. Refresh. load captures navigationToken and awaits fetchMarketCandles
+   (lines 350, 363).
+6. NativePan. The user zooms or pans the chart. onViewport writes state.range
+   and leaves navigationRevision unchanged (line 310).
+7. LiveArrives. The token still equals navigationRevision, so the continuation
+   clears state.range (line 368).
+
+```mermaid
+stateDiagram-v2
+  s0: Loading shell
+  s1: Prices waiting for a painted chart
+  s2: Observed chart ready
+  s3: Refreshing observed prices
+  s4: Refreshing with a new range
+  s5: Refresh reset the window chosen on the chart
+  [*] --> s0
+  s0 --> s0: open ETH chart
+  s0 --> s1: saved prices arrive
+  s1 --> s1: render available content
+  s1 --> s2: chart confirms painted prices
+  s2 --> s3: refresh or retry
+  s3 --> s4: zoom or pan the chart itself
+  s4 --> s5: live prices arrive
+```
+
+The replay case "ETH refresh preserves a date window chosen on the chart while
+its request was pending" runs those steps through the real initializer and
+fails. After step 7 the next render pushes the default window with setAtlasRange
+(line 316). The older case "ETH refresh preserves a date range chosen while its
+request was pending" still passes. It calls onRangeChange directly, and
+bindChartNavigation cannot deliver that callback once a mount exists.
+
+The real adapter and engine show what the user sees. The measurement mounted
+mountObservedPriceChart under tests/helpers/funnest-native-fixture.mjs, scrolled
+with ArrowLeft, then called setData and setAtlasRange as render does. The
+refresh frame shows the default window. The engine returns to the user's window
+one frame later, because setData restores the previous range. The next layout
+change shows the default window again, because setAtlasRange left the runtime
+owning it.
+
+### Results at 856e7742
+
+`node scripts/verify-eth-state.mjs docs/formal-eth/verification.json` wrote
+verification.json and exited 1 with two failures, the invariant and the replay
+case of the open finding.
+
+- The current model generated 3,095,573 states, 276,126 of them distinct, and
+  left none on the queue. Six invariants hold. NativeNavigationSurvivesRefresh
+  breaks after 3,476 generated states.
+- The baseline breaks its three recorded properties and passes the other three
+  over 777,360 distinct states.
+- Each of the eight configurations that removes one guard breaks its named
+  invariant.
+- The replay runs 24 cases. 23 pass, and the case above fails.
+- All 14 mutations of a temporary copy of dist/eth-view.js fail an intended
+  assertion in a case that the unmutated module passes.
+
 ## v1.29 integration correspondence
 
 The current committed source is `7261c1807028e1b69bf9cd9be0d269a64f88acc0`. The strict process-exit rerun, exact runtime hashes, maintained mutation selectors and limits of the new features are recorded in [the integration review](../evolution-2026-10-26/publication-independent-review.md) and the current project verification skill. Current machine-readable receipt: [verification result](../evolution-2026-10-26/eth-state-final.json). Earlier revisions and charts below remain historical evidence. New economic, scenario and capital-recalculation behavior is not implicitly included in these finite lifecycle models.

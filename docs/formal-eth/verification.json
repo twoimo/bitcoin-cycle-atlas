@@ -16,106 +16,211 @@
       "custom"
     ]
   },
-  "model": {
-    "current": {
-      "status": "pass",
-      "invariant": null,
-      "generated": 11109,
-      "distinct": 2243,
-      "remaining": 0
+  "verdict": "fail",
+  "failures": [
+    {
+      "id": "current/NativeNavigationSurvivesRefresh",
+      "reason": "unexpected invariant violation"
     },
-    "baseline/TypeOK": {
+    {
+      "id": "replay/original",
+      "reason": "failed cases: ETH refresh preserves a date window chosen on the chart while its request was pending"
+    }
+  ],
+  "model": {
+    "current/NativeNavigationSurvivesRefresh": {
+      "status": "unexpected invariant violation",
+      "invariant": "NativeNavigationSurvivesRefresh",
+      "exitStatus": 12,
+      "generated": 3476,
+      "distinct": 1402,
+      "remaining": 959
+    },
+    "current/TypeOK": {
       "status": "pass",
       "invariant": "TypeOK",
-      "generated": 14969,
-      "distinct": 3503,
+      "exitStatus": 0,
+      "generated": 3095573,
+      "distinct": 276126,
+      "remaining": 0
+    },
+    "current/ReadyHasUsableView": {
+      "status": "pass",
+      "invariant": "ReadyHasUsableView",
+      "exitStatus": 0,
+      "generated": 3095573,
+      "distinct": 276126,
+      "remaining": 0
+    },
+    "current/NoHiddenPublication": {
+      "status": "pass",
+      "invariant": "NoHiddenPublication",
+      "exitStatus": 0,
+      "generated": 3095573,
+      "distinct": 276126,
+      "remaining": 0
+    },
+    "current/NoStalePublication": {
+      "status": "pass",
+      "invariant": "NoStalePublication",
+      "exitStatus": 0,
+      "generated": 3095573,
+      "distinct": 276126,
+      "remaining": 0
+    },
+    "current/NavigationSurvivesRefresh": {
+      "status": "pass",
+      "invariant": "NavigationSurvivesRefresh",
+      "exitStatus": 0,
+      "generated": 3095573,
+      "distinct": 276126,
+      "remaining": 0
+    },
+    "current/ReadinessOnce": {
+      "status": "pass",
+      "invariant": "ReadinessOnce",
+      "exitStatus": 0,
+      "generated": 3095573,
+      "distinct": 276126,
       "remaining": 0
     },
     "baseline/ReadyHasUsableView": {
       "status": "expected invariant violation",
       "invariant": "ReadyHasUsableView",
-      "generated": 36,
-      "distinct": 23,
-      "remaining": 13
+      "exitStatus": 12,
+      "generated": 43,
+      "distinct": 27,
+      "remaining": 16
     },
     "baseline/NoHiddenPublication": {
       "status": "expected invariant violation",
       "invariant": "NoHiddenPublication",
-      "generated": 31,
-      "distinct": 21,
-      "remaining": 12
-    },
-    "baseline/NoStalePublication": {
-      "status": "pass",
-      "invariant": "NoStalePublication",
-      "generated": 14969,
-      "distinct": 3503,
-      "remaining": 0
+      "exitStatus": 12,
+      "generated": 99,
+      "distinct": 53,
+      "remaining": 31
     },
     "baseline/NavigationSurvivesRefresh": {
       "status": "expected invariant violation",
       "invariant": "NavigationSurvivesRefresh",
-      "generated": 268,
-      "distinct": 145,
-      "remaining": 87
+      "exitStatus": 12,
+      "generated": 1380,
+      "distinct": 625,
+      "remaining": 431
+    },
+    "baseline/TypeOK": {
+      "status": "pass",
+      "invariant": "TypeOK",
+      "exitStatus": 0,
+      "generated": 7659682,
+      "distinct": 777360,
+      "remaining": 0
+    },
+    "baseline/NoStalePublication": {
+      "status": "pass",
+      "invariant": "NoStalePublication",
+      "exitStatus": 0,
+      "generated": 7659682,
+      "distinct": 777360,
+      "remaining": 0
     },
     "baseline/ReadinessOnce": {
       "status": "pass",
       "invariant": "ReadinessOnce",
-      "generated": 14969,
-      "distinct": 3503,
+      "exitStatus": 0,
+      "generated": 7659682,
+      "distinct": 777360,
       "remaining": 0
     },
     "unguarded-response/NoStalePublication": {
       "status": "expected invariant violation",
       "invariant": "NoStalePublication",
-      "generated": 14,
-      "distinct": 8,
-      "remaining": 3
+      "exitStatus": 12,
+      "generated": 33,
+      "distinct": 22,
+      "remaining": 13
     },
     "unguarded-error/NoStalePublication": {
       "status": "expected invariant violation",
       "invariant": "NoStalePublication",
-      "generated": 15,
-      "distinct": 9,
-      "remaining": 4
+      "exitStatus": 12,
+      "generated": 34,
+      "distinct": 23,
+      "remaining": 14
     },
     "hidden-render/NoHiddenPublication": {
       "status": "expected invariant violation",
       "invariant": "NoHiddenPublication",
-      "generated": 31,
-      "distinct": 21,
-      "remaining": 12
+      "exitStatus": 12,
+      "generated": 99,
+      "distinct": 53,
+      "remaining": 31
     },
     "lost-navigation/NavigationSurvivesRefresh": {
       "status": "expected invariant violation",
       "invariant": "NavigationSurvivesRefresh",
-      "generated": 289,
-      "distinct": 160,
-      "remaining": 103
+      "exitStatus": 12,
+      "generated": 3461,
+      "distinct": 1394,
+      "remaining": 952
+    },
+    "unpainted-ready/ReadyHasUsableView": {
+      "status": "expected invariant violation",
+      "invariant": "ReadyHasUsableView",
+      "exitStatus": 12,
+      "generated": 42,
+      "distinct": 25,
+      "remaining": 14
+    },
+    "hidden-paint/NoHiddenPublication": {
+      "status": "expected invariant violation",
+      "invariant": "NoHiddenPublication",
+      "exitStatus": 12,
+      "generated": 338,
+      "distinct": 176,
+      "remaining": 114
+    },
+    "stale-mount-paint/NoStalePublication": {
+      "status": "expected invariant violation",
+      "invariant": "NoStalePublication",
+      "exitStatus": 12,
+      "generated": 16755,
+      "distinct": 5610,
+      "remaining": 3867
+    },
+    "hidden-viewport/NoHiddenPublication": {
+      "status": "expected invariant violation",
+      "invariant": "NoHiddenPublication",
+      "exitStatus": 12,
+      "generated": 336,
+      "distinct": 175,
+      "remaining": 113
     }
   },
   "implementation": {
-    "tests": 17,
-    "original": "pass",
-    "restored": "pass",
+    "tests": 24,
+    "original": "fail",
+    "restored": "fail",
     "originalCounts": {
-      "tests": 17,
-      "pass": 17,
-      "fail": 0,
+      "tests": 24,
+      "pass": 23,
+      "fail": 1,
       "cancelled": 0,
       "skipped": 0,
       "todo": 0
     },
     "restoredCounts": {
-      "tests": 17,
-      "pass": 17,
-      "fail": 0,
+      "tests": 24,
+      "pass": 23,
+      "fail": 1,
       "cancelled": 0,
       "skipped": 0,
       "todo": 0
     },
-    "sourceSha256": "bd57616e5ed9515fb876e93bf12d8ff4cf185825465e4e82c0b86b5dde47ab5d",
+    "failedCases": [
+      "ETH refresh preserves a date window chosen on the chart while its request was pending"
+    ],
+    "sourceSha256": "4df3eaf1f09ea002ddfa038a6b605efbae8c54fb5a4c2ee72c56fe66b3f639e8",
     "mutations": {
       "premature-ready": "expected assertion failure",
       "hidden-render": "expected assertion failure",
@@ -125,15 +230,36 @@
       "lost-intraday-navigation": "expected assertion failure",
       "untracked-navigation": "expected assertion failure",
       "repeated-ready": "expected assertion failure",
-      "missing-escaper": "expected assertion failure"
+      "missing-escaper": "expected assertion failure",
+      "unpainted-ready": "expected assertion failure",
+      "hidden-paint-failure": "expected assertion failure",
+      "stale-mount-paint": "expected assertion failure",
+      "hidden-viewport": "expected assertion failure",
+      "leaked-mount": "expected assertion failure"
+    },
+    "mutationExitStatuses": {
+      "premature-ready": 1,
+      "hidden-render": 1,
+      "unguarded-archive": 1,
+      "unguarded-error": 1,
+      "lost-daily-navigation": 1,
+      "lost-intraday-navigation": 1,
+      "untracked-navigation": 1,
+      "repeated-ready": 1,
+      "missing-escaper": 1,
+      "unpainted-ready": 1,
+      "hidden-paint-failure": 1,
+      "stale-mount-paint": 1,
+      "hidden-viewport": 1,
+      "leaked-mount": 1
     }
   },
   "limitations": [
     "Finite reachable-state check, not an unbounded or whole-program proof",
     "HTTP abort can complete late; callbacks while suspended are a deliberate scheduler over-approximation",
     "Initializer replay injects import, HTTP, animation-frame, timer and DOM boundaries",
+    "The replay injects the chart mount, so paint results, window reports and teardown run at the adapter boundary and not in the Funnest engine",
     "Intraday controller publication is covered by verify-market-state; ETH integration is replay-tested",
     "No price accuracy, causal event effect, pixel layout, browser scheduling or liveness proof"
-  ],
-  "reviewedRuntimeCommit": "1ad3be543e870e74f10708c266f19572b217d25f"
+  ]
 }

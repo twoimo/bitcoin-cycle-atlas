@@ -158,3 +158,69 @@ test('ETH weekly refresh preserves the later preset and updated observation boun
   assert.equal(f.latest().range.start, selected.start); assert.equal(f.latest().range.end, selected.end);
   assert.match(f.latest().range.contextKey, /weekly:2026-10-24T02/);
 });
+
+test('ETH announces readiness only after the chart confirms painted prices', async () => {
+  const f = await loaded({ paint: 'manual' });
+  assert.equal(f.draws.length, 1);
+  assert.equal(f.document.documentElement.dataset.boot, 'loading', 'readiness must wait for the chart paint confirmation');
+  assert.deepEqual(f.events, []);
+  f.paint(0); await f.settle();
+  assert.equal(f.document.documentElement.dataset.boot, 'ready'); assert.deepEqual(f.events, ['atlas:ready']);
+});
+
+test('ETH paint failure reveals an actionable retry and the retry mounts a new chart', async () => {
+  const f = await loaded({ paint: 'manual' });
+  f.paintRejects(0); await f.settle();
+  assert.equal(f.document.documentElement.dataset.boot, 'ready', 'a chart that cannot paint must release the shell with its retry');
+  assert.equal(f.app.querySelector('#eth-empty button').hidden, false); assert.match(f.status(), /실패/);
+  f.refresh();
+  assert.equal(f.draws[0].destroyed, true, 'the retry must discard the failed chart');
+  f.replyLive(0, ethPayload(2)); await f.settle();
+  assert.equal(f.draws.length, 2); f.paint(1); await f.settle();
+  assert.equal(f.app.querySelector('#eth-empty').hidden, true); assert.doesNotMatch(f.status(), /실패/);
+  assert.deepEqual(f.events, ['atlas:ready']);
+});
+
+test('ETH paint failure while suspended cannot release the boot shell', async () => {
+  const f = await loaded({ paint: 'manual' });
+  f.hide(); f.paintRejects(0); await f.settle();
+  assert.equal(f.document.documentElement.dataset.boot, 'loading', 'a suspended paint failure must not release the boot shell');
+  assert.deepEqual(f.events, []);
+});
+
+test('ETH destroyed chart cannot mark its replacement failed with a late paint result', async () => {
+  const f = await loaded({ paint: 'manual' });
+  f.paintRejects(0); await f.settle();
+  f.interval('weekly'); await f.settle();
+  assert.equal(f.paints.length, 2, 'the failed chart takes the weekly series and waits for its paint');
+  f.refresh(); f.replyLive(0, ethPayload(2)); await f.settle();
+  assert.equal(f.draws[0].destroyed, true); assert.equal(f.draws.length, 2);
+  f.paint(2); await f.settle();
+  assert.doesNotMatch(f.status(), /실패/);
+  f.paintRejects(1, 'Funnest chart was destroyed before paint'); await f.microtasks(); f.resize(); await f.settle();
+  assert.doesNotMatch(f.status(), /실패/, 'a destroyed chart must not mark its replacement failed');
+});
+
+test('ETH chart window report while suspended cannot move the range or the workbench', async () => {
+  const f = await loaded();
+  const state = f.workbench().state, before = { ...state.range };
+  f.hide(); const updates = f.workbenchUpdates();
+  f.nativeRange({ start: before.start + 86400 * 5, end: before.end - 86400 * 5 });
+  assert.equal(f.workbenchUpdates(), updates, 'a suspended chart window report must not refresh the workbench');
+  assert.equal(state.range.start, before.start, 'a suspended chart window report must not move the range');
+});
+
+test('ETH refresh preserves a date window chosen on the chart while its request was pending', async () => {
+  const f = await loaded(); f.refresh();
+  const range = f.latest().range, chosen = { start: range.start + 86400 * 10, end: range.end - 86400 * 10 };
+  f.nativeRange(chosen); f.replyLive(0, ethPayload(2)); await f.settle();
+  assert.deepEqual(f.latest().nativeRange, { from: chosen.start * 1000, to: chosen.end * 1000 },
+    'a live refresh must not reset a window chosen on the chart while it was pending');
+});
+
+test('ETH discarded document destroys its chart and a persisted hide keeps it', async () => {
+  const f = await loaded();
+  f.hide(); assert.notEqual(f.latest().destroyed, true, 'a persisted hide must keep the chart for restoration');
+  f.show(); await f.settle(); assert.equal(f.draws.length, 1);
+  f.hide(false); assert.equal(f.latest().destroyed, true, 'a discarded document must destroy its chart');
+});

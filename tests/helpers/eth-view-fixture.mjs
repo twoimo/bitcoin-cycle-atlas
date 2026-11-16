@@ -83,9 +83,11 @@ export function ethPayload(revision = 1) {
 /** Execute the complete production initializer and inline boot script. Only
  * imports, HTTP, animation-frame, timer and DOM boundaries are injected; no
  * private function is extracted or rewritten. Requests deliberately permit late
- * success after abort so ownership cannot accidentally rely on browser abort. */
-export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
-  const requests = [], liveRequests = [], frames = new Map(), timers = new Map(), draws = [], emitted = [];
+ * success after abort so ownership cannot accidentally rely on browser abort.
+ * With paint 'manual', each chart paint confirmation stays pending until the
+ * test settles it, so a case can order it against other events. */
+export async function ethViewFixture({ query = '', pathname = '/', paint = 'auto' } = {}) {
+  const requests = [], liveRequests = [], frames = new Map(), timers = new Map(), draws = [], paints = [], emitted = [];
   const window = new Surface(), document = new Surface();
   const bootTimers = new Map(); let bootTimerId = 0;
   window.setTimeout = callback => { bootTimers.set(++bootTimerId, callback); return bootTimerId; };
@@ -109,7 +111,11 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
   const atlasCandlesToFunnestBars = series => { const bars=series.candles.map(row=>({...row,time:row.time*1000}));barsToSeries.set(bars,series);return bars; };
   const mountObservedPriceChart = (_plot,options) => {
     const record={...options,setAtlasRangeCalls:0,nativeRange:options.range?{from:options.range.start*1000,to:options.range.end*1000}:null,nativeMagnet:false,atlasMagnet:options.magnet||'off',chart:{layout:{plotWidth:554},setMagnet(value){record.nativeMagnet=value;},getVisibleTimeRange(){return record.nativeRange;}}};draws.push(record);
-    return {chart:record.chart,ready:async()=>({painted:true,status:'ready',bars:record.series.candles.length}),setData(bars){record.series=barsToSeries.get(bars);},setRange(range){const start=range.from/1000,end=range.to/1000;if(record.range?.start!==start||record.range?.end!==end)record.range={...record.range,start,end};},setAtlasRange(range){record.setAtlasRangeCalls++;record.range=range;record.nativeRange={from:range.start*1000,to:range.end*1000};},setChartType(value){record.chartType=value;},setScale(value){record.scale=value;},setAtlasInteraction(value){record.interaction={...value};record.atlasMagnet=value.magnet;},setAtlasRows(rows){record.sourceRows=rows;},setPriceExtrema(value){record.priceDomain=value;},setAtlasOverlays(value){Object.assign(record,value);},addOverlay(){return {redraw(){},remove(){}};},destroy(){record.destroyed=true;}};
+    // Like the runtime, one promise answers every ready() call until setData.
+    let watch=null;
+    const painted=()=>({painted:true,status:'ready',bars:record.series.candles.length});
+    const ready=paint==='manual'?()=>watch??=new Promise((resolve,reject)=>paints.push({chart:record,resolve:()=>resolve(painted()),reject})):async()=>painted();
+    return {chart:record.chart,ready,setData(bars){record.series=barsToSeries.get(bars);watch=null;},setRange(range){const start=range.from/1000,end=range.to/1000;if(record.range?.start!==start||record.range?.end!==end)record.range={...record.range,start,end};},setAtlasRange(range){record.setAtlasRangeCalls++;record.range=range;record.nativeRange={from:range.start*1000,to:range.end*1000};},setChartType(value){record.chartType=value;},setScale(value){record.scale=value;},setAtlasInteraction(value){record.interaction={...value};record.atlasMagnet=value.magnet;},setAtlasRows(rows){record.sourceRows=rows;},setPriceExtrema(value){record.priceDomain=value;},setAtlasOverlays(value){Object.assign(record,value);},addOverlay(){return {redraw(){},remove(){}};},destroy(){record.destroyed=true;}};
   };
   const deps = {
     withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,nativeDateRange,mountObservedPriceChart,atlasCandlesToFunnestBars,
@@ -164,7 +170,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     app.dispatchEvent({ type: 'click', target });
   };
   return {
-    requests, liveRequests, frames, timers, draws, events: emitted, initialization, document, app, location, urlWrites, indicator:indicatorElement,indicatorRect,workbenchUpdates:()=>workbenchUpdates,workbench:()=>workbenchOptions,
+    requests, liveRequests, frames, timers, draws, paints, events: emitted, initialization, document, app, location, urlWrites, indicator:indicatorElement,indicatorRect,workbenchUpdates:()=>workbenchUpdates,workbench:()=>workbenchOptions,
     microtasks, frame, settle,
     reply: (index, payload) => requests[index].resolve({ ok: true, json: async () => payload }),
     reject: (index, message = 'Archive failed') => requests[index].reject(new Error(message)),
@@ -180,7 +186,14 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     show: () => window.dispatchEvent({ type: 'pageshow', persisted: true }),
     resize: () => resize(), refresh: () => click('action', 'refresh'),
     interval: value => click('interval', value), span: value => click('span', value),
+    // pan and priceRange call the Atlas navigation callbacks directly. The real
+    // bindChartNavigation cannot deliver them once a chart is mounted, because
+    // getRange then returns null. nativeRange is the zoom or pan a user still has.
+    // The mount reports its new window unless it was destroyed.
     pan: range => navigation.onRangeChange(range), priceRange: range => navigation.onPriceRangeChange(range), navigationRange: () => navigation.getRange(),
+    nativeRange: range => { const chart = draws.at(-1); if (chart.destroyed) return; chart.nativeRange = { from: range.start * 1000, to: range.end * 1000 }; chart.onViewport(chart.nativeRange); },
+    paint: index => paints[index].resolve(),
+    paintRejects: (index, message = 'Funnest chart did not paint within 5 seconds') => paints[index].reject(new Error(message)),
     focusEvent: id => historyOptions.onFocusEvent(id), latest: () => draws.at(-1),
     status: () => app.querySelector('#eth-status').textContent,
     info: () => { click('action', 'info'); return document.body.nodes.get('eth-data-dialog'); },
