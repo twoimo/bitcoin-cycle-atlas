@@ -3,7 +3,7 @@ import { RELAY_TOPICS, classifyRelayEntry, relayEntries, relayMatches } from './
 // 릴레이 콘텐츠 방(Relay room).
 //
 // RelayDeck은 텔레그램(소수의견)·인생의 방(네이버 프리미엄)·모바일한경 세 원천을 한 리서치룸으로
-// 보낸다. 카카오톡은 분류가 안 되므로, 이 화면이 세 원천을 좌측 채널 목록 → 우측 대화로 나눠 보여 준다.
+// 보낸다. 카카오톡은 분류가 안 되므로, 이 화면이 세 원천을 좌측 채널 목록 → 우측 방으로 나눠 보여 준다.
 // 데이터는 RelayDeck가 내보낸 ./data/relay/index.json을 읽기만 하며(사이트는 계산하지 않음),
 // 값이 없거나 형식이 다르면 조용히 빈 상태를 보여 준다.
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -202,177 +202,383 @@ function articleInline(text) {
 
 const svg = path => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">${path}</svg>`;
 const GLYPH = {
-  relay: svg('<path d="M4 5h16v11H7l-3 3V5Zm4 4h8M8 12h5"/>'),
-  chat: svg('<path d="M4 5h16v11H7l-3 3V5Zm4 4h8M8 12h5"/>'),
   book: svg('<path d="M12 6c-3-2-6-2-10-1v14c4-1 7-1 10 1 3-2 6-2 10-1V5c-4-1-7-1-10 1Zm0 0v14"/>'),
-  paper: svg('<path d="M5 3h11l3 3v15H5V3Zm3 5h8M8 12h8M8 16h5"/>'),
   refresh: svg('<path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V9H15"/>'),
   back: svg('<path d="M15 5l-7 7 7 7"/>'),
 };
-const KIND_GLYPH = { chat: 'chat', articles: 'book', editions: 'paper' };
-const kindGlyph = kind => GLYPH[KIND_GLYPH[kind]] || GLYPH.book;
 
-function roomCount(item) {
-  const kind = item?.kind || 'chat';
-  return kind === 'chat' ? (item?.messages?.length || 0)
-    : kind === 'articles' ? (item?.articles?.length || 0)
-      : (item?.editions?.length || 0);
+function countLabel(room) {
+  const count = relayEntries(room).length;
+  return room.kind === 'chat' ? `메시지 ${count}개` : room.kind === 'articles' ? `글 ${count}편` : `판본 ${count}개`;
 }
-function countLabel(item) {
-  const count = roomCount(item), kind = item?.kind || 'chat';
-  return kind === 'chat' ? `메시지 ${count}개` : kind === 'articles' ? `글 ${count}편` : `판본 ${count}개`;
-}
-function shortTitle(item) {
-  const title = String(item?.title || item?.id || '');
+function shortTitle(room) {
+  const title = String(room.title || room.id);
   return title.replace(/\s*\([^)]*\)\s*$/, '').trim() || title;
 }
-function roomPreview(item) {
-  const kind = item?.kind || 'chat';
-  if (kind === 'chat') {
-    const messages = Array.isArray(item.messages) ? item.messages : [];
-    const last = messages[messages.length - 1];
+const graphemes = new Intl.Segmenter('ko', { granularity: 'grapheme' });
+const initial = room => graphemes.segment(shortTitle(room))[Symbol.iterator]().next().value?.segment ?? '';
+const entryTime = entry => String(entry?.at || entry?.published_date || entry?.date || '');
+
+// The row preview is the entry the room shows last, at the bottom of its stream.
+function roomPreview(room) {
+  const last = relayEntries(room).at(-1);
+  if (room.kind === 'chat') {
     if (!last) return '아직 받은 메시지가 없습니다';
     const text = String(last.text || '').replace(/\s+/g, ' ').trim();
     if (text) return text.length > 64 ? `${text.slice(0, 64)}…` : text;
     const images = Array.isArray(last.images) ? last.images.length : 0;
     return images ? `사진 ${images}장` : '메시지';
   }
-  if (kind === 'articles') {
-    const articles = Array.isArray(item.articles) ? item.articles : [];
-    const article = articles[articles.length - 1];
-    return article?.title ? String(article.title).slice(0, 64) : '아직 받은 글이 없습니다';
-  }
-  const edition = Array.isArray(item.editions) ? item.editions[0] : null;
-  return edition ? `${edition.version || ''} ${dayLabel(edition.date)}`.trim() : '아직 받은 판본이 없습니다';
+  if (room.kind === 'articles') return last?.title ? String(last.title).slice(0, 64) : '아직 받은 글이 없습니다';
+  return last ? `${last.version || ''} ${dayLabel(last.date)}`.trim() : '아직 받은 판본이 없습니다';
+}
+// Telegram's list clock: the time for today, else the date. A date-only source never gains a time.
+function rowTime(raw) {
+  const now = new Date(Date.now() + KST);
+  const today = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-${String(now.getUTCDate()).padStart(2, '0')}`;
+  const dateOnly = /^\d{4}-\d{2}-\d{2}$/.test(raw), date = dateOnly ? raw : dayKey(raw);
+  if (!date) return raw;
+  if (!dateOnly && date === today) return clock(raw);
+  const [year, month, day] = date.split('-');
+  return Number(year) === now.getUTCFullYear() ? `${month}.${day}` : `${year}.${month}.${day}`;
 }
 
-export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady } = {}) {
-  if (!root) throw new TypeError('relay view root is required');
-  let data = null, roomId = null, articleId = null, editionIndex = 0, pageIndex = 0, loading = false, error = null, readySent = false;
-  let imageAssets = {};
-  let revealLatest = true;
-  let topic = 'all', query = '', renderVersion = 0;
-  const filtered = item => relayEntries(item).filter(entry => relayMatches(entry, { topic, query }));
-  const filtering = () => topic !== 'all' || query.trim() !== '';
-  const noMatches = () => '<p class="relay-empty" role="status">조건에 맞는 항목이 없습니다. 분류나 검색어를 바꿔 주세요.</p>';
+/** @typedef {'chat'|'articles'|'editions'} RoomKind */
+/** @typedef {{id:string, kind:RoomKind, title?:string, subtitle?:string, messages?:object[], articles?:object[], editions?:object[]}} Room */
+/** @typedef {{generatedAt:string|null, rooms:Room[], token:number, assets:Record<string,string>}} RelayData */
+/** The relay's two URL params as read, before the data can vouch for them.
+ * @typedef {{room:string|null, post:string|null}} RawAddress */
+/** A RawAddress the ready data honors: `room` exists, `post` is an article of that articles room.
+ * @typedef {{room:string|null, post:string|null}} Address */
+/** @typedef {{topic:string, query:string}} Filters */
+/** Source-order indexes into room.editions and its pages, valid only for `room`.
+ * @typedef {{room:string, edition:number, page:number}} EditionCursor */
+/**
+ * Only `ready` has panes, so a status can never sit inside a pane the stacked layout hides.
+ * @typedef {{kind:'idle'|'loading', pending:RawAddress}
+ *   | {kind:'error', pending:RawAddress, message:string}
+ *   | {kind:'empty', pending:RawAddress, generatedAt:string|null}
+ *   | {kind:'ready', data:RelayData, address:Address, edition:EditionCursor|null}} Phase */
+/** @typedef {{phase:Phase, filters:Filters}} Model */
+/** CSS owns the threshold; JS only reads `--relay-layout` back. @typedef {'split'|'stack'} Layout */
+/**
+ * Derived from a ready Model on every commit and never stored.
+ * @typedef {{data:RelayData, address:Address, room:Room, pane:'list'|'room', article:object|null,
+ *   edition:{index:number, page:number}|null, filters:Filters, filtering:boolean,
+ *   shown:object[], byRoom:Map<string, object[]>, mode:'default'|'articles'|'reading'}} View */
+/** @typedef {{kind:'keep'}|{kind:'row', room:string}|{kind:'card', article:string}|{kind:'content'}|{kind:'control', name:'query'|'topic'}} FocusIntent */
 
-  function topicEvidence(entry) {
-    const result = classifyRelayEntry(entry);
-    return `<details class="relay-topic-evidence"><summary>${esc(result.topics.map(match => match.label).join(' · '))} · 분류 근거</summary><ul>${result.topics.map(match => `<li><span class="relay-topic-evidence-label">${esc(match.label)}</span>: ${match.evidence ? `<span class="relay-topic-evidence-keyword">「${esc(match.evidence.quote)}」</span><blockquote class="relay-msg-quote relay-topic-evidence-quote">${esc(match.evidence.excerpt)}</blockquote>` : esc(result.reason)}</li>`).join('')}</ul><p>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.</p></details>`;
+const HOME = Object.freeze({ room: null, post: null });
+const NO_FILTERS = Object.freeze({ topic: 'all', query: '' });
+const RELAY_PARAMS = ['room', 'post'];
+const ROOM_KINDS = new Set(['chat', 'articles', 'editions']);
+const KEEP = Object.freeze({ kind: 'keep' });
+const CONTENT = Object.freeze({ kind: 'content' });
+
+function parseRelayPayload(json, token, assets) {
+  const seen = new Set(), rooms = [];
+  for (const room of Array.isArray(json?.rooms) ? json.rooms : []) {
+    // A repeated id would make `[data-room]` and the `room` param ambiguous.
+    if (!room || typeof room.id !== 'string' || !room.id || seen.has(room.id)) continue;
+    seen.add(room.id);
+    rooms.push(ROOM_KINDS.has(room.kind) ? room : { ...room, kind: 'chat' });
   }
+  const generatedAt = typeof json?.generated_at === 'string' ? json.generated_at : null;
+  return rooms.length ? { kind: 'ready', data: { generatedAt, rooms, token, assets } } : { kind: 'empty', generatedAt };
+}
 
-  function filterForm(item) {
-    const entries = relayEntries(item), shown = filtered(item).length;
-    return `<form class="relay-filter-form" aria-label="릴레이 분류와 검색">
-      <label>주제<select name="topic" aria-label="릴레이 주제"><option value="all">전체 (${entries.length})</option>${RELAY_TOPICS.map(tag => `<option value="${tag.id}"${topic === tag.id ? ' selected' : ''}>${tag.label} (${entries.filter(entry => relayMatches(entry,{topic:tag.id})).length})</option>`).join('')}</select></label>
-      <label>원문 검색<input type="search" name="query" aria-label="릴레이 제목·본문 검색" value="${esc(query)}" placeholder="제목·본문"></label>
-      <button type="submit">검색</button><button type="button" data-relay-action="clear-filters">초기화</button>
-      <output role="status" aria-live="polite">${shown} / ${entries.length}건 · 원문 키워드 분류</output>
-    </form>`;
-  }
-  const imageSource = value => Object.hasOwn(imageAssets, value) ? imageAssets[value] : value;
-  const signalReady = () => { if (!readySent) { readySent = true; try { onReady?.(); } catch { /* optional */ } } };
+/** @param {'center'|'page'|'any'} scope @returns {RawAddress|null} null when the entry belongs to another page */
+function readRelayParams(search, scope) {
+  const params = new URLSearchParams(search);
+  if (scope === 'center' && params.get('center') !== 'relay') return null;
+  if (scope === 'page' && params.get('page') !== 'relay') return null;
+  return { room: params.get('room') || null, post: params.get('post') || null };
+}
+function serializeAddress(address) {
+  const params = new URLSearchParams();
+  for (const key of RELAY_PARAMS) if (address[key]) params.set(key, address[key]);
+  return params.toString();
+}
+const sameAddress = (a, b) => serializeAddress(a) === serializeAddress(b);
 
-  const rooms = () => (Array.isArray(data?.rooms) ? data.rooms : []);
-  const room = () => rooms().find(item => item.id === roomId) || rooms()[0] || null;
+/**
+ * The navigation port, the only code that touches `history` or `location`.
+ * @typedef {{read:() => RawAddress|null, from:() => RawAddress|null,
+ *   write:(next:Address, how:'push'|'replace', from?:Address) => void,
+ *   back:() => void, subscribe:(listener:(raw:RawAddress) => void) => () => void}} RelayAddressPort
+ */
 
-  async function load() {
-    if (loading) return;
-    loading = true; error = null;
-    if (!data) render();
-    try {
-      const inline = embeddedData?.();
-      if (inline) {
-        data = JSON.parse(inline);
-        const assets = embeddedAssets?.();
-        imageAssets = assets ? JSON.parse(assets) : {};
+/** Embedded, the relay writes the shell's URL, the one the user sees and shares. @returns {RelayAddressPort} */
+function relayAddressFor(win) {
+  if (!win?.history || !win.location) return createMemoryRelayAddress('');
+  let target = win, scope = 'page';
+  try {
+    if (win.parent !== win && new URLSearchParams(win.location.search).get('embedded') === '1'
+      && win.parent.location.origin === win.location.origin) { target = win.parent; scope = 'center'; }
+  } catch { /* a cross-origin parent keeps the relay on its own document */ }
+  let writing = false;
+  const read = () => readRelayParams(target.location.search, scope);
+  return {
+    read,
+    from() {
+      const from = target.history.state?.relay?.from;
+      return typeof from === 'string' ? readRelayParams(from, 'any') : null;
+    },
+    write(next, how, from = HOME) {
+      const url = new URL(target.location.href);
+      for (const key of RELAY_PARAMS) if (next[key]) url.searchParams.set(key, next[key]); else url.searchParams.delete(key);
+      // `from` proves which screen the entry below shows, so the in-app back may pop it.
+      const state = how === 'push' ? { relay: { from: serializeAddress(from) } } : target.history.state;
+      writing = true;
+      try { target.history[how === 'push' ? 'pushState' : 'replaceState'](state, '', url); } finally { writing = false; }
+    },
+    back: () => target.history.back(),
+    subscribe(listener) {
+      // currententrychange also reports the shell's own push of a bare `center=relay`;
+      // popstate only reports traversals. Listening to one keeps each traversal single.
+      const source = target.navigation?.addEventListener ? target.navigation : target;
+      const type = source === target ? 'popstate' : 'currententrychange';
+      const stop = () => source.removeEventListener(type, handler);
+      function handler() {
+        if (writing) return;
+        if (win.closed) { stop(); return; }
+        const raw = read();
+        if (raw) listener(raw);
       }
-      else {
-        const response = await fetch('./data/relay/index.json', { signal: AbortSignal.timeout(15000) });
-        if (!response.ok) throw new Error('relay data unavailable');
-        data = await response.json();
-      }
-      if (!rooms().some(item => item.id === roomId)) roomId = rooms()[0]?.id || null;
-      revealLatest = true;
-    } catch (cause) {
-      error = '릴레이 자료를 아직 받지 못했습니다.'; data = null;
-    } finally {
-      loading = false; render(); signalReady();
-    }
+      source.addEventListener(type, handler);
+      win.addEventListener('pagehide', event => { if (!event.persisted) stop(); });
+      return stop;
+    },
+  };
+}
+
+/** In-memory session history with the browser port's semantics; back() notifies synchronously. */
+export function createMemoryRelayAddress(search = '') {
+  const entries = [{ address: readRelayParams(search, 'any'), from: null }];
+  const listeners = new Set();
+  let index = 0;
+  return {
+    read: () => entries[index].address,
+    from: () => entries[index].from,
+    write(next, how, from = HOME) {
+      const address = { room: next.room, post: next.post };
+      if (how === 'push') { entries.splice(index + 1); entries.push({ address, from: { ...from } }); index += 1; }
+      else entries[index] = { address, from: entries[index].from };
+    },
+    back() {
+      if (index === 0) return;
+      index -= 1;
+      for (const listener of listeners) listener(entries[index].address);
+    },
+    subscribe(listener) { listeners.add(listener); return () => listeners.delete(listener); },
+    get href() { const search = serializeAddress(entries[index].address); return search ? `?${search}` : ''; },
+    get length() { return entries.length; },
+    get index() { return index; },
+  };
+}
+
+/** @param {RawAddress} raw @param {RelayData} data @returns {Address} */
+function normalizeAddress(raw, data) {
+  const room = data.rooms.find(item => item.id === raw.room);
+  if (!room) return HOME;
+  const post = room.kind === 'articles' && relayEntries(room).some(article => article.id === raw.post) ? raw.post : null;
+  return { room: room.id, post };
+}
+function withAddress(model, address) {
+  const { phase } = model, room = address.room ?? phase.data.rooms[0].id;
+  return { ...model, phase: { ...phase, address, edition: phase.edition?.room === room ? phase.edition : null } };
+}
+const filtering = filters => filters.topic !== 'all' || filters.query.trim() !== '';
+const shownMemo = new WeakMap();
+/** @returns {Map<string, object[]>} each room's matching entries in source order */
+function shownByRoom(data, filters) {
+  const key = `${filters.topic}\u0000${filters.query}`, memo = shownMemo.get(data);
+  if (memo?.key === key) return memo.byRoom;
+  const byRoom = new Map(data.rooms.map(room => [room.id, relayEntries(room).filter(entry => relayMatches(entry, filters))]));
+  shownMemo.set(data, { key, byRoom });
+  return byRoom;
+}
+function deriveView(model) {
+  const { phase, filters } = model;
+  if (phase.kind !== 'ready') return null;
+  const { data, address } = phase;
+  const room = data.rooms.find(item => item.id === address.room) ?? data.rooms[0];
+  const byRoom = shownByRoom(data, filters), shown = byRoom.get(room.id);
+  const article = room.kind === 'articles' && address.post ? relayEntries(room).find(item => item.id === address.post) ?? null : null;
+  let edition = null;
+  if (room.kind === 'editions' && shown.length) {
+    const editions = relayEntries(room);
+    const cursor = phase.edition?.room === room.id && shown.includes(editions[phase.edition.edition]) ? phase.edition : null;
+    // The newest edition is the default, so the row preview and the open room agree on "latest".
+    const index = cursor ? cursor.edition : editions.indexOf(shown.at(-1));
+    const pages = Array.isArray(editions[index].pages) ? editions[index].pages.length : 0;
+    edition = { index, page: cursor ? Math.max(0, Math.min(cursor.page, pages - 1)) : 0 };
   }
+  return {
+    data, address, room, article, edition, filters, byRoom, shown,
+    filtering: filtering(filters),
+    pane: address.room === null ? 'list' : 'room',
+    mode: article ? 'reading' : room.kind === 'articles' ? 'articles' : 'default',
+  };
+}
+/** What the reader sees. Writing history between two views with one key would make a dead Back press. */
+function screenKey(view, layout) {
+  const shown = `${view.room.id}\u0000${view.article?.id ?? ''}`;
+  if (layout === 'split') return shown;
+  return view.pane === 'list' ? 'list' : `room\u0000${shown}`;
+}
+function leaveTarget(view) {
+  if (view.article) return { room: view.room.id, post: null };
+  return view.address.room === null ? null : HOME;
+}
+/** history.back() only when the entry's `from` proves the entry below shows the target screen,
+ * so the in-app back never lands on another page. @returns {'back'|'replace'} */
+function leaveStep(from, target, model, layout) {
+  if (!from) return 'replace';
+  const below = deriveView(withAddress(model, normalizeAddress(from, model.phase.data)));
+  return screenKey(below, layout) === screenKey(deriveView(withAddress(model, target)), layout) ? 'back' : 'replace';
+}
+function focusAfterTraversal(prev, next, layout) {
+  if (layout === 'stack' && prev.pane === 'room' && next.pane === 'list') return { kind: 'row', room: prev.room.id };
+  if (prev.article && !next.article && prev.room.id === next.room.id) return { kind: 'card', article: prev.article.id };
+  const entered = next.article || (layout === 'stack' && next.pane === 'room');
+  return entered && screenKey(prev, layout) !== screenKey(next, layout) ? CONTENT : KEEP;
+}
+/** Entering a room shows its newest entry. Filters, readers and editions keep their own position. */
+function revealsLatest(prev, next, layout) {
+  if (next.article || next.room.kind === 'editions') return false;
+  if (!prev) return true;
+  if (prev.article && prev.room.id === next.room.id) return false;
+  return prev.room.id !== next.room.id || (layout === 'stack' && prev.pane === 'list' && next.pane === 'room');
+}
 
-  function roomList() {
-    return rooms().map(item => {
-      const kind = item.kind || 'chat';
-      const active = item.id === roomId;
-      const count = roomCount(item);
-      return `<li><button type="button" class="relay-room-item${active ? ' active' : ''}" data-room="${esc(item.id)}" title="${esc(item.title || item.id)}"${active ? ' aria-current="true"' : ''}>
-        <span class="relay-room-avatar" data-kind="${esc(kind)}" aria-hidden="true">${kindGlyph(kind)}</span>
-        <span class="relay-room-copy">
-          <span class="relay-room-top">
-            <span class="relay-room-name"><span class="relay-room-full">${esc(item.title || item.id)}</span><span class="relay-room-short">${esc(shortTitle(item))}</span></span>
-            <span class="relay-room-count" aria-label="${esc(countLabel(item))}">${count}</span>
-          </span>
-          <span class="relay-room-sub">${esc(roomPreview(item))}</span>
-        </span>
-      </button></li>`;
-    }).join('');
-  }
+const NO_MATCHES = '<p class="relay-empty">조건에 맞는 항목이 없습니다. 분류나 검색어를 바꿔 주세요.</p>';
+const assetSource = assets => value => Object.hasOwn(assets, value) ? assets[value] : value;
 
-  function chatDetail(item) {
-    const messages = filtered(item);
-    if (!messages.length && filtering()) return noMatches();
-    if (!messages.length) return '<p class="relay-empty" role="status">아직 받은 메시지가 없습니다.</p>';
-    const byId = new Map(relayEntries(item).map(message => [String(message.id), message]));
-    const authors = new Set(messages.map(message => String(message.author || '').trim()).filter(Boolean));
-    const showAuthor = authors.size > 1;
-    let lastDay = null;
-    const rows = messages.map(message => {
-      const key = dayKey(message.at);
-      const heading = key !== lastDay ? dayHeading(message.at) : '';
-      lastDay = key;
-      const divider = heading ? `<li class="relay-day" role="separator"><span>${esc(heading)}</span></li>` : '';
+function topicEvidence(entry) {
+  const result = classifyRelayEntry(entry);
+  return `<details class="relay-topic-evidence"><summary>${esc(result.topics.map(match => match.label).join(' · '))} · 분류 근거</summary><ul>${result.topics.map(match => `<li><span class="relay-topic-evidence-label">${esc(match.label)}</span>: ${match.evidence ? `<span class="relay-topic-evidence-keyword">「${esc(match.evidence.quote)}」</span><blockquote class="relay-msg-quote relay-topic-evidence-quote">${esc(match.evidence.excerpt)}</blockquote>` : esc(result.reason)}</li>`).join('')}</ul><p>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.</p></details>`;
+}
 
-      const text = renderMessageText(message);
-      const imageList = (Array.isArray(message.images) ? message.images : []).flatMap(image => {
-        const src = typeof image === 'string' ? image : image?.src;
-        if (!src) return [];
-        const width = Number(image?.width), height = Number(image?.height);
-        const dims = Number.isInteger(width) && Number.isInteger(height) && width > 0 && height > 0
-          ? ` width="${width}" height="${height}"` : '';
-        const alt = String(image?.alt || message.text || '텔레그램 사진').slice(0, 160);
-        return [{ src: imageSource(src), dims, alt }];
-      });
-      const images = imageList.length ? `<div class="relay-msg-images" data-count="${imageList.length}">${imageList.map(image =>
-        `<a class="relay-msg-image" href="${esc(image.src)}" target="_blank" rel="noopener noreferrer"><img src="${esc(image.src)}" alt="${esc(image.alt)}" loading="lazy" decoding="async"${image.dims}></a>`
-      ).join('')}</div>` : '';
+function renderPhase(phase) {
+  const message = phase.kind === 'error' ? phase.message : phase.kind === 'empty' ? '표시할 원천이 없습니다.' : '릴레이 자료를 불러오는 중입니다.';
+  const settled = phase.kind === 'error' || phase.kind === 'empty';
+  const clock = phase.kind === 'empty' && phase.generatedAt ? hhmm(phase.generatedAt) : '';
+  return `<div class="relay-blank-state"><p class="relay-empty" role="status">${esc(message)}</p>${settled ? '<button type="button" class="relay-retry" data-relay-action="reload">다시 불러오기</button>' : ''}${clock ? `<p class="relay-blank-clock"><span>15분마다 갱신</span> <time datetime="${esc(phase.generatedAt)}">${esc(clock)}</time></p>` : ''}</div>`;
+}
 
-      const previews = (Array.isArray(message.previews) ? message.previews : []).flatMap(preview => {
-        const url = safeHref(preview?.url);
-        if (!url) return [];
-        const title = preview.title || preview.display_url || url;
-        const site = preview.site_name || '', description = preview.description || '';
-        return [`<a class="relay-preview" href="${esc(url)}" target="_blank" rel="noopener noreferrer">
+/** Rendered once per data load. The form is never rebuilt while ready, so IME composition and an open select survive. */
+function renderFrame(view) {
+  const { data, filters } = view, entries = data.rooms.flatMap(room => relayEntries(room));
+  const topics = entries.map(entry => classifyRelayEntry(entry).topics.map(match => match.id));
+  const options = RELAY_TOPICS.map(tag => `<option value="${tag.id}"${filters.topic === tag.id ? ' selected' : ''}>${tag.label} (${topics.filter(ids => ids.includes(tag.id)).length})</option>`).join('');
+  const generated = data.generatedAt ? hhmm(data.generatedAt) : '';
+  return `<div class="relay-panes">
+    <aside class="relay-rooms" aria-label="릴레이 채널">
+      <header class="relay-rooms-head"><h2>채널</h2><span class="relay-rooms-total">${data.rooms.length}</span><button type="button" class="relay-refresh" data-relay-action="reload" aria-label="릴레이 새로고침" title="새로고침">${GLYPH.refresh}</button></header>
+      <form class="relay-filter-form" role="search" aria-label="릴레이 분류와 검색">
+        <label class="relay-filter-query"><span class="relay-filter-label">원문 검색</span><input type="search" name="query" aria-label="릴레이 제목·본문 검색" value="${esc(filters.query)}" placeholder="제목·본문 검색" enterkeyhint="search"></label>
+        <button type="submit">검색</button>
+        <label class="relay-filter-topic"><span class="relay-filter-label">주제</span><select name="topic" aria-label="릴레이 주제"><option value="all">전체 (${entries.length})</option>${options}</select></label>
+        <button type="button" data-relay-action="clear-filters">초기화</button>
+        <output role="status" aria-live="polite"></output>
+      </form>
+      <ul class="relay-room-list" aria-label="채널 목록"></ul>
+      <footer class="relay-rooms-foot">${generated ? `<span>15분마다 갱신</span><time datetime="${esc(data.generatedAt)}">${esc(generated)}</time>` : '<span>RelayDeck</span>'}</footer>
+    </aside>
+    <section class="relay-detail" aria-labelledby="relay-room-title"></section>
+    <div class="relay-backdrop" aria-hidden="true"></div>
+  </div>`;
+}
+
+/** One row per room in data order. No <img>, so a room renders only its own images. No unread badge:
+ * the data has no unread counts, and a count pill in that place reads as one. */
+function renderRows(view) {
+  return view.data.rooms.map(room => {
+    const total = relayEntries(room).length, raw = entryTime(relayEntries(room).at(-1));
+    const sub = view.filtering ? `${view.byRoom.get(room.id).length} / ${total}건 일치` : roomPreview(room);
+    return `<li><button type="button" class="relay-room-item" data-room="${esc(room.id)}" title="${esc(room.title || room.id)}" tabindex="-1">
+      <span class="relay-room-avatar" data-kind="${room.kind}" aria-hidden="true">${esc(initial(room))}</span>
+      <span class="relay-room-copy">
+        <span class="relay-room-top"><span class="relay-room-name">${esc(room.title || room.id)}</span>${raw ? `<time class="relay-room-time" datetime="${esc(raw)}">${esc(rowTime(raw))}</time>` : ''}</span>
+        <span class="relay-room-sub">${esc(sub)}</span>
+      </span>
+    </button></li>`;
+  }).join('');
+}
+
+function renderRoom(view) {
+  const { room, article, data } = view, title = room.title || room.id, src = assetSource(data.assets);
+  const lead = article
+    ? `<button type="button" class="relay-detail-back" data-relay-action="article-back" aria-label="글 목록으로" title="글 목록">${GLYPH.back}</button>`
+    : `<button type="button" class="relay-room-back" data-relay-action="room-back" aria-label="채널 목록으로" title="채널 목록">${GLYPH.back}</button><span class="relay-peer-avatar" data-kind="${room.kind}" aria-hidden="true">${esc(initial(room))}</span>`;
+  const topic = RELAY_TOPICS.find(tag => tag.id === view.filters.topic)?.label ?? '전체 주제';
+  const query = view.filters.query.trim();
+  const note = view.filtering
+    ? `<p class="relay-filter-note">${esc([query ? `'${query}'` : '', topic, `${view.shown.length} / ${relayEntries(room).length}건`].filter(Boolean).join(' · '))}</p>` : '';
+  const body = room.kind === 'chat' ? chatDetail(room, view, src)
+    : room.kind === 'editions' ? editionDetail(room, view, src)
+      : article ? articleReader(article, room.title || '인생의 방', src) : articleStream(view, src);
+  return `<header class="relay-detail-head${article ? ' relay-detail-head--reading' : ''}">${lead}
+      <div class="relay-peer"><h2 id="relay-room-title">${esc(title)}</h2><p class="relay-peer-sub">${esc([room.subtitle, countLabel(room)].filter(Boolean).join(' · '))}</p></div>
+      ${data.generatedAt ? `<span class="relay-peer-updated">최근 갱신 ${esc(hhmm(data.generatedAt))}</span>` : ''}
+    </header>${note}
+    <div class="relay-detail-body" role="region" aria-label="${esc(title)} 내용" tabindex="0">${body}</div>`;
+}
+
+function chatDetail(item, view, imageSource) {
+  const messages = view.shown;
+  if (!messages.length) return view.filtering ? NO_MATCHES : '<p class="relay-empty">아직 받은 메시지가 없습니다.</p>';
+  const byId = new Map(relayEntries(item).map(message => [String(message.id), message]));
+  const authors = new Set(messages.map(message => String(message.author || '').trim()).filter(Boolean));
+  const showAuthor = authors.size > 1;
+  let lastDay = null;
+  const rows = messages.map(message => {
+    const key = dayKey(message.at);
+    const heading = key !== lastDay ? dayHeading(message.at) : '';
+    lastDay = key;
+    const divider = heading ? `<li class="relay-day" role="separator"><span>${esc(heading)}</span></li>` : '';
+
+    const text = renderMessageText(message);
+    const imageList = (Array.isArray(message.images) ? message.images : []).flatMap(image => {
+      const src = typeof image === 'string' ? image : image?.src;
+      if (!src) return [];
+      const width = Number(image?.width), height = Number(image?.height);
+      const dims = Number.isInteger(width) && Number.isInteger(height) && width > 0 && height > 0
+        ? ` width="${width}" height="${height}"` : '';
+      const alt = String(image?.alt || message.text || '텔레그램 사진').slice(0, 160);
+      return [{ src: imageSource(src), dims, alt }];
+    });
+    const images = imageList.length ? `<div class="relay-msg-images" data-count="${imageList.length}">${imageList.map(image =>
+      `<a class="relay-msg-image" href="${esc(image.src)}" target="_blank" rel="noopener noreferrer"><img src="${esc(image.src)}" alt="${esc(image.alt)}" loading="lazy" decoding="async"${image.dims}></a>`
+    ).join('')}</div>` : '';
+
+    const previews = (Array.isArray(message.previews) ? message.previews : []).flatMap(preview => {
+      const url = safeHref(preview?.url);
+      if (!url) return [];
+      const title = preview.title || preview.display_url || url;
+      const site = preview.site_name || '', description = preview.description || '';
+      return [`<a class="relay-preview" href="${esc(url)}" target="_blank" rel="noopener noreferrer">
           ${site ? `<span class="relay-preview-site">${esc(site)}</span>` : ''}
           <span class="relay-preview-title">${esc(title)}</span>
           ${description ? `<span class="relay-preview-description">${esc(description)}</span>` : ''}
           <span class="relay-preview-url">${esc(preview.display_url || url)}</span>
         </a>`];
-      }).join('');
+    }).join('');
 
-      const replied = message.reply_to ? byId.get(String(message.reply_to)) : null;
-      const reply = replied
-        ? `<div class="relay-reply"><span class="relay-reply-name">${esc(replied.author || item.title || '')}</span><span class="relay-reply-text">${esc(replySnippet(replied))}</span></div>`
-        : message.reply_to ? '<div class="relay-reply"><span class="relay-reply-text">이전 메시지</span></div>' : '';
-      const quote = message.quote ? `<blockquote class="relay-msg-quote">${esc(message.quote).replace(/\n/g, '<br>')}</blockquote>` : '';
-      const withheld = message.withheld && !text ? '<p class="relay-msg-withheld">Telegram에서 본문이 제한된 글입니다.</p>' : '';
-      const link = safeHref(message.url || message.link);
-      const album = imageList.length > 1 ? `<span class="relay-msg-album">사진 ${imageList.length}장</span>` : '';
-      const linkNote = link && !previews
-        ? `<a class="relay-msg-link" href="${esc(link)}" target="_blank" rel="noopener noreferrer">원문 보기</a>` : '';
-      const mediaOnly = imageList.length > 0 && !text && !previews && !quote && !reply && !withheld && !link && !showAuthor;
-      const author = showAuthor ? `<span class="relay-msg-author">${esc(message.author || '')}</span>` : '';
-      return `${divider}<li class="relay-msg${mediaOnly ? ' relay-msg--media' : ''}" data-message-id="${esc(message.id)}"${mediaOnly ? ` data-media="${imageList.length}"` : ''}>
+    const replied = message.reply_to ? byId.get(String(message.reply_to)) : null;
+    const reply = replied
+      ? `<div class="relay-reply"><span class="relay-reply-name">${esc(replied.author || item.title || '')}</span><span class="relay-reply-text">${esc(replySnippet(replied))}</span></div>`
+      : message.reply_to ? '<div class="relay-reply"><span class="relay-reply-text">이전 메시지</span></div>' : '';
+    const quote = message.quote ? `<blockquote class="relay-msg-quote">${esc(message.quote).replace(/\n/g, '<br>')}</blockquote>` : '';
+    const withheld = message.withheld && !text ? '<p class="relay-msg-withheld">Telegram에서 본문이 제한된 글입니다.</p>' : '';
+    const link = safeHref(message.url || message.link);
+    const album = imageList.length > 1 ? `<span class="relay-msg-album">사진 ${imageList.length}장</span>` : '';
+    const linkNote = link && !previews
+      ? `<a class="relay-msg-link" href="${esc(link)}" target="_blank" rel="noopener noreferrer">원문 보기</a>` : '';
+    const mediaOnly = imageList.length > 0 && !text && !previews && !quote && !reply && !withheld && !link && !showAuthor;
+    const author = showAuthor ? `<span class="relay-msg-author">${esc(message.author || '')}</span>` : '';
+    return `${divider}<li class="relay-msg${mediaOnly ? ' relay-msg--media' : ''}" data-message-id="${esc(message.id)}"${mediaOnly ? ` data-media="${imageList.length}"` : ''}>
         <div class="relay-bubble">
           ${author}${reply}${quote}${images}
           ${text ? `<p class="relay-msg-text">${text}</p>` : ''}
@@ -381,31 +587,31 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
           <div class="relay-msg-foot"><span>${esc(item.title || item.id)}</span>${!link ? '<span>원문 링크 미제공</span>' : ''}${album}<time datetime="${esc(message.at || '')}">${esc(clock(message.at))}</time></div>
         </div>
       </li>`;
-    }).join('');
-    return `<ol class="relay-chat" aria-label="${esc(item.title || '텔레그램')} 메시지">${rows}</ol>`;
-  }
+  }).join('');
+  return `<ol class="relay-chat" aria-label="${esc(item.title || '텔레그램')} 메시지">${rows}</ol>`;
+}
 
-  function articleReader(article, publication = '인생의 방') {
-    const title = article.title || '제목 없음';
-    const date = dayLabel(article.published_date || article.at);
-    const minutes = articleReadMinutes(article);
-    const link = safeHref(article.url);
-    let firstImage = true;
-    const body = articleContentBlocks(article).map(block => {
-      if (block.kind === 'image') {
-        const dims = block.width && block.height ? ` width="${block.width}" height="${block.height}"` : '';
-        const caption = articleCaption(block);
-        const figure = `<figure class="relay-reader-figure"><img src="${esc(imageSource(block.src))}" alt="${esc(block.alt || '본문 사진')}" loading="${firstImage ? 'eager' : 'lazy'}" decoding="async"${dims}>${caption ? `<figcaption>${esc(caption)}</figcaption>` : ''}</figure>`;
-        firstImage = false;
-        return figure;
-      }
-      if (block.kind === 'quote') return `<blockquote>${articleInline(block.text)}</blockquote>`;
-      const heading = articleHeading(block.text);
-      return heading
-        ? `<h${heading.level}>${articleInline(heading.text)}</h${heading.level}>`
-        : `<p>${articleInline(block.text)}</p>`;
-    }).join('');
-    return `<article class="relay-reader">
+function articleReader(article, publication, imageSource) {
+  const title = article.title || '제목 없음';
+  const date = dayLabel(article.published_date || article.at);
+  const minutes = articleReadMinutes(article);
+  const link = safeHref(article.url);
+  let firstImage = true;
+  const body = articleContentBlocks(article).map(block => {
+    if (block.kind === 'image') {
+      const dims = block.width && block.height ? ` width="${block.width}" height="${block.height}"` : '';
+      const caption = articleCaption(block);
+      const figure = `<figure class="relay-reader-figure"><img src="${esc(imageSource(block.src))}" alt="${esc(block.alt || '본문 사진')}" loading="${firstImage ? 'eager' : 'lazy'}" decoding="async"${dims}>${caption ? `<figcaption>${esc(caption)}</figcaption>` : ''}</figure>`;
+      firstImage = false;
+      return figure;
+    }
+    if (block.kind === 'quote') return `<blockquote>${articleInline(block.text)}</blockquote>`;
+    const heading = articleHeading(block.text);
+    return heading
+      ? `<h${heading.level}>${articleInline(heading.text)}</h${heading.level}>`
+      : `<p>${articleInline(block.text)}</p>`;
+  }).join('');
+  return `<article class="relay-reader">
       <header class="relay-reader-head">
         <h2>${esc(title)}</h2>
         <div class="relay-reader-byline">
@@ -423,16 +629,16 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
         ${link ? `<a href="${esc(link)}" target="_blank" rel="noopener noreferrer">네이버 원문 <span aria-hidden="true">↗</span></a>` : ''}
       </footer>
     </article>`;
-  }
+}
 
-  function articleCard(article) {
-    const content = articleContentBlocks(article);
-    const images = content.filter(block => block.kind === 'image');
-    const excerpt = articleExcerpt(article);
-    const thumb = images.length
-      ? `<span class="relay-article-thumb"><img src="${esc(imageSource(images[0].src))}" alt="" loading="lazy" decoding="async"></span>`
-      : '<span class="relay-article-thumb relay-article-thumb--empty" aria-hidden="true"></span>';
-    return `<li><button type="button" class="relay-article" data-article="${esc(article.id)}">
+function articleCard(article, imageSource) {
+  const content = articleContentBlocks(article);
+  const images = content.filter(block => block.kind === 'image');
+  const excerpt = articleExcerpt(article);
+  const thumb = images.length
+    ? `<span class="relay-article-thumb"><img src="${esc(imageSource(images[0].src))}" alt="" loading="lazy" decoding="async"></span>`
+    : '<span class="relay-article-thumb relay-article-thumb--empty" aria-hidden="true"></span>';
+  return `<li><button type="button" class="relay-article" data-article="${esc(article.id)}">
       <span class="relay-article-copy">
         <span class="relay-article-meta">${esc(dayLabel(article.published_date || article.at))} · ${articleReadMinutes(article)}분 읽기</span>
         <span class="relay-article-title">${esc(article.title || '제목 없음')}</span>
@@ -441,32 +647,28 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
       </span>
       ${thumb}
     </button></li>`;
-  }
+}
 
-  function articleDetail(item) {
-    const articles = filtered(item);
-    if (!articles.length && filtering()) return noMatches();
-    if (!articles.length) return '<p class="relay-empty" role="status">아직 받은 글이 없습니다.</p>';
-    const chosen = articles.find(article => article.id === articleId);
-    if (chosen) return articleReader(chosen, item.title || '인생의 방');
-    return `<div class="relay-feed"><ul class="relay-articles">${articles.map(articleCard).join('')}</ul></div>`;
-  }
+function articleStream(view, imageSource) {
+  if (!view.shown.length) return view.filtering ? NO_MATCHES : '<p class="relay-empty">아직 받은 글이 없습니다.</p>';
+  return `<div class="relay-feed"><ol class="relay-articles">${view.shown.map(article => articleCard(article, imageSource)).join('')}</ol></div>`;
+}
 
-  function editionDetail(item) {
-    const editions = filtered(item);
-    if (!editions.length && filtering()) return noMatches();
-    if (!editions.length) return '<p class="relay-empty" role="status">아직 받은 판본이 없습니다.</p>';
-    if (editionIndex >= editions.length) editionIndex = 0;
-    const edition = editions[editionIndex];
-    const pages = Array.isArray(edition.pages) ? edition.pages : [];
-    if (pageIndex >= pages.length) pageIndex = 0;
-    const page = pages[pageIndex] || null;
-    const dates = editions.map((entry, index) => `<button type="button" class="relay-edition-chip${index === editionIndex ? ' active' : ''}" data-edition="${index}">${esc(entry.version || '')} ${esc(dayLabel(entry.date))}</button>`).join('');
-    const pager = pages.map((entry, index) => `<button type="button" class="relay-page-chip${index === pageIndex ? ' active' : ''}" data-page="${index}"${index === pageIndex ? ' aria-current="true"' : ''}>${esc(entry.label || String(index + 1))}</button>`).join('');
-    const stage = page?.image
-      ? `<img class="relay-paper-image" src="${esc(imageSource(page.image))}" alt="${esc(page.alt || (page.label || ''))}" loading="lazy">`
-      : `<div class="relay-paper-placeholder">${esc(page?.text || '이미지 준비 중')}</div>`;
-    return `<div class="relay-paper">${topicEvidence(edition)}
+/** `data-edition` is a source index, so a filter cannot shift which edition a chip opens. */
+function editionDetail(item, view, imageSource) {
+  if (!view.edition) return view.filtering ? NO_MATCHES : '<p class="relay-empty">아직 받은 판본이 없습니다.</p>';
+  const editions = relayEntries(item), { index, page: pageIndex } = view.edition, edition = editions[index];
+  const pages = Array.isArray(edition.pages) ? edition.pages : [];
+  const page = pages[pageIndex] || null;
+  const dates = view.shown.map(entry => {
+    const source = editions.indexOf(entry);
+    return `<button type="button" class="relay-edition-chip${source === index ? ' active' : ''}" data-edition="${source}"${source === index ? ' aria-current="true"' : ''}>${esc(entry.version || '')} ${esc(dayLabel(entry.date))}</button>`;
+  }).join('');
+  const pager = pages.map((entry, at) => `<button type="button" class="relay-page-chip${at === pageIndex ? ' active' : ''}" data-page="${at}"${at === pageIndex ? ' aria-current="true"' : ''}>${esc(entry.label || String(at + 1))}</button>`).join('');
+  const stage = page?.image
+    ? `<img class="relay-paper-image" src="${esc(imageSource(page.image))}" alt="${esc(page.alt || (page.label || ''))}" loading="lazy">`
+    : `<div class="relay-paper-placeholder">${esc(page?.text || '이미지 준비 중')}</div>`;
+  return `<div class="relay-paper">${topicEvidence(edition)}
       <div class="relay-paper-foot"><div class="relay-edition-list">${dates}</div><span class="relay-paper-status">${esc(page?.label || '')} · ${pageIndex + 1}/${Math.max(pages.length, 1)}</span></div>
       <div class="relay-paper-body">
         <div class="relay-paper-stage">${stage}
@@ -475,102 +677,292 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
         <nav class="relay-pager" aria-label="신문 면 이동">${pager}</nav>
       </div>
     </div>`;
+}
+
+/* Focus that survives a region repaint, keyed by what the control does rather than by node identity. */
+const FOCUS_TARGETS = [
+  ['[data-room]', el => el.dataset.room],
+  ['[data-article]', el => el.dataset.article],
+  ['[data-edition]', el => el.dataset.edition],
+  ['.relay-pager [data-page]', el => el.dataset.page],
+  ['[data-relay-action]', el => el.dataset.relayAction],
+  ['[name]', el => el.getAttribute('name')],
+  ['.relay-detail-body', () => ''],
+];
+function focusKey(el) {
+  const index = FOCUS_TARGETS.findIndex(([selector]) => el.matches?.(selector));
+  return index < 0 ? null : `${index}:${FOCUS_TARGETS[index][1](el)}`;
+}
+const findBy = (root, selector, read, value) => [...root.querySelectorAll(selector)].find(el => read(el) === value);
+
+const ROW_KEYS = new Set(['ArrowDown', 'ArrowUp', 'Home', 'End']);
+
+/**
+ * @param {{root:HTMLElement, embeddedData?:() => string|null, embeddedAssets?:() => string|null,
+ *   onReady?:() => void, address?:RelayAddressPort}} options
+ */
+export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady, address } = {}) {
+  if (!root) throw new TypeError('relay view root is required');
+  const port = address ?? relayAddressFor(root.ownerDocument?.defaultView);
+  /** @type {Model} */
+  let model = { phase: { kind: 'idle', pending: port.read() ?? HOME }, filters: NO_FILTERS };
+  /** @type {View|null} */
+  let view = null;
+  let token = 0, fetching = false, readySent = false, version = 0;
+  // Tracked on focusin and cleared only when focus moves to another element outside the relay,
+  // so the shell's inert blip on a history traversal cannot erase it.
+  let lastFocus = null;
+  let streamBeforeReader = null;
+  const painted = { frame: null, rows: null, selected: null, room: null };
+  const repaintAll = frame => Object.assign(painted, { frame, rows: null, selected: null, room: null });
+
+  function readLayout() {
+    const panes = root.querySelector('.relay-panes');
+    const style = panes && root.ownerDocument?.defaultView?.getComputedStyle?.(panes);
+    return style?.getPropertyValue('--relay-layout').trim() === 'stack' ? 'stack' : 'split';
   }
 
-  function currentArticle(item) {
-    if ((item?.kind || 'chat') !== 'articles' || !articleId) return null;
-    return (Array.isArray(item.articles) ? item.articles : []).find(article => article.id === articleId) || null;
-  }
-
-  function detail() {
-    const item = room();
-    if (!item) return `<div class="relay-blank-state"><p class="relay-empty" role="status">${loading ? '릴레이 자료를 불러오는 중입니다.' : esc(error || '표시할 원천이 없습니다.')}</p>${loading ? '' : '<button type="button" class="relay-retry" data-relay-action="reload">다시 불러오기</button>'}</div>`;
-    const kind = item.kind || 'chat';
-    const article = currentArticle(item);
-    const body = kind === 'chat' ? chatDetail(item) : kind === 'editions' ? editionDetail(item) : articleDetail(item);
-    const generated = data?.generated_at ? `최근 갱신 ${hhmm(data.generated_at)}` : '';
-    const avatar = article
-      ? `<button type="button" class="relay-detail-back" data-relay-action="article-back" aria-label="글 목록으로" title="글 목록">${GLYPH.back}</button>`
-      : `<span class="relay-peer-avatar" data-kind="${esc(kind)}" aria-hidden="true">${kindGlyph(kind)}</span>`;
-    return `<header class="relay-detail-head${article ? ' relay-detail-head--reading' : ''}">
-        ${avatar}
-        <div class="relay-peer">
-          <h2>${esc(item.title || item.id)}</h2>
-          <p class="relay-peer-sub">${esc([item.subtitle, countLabel(item)].filter(Boolean).join(' · '))}</p>
-        </div>
-        <div class="relay-peer-tools">
-          ${generated ? `<span class="relay-peer-updated">${esc(generated)}</span>` : ''}
-          <button type="button" class="relay-refresh" data-relay-action="reload" aria-label="릴레이 새로고침" title="새로고침">${GLYPH.refresh}</button>
-        </div>
-      </header>
-      ${filterForm(item)}
-      <div class="relay-detail-body" role="region" aria-label="${esc(item.title || item.id)} 내용" tabindex="0">${body}</div>`;
-  }
-
-  function render() {
-    const version = ++renderVersion;
-    const generatedTime = data?.generated_at ? hhmm(data.generated_at) : '';
-    const currentRoom = room(), currentKind = currentRoom?.kind || 'chat';
-    const reading = !!(currentArticle(currentRoom));
-    root.dataset.relayState = loading ? 'loading' : error ? 'error' : rooms().length ? 'ready' : 'empty';
-    root.dataset.relayMode = reading ? 'reading' : currentKind === 'articles' ? 'articles' : 'default';
-    root.innerHTML = `
-      <aside class="relay-rooms" aria-label="릴레이 채널">
-        <header class="relay-rooms-head"><h2>채널</h2><span class="relay-rooms-total">${rooms().length}</span></header>
-        ${rooms().length ? `<ul class="relay-room-list">${roomList()}</ul>` : '<p class="relay-empty">채널 0개</p>'}
-        <footer class="relay-rooms-foot">${generatedTime ? `<span>15분마다 갱신</span><time>${esc(generatedTime)}</time>` : '<span>RelayDeck</span>'}</footer>
-      </aside>
-      <section class="relay-detail">${detail()}</section>`;
-
-    if (revealLatest && data && (room()?.kind || 'chat') === 'chat') {
-      revealLatest = false;
-      const scrollLatest = () => {
-        if (version !== renderVersion || (room()?.kind || 'chat') !== 'chat') return;
-        const body = root.querySelector('.relay-detail-body');
-        if (body) body.scrollTop = body.scrollHeight;
-      };
-      scrollLatest();
-      if (typeof requestAnimationFrame === 'function') requestAnimationFrame(scrollLatest);
-      setTimeout(scrollLatest, 60);
+  /** The only writer of the screen. Committing the same model twice paints nothing the second time. */
+  function commit(next, { focus = KEEP, reveal = false, deferFocus = false } = {}) {
+    const prev = view, top = root.querySelector('.relay-detail-body')?.scrollTop ?? 0;
+    model = next;
+    view = deriveView(model);
+    if (paint(view)) version += 1;
+    if (view) {
+      if (prev && !prev.article && view.article && prev.room.id === view.room.id) streamBeforeReader = { room: view.room.id, top };
+      const closedReader = prev?.article && !view.article && prev.room.id === view.room.id;
+      if (closedReader && streamBeforeReader?.room === view.room.id) root.querySelector('.relay-detail-body').scrollTop = streamBeforeReader.top;
+      else if (reveal || closedReader) revealLatest();
     }
+    if (deferFocus && typeof globalThis.requestAnimationFrame === 'function') globalThis.requestAnimationFrame(() => applyFocus(focus));
+    else applyFocus(focus);
+  }
+
+  /** Region updates by key. @returns {boolean} whether the room region was rebuilt */
+  function paint(next) {
+    const { phase } = model;
+    root.dataset.relayState = phase.kind === 'idle' ? 'loading' : phase.kind;
+    root.dataset.relayMode = next?.mode ?? 'default';
+    if (!next) {
+      delete root.dataset.relayPane;
+      const key = `${root.dataset.relayState}:${phase.message ?? ''}`;
+      if (painted.frame !== key) { root.innerHTML = renderPhase(phase); repaintAll(key); }
+      return false;
+    }
+    root.dataset.relayPane = next.pane;
+    if (painted.frame !== next.data.token) { root.innerHTML = renderFrame(next); repaintAll(next.data.token); }
+    const filters = `${next.filters.topic}\u0000${next.filters.query}`;
+    if (painted.rows !== filters) {
+      root.querySelector('.relay-room-list').innerHTML = renderRows(next);
+      for (const option of root.querySelector('[name="topic"]').options) option.selected = option.value === next.filters.topic;
+      painted.rows = filters;
+      painted.selected = null;
+    }
+    if (painted.selected !== next.room.id) {
+      for (const row of root.querySelectorAll('.relay-room-item')) {
+        const selected = row.dataset.room === next.room.id;
+        row.setAttribute('tabindex', selected ? '0' : '-1');
+        if (selected) row.setAttribute('aria-current', 'true'); else row.removeAttribute('aria-current');
+      }
+      painted.selected = next.room.id;
+    }
+    const totals = [...next.byRoom.values()].reduce((sum, rows) => sum + rows.length, 0);
+    const status = `${totals} / ${next.data.rooms.reduce((sum, room) => sum + relayEntries(room).length, 0)}건 · 원문 키워드 분류`;
+    const output = root.querySelector('.relay-filter-form output');
+    if (output.textContent !== status) output.textContent = status;
+    root.querySelector('[data-relay-action="clear-filters"]').toggleAttribute('hidden', !next.filtering);
+    const roomKey = [next.room.id, next.article?.id ?? '', next.edition ? `${next.edition.index}.${next.edition.page}` : '', filters].join('\u0000');
+    if (painted.room === roomKey) return false;
+    root.querySelector('.relay-detail').innerHTML = renderRoom(next);
+    painted.room = roomKey;
+    return true;
+  }
+
+  function revealLatest() {
+    const at = version;
+    const reveal = () => {
+      if (at !== version) return;
+      const body = root.querySelector('.relay-detail-body');
+      if (body) body.scrollTop = body.scrollHeight;
+    };
+    reveal();
+    globalThis.requestAnimationFrame?.(reveal);
+    setTimeout(reveal, 60);
+  }
+
+  function rove(row) {
+    for (const item of root.querySelectorAll('.relay-room-item')) item.setAttribute('tabindex', item === row ? '0' : '-1');
+  }
+  /** @param {FocusIntent} intent */
+  function applyFocus(intent) {
+    if (intent.kind === 'keep') {
+      const doc = root.ownerDocument, active = doc.activeElement;
+      if (!lastFocus || (active && active !== doc.body)) return;
+      const [index] = lastFocus.split(':'), [selector, read] = FOCUS_TARGETS[Number(index)];
+      findBy(root, selector, el => `${index}:${read(el)}`, lastFocus)?.focus({ preventScroll: true });
+      return;
+    }
+    const target = intent.kind === 'row' ? findBy(root, '[data-room]', el => el.dataset.room, intent.room)
+      : intent.kind === 'card' ? findBy(root, '[data-article]', el => el.dataset.article, intent.article)
+        : intent.kind === 'content' ? root.querySelector('.relay-detail-body')
+          : root.querySelector(`[name="${intent.name}"]`);
+    if (intent.kind === 'row' && target) rove(target);
+    target?.focus({ preventScroll: intent.kind === 'content' });
+  }
+
+  const signalReady = () => { if (!readySent) { readySent = true; try { onReady?.(); } catch { /* optional */ } } };
+
+  async function load() {
+    if (fetching) return;
+    fetching = true;
+    if (model.phase.kind !== 'ready') commit({ ...model, phase: { kind: 'loading', pending: model.phase.pending } });
+    let parsed;
+    try {
+      // The embedded path never awaits: the standalone build and the state tests settle synchronously.
+      const inline = embeddedData?.();
+      if (inline) {
+        const assets = embeddedAssets?.();
+        parsed = parseRelayPayload(JSON.parse(inline), ++token, assets ? JSON.parse(assets) : {});
+      } else {
+        const response = await fetch('./data/relay/index.json', { signal: AbortSignal.timeout(15000) });
+        if (!response.ok) throw new Error('relay data unavailable');
+        parsed = parseRelayPayload(await response.json(), ++token, {});
+      }
+    } catch {
+      parsed = null;
+    } finally {
+      fetching = false;
+    }
+    try { settle(parsed); } finally { signalReady(); }
+  }
+
+  function settle(parsed) {
+    const { phase } = model, pending = phase.kind === 'ready' ? phase.address : phase.pending;
+    if (!parsed) { commit({ ...model, phase: { kind: 'error', pending, message: '릴레이 자료를 아직 받지 못했습니다.' } }); return; }
+    if (parsed.kind === 'empty') { commit({ ...model, phase: { kind: 'empty', pending, generatedAt: parsed.generatedAt } }); return; }
+    const normalized = normalizeAddress(pending, parsed.data);
+    if (!sameAddress(normalized, pending)) port.write(normalized, 'replace');
+    const next = { ...model, phase: { kind: 'ready', data: parsed.data, address: normalized, edition: phase.edition ?? null } };
+    commit(next, { reveal: revealsLatest(null, deriveView(next), readLayout()) });
+  }
+
+  function selectRoom(id) {
+    const next = withAddress(model, normalizeAddress({ room: id, post: null }, model.phase.data));
+    const layout = readLayout(), nextView = deriveView(next);
+    if (screenKey(nextView, layout) === screenKey(view, layout)) return;
+    port.write(next.phase.address, 'push', view.address);
+    commit(next, { focus: layout === 'stack' ? CONTENT : KEEP, reveal: revealsLatest(view, nextView, layout) });
+  }
+
+  function openArticle(id) {
+    const next = withAddress(model, normalizeAddress({ room: view.room.id, post: id }, model.phase.data));
+    if (!next.phase.address.post) return;
+    port.write(next.phase.address, 'push', view.address);
+    commit(next, { focus: CONTENT });
+  }
+
+  function leave(layout = readLayout()) {
+    const target = leaveTarget(view);
+    if (!target) return;
+    // The traversal comes back through adopt(), synchronously for the memory port.
+    if (leaveStep(port.from(), target, model, layout) === 'back') { port.back(); return; }
+    port.write(target, 'replace');
+    const next = withAddress(model, target), nextView = deriveView(next);
+    commit(next, { focus: focusAfterTraversal(view, nextView, layout), reveal: revealsLatest(view, nextView, layout) });
+  }
+
+  /** An address change the relay did not write: Back, Forward, the shell's nav push. */
+  function adopt(raw) {
+    if (model.phase.kind !== 'ready') { model = { ...model, phase: { ...model.phase, pending: raw } }; return; }
+    const normalized = normalizeAddress(raw, model.phase.data);
+    if (sameAddress(normalized, model.phase.address)) return;
+    if (!sameAddress(normalized, raw)) port.write(normalized, 'replace');
+    const next = withAddress(model, normalized), layout = readLayout(), nextView = deriveView(next);
+    // Deferred past the shell's own popstate re-run of open(), whose inert toggle would drop it.
+    commit(next, { focus: focusAfterTraversal(view, nextView, layout), reveal: revealsLatest(view, nextView, layout), deferFocus: true });
+  }
+
+  function applyFilters(filters, origin) {
+    let next = { ...model, filters };
+    // Replace, not push, so Back never reopens a reader the filter just closed.
+    if (view.article) { port.write({ room: view.room.id, post: null }, 'replace'); next = withAddress(next, { room: view.room.id, post: null }); }
+    commit({ ...next, phase: { ...next.phase, edition: null } }, { focus: { kind: 'control', name: origin } });
+  }
+
+  function setCursor(edition, page) {
+    commit({ ...model, phase: { ...model.phase, edition: { room: view.room.id, edition, page } } });
+  }
+
+  function readFilters(form) {
+    const chosen = form.querySelector('[name="topic"]')?.value;
+    return {
+      topic: RELAY_TOPICS.some(tag => tag.id === chosen) ? chosen : 'all',
+      query: form.querySelector('[name="query"]')?.value || '',
+    };
+  }
+
+  function escape(event) {
+    if (event.target.closest('input,select,textarea')) return;
+    const layout = readLayout();
+    if (view.article || (layout === 'stack' && view.pane === 'room')) { event.preventDefault(); leave(layout); }
+    else if (layout === 'split' && event.target.closest('.relay-detail')) { event.preventDefault(); applyFocus({ kind: 'row', room: view.room.id }); }
+  }
+
+  function moveRowFocus(event, row) {
+    const rows = [...root.querySelectorAll('.relay-room-item')], at = rows.indexOf(row);
+    const to = { ArrowDown: Math.min(at + 1, rows.length - 1), ArrowUp: Math.max(at - 1, 0), Home: 0, End: rows.length - 1 }[event.key];
+    event.preventDefault();
+    rove(rows[to]);
+    rows[to].focus();
   }
 
   root.addEventListener('click', event => {
-    const roomButton = event.target.closest('[data-room]');
-    if (roomButton) { roomId = roomButton.dataset.room; articleId = null; editionIndex = 0; pageIndex = 0; revealLatest = true; render(); return; }
-    const articleButton = event.target.closest('[data-article]');
-    if (articleButton) { articleId = articleButton.dataset.article; render(); return; }
-    const editionButton = event.target.closest('[data-edition]');
-    if (editionButton) { editionIndex = Number(editionButton.dataset.edition); pageIndex = 0; render(); return; }
-    const pageButton = event.target.closest('.relay-pager [data-page]');
-    if (pageButton) { pageIndex = Number(pageButton.dataset.page); render(); return; }
     const action = event.target.closest('[data-relay-action]')?.dataset.relayAction;
-    if (action === 'clear-filters') { topic = 'all'; query = ''; articleId = null; editionIndex = 0; pageIndex = 0; revealLatest = false; render(); root.querySelector('[name="query"]')?.focus(); }
-    else if (action === 'article-back') { articleId = null; render(); }
-    else if (action === 'page-prev') { pageIndex = Math.max(0, pageIndex - 1); render(); }
-    else if (action === 'page-next') { pageIndex = Math.min((filtered(room())[editionIndex]?.pages?.length || 1) - 1, pageIndex + 1); render(); }
-    else if (action === 'reload') { revealLatest = true; void load(); }
+    if (action === 'reload') { void load(); return; }
+    if (!view) return;
+    const roomButton = event.target.closest('[data-room]');
+    if (roomButton) { selectRoom(roomButton.dataset.room); return; }
+    const articleButton = event.target.closest('[data-article]');
+    if (articleButton) { openArticle(articleButton.dataset.article); return; }
+    const editionButton = event.target.closest('[data-edition]');
+    if (editionButton) { setCursor(Number(editionButton.dataset.edition), 0); return; }
+    const pageButton = event.target.closest('.relay-pager [data-page]');
+    if (pageButton) { setCursor(view.edition.index, Number(pageButton.dataset.page)); return; }
+    if (action === 'clear-filters') {
+      root.querySelector('[name="query"]').value = '';
+      applyFilters(NO_FILTERS, 'query');
+    } else if (action === 'article-back' || action === 'room-back') leave();
+    else if (action === 'page-prev') setCursor(view.edition.index, Math.max(0, view.edition.page - 1));
+    else if (action === 'page-next') {
+      const pages = relayEntries(view.room)[view.edition.index].pages?.length || 1;
+      setCursor(view.edition.index, Math.min(pages - 1, view.edition.page + 1));
+    }
   });
-
-  function applyFilters(event) {
+  root.addEventListener('submit', event => {
     const form = event.target.closest('.relay-filter-form');
-    if (!form) return;
+    if (!form || !view) return;
     event.preventDefault();
-    const chosen = form.querySelector('[name="topic"]')?.value;
-    topic = RELAY_TOPICS.some(tag => tag.id === chosen) ? chosen : 'all';
-    query = form.querySelector('[name="query"]')?.value || '';
-    articleId = null; editionIndex = 0; pageIndex = 0; revealLatest = false;
-    render();
-    root.querySelector(event.type === 'change' ? '[name="topic"]' : '[name="query"]')?.focus();
-  }
-  root.addEventListener('submit', applyFilters);
-  root.addEventListener('change', event => { if (event.target.matches('[name="topic"]')) applyFilters(event); });
+    applyFilters(readFilters(form), 'query');
+  });
+  root.addEventListener('change', event => {
+    if (!view || !event.target.matches('[name="topic"]')) return;
+    applyFilters(readFilters(event.target.closest('.relay-filter-form')), 'topic');
+  });
+  root.addEventListener('keydown', event => {
+    if (event.defaultPrevented || event.isComposing || !view) return;
+    const row = event.target.closest('.relay-room-item');
+    if (row && ROW_KEYS.has(event.key)) moveRowFocus(event, row);
+    else if (event.key === 'Escape') escape(event);
+  });
+  root.addEventListener('focusin', event => { lastFocus = focusKey(event.target); });
+  root.addEventListener('focusout', event => { if (event.relatedTarget && !root.contains(event.relatedTarget)) lastFocus = null; });
+  port.subscribe(adopt);
 
-  render();
+  commit(model);
 
   return {
-    render,
-    show(visible) { if (visible && !data && !loading && !error) void load(); },
+    render: () => { repaintAll(null); commit(model); },
+    show(visible) { if (visible && model.phase.kind === 'idle') void load(); },
     reload: load,
   };
 }
