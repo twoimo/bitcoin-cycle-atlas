@@ -30,13 +30,13 @@ const positivePath = [
   { date: '2023-10-06', price: 104, low: 92, high: 121, baselinePrice: 107 },
 ];
 
-function paintForecast({ scale, path, milestones = [], invertScale = false, switchTo = null }) {
-  const { document, window } = parseHTML('<html><body><div id="plot"></div></body></html>');
+function paintForecast({ scale, path, milestones = [], invertScale = false, switchTo = null, hoverDate = null }) {
+  const { document, window } = parseHTML('<html><body><svg id="overlay" viewBox="0 0 640 420"></svg><div id="plot"></div></body></html>');
   window.devicePixelRatio = 1;
   const globalKeys = ['document', 'window', 'MutationObserver', 'ResizeObserver', 'matchMedia', 'getComputedStyle', 'requestAnimationFrame', 'cancelAnimationFrame'];
   const originals = new Map(globalKeys.map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
   const originalCreate = document.createElement.bind(document);
-  const fills = [], strokes = [], arcs = [], texts = [];
+  const fills = [], strokes = [], arcs = [], texts = [], crosshair = [], inspected = [];
   const setBounds = element => {
     element.getBoundingClientRect = () => ({ x: 0, y: 0, left: 0, top: 0, right: 640, bottom: 420, width: 640, height: 420 });
     for (const [key, value] of [['clientWidth', 640], ['clientHeight', 420], ['offsetWidth', 640], ['offsetHeight', 420]]) Object.defineProperty(element, key, { configurable: true, value });
@@ -67,8 +67,8 @@ function paintForecast({ scale, path, milestones = [], invertScale = false, swit
   Object.assign(window, { ResizeObserver, matchMedia, getComputedStyle, requestAnimationFrame: () => ++frame, cancelAnimationFrame() {} });
   Object.assign(globalThis, { document, window, MutationObserver: window.MutationObserver, ResizeObserver, matchMedia, getComputedStyle, requestAnimationFrame: () => ++frame, cancelAnimationFrame() {} });
   try {
-    const plot = document.getElementById('plot'); setBounds(plot);
-    mounted = mountObservedPriceChart(plot, { series: { candles }, symbol: 'MSTR', currency: 'USD', scale, invertScale, range: { start: day - 86400, end: day + 8 * 86400 }, onViewport() {}, onError() {} });
+    const plot = document.getElementById('plot'), overlaySvg = document.getElementById('overlay'); setBounds(plot); setBounds(overlaySvg);
+    mounted = mountObservedPriceChart(plot, { series: { candles }, symbol: 'MSTR', currency: 'USD', scale, invertScale, overlaySvg, onCrosshair: detail => crosshair.push(detail), onInspect: detail => inspected.push(detail), range: { start: day - 86400, end: day + 8 * 86400 }, onViewport() {}, onError() {} });
     mounted.chart.addOverlay({ layer: 'above', render(rc) { coords = rc.coords; } });
     mounted.setAtlasOverlays({ forecast: { path, milestones }, events: [], showEvents: false });
     mounted.chart.render();
@@ -83,11 +83,18 @@ function paintForecast({ scale, path, milestones = [], invertScale = false, swit
     assert.ok(coords, 'the pinned Funnest runtime passed its PaneCoords to the overlays');
     const x = date => coords.timeToX(Date.parse(`${date}T00:00:00Z`)), y = price => coords.priceToY(price);
     const segment = (from, to) => ({ from: { x: x(from[0]), y: y(from[1]) }, to: { x: x(to[0]), y: y(to[1]) } });
+    if (hoverDate) {
+      const layout = mounted.chart.layout, main = layout.panes.find(pane => pane.kind === 'main'), rect = mounted.host.getBoundingClientRect();
+      const event = new window.Event('pointermove', { bubbles: true, cancelable: true });
+      Object.assign(event, { clientX: rect.left + x(hoverDate) * rect.width / layout.width, clientY: rect.top + (coords.height / 2 + main.top) * rect.height / layout.height, pointerId: 7, pointerType: 'mouse', buttons: 0 });
+      [...mounted.host.querySelectorAll('canvas')].at(-1).dispatchEvent(event);
+      mounted.chart.render();
+    }
     return {
       coords, x, y, segment, receipt: mounted.inspectAtlasOverlayRender(), texts: texts.map(item => item.text), textAt: text => texts.find(item => item.text === text),
       band: fills.filter(item => item.color === BAND).map(item => item.points),
       line: strokes.filter(item => item.color === LINE && item.points.length === 2).map(({ points: [from, to] }) => ({ from, to })),
-      arcs,
+      arcs, crosshair: crosshair.at(-1), inspected: inspected.at(-1),
     };
   } finally {
     mounted?.destroy();
@@ -206,4 +213,18 @@ test('a scale toggle paints the forecast as a fresh mount on the new axis does',
   }
   const linear = paintForecast({ scale: 'log', path: zeroPricePath, switchTo: 'normal' });
   assert.ok(linear.y(0) >= 0 && linear.y(0) <= linear.coords.height, 'after the log-gap notice sends the user to the linear axis, price 0 is inside the pane');
+});
+
+test('hovering a zero residual row inspects price 0 instead of going blank', () => {
+  for (const scale of ['normal', 'log']) {
+    const positive = paintForecast({ scale, path: zeroPricePath, hoverDate: '2023-10-05' });
+    assert.equal(positive.crosshair?.value, 70, `${scale}: the same hover reaches a positive forecast row`);
+    const paint = paintForecast({ scale, path: zeroPricePath, hoverDate: '2023-10-07' });
+    const time = Date.parse('2023-10-07T00:00:00Z');
+    assert.equal(paint.crosshair?.kind, 'simulated', `${scale}: the crosshair reports the forecast row, not an empty future`);
+    assert.equal(paint.crosshair.time, time); assert.equal(paint.crosshair.value, 0);
+    assert.equal(paint.inspected?.kind, 'simulated'); assert.equal(paint.inspected.price, 0);
+    assert.equal(paint.inspected.forecast.valuationState, 'absorbed');
+    assert.equal(paint.inspected.fields.find(field => field.label.startsWith('조건부 경로 가격'))?.value, '0.00');
+  }
 });
