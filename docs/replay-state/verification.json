@@ -1,7 +1,7 @@
 {
   "kind": "atlas-replay-state-verification",
   "schemaVersion": 1,
-  "baselineCommit": "fe93a5727277d15a934b7472588fb907e30b02b8",
+  "baselineCommit": "856e77422e0a43a77470aed2e3f64fa1e522880b",
   "manualDateFollowupBaselineCommit": "aca73b74a5128a5466488a0c701e86f5e854af46",
   "previousFollowupBaselineCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
   "originalAuditBaselineCommit": "94a1b1dda9eb359de70747043808340da369d087",
@@ -10,7 +10,7 @@
   "sourceSha256": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908",
   "testPath": "tests/chart-replay-state.test.mjs",
   "testSha256": "1ae620d55fd750fbc951b0980f8eed58a2a64cf4eb2a83dc9b74626601badabc",
-  "method": "Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, manual-date rejection, destroy-during-save, axis-click, inert-ownership and refused-entry cases and isolated real-source negative controls",
+  "method": "Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, manual-date rejection, destroy-during-save, axis-click, inert-ownership, refused-entry, unanswered-gate and start-reread cases and isolated real-source negative controls",
   "coordinatorPath": "dist/chart-replay.js",
   "coordinatorSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
   "coordinatorTestPath": "tests/chart-replay-ui.test.mjs",
@@ -82,6 +82,21 @@
         "exported open with that record"
       ],
       "availability": "refused before entry"
+    },
+    "unansweredGate": {
+      "entries": [
+        "toolbar entry before the gate answers",
+        "date confirmation after the gate answers T3",
+        "toolbar entry after T3"
+      ],
+      "availability": "unanswered (null), then refused"
+    },
+    "startReread": {
+      "entries": [
+        "toolbar entry under an allowed gate",
+        "date confirmation after the gate refuses"
+      ],
+      "availability": "allowed at entry, refused before confirmation"
     }
   },
   "formalProof": false,
@@ -94,7 +109,7 @@
     "Exhaustive persistence and concurrent-tab schedules",
     "Wall-clock scheduling accuracy",
     "Cutoff-model loading in the coordinator fixture",
-    "Forecast availability that changes after replay entry",
+    "Forecast availability that changes after start passes its gate, while the session loads or plays",
     "Wheel, keyboard and drag navigation beyond axis-click start confirmation"
   ],
   "original": {
@@ -428,6 +443,52 @@
     "restored": {
       "status": "pass",
       "name": "T3 replay refusal retains actual prices and saved records without starting any forecast request",
+      "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
+      "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+    }
+  },
+  "unansweredGate": {
+    "original": {
+      "status": "pass",
+      "name": "a replay requested before the asset forecast gate answers starts no forecast once the asset proves T3",
+      "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
+      "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+    },
+    "mutations": {
+      "unanswered-gate-allows-replay": {
+        "status": "expected behavioral failure",
+        "name": "a replay requested before the asset forecast gate answers starts no forecast once the asset proves T3",
+        "assertion": "an unanswered forecast gate opens no replay",
+        "exitStatus": 1,
+        "sourceSha256": "c31c0db7cb7c7c33d6450398bd4aebf3b502af67473089a645427294c5f3c8ab"
+      }
+    },
+    "restored": {
+      "status": "pass",
+      "name": "a replay requested before the asset forecast gate answers starts no forecast once the asset proves T3",
+      "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
+      "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+    }
+  },
+  "startReread": {
+    "original": {
+      "status": "pass",
+      "name": "a replay opened under an allowed forecast gate starts no forecast after the gate blocks the asset",
+      "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
+      "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+    },
+    "mutations": {
+      "start-skips-gate-reread": {
+        "status": "expected behavioral failure",
+        "name": "a replay opened under an allowed forecast gate starts no forecast after the gate blocks the asset",
+        "assertion": "start rereads the gate before it fixes a forecast",
+        "exitStatus": 1,
+        "sourceSha256": "496cdb82d14d474b58b380a473c0f775d4e23880a65a498399b271848a9f9184"
+      }
+    },
+    "restored": {
+      "status": "pass",
+      "name": "a replay opened under an allowed forecast gate starts no forecast after the gate blocks the asset",
       "sourceSha256": "de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d",
       "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
     }

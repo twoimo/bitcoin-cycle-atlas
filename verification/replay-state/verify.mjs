@@ -76,7 +76,12 @@ const inertOwnershipCase={name:'mobile information sheet keeps original replay p
   assertion:'overlapping discovery cannot replace the original inert value'};
 const refusalCase={name:'T3 replay refusal retains actual prices and saved records without starting any forecast request',
   assertion:'a refused forecast cannot enter replay'};
-const guardCases={startGesture:startGestureCase,inertOwnership:inertOwnershipCase,refusal:refusalCase};
+const unansweredGateCase={name:'a replay requested before the asset forecast gate answers starts no forecast once the asset proves T3',
+  assertion:'an unanswered forecast gate opens no replay'};
+const startRereadCase={name:'a replay opened under an allowed forecast gate starts no forecast after the gate blocks the asset',
+  assertion:'start rereads the gate before it fixes a forecast'};
+const guardCases={startGesture:startGestureCase,inertOwnership:inertOwnershipCase,refusal:refusalCase,
+  unansweredGate:unansweredGateCase,startReread:startRereadCase};
 function checkSavedEntry(cwd,item,{broken=false}={}){
   const run=spawnSync(process.execPath,['--experimental-vm-modules',coordinatorTestPath,'--replay-ui-extra-name',item.name],
     {cwd,encoding:'utf8',timeout:30000,maxBuffer:4*1024*1024});
@@ -192,6 +197,10 @@ try{
       before:'if(destroyed||active)return;\n    if(!forecastEntryAvailable())return;',after:'if(destroyed||active)return;'},
     {group:'refusal',name:'refused-open-starts-replay',test:{...refusalCase,assertion:'a refused forecast cannot open replay'},
       before:'if(destroyed||saving)return;\n    if(!forecastEntryAvailable())return;',after:'if(destroyed||saving)return;'},
+    {group:'unansweredGate',name:'unanswered-gate-allows-replay',test:unansweredGateCase,
+      before:'if(availability?.allowed)return true;',after:'if(!availability||availability.allowed)return true;'},
+    {group:'startReread',name:'start-skips-gate-reread',test:startRereadCase,
+      before:'if(!active||!archive||!modules)return;\n    if(!forecastEntryAvailable())return;',after:'if(!active||!archive||!modules)return;'},
   ];
   for(const mutation of guardMutations){
     assert.equal(coordinator.split(mutation.before).length,2,'Guard mutation selector drifted: '+mutation.name);
@@ -203,12 +212,12 @@ try{
   for(const [group,item] of Object.entries(guardCases))results[group].restored=checkSavedEntry(scratch,item);
 }finally{await rm(scratch,{recursive:true,force:true});}
 const receipt={kind:'atlas-replay-state-verification',schemaVersion:1,
-  baselineCommit:'fe93a5727277d15a934b7472588fb907e30b02b8',
+  baselineCommit:'856e77422e0a43a77470aed2e3f64fa1e522880b',
   manualDateFollowupBaselineCommit:'aca73b74a5128a5466488a0c701e86f5e854af46',
   previousFollowupBaselineCommit:'4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc',
   originalAuditBaselineCommit:'94a1b1dda9eb359de70747043808340da369d087',
   node:process.version,sourcePath,sourceSha256:hash(source),testPath,testSha256:hash(tests),
-  method:'Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, manual-date rejection, destroy-during-save, axis-click, inert-ownership and refused-entry cases and isolated real-source negative controls',
+  method:'Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, manual-date rejection, destroy-during-save, axis-click, inert-ownership, refused-entry, unanswered-gate and start-reread cases and isolated real-source negative controls',
   coordinatorPath,coordinatorSha256:hash(coordinator),coordinatorTestPath,coordinatorTestSha256:hash(coordinatorTests),
   snapshotPath,snapshotSha256:hash(snapshotSource),
   bounds:{playback:results.original.enumeration,asyncLoads:2,selectionCommands:6,selectionMaxTraceLength:3,selectionTraces:259,
@@ -218,9 +227,11 @@ const receipt={kind:'atlas-replay-state-verification',schemaVersion:1,
       finiteSelectionAlphabetUnchanged:true},
     startGestures:{clickedRegions:['price axis','time axis'],entryState:'unconfirmed selection',finiteSelectionAlphabetUnchanged:true},
     inertOwnership:{layouts:['phone information sheet','desktop footer'],preexistingInertOwners:1},
-    refusal:{entries:['toolbar entry with a saved record','exported open with that record'],availability:'refused before entry'}},
+    refusal:{entries:['toolbar entry with a saved record','exported open with that record'],availability:'refused before entry'},
+    unansweredGate:{entries:['toolbar entry before the gate answers','date confirmation after the gate answers T3','toolbar entry after T3'],availability:'unanswered (null), then refused'},
+    startReread:{entries:['toolbar entry under an allowed gate','date confirmation after the gate refuses'],availability:'allowed at entry, refused before confirmation'}},
   formalProof:false,modelCheckerRun:false,
-  excluded:['Unlimited trace lengths','Native browser DOM, rendering and events','Real forecast generation and scoring in coordinator doubles','Exhaustive network completion schedules','Exhaustive persistence and concurrent-tab schedules','Wall-clock scheduling accuracy','Cutoff-model loading in the coordinator fixture','Forecast availability that changes after replay entry','Wheel, keyboard and drag navigation beyond axis-click start confirmation'],
+  excluded:['Unlimited trace lengths','Native browser DOM, rendering and events','Real forecast generation and scoring in coordinator doubles','Exhaustive network completion schedules','Exhaustive persistence and concurrent-tab schedules','Wall-clock scheduling accuracy','Cutoff-model loading in the coordinator fixture','Forecast availability that changes after start passes its gate, while the session loads or plays','Wheel, keyboard and drag navigation beyond axis-click start confirmation'],
   ...results};
 if(process.argv[2]){
   const destination=path.resolve(process.argv[2]);await mkdir(path.dirname(destination),{recursive:true});

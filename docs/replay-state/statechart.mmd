@@ -17,6 +17,7 @@ stateDiagram-v2
     SavedChoice --> Idle: Cancel
     Selecting --> Selecting: Change settings or reject invalid date
     Selecting --> Loading: Confirm date or bar
+    Selecting --> Idle: Confirm after the forecast gate refuses
     Loading --> Selecting: Change unconfirmed settings
     Loading --> Paused: Current request succeeds
     Loading --> Failed: Current request fails
