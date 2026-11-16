@@ -14,7 +14,7 @@ const invariants = ['TypeOK', 'ReadyHasUsableView', 'NoHiddenPublication', 'NoSt
 // The baseline predates the chart mount, so it keeps the six properties recorded for it.
 const recordedForBaseline = invariants.filter(name => name !== 'NativeNavigationSurvivesRefresh');
 const failuresBeforeFix = ['ReadyHasUsableView', 'NoHiddenPublication', 'NavigationSurvivesRefresh'];
-const cases = 24;
+const cases = 25;
 
 // One broken promise must not hide the rest of the receipt. Every expectation
 // is still required, and any entry here makes the run exit 1.
@@ -184,6 +184,10 @@ async function implementation(work) {
     {
       id: 'untracked-native-navigation', from: '{++navigationRevision;state.range={...state.range,start,end};', to: '{state.range={...state.range,start,end};',
       failure: /a live refresh must not reset a window chosen on the chart while it was pending/,
+    },
+    {
+      id: 'dropped-hidden-paint', from: '    suspended=false;\n    if(state.funnestMount&&!state.funnestReady)watchFunnestPaint(state.funnestMount);\n', to: '    suspended=false;\n',
+      failure: /pageshow must reread a paint confirmation dropped while hidden/,
     },
     {
       id: 'leaked-mount', from: 'if(!event.persisted){state.funnestMount?.destroy();state.funnestMount=null;', to: 'if(!event.persisted){',

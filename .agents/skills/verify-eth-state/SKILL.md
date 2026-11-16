@@ -32,23 +32,25 @@ post-await focusHistoricalEvent writer whenever either changes: daily coverage
 and cached daily loading establish the current abstraction's focus boundary.
 
 Baseline commit: 64c8207cb044d8990289c5a7d39972e21b74c240.
-Last code/model synchronization commit: d4f667d2 (2026-11-16), the onViewport fix
-on top of the review at 856e77422e0a43a77470aed2e3f64fa1e522880b (tree
-01720549f0a5f4e7fb05129b1c97f80389d993b6). The fix changed one statement on
-dist/eth-view.js:310 and no line numbers.
+Last code/model synchronization commit: 1722f1fc (2026-11-16). It adds two fixes to
+the review at 856e77422e0a43a77470aed2e3f64fa1e522880b (tree
+01720549f0a5f4e7fb05129b1c97f80389d993b6). d4f667d2 changed one statement on
+dist/eth-view.js:310. 1722f1fc added line 424, so later lines are one higher. The
+runtime change in c35f75cf added one line before ready(), so runtime citations from
+line 466 on are one higher than at 856e7742.
 Previous synchronization: fe93a5727277d15a934b7472588fb907e30b02b8. That commit is
 not an ancestor of this history. Its covered files equal those of c92c4871, so
 the review read c92c4871..856e7742.
 Reviewed SHA-256:
 
-- dist/eth-view.js 92d21451759ffa84d0201604e2f8138395a6aa41a2f92865dd4485aaa081e9de
+- dist/eth-view.js 67ec77dbed416369cc7f0bcc5898b18a1d60aac1bac8e220e84c07950670bcdf
 - dist/index.html 5e0f6b3b72a2c5b7862b1560d90aa74af9ed7cfa8a5f80b5a28cd85455f47dcd
 - dist/native-chart-workbench.js 2e3c57fb39748c8ae30e42786d522789f2383c4b9623c5d55f1d70d2a4c5d246
 - dist/chart-replay.js de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d
 - dist/center-workbench.js 2decc81ec9db604edb6dd95b6beb92a9582b25e76f60f8c65b2506a6ffaa8f6c
 - dist/chart-navigation.js f6a987a9fc14e72f8de01fe0e21d0d142b872939188f8328cf153b7b8f7a03c0
 - dist/funnest-observed-price-adapter.js 6b4d25b84f99728987bde5d989cad191bd8059cf9e62b328da53cdef185fa683
-- src/charts/funnest-chart-runtime.js c520f3f1b962d344b9912a3589a1bb48f3376d5b72d2369c0e5b6213b8b8cfcf
+- src/charts/funnest-chart-runtime.js cad0f5e2c38a9c2c82dc248eade24b0aea92d3acff61d125f8ac72972471882d
 - dist/ethereum-history.js 196e860ce7f4485071ca54685e8b5bf48e62ed9c9d00dc1012f8183de44053a6
 
 931ed189 moved ETH drawing to the Funnest observed-price adapter. This
@@ -57,14 +59,16 @@ reports and the refresh retry to EthLoad.tla. It also added four constants that
 each remove one new guard, and a seventh invariant,
 NativeNavigationSurvivesRefresh. d4f667d2 made onViewport increment
 navigationRevision, and a fifth constant, TrackNativeNavigation, removes that
-increment. The readiness promise changed on purpose. It
+increment. 1722f1fc makes the persisted pageshow handler start the paint watch
+again for a mount that is not confirmed, and Show in EthLoad.tla rereads a
+confirmation dropped while suspended. The readiness promise changed on purpose. It
 read "only after it renders observed prices or an actionable retry error".
 render now announces only when state.funnestReady holds a painted confirmation
 (dist/eth-view.js:253, 337), and
 tests/funnest-observed-price-adapter.test.mjs:436-437 pins the source text of
 that paint watch. The bounds are unchanged. Model comments cite current line
 numbers. docs/formal-eth/verification.json is the receipt of the run at
-d4f667d2. The charts in docs/formal-eth/statechart and
+1722f1fc. The charts in docs/formal-eth/statechart and
 docs/evolution-2026-10-26/eth-state-final.json still describe 7261c180.
 The new ETH future-price engine, scenario calculations and future visibility are
 outside this finite lifecycle model; their dedicated tests are separate evidence.
@@ -109,7 +113,7 @@ JAVA may select a Java binary. A supplied jar with a different hash fails.
 TLC 1.7.4 exits 255 with an ArithmeticException after a complete search under
 Java 25, so use Java 11 to 21. scripts/verification-process.mjs holds the
 download, the hash check and the process-exit rule. This runner gives each
-process 180 s. Its largest search is the baseline, at about 5.7 million
+process 180 s. Its largest search is the baseline, at about 5.4 million
 generated states.
 
 An optional output argument writes a machine-readable receipt:
@@ -125,10 +129,10 @@ A pass exits 0 and reports all of the following:
    named invariant: the response, error, suspension and navigation guards, then
    the paint wait, the paint suspension guard, the paint mount guard, the
    viewport suspension guard and the native navigation revision. Do not weaken a property to make a failure pass.
-3. All 24 complete-initializer replay cases pass, including intraday refresh
+3. All 25 complete-initializer replay cases pass, including intraday refresh
    integration, the information dialog's escaped data link and the chart mount
    cases.
-4. All 15 mutations of a temporary copy of the real production module fail
+4. All 16 mutations of a temporary copy of the real production module fail
    their intended assertions. The restored temporary module behaves like the
    working runtime. The working runtime is never mutated by the checker.
 
@@ -139,8 +143,8 @@ invariant, so every other invariant still gets a complete search.
 
 Read both the exit status and actual test counts. A runner reporting only test
 filenames, a Java/tool failure, a missing mutation selector, or a skipped replay
-is not a verification pass. The verifier requires an actual 24-case TAP plan
-with zero skips, cancellations and todos for every run, and 24 passes for the
+is not a verification pass. The verifier requires an actual 25-case TAP plan
+with zero skips, cancellations and todos for every run, and 25 passes for the
 original and restored runs. A mutation counts only when a case that the
 unmutated module passes fails with the intended assertion.
 

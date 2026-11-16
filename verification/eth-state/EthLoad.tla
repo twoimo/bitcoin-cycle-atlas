@@ -1,8 +1,8 @@
 ------------------------------ MODULE EthLoad ------------------------------
 EXTENDS Naturals, FiniteSets
 
-\* Line citations refer to dist/eth-view.js at d4f667d2, which has the line numbers of
-\* 856e77422e0a43a77470aed2e3f64fa1e522880b,
+\* Line citations refer to dist/eth-view.js at 1722f1fc. Up to line 421 they match
+\* 856e77422e0a43a77470aed2e3f64fa1e522880b; later lines are one higher,
 \* unless another file is named. src/charts/funnest-chart-runtime.js is the source
 \* of the shipped dist/funnest-chart-runtime.bundle.js.
 CONSTANTS RequestLimit, BootOnRender, RespectSuspension, PreserveNavigation,
@@ -95,9 +95,9 @@ BeginLoad(force, frequency) ==
   /\ s.issued < RequestLimit \* verification/eth-state/EthLoad.cfg:3 finite bound
   /\ s' = Begin(s, force, frequency)
 
-\* Line 428 the initializer opens its first archive.
+\* Line 429 the initializer opens its first archive.
 Open ==
-  /\ s.issued = 0 \* line 428 single initializer invocation
+  /\ s.issued = 0 \* line 429 single initializer invocation
   /\ BeginLoad(FALSE, "daily")
 
 \* Line 388 refresh/retry is available after the shell is released.
@@ -207,7 +207,7 @@ NativePan ==
              !.native = s.native \/ (s.active > 0 /\ s.phase[s.active] = "live")]
 
 \* The mount also reports windows that it sets itself, such as the range it
-\* restores one frame after setData (src/charts/funnest-chart-runtime.js:496). That
+\* restores one frame after setData (src/charts/funnest-chart-runtime.js:497). That
 \* callback can run after pagehide. Line 310 drops it while suspended; without that
 \* guard it writes state.range and refreshes the workbench footer. On a visible
 \* page the same report repeats the range that render pushed, which line 310 ignores,
@@ -251,11 +251,11 @@ SkipRender ==
   /\ s.renderPending /\ s.obscured
   /\ s' = [s EXCEPT !.renderPending = FALSE]
 
-\* Lines 428-429 the first load's promise settles even after revocation.
+\* Lines 429-430 the first load's promise settles even after revocation.
 \* The original baseline emitted atlas:ready unconditionally after this callback.
 \* The fixed code delegates readiness to guarded render(), with a chart or retry.
 InitialFrame ==
-  /\ s.phase[1] = "done" /\ ~s.initialDone \* line 429 final initializer await
+  /\ s.phase[1] = "done" /\ ~s.initialDone \* line 430 final initializer await
   /\ LET r == [s EXCEPT !.initialDone = TRUE, !.renderPending = FALSE]
          drawn == IF CanRender /\ ~s.obscured THEN Paint(r) ELSE r
      IN s' = IF BootOnRender THEN drawn
@@ -274,8 +274,8 @@ PaintConfirmed ==
              ELSE IF CanRender /\ ~s.obscured THEN Paint(r) ELSE r
 
 \* Line 253: the watch resolves without painted pixels, or rejects after five
-\* unpainted seconds or a canvas read error (src/charts/funnest-chart-runtime.js:469,
-\* 483). A throw from render() inside the then handler reaches the same catch.
+\* unpainted seconds or a canvas read error (src/charts/funnest-chart-runtime.js:470,
+\* 484). A throw from render() inside the then handler reaches the same catch.
 \* Both handlers record the chart error, announce readiness for the retry and
 \* schedule its paint. They drop the result while suspended.
 PaintFailed ==
@@ -285,7 +285,7 @@ PaintFailed ==
              THEN Scheduled(Announce([w EXCEPT !.chartError = TRUE, !.painted = FALSE]))
              ELSE w
 
-\* A destroyed mount rejects its pending watch (src/charts/funnest-chart-runtime.js:471).
+\* A destroyed mount rejects its pending watch (src/charts/funnest-chart-runtime.js:472).
 \* Line 253 drops it because state.funnestMount is no longer that mount.
 StalePaintFailed ==
   /\ s.staleWatch
@@ -299,21 +299,26 @@ StalePaintFailed ==
 \* discarded document also destroys the mount (line 419). Hide with no later Show
 \* covers it: the live mount can still call back, into the same suspension guards.
 Hide ==
-  /\ s.issued > 0 \* lines 44-428 no event interleaves before first load
+  /\ s.issued > 0 \* lines 44-429 no event interleaves before first load
   /\ s.attached \* line 413 browser pagehide event
   /\ s' = [s EXCEPT !.attached = FALSE, !.active = 0, !.loading = FALSE, !.renderPending = FALSE,
              !.native = FALSE]
 
 \* Lines 421-425 a BFCache restoration reloads missing prices, or schedules
 \* retained valid prices. No invariant assumes abort prevents late completion.
+\* Line 424 starts the paint watch again for a mount that is not confirmed. ready()
+\* returns its settled promise until setData (src/charts/funnest-chart-runtime.js), so
+\* a confirmation dropped while suspended is read again. A mount needs prices, so the
+\* load branch has none.
 Show ==
-  /\ ~s.attached \* lines 421-423 paired persisted pageshow
+  /\ ~s.attached \* lines 421-425 paired persisted pageshow
   /\ IF s.prices = 0 THEN BeginLoad(FALSE, s.frequency)
-     ELSE s' = [s EXCEPT !.attached = TRUE, !.renderPending = TRUE]
+     ELSE s' = [s EXCEPT !.attached = TRUE, !.renderPending = TRUE,
+                         !.watching = s.watching \/ (s.mounted /\ ~s.painted)] \* line 424
 
 \* Lines 124, 411-412 late layout/font notification, including suspension.
 Resize ==
-  /\ s.issued > 0 \* lines 44-428 no callback interleaves before first load
+  /\ s.issued > 0 \* lines 44-429 no callback interleaves before first load
   /\ s' = Scheduled(s)
 
 \* dist/chart-replay.js:360 and dist/center-workbench.js:151 take the plot.
@@ -330,7 +335,7 @@ Reveal ==
               !.renderPending = s.renderPending \/ (scheduled /\ (s.attached \/ ~RespectSuspension))]
 
 Next ==
-  \* Lines 44-428 setup and its first load have no intervening await.
+  \* Lines 44-429 setup and its first load have no intervening await.
   \* Hide/Resize carry this guard so TLC keeps distinct reader action labels.
   Open \/ Refresh \/ ChangeInterval \/ Pan \/ NativePan \/ ViewportEcho \/ Restore
   \/ Render \/ SkipRender \/ InitialFrame \/ PaintConfirmed \/ PaintFailed \/ StalePaintFailed
@@ -353,7 +358,7 @@ TypeOK ==
                    "native"}: s[name] \in BOOLEAN
 
 \* Readiness may be announced only when the selected chart has confirmed painted
-\* prices or a recorded actionable error. Guarded by lines 251, 253, 280, 337, 429.
+\* prices or a recorded actionable error. Guarded by lines 251, 253, 280, 337, 430.
 ReadyHasUsableView == ~s.badReadiness
 
 \* A suspended page must publish neither chart updates nor readiness, even if an

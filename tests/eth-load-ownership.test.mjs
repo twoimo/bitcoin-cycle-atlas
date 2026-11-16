@@ -188,6 +188,16 @@ test('ETH paint failure while suspended cannot release the boot shell', async ()
   assert.deepEqual(f.events, []);
 });
 
+test('ETH reveals a chart whose paint was confirmed while the page was hidden', async () => {
+  const f = await loaded({ paint: 'manual' });
+  f.hide(); f.paint(0); await f.settle();
+  assert.equal(f.document.documentElement.dataset.boot, 'loading', 'a hidden page must not publish its readiness');
+  f.show(); await f.settle();
+  assert.equal(f.document.documentElement.dataset.boot, 'ready', 'pageshow must reread a paint confirmation dropped while hidden');
+  assert.deepEqual(f.events, ['atlas:ready']);
+  assert.equal(f.draws.length, 1);
+});
+
 test('ETH destroyed chart cannot mark its replacement failed with a late paint result', async () => {
   const f = await loaded({ paint: 'manual' });
   f.paintRejects(0); await f.settle();
