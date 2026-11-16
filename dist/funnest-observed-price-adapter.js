@@ -107,6 +107,7 @@ export function mountObservedPriceChart(plot, { series, symbol, currency = 'USD'
       inputPresent: Boolean(band?.inputPresent), pathRows: band?.pathRows || 0,
       painted: Boolean(band?.painted), fillCalls: band?.fillCalls || 0,
       color: band?.color || null, coordinates: freezePoints(band?.coordinates || []),
+      polygons: Object.freeze((band?.polygons || []).map(freezePoints)),
     });
     const lineRender = Object.freeze({
       layer: 'above', rendered: Boolean(lines), sequence: lines?.sequence || 0,
@@ -131,37 +132,53 @@ export function mountObservedPriceChart(plot, { series, symbol, currency = 'USD'
       excludedEventLabels: freezeExcludedLabels(lines?.excludedEventLabels || []),
       suppressedEventLabelCount: lines?.suppressedEventLabelCount || 0,
       eventObstacles: freezeObstacles(lines?.eventObstacles || []),
+      forecastNotices: Object.freeze((lines?.forecastNotices || []).map(notice => Object.freeze({ ...notice, lines: Object.freeze(notice.lines.map(line => Object.freeze({ ...line }))) }))),
       bandRender,
       lineRender,
     });
   };
   const pointTime = row => Date.parse(`${String(row.date).slice(0, 10)}T00:00:00Z`);
-  const valid = (row, key) => Number.isFinite(row[key]) && row[key] > 0;
+  // A forecast value of 0 is an absorbed residual value, not a missing row. Only a log axis has no place for it.
+  const logAxis = () => mounted.chart.settings?.priceScale === 'log';
+  const valid = (row, key, log) => Number.isFinite(row[key]) && (row[key] > 0 || (row[key] === 0 && !log));
+  const lowPriceEdge = coords => coords.priceToY(2) > coords.priceToY(1) ? 0 : coords.height;
+  const crossesZero = (before, row, keys) => keys.some(key => (before[key] === 0) !== (row[key] === 0));
   const bandOverlay = {
     layer: 'below',
     render({ coords, painter }) {
       const rows = overlayData.forecast && Array.isArray(overlayData.forecast.path) ? overlayData.forecast.path : [];
-      const upper = rows.filter(row => valid(row, 'high')).map(row => [coords.timeToX(pointTime(row)), coords.priceToY(row.high)]);
-      const lower = rows.filter(row => valid(row, 'low')).map(row => [coords.timeToX(pointTime(row)), coords.priceToY(row.low)]).reverse();
-      let painted = false, fillCalls = 0, color = null;
-      const coordinates = upper.length > 1 && lower.length > 1 && upper.every(point => point.every(Number.isFinite)) && lower.every(point => point.every(Number.isFinite)) ? [...upper, ...lower] : [];
-      if (coordinates.length) {
-        const ctx = painter.ctx; ctx.save(); ctx.fillStyle = 'rgba(199,155,75,.13)'; color = String(ctx.fillStyle); ctx.beginPath();
-        ctx.moveTo(upper[0][0], upper[0][1]); for (const [x, y] of upper.slice(1)) ctx.lineTo(x, y);
-        for (const [x, y] of lower) ctx.lineTo(x, y); ctx.closePath(); ctx.fill(); fillCalls++; painted = true; ctx.restore();
+      const log = logAxis(), edge = lowPriceEdge(coords), edgeY = value => value === 0 && log ? edge : coords.priceToY(value);
+      const runs = [[]];
+      for (const row of rows) {
+        if (!valid(row, 'low', false) || !valid(row, 'high', false)) continue;
+        const before = runs.at(-1).at(-1);
+        if (before && log && crossesZero(before, row, ['low', 'high'])) runs.push([]);
+        runs.at(-1).push(row);
       }
-      lastBandRender = { sequence: ++overlayRenderSequence, inputPresent: rows.length > 0, pathRows: rows.length, painted, fillCalls, color, coordinates };
+      const polygons = runs.filter(run => run.length > 1)
+        .map(run => [...run.map(row => [coords.timeToX(pointTime(row)), edgeY(row.high)]), ...[...run].reverse().map(row => [coords.timeToX(pointTime(row)), edgeY(row.low)])])
+        .filter(points => points.every(point => point.every(Number.isFinite)));
+      let painted = false, fillCalls = 0, color = null;
+      if (polygons.length) {
+        const ctx = painter.ctx; ctx.save(); ctx.fillStyle = 'rgba(199,155,75,.13)'; color = String(ctx.fillStyle);
+        for (const [[startX, startY], ...points] of polygons) {
+          ctx.beginPath(); ctx.moveTo(startX, startY); for (const [x, y] of points) ctx.lineTo(x, y);
+          ctx.closePath(); ctx.fill(); fillCalls++; painted = true;
+        }
+        ctx.restore();
+      }
+      lastBandRender = { sequence: ++overlayRenderSequence, inputPresent: rows.length > 0, pathRows: rows.length, painted, fillCalls, color, coordinates: polygons.flat(), polygons };
     },
   };
   const lineOverlay = {
     layer: 'above',
     render({ coords, painter }) {
-      const forecastSegments = [], baselineSegments = [];
+      const forecastSegments = [], baselineSegments = [], forecastNotices = [], log = logAxis();
       const path = (rows, key, color, width, dash, diagnostics) => {
         let previous = null;
         for (const row of rows) {
           const time = pointTime(row);
-          if (!Number.isFinite(time) || !valid(row, key)) { previous = null; continue; }
+          if (!Number.isFinite(time) || !valid(row, key, log)) { previous = null; continue; }
           const x = coords.timeToX(time), y = coords.priceToY(row[key]);
           if (previous && Number.isFinite(x) && Number.isFinite(y)) {
             painter.line(previous.x, previous.y, x, y, color, width, dash);
@@ -194,7 +211,7 @@ export function mountObservedPriceChart(plot, { series, symbol, currency = 'USD'
         const viewportRect={left:hostRect.left+canvasRect.left*scaleX,top:hostRect.top+(canvasRect.top+paneTop)*scaleY,right:hostRect.left+canvasRect.right*scaleX,bottom:hostRect.top+(canvasRect.bottom+paneTop)*scaleY,width:canvasRect.width*scaleX,height:canvasRect.height*scaleY};
         return {canvasRect,viewportRect};
       };
-      const baselineRows = rows.filter(row => valid(row, 'baselinePrice'));
+      const baselineRows = rows.filter(row => valid(row, 'baselinePrice', log));
       const palette = {
         forecast: paintToken('--data-gold', '#d8b56d'),
         baseline: paintToken('--accent', '#2962ff'),
@@ -205,12 +222,29 @@ export function mountObservedPriceChart(plot, { series, symbol, currency = 'USD'
       if (rows.length) {
         path(rows, 'price', palette.forecast, 1.8, [7, 5], forecastSegments);
         if (baselineRows.length) path(rows, 'baselinePrice', palette.baseline, 1.7, [2, 4], baselineSegments);
+        const edge = lowPriceEdge(coords);
         for (const item of forecast.milestones || []) {
           const time = pointTime(item); if (!Number.isFinite(time)) continue;
           const row = rows.reduce((best, candidate) => Math.abs(pointTime(candidate) - time) < Math.abs(pointTime(best) - time) ? candidate : best, rows[0]);
-          const x = coords.timeToX(time), y = valid(row, 'price') ? coords.priceToY(row.price) : NaN;
+          const x = coords.timeToX(time), y = valid(row, 'price', log) ? coords.priceToY(row.price) : row.price === 0 ? edge + (edge ? -20 : 20) : NaN;
           if (Number.isFinite(x) && Number.isFinite(y)) { painter.vLine(x, 0, coords.height, item.turnType === 'high' ? '#bc9bd7' : item.turnType === 'low' ? '#7bbfae' : palette.forecast, [2, 5]); painter.circle(x, y, 4, palette.frame, palette.forecast, 1.5); }
         }
+        const inView = x => Number.isFinite(x) && x >= 0 && x <= coords.plotWidth;
+        const visibleRows = rows.filter(row => inView(coords.timeToX(pointTime(row))));
+        const zeroPrice = visibleRows.find(row => row.price === 0), zero = zeroPrice || visibleRows.find(row => row.low === 0);
+        if (zero) {
+          const date = String(zero.date).slice(0, 10), text = `${zeroPrice ? '가정 가격 0' : '범위 하한 0'} · 잔여가치 소진${log ? ' · 로그축 외' : ''}`;
+          const x = Math.max(6, Math.min(coords.plotWidth - painter.measure(text) - 6, coords.timeToX(pointTime(zero))));
+          forecastNotices.push({ kind: 'equity-zero-residual', zeroPrice: Boolean(zeroPrice), date, title: `${date} · ${zeroPrice ? '선택한 조건' : '하단 조건'}의 보통주 잔여가치가 0입니다. 양수 가격으로 대체하지 않습니다.`, lines: [{ text, x, y: coords.height - 10 }] });
+        }
+        const logGap = log && rows.some((row, index) => {
+          const before = rows[index - 1];
+          if (!before || !crossesZero(before, row, ['price', 'low', 'high'])) return false;
+          const from = coords.timeToX(pointTime(before)), to = coords.timeToX(pointTime(row));
+          return Number.isFinite(from) && Number.isFinite(to) && to >= 0 && from <= coords.plotWidth;
+        });
+        if (logGap) forecastNotices.push({ kind: 'equity-log-gap', title: '양수와 0 사이의 구간은 로그축에서 보간하지 않습니다. 해당 가격선 또는 가정 범위를 생략합니다. 선형축에서 확인해 주세요.', lines: ['0 경계 구간 · 로그 연결 생략', '선형축에서 확인해 주세요.'].map((text, index) => ({ text, x: 6, y: coords.height - 38 + index * 14 })) });
+        for (const notice of forecastNotices) for (const line of notice.lines) painter.text(line.text, line.x, line.y, palette.label, 'left', 'middle');
       }
       let eventLines=[],eventLabels=[],excludedEventLabels=[],obstacles=[];
       if (overlayData.showEvents) {
@@ -248,6 +282,7 @@ export function mountObservedPriceChart(plot, { series, symbol, currency = 'USD'
         excludedEventLabels,
         suppressedEventLabelCount: excludedEventLabels.length,
         eventObstacles: obstacles,
+        forecastNotices,
       };
     },
   };
@@ -536,21 +571,23 @@ export function mountObservedPriceChart(plot, { series, symbol, currency = 'USD'
     if (!overlayHandlesRemoved) { overlayHandlesRemoved = true; for (const cleanup of interactionCleanups) cleanup(); bandHandle?.remove?.(); lineHandle?.remove?.(); interactionHandle?.remove?.(); futureCrosshairGroup?.remove?.(); }
     return destroyMounted();
   };
-  const syncPriceDomain = () => {
-    if (overlayData.priceDomain) { mounted.setPriceExtrema(overlayData.priceDomain); return; }
-    const visible = visibleRange();
-    const from = visible?.from ?? -Infinity, to = visible?.to ?? Infinity;
-    const values = [];
+  const forecastDomain = () => {
+    const visible = visibleRange(), from = visible?.from ?? -Infinity, to = visible?.to ?? Infinity, log = logAxis(), values = [];
     for (const bar of mounted.getBars()) if (bar.time >= from && bar.time <= to) values.push(bar.low, bar.high);
     for (const row of overlayData.forecast?.path || []) {
-      const time = Date.parse(`${String(row.date).slice(0, 10)}T00:00:00Z`);
-      if (time < from || time > to) continue;
-      for (const key of ['low', 'high', 'price', 'baselinePrice']) if (Number.isFinite(row[key]) && row[key] > 0) values.push(row[key]);
+      const time = pointTime(row);
+      if (time >= from && time <= to) for (const key of ['low', 'high', 'price', 'baselinePrice']) if (valid(row, key, log)) values.push(row[key]);
     }
-    if (!values.length) return;
-    let min = Math.min(...values), max = Math.max(...values);
+    if (!values.length) return null;
+    if (!values.some(value => value > 0)) values.push(mounted.getBars().at(-1).close);
+    let min = Infinity, max = -Infinity;
+    for (const value of values) { min = Math.min(min, value); max = Math.max(max, value); }
     if (!(max > min)) { min *= .99; max *= 1.01; }
-    mounted.setPriceExtrema({ min, max });
+    return { min, max };
+  };
+  const syncPriceDomain = () => {
+    const domain = overlayData.priceDomain || forecastDomain();
+    if (domain) mounted.setPriceExtrema(domain);
   };
   mounted.setAtlasOverlays = ({ forecast = null, events = [], showEvents = false, priceDomain = null } = {}) => { overlayData = { forecast, events, showEvents, priceDomain }; syncPriceDomain(); bandHandle?.redraw?.(); lineHandle?.redraw?.(); interactionHandle?.redraw?.(); };
   mounted.setAtlasRange = nextRange => { if (!nextRange) return false; mounted.atlasRange = nextRange; return mounted.setRange({ from: nextRange.start * 1000, to: nextRange.end * 1000 }); };
@@ -559,7 +596,7 @@ export function mountObservedPriceChart(plot, { series, symbol, currency = 'USD'
   mounted.getOverlaySvg = () => overlaySvg?.isConnected ? overlaySvg : null;
   mounted.getExportSurface = () => ({ canvas: mounted.getCanvas(), svg: mounted.getOverlaySvg() });
   mounted.getSelection = () => { const selection = lastSelection || (() => { const bar = mounted.getBars().at(-1); return bar ? { bar, time: bar.time } : null; })(); if (!selection) return null; const { bar, time } = selection, stamp = new Date(time).toISOString().replace('T', ' ').slice(0, 16); const fields = [['시각', stamp], ['시가', bar.open], ['고가', bar.high], ['저가', bar.low], ['종가', bar.close], ...(bar.volume === undefined ? [] : [['거래량', bar.volume]])].filter(([, value]) => value !== undefined); return { label: `${symbol} · 실제 관측 봉`, fields: fields.map(([label, value]) => ({ label, value: String(value) })), copyText: fields.map(([label, value]) => `${label}: ${value}`).join('\n') }; };
-  mounted.getPriceScale = () => { if (overlayData.priceDomain) return { ...overlayData.priceDomain }; const visible = visibleRange(), from = visible?.from ?? -Infinity, to = visible?.to ?? Infinity, values = []; for (const bar of mounted.getBars()) if (bar.time >= from && bar.time <= to) values.push(bar.low, bar.high); for (const row of overlayData.forecast?.path || []) { const time = Date.parse(`${String(row.date).slice(0, 10)}T00:00:00Z`); if (time >= from && time <= to) for (const key of ['low','high','price','baselinePrice']) if (Number.isFinite(row[key]) && row[key] > 0) values.push(row[key]); } if (!values.length) return null; let min = Infinity, max = -Infinity; for (const value of values) { min = Math.min(min, value); max = Math.max(max, value); } if (!(max > min)) { min *= .99; max *= 1.01; } return { min, max }; };
+  mounted.getPriceScale = () => overlayData.priceDomain ? { ...overlayData.priceDomain } : forecastDomain();
   mounted.syncAtlasViewport = () => { syncPriceDomain(); bandHandle?.redraw?.(); lineHandle?.redraw?.(); }; 
   return mounted;
 }
