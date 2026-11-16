@@ -296,6 +296,22 @@ test('loading, error, empty, ready and no-match states each have exactly one liv
   } finally { globalThis.fetch = originalFetch; }
 });
 
+test('a rendered room keeps every source disclosure and original link', async () => {
+  const { root, window } = await mount();
+  const message = id => root.querySelector(`[data-message-id="${id}"]`);
+  const foot = id => message(id).querySelector('.relay-msg-foot').textContent;
+  const link = (scope, label) => [...scope.querySelectorAll('a')].find(a => a.textContent.trim() === label)?.getAttribute('href');
+  for (const id of ['a', 'b', 'c']) assert.match(foot(id), /소수의견\(26년 4분기\)/, `${id} names its room`);
+  assert.match(foot('b'), /원문 링크 미제공/);
+  assert.doesNotMatch(foot('a'), /원문 링크 미제공/);
+  assert.equal(link(message('a'), '원문 보기'), 'https://example.test/a');
+  assert.match(root.querySelector('.relay-detail-head').textContent, /최근 갱신 11\.13 12:00/);
+  assert.match(root.querySelector('.relay-rooms-foot').textContent, /15분마다 갱신\s*11\.13 12:00/);
+  click(root, window, '[data-room="naver"]');
+  click(root, window, '[data-article="n1"]');
+  assert.equal(link(root.querySelector('.relay-reader'), '네이버 원문 ↗'), 'https://example.test/n1');
+});
+
 test('ready keeps one reload control and the room list never holds an image', async () => {
   const { root, window } = await mount();
   const check = label => {
