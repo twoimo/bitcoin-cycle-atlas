@@ -2,8 +2,8 @@ import {buildCycleClockBacktest,assertCycleClockBacktest} from './cycle-clock-ba
 import {createForecastComputation} from './forecast-computation.js';
 import {forecastHash} from './forecast-records.js';
 import {setLoadingSurface} from './loading-surfaces.js';
+import {esc} from './ui/html-escape.js';
 
-const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number=value=>Number.isFinite(value)?new Intl.NumberFormat('ko-KR',{maximumFractionDigits:2}).format(value):'—';
 const signed=value=>Number.isFinite(value)?(value>0?'+':'')+number(value)+'일':'—';
 const typeLabel=type=>type==='peak'?'고점':'저점';

@@ -1,8 +1,9 @@
 import { setLoadingSurface } from './loading-surfaces.js';
 import { mountIpoMonthCalendar } from './ipo-month-calendar.js?v=1.32.1';
+import { withRequestTimeout } from './ui/request-timeout.js';
+import { esc } from './ui/html-escape.js';
 // 공모주 청약·수요예측 캘린더. 38커뮤니케이션 집계 원자료를 표시만 하며,
 // 상태와 D-day는 열람 시점의 날짜로 다시 계산한다(저장된 상태 문자열을 신뢰하지 않는다).
-const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const normalize = v => String(v ?? '').normalize('NFKC').toLocaleLowerCase();
 const DAY = 86400000;
 const utcDay = iso => { const [y, m, d] = String(iso).split('-').map(Number); return Date.UTC(y, (m || 1) - 1, d || 1); };
@@ -101,7 +102,7 @@ export function initIpoView({ root, load = null, embeddedData = () => null, now 
     setLoadingSurface(el('.ipo-pages'),true,{kind:'calendar',label:'공모주 일정 로딩'});
     try {
       const embedded = embeddedData();
-      state.doc = embedded ? JSON.parse(embedded) : await (load ?? (() => fetch('./data/ipo-calendar.json').then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })))();
+      state.doc = embedded ? JSON.parse(embedded) : await withRequestTimeout(load ?? (({ signal }) => fetch('./data/ipo-calendar.json', { signal }).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })), '일정 확인 시간이 초과되었습니다.');
       if (!Array.isArray(state.doc?.['항목'])) throw new Error('잘못된 일정 데이터 형식');
       for (const item of state.doc['항목']) {
         if (typeof item?.['종목'] !== 'string') throw new Error('잘못된 종목 데이터');

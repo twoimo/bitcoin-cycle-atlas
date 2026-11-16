@@ -1,4 +1,4 @@
-const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+import { esc } from './ui/html-escape.js';
 const iso = date => date.toISOString().slice(0, 10);
 const monthName = month => `${Number(month.slice(0,4))}년 ${Number(month.slice(5))}월`;
 const kinds = [['청약','subscription'], ['수요예측','forecast']];

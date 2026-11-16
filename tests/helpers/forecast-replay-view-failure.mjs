@@ -58,7 +58,12 @@ export async function verifyReplayViewFailure(sourceUrl=new URL('../../dist/fore
       if(specifier.startsWith('./forecast-replay.js'))return engine;
       throw new Error('Unexpected view dependency '+specifier);
     }});
-    await view.link(specifier=>{if(specifier==='./loading-surfaces.js')return loadingView;assert.ok(specifier.startsWith('./atlas-price-chart.js'));return chart;});await view.evaluate();
+    const shipped=async specifier=>{const url=new URL(specifier,sourceUrl);return new vm.SourceTextModule(await readFile(url,'utf8'),{context,identifier:url.href});};
+    await view.link(specifier=>{
+      if(specifier==='./loading-surfaces.js')return loadingView;
+      if(['./ui/html-escape.js','./ui/journal-format.js'].includes(specifier))return shipped(specifier);
+      assert.ok(specifier.startsWith('./atlas-price-chart.js'));return chart;
+    });await view.evaluate();
     const mounted=view.namespace.mountForecastReplay(host,{record:{symbol:'BTCUSD',asOf:timeline[0]},snapshot:{}});
     const flush=async()=>{for(let i=0;i<3;i++)await new Promise(setImmediate);};
     const click=selector=>panel.listeners.get('click')({target:{closest:value=>value===selector}});

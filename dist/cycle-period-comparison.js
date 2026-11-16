@@ -1,8 +1,8 @@
 import {placePlotLabel} from './ui/chart-legend-layout.js';
 import {utcDay,dateFromDay} from './cycle-engine.js';
 import {buildCycleMilestones,INTERVAL_RELATIONS} from './cycle-milestones.js';
+import {esc} from './ui/html-escape.js';
 
-const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const conditional=item=>item.selectionKind==='scenario'||['scenario','mixed'].includes(item.kind);
 const weeks=days=>new Intl.NumberFormat('ko-KR',{maximumFractionDigits:1}).format(days/7);
 const rangeText=range=>range?`${weeks(range.min)}–${weeks(range.max)}주`:'자료 없음';
