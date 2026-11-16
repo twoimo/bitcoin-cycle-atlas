@@ -30,7 +30,16 @@ const positivePath = [
   { date: '2023-10-06', price: 104, low: 92, high: 121, baselinePrice: 107 },
 ];
 
-function paintForecast({ scale, path, milestones = [], invertScale = false, switchTo = null, hoverDate = null }) {
+const CHART_NAME = 'MSTR 가격 차트';
+// What assistive technology reads for the focusable chart group: the text of every aria-describedby target.
+const chartDescription = plot => {
+  const chart = plot.querySelector(`[role="group"][aria-label="${CHART_NAME}"]`);
+  assert.ok(chart, 'the chart is exposed as one named group');
+  return (chart.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean)
+    .map(id => plot.ownerDocument.getElementById(id)?.textContent.replace(/\s+/g, ' ').trim() || '').filter(Boolean).join(' ');
+};
+
+function paintForecast({ scale, path, milestones = [], invertScale = false, switchTo = null, hoverDate = null, after = null }) {
   const { document, window } = parseHTML('<html><body><svg id="overlay" viewBox="0 0 640 420"></svg><div id="plot"></div></body></html>');
   window.devicePixelRatio = 1;
   const globalKeys = ['document', 'window', 'MutationObserver', 'ResizeObserver', 'matchMedia', 'getComputedStyle', 'requestAnimationFrame', 'cancelAnimationFrame'];
@@ -68,7 +77,7 @@ function paintForecast({ scale, path, milestones = [], invertScale = false, swit
   Object.assign(globalThis, { document, window, MutationObserver: window.MutationObserver, ResizeObserver, matchMedia, getComputedStyle, requestAnimationFrame: () => ++frame, cancelAnimationFrame() {} });
   try {
     const plot = document.getElementById('plot'), overlaySvg = document.getElementById('overlay'); setBounds(plot); setBounds(overlaySvg);
-    mounted = mountObservedPriceChart(plot, { series: { candles }, symbol: 'MSTR', currency: 'USD', scale, invertScale, overlaySvg, onCrosshair: detail => crosshair.push(detail), onInspect: detail => inspected.push(detail), range: { start: day - 86400, end: day + 8 * 86400 }, onViewport() {}, onError() {} });
+    mounted = mountObservedPriceChart(plot, { series: { candles }, symbol: 'MSTR', currency: 'USD', accessibleName: CHART_NAME, scale, invertScale, overlaySvg, onCrosshair: detail => crosshair.push(detail), onInspect: detail => inspected.push(detail), range: { start: day - 86400, end: day + 8 * 86400 }, onViewport() {}, onError() {} });
     mounted.chart.addOverlay({ layer: 'above', render(rc) { coords = rc.coords; } });
     mounted.setAtlasOverlays({ forecast: { path, milestones }, events: [], showEvents: false });
     mounted.chart.render();
@@ -90,7 +99,11 @@ function paintForecast({ scale, path, milestones = [], invertScale = false, swit
       [...mounted.host.querySelectorAll('canvas')].at(-1).dispatchEvent(event);
       mounted.chart.render();
     }
+    const description = chartDescription(plot);
+    let afterDescription = null;
+    if (after) { after(mounted); mounted.chart.invalidate(); mounted.chart.render(); afterDescription = chartDescription(plot); }
     return {
+      description, afterDescription,
       coords, x, y, segment, receipt: mounted.inspectAtlasOverlayRender(), texts: texts.map(item => item.text), textAt: text => texts.find(item => item.text === text),
       band: fills.filter(item => item.color === BAND).map(item => item.points),
       line: strokes.filter(item => item.color === LINE && item.points.length === 2).map(({ points: [from, to] }) => ({ from, to })),
@@ -226,5 +239,31 @@ test('hovering a zero residual row inspects price 0 instead of going blank', () 
     assert.equal(paint.inspected?.kind, 'simulated'); assert.equal(paint.inspected.price, 0);
     assert.equal(paint.inspected.forecast.valuationState, 'absorbed');
     assert.equal(paint.inspected.fields.find(field => field.label.startsWith('조건부 경로 가격'))?.value, '0.00');
+  }
+});
+
+test('the zero residual and log-gap notices are part of the chart group\'s accessible description', () => {
+  const linear = paintForecast({ scale: 'normal', path: zeroPricePath });
+  for (const text of [ZERO_PRICE_TITLE, '가정 가격 0 · 잔여가치 소진']) assert.ok(linear.description.includes(text), `linear description names: ${text} (got ${JSON.stringify(linear.description)})`);
+  assert.equal(linear.description.includes(LOG_GAP_TITLE), false, 'a linear axis describes no log gap');
+
+  const log = paintForecast({ scale: 'log', path: zeroPricePath });
+  for (const text of [ZERO_PRICE_TITLE, '가정 가격 0 · 잔여가치 소진 · 로그축 외', LOG_GAP_TITLE, '0 경계 구간 · 로그 연결 생략']) assert.ok(log.description.includes(text), `log description names: ${text} (got ${JSON.stringify(log.description)})`);
+
+  const bound = paintForecast({ scale: 'normal', path: zeroBoundPath });
+  for (const text of [ZERO_BOUND_TITLE, '범위 하한 0 · 잔여가치 소진']) assert.ok(bound.description.includes(text), `zero lower bound description names: ${text}`);
+
+  for (const scale of ['normal', 'log']) assert.equal(paintForecast({ scale, path: positivePath }).description, '', `${scale}: a positive forecast adds no notice to the chart description`);
+});
+
+test('the chart description drops a notice as soon as it no longer applies', () => {
+  const linear = paintForecast({ scale: 'log', path: zeroPricePath, after: mounted => { mounted.setScale('normal'); mounted.setAtlasOverlays({ forecast: { path: zeroPricePath }, events: [], showEvents: false }); } });
+  assert.ok(linear.description.includes(LOG_GAP_TITLE));
+  assert.ok(linear.afterDescription.includes(ZERO_PRICE_TITLE), 'the zero notice stays on the linear axis');
+  assert.equal(linear.afterDescription.includes(LOG_GAP_TITLE), false, 'the log-gap notice leaves with the log axis');
+  for (const [label, forecast] of [['a positive scenario', { path: positivePath }], ['a hidden forecast', null]]) {
+    const paint = paintForecast({ scale: 'log', path: zeroPricePath, after: mounted => mounted.setAtlasOverlays({ forecast, events: [], showEvents: false }) });
+    assert.ok(paint.description.includes(ZERO_PRICE_TITLE), `${label}: starts with the zero notice`);
+    assert.equal(paint.afterDescription, '', `${label}: the chart description is cleared`);
   }
 });
