@@ -1,19 +1,14 @@
-import { readdir, realpath } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { execFileSync, spawn } from 'node:child_process';
+import { spawn } from 'node:child_process';
+import { CANONICAL_NODE as version, CANONICAL_IMAGE as image, onCanonicalRuntime, canonicalDockerRun } from './canonical-runtime.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const version = 'v24.22.2';
-// The former pin (e7add2…) stopped resolving from Docker Hub on 2026-11-11 (registry 404).
-// This is the current linux/amd64 index digest of the same node:24.22.2 tag; the
-// three frozen files still replay 41/41 on it.
-const image = 'node@sha256:8fa96264f302f58bbb13aa7339c541547b56975766ce956c875da149452a3e40';
-// These cases reproduce immutable outputs originally made on Linux/x64.
-// Every other case uses the host runtime, including new-model calculations.
-const frozenFiles = new Set(['ethereum-prospective-archive-issuer.test.mjs', 'ethereum-prospective-archive-summary.test.mjs', 'ethereum-warm-start-prospective.test.mjs']);
 const files = (await readdir(resolve(root, 'tests'))).filter(name => name.endsWith('.test.mjs')).sort();
-const canonical = process.platform === 'linux' && process.arch === 'x64' && process.version === version;
+const frozenGuard = "import './support/linux-x64-replay.mjs';";
+const frozenFiles = new Set((await Promise.all(files.map(async file => (await readFile(resolve(root, 'tests', file), 'utf8')).includes(frozenGuard) ? file : null))).filter(Boolean));
+const canonical = onCanonicalRuntime();
 const args = process.argv.slice(2).filter(arg => arg !== '--test-reporter=tap');
 if (args.some(arg => arg.startsWith('--test-reporter'))) throw new Error('The combined test receipt requires TAP reporting');
 async function run(command, options) {
@@ -32,12 +27,7 @@ const batches = [];
 const hostFiles = canonical ? files : files.filter(file => !frozenFiles.has(file));
 batches.push(await run(process.execPath, ['--test', '--test-reporter=tap', ...args, ...hostFiles.map(file => 'tests/'+file)]));
 if (!canonical) {
-  const common = await realpath(resolve(root, execFileSync('git', ['rev-parse', '--git-common-dir'], { cwd: root, encoding: 'utf8' }).trim()));
-  const options = ['run', '--rm', '--platform', 'linux/amd64', '--network', 'none', '--read-only', '--cpus', '8',
-    '--user', `${process.getuid?.() ?? 1000}:${process.getgid?.() ?? 1000}`, '--tmpfs', '/tmp:rw,exec,nosuid,size=2g',
-    '--env', 'GIT_OPTIONAL_LOCKS=0', '--mount', `type=bind,src=${root},dst=${root}`, '--workdir', root];
-  if (!common.startsWith(root+'/')) options.push('--mount', `type=bind,src=${common},dst=${common},readonly`);
-  options.push(image, 'node', '--test', '--test-reporter=tap', ...args, ...files.filter(file => frozenFiles.has(file)).map(file => 'tests/'+file));
+  const options = [...await canonicalDockerRun(root), 'node', '--test', '--test-reporter=tap', ...args, ...files.filter(file => frozenFiles.has(file)).map(file => 'tests/'+file)];
   console.log(`Frozen output replay: ${version} linux/x64, ${image}. No numerical tolerance or stored output changes.`);
   batches.push(await run('docker', options));
 }

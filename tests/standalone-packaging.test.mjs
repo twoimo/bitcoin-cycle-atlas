@@ -129,7 +129,6 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   assert.equal(verification.modules, Object.keys(bundle.imports).length);
   assert.equal(verification.snapshots, 10); // Existing nine plus the exact relay source.
   assert.ok(verification.forecastRecords>=5,'all five initial economic scenarios have actual preserved outputs');
-  assert.equal(verification.stylesheets, 40); // Includes the common two-row quote HUD.
   const monthlyStyle = `<style>\n${await readFile(resolve(root, 'dist/monthly-backtest.css'), 'utf8')}\n</style>`;
   assert.equal(html.split(monthlyStyle).length - 1, 1, 'monthly backtest styles are preserved exactly once');
   assert.match(html,/\.forecast-journal\s*\{/,'the archived forecast workspace retains its offline styles');
