@@ -221,11 +221,10 @@ export function mountAtlasBtcFunnestChart({
   const evidenceRows = forecastEvidence.filter(row => row?.date).map(row => ({ ...row, time: utcMs(row.date) }));
   const annotationRows = researchAnnotations.filter(row => row?.start?.date && row?.end?.date).map(row => ({ ...row, startTime: utcMs(row.start.date), endTime: utcMs(row.end.date) }));
   const selectedRows = [
-    ...rawRows.map(row => ({ ...row, kind: 'observed', price: row.price ?? row.close })),
-    ...lineRows.map(row => ({ ...row, kind: 'observed-line', price: row.close })),
+    ...observedTimeline.map(row => ({ ...row, kind: 'observed', price: row.price ?? row.close })),
     ...forecastRows.map(row => ({ ...row, kind: 'simulated' })),
     ...retrospectiveRows.map(row => ({ ...row, kind: 'retrospective' })),
-  ].sort((a, b) => a.time - b.time || (a.kind.startsWith('observed') ? -1 : 1));
+  ].sort((a, b) => a.time - b.time || (a.kind === 'observed' ? -1 : 1));
   const uniqueRows = selectedRows.filter((row, index) => index === 0 || row.time !== selectedRows[index - 1].time || row.kind !== selectedRows[index - 1].kind);
   const latestObservedTime = observedTimeline.at(-1).time;
   const futureSelectionRows = uniqueRows.filter(row => row.kind === 'simulated' && row.time > latestObservedTime);
@@ -662,14 +661,12 @@ export function mountAtlasBtcFunnestChart({
   };
   const detailFor = row => {
     if (!row) return null;
-    const displayRow = row.kind === 'observed' ? sourceByTime.get(row.time) : row;
-    if (row.kind === 'observed' && displayRow) {
-      const detail = sourcePointDetail(displayRow, previousAt(displayRow), display, { frequency, source: actualSource });
-      if (sourceMode === 'close-only' && showVolume) { const observedVolume = volumeByDate.get(displayRow.date); if (observedVolume) Object.assign(detail, { volume: observedVolume.volume, volumeSource, volumeUnit: 'BTC', volumeStartDate: observedVolume.startDate || observedVolume.date, volumeEndDate: observedVolume.endDate || observedVolume.date }); }
-      return detail;
-    }
-    if (row.kind === 'observed-line') return sourcePointDetail(row, closeBefore.get(row.time), display, { frequency, source: lineSource });
-    return { date: row.date, price: row.price, displayedPrice: display.toDisplay(row.price), display: display.metadata, kind: 'simulated', source: row.kind === 'retrospective' ? '현재 생성 회고 경로' : 'Atlas 조건부 모델', frequency };
+    if (row.kind !== 'observed') return { date: row.date, price: row.price, displayedPrice: display.toDisplay(row.price), display: display.metadata, kind: 'simulated', source: row.kind === 'retrospective' ? '현재 생성 회고 경로' : 'Atlas 조건부 모델', frequency };
+    const bar = sourceByTime.get(row.time);
+    if (!bar) return sourcePointDetail(row, closeBefore.get(row.time), display, { frequency, source: lineSource });
+    const detail = sourcePointDetail(bar, previousAt(bar), display, { frequency, source: actualSource });
+    if (sourceMode === 'close-only' && showVolume) { const observedVolume = volumeByDate.get(bar.date); if (observedVolume) Object.assign(detail, { volume: observedVolume.volume, volumeSource, volumeUnit: 'BTC', volumeStartDate: observedVolume.startDate || observedVolume.date, volumeEndDate: observedVolume.endDate || observedVolume.date }); }
+    return detail;
   };
   let selectionIndex = uniqueRows.findIndex(row => row.date === activeSelection);
   if (selectionIndex < 0) { const nearest = nearestSelection(activeSelection); selectionIndex = Math.max(0, uniqueRows.indexOf(nearest)); activeSelection = nearest?.date ?? uniqueRows.at(-1)?.date; }
@@ -685,11 +682,11 @@ export function mountAtlasBtcFunnestChart({
     const futurePointer = point.time > latestObservedTime;
     const selected = futurePointer ? nearestFutureSelection(point.time) : nearestSelection(point.time);
     if (futurePointer && !selected) { hideFuturePreview({ clearPointer: true }); clearNativeCrosshair(); return false; }
-    const sourceRow = selected?.kind === 'observed' ? sourceByTime.get(selected.time) : selected;
+    const sourceRow = selected?.kind === 'observed' ? sourceByTime.get(selected.time) ?? selected : selected;
     const resolved = tool === 'measure' && sourceRow ? resolveMagnetPoint({ row: sourceRow, pointerY: y,
       y: value => lastCoords.priceToY(display.toDisplay(value)), invertY: value => display.fromDisplay(lastCoords.yToPrice(value)),
       mode: magnet, ctrlKey: Boolean(event.ctrlKey), metaKey: Boolean(event.metaKey), thresholdPx: 12 * view.height / rect.height }) : null;
-    const measurementAnchor = resolved ? { ...resolved, time: selected.time, date: selected.date, kind: selected.kind === 'observed' || selected.kind === 'observed-line' ? 'observed' : 'simulated' } : null;
+    const measurementAnchor = resolved ? { ...resolved, time: selected.time, date: selected.date, kind: selected.kind === 'observed' ? 'observed' : 'simulated' } : null;
     pointerDetail = { time: point.time, value: display.fromDisplay(point.price), price: display.fromDisplay(point.price), x, y, date: selected?.date || null, kind: selected?.kind || null, measurementAnchor };
     const hostRect = host.getBoundingClientRect(); if (!(hostRect.width > 0 && hostRect.height > 0)) return false;
     // In pinned Funnest the second (overlay) canvas owns Interaction; events
