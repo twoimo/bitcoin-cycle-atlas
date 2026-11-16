@@ -295,7 +295,7 @@ export function FunnestInstrumentPlot(props: Props) {
     return () => { (svgRef as { current: SVGSVGElement | null }).current = null; };
   }, [svgRef, dates.length, view.chartType, view.start, view.end, view.autoScale, description, symbol, unit, chartWidth, chartHeight, hasVolume, volumeAxisWidth]);
   useEffect(() => { if (menuPulse > 0) setMenuOpen(true); }, [menuPulse]);
-  const gesture = useRef<PlotGesture | null>(null), suppressClickUntil = useRef(0), lastPointerX = useRef<number | null>(null);
+  const gesture = useRef<PlotGesture | null>(null), suppressClickUntil = useRef(0);
   const touches = useRef(new Map<number, { x: number; y: number }>());
   const priceSvg = () => host.current?.querySelector<SVGSVGElement>('svg[data-plot-right]');
   const fullView = (): RsiChartView => ({ ...view, start: timeline[0] ?? view.start, end: timeline.at(-1) ?? view.end, autoScale: true, domain: null });
@@ -390,13 +390,6 @@ export function FunnestInstrumentPlot(props: Props) {
     if (domain) applyEdit({ ...view, autoScale: false, domain });
     return true;
   };
-  const recordPointer = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (within(plotRegions(priceSvg())?.plot, event) || (event.target as Element).closest('[data-panel="rsi"]')) lastPointerX.current = event.clientX;
-  };
-  const pointerAnchor = () => {
-    const plot = plotRegions(priceSvg())?.plot, x = lastPointerX.current;
-    return plot && x !== null ? clamp((x - plot.left) / plot.width, 0, 1) : .5;
-  };
   const navigateByKey = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const state = gesture.current;
     if (event.key === 'Escape' && state) { event.preventDefault(); event.stopPropagation(); releaseGesture(state); return; }
@@ -407,7 +400,8 @@ export function FunnestInstrumentPlot(props: Props) {
     if (command === 'reset') { applyEdit(fullView()); return; }
     const range = spacedRange();
     if (!range) return;
-    const next = command === 'left' || command === 'right' ? panRange(range, command === 'left' ? -.25 : .25) : zoomRange(range, command === 'in' ? .8 : 1.25, pointerAnchor());
+    // Keyboard zoom keeps the right edge, as the zoom reference's + button does; only wheel and pinch follow the pointer.
+    const next = command === 'left' || command === 'right' ? panRange(range, command === 'left' ? -.25 : .25) : zoomRange(range, command === 'in' ? .8 : 1.25, 1);
     applyEdit({ ...view, start: next.start, end: next.end, spacingBounds: next.spacingBounds });
   };
   const axisOwnsClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -451,7 +445,6 @@ export function FunnestInstrumentPlot(props: Props) {
     role="group" aria-label={`${description || `${symbol} 가격 차트`} · ${view.start}부터 ${view.end}`}
     onWheel={event => { if (isPlotControlTarget(event.target)) return; event.preventDefault(); if (scalePriceAxis(event)) return; const first = Date.parse(view.start), last = Date.parse(view.end), duration = last - first; if (!Number.isFinite(duration) || duration <= 0) return; const plot = plotRegions(priceSvg())?.plot ?? event.currentTarget.getBoundingClientRect(); const factor = event.deltaY < 0 ? 0.82 : 1.22; const anchor = clamp((event.clientX - plot.left) / Math.max(1, plot.width), 0, 1); const nextDuration = Math.max(86400000, duration * factor); const point = first + duration * anchor; const next = boundedWindow(point - nextDuration * anchor, point + nextDuration * (1-anchor), timeline); if (!next) return; onStart(); onView({ ...view, ...next }); onEnd(); }}
     onPointerDown={event => { if (isPlotControlTarget(event.target) || !active || event.button !== 0) return; startGesture(event); }}
-    onPointerMove={recordPointer}
     onClick={event => { if (isPlotControlTarget(event.target)) return; if (axisOwnsClick(event)) return; choose(current.current ?? selectedIndex, (event.target as Element).closest('[data-panel="rsi"]') ? 'rsi' : 'price'); }}
     onDoubleClick={event => { if (isPlotControlTarget(event.target) || !active || event.ctrlKey || event.metaKey || event.altKey) return; resetOnDoubleClick(event); }}
     onContextMenu={event => { if (isPlotControlTarget(event.target)) return; event.preventDefault(); setMenuOpen(true); }}

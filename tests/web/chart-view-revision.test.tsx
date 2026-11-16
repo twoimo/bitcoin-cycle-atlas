@@ -279,19 +279,18 @@ for (const symbol of ['TQQQ', 'HYPE'] as const) {
     assert.equal(chart.state().userViewRevision, 1, 'the key is one user edit');
   });
 
-  test(`${symbol} + and = zoom in about the last pointer position and - zooms out`, async t => {
+  test(`${symbol} + and = zoom in to 80% of the days and - zooms out to 125%, keeping the right edge`, async t => {
     const chart = await hostedChart(t, '', symbol);
-    const before = chart.range(), anchor = utcDay(before.start) + daySpan(before) * .25;
-    await chart.fixture.hover(chart.plot.left + chart.plot.width * .25, chart.plot.y);
+    const before = chart.range();
     await chart.fixture.press('+');
     const zoomed = chart.range();
     assert(Math.abs((daySpan(zoomed) + 1) - (daySpan(before) + 1) * .8) <= 1, `+ shows 80% of the days: ${JSON.stringify({ before, zoomed })}`);
-    assert(Math.abs(anchor - (utcDay(zoomed.start) + daySpan(zoomed) * .25)) <= 1, `the date under the pointer stays under it: ${JSON.stringify({ before, zoomed })}`);
     await chart.fixture.press('=');
     const again = chart.range();
     assert(Math.abs((daySpan(again) + 1) - (daySpan(zoomed) + 1) * .8) <= 1, '= zooms in like +');
     await chart.fixture.press('-');
     assert(Math.abs((daySpan(chart.range()) + 1) - (daySpan(again) + 1) * 1.25) <= 1, '- shows 125% of the days');
+    assert.equal(chart.range().end, before.end, 'every key zoom keeps the right edge');
     assert.equal(chart.state().userViewRevision, 3, 'each key is one user edit');
   });
 
@@ -304,6 +303,7 @@ for (const symbol of ['TQQQ', 'HYPE'] as const) {
     await chart.fixture.press('ArrowDown', { metaKey: true });
     const out = chart.range();
     assert(daySpan(out) > daySpan(zoomed), 'Cmd+Down zooms out');
+    assert(zoomed.end === before.end && out.end === before.end, `Ctrl+Up and Cmd+Down keep the right edge: ${JSON.stringify({ before, zoomed, out })}`);
     await chart.fixture.press('ArrowLeft', { ctrlKey: true });
     const left = chart.range();
     assert(Math.abs(utcDay(left.start) - (utcDay(out.start) - Math.round(daySpan(out) / 4))) <= 1, `Ctrl+Left pans a quarter window back: ${JSON.stringify({ out, left })}`);
@@ -395,7 +395,7 @@ for (const symbol of ['TQQQ', 'HYPE'] as const) for (const ctrlKey of [false, tr
 
 const chartHelp = [
   ['휠 / Ctrl + 휠', '가리킨 날짜를 유지하며 확대·축소'],
-  ['+ / −', '시간 구간 확대 / 축소'],
+  ['+ / −', '오른쪽 끝을 유지하며 시간 구간 확대 / 축소'],
   ['두 손가락 벌리기 / 모으기', '시간 구간 확대 / 축소'],
   ['이동 도구(H) 드래그', '날짜 위치 이동'],
   ['가격축 드래그 / 휠', '가격 눈금 조절'],

@@ -30,7 +30,7 @@ export function readRsiSignalLabelBounds(root: Element): NonNullable<ChartOverla
 }
 /** Inputs the hosted chart handles, shown by both workbench help panes. */
 const CHART_HELP=[
-  ['휠 / Ctrl + 휠','가리킨 날짜를 유지하며 확대·축소'],['+ / −','시간 구간 확대 / 축소'],['두 손가락 벌리기 / 모으기','시간 구간 확대 / 축소'],
+  ['휠 / Ctrl + 휠','가리킨 날짜를 유지하며 확대·축소'],['+ / −','오른쪽 끝을 유지하며 시간 구간 확대 / 축소'],['두 손가락 벌리기 / 모으기','시간 구간 확대 / 축소'],
   ['이동 도구(H) 드래그','날짜 위치 이동'],['가격축 드래그 / 휠','가격 눈금 조절'],['가격축 두 번 클릭','가격 자동 맞춤'],['시간축 드래그','표시 기간 조절'],
   ['C / H / M','십자선 / 이동 / 두 점 측정'],['← / →','이전 / 다음 관측'],['Shift + ← / →','이전 / 다음 구간'],['0 / Alt+R / 두 번 클릭','전체 범위'],
   ['Alt+G / Alt+M','날짜 이동 / 자석'],['Ctrl/⌘ Z','실행 취소'],['Shift Ctrl/⌘ Z','다시 실행'],
