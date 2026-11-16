@@ -15,13 +15,38 @@ import {fileURLToPath, pathToFileURL} from 'node:url';
 import {headlessWindowArgument, verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
 import {isNativeFunnestPainted} from './funnest-browser-evidence.mjs';
 import {
-  priceAxisObservationForState, priceAxisHasEmptyInsetClip, priceAxisOverlapEvidence, priceAxisOverlayCoverage, priceAxisPaintStyleState,
-  priceAxisSourceExpectations, priceAxisSymbols, priceAxisWidths, validatePriceAxisState,
+  comparePriceAxisStates, priceAxisAlignment, priceAxisObservationForState, priceAxisHasEmptyInsetClip, priceAxisOverlapEvidence, priceAxisOverlayCoverage,
+  priceAxisPaintStyleState, priceAxisSourceExpectations, priceAxisSymbols, priceAxisWidths, validatePriceAxisState,
 } from './price-axis-browser-contract.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url)), site = resolve(root,'dist'), prefix = '/bitcoin-cycle-atlas';
 const delay = ms => new Promise(resolve => setTimeout(resolve,ms));
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+/** Runs before the page's own scripts. Records, per canvas, the text and rounded-rectangle draws of the latest frame in
+ * draw order (a full-canvas fillRect starts a frame) and always calls through, so the paint is byte for byte the product's. */
+export function installCanvasDrawTap() {
+  const proto = CanvasRenderingContext2D.prototype, frames = new WeakMap();
+  const frameOf = canvas => {let frame = frames.get(canvas); if (!frame) frames.set(canvas,frame = {texts:[],rects:[],sequence:0,order:0}); return frame;};
+  const fillRect = proto.fillRect, fillText = proto.fillText, roundRect = proto.roundRect;
+  proto.fillRect = function(x,y,w,h) {
+    if (x === 0 && y === 0) {
+      const transform = this.getTransform(), canvas = this.canvas;
+      if (Math.round(w * transform.a) >= canvas.width && Math.round(h * transform.d) >= canvas.height) {const frame = frameOf(canvas); frame.texts = []; frame.rects = []; frame.order = 0; frame.sequence++;}
+    }
+    return fillRect.call(this,x,y,w,h);
+  };
+  proto.fillText = function(text,x,y,maxWidth) {
+    const frame = frameOf(this.canvas);
+    frame.texts.push({order:++frame.order,text:String(text),x,y,font:this.font,align:this.textAlign,baseline:this.textBaseline,fill:String(this.fillStyle),alpha:this.globalAlpha});
+    return fillText.call(this,text,x,y,maxWidth);
+  };
+  proto.roundRect = function(x,y,w,h,radii) {
+    const frame = frameOf(this.canvas);
+    frame.rects.push({order:++frame.order,x,y,w,h,fill:String(this.fillStyle),alpha:this.globalAlpha});
+    return roundRect.call(this,x,y,w,h,radii);
+  };
+  window.__atlasCanvasDraws = canvas => {const frame = frames.get(canvas); return frame ? {sequence:frame.sequence,texts:frame.texts.map(item => ({...item})),rects:frame.rects.map(item => ({...item}))} : null;};
+}
 export function firstDifference(a,b,path = '$') {
   if (a === b) return null;
   if (!a || !b || typeof a !== 'object' || typeof b !== 'object') return `${path}: ${JSON.stringify(a)} -> ${JSON.stringify(b)}`;
@@ -156,37 +181,70 @@ export function inspectPriceAxis(symbol) {
   };
   const host = svg?.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas') || null, snapshot = host?.getAtlasFunnestSnapshot?.() || null;
   const hitAt = (x,y) => {const node = document.elementFromPoint(x,y); return {x,y,target:describe(node),insideHost:Boolean(node && host.contains(node))};};
-  // The engine reserves layout.width - layout.plotWidth for the price axis and
-  // paints its labels there as canvas text. Row bands are the ink outside the
-  // gutter's background and its single full-height boundary rule.
-  const readSurface = (canvas,layout,main,hostRect,scale) => {
-    const kx = canvas.width / layout.width, ky = canvas.height / layout.height;
-    const x0 = Math.round(layout.plotWidth * kx), y0 = Math.round(main.top * ky), width = canvas.width - x0, height = Math.min(canvas.height,Math.round((main.top + main.height) * ky)) - y0;
-    let data;
-    try {data = width > 0 && height > 0 ? canvas.getContext('2d').getImageData(x0,y0,width,height).data : null;} catch {data = null;}
-    if (!data) return {readable:false,width:Math.max(0,width),height:Math.max(0,height),modal:null,ruleColumns:[],bands:[]};
-    const key = index => `${data[index]},${data[index+1]},${data[index+2]},${data[index+3]}`, counts = new Map();
-    for (let index = 0; index < data.length; index += 4) counts.set(key(index),(counts.get(key(index)) || 0) + 1);
+  // The engine reserves layout.width - layout.plotWidth for the price axis. Funnest paints each tick label with
+  // one fillText and the last-price tag with one roundRect, so the recorded calls of the latest frame are the label
+  // text, anchor and tag geometry in layout pixels; measureText turns them into boxes. Pixels then prove the ink.
+  const scratch = document.createElement('canvas').getContext('2d');
+  const readLabels = (draws,layout,hostRect,scale) => {
+    const cssX = value => hostRect.left + value * scale.x, cssY = value => hostRect.top + value * scale.y;
+    const cssBox = (left,top,right,bottom) => rect(cssX(left),cssY(top),cssX(right),cssY(bottom));
+    const inGutter = item => item.x >= layout.plotWidth && item.y < layout.panesHeight;
+    const rects = draws.rects.filter(inGutter).map(item => ({order:item.order,layout:{left:item.x,top:item.y,right:item.x + item.w,bottom:item.y + item.h},fill:item.fill,alpha:item.alpha}));
+    const entries = draws.texts.filter(inGutter).map(item => {
+      scratch.font = item.font; scratch.textBaseline = item.baseline;
+      const measured = scratch.measureText(item.text), left = item.x - measured.width * (item.align === 'right' ? 1 : item.align === 'center' ? .5 : 0);
+      const layoutBox = {left,top:item.y - measured.fontBoundingBoxAscent,right:left + measured.width,bottom:item.y + measured.fontBoundingBoxDescent};
+      return {order:item.order,text:item.text,x:item.x,y:item.y,align:item.align,baseline:item.baseline,font:item.font,fill:item.fill,alpha:item.alpha,layoutBox,
+        box:cssBox(layoutBox.left,layoutBox.top,layoutBox.right,layoutBox.bottom),anchor:{x:cssX(item.x),y:cssY(item.y)}};
+    });
+    // The engine draws the last-price tag, then its price text and countdown; ticks are drawn before any tag.
+    const badge = rects.at(-1) || null, inside = (entry,tag) => Boolean(tag) && entry.order > tag.order && entry.y >= tag.layout.top && entry.y <= tag.layout.bottom;
+    const tagTexts = badge ? entries.filter(entry => inside(entry,badge)).sort((a,b) => a.y - b.y) : [];
+    const withHit = (entry,key) => {const center = {x:(entry.box.left+entry.box.right)/2,y:(entry.box.top+entry.box.bottom)/2}; return {key,...entry,hit:hitAt(center.x,center.y)};};
+    const ticks = entries.filter(entry => !inside(entry,badge)).sort((a,b) => a.y - b.y).map((entry,index) => withHit(entry,`tick-${index}`));
+    const badgeRect = badge ? cssBox(badge.layout.left,badge.layout.top,badge.layout.right,badge.layout.bottom) : null;
+    return {frame:{textCount:draws.texts.length,rectCount:draws.rects.length,sequence:draws.sequence},ticks,badgeCount:rects.length,
+      latest:tagTexts[0] ? {...withHit(tagTexts[0],'latest'),badge:{rect:badgeRect,hit:hitAt((badgeRect.left+badgeRect.right)/2,(badgeRect.top+badgeRect.bottom)/2),fill:badge.fill,alpha:badge.alpha}} : null,
+      countdown:tagTexts[1] ? withHit(tagTexts[1],'countdown') : null};
+  };
+  // Pixel truth for the gutter column band: the background mode, the single boundary rule, the bottom frame line, ink under
+  // every label box and any ink the labels, tag and rule do not account for.
+  const readInk = (canvas,layout,hostRect,scale,labels) => {
+    const kx = canvas.width / layout.width, ky = canvas.height / layout.height, x0 = Math.round(layout.plotWidth * kx), width = canvas.width - x0, height = Math.min(canvas.height,Math.round(layout.panesHeight * ky));
+    let data, bottom = null;
+    try {data = width > 0 && height > 0 ? canvas.getContext('2d').getImageData(x0,0,width,height).data : null;} catch {data = null;}
+    if (!data) return {readable:false,modal:null,ruleColumns:[],bottomLine:null,strayInkPixels:null,overlayOpaquePixels:null};
+    const key = (source,index) => `${source[index]},${source[index+1]},${source[index+2]},${source[index+3]}`, counts = new Map();
+    for (let index = 0; index < data.length; index += 4) counts.set(key(data,index),(counts.get(key(data,index)) || 0) + 1);
     const modal = [...counts].sort((a,b) => b[1] - a[1])[0][0], ruleColumns = [];
     for (let x = 0; x < width; x++) {
-      const first = key(x*4); if (first === modal) continue;
+      const first = key(data,x*4); if (first === modal) continue;
       let uniform = true;
-      for (let y = 1; y < height && uniform; y++) if (key((y*width + x)*4) !== first) uniform = false;
+      for (let y = 1; y < height && uniform; y++) if (key(data,(y*width + x)*4) !== first) uniform = false;
       if (uniform) ruleColumns.push(x);
     }
-    const bands = [];
-    let current = null;
-    for (let y = 0; y < height; y++) {
-      let left = Infinity, right = -Infinity, pixels = 0;
-      for (let x = 0; x < width; x++) if (!ruleColumns.includes(x) && key((y*width + x)*4) !== modal) {left = Math.min(left,x);right = Math.max(right,x);pixels++;}
-      if (!pixels) {current = null;continue;}
-      if (!current) {current = {top:y,bottom:y,left,right,pixels};bands.push(current);}
-      else Object.assign(current,{bottom:y,left:Math.min(current.left,left),right:Math.max(current.right,right),pixels:current.pixels + pixels});
+    for (let row = Math.max(0,height - 2); row <= Math.min(canvas.height - 1,height + 1) && !bottom; row++) {
+      const line = canvas.getContext('2d').getImageData(0,row,canvas.width,1).data, first = key(line,0);
+      let uniform = first !== modal;
+      for (let x = 1; x < canvas.width && uniform; x++) if (key(line,x*4) !== first) uniform = false;
+      if (uniform) bottom = {row,color:first,rect:rect(hostRect.left,hostRect.top + row/ky*scale.y,hostRect.right,hostRect.top + (row + 1)/ky*scale.y)};
     }
-    return {readable:true,width,height,modal,ruleColumns,bands:bands.map(band => {
-      const cssRect = rect(hostRect.left + (x0 + band.left)/kx*scale.x,hostRect.top + (y0 + band.top)/ky*scale.y,hostRect.left + (x0 + band.right + 1)/kx*scale.x,hostRect.top + (y0 + band.bottom + 1)/ky*scale.y);
-      return {...band,rect:cssRect,hit:hitAt((cssRect.left+cssRect.right)/2,(cssRect.top+cssRect.bottom)/2)};
-    })};
+    const accounted = [...labels.ticks,...(labels.latest ? [labels.latest,{box:labels.latest.badge.rect},...(labels.countdown ? [labels.countdown] : [])] : [])].map(entry => entry.box);
+    const inkIn = target => {
+      let pixels = 0;
+      const left = Math.max(0,Math.floor((target.left - hostRect.left)/scale.x*kx) - x0), right = Math.min(width,Math.ceil((target.right - hostRect.left)/scale.x*kx) - x0);
+      const top = Math.max(0,Math.floor((target.top - hostRect.top)/scale.y*ky)), end = Math.min(height,Math.ceil((target.bottom - hostRect.top)/scale.y*ky));
+      for (let y = top; y < end; y++) for (let x = left; x < right; x++) if (!ruleColumns.includes(x) && key(data,(y*width + x)*4) !== modal) pixels++;
+      return pixels;
+    };
+    for (const entry of [...labels.ticks,...(labels.latest ? [labels.latest,...(labels.countdown ? [labels.countdown] : [])] : [])]) entry.ink = inkIn(entry.box);
+    let stray = 0;
+    for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
+      if (ruleColumns.includes(x) || key(data,(y*width + x)*4) === modal) continue;
+      const cssLeft = hostRect.left + (x0 + x)/kx*scale.x, cssTop = hostRect.top + y/ky*scale.y, cssRight = hostRect.left + (x0 + x + 1)/kx*scale.x, cssBottom = hostRect.top + (y + 1)/ky*scale.y;
+      if (!accounted.some(target => cssRight > target.left - 1 && cssLeft < target.right + 1 && cssBottom > target.top - 1 && cssTop < target.bottom + 1)) stray++;
+    }
+    return {readable:true,modal,ruleColumns,rule:ruleColumns.length ? {rect:rect(hostRect.left + (x0 + ruleColumns[0])/kx*scale.x,hostRect.top,hostRect.left + (x0 + ruleColumns[0] + 1)/kx*scale.x,hostRect.top + height/ky*scale.y)} : null,bottomLine:bottom,strayInkPixels:stray};
   };
   let canvas = null;
   if (host && snapshot) {
@@ -195,12 +253,14 @@ export function inspectPriceAxis(symbol) {
     const cssX = value => hostRect.left + value * scale.x, cssY = value => hostRect.top + value * scale.y;
     const plotRect = main ? rect(hostRect.left,cssY(main.top),cssX(layout.plotWidth),cssY(main.top + main.height)) : null;
     const axisRect = main ? rect(cssX(layout.plotWidth),cssY(main.top),hostRect.right,cssY(main.top + main.height)) : null;
+    const surfaces = main && layout ? [...host.querySelectorAll('canvas')] : [], drawn = surfaces.map(surface => ({surface,draws:window.__atlasCanvasDraws?.(surface) || null})).find(item => item.draws?.texts.length);
+    const labels = drawn ? readLabels(drawn.draws,layout,hostRect,scale) : null;
+    const ink = drawn && labels ? readInk(drawn.surface,layout,hostRect,scale,labels) : null;
     canvas = {engine:snapshot.engine,state:snapshot.state,painted:snapshot.painted,legacyPriceNodes:snapshot.legacy?.priceNodes,chartType:snapshot.chartType,sourceMode:snapshot.sourceMode,
       currency:snapshot.currency,timeUnit:snapshot.timeUnit,source:snapshot.source,barCount:bars.length,
       lastBar:last ? {time:last.time,open:last.open,high:last.high,low:last.low,close:last.close} : null,lastIntervalMs:last && previous ? last.time - previous.time : null,
       layout:layout ? {width:layout.width,height:layout.height,plotWidth:layout.plotWidth,panesHeight:layout.panesHeight,timeAxisHeight:layout.timeAxisHeight,main:main ? {top:main.top,height:main.height} : null} : null,
-      hostRect,scale,plotRect,axisRect,paintRect:axisRect ? clipped(host,axisRect) : null,
-      ink:{surfaces:main && layout ? [...host.querySelectorAll('canvas')].map(surface => readSurface(surface,layout,main,hostRect,scale)) : []}};
+      hostRect,scale,plotRect,axisRect,paintRect:axisRect ? clipped(host,axisRect) : null,tapInstalled:typeof window.__atlasCanvasDraws === 'function',labels,ink};
   }
   const obstacles = [], overlayRoots = new Set(document.querySelectorAll('.instrument-indicator-manager,#chart-indicator-manager,#atlas-chart-legend,.chart-legend-dock,#eth-forecast-note,.eth-forecast-note,.workbench-market-info,.atlas-readout,.atlas-quote-hud,.eth-readout,.eth-readout-source,.lab-chart-foot'));
   const seen = new Set();
@@ -231,6 +291,8 @@ export function inspectPriceAxis(symbol) {
   }
   // Painted marks of the SVG overlay stacked above the base canvas. Transparent
   // hit targets paint nothing and cannot cover a label.
+  const eventGroups = '[data-history-event],[data-history-event-label],[data-cycle-marker],[data-cycle-marker-label],[data-cycle-interval],[data-cycle-clock],[data-next-turn],.history-event-preview,.cycle-interval-overlay-layer,[data-funnest-annotation-labels]';
+  const forecastGroups = '[data-forecast-evidence],.equity-forecast-layer,.forecast-event-guide,[data-indicator-layer="range"]';
   for (const [index,node] of [...(svg?.querySelectorAll('text,rect,path,line,circle,ellipse,polygon,polyline,image,use') || [])].entries()) {
     if (node.closest('defs') || !visible(node,{content:true})) continue;
     const css = getComputedStyle(node), fill = colorPaints(css.fill) && Number(css.fillOpacity) > 0, stroke = colorPaints(css.stroke) && Number(css.strokeOpacity) > 0 && Number.parseFloat(css.strokeWidth) > 0;
@@ -241,19 +303,29 @@ export function inspectPriceAxis(symbol) {
       const dx = fixed ? half : half * Math.hypot(matrix.a,matrix.c), dy = fixed ? half : half * Math.hypot(matrix.b,matrix.d);
       r = rect(r.left-dx,r.top-dy,r.right+dx,r.bottom+dy);
     }
-    addObstacle(node,'annotation',r,`annotation-${index}:${describe(node)}`);
+    const category = node.closest(eventGroups) ? 'event' : node.closest(forecastGroups) ? 'forecast' : 'hud';
+    addObstacle(node,category,r,`${category}-${index}:${describe(node)}`);
   }
+  // Forecast and baseline lines are painted on the canvas by the product overlays, which the engine clips to the plot
+  // before it draws the labels. Their painter calls are the paint evidence; pixels show that none reaches the gutter.
+  const overlayRender = svg?.closest('.atlas-plot')?.inspectAtlasOverlayRender?.() ?? null, btcRender = host?.getAtlasBtcRenderSnapshot?.() ?? null;
+  const forecastPaint = overlayRender ? {source:'funnest overlay painter',segments:overlayRender.forecastSegments?.count ?? 0}
+    : btcRender ? {source:'btc funnest render',segments:(btcRender.paint?.paths?.forecast?.subpaths || []).reduce((total,path) => total + Math.max(0,path.length - 1),0)} : null;
   const raw = symbol === 'BTCUSD' ? window.__atlasPriceAxisReadout || null : null;
   const readout = symbol === 'BTCUSD'
     ? {priceText:document.querySelector('#lab-metrics .readout-main strong')?.textContent.trim() || '',date:raw?.date?.slice(0,10) || null,kind:document.querySelector('#lab-metrics')?.dataset.kind || null,raw,title:document.querySelector('#lab-metrics')?.title || '',sourceText:document.querySelector('.workbench-market-info')?.textContent.trim() || ''}
     : {priceText:document.querySelector('#eth-price')?.textContent.trim() || '',date:document.querySelector('#eth-bar-time')?.getAttribute('datetime')?.slice(0,10) || null,kind:document.querySelector('#eth-kind')?.textContent.trim() === '관측 종가' ? 'observed' : document.querySelector('#eth-kind')?.textContent.trim(),raw:null,sourceText:document.querySelector('.eth-readout-source,.workbench-market-info')?.textContent.trim() || ''};
-  const counts = Object.fromEntries(['legend','hud','annotation'].map(kind => [kind,obstacles.filter(item => item.category === kind).length]));
-  const observations = Object.fromEntries(['legend','hud','annotation'].map(category => [category,{paintObjectCount:counts[category],
-    reason:counts[category] > 0 ? 'paint observed' : document.documentElement.dataset.boot !== 'ready' ? 'product not ready' : 'no painted objects in current rendered state'}]));
+  const counts = Object.fromEntries(['legend','event','forecast','hud'].map(kind => [kind,obstacles.filter(item => item.category === kind).length]));
+  counts.forecast += forecastPaint?.segments || 0;
+  const eventControl = document.querySelector(symbol === 'BTCUSD' ? '#atlas-history-events' : '#eth-history-visible');
+  const enabled = {event:eventControl ? eventControl.checked : null,forecast:new URLSearchParams(location.search).get('forecast') === 'off' ? false : null,legend:null};
+  const observations = Object.fromEntries(['legend','event','forecast'].map(category => [category,{paintObjectCount:counts[category],enabled:enabled[category],
+    reason:counts[category] > 0 ? 'paint observed' : enabled[category] === false ? 'disabled by product control' : document.documentElement.dataset.boot !== 'ready' ? 'product not ready' : 'no painted objects in current rendered state',
+    renderedCount:category === 'event' ? svg?.dataset.historyEventCount ?? null : category === 'forecast' ? forecastPaint?.segments ?? null : null}]));
   return {symbol,width:innerWidth,height:innerHeight,url:location.href,boot:document.documentElement.dataset.boot,page:document.body.dataset.page,
     chartType:snapshot?.chartType || null,overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth,document.body.scrollWidth-innerWidth),
     canvas,readout,obstacles,geometryIssues:[...new Set(geometryIssues)],
-    overlays:{paintObjectCounts:counts,observations,unobservedCategories:['legend','hud','annotation'].filter(kind => counts[kind] === 0),
+    overlays:{paintObjectCounts:counts,observations,forecastPaint,unobservedCategories:['legend','event','forecast'].filter(kind => counts[kind] === 0),
       controls:[...document.querySelectorAll('#atlas-history-events,#eth-history-visible,#lab-band,[data-native-setting],#eth-forecast-note')].map(node => ({id:node.id,setting:node.dataset.nativeSetting || null,checked:'checked' in node ? node.checked : null,hidden:node.hidden,painted:visible(node)}))},
     fonts:{status:document.fonts.status,family:svg ? getComputedStyle(svg).fontFamily : null}};
 }
@@ -288,8 +360,14 @@ function options(argv) {
 
 export async function verifyPriceAxisBrowser(argv = process.argv.slice(2)) {
   const report = {schemaVersion:1,kind:'atlas-price-axis-browser',recordedAt:new Date().toISOString(),qualifiesFullVerification:false,qualifiesPriceAxisVerification:false,
-    methodology:{geometry:'unrounded native CSS coordinates; the price-axis gutter is the engine layout width minus plotWidth over the main pane, scaled to the host rectangle',labels:'canvas pixels in the gutter: background mode, one full-height boundary rule, then row bands of label ink; label text is not readable, so rows are checked for containment and pointer reach only',occlusion:'strict zero intersection between the gutter and clip-aware painted bounds of HTML overlays and SVG overlay marks; pseudo paint uses conservative native owner bounds; native center elementFromPoint must reach the chart',sources:'preserved local JSON compared with the last engine bar and the DOM readout, independent of canvas pixels',network:'own static origin only; external requests aborted',matrix:'8 default routes + 8 explicit candle routes; all required',retired:'BTC/ETH gutter alignment within 2 CSS pixels: the engine sizes the gutter from the widest label, so unequal symbols legitimately differ; tick text, tick collisions and the SVG frame lines no longer exist as DOM'},
-    requiredCases:specs.length,cases:[],failures:[],sourceFiles:{},testedHead:null};
+    methodology:{geometry:'unrounded native CSS coordinates; the price-axis gutter is the engine layout width minus plotWidth over the main pane, scaled to the host rectangle',
+      labels:'recorded fillText and roundRect calls of the latest canvas frame give each tick label, the last-price tag and its text; measureText gives the boxes, canvas pixels give ink, the boundary rule, the bottom frame line and any ink the labels do not account for',
+      occlusion:'strict zero intersection between every tick box, the last-price tag, the boundary rule and the bottom frame line and the clip-aware painted bounds of HTML overlays and SVG overlay marks; strict zero overlap between labels and between a label and the tag; pseudo paint uses conservative native owner bounds; native center elementFromPoint must reach the chart',
+      sources:'preserved local JSON compared with the last engine bar, the last-price tag digits and the DOM readout, independent of canvas pixels; the engine draws digits without the currency symbol',
+      alignment:'BTC against ETH at the same viewport within 2 CSS pixels for gutter, label x, label inset from the plot, tag left, tag text x and tag right gap, all read from the engine layout and the recorded draws',
+      network:'own static origin only; external requests aborted',matrix:'8 default routes + 8 explicit candle routes; all required, plus 8 BTC/ETH pairs',
+      unobserved:'forecast and baseline lines are canvas paint: their painter calls are counted and the gutter pixels must hold nothing else; the engine has no top frame line'},
+    requiredCases:specs.length,cases:[],comparisons:[],failures:[],sourceFiles:{},testedHead:null};
   let settings, ownsOut = false, server, chrome, profile, browser, stage = 'arguments', browserStderr = '';
   try {
     settings = options(argv);
@@ -346,6 +424,7 @@ export async function verifyPriceAxisBrowser(argv = process.argv.slice(2)) {
           else {result.blockedExternalRequests.push(event.request.url);await cdp.send('Fetch.failRequest',{requestId:event.requestId,errorReason:'BlockedByClient'});}
         });
         await cdp.send('Fetch.enable',{patterns:[{urlPattern:'*'}]});
+        await cdp.send('Page.addScriptToEvaluateOnNewDocument',{source:`(${installCanvasDrawTap})()`});
         // Read the existing product event. This observer exposes no replacement
         // values and never drives application selection or presentation.
         await cdp.send('Page.addScriptToEvaluateOnNewDocument',{source:'document.addEventListener("atlas:readout",event=>{const row=event.detail||{};window.__atlasPriceAxisReadout=Object.fromEntries(["date","price","close","source","kind","frequency","unit","hovered"].filter(key=>row[key]!==undefined).map(key=>[key,row[key]]));});'});
@@ -366,7 +445,7 @@ export async function verifyPriceAxisBrowser(argv = process.argv.slice(2)) {
         const expected = report.expectedSources[spec.symbol];
         result.expectedObservation = priceAxisObservationForState(result.state,expected);
         if (spec.mode === 'candles' && result.state.chartType !== 'candles') result.failures.push('explicit candle route did not render candles');
-        result.overlap = priceAxisOverlapEvidence(result.state);
+        result.alignment = priceAxisAlignment(result.state,expected); result.overlap = priceAxisOverlapEvidence(result.state);
         result.failures.push(...validatePriceAxisState(result.state,expected,spec));
         const shot = await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false}), bytes = Buffer.from(shot.data,'base64');
         result.screenshot = {file:`${spec.id}.png`,sha256:sha256(bytes),bytes:bytes.length}; await writeFile(resolve(settings.out,result.screenshot.file),bytes);
@@ -381,6 +460,12 @@ export async function verifyPriceAxisBrowser(argv = process.argv.slice(2)) {
       report.failures.push(...result.failures.map(reason => `${spec.id}: ${reason}`));
       console.log(JSON.stringify({id:result.id,status:result.status,failures:result.failures,screenshot:result.screenshot?.file || null,unobservedOverlays:result.state?.overlays.unobservedCategories || null,gutterIntrusionArea:result.overlap?.intrudedArea ?? null}));
     }
+    for (const mode of ['default','candles']) for (const width of priceAxisWidths) {
+      const btc = report.cases.find(item => item.symbol === 'BTCUSD' && item.width === width && item.mode === mode), eth = report.cases.find(item => item.symbol === 'ETHUSD' && item.width === width && item.mode === mode);
+      const comparison = {id:`BTC-ETH-${width}-${mode}`,width,mode,...comparePriceAxisStates(btc?.state,eth?.state)};
+      comparison.status = comparison.failures.length ? 'failed' : 'passed'; report.comparisons.push(comparison);
+      report.failures.push(...comparison.failures.map(reason => `${comparison.id}: ${reason}`));
+    }
     report.sourceFilesAfter = await sourceHashes();
     if (JSON.stringify(report.sourceFilesAfter) !== JSON.stringify(report.sourceFiles)) report.failures.push('served source files changed during verification');
   } catch (error) {report.failures.push(`${stage}: ${error.stack || error}`);}
@@ -391,10 +476,11 @@ export async function verifyPriceAxisBrowser(argv = process.argv.slice(2)) {
     if (profile) await rm(profile,{recursive:true,force:true}).catch(error => report.failures.push(`profile cleanup: ${error.message}`));
     if (!settings?.help) {
       report.counts = {required:specs.length,attempted:report.cases.length,unattempted:specs.length-report.cases.length,passed:report.cases.filter(item => item.status === 'passed').length,failed:report.cases.filter(item => item.status === 'failed').length,
-        default:report.cases.filter(item => item.mode === 'default' && item.status === 'passed').length,candles:report.cases.filter(item => item.mode === 'candles' && item.status === 'passed').length};
+        default:report.cases.filter(item => item.mode === 'default' && item.status === 'passed').length,candles:report.cases.filter(item => item.mode === 'candles' && item.status === 'passed').length,
+        alignmentPairs:report.comparisons.length,alignmentPassed:report.comparisons.filter(item => item.status === 'passed').length};
       report.coverage = priceAxisOverlayCoverage(report.cases);
       if (report.cases.length) for (const category of report.coverage.missing) report.failures.push(`coverage: ${category} paint was not observed in any case; zero occlusion remains unverified`);
-      report.status = report.counts.passed === specs.length && report.coverage.status === 'passed' && report.failures.length === 0 ? 'passed' : 'failed';
+      report.status = report.counts.passed === specs.length && report.counts.alignmentPassed === 8 && report.coverage.status === 'passed' && report.failures.length === 0 ? 'passed' : 'failed';
       report.qualifiesPriceAxisVerification = report.status === 'passed';
       if (ownsOut) try {await writeFile(resolve(settings.out,'report.json'),JSON.stringify(report,null,2)+'\n');}
       catch (error) {report.status = 'failed';report.qualifiesPriceAxisVerification = false;report.failures.push(`report write: ${error.stack || error}`);}

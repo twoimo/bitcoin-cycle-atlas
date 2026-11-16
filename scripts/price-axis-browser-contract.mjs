@@ -74,39 +74,76 @@ export function priceAxisSourceExpectations({btcDaily, ethArchive, btcVolume}) {
 
 export const priceAxisObservationForState = (state, expected) => state.chartType === 'candles' && expected?.candle ? expected.candle : expected;
 
-/** Label rows are the canvas analog of the old tick and latest-price boxes.
- * Any painted overlay with positive area over a row covers a label; touching
- * is allowed. Overlap with the rest of the gutter strip, which holds no label,
- * is recorded as evidence and does not fail. */
+/** The engine draws the number without a currency symbol; its digits must equal the independent source value. */
+export const priceAxisLabelText = expected => expected.text.replace(/^\$/, '');
+
+const gutterTargets = state => {
+  const labels = state.canvas?.labels, ink = state.canvas?.ink;
+  return [
+    ...(labels?.ticks || []).map(tick => ({key:tick.key, rect:tick.box})),
+    ...(labels?.latest ? [{key:'latest-tag', rect:labels.latest.badge.rect}] : []),
+    ...(ink?.rule ? [{key:'frame-axis', rect:ink.rule.rect}] : []),
+    ...(ink?.bottomLine ? [{key:'frame-bottom', rect:ink.bottomLine.rect}] : []),
+  ];
+};
+const labelTargets = state => {
+  const labels = state.canvas?.labels;
+  return [...(labels?.ticks || []), ...(labels?.latest ? [labels.latest] : []), ...(labels?.countdown ? [labels.countdown] : [])].map(item => ({key:item.key, rect:item.box}));
+};
+
+/** Painted overlays that touch a tick label, the last-price tag or a frame line occlude them: any positive area fails
+ * and touching is allowed. Two labels, or a label and the tag, that share area collide. Overlap with the rest of the
+ * gutter strip, which holds nothing, is recorded and does not fail. */
 export function priceAxisOverlapEvidence(state) {
-  const rows = (state.canvas?.ink?.surfaces || []).flatMap(surface => surface.bands.map(band => ({key:`label-${band.top}-${band.bottom}`,rect:band.rect})));
-  const occlusions = [], gutterIntrusions = [];
+  const targets = gutterTargets(state), occlusions = [], gutterIntrusions = [], labelCollisions = [];
   for (const obstacle of state.obstacles || []) {
     const strip = priceAxisIntersectionArea(state.canvas?.axisRect, obstacle.paintRect);
     if (strip > 0) gutterIntrusions.push({obstacle:obstacle.key,category:obstacle.category,surface:obstacle.surface,area:strip});
-    for (const row of rows) {
-      const area = priceAxisIntersectionArea(row.rect, obstacle.paintRect);
-      if (area > 0) occlusions.push({target:row.key,obstacle:obstacle.key,category:obstacle.category,surface:obstacle.surface,area});
+    for (const target of targets) {
+      const area = priceAxisIntersectionArea(target.rect, obstacle.paintRect);
+      if (area > 0) occlusions.push({target:target.key,obstacle:obstacle.key,category:obstacle.category,surface:obstacle.surface,area});
     }
   }
-  return {occlusions,gutterIntrusions,occludedArea:occlusions.reduce((total, item) => total + item.area, 0),intrudedArea:gutterIntrusions.reduce((total, item) => total + item.area, 0)};
+  const labels = labelTargets(state), tag = state.canvas?.labels?.latest?.badge?.rect;
+  for (let i = 0; i < labels.length; i++) for (let j = i + 1; j < labels.length; j++) {
+    const area = priceAxisIntersectionArea(labels[i].rect, labels[j].rect);
+    if (area > 0) labelCollisions.push({a:labels[i].key, b:labels[j].key, area});
+  }
+  for (const tick of state.canvas?.labels?.ticks || []) {
+    const area = priceAxisIntersectionArea(tick.box, tag);
+    if (area > 0) labelCollisions.push({a:tick.key, b:'latest-tag', area});
+  }
+  return {occlusions,gutterIntrusions,labelCollisions,occludedArea:occlusions.reduce((total, item) => total + item.area, 0),
+    intrudedArea:gutterIntrusions.reduce((total, item) => total + item.area, 0)};
 }
 
-/** Label rows are measured from canvas pixels, so their text cannot be read.
- * Each row must stay clear of the plot boundary rule and the canvas edge,
- * and the pointer must reach the chart at its centre. */
-function validateAxisInk(surface, canvas, fail) {
-  if (!surface.readable) {fail('native canvas pixels are unreadable');return;}
-  if (!surface.bands.length) return;
-  if (JSON.stringify(surface.ruleColumns) !== '[0]') fail(`axis rule is not one continuous column at the plot boundary (columns ${JSON.stringify(surface.ruleColumns)})`);
-  for (const band of surface.bands) {
-    if (band.left < 1) fail(`label row ${band.top}-${band.bottom} touches the plot boundary`);
-    if (band.right > surface.width - 2) fail(`label row ${band.top}-${band.bottom} touches the canvas edge`);
-    if (!contained(band.rect, canvas.axisRect)) fail(`label row ${band.top}-${band.bottom} escapes the price-axis gutter`);
-    const hit = band.hit;
-    if (!hit || hit.insideHost !== true) fail(`label row ${band.top}-${band.bottom}: center hit is not the chart (${hit?.target ?? 'none'})`);
-    if (!hit || hit.x !== (band.rect.left + band.rect.right) / 2 || hit.y !== (band.rect.top + band.rect.bottom) / 2) fail(`label row ${band.top}-${band.bottom}: center hit did not use the raw rectangle center`);
-  }
+/** Every value is read from the engine: gutter from its layout, label x from the recorded fillText anchor, tag from the
+ * recorded roundRect and its text. Nothing is rounded here. */
+export function priceAxisAlignment(state) {
+  const canvas = state.canvas, labels = canvas?.labels, host = canvas?.hostRect, axis = canvas?.axisRect, tag = labels?.latest;
+  const first = [...(labels?.ticks || [])].filter(tick => tick.ink > 0).sort((a, b) => a.anchor.y - b.anchor.y)[0];
+  if (!hasBox(host) || !hasBox(axis) || !first || !tag?.badge?.rect) return null;
+  return {
+    gutter:host.right - axis.left,
+    labelX:first.anchor.x - host.left,
+    labelInset:first.anchor.x - axis.left,
+    tagLeft:tag.badge.rect.left - host.left,
+    tagTextX:tag.anchor.x - host.left,
+    tagRightGap:host.right - tag.badge.rect.right,
+  };
+}
+
+/** Label text is canvas pixels, so each box comes from the recorded draw call and measureText; ink and the center hit
+ * are read from the pixels and the document at that box. */
+function validateLabel(target, canvas, viewport, fail) {
+  const {key, box, ink, hit, fill, alpha} = target;
+  if (!(ink > 0) || !(alpha > 0) || /^(?:transparent|rgba\([^)]*,\s*0(?:\.0+)?\s*\))$/.test(fill)) fail(`${key}: price text has no visible fill or stroke ink`);
+  if (!hasBox(box) || !contained(box, canvas.hostRect) || !contained(box, viewport)) fail(`${key}: clipped or outside chart/viewport`);
+  if (!hasBox(canvas.paintRect) || !contained(box, canvas.paintRect)) fail(`${key}: clipped painted bounds`);
+  if (!finite(target.anchor?.x) || !finite(target.anchor?.y)) fail(`${key}: missing raw text anchor`);
+  if (box?.left < canvas.axisRect?.left) fail(`${key}: crosses the price gutter boundary`);
+  if (!hit || hit.insideHost !== true) fail(`${key}: center hit is not the chart (${hit?.target ?? 'none'})`);
+  if (!hit || hit.x !== (box.left + box.right) / 2 || hit.y !== (box.top + box.bottom) / 2) fail(`${key}: center hit did not use raw rectangle center`);
 }
 
 export function validatePriceAxisState(state, source, expectedViewport) {
@@ -143,20 +180,57 @@ export function validatePriceAxisState(state, source, expectedViewport) {
     if (!contained(axis, viewport)) fail('price-axis gutter is outside the viewport');
     if (!contained(axis, canvas.paintRect)) fail('price-axis gutter is clipped by an ancestor');
   }
-  const surfaces = canvas.ink?.surfaces || [];
-  if (!surfaces.length) fail('no native canvas surface was read');
-  for (const surface of surfaces) validateAxisInk(surface, canvas, fail);
-  if (!surfaces.some(surface => surface.readable && surface.bands.length >= 2)) fail('price-axis gutter shows fewer than two painted label rows');
+  const labels = canvas.labels, ink = canvas.ink;
+  if (!canvas.tapInstalled) fail('the canvas draw recorder is not installed');
+  if (!labels || !ink) {fail('no price-axis draw calls were recorded for the latest frame');return failures;}
+  if (!labels.ticks.length) fail('missing price-axis ticks');
+  if (new Set(labels.ticks.map(tick => tick.text)).size !== labels.ticks.length) fail('duplicate painted tick text');
+  if (labels.ticks.some(tick => tick.anchor?.x !== labels.ticks[0]?.anchor?.x)) fail('tick x anchors are not aligned');
+  for (const tick of labels.ticks) validateLabel(tick, canvas, viewport, fail);
+  if (!labels.latest) fail('latest price tag was not painted');
+  else {
+    const tag = labels.latest, rect = tag.badge.rect;
+    if (tag.text.replace(/^\$/, '') !== priceAxisLabelText(expected)) fail(`latest label ${JSON.stringify(tag.text)} does not match ${expected.source} ${expected.date} ${priceAxisLabelText(expected)}`);
+    validateLabel(tag, canvas, viewport, fail);
+    if (!hasBox(rect) || !contained(rect, canvas.hostRect) || !contained(rect, viewport) || !contained(rect, canvas.paintRect)) fail('latest-tag: clipped or outside chart/viewport');
+    if (rect?.left < axis?.left) fail('latest-tag: crosses the price gutter boundary');
+    if (!contained(tag.box, rect)) fail('latest: text escapes the price badge');
+    if (labels.countdown && !contained(labels.countdown.box, rect)) fail('countdown: text escapes the price badge');
+    if (!tag.badge.hit || tag.badge.hit.insideHost !== true) fail(`latest-tag: center hit is not the chart (${tag.badge.hit?.target ?? 'none'})`);
+  }
+  if (labels.countdown) validateLabel(labels.countdown, canvas, viewport, fail);
+  if (!ink.readable) fail('native canvas pixels are unreadable');
+  else {
+    if (JSON.stringify(ink.ruleColumns) !== '[0]' || !ink.rule) fail(`axis: does not span the complete frame as one continuous rule at the plot boundary (columns ${JSON.stringify(ink.ruleColumns)})`);
+    if (!ink.bottomLine) fail('bottom: the frame line does not meet the left frame and price axis');
+    if (ink.strayInkPixels !== 0) fail(`canvas paint covers the price axis outside its labels (${ink.strayInkPixels} pixels)`);
+  }
   for (const issue of state.geometryIssues || []) fail(`geometry: ${issue}`);
   for (const obstacle of state.obstacles || []) if (!hasBox(obstacle.paintRect)) fail(`${obstacle.key}: missing obstacle paint geometry`);
-  for (const item of priceAxisOverlapEvidence(state).occlusions) fail(`${item.target}: ${item.category} ${item.obstacle} occludes ${item.area} square CSS pixels`);
+  const overlap = priceAxisOverlapEvidence(state);
+  for (const item of overlap.occlusions) fail(`${item.target}: ${item.category} ${item.obstacle} occludes ${item.area} square CSS pixels`);
+  for (const item of overlap.labelCollisions) fail(`${item.a}/${item.b}: labels overlap ${item.area} square CSS pixels`);
+  const alignment = priceAxisAlignment(state);
+  if (!alignment || Object.values(alignment).some(value => !finite(value)) || !(alignment.gutter > 0)) fail('missing raw alignment measurements');
   return failures;
+}
+
+/** ±2 CSS pixels applies only to the requested BTC/ETH layout comparison.
+ * It is never reused for occlusion, clipping, overflow, or source identity. */
+export function comparePriceAxisStates(btc, eth) {
+  const failures = [];
+  if (btc?.symbol !== 'BTCUSD' || eth?.symbol !== 'ETHUSD' || btc.width !== eth.width || btc.height !== eth.height) return {deltas:null, failures:['missing same-viewport BTC/ETH pair']};
+  const a = priceAxisAlignment(btc), b = priceAxisAlignment(eth);
+  if (!a || !b) return {deltas:null, failures:['missing BTC/ETH alignment evidence']};
+  const deltas = Object.fromEntries(Object.keys(a).map(key => [key,b[key] - a[key]]));
+  for (const [key, value] of Object.entries(deltas)) if (!finite(value) || Math.abs(value) > 2) failures.push(`${key}: BTC/ETH difference ${value} exceeds 2 CSS pixels`);
+  return {btc:a, eth:b, deltas, failures};
 }
 
 /** A category absent in a particular viewport is explicitly unobserved.
  * Matrix coverage requires actual paint at least once for every requested
  * category; empty arrays are never advertised as a checked zero occlusion. */
-const priceAxisOverlayCategories = Object.freeze(['legend','hud','annotation']);
+const priceAxisOverlayCategories = Object.freeze(['legend','event','forecast']);
 export function priceAxisOverlayCoverage(cases) {
   const categories = Object.fromEntries(priceAxisOverlayCategories.map(category => {
     const observed = cases.filter(item => item.state?.overlays?.paintObjectCounts?.[category] > 0).map(item => item.id);
