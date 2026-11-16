@@ -15,6 +15,7 @@ import {listWorktreeSourceFiles as listP0SourceFiles} from './browser-source-ide
 export {listP0SourceFiles};
 import {ensureOwnedVisibleForPaint} from './browser-paint-readiness.mjs';
 import {headlessWindowArgument,verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
+import {isNativeFunnestPainted} from './funnest-browser-evidence.mjs';
 import {
   inspectP0CssSources,inspectP0TokenPairs,p0Cases,p0FinalStatus,p0FontCss,p0FontFamily,p0PaintSamples,
   p0SampleCoverage,p0ThemeStorageKey,p0TokenPairs,validateP0FontEvidence,validateP0Paint,validateP0PaintRole,validateP0Typography,
@@ -70,7 +71,7 @@ export async function readP0Sources(projectRoot=root) {
   const files = [...new Set([...cssFiles,'dist/vendor/skullet/styles.css','dist/site-before-shell.css','dist/site-after-shell.css','dist/index.html','apps/web/index.html',
     ...jsFiles,fontManifestFile,...fontFiles.map(entry => entry.file),'dist/data/btc-daily.json','dist/data/eth-ohlc.json',
     'scripts/ui-renewal-p0-contract.mjs','scripts/verify-ui-renewal-p0-browser.mjs','scripts/build-site-styles.mjs',
-    'scripts/browser-paint-readiness.mjs','scripts/headless-browser-window.mjs'])].sort();
+    'scripts/browser-paint-readiness.mjs','scripts/headless-browser-window.mjs','scripts/funnest-browser-evidence.mjs'])].sort();
   const hashes = Object.fromEntries(await Promise.all(files.map(async file => [file,sha256(await readFile(resolve(projectRoot,file)))])));
   return {audit:{...audit,tokens:Object.fromEntries(audit.tokens)},tokenPairs:pairs,hashes,
     fonts:{manifest:fontManifestFile,family:manifest.family,faces:manifest.fontAssets.count,bytes:manifest.fontAssets.totalBytes,issues:fontIssues,status:fontIssues.length ? 'failed' : 'passed'},
@@ -95,6 +96,11 @@ class Cdp {
   }
   send(method,params={}) {const id = ++this.id;return new Promise((resolve,reject) => {const timer = setTimeout(() => {this.pending.delete(id);reject(new Error(`CDP timeout: ${method}`));},30000);this.pending.set(id,{resolve,reject,timer});this.ws.send(JSON.stringify({id,method,params}));});}
   close() {for (const call of this.pending.values()) {clearTimeout(call.timer);call.reject(new Error('CDP target closed'));}this.pending.clear();this.ws.close();}
+}
+/** Init script that saves the one non-default theme before boot, once per tab; null keeps a clean profile. */
+export function p0PreferenceSeed(spec,origin) {
+  if (spec.theme === 'dark') return null;
+  return `if(location.origin===${JSON.stringify(origin)}&&!sessionStorage.getItem('p0-preference-seeded')){localStorage.setItem(${JSON.stringify(p0ThemeStorageKey)},${JSON.stringify(spec.theme)});sessionStorage.setItem('p0-preference-seeded','1');}`;
 }
 export function p0EvaluationExpression(fn,args=[]) {return `(${fn.toString()})(${args.map(value => JSON.stringify(value)).join(',')})`;}
 async function evaluate(cdp,fn,...args) {
@@ -160,7 +166,7 @@ export function inspectP0Page(spec,stage,sampleSpecs,tokenNames) {
   const typography = node => ({selector:nodePath(node),visible:visible(node),fontSize:Number.parseFloat(getComputedStyle(node).fontSize),fontFamily:getComputedStyle(node).fontFamily,text:node.textContent.trim().slice(0,160)});
   const proseSelectors = '#chart-reader-body > p,.atlas-settings-body > p,.price-axis-options > .price-axis-basis,.research-article p,.method-card p,.reading-card p,.editorial-panel > p';
   const prose = [...document.querySelectorAll(proseSelectors)].filter(visible).map(typography);
-  const denseText = [...document.querySelectorAll('.atlas-canvas-heading button,.atlas-canvas-heading select,.workbench-bottom-bar button,.chart-readout,[data-price-axis-label="tick"],.atlas-page-intro h1')].filter(visible).map(typography);
+  const denseText = [...document.querySelectorAll('.atlas-canvas-heading button,.atlas-canvas-heading select,.workbench-bottom-bar button,.chart-readout,.atlas-page-intro h1')].filter(visible).map(typography);
   const colours = new Map();
   for (const node of document.querySelectorAll('body *')) {
     if (!visible(node)) continue;const style = getComputedStyle(node);
@@ -245,8 +251,11 @@ async function openSettings(cdp) {
 }
 async function closeSettings(cdp) {await click(cdp,'.reader-heading button');await until(() => evaluate(cdp,() => document.querySelector('#chart-reader')?.hidden),'settings reader closes');}
 async function observedReady(cdp,symbol) {
-  await until(() => evaluate(cdp,symbol => {const boot = document.documentElement?.dataset.boot;if (boot === 'error') throw new Error('product boot error');const chart = document.querySelector(symbol === 'BTCUSD' ? '#lab-chart' : '#eth-chart');
-    return boot === 'ready' && document.documentElement.dataset.symbol === symbol && chart?.querySelector('[data-price-axis-label="tick"]') && Number(chart.dataset.visiblePointCount)>0;},symbol),`${symbol} actual observed chart`);
+  const selector = symbol === 'BTCUSD' ? '#lab-chart' : '#eth-chart';
+  await until(async () => {
+    const booted = await evaluate(cdp,symbol => {const boot = document.documentElement?.dataset.boot;if (boot === 'error') throw new Error('product boot error');return boot === 'ready' && document.documentElement.dataset.symbol === symbol;},symbol);
+    return booted && await evaluate(cdp,isNativeFunnestPainted,selector);
+  },`${symbol} actual observed chart`);
   await settle(cdp);
 }
 async function screenshot(cdp,out,file) {const result = await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false}), bytes = Buffer.from(result.data,'base64');await writeFile(resolve(out,file),bytes);return {file,bytes:bytes.length,sha256:sha256(bytes)};}
@@ -301,13 +310,14 @@ export async function verifyUiRenewalP0Browser(argv=process.argv.slice(2)) {
           else {result.blockedExternalRequests.push(event.request.url);await cdp.send('Fetch.failRequest',{requestId:event.requestId,errorReason:'BlockedByClient'});}
         });
         await cdp.send('Fetch.enable',{patterns:[{urlPattern:'*'}]});
-        // Emulate a saved user preference before product boot; never assign a
-        // product theme attribute or inject replacement colours/font styles.
-        if (spec.theme === 'dark') await cdp.send('Page.addScriptToEvaluateOnNewDocument',{source:`if(location.origin===${JSON.stringify(origin)}&&!sessionStorage.getItem('p0-preference-seeded')){localStorage.setItem(${JSON.stringify(p0ThemeStorageKey)},'dark');sessionStorage.setItem('p0-preference-seeded','1');}`});
+        // The new-visitor default is dark (design.md), so dark cases start from a
+        // clean profile and light cases emulate a saved preference before boot.
+        // Never assign a product theme attribute or inject replacement styles.
+        const seed = p0PreferenceSeed(spec,origin);if (seed) await cdp.send('Page.addScriptToEvaluateOnNewDocument',{source:seed});
         await cdp.send('Emulation.setDeviceMetricsOverride',{width:spec.width,height:spec.height,deviceScaleFactor:1,mobile:spec.width<=620});
         result.requestedUrl = `${base}?symbol=${spec.symbol}`;await cdp.send('Page.navigate',{url:result.requestedUrl});await observedReady(cdp,spec.symbol);
         const initial = await evaluate(cdp,() => ({theme:document.documentElement.dataset.theme,stored:localStorage.getItem('atlas-ui-theme')}));result.initialPreference = initial;
-        if (initial.theme !== spec.theme) result.failures.push(`initial product theme ${initial.theme} did not honour ${spec.theme === 'light' ? 'clean light default' : 'saved dark preference'}`);
+        if (initial.theme !== spec.theme) result.failures.push(`initial product theme ${initial.theme} did not honour ${spec.theme === 'dark' ? 'the clean-profile dark default' : 'the saved light preference'}`);
         const chart = await evaluate(cdp,inspectP0Page,spec,'chart',p0PaintSamples,tokenNames);result.snapshots.push(chart);result.screenshots.push(await screenshot(cdp,settings.out,`${spec.id}-chart.png`));
         await openSettings(cdp);await settle(cdp);
         const settingsScan = await collectP0Settings({spec,

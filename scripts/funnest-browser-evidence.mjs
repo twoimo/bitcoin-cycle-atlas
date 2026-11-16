@@ -44,6 +44,12 @@ export function readNativeFunnestEvidence(selector) {
   return {snapshot,overlay,hostBounds,mainBounds:paneBox(main),volumeBounds:paneBox(volume),ink};
 }
 
+/** Serialized into the runner-owned page. True once the chart behind `selector` is a painted Funnest canvas that holds observed bars. */
+export function isNativeFunnestPainted(selector) {
+  const host=document.querySelector(selector)?.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas'),snapshot=host?.getAtlasFunnestSnapshot?.();
+  return Boolean(snapshot?.painted&&snapshot.engineBars?.length>0);
+}
+
 export function assertNativeObservedEvidence(evidence,series,{symbol,chartType='line'}={}) {
   assert.ok(evidence?.snapshot,'Missing read-only native Funnest snapshot');
   const state=evidence.snapshot;

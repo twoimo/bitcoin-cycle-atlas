@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {assertNativeObservedEvidence,assertNativeOverlayEvidence} from '../scripts/funnest-browser-evidence.mjs';
+import {runInNewContext} from 'node:vm';
+import {assertNativeObservedEvidence,assertNativeOverlayEvidence,isNativeFunnestPainted} from '../scripts/funnest-browser-evidence.mjs';
 
 const series={candles:[{time:1700000000,open:10,high:12,low:9,close:11,volume:7},{time:1700172800,open:11,high:14,low:10,close:13,volume:0}]};
 const bars=series.candles.map(row=>({...row,time:row.time*1000}));
@@ -55,4 +56,25 @@ test('browser source identity binds the actual export, disclosure, and served st
     const digest=createHash('sha256').update(await readFile(new URL('../'+file,import.meta.url))).digest('hex');
     assert.equal(identity.sourceHashes[file],digest,file+' must be included in before/after source integrity');
   }
+});
+
+// A minimal page model: the chart node, its .atlas-plot owner and the Funnest host that publishes the snapshot.
+const readyPage=(snapshot,{host=true,plot=true,chart=true}={})=>{
+  const hostNode=host?{getAtlasFunnestSnapshot:snapshot===undefined?undefined:()=>snapshot}:null;
+  const plotNode=plot?{querySelector:selector=>selector==='.atlas-funnest-canvas'?hostNode:null}:null;
+  return {querySelector:selector=>selector==='#lab-chart'&&chart?{closest:owner=>owner==='.atlas-plot'?plotNode:null}:null};
+};
+const painted=document=>runInNewContext(`(${isNativeFunnestPainted})('#lab-chart')`,{document});
+
+test('Funnest paint readiness needs a painted canvas that holds observed bars',()=>{
+  assert.equal(painted(readyPage({painted:true,engineBars:[{time:1}]})),true);
+  for(const document of [readyPage({painted:false,engineBars:[{time:1}]}),readyPage({painted:true,engineBars:[]}),readyPage({painted:true}),
+    readyPage(undefined),readyPage({painted:true,engineBars:[{time:1}]},{host:false}),readyPage({painted:true,engineBars:[{time:1}]},{plot:false}),
+    readyPage({painted:true,engineBars:[{time:1}]},{chart:false})])assert.equal(painted(document),false);
+});
+test('Funnest paint readiness does not wait for a legacy SVG axis label or point-count attribute',()=>{
+  const document=readyPage({painted:true,engineBars:[{time:1}]}),queried=[];
+  const spy={querySelector:selector=>{queried.push(selector);return document.querySelector(selector);}};
+  assert.equal(painted(spy),true);
+  assert.deepEqual(queried,['#lab-chart']);
 });

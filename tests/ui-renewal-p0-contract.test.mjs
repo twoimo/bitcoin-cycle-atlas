@@ -13,7 +13,7 @@ import {
   p0Thresholds, p0TokenPairs, readP0RootTokens, resolveP0Token, validateP0FontEvidence,
   validateP0Paint, validateP0PaintRole, validateP0Typography,
 } from '../scripts/ui-renewal-p0-contract.mjs';
-import {collectP0Settings,inspectP0Page,p0EvaluationExpression,parseP0Arguments,readP0ReaderScroll,readP0Sources} from '../scripts/verify-ui-renewal-p0-browser.mjs';
+import {collectP0Settings,inspectP0Page,p0EvaluationExpression,p0PreferenceSeed,parseP0Arguments,readP0ReaderScroll,readP0Sources} from '../scripts/verify-ui-renewal-p0-browser.mjs';
 import {drawAtlasPriceChart} from '../dist/atlas-price-chart.js';
 import {drawIntradayChart} from '../dist/intraday-chart.js';
 
@@ -422,4 +422,14 @@ test('a real CLI preflight failure creates missing parents, records the reason, 
   await writeFile(resolve(out,'sentinel'),'preserved');
   const second = await command(process.execPath,args).catch(error => error);assert.equal(second.code,1);assert.match(second.stdout,/EEXIST/);
   assert.equal(await readFile(resolve(out,'report.json'),'utf8'),bytes);assert.equal(await readFile(resolve(out,'sentinel'),'utf8'),'preserved');
+});
+
+test('dark cases keep a clean profile and light cases save the only non-default preference once per tab', () => {
+  const origin = 'http://127.0.0.1:4321';
+  assert.equal(p0PreferenceSeed({theme:'dark'},origin),null);
+  const seed = p0PreferenceSeed({theme:'light'},origin), storage = new Map(), session = new Map();
+  const run = location => runInNewContext(seed,{location,localStorage:{setItem:(key,value) => storage.set(key,value)},sessionStorage:{getItem:key => session.get(key) ?? null,setItem:(key,value) => session.set(key,value)}});
+  run({origin:'https://example.invalid'});assert.equal(storage.size,0,'another origin is never seeded');
+  run({origin});assert.deepEqual([...storage],[['atlas-ui-theme','light']]);
+  storage.set('atlas-ui-theme','dark');run({origin});assert.equal(storage.get('atlas-ui-theme'),'dark','a reload keeps the viewer choice');
 });
