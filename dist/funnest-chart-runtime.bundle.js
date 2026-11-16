@@ -4710,7 +4710,7 @@ function mountAtlasFunnestChart(container, options = {}) {
   });
   if (chart.mainScale && typeof chart.mainScale.mode === "string") chart.mainScale.mode = scale;
   const cleanups = [];
-  let destroyed = false, readyPromise = null, observations = [], currentBars = [], pendingRange = range, ownedRange = range, retainedRange = range, retainedMaxSpan = 0, retainedFitException = Boolean(range), initialRangeOwned = Boolean(range), userRange = false, futureDateTicks = [], announceTimer = 0, currentInverted = Boolean(invertScale), lastCrosshair = null, crosshairEventSequence = 0;
+  let destroyed = false, readyPromise = null, observations = [], currentBars = [], pendingRange = range, ownedRange = range, retainedRange = range, retainedMaxSpan = 0, retainedFitException = Boolean(range), initialRangeOwned = Boolean(range), userRange = false, userInput = false, inputStamp = 0, restoreEpoch = 0, restoringData = false, futureDateTicks = [], announceTimer = 0, currentInverted = Boolean(invertScale), lastCrosshair = null, crosshairEventSequence = 0;
   const volumeMap = /* @__PURE__ */ new Map();
   if (volumeByTime !== null) {
     if (!Array.isArray(volumeByTime)) throw new TypeError("Observed volume must be a time-keyed array");
@@ -4896,6 +4896,11 @@ function mountAtlasFunnestChart(container, options = {}) {
       if (!initialRangeOwned) retainedRange = actual;
       retainedMaxSpan = Math.max(retainedMaxSpan, sourceRangeSpan(currentBars, initialRangeOwned && ownedRange ? ownedRange : actual));
     }
+    if (restoringData) return;
+    if (userInput) {
+      userInput = false;
+      userRange = true;
+    }
     onViewport(detail);
   }));
   cleanups.push(chart.on("error", (error) => {
@@ -4920,23 +4925,23 @@ function mountAtlasFunnestChart(container, options = {}) {
     if (!currentBars.length) return;
     if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
       event.preventDefault();
-      releaseInitialRange();
+      takeByInput();
       chart.scrollBars(event.key === "ArrowLeft" ? -Math.max(1, Math.round(currentBars.length * 0.02)) : Math.max(1, Math.round(currentBars.length * 0.02)));
     } else if (event.key === "+" || event.key === "=") {
       event.preventDefault();
-      releaseInitialRange();
+      takeByInput();
       chart.zoom(1.2);
     } else if (event.key === "-" || event.key === "_") {
       event.preventDefault();
-      releaseInitialRange();
+      takeByInput();
       chart.zoom(1 / 1.2);
     } else if (event.key === "Home") {
       event.preventDefault();
-      releaseInitialRange();
+      takeByInput();
       chart.setVisibleTimeRange({ from: currentBars[0].time, to: currentBars.at(-1).time });
     } else if (event.key === "End") {
       event.preventDefault();
-      releaseInitialRange();
+      takeByInput();
       chart.scrollToRealtime();
     }
   };
@@ -4944,13 +4949,25 @@ function mountAtlasFunnestChart(container, options = {}) {
   const releaseInitialRange = () => {
     initialRangeOwned = false;
     pendingRange = null;
-    userRange = true;
+  };
+  const takeByInput = () => {
+    releaseInitialRange();
+    userInput = true;
+    const stamp = ++inputStamp;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (stamp === inputStamp) userInput = false;
+    }));
+  };
+  const onPointerMove = (event) => {
+    if (event.buttons) takeByInput();
   };
   container.addEventListener("pointerdown", releaseInitialRange, true);
-  container.addEventListener("wheel", releaseInitialRange, { capture: true, passive: true });
+  container.addEventListener("pointermove", onPointerMove, true);
+  container.addEventListener("wheel", takeByInput, { capture: true, passive: true });
   cleanups.push(() => {
     container.removeEventListener("pointerdown", releaseInitialRange, true);
-    container.removeEventListener("wheel", releaseInitialRange, true);
+    container.removeEventListener("pointermove", onPointerMove, true);
+    container.removeEventListener("wheel", takeByInput, true);
   });
   if (typeof chart.timeScale?.zoom !== "function" || typeof chart.invalidate !== "function") throw new TypeError("Funnest 0.6.22 time-scale zoom is unavailable");
   let axisDrag = null;
@@ -5048,7 +5065,18 @@ function mountAtlasFunnestChart(container, options = {}) {
       host.dataset.state = currentBars.length ? "loading" : "empty";
       if (!currentBars.length) status.textContent = "\uD45C\uC2DC\uD560 \uC2E4\uC81C \uAD00\uCE21 \uAC00\uACA9 \uC790\uB8CC\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.";
       chart.setData(currentBars);
-      if (previousRange) requestAnimationFrame(() => chart.setVisibleTimeRange(previousRange));
+      userInput = false;
+      if (previousRange) {
+        const epoch = ++restoreEpoch;
+        restoringData = true;
+        requestAnimationFrame(() => {
+          if (epoch !== restoreEpoch || destroyed) return;
+          chart.setVisibleTimeRange(previousRange);
+          requestAnimationFrame(() => {
+            if (epoch === restoreEpoch) restoringData = false;
+          });
+        });
+      }
       readyPromise = null;
     },
     setRange(nextRange) {
@@ -5059,6 +5087,9 @@ function mountAtlasFunnestChart(container, options = {}) {
       retainedFitException = true;
       initialRangeOwned = true;
       userRange = false;
+      userInput = false;
+      restoringData = false;
+      ++restoreEpoch;
       pendingRange = null;
       configureRetainedRangeSpacing(nextRange);
       chart.setVisibleTimeRange(nextRange);

@@ -425,3 +425,42 @@ test('dragging the time axis right widens the window around the pressed date, an
     } finally { mounted.destroy(); }
   });
 });
+
+test('only a gesture that moves the window gives it to the viewer, and setData reports no interim window', async () => {
+  await withNativeRuntime(async ({ container, window, settle, relayout }) => {
+    const owned = { from: sessionBars[40].time, to: sessionBars.at(-1).time }, reports = [];
+    let mounted;
+    mounted = mountAtlasFunnestChart(container, { bars: sessionBars, symbol: 'MSTR', range: owned, volume: false, onViewport: () => reports.push(mounted.userOwnsRange()) });
+    try {
+      await settle(80);
+      assert.equal(mounted.userOwnsRange(), false, 'the requested range belongs to the caller');
+      container.dispatchEvent(new window.Event('pointerdown', { bubbles: true, cancelable: true }));
+      container.dispatchEvent(new window.Event('pointerup', { bubbles: true, cancelable: true }));
+      await relayout(mounted, 11);
+      assert.equal(mounted.userOwnsRange(), false, 'a click and the relayout after it do not give the window to the viewer');
+      const before = mounted.chart.getVisibleTimeRange(), count = reports.length;
+      mounted.setData(sessionBars); await settle(80);
+      assert.equal(reports.length, count, 'setData reports neither its interim window nor the restore');
+      assert.deepEqual(mounted.chart.getVisibleTimeRange(), before, 'setData keeps the visible window');
+      const key = new window.Event('keydown', { bubbles: true, cancelable: true });
+      Object.defineProperty(key, 'key', { value: 'ArrowLeft' });
+      mounted.host.dispatchEvent(key); await settle(40);
+      assert.equal(reports.at(-1), true, 'the report after a navigation key belongs to the viewer');
+      mounted.setRange(owned); await settle(40);
+      assert.equal(mounted.userOwnsRange(), false, 'setRange takes the window back');
+    } finally { mounted.destroy(); }
+  });
+});
+
+test('a setRange made before the data restore runs keeps its window', async () => {
+  await withNativeRuntime(async ({ container, settle }) => {
+    const first = { from: sessionBars[40].time, to: sessionBars.at(-1).time }, next = { from: sessionBars[10].time, to: sessionBars[60].time };
+    const mounted = mountAtlasFunnestChart(container, { bars: sessionBars, symbol: 'MSTR', range: first, volume: false });
+    try {
+      await settle(80);
+      mounted.setData(sessionBars); mounted.setRange(next); await settle(80);
+      const visible = mounted.chart.getVisibleTimeRange();
+      assert.deepEqual({ from: Math.round(visible.from), to: Math.round(visible.to) }, next, 'the delayed restore does not replace the newer requested window');
+    } finally { mounted.destroy(); }
+  });
+});

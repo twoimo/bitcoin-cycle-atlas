@@ -245,7 +245,7 @@ export function mountAtlasFunnestChart(container, options = {}) {
   // disagree. Set the native mode alongside constructor settings before data can paint.
   if (chart.mainScale && typeof chart.mainScale.mode === 'string') chart.mainScale.mode = scale;
   const cleanups = [];
-  let destroyed = false, readyPromise = null, observations = [], currentBars = [], pendingRange = range, ownedRange = range, retainedRange = range, retainedMaxSpan = 0, retainedFitException = Boolean(range), initialRangeOwned = Boolean(range), userRange = false, futureDateTicks = [], announceTimer = 0, currentInverted = Boolean(invertScale), lastCrosshair = null, crosshairEventSequence = 0;
+  let destroyed = false, readyPromise = null, observations = [], currentBars = [], pendingRange = range, ownedRange = range, retainedRange = range, retainedMaxSpan = 0, retainedFitException = Boolean(range), initialRangeOwned = Boolean(range), userRange = false, userInput = false, inputStamp = 0, restoreEpoch = 0, restoringData = false, futureDateTicks = [], announceTimer = 0, currentInverted = Boolean(invertScale), lastCrosshair = null, crosshairEventSequence = 0;
   const volumeMap = new Map();
   if (volumeByTime !== null) {
     if (!Array.isArray(volumeByTime)) throw new TypeError('Observed volume must be a time-keyed array');
@@ -395,6 +395,8 @@ export function mountAtlasFunnestChart(container, options = {}) {
       if (!initialRangeOwned) retainedRange = actual;
       retainedMaxSpan = Math.max(retainedMaxSpan, sourceRangeSpan(currentBars, initialRangeOwned && ownedRange ? ownedRange : actual));
     }
+    if (restoringData) return;
+    if (userInput) { userInput = false; userRange = true; }
     onViewport(detail);
   }));
   cleanups.push(chart.on('error', error => {
@@ -413,19 +415,29 @@ export function mountAtlasFunnestChart(container, options = {}) {
     if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.isComposing || /^(INPUT|TEXTAREA|SELECT)$/.test(event.target?.tagName)) return;
     if (!currentBars.length) return;
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-      event.preventDefault(); releaseInitialRange(); chart.scrollBars(event.key === 'ArrowLeft' ? -Math.max(1, Math.round(currentBars.length * 0.02)) : Math.max(1, Math.round(currentBars.length * 0.02)));
-    } else if (event.key === '+' || event.key === '=') { event.preventDefault(); releaseInitialRange(); chart.zoom(1.2); }
-    else if (event.key === '-' || event.key === '_') { event.preventDefault(); releaseInitialRange(); chart.zoom(1 / 1.2); }
-    else if (event.key === 'Home') { event.preventDefault(); releaseInitialRange(); chart.setVisibleTimeRange({ from: currentBars[0].time, to: currentBars.at(-1).time }); }
-    else if (event.key === 'End') { event.preventDefault(); releaseInitialRange(); chart.scrollToRealtime(); }
+      event.preventDefault(); takeByInput(); chart.scrollBars(event.key === 'ArrowLeft' ? -Math.max(1, Math.round(currentBars.length * 0.02)) : Math.max(1, Math.round(currentBars.length * 0.02)));
+    } else if (event.key === '+' || event.key === '=') { event.preventDefault(); takeByInput(); chart.zoom(1.2); }
+    else if (event.key === '-' || event.key === '_') { event.preventDefault(); takeByInput(); chart.zoom(1 / 1.2); }
+    else if (event.key === 'Home') { event.preventDefault(); takeByInput(); chart.setVisibleTimeRange({ from: currentBars[0].time, to: currentBars.at(-1).time }); }
+    else if (event.key === 'End') { event.preventDefault(); takeByInput(); chart.scrollToRealtime(); }
   };
   host.addEventListener('keydown', onKeyDown);
-  const releaseInitialRange = () => { initialRangeOwned = false; pendingRange = null; userRange = true; };
+  const releaseInitialRange = () => { initialRangeOwned = false; pendingRange = null; };
+  // userOwnsRange() turns true only at the report that follows a wheel, a drag or a navigation key. A click,
+  // a relayout or a data refresh can also move the window, and none of those is the viewer's choice.
+  const takeByInput = () => {
+    releaseInitialRange(); userInput = true;
+    const stamp = ++inputStamp;
+    requestAnimationFrame(() => requestAnimationFrame(() => { if (stamp === inputStamp) userInput = false; }));
+  };
+  const onPointerMove = event => { if (event.buttons) takeByInput(); };
   container.addEventListener('pointerdown', releaseInitialRange, true);
-  container.addEventListener('wheel', releaseInitialRange, { capture: true, passive: true });
+  container.addEventListener('pointermove', onPointerMove, true);
+  container.addEventListener('wheel', takeByInput, { capture: true, passive: true });
   cleanups.push(() => {
     container.removeEventListener('pointerdown', releaseInitialRange, true);
-    container.removeEventListener('wheel', releaseInitialRange, true);
+    container.removeEventListener('pointermove', onPointerMove, true);
+    container.removeEventListener('wheel', takeByInput, true);
   });
   // Atlas's time-axis rule, shared with its SVG charts: dragging right shows e^(2 * travel / plot width)
   // times as many bars around the pressed date. Funnest 0.6.22's own axis drag does the reverse
@@ -493,11 +505,20 @@ export function mountAtlasFunnestChart(container, options = {}) {
       const previousRange = preserveRange ? chart.getVisibleTimeRange() : null;
       lastCrosshair = null; clearFutureDateTicks(); mapData(nextBars); retainedMaxSpan = sourceRangeSpan(currentBars, initialRangeOwned && ownedRange ? ownedRange : retainedRange); host.dataset.state = currentBars.length ? 'loading' : 'empty';
       if (!currentBars.length) status.textContent = '표시할 실제 관측 가격 자료가 없습니다.';
-      chart.setData(currentBars);
-      if (previousRange) requestAnimationFrame(() => chart.setVisibleTimeRange(previousRange));
+      chart.setData(currentBars); userInput = false;
+      // The engine shows a shifted window for a frame and the restore puts the previous one back. Neither is
+      // reported, and a setRange made before the restore runs wins.
+      if (previousRange) {
+        const epoch = ++restoreEpoch; restoringData = true;
+        requestAnimationFrame(() => {
+          if (epoch !== restoreEpoch || destroyed) return;
+          chart.setVisibleTimeRange(previousRange);
+          requestAnimationFrame(() => { if (epoch === restoreEpoch) restoringData = false; });
+        });
+      }
       readyPromise = null;
     },
-    setRange(nextRange) { if (!nextRange || !(nextRange.to > nextRange.from)) return false; ownedRange = nextRange; retainedRange = nextRange; retainedMaxSpan = sourceRangeSpan(currentBars, nextRange); retainedFitException = true; initialRangeOwned = true; userRange = false; pendingRange = null; configureRetainedRangeSpacing(nextRange); chart.setVisibleTimeRange(nextRange); return true; },
+    setRange(nextRange) { if (!nextRange || !(nextRange.to > nextRange.from)) return false; ownedRange = nextRange; retainedRange = nextRange; retainedMaxSpan = sourceRangeSpan(currentBars, nextRange); retainedFitException = true; initialRangeOwned = true; userRange = false; userInput = false; restoringData = false; ++restoreEpoch; pendingRange = null; configureRetainedRangeSpacing(nextRange); chart.setVisibleTimeRange(nextRange); return true; },
     setChartType(nextType) {
       if (!['candles', 'line', 'area'].includes(nextType)) throw new RangeError('Unsupported Funnest chart type');
       if (sourceMode === 'close-only' && nextType !== 'line') throw new RangeError('Close-only sources cannot be presented as candles or area OHLC');
