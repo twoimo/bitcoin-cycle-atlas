@@ -13,7 +13,7 @@ const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const invariants = ['TypeOK', 'ReadyHasUsableView', 'NoHiddenPublication', 'NoStalePublication', 'NavigationSurvivesRefresh', 'NativeNavigationSurvivesRefresh', 'ReadinessOnce'];
 const invariantsBeforeChartMount = invariants.filter(name => name !== 'NativeNavigationSurvivesRefresh');
 const failuresBeforeFix = ['ReadyHasUsableView', 'NoHiddenPublication', 'NavigationSurvivesRefresh'];
-const cases = 26;
+const cases = 27;
 const TLC_FOUND_VIOLATION = 12, TESTS_FAILED = 1, PROCESS_TIMEOUT_MS = 180000;
 
 const failures = [];

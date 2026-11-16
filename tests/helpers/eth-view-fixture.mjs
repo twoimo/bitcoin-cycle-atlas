@@ -108,11 +108,11 @@ export async function ethViewFixture({ query = '', pathname = '/', paint = 'auto
   const barsToSeries = new WeakMap();
   const atlasCandlesToFunnestBars = series => { const bars=series.candles.map(row=>({...row,time:row.time*1000}));barsToSeries.set(bars,series);return bars; };
   const mountObservedPriceChart = (_plot,options) => {
-    const record={...options,setAtlasRangeCalls:0,nativeRange:options.range?{from:options.range.start*1000,to:options.range.end*1000}:null,nativeMagnet:false,atlasMagnet:options.magnet||'off',chart:{layout:{plotWidth:554},setMagnet(value){record.nativeMagnet=value;},getVisibleTimeRange(){return record.nativeRange;}}};draws.push(record);
+    const record={...options,setAtlasRangeCalls:0,userRange:false,nativeRange:options.range?{from:options.range.start*1000,to:options.range.end*1000}:null,nativeMagnet:false,atlasMagnet:options.magnet||'off',chart:{layout:{plotWidth:554},setMagnet(value){record.nativeMagnet=value;},getVisibleTimeRange(){return record.nativeRange;}}};draws.push(record);
     let watch=null;
     const painted=()=>({painted:true,status:'ready',bars:record.series.candles.length});
     const ready=paint==='manual'?()=>watch??=new Promise((resolve,reject)=>paints.push({chart:record,resolve:()=>resolve(painted()),reject})):async()=>painted();
-    return {chart:record.chart,ready,setData(bars){record.series=barsToSeries.get(bars);watch=null;},setRange(range){const start=range.from/1000,end=range.to/1000;if(record.range?.start!==start||record.range?.end!==end)record.range={...record.range,start,end};},setAtlasRange(range){record.setAtlasRangeCalls++;record.range=range;record.nativeRange={from:range.start*1000,to:range.end*1000};},setChartType(value){record.chartType=value;},setScale(value){record.scale=value;},setAtlasInteraction(value){record.interaction={...value};record.atlasMagnet=value.magnet;},setAtlasRows(rows){record.sourceRows=rows;},setPriceExtrema(value){record.priceDomain=value;},setAtlasOverlays(value){Object.assign(record,value);},addOverlay(){return {redraw(){},remove(){}};},destroy(){record.destroyed=true;}};
+    return {chart:record.chart,ready,userOwnsRange:()=>record.userRange,setData(bars){record.series=barsToSeries.get(bars);watch=null;},setRange(range){const start=range.from/1000,end=range.to/1000;if(record.range?.start!==start||record.range?.end!==end)record.range={...record.range,start,end};},setAtlasRange(range){record.setAtlasRangeCalls++;record.userRange=false;record.range=range;record.nativeRange={from:range.start*1000,to:range.end*1000};},setChartType(value){record.chartType=value;},setScale(value){record.scale=value;},setAtlasInteraction(value){record.interaction={...value};record.atlasMagnet=value.magnet;},setAtlasRows(rows){record.sourceRows=rows;},setPriceExtrema(value){record.priceDomain=value;},setAtlasOverlays(value){Object.assign(record,value);},addOverlay(){return {redraw(){},remove(){}};},destroy(){record.destroyed=true;}};
   };
   const deps = {
     withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,nativeDateRange,mountObservedPriceChart,atlasCandlesToFunnestBars,
@@ -184,7 +184,7 @@ export async function ethViewFixture({ query = '', pathname = '/', paint = 'auto
     resize: () => resize(), refresh: () => click('action', 'refresh'),
     interval: value => click('interval', value), span: value => click('span', value),
     pan: range => navigation.onRangeChange(range), priceRange: range => navigation.onPriceRangeChange(range), navigationRange: () => navigation.getRange(),
-    nativeRange: range => { const chart = draws.at(-1); if (chart.destroyed) return; chart.nativeRange = { from: range.start * 1000, to: range.end * 1000 }; chart.onViewport(chart.nativeRange); },
+    nativeRange: (range, { user = true } = {}) => { const chart = draws.at(-1); if (chart.destroyed) return; chart.userRange ||= user; chart.nativeRange = { from: range.start * 1000, to: range.end * 1000 }; chart.onViewport(chart.nativeRange); },
     paint: index => paints[index].resolve(),
     paintRejects: (index, message = 'Funnest chart did not paint within 5 seconds') => paints[index].reject(new Error(message)),
     focusEvent: id => historyOptions.onFocusEvent(id), latest: () => draws.at(-1),

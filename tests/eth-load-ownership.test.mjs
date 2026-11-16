@@ -228,6 +228,14 @@ test('ETH refresh preserves a date window chosen on the chart while its request 
     'a live refresh must not reset a window chosen on the chart while it was pending');
 });
 
+test('ETH refresh resets a window the chart moved without the viewer while its request was pending', async () => {
+  const f = await loaded(), shown = f.latest().nativeRange; f.refresh();
+  const range = f.latest().range;
+  f.nativeRange({ start: range.start + 86400 * 10, end: range.end }, { user: false });
+  f.replyLive(0, ethPayload(2)); await f.settle();
+  assert.deepEqual(f.latest().nativeRange, shown, 'a live refresh must reset a window that moved without the viewer navigating');
+});
+
 test('ETH ignores a chart window report on a cleared range, so the interval switch keeps working', async () => {
   const f = await loaded(); f.refresh();
   const state = f.workbench().state, range = f.latest().range, day = 86400;
