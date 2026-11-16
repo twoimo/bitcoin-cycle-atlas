@@ -421,6 +421,7 @@ export async function initEthView() {
   window.addEventListener('pageshow',event=>{
     if(!event.persisted)return;
     suspended=false;
+    if(state.funnestMount&&!state.funnestReady)watchFunnestPaint(state.funnestMount);
     if(!currentSeries())void load();else schedule();
   });
   // Opening a chart must retain the supplied URL. Explicit controls still

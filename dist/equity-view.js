@@ -282,7 +282,7 @@ export async function initEquityView({symbol}={}){
   mountChartReplay({svg,plot,toolbar:$('.eth-topbar'),symbol,restore:schedule,getForecastAvailability:()=>forecastAvailability});
   const observer=new ResizeObserver(schedule);observer.observe(plot);document.fonts?.ready.then(schedule);
   window.addEventListener('pagehide',event=>{suspended=true;++generation;request?.abort();state.loading=false;if(state.frame!==null){cancelAnimationFrame(state.frame);state.frame=null;}cancelInteraction();if(!event.persisted){state.funnestMount?.destroy();state.funnestMount=null;touch.destroy();navigation.destroy();observer.disconnect();selector.destroy();viewport.destroy();workbench.destroy();document.removeEventListener('atlas:modal-open',onModal);}});
-  window.addEventListener('pageshow',event=>{if(event.persisted){suspended=false;if(!daily||!projection)void load();else schedule();}});
+  window.addEventListener('pageshow',event=>{if(event.persisted){suspended=false;if(state.funnestMount&&!state.funnestReady)watchFunnestPaint(state.funnestMount);if(!daily||!projection)void load();else schedule();}});
   // Initial data loading is not a view edit. Keep the supplied URL until an
   // explicit control change calls persist().
   await load();await new Promise(resolve=>requestAnimationFrame(()=>{render();resolve();}));
