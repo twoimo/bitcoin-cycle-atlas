@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { Point } from '@atlas/contracts/market-lab';
 import type { RsiRow } from '@atlas/domain/market-lab';
 import type { RsiBar } from '@atlas/domain/rsi-bars';
@@ -28,6 +28,14 @@ export function readRsiSignalLabelBounds(root: Element): NonNullable<ChartOverla
       ? [{ x: box.left - origin.left, y: box.top - origin.top, width: box.width, height: box.height }] : [];
   });
 }
+/** Inputs the hosted chart handles, shown by both workbench help panes. */
+const CHART_HELP=[
+  ['휠 / Ctrl + 휠','가리킨 날짜를 유지하며 확대·축소'],['+ / −','시간 구간 확대 / 축소'],['두 손가락 벌리기 / 모으기','시간 구간 확대 / 축소'],
+  ['이동 도구(H) 드래그','날짜 위치 이동'],['가격축 드래그 / 휠','가격 눈금 조절'],['가격축 두 번 클릭','가격 자동 맞춤'],['시간축 드래그','표시 기간 조절'],
+  ['C / H / M','십자선 / 이동 / 두 점 측정'],['← / →','이전 / 다음 관측'],['Shift + ← / →','이전 / 다음 구간'],['0 / Alt+R / 두 번 클릭','전체 범위'],
+  ['Alt+G / Alt+M','날짜 이동 / 자석'],['Ctrl/⌘ Z','실행 취소'],['Shift Ctrl/⌘ Z','다시 실행'],
+] as const;
+export function ChartHelp(){return <dl className="rsi-data-list">{CHART_HELP.map(([input,effect])=><Fragment key={input}><dt>{input}</dt><dd>{effect}</dd></Fragment>)}</dl>;}
 interface Props {menuPulse:number;symbol:string;unit:string;prices:Point[];bars:RsiBar[];rows:RsiRow[];view:RsiChartView;active:boolean;
   onView:(view:RsiChartView)=>void;onStart:()=>void;onEnd:()=>void;onPick:(pick:Pick)=>void;onHover:(pick:Pick|null)=>void;hover:Pick|null;svgRef:React.RefObject<SVGSVGElement|null>;
   series?:InstrumentSeries;markers?:InstrumentMarker[];onMarker?:()=>void;volumeUnit?:string;description?:string;className?:string;revision?:string;quote?:ChartQuote;overlay?:(geometry:ChartOverlayGeometry)=>React.ReactNode}
