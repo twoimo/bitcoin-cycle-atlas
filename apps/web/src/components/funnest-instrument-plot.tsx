@@ -14,10 +14,10 @@ import { FunnestInstrumentMarkers } from './funnest-instrument-markers.js';
 export interface NativePricePaneBounds { left: number; right: number; top: number; bottom: number }
 
 /** Copy the public engine layout; no independently guessed chart margins. */
-function NativePricePaneLayout({ host, onLayout }: { host: React.RefObject<HTMLDivElement | null>; onLayout?: (bounds: NativePricePaneBounds) => void }) {
-  const chart = useCartesianChart();
+function NativePricePaneLayout({ onLayout }: { onLayout?: (bounds: NativePricePaneBounds) => void }) {
+  const chart = useCartesianChart(), anchor = useRef<SVGGElement>(null);
   useLayoutEffect(() => {
-    const svg = host.current?.querySelector('svg'), root = host.current?.closest('.rsi-chart-canvas');
+    const svg = anchor.current?.closest('svg'), root = svg?.closest('.rsi-chart-canvas');
     if (!svg || !root || !chart.width || !chart.height) return;
     for (const [key, value] of Object.entries({ plotLeft: chart.plot.left, plotRight: chart.plot.right, plotTop: chart.plot.top, plotBottom: chart.plot.bottom, timeAxisTop: chart.plot.bottom })) svg.dataset[key] = String(value);
     const box = svg.getBoundingClientRect(), origin = root.getBoundingClientRect();
@@ -25,8 +25,8 @@ function NativePricePaneLayout({ host, onLayout }: { host: React.RefObject<HTMLD
     const sx = box.width / chart.width, sy = box.height / chart.height;
     onLayout?.({ left: box.left - origin.left + chart.plot.left * sx, right: box.left - origin.left + chart.plot.right * sx,
       top: box.top - origin.top + chart.plot.top * sy, bottom: box.top - origin.top + chart.plot.bottom * sy });
-  }, [host, onLayout, chart.width, chart.height, chart.plot.left, chart.plot.right, chart.plot.top, chart.plot.bottom]);
-  return null;
+  }, [onLayout, chart.width, chart.height, chart.plot.left, chart.plot.right, chart.plot.top, chart.plot.bottom]);
+  return <g ref={anchor}/>;
 }
 
 /** Preserve the original lower volume strip using Funnest's real value scale. */
@@ -303,7 +303,7 @@ export function FunnestInstrumentPlot(props: Props) {
       ...(hasVolume ? [{ id: 'volume', label: `거래량 (${volumeUnit || '단위 미제공'})`, data: volumes, yAxisId: 'volume', color: 'var(--muted)' }] : []),
     ]} xAxis={{ data: dates, scaleType: 'band', bandPadding: 0.2 }} yAxis={[priceAxis, ...(hasVolume ? [{ id: 'volume', domain: volumeScale.domain, nice: false }] : [])]} height={plotHeight} inset={{ left: 12, right: 0, top: 20, bottom: 30 }} enableScrubbing onScrubberPositionChange={updateIndex}
       getScrubberAccessibilityLabel={(i: number) => { const bar = candleData[i]; return bar ? `${dates[i]} · 시가 ${fmt(bar.open)} · 고가 ${fmt(bar.high)} · 저가 ${fmt(bar.low)} · 종가 ${fmt(bar.close)} ${unit} · 거래량 ${bar.volume == null ? '미공표' : `${fmt(bar.volume)} ${volumeUnit}`}` : `${dates[i]} · 관측값 없음`; }} aria-label={`${symbol} 실제 OHLC ${unit}`}>
-      <NativePricePaneLayout host={host} onLayout={onPlotGeometry}/><XAxis minTickSpacing={dateTickSpacing} tickLabelFormatter={dateLabel} showGrid/><PriceAxis reflect={reflect}/>
+      <NativePricePaneLayout onLayout={onPlotGeometry}/><XAxis minTickSpacing={dateTickSpacing} tickLabelFormatter={dateLabel} showGrid/><PriceAxis reflect={reflect}/>
       {hasVolume && <YAxis axisId="volume" position="left" width={volumeAxisWidth} ticks={volumeScale.ticks} tickLabelFormatter={fmt} showGrid={false}/>}
       {hasVolume && <BarPlot seriesIds={['volume']} radius={0} highlightScrubbed={false} getBarColor={(_value: number, i: number) => statusColor(volumeByDate.get(dates[i])?.state)}/>}
       <CandlePlot data={plottedCandles} yAxisId="price" upColor="var(--chart-candle-up)" downColor="var(--chart-candle-down)" tooltip={false} valueFormatter={fmt}/>
@@ -317,7 +317,7 @@ export function FunnestInstrumentPlot(props: Props) {
       ...(hasAverage ? [{ id: 'volume-average', label: '과거 평균 거래량', data: averages, yAxisId: 'volume', color: 'var(--text)', lineStyle: 'dashed' as const }] : []),
     ]} xAxis={{ data: dates, scaleType: hasVolume ? 'band' : 'linear', bandPadding: 0.2 }} yAxis={[priceAxis, ...(hasVolume ? [{ id: 'volume', domain: volumeScale.domain, nice: false }] : [])]} height={plotHeight} inset={{ left: 12, right: 0, top: 20, bottom: 30 }} enableScrubbing onScrubberPositionChange={updateIndex}
       getScrubberAccessibilityLabel={(i: number) => `${dates[i] ?? ''} · ${priceData[i] == null ? '관측값 없음' : `${fmt(priceData[i]!)} ${unit}`} · 거래량 ${volumes[i] == null ? '미공표' : `${fmt(volumes[i]!)} ${volumeUnit}`}`} aria-label={`${symbol} 관측 종가 ${unit}`}>
-      <NativePricePaneLayout host={host} onLayout={onPlotGeometry}/><XAxis minTickSpacing={dateTickSpacing} tickLabelFormatter={dateLabel} showGrid/><PriceAxis reflect={reflect}/>
+      <NativePricePaneLayout onLayout={onPlotGeometry}/><XAxis minTickSpacing={dateTickSpacing} tickLabelFormatter={dateLabel} showGrid/><PriceAxis reflect={reflect}/>
       {hasVolume && <YAxis axisId="volume" position="left" width={volumeAxisWidth} ticks={volumeScale.ticks} tickLabelFormatter={fmt} showGrid={false}/>}
       {hasVolume && <BarPlot seriesIds={['volume']} radius={0} highlightScrubbed={false} getBarColor={(_value: number, i: number) => statusColor(volumeByDate.get(dates[i])?.state)}/>}
       <Line seriesId="price" curve="linear" strokeWidth={2}/>{hasAverage && <Line seriesId="volume-average" curve="linear" strokeWidth={1.2}/>}
