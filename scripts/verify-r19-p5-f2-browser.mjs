@@ -6,7 +6,7 @@ import {createHash} from 'node:crypto';
 import {mkdtemp,readFile,writeFile,mkdir,rm,realpath,stat} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {extname,resolve,sep} from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {fileURLToPath,pathToFileURL} from 'node:url';
 import {headlessWindowArgument,verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
 import {p0ParseColor,p0Composite,p0Contrast,resolveP0Token} from './ui-renewal-p0-contract.mjs';
 
@@ -14,7 +14,6 @@ const root=fileURLToPath(new URL('..',import.meta.url)),site=resolve(root,'dist'
 const args=process.argv.slice(2),option=(name,fallback)=>args.includes(name)?args[args.indexOf(name)+1]:fallback;
 const out=resolve(root,option('--out','build/r19-p5-f2-browser'));
 const git=(...args)=>execFileSync('git',args,{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).trim();
-const baseline=git('rev-parse','--verify',option('--baseline-ref','3356e68aca3e45ce82bbeca1e852ba220fa9c762')+'^{commit}');
 const bin=process.env.ATLAS_BROWSER_PATH||(process.platform==='darwin'?'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome':'/usr/bin/chromium');
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex'),delay=ms=>new Promise(done=>setTimeout(done,ms));
 const specs=['light','dark'].flatMap(theme=>[320,1440].map(width=>({id:`conference-${theme}-${width}`,theme,width,height:900})));
@@ -32,6 +31,7 @@ class Cdp{
 async function evaluate(cdp,fn,...args){const value=await cdp.send('Runtime.evaluate',{expression:`(${fn.toString()})(${args.map(arg=>JSON.stringify(arg)).join(',')})`,awaitPromise:true,returnByValue:true});if(value.exceptionDetails)throw new Error(JSON.stringify(value.exceptionDetails));return value.result.value;}
 async function until(fn,label){const deadline=Date.now()+45000;while(Date.now()<deadline){try{const value=await fn();if(value)return value;}catch(error){if(!/Execution context was destroyed|Cannot find context/.test(error.message))throw error;}await delay(100);}throw new Error('Timed out: '+label);}
 async function settle(cdp){await evaluate(cdp,async()=>{await document.fonts.ready;await new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)));});}
+export function conferenceReady(theme){const boot=document.documentElement?.dataset.boot;if(boot==='error')throw new Error('Product boot error');return boot==='ready'&&document.body.dataset.page==='conference'&&document.documentElement.dataset.theme===theme&&Boolean(document.querySelector('.conference-player[data-state="ready"]'));}
 function inspect(){
   const button=document.querySelector('.conference-play');if(!button)throw new Error('Missing conference play button');
   const rect=el=>{const b=el.getBoundingClientRect();return {x:b.x,y:b.y,width:b.width,height:b.height};};
@@ -102,6 +102,8 @@ async function hover(cdp,box){
 }
 async function screenshot(cdp,file,spec){const png=Buffer.from((await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false})).data,'base64');if(png.length<24||png.subarray(0,8).toString('hex')!=='89504e470d0a1a0a'||png.readUInt32BE(16)!==spec.width||png.readUInt32BE(20)!==spec.height)throw new Error('Invalid PNG or capture dimensions');await writeFile(resolve(out,file),png);return {file,sha256:sha(png),bytes:png.length,width:spec.width,height:spec.height};}
 
+async function run(){
+const baseline=git('rev-parse','--verify',option('--baseline-ref','3356e68aca3e45ce82bbeca1e852ba220fa9c762')+'^{commit}');
 await mkdir(out,{recursive:true});
 const report={kind:'r19-p5-f2-native-paint',startedAt:new Date().toISOString(),baseline,scope:'Conference play default paint, native enabled hover when available, adjacent visible clock text, and 320/1440 screenshots in both themes. No media, playback, D-1, timing, chart-axis, or full P5 qualification.',
   thresholds:{text:4.5,icon:3,allowedRadiusPx:[3,6],targetPx:56},requiredTokens:{normalBackground:'--surface',hoverBackground:'--surface-hover',icon:'--text',border:'--accent-ink'},colorPolicy:'The candidate must match its exact native surface/text/accent-ring token contract. Separately record every raw hue, including low-saturation neutrals. A hue-200–260 background is new only if absent from the same-theme baseline visible UI/observed native hover palette; existing neutrals are not new accents.',
@@ -123,7 +125,7 @@ try{
         ({browserContextId:contextId}=await browser.send('Target.createBrowserContext'));const {targetId}=await browser.send('Target.createTarget',{url:'about:blank',browserContextId:contextId});const targets=await (await fetch(`http://127.0.0.1:${port[0]}/json/list`)).json();cdp=await Cdp.connect(targets.find(target=>target.id===targetId).webSocketDebuggerUrl);
         await cdp.send('Page.enable');await cdp.send('Runtime.enable');result.nativeWindowEnvelope=await verifyHeadlessWindowEnvelope(cdp,spec);await cdp.send('Emulation.setDeviceMetricsOverride',{width:spec.width,height:spec.height,deviceScaleFactor:1,mobile:spec.width<=620});await cdp.send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:spec.theme}]});
         await cdp.send('Page.addScriptToEvaluateOnNewDocument',{source:`try{localStorage.setItem('atlas-ui-theme',${JSON.stringify(spec.theme)})}catch{}`});await cdp.send('Page.navigate',{url:base+'?page=conference'});
-        await until(()=>evaluate(cdp,theme=>{if(document.documentElement.dataset.boot==='error')throw new Error('Product boot error');return document.documentElement.dataset.boot==='ready'&&document.body.dataset.page==='conference'&&document.documentElement.dataset.theme===theme&&Boolean(document.querySelector('.conference-player[data-state="ready"]'));},spec.theme),spec.id+' product ready');await settle(cdp);
+        await until(()=>evaluate(cdp,conferenceReady,spec.theme),spec.id+' product ready');await settle(cdp);
         result.state=await evaluate(cdp,inspect);result.screenshot=await screenshot(cdp,`${lane.name}/${spec.id}.png`,spec);result.measured=measurements(result.state);
         result.palette=result.state.palette.map(row=>({...colorEntry(row.color),example:row.example}));
         if(result.state.neighbor){await hover(cdp,result.state.neighbor.box);result.neighborHover=await evaluate(cdp,box=>{const element=document.elementFromPoint(box.x+box.width/2,box.y+box.height/2)?.closest('button');return element?{name:element.getAttribute('aria-label')||element.textContent,disabled:element.disabled,hover:element.matches(':hover'),background:getComputedStyle(element).backgroundColor}:null;},result.state.neighbor.box);if(!result.neighborHover||result.neighborHover.disabled||!result.neighborHover.hover)throw new Error('Neighbor native hover unverified');result.palette.push({...colorEntry(result.neighborHover.background),example:'native hover: '+result.neighborHover.name});}
@@ -159,3 +161,5 @@ finally{
   report.status=report.complete&&report.sourceStable&&report.failures.length===0?'passed':report.completedCases?'failed':'blocked';report.qualifiesF2ObservedPaint=report.status==='passed';report.mediaPlaybackVerified=false;report.fullP5Qualified=false;report.finishedAt=new Date().toISOString();report.chromeStderr=stderr;
   await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({status:report.status,complete:report.complete,completedCases:report.completedCases,sourceStable:report.sourceStable,oldBlueBackgrounds:report.oldBlueBackgrounds,newHueBandBackgrounds:report.newHueBandBackgrounds,failures:report.failures.length,out}));if(report.status!=='passed')process.exitCode=1;
 }
+}
+if(process.argv[1]&&pathToFileURL(resolve(process.argv[1])).href===import.meta.url)await run();
