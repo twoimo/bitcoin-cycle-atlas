@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 /** Reproduce the live cycle clock from completed observations; no network I/O. */
 import assert from 'node:assert/strict';
-import { createHash, randomUUID } from 'node:crypto';
-import { readFile, writeFile, mkdir, rename, rm } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { cycleCalibrationSnapshot } from '../dist/cycle-calibration.js';
 import { buildLongHorizonForecast } from '../dist/long-horizon-forecast.js';
 import { utcDay, dateFromDay } from '../dist/cycle-engine.js';
 import { validateSnapshot } from './refresh-data.mjs';
+import { writeFileAtomic } from './atomic-file.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const CALIBRATION_RECORD_VERSION = 'cycle-calibration-record-v1';
@@ -79,14 +80,7 @@ export async function refreshCycleCalibration({
   catch (error) { if (error.code !== 'ENOENT') throw error; }
   const changed = previous !== expected;
   if (check && changed) throw new Error('Cycle calibration artifact is absent, stale or inconsistent with completed observations. Run npm run refresh:cycle.');
-  if (!check && changed) {
-    await mkdir(path.dirname(outputPath), { recursive: true });
-    const temporary = `${outputPath}.${randomUUID()}.tmp`;
-    try {
-      await writeFile(temporary, expected, { flag: 'wx', mode: 0o644 });
-      await rename(temporary, outputPath);
-    } finally { await rm(temporary, { force: true }); }
-  }
+  if (!check && changed) await writeFileAtomic(outputPath, expected, { mode: 0o644, mkdir: true });
   return {
     status: check ? 'verified' : changed ? 'updated' : 'unchanged',
     asOf: record.asOf, version: record.version, observationCount: record.observationCount,
