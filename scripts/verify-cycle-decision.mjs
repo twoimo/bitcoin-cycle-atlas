@@ -391,7 +391,7 @@ for (const [name, needle, replacement] of mutations) {
 verify(production);
 console.log(JSON.stringify({
   status: 'PASS', method: 'Exhaustive finite real-JavaScript inputs, independent ordered-pair risk and calendar-grid episode oracles, public-entry mutation controls',
-  baseCommit: '3a1be8370a9fd9a71861be3f929493370f08a5ef',
+  baseCommit: 'fe93a5727277d15a934b7472588fb907e30b02b8',
   sourceSha256: createHash('sha256').update(source).digest('hex'), node: process.version, counts, negativeControls: controls,
   bounds: 'Every length-2..6 path over prices 50, 100 and 200; all 81 length-4 scoped intervals; 36 current-window cases; 33 as-of prefixes; 4 conditional-window combinations; 4 provisional extrema combinations; 6 rejected mismatches; 53 bounded observed-episode inputs; 66 missing-date positions; 17 episode cutoff prefixes; 48 bounded future-episode inputs; 17 explicit, absent or unavailable chart-horizon cases; 8 future/warm-up gaps; 5 shared-cycle membership cases. Episode cases are bounded fixtures, not exhaustive long price paths.',
   excludes: 'Unbounded mathematical proof, market forecasting, trading profitability, model calibration, browser rendering, transaction costs and intraday losses.',

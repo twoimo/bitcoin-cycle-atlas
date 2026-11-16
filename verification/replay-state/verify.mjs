@@ -70,6 +70,13 @@ const manualDateCases=[
   {name:'manual invalid dates leave an unconfirmed replay start unconfirmed',
     assertion:'invalid manual input cannot confirm a start'},
 ];
+const startGestureCase={name:'replay time-axis and plot drags use actual plot width and axis clicks cannot confirm a start bar',
+  assertion:'an axis click cannot confirm a replay start'};
+const inertOwnershipCase={name:'mobile information sheet keeps original replay periods reachable and restores unrelated inert state across resizing',
+  assertion:'overlapping discovery cannot replace the original inert value'};
+const refusalCase={name:'T3 replay refusal retains actual prices and saved records without starting any forecast request',
+  assertion:'a refused forecast cannot enter replay'};
+const guardCases={startGesture:startGestureCase,inertOwnership:inertOwnershipCase,refusal:refusalCase};
 function checkSavedEntry(cwd,item,{broken=false}={}){
   const run=spawnSync(process.execPath,['--experimental-vm-modules',coordinatorTestPath,'--replay-ui-extra-name',item.name],
     {cwd,encoding:'utf8',timeout:30000,maxBuffer:4*1024*1024});
@@ -101,6 +108,7 @@ results.selection={original:checkSelection(root),mutations:{}};
 results.savedEntry={original:savedEntryCases.map(item=>checkSavedEntry(root,item)),mutations:{}};
 results.destruction={original:checkSavedEntry(root,destructionCase),mutations:{}};
 results.manualDates={original:manualDateCases.map(item=>checkSavedEntry(root,item)),mutations:{}};
+for(const [group,item] of Object.entries(guardCases))results[group]={original:checkSavedEntry(root,item),mutations:{}};
 const scratch=await mkdtemp(path.join(tmpdir(),'atlas-replay-state-'));
 try{
   await mkdir(path.join(scratch,'dist'));await mkdir(path.join(scratch,'tests'));
@@ -174,22 +182,45 @@ try{
   results.manualDates.mutations[manualDateMutation.name]={...checkSavedEntry(scratch,manualDateCases[0],{broken:true}),sourceSha256:hash(unguarded)};
   await writeFile(path.join(scratch,coordinatorPath),coordinator);
   results.manualDates.restored=manualDateCases.map(item=>checkSavedEntry(scratch,item));
+  const guardMutations=[
+    {group:'startGesture',name:'axis-click-confirms-start',test:startGestureCase,
+      before:"if(event.type==='pointerup'&&prior?.kind==='plot'&&!prior.moved&&(picking||getState().status==='selecting'))",
+      after:"if(event.type==='pointerup'&&prior&&!prior.moved&&(picking||getState().status==='selecting'))"},
+    {group:'inertOwnership',name:'duplicate-discovery-overwrites-prior-inert',test:inertOwnershipCase,
+      before:'for(const node of new Set(blocked)){',after:'for(const node of blocked){'},
+    {group:'refusal',name:'refused-entry-activates-replay',test:refusalCase,
+      before:'if(destroyed||active)return;\n    if(!forecastEntryAvailable())return;',after:'if(destroyed||active)return;'},
+    {group:'refusal',name:'refused-open-starts-replay',test:{...refusalCase,assertion:'a refused forecast cannot open replay'},
+      before:'if(destroyed||saving)return;\n    if(!forecastEntryAvailable())return;',after:'if(destroyed||saving)return;'},
+  ];
+  for(const mutation of guardMutations){
+    assert.equal(coordinator.split(mutation.before).length,2,'Guard mutation selector drifted: '+mutation.name);
+    const mutated=coordinator.replace(mutation.before,mutation.after);
+    await writeFile(path.join(scratch,coordinatorPath),mutated);
+    results[mutation.group].mutations[mutation.name]={...checkSavedEntry(scratch,mutation.test,{broken:true}),sourceSha256:hash(mutated)};
+  }
+  await writeFile(path.join(scratch,coordinatorPath),coordinator);
+  for(const [group,item] of Object.entries(guardCases))results[group].restored=checkSavedEntry(scratch,item);
 }finally{await rm(scratch,{recursive:true,force:true});}
 const receipt={kind:'atlas-replay-state-verification',schemaVersion:1,
-  baselineCommit:'aca73b74a5128a5466488a0c701e86f5e854af46',
+  baselineCommit:'fe93a5727277d15a934b7472588fb907e30b02b8',
+  manualDateFollowupBaselineCommit:'aca73b74a5128a5466488a0c701e86f5e854af46',
   previousFollowupBaselineCommit:'4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc',
   originalAuditBaselineCommit:'94a1b1dda9eb359de70747043808340da369d087',
   node:process.version,sourcePath,sourceSha256:hash(source),testPath,testSha256:hash(tests),
-  method:'Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, manual-date rejection, destroy-during-save cases and isolated real-source negative controls',
+  method:'Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, manual-date rejection, destroy-during-save, axis-click, inert-ownership and refused-entry cases and isolated real-source negative controls',
   coordinatorPath,coordinatorSha256:hash(coordinator),coordinatorTestPath,coordinatorTestSha256:hash(coordinatorTests),
   snapshotPath,snapshotSha256:hash(snapshotSource),
   bounds:{playback:results.original.enumeration,asyncLoads:2,selectionCommands:6,selectionMaxTraceLength:3,selectionTraces:259,
     destruction:{pendingExplicitSaves:1,completionSchedules:['deferred callback resumes','deferred callback rejects'],destroyCallsPerSchedule:2},
     manualDates:{submissionMethods:['button','Enter'],entryStates:['resumed capture','unconfirmed selection'],
       invalidKinds:['above maximum','below minimum','empty','malformed','impossible day','impossible month','zero year','native invalidity'],
-      finiteSelectionAlphabetUnchanged:true}},
+      finiteSelectionAlphabetUnchanged:true},
+    startGestures:{clickedRegions:['price axis','time axis'],entryState:'unconfirmed selection',finiteSelectionAlphabetUnchanged:true},
+    inertOwnership:{layouts:['phone information sheet','desktop footer'],preexistingInertOwners:1},
+    refusal:{entries:['toolbar entry with a saved record','exported open with that record'],availability:'refused before entry'}},
   formalProof:false,modelCheckerRun:false,
-  excluded:['Unlimited trace lengths','Native browser DOM, rendering and events','Real forecast generation and scoring in coordinator doubles','Exhaustive network completion schedules','Exhaustive persistence and concurrent-tab schedules','Wall-clock scheduling accuracy','Cutoff-model loading in the coordinator fixture'],
+  excluded:['Unlimited trace lengths','Native browser DOM, rendering and events','Real forecast generation and scoring in coordinator doubles','Exhaustive network completion schedules','Exhaustive persistence and concurrent-tab schedules','Wall-clock scheduling accuracy','Cutoff-model loading in the coordinator fixture','Forecast availability that changes after replay entry','Wheel, keyboard and drag navigation beyond axis-click start confirmation'],
   ...results};
 if(process.argv[2]){
   const destination=path.resolve(process.argv[2]);await mkdir(path.dirname(destination),{recursive:true});

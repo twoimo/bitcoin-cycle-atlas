@@ -328,7 +328,7 @@ const interactionCases=[
   {name:'replay time-axis and plot drags use actual plot width and axis clicks cannot confirm a start bar',async run(source){
     const h=await harness(source,{rendererAxis:navigationAxis});await h.mounted.open();
     for(const point of [{clientX:760,clientY:100},{clientX:400,clientY:380}]){replayGesture(h,'pointerdown',point);replayGesture(h,'pointerup',point);await flush();}
-    assert.equal(h.controllers[0].getState().status,'selecting');assert.equal(h.builds.length,0);
+    assert.equal(h.controllers[0].getState().status,'selecting','an axis click cannot confirm a replay start');assert.equal(h.builds.length,0,'an axis click cannot confirm a replay start');
     await h.start();const before=replayRange(h);
     replayGesture(h,'pointerdown',{clientX:500,clientY:380});replayGesture(h,'pointermove',{clientX:432,clientY:380});replayGesture(h,'pointerup',{clientX:432,clientY:380});h.repaint();
     const narrowed=replayRange(h),anchor=(500-navigationAxis.left)/(navigationAxis.right-navigationAxis.left),pivot=value=>Date.parse(value.start)/86400000+anchor*replaySpan(value);
@@ -921,11 +921,11 @@ const interactionCases=[
     h.svg.innerHTML='<path data-observed-price="true"></path>';
     const original=h.svg.innerHTML;
     h.trigger.click();await flush();
-    assert.equal(h.mounted.isActive(),false);assert.equal(h.panel.hidden,true);assert.equal(h.svg.innerHTML,original);
+    assert.equal(h.mounted.isActive(),false,'a refused forecast cannot enter replay');assert.equal(h.panel.hidden,true);assert.equal(h.svg.innerHTML,original);
     assert.equal(h.notice().hidden,false);assert.match(h.notice().textContent,/표본 부족으로 미래 경로를 제공하지 않습니다.*359거래일/);
     assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);assert.equal(loads,0);assert.equal(h.builds.length,0);
     await h.mounted.open({resume:JSON.parse(raw)});await flush();
-    assert.equal(h.mounted.isActive(),false);assert.equal(h.panel.hidden,true);assert.equal(h.svg.innerHTML,original);
+    assert.equal(h.mounted.isActive(),false,'a refused forecast cannot open replay');assert.equal(h.panel.hidden,true);assert.equal(h.svg.innerHTML,original);
     assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);assert.equal(loads,0);assert.equal(h.builds.length,0);
     h.mounted.destroy();
   }},
