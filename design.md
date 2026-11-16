@@ -25,10 +25,11 @@ The latest follow-up unifies 가격 차트 and 종목 차트 as 가격 차트. A
 supported instruments use the BTC workbench's four perimeter regions and one
 outer toolbar, with their own real data, units, intervals and source clocks.
 The price destination returns to the most recently selected instrument after
-other workspaces. The current main adds 릴레이 콘텐츠 at `/?page=relay` and
-컨퍼런스 복습 at `/?page=conference` after the five existing destinations:
-가격 차트, 시장 분석, 리서치, 자산 비교 and 공모주. Keep all seven in that order
-and preserve every legacy URL. This supersedes the earlier separate chart
+other workspaces. The current main adds 릴레이 콘텐츠 at `/?page=relay` after
+the five existing destinations: 가격 차트, 시장 분석, 리서치, 자산 비교 and 공모주.
+Keep all six in that order and preserve every legacy URL. The 컨퍼런스 복습
+player was removed on 2026-11-16; its `/?page=conference` and `/conference/`
+links open the price chart. This supersedes the earlier separate chart
 destinations recorded below.
 
 The latest user direction replaces the previous editorial styling and 64px labelled right rail with a faithful TradingView reference study and a narrow icon rail. Use only the requested UI/UX Pro Max and `clone-website` skills for visual design. Read the actual reference, measure geometry and computed styles, and compare source and implementation at matching viewport and interaction states. Keep Korean accessible names, visible focus, real actions, the four perimeter regions and the single outer toolbar. The current decisions and selected skill revisions live in `design-system/bitcoin-cycle-atlas/MASTER.md`; earlier dated visual directions below are historical where they conflict with this section. Price observations, model calculations, immutable records, replay and ztd-charts remain authoritative.

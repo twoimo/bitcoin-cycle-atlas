@@ -29,7 +29,6 @@ export const p1Destinations = Object.freeze([
   {id:'data', page:'data', path:'?page=data', title:'자산 비교', limit:1280},
   {id:'ipo', page:'ipo', path:'?page=ipo', title:'공모주', limit:1140},
   {id:'relay', page:'relay', path:'?page=relay', title:'릴레이 콘텐츠', limit:1280},
-  {id:'conference', page:'conference', path:'?page=conference', title:'컨퍼런스 복습', limit:1280},
 ].map(Object.freeze));
 export const p1Cases = Object.freeze(p1Widths.flatMap(width => p1Destinations.map(destination => Object.freeze({...destination, width, height:900, caseId:`${destination.id}-${width}`}))));
 
@@ -193,9 +192,10 @@ export function p1FinalStatus(report) {
     journeys.every(j=>JSON.stringify(j.steps?.map(s=>s.destination).sort())===JSON.stringify(p1Destinations.map(s=>s.id).sort()));
   const passedLayouts=layouts.filter(s=>s.status==='passed').length,steps=journeys.flatMap(j=>j.steps||[]),passedSteps=steps.filter(s=>s.status==='passed').length;
   const chartReturns=journeys.map(j=>j.chartReturn).filter(Boolean),passedChartReturns=chartReturns.filter(s=>s.status==='passed').length;
-  const qualified=complete && passedLayouts===28 && passedSteps===56 && passedChartReturns===8 && journeys.every(j=>j.status==='passed') && report.sourceStable===true && !(report.failures||[]).length;
+  const requiredLayouts=p1Cases.length,requiredSteps=expectedJourney.length*p1Destinations.length,requiredReturns=expectedJourney.length;
+  const qualified=complete && passedLayouts===requiredLayouts && passedSteps===requiredSteps && passedChartReturns===requiredReturns && journeys.every(j=>j.status==='passed') && report.sourceStable===true && !(report.failures||[]).length;
   const failed=layouts.some(s=>s.status==='failed')||journeys.some(s=>s.status==='failed');
-  return {status:qualified?'passed':failed?'failed':'unverified',qualifiesP1Verification:qualified,counts:{requiredLayouts:28,attemptedLayouts:layouts.length,passedLayouts,requiredNavigationActivations:56,attemptedNavigationActivations:steps.length,passedNavigationActivations:passedSteps,requiredChartReturns:8,attemptedChartReturns:chartReturns.length,passedChartReturns},complete};
+  return {status:qualified?'passed':failed?'failed':'unverified',qualifiesP1Verification:qualified,counts:{requiredLayouts,attemptedLayouts:layouts.length,passedLayouts,requiredNavigationActivations:requiredSteps,attemptedNavigationActivations:steps.length,passedNavigationActivations:passedSteps,requiredChartReturns:requiredReturns,attemptedChartReturns:chartReturns.length,passedChartReturns},complete};
 }
 
 class Cdp {
@@ -411,11 +411,11 @@ export function createP1StaticServer(siteDirectory=site) {
 
 export async function verifyUiRenewalP1Browser(argv=process.argv.slice(2)) {
   const report={schemaVersion:1,kind:'atlas-ui-renewal-p1',request:'HANDOFF-R19P1-1-595c365',recordedAt:new Date().toISOString(),qualifiesP1Verification:false,qualifiesFullVerification:false,
-    scope:'28 route shell layouts, 56 native pointer/keyboard destination activations and 8 chart-to-content returns at 320/390/768/1440. Canonical market keeps its authored chart-hosted owner. Existing P0 contrast/settings-icon gate remains independent and unchanged.',
+    scope:`${p1Cases.length} route shell layouts, ${p1Cases.length*2} native pointer/keyboard destination activations and ${p1Widths.length*2} chart-to-content returns at ${p1Widths.join('/')}. Canonical market keeps its authored chart-hosted owner. Existing P0 contrast/settings-icon gate remains independent and unchanged.`,
     methodology:'read-only DOM/IntersectionObserver evidence and unchanged P0 native glyph/paint proof; native CDP key/pointer/wheel inputs; isolated profile/static origin; no product focus/scroll/style mutation, threshold relaxation or hidden-item omission',layouts:[],journeys:[],networkInterception:[],failures:[]};
   let settings,ownsOut=false,server,profile,chrome,browser,stderr='',stage='arguments';
   try {
-    settings=parseP1Arguments(argv);if(settings.help){console.log('Usage: node scripts/verify-ui-renewal-p1-browser.mjs --out NEW_DIRECTORY [--browser CHROME_PATH]\n28 direct shell layouts; 56 actual nav activations. Native failure/partial coverage never qualifies P1. Existing P0 must be run separately.');return report;}
+    settings=parseP1Arguments(argv);if(settings.help){console.log('Usage: node scripts/verify-ui-renewal-p1-browser.mjs --out NEW_DIRECTORY [--browser CHROME_PATH]\n24 direct shell layouts; 48 actual nav activations. Native failure/partial coverage never qualifies P1. Existing P0 must be run separately.');return report;}
     await mkdir(dirname(settings.out),{recursive:true});await mkdir(settings.out,{recursive:false});ownsOut=true;
     report.testedHead=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();report.workingTree=execFileSync('git',['status','--short'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean);
     report.sourceHashes=await sourceInventory();stage='browser executable';await access(settings.bin,constants.X_OK);
@@ -443,7 +443,7 @@ export async function verifyUiRenewalP1Browser(argv=process.argv.slice(2)) {
       // route change, including price -> dashboard ownership. Resetting the
       // document between destinations cannot synthesize any focus/hit result.
       for(const destination of [...p1Destinations.filter(d=>d.id!=='relay'),p1Destinations.find(d=>d.id==='relay')]){
-        const start=destination.id==='relay'?'conference':'relay';await page.cdp.send('Page.navigate',{url:base+`?page=${start}`});await ready(page.cdp,start,{direct:true});
+        const start=destination.id==='relay'?'ipo':'relay';await page.cdp.send('Page.navigate',{url:base+`?page=${start}`});await ready(page.cdp,start,{direct:true});
         const step={destination:destination.id,status:'unverified',inputs:[],failures:[]};journey.steps.push(step);
         try{await activateP1Navigation(page.cdp,destination,mode,step);
           if(destination.id==='outlook'){

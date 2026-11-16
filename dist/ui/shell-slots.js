@@ -6,7 +6,7 @@ export const SHELL_SLOT_KEYS = Object.freeze({
   top: ['symbol', 'interval', 'chart-type', 'indicators', 'instrument', 'history', 'workspace', 'chart-menu', 'export', 'settings'],
   bottom: ['range', 'date', 'events', 'readout', 'scale', 'auto-scale', 'fit', 'status'],
   left: ['crosshair', 'pan', 'measure', 'magnet', 'clear', 'zoom-in', 'zoom-out', 'pan-left', 'pan-right', 'reset', 'annotations'],
-  right: ['outlook', 'market-us', 'evidence', 'data', 'ipo', 'relay', 'conference', 'selection', 'layers', 'method', 'records', 'help'],
+  right: ['outlook', 'market-us', 'evidence', 'data', 'ipo', 'relay', 'selection', 'layers', 'method', 'records', 'help'],
 });
 
 const instances = new WeakMap();

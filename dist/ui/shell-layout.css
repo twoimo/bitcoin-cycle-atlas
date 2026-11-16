@@ -170,7 +170,7 @@ body[data-shell=dashboard] #main {
   box-sizing: border-box;
 }
 body[data-shell=dashboard][data-shell-width=wide] #main { max-width: var(--shell-container-wide); }
-body[data-shell=dashboard] #main > :is(#evidence-view, #ipo-view, #data-view, #market-view, #relay-view, #conference-view) {
+body[data-shell=dashboard] #main > :is(#evidence-view, #ipo-view, #data-view, #market-view, #relay-view) {
   width: 100%;
   max-width: 100%;
   min-width: 0;

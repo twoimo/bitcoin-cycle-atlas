@@ -87,7 +87,7 @@ test('an active InvalidID without positive same-request cancellation remains fat
     assert.equal(f.diagnostic.requests[0].status,'failed');assert.equal(f.failures.length,1);
     assert.match(f.failures[0],/network interception: Invalid InterceptionId/);
     const result=p1FinalStatus(completeReport(f.failures));
-    assert.equal(result.counts.passedLayouts,28);assert.equal(result.counts.passedNavigationActivations,56);assert.equal(result.counts.passedChartReturns,8);
+    assert.equal(result.counts.passedLayouts,24);assert.equal(result.counts.passedNavigationActivations,48);assert.equal(result.counts.passedChartReturns,8);
     assert.equal(result.qualifiesP1Verification,false);
   }
 });

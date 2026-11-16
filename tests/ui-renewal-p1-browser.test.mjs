@@ -48,10 +48,10 @@ test('P1 requires a new output path and rejects incomplete/unknown switches',()=
   assert.equal(parseP1Arguments(['--out','receipt'],'/tmp/p1').out,'/tmp/p1/receipt');
   assert.equal(parseP1Arguments(['--help']).help,true);
 });
-test('P1 matrix contains all seven destinations at exactly four requested widths',()=>{
+test('P1 matrix contains all six destinations at exactly four requested widths',()=>{
   assert.deepEqual(p1Widths,[320,390,768,1440]);
-  assert.deepEqual(p1Destinations.map(s=>s.id),['outlook','market-us','evidence','data','ipo','relay','conference']);
-  assert.equal(p1Cases.length,28);assert.equal(new Set(p1Cases.map(s=>s.caseId)).size,28);
+  assert.deepEqual(p1Destinations.map(s=>s.id),['outlook','market-us','evidence','data','ipo','relay']);
+  assert.equal(p1Cases.length,24);assert.equal(new Set(p1Cases.map(s=>s.caseId)).size,24);
   for(const spec of p1Cases)assert.deepEqual(validateP1Layout(layout(spec),spec),[]);
 });
 test('native reach rejects covered, clipped, disabled and undersized controls',()=>{
@@ -65,7 +65,7 @@ test('keyboard reach additionally requires real target focus and visible 2px rin
 });
 test('readiness rejects an old destination, an unpainted body and any incomplete direct route',()=>{
   assert.equal(isP1RouteReady(routeReadiness(),'relay',{direct:true}),true);
-  for(const change of [s=>s.boot='loading',s=>s.readyState='interactive',s=>s.page='conference',s=>s.activeNavigation=['conference'],s=>s.activeNavigation.push('outlook'),s=>s.frameCount=1,s=>s.section.painted=false,s=>s.section.populated=false,s=>s.section.busy=true,s=>s.section.loading=true]) {
+  for(const change of [s=>s.boot='loading',s=>s.readyState='interactive',s=>s.page='ipo',s=>s.activeNavigation=['ipo'],s=>s.activeNavigation.push('outlook'),s=>s.frameCount=1,s=>s.section.painted=false,s=>s.section.populated=false,s=>s.section.busy=true,s=>s.section.loading=true]) {
     const state=routeReadiness();change(state);assert.equal(isP1RouteReady(state,'relay',{direct:true}),false);
   }
   assert.equal(isP1RouteReady(routeReadiness('relay',{hosted:true}),'relay',{direct:true}),false);

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {validateContentNavigationOwner,contentNavigationWheelDelta} from '../scripts/verify-compare-shell-browser.mjs';
 
-const phone = () => ({navCount:1,originalNav:true,navItems:7,navLabelled:7,headerHostCount:0,headerOwnsNav:false,headerNavPainted:false,
+const phone = () => ({navCount:1,originalNav:true,navItems:6,navLabelled:6,headerHostCount:0,headerOwnsNav:false,headerNavPainted:false,
   navDirection:'column',navOverflowX:'visible',navInSidebar:false,navInRail:true,sidebarRendered:false,railInDoc:true,railHidden:false,railCount:1});
 const sidebar = () => ({...phone(),navInSidebar:true,navInRail:false,sidebarRendered:true,railHidden:true,railCount:0});
 const header = () => ({...phone(),headerHostCount:1,headerOwnsNav:true,headerNavPainted:true,navDirection:'row',navOverflowX:'auto',navInRail:false,railHidden:true,railCount:0});
@@ -11,7 +11,7 @@ test('P1 header and both original fallback owners satisfy distinct complete cont
   for(const snapshot of [header(),sidebar(),phone()])assert.deepEqual(validateContentNavigationOwner(snapshot),[]);
 });
 test('owner migration never accepts a cloned, duplicated or incomplete navigation',()=>{
-  for(const original of [header(),sidebar(),phone()])for(const patch of [{navCount:0},{navCount:2},{originalNav:false},{navItems:6},{navItems:8},{navLabelled:6}])assert.ok(validateContentNavigationOwner({...original,...patch}).length);
+  for(const original of [header(),sidebar(),phone()])for(const patch of [{navCount:0},{navCount:2},{originalNav:false},{navItems:5},{navItems:7},{navLabelled:5}])assert.ok(validateContentNavigationOwner({...original,...patch}).length);
 });
 test('header must own exactly one original node inside a painted horizontal scroll host',()=>{
   for(const patch of [{headerHostCount:0},{headerHostCount:2},{headerOwnsNav:false},{headerNavPainted:false},{navDirection:'column'},{navOverflowX:'hidden'},{navOverflowX:'visible'}])assert.ok(validateContentNavigationOwner({...header(),...patch}).length);

@@ -18,12 +18,7 @@ const bin = process.env.ATLAS_BROWSER_PATH || '/Applications/Google Chrome.app/C
 const prefix = '/bitcoin-cycle-atlas', delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 const instruments = ['BTCUSD', 'ETHUSD', 'MSTR', 'BMNR', 'compare'];
 const specs = [320, 768, 1440].flatMap(width => instruments.map(instrument => ({id:`${instrument}-${width}`, instrument, width, height:900})));
-// Preserve the original 15-case matrix as its own result. R12 also covers the
-// adjacent phone width and the dashboard-owned conference heading.
-const supplementalSpecs = [
-  ...instruments.map(instrument => ({id:`${instrument}-390`, instrument, width:390, height:900})),
-  ...[320, 390, 768, 1440].map(width => ({id:`conference-${width}`, instrument:'conference', width, height:900})),
-];
+const supplementalSpecs = instruments.map(instrument => ({id:`${instrument}-390`, instrument, width:390, height:900}));
 
 class Cdp {
   constructor(ws) {
@@ -125,7 +120,6 @@ function inspectHeading() {
     painted:painted(heading), paintIssues:[...new Set(paintIssues)], color:style?.color, fontSize:style?.fontSize, lineHeight:style?.lineHeight, fontFamily:style?.fontFamily,
     describedBy:descriptionId, description:description?.textContent.trim() || '', descriptionCount:descriptionId ? document.querySelectorAll(`[id="${descriptionId}"]`).length : 0,
     followsToolbar:Boolean(toolbar && toolbar.nextElementSibling === copy), outsidePlot:Boolean(copy && !copy.closest('.atlas-plot')),
-    inDashboardHeader:Boolean(copy?.classList.contains('atlas-shell-copy') && copy.closest('.atlas-dashboard-header')),
     placement:{kind:placement, anchor:anchorBox, expected, delta:expected && headingBox ? {left:headingBox.left - expected.left, top:headingBox.top - expected.top} : null},
     layout:{workspace:rect(document.querySelector('.workspace')), stage:rect(document.querySelector('.atlas-chart-stage'))},
     btcRefreshNotice:notice ? {state:notice.dataset.state || null, hidden:notice.hidden, busy:notice.getAttribute('aria-busy') === 'true',
@@ -207,7 +201,6 @@ try {
     'dist/daily-data-view.js', 'dist/daily-data.css',
     'dist/research-reader.js', 'dist/research-reader.css', 'dist/editorial-ledgers.css',
     'dist/relay-room.js', 'dist/relay-room.css', 'scripts/verify-page-heading-browser.mjs', 'scripts/page-heading-browser-contract.mjs',
-    'dist/conference/route.js', 'dist/conference/player.js', 'dist/conference/player.css',
   ]) report.sourceFiles[path] = createHash('sha256').update(await readFile(resolve(root, path))).digest('hex');
   const mime = {'.html':'text/html;charset=utf-8','.js':'text/javascript','.json':'application/json','.css':'text/css','.svg':'image/svg+xml','.png':'image/png','.woff2':'font/woff2'};
   server = createServer(async (request, response) => {
@@ -245,12 +238,11 @@ try {
     const result = {...spec, status:'failed', failures:[]}; (supplemental ? report.supplementalCases : report.cases).push(result); errors = [];
     try {
       await cdp.send('Emulation.setDeviceMetricsOverride', {width:spec.width,height:spec.height,deviceScaleFactor:1,mobile:spec.width <= 620});
-      await cdp.send('Page.navigate', {url:base + (spec.instrument === 'conference' ? '?page=conference' : spec.instrument === 'compare' ? '?page=compare&legacy=1&compare-unit=rebased' : `?symbol=${spec.instrument}`)});
+      await cdp.send('Page.navigate', {url:base + (spec.instrument === 'compare' ? '?page=compare&legacy=1&compare-unit=rebased' : `?symbol=${spec.instrument}`)});
       await until(() => evaluate(cdp, instrument => {
         const boot = document.documentElement?.dataset.boot;
         if (boot === 'error') throw new Error('boot error');
         if (boot !== 'ready') return false;
-        if (instrument === 'conference') return document.body?.dataset.page === 'conference' && ['empty', 'ready'].includes(document.querySelector('.conference-player')?.dataset.state);
         if (instrument === 'compare') return document.body?.dataset.page === 'compare' && document.querySelectorAll('#structure-periods tr').length > 0;
         if (document.documentElement.dataset.symbol !== instrument || document.body?.dataset.page !== 'outlook') return false;
         const svg = document.querySelector(instrument === 'ETHUSD' ? '#eth-chart' : instrument === 'BTCUSD' ? '#lab-chart' : '#equity-chart');
@@ -261,7 +253,7 @@ try {
       result.state = await settledHeading(cdp, `${spec.id} geometry settled`);
       const before = baseline?.cases.find(item => item.id === spec.id)?.state;
       if (baseline && !before && !supplemental) result.failures.push('missing baseline case');
-      result.failures.push(...validate(result.state, before, spec.instrument === 'conference' ? '컨퍼런스 복습' : spec.instrument === 'compare' ? '사이클 비교' : '가격 차트'), ...errors.map(error => `runtime: ${error}`));
+      result.failures.push(...validate(result.state, before, spec.instrument === 'compare' ? '사이클 비교' : '가격 차트'), ...errors.map(error => `runtime: ${error}`));
       const shot = await cdp.send('Page.captureScreenshot', {format:'png',fromSurface:true,captureBeyondViewport:false});
       const bytes = Buffer.from(shot.data, 'base64'); result.screenshot = {file:`${spec.id}.png`,sha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length};
       await writeFile(resolve(out, result.screenshot.file), bytes);

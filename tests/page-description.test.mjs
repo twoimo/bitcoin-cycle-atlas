@@ -17,7 +17,7 @@ function fixture({page='outlook', center, embedded=false, toolbar=true, beforeMo
 }
 
 test('the registered destinations and saved comparison page describe their actual basis without a shared refresh promise', () => {
-  assert.deepEqual(atlasNavigationPages.map(page => atlasPageDescription(page).title), ['가격 차트','시장 분석','리서치','자산 비교','공모주','릴레이 콘텐츠','컨퍼런스 복습']);
+  assert.deepEqual(atlasNavigationPages.map(page => atlasPageDescription(page).title), ['가격 차트','시장 분석','리서치','자산 비교','공모주','릴레이 콘텐츠']);
   for (const page of [...atlasNavigationPages, {id:'compare'}]) {
     const info = atlasPageDescription(page);
     assert.ok(info.description.length > 15);
@@ -149,24 +149,24 @@ test('the same toolbar follows a new scroll owner and drops its detached ancesto
   } finally { f.cleanup(); }
 });
 
-test('conference clears fixed placement and disposal rejects queued resize work', () => {
+test('a dashboard page clears fixed placement and disposal rejects queued resize work', () => {
   const f = observedCompareFixture();
   try {
     const {document, controller, heading, header, observer, frames} = f;
     const copy = heading.parentElement;
     observer.notify(document.querySelector('.workspace'));
-    document.body.dataset.page = 'conference';
+    document.body.dataset.page = 'relay';
     controller.sync();
     assert.equal(copy.parentElement, header);
     assert.equal(copy.className, 'atlas-shell-copy');
     assert.equal(copy.hidden, false);
     assert.equal(copy.hasAttribute('style'), false);
     assert.equal(copy.dataset.headingPlacement, undefined);
-    assert.equal(heading.textContent, '컨퍼런스 복습');
+    assert.equal(heading.textContent, '릴레이 콘텐츠');
     assert.equal(document.querySelectorAll('h1').length, 1);
     assert.equal(observer.targets.size, 0);
     f.flushFrame();
-    assert.equal(copy.hasAttribute('style'), false, 'an already queued chart frame must not repaint the conference header');
+    assert.equal(copy.hasAttribute('style'), false, 'an already queued chart frame must not repaint the dashboard header');
     document.body.dataset.page = 'compare';
     controller.sync();
     observer.notify(document.querySelector('.workspace'));
@@ -196,7 +196,7 @@ test('one described h1 follows chart and dashboard destinations while original c
     const description = document.getElementById(heading.getAttribute('aria-describedby'));
     let clicks = 0;
     controls[0].addEventListener('click', () => clicks++);
-    for (const page of ['outlook','market-us','rsi','evidence','data','ipo','relay','housing','conference']) {
+    for (const page of ['outlook','market-us','rsi','evidence','data','ipo','relay','housing']) {
       document.body.dataset.centerTool = page;
       controller.sync();
       assert.equal(heading.textContent, atlasPageDescription(page).title);

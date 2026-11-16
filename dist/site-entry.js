@@ -1,26 +1,23 @@
 import { initTheme } from './ui/theme.js';
 import { enhanceBootSkeleton } from './loading-surfaces.js';
 import { initAtlasShell } from './atlas-shell.js?v=1.36.1';
-import { canonicalNativeChartEntry } from './atlas-navigation.js?v=1.36.1';
+import { canonicalNativeChartEntry, canonicalRetiredPageEntry } from './atlas-navigation.js?v=1.36.1';
 import { canonicalWorkspaceChartEntry } from './atlas-navigation.js?v=1.36.1';
 import { mountJournalEntry } from './journal-entry.js?v=1.29.0';
 import { initPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
 
 initTheme();
 
-const chartEntry = canonicalNativeChartEntry(location) || canonicalWorkspaceChartEntry(location);
-if (chartEntry) {
-  // Resolve either chart family before a fallback owner starts fetching or
-  // rendering another instrument in the shared shell.
-  location.replace(chartEntry);
+const canonicalEntry = canonicalRetiredPageEntry(location) || canonicalNativeChartEntry(location) || canonicalWorkspaceChartEntry(location);
+if (canonicalEntry) {
+  location.replace(canonicalEntry);
 } else {
   enhanceBootSkeleton();
   initAtlasShell();
   initPerformanceDiagnostics();
   mountJournalEntry();
   const requested = new URLSearchParams(location.search).get('symbol')?.toUpperCase();
-  const conference = new URLSearchParams(location.search).get('page') === 'conference';
-  const symbol = !conference && ['ETHUSD','MSTR','BMNR'].includes(requested) ? requested : 'BTCUSD';
+  const symbol = ['ETHUSD','MSTR','BMNR'].includes(requested) ? requested : 'BTCUSD';
   document.documentElement.dataset.symbol = symbol;
   const bootSymbol = document.querySelector('.atlas-boot-symbol');
   if (bootSymbol) bootSymbol.textContent = symbol;

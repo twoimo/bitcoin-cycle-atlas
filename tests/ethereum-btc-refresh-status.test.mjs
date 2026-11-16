@@ -86,7 +86,7 @@ test('the existing compare notice reserves its measured height, follows resizing
     assert.equal(reserved(),'0px');
     assert.equal(chartReserved(),'0px');
     assert.equal(document.getElementById('main').dataset.btcNotice,undefined);
-    for(const page of ['conference','data']) {
+    for(const page of ['relay','data']) {
       status.update({page,phase:'failed'});
       assert.equal(reserved(),'0px',page+' must not inherit the chart reservation');
       assert.equal(chartReserved(),'0px');

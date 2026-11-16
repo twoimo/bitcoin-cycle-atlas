@@ -39,36 +39,34 @@ export function pageHeadingOverlapAreas(state) {
 
 export function validatePageHeadingState(state, previous, expectedTitle) {
   const failures = [], check = (condition, message) => { if (!condition) failures.push(message); };
-  const conference = expectedTitle === '컨퍼런스 복습', comparison = expectedTitle === '사이클 비교';
+  const comparison = expectedTitle === '사이클 비교';
   const label = state.placement?.kind === 'label';
   check(state.h1Count === 1 && state.paintedH1Count === 1 && state.painted, `h1 total=${state.h1Count}, painted=${state.paintedH1Count}`);
   check(state.title === expectedTitle, `unexpected title ${state.title}`);
   check(state.describedBy === 'atlas-page-description' && state.descriptionCount === 1 && state.description.length > 15, 'description connection missing');
   check(state.headingInViewport && state.glyphsInViewport, 'heading/glyphs outside viewport');
-  if (!conference) {
-    check(comparison ? state.placement?.kind === 'compare' : label, comparison ? 'compare heading placement changed' : 'price heading must own a normal-flow label row');
-    if (label) {
-      const row = state.labelRow, glyphs = state.glyphs || [];
-      check(row?.painted && row.inViewport && inBox(state.heading, row.rect)
-        && glyphs.length > 0 && glyphs.every(glyph => inBox(glyph, row.rect)), 'heading/glyphs outside visible label row');
-      check(row?.position === 'static' && row.order === '-1', 'label row must remain in normal layout flow');
-      check(validRect(row?.rect) && Math.abs(row.rect.height - 22) <= .01, 'label row must retain its 22px height');
-      check(state.fontSize === '12px' && state.lineHeight === '14px', 'label heading type must remain 12px/14px');
-      check(validRect(state.geometry?.toolbar), 'label toolbar geometry missing');
-      check(validRect(state.symbolButton) && validRect(state.symbolLabel) && state.symbolGlyphs?.length > 0
-        && state.symbolGlyphs.every(validRect), 'symbol button/label/glyph geometry missing');
-    } else {
-      check(state.headingInToolbar && state.glyphsInToolbar, 'heading/glyphs outside visible toolbar');
-      check(state.placement?.delta && Math.abs(state.placement.delta.left) <= .01 && Math.abs(state.placement.delta.top) <= .01,
-        `stale anchor coordinates: ${JSON.stringify(state.placement?.delta)}`);
-    }
-    check(validRect(state.heading) && state.glyphs?.length > 0 && state.glyphs.every(validRect) && validRect(state.geometry?.plot), 'heading/glyph/plot geometry missing');
-    const areas = pageHeadingOverlapAreas(state);
-    for (const [name, area] of Object.entries(areas)) check(area === 0, `${name} overlap area ${area}px²`);
+  check(comparison ? state.placement?.kind === 'compare' : label, comparison ? 'compare heading placement changed' : 'price heading must own a normal-flow label row');
+  if (label) {
+    const row = state.labelRow, glyphs = state.glyphs || [];
+    check(row?.painted && row.inViewport && inBox(state.heading, row.rect)
+      && glyphs.length > 0 && glyphs.every(glyph => inBox(glyph, row.rect)), 'heading/glyphs outside visible label row');
+    check(row?.position === 'static' && row.order === '-1', 'label row must remain in normal layout flow');
+    check(validRect(row?.rect) && Math.abs(row.rect.height - 22) <= .01, 'label row must retain its 22px height');
+    check(state.fontSize === '12px' && state.lineHeight === '14px', 'label heading type must remain 12px/14px');
+    check(validRect(state.geometry?.toolbar), 'label toolbar geometry missing');
+    check(validRect(state.symbolButton) && validRect(state.symbolLabel) && state.symbolGlyphs?.length > 0
+      && state.symbolGlyphs.every(validRect), 'symbol button/label/glyph geometry missing');
+  } else {
+    check(state.headingInToolbar && state.glyphsInToolbar, 'heading/glyphs outside visible toolbar');
+    check(state.placement?.delta && Math.abs(state.placement.delta.left) <= .01 && Math.abs(state.placement.delta.top) <= .01,
+      `stale anchor coordinates: ${JSON.stringify(state.placement?.delta)}`);
   }
+  check(validRect(state.heading) && state.glyphs?.length > 0 && state.glyphs.every(validRect) && validRect(state.geometry?.plot), 'heading/glyph/plot geometry missing');
+  const areas = pageHeadingOverlapAreas(state);
+  for (const [name, area] of Object.entries(areas)) check(area === 0, `${name} overlap area ${area}px²`);
   check(state.paintIssues.length === 0, `heading paint: ${state.paintIssues.join('; ')}`);
   check(state.color !== 'transparent' && !/rgba\([^)]*,\s*0\)/.test(state.color || ''), 'transparent heading text');
-  check((conference ? state.inDashboardHeader : state.followsToolbar) && state.outsidePlot, 'heading lost shell ownership');
+  check(state.followsToolbar && state.outsidePlot, 'heading lost shell ownership');
   check(state.overflow === 0, `horizontal overflow ${state.overflow}px`);
   check(state.duplicateTitles.length === 0, `duplicate titles: ${state.duplicateTitles.join(', ')}`);
   check(state.overlayCollisions.length === 0 && !state.symbolCollision, `text overlap: ${state.overlayCollisions.join(', ')} symbol=${state.symbolCollision}`);

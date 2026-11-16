@@ -8,7 +8,7 @@ import { assertStagedVerification } from './cloudflare-staged-contract.mjs';
 export const cloudflareAssetsPath = '.cloudflare/output/v0/workers/default/assets';
 export const cloudflareWorkerConfigPath = '.cloudflare/output/v0/workers/default/worker.config.json';
 export const cloudflareRootConfigPath = '.cloudflare/output/v0/config.json';
-export const redirects = '/bitcoin-cycle-atlas / 301\n/bitcoin-cycle-atlas/* /:splat 301\n';
+export const redirects = '/bitcoin-cycle-atlas / 301\n/conference / 301\n/bitcoin-cycle-atlas/* /:splat 301\n/conference/* / 301\n';
 export const headers = '/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n/publication.json\n  Cache-Control: no-store\n';
 const formerOrigin = 'https://twoimo.github.io/bitcoin-cycle-atlas/';
 const omitted = new Set(['.nojekyll', 'publication.json', 'publication.json.tmp']);

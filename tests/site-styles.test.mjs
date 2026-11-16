@@ -11,8 +11,8 @@ const dist = fileURLToPath(new URL('../dist/', import.meta.url));
 const html = await readFile(resolve(dist, 'index.html'), 'utf8');
 
 test('four root requests retain every source sheet in its original cascade position', async () => {
-  assert.equal(SITE_STYLE_SOURCES.length, 43);
-  assert.equal(new Set(SITE_STYLE_SOURCES).size, 43, 'no source is duplicated');
+  assert.equal(SITE_STYLE_SOURCES.length, 42);
+  assert.equal(new Set(SITE_STYLE_SOURCES).size, 42, 'no source is duplicated');
   const entries = siteStylesheetEntries(html);
   assert.deepEqual(entries.map(entry => entry.file), ['styles.css','site-before-shell.css','atlas-shell.css','site-after-shell.css']);
   assert.equal(entries[1].sources[0], 'compact.css');
@@ -42,7 +42,7 @@ test('four root requests retain every source sheet in its original cascade posit
   }
 });
 
-test('offline packaging expands the request bundles into all 43 exact source blocks', async () => {
+test('offline packaging expands the request bundles into all 42 exact source blocks', async () => {
   const inlined = await inlineSiteStyles(html, dist);
   let previous = -1;
   for (const file of SITE_STYLE_SOURCES) {
@@ -52,7 +52,7 @@ test('offline packaging expands the request bundles into all 43 exact source blo
     assert.ok(position > previous, `${file} retains offline cascade order`);
     previous = position;
   }
-  assert.equal([...inlined.matchAll(/<style>/g)].length, 43);
+  assert.equal([...inlined.matchAll(/<style>/g)].length, 42);
   assert.doesNotMatch(inlined, /<link rel="stylesheet" href="\.\//);
 });
 
