@@ -707,13 +707,13 @@ const observedDrawdownColor = '#a7b8cd';
 
 async function withDailyCandlesAndCloses(options, run) {
   await withFunnestFixture(async fixture => {
-    const readouts = []; let mounted;
+    const readouts = [], inspections = []; let mounted;
     try {
       mounted = mountAtlasBtcFunnestChart({ container: fixture.stage, svg: fixture.svg, sourceMode: 'ohlc', frequency: 'daily', chartType: 'candles',
         observedRows: coinMetricsCloses, observedCandles: venueCandles, candleSource: 'Bitstamp', start: '2024-01-01', end: '2024-01-12',
-        onHover: detail => readouts.push(detail), ...options });
+        onHover: detail => readouts.push(detail), onInspect: detail => inspections.push(detail), ...options });
       await settle();
-      await run({ ...fixture, mounted, readouts });
+      await run({ ...fixture, mounted, readouts, inspections });
     } finally { mounted?.destroy(); }
   });
 }
@@ -786,6 +786,52 @@ test('daily candle mode scales the price axis and the drawdown trace from every 
     assert.equal(deepest.date, '2024-01-08');
     for (const row of drawdown) assert.ok(Math.abs(depth(row) / depth(deepest) - row.pct / deepest.pct) < 1e-9,
       `${row.date} sits ${row.pct.toFixed(2)}% below the highest observed close so far`);
+  });
+});
+
+function pointerOver(svg, mounted, row) {
+  const box = svg.getBoundingClientRect(), view = svg.viewBox.baseVal;
+  return { clientX: box.left + mounted.x(row.date) / view.width * box.width, clientY: box.top + mounted.getPriceScale().priceToY(row.price) / view.height * box.height,
+    pointerId: 23, pointerType: 'mouse', buttons: 0, pressure: 0 };
+}
+const modelPath = [{ date: '2024-01-13', price: 133 }, { date: '2024-01-14', price: 135 }];
+
+test('a close with no candle is inspected as an observation, and only a model row as a conditional assumption', async () => {
+  await withDailyCandlesAndCloses({ forecast: modelPath, end: '2024-01-14' }, async ({ svg, window, mounted, readouts, inspections }) => {
+    const observation = (day, price) => ({ label: `${day} · 관측`, date: day, kind: 'observed', fields: [{ label: '관측 가격', value: price }] });
+    mounted.selectDate('2024-01-03');
+    assert.deepEqual(inspections.at(-1), observation('2024-01-03', '$60'), 'a Coin Metrics close before the first candle is an observation');
+    pressKey(window, svg, 'Home');
+    assert.deepEqual(inspections.at(-1), observation('2024-01-01', '$100'), 'the keyboard reaches the first close as an observation');
+    mounted.selectDate('2024-01-07');
+    assert.deepEqual(inspections.at(-1), observation('2024-01-07', '$300'), 'a close between two candles is an observation');
+    mounted.selectDate('2024-01-06');
+    assert.deepEqual(inspections.at(-1), observation('2024-01-06', '$110'), 'a candle date stays an observation of the exchange close');
+
+    const lateClose = coinMetricsCloses[10];
+    assert.equal(mounted.previewPointer(pointerOver(svg, mounted, lateClose)), true);
+    await settle(30);
+    assert.equal(readouts.at(-1).date, lateClose.date); assert.equal(readouts.at(-1).kind, 'observed'); assert.equal(readouts.at(-1).source, 'Coin Metrics');
+    assert.equal(mounted.host.getAtlasFunnestSnapshot().crosshair, null, 'the native crosshair does not show a candle while the pointer is on a close-only date');
+    svg.dispatchEvent(new window.Event('click', { bubbles: true, cancelable: true }));
+    assert.deepEqual(inspections.at(-1), observation(lateClose.date, '$122'), 'a clicked close after the last candle is an observation');
+
+    mounted.selectDate('2024-01-14');
+    assert.deepEqual(inspections.at(-1), { label: '2024-01-14 · 조건부 가정', date: '2024-01-14', kind: 'simulated', fields: [{ label: '조건부 가격', value: '$135' }] },
+      'only a model row is a conditional assumption');
+  });
+});
+
+test('a measurement that starts on a close with no candle is anchored to an observation', async () => {
+  const measurements = [];
+  await withDailyCandlesAndCloses({ tool: 'measure', magnet: 'strong', onMeasurement: value => measurements.push(value) }, async ({ svg, window, mounted }) => {
+    const earlyClose = coinMetricsCloses[2];
+    assert.equal(mounted.previewPointer(pointerOver(svg, mounted, earlyClose)), true);
+    await settle(30);
+    const anchor = mounted.host.getAtlasBtcRenderSnapshot().interaction.measurementAnchor;
+    assert.deepEqual([anchor.date, anchor.kind, anchor.field, anchor.price, anchor.snapped], [earlyClose.date, 'observed', 'C', earlyClose.price, true]);
+    svg.dispatchEvent(new window.Event('click', { bubbles: true }));
+    assert.deepEqual([measurements[0].startDate, measurements[0].startKind, measurements[0].startPrice], [earlyClose.date, 'observed', earlyClose.price]);
   });
 });
 
