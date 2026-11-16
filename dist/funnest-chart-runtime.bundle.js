@@ -4710,7 +4710,7 @@ function mountAtlasFunnestChart(container, options = {}) {
   });
   if (chart.mainScale && typeof chart.mainScale.mode === "string") chart.mainScale.mode = scale;
   const cleanups = [];
-  let destroyed = false, readyPromise = null, observations = [], currentBars = [], pendingRange = range, ownedRange = range, retainedRange = range, retainedMaxSpan = 0, retainedFitException = Boolean(range), initialRangeOwned = Boolean(range), futureDateTicks = [], announceTimer = 0, currentInverted = Boolean(invertScale), lastCrosshair = null, crosshairEventSequence = 0;
+  let destroyed = false, readyPromise = null, observations = [], currentBars = [], pendingRange = range, ownedRange = range, retainedRange = range, retainedMaxSpan = 0, retainedFitException = Boolean(range), initialRangeOwned = Boolean(range), userRange = false, futureDateTicks = [], announceTimer = 0, currentInverted = Boolean(invertScale), lastCrosshair = null, crosshairEventSequence = 0;
   const volumeMap = /* @__PURE__ */ new Map();
   if (volumeByTime !== null) {
     if (!Array.isArray(volumeByTime)) throw new TypeError("Observed volume must be a time-keyed array");
@@ -4944,6 +4944,7 @@ function mountAtlasFunnestChart(container, options = {}) {
   const releaseInitialRange = () => {
     initialRangeOwned = false;
     pendingRange = null;
+    userRange = true;
   };
   container.addEventListener("pointerdown", releaseInitialRange, true);
   container.addEventListener("wheel", releaseInitialRange, { capture: true, passive: true });
@@ -4990,6 +4991,9 @@ function mountAtlasFunnestChart(container, options = {}) {
     host,
     get state() {
       return host.dataset.state || "loading";
+    },
+    userOwnsRange() {
+      return userRange;
     },
     ready() {
       if (!currentBars.length) return Promise.resolve({ painted: false, status: "empty", bars: 0 });
@@ -5054,6 +5058,7 @@ function mountAtlasFunnestChart(container, options = {}) {
       retainedMaxSpan = sourceRangeSpan(currentBars, nextRange);
       retainedFitException = true;
       initialRangeOwned = true;
+      userRange = false;
       pendingRange = null;
       configureRetainedRangeSpacing(nextRange);
       chart.setVisibleTimeRange(nextRange);

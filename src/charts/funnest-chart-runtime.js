@@ -245,7 +245,7 @@ export function mountAtlasFunnestChart(container, options = {}) {
   // disagree. Set the native mode alongside constructor settings before data can paint.
   if (chart.mainScale && typeof chart.mainScale.mode === 'string') chart.mainScale.mode = scale;
   const cleanups = [];
-  let destroyed = false, readyPromise = null, observations = [], currentBars = [], pendingRange = range, ownedRange = range, retainedRange = range, retainedMaxSpan = 0, retainedFitException = Boolean(range), initialRangeOwned = Boolean(range), futureDateTicks = [], announceTimer = 0, currentInverted = Boolean(invertScale), lastCrosshair = null, crosshairEventSequence = 0;
+  let destroyed = false, readyPromise = null, observations = [], currentBars = [], pendingRange = range, ownedRange = range, retainedRange = range, retainedMaxSpan = 0, retainedFitException = Boolean(range), initialRangeOwned = Boolean(range), userRange = false, futureDateTicks = [], announceTimer = 0, currentInverted = Boolean(invertScale), lastCrosshair = null, crosshairEventSequence = 0;
   const volumeMap = new Map();
   if (volumeByTime !== null) {
     if (!Array.isArray(volumeByTime)) throw new TypeError('Observed volume must be a time-keyed array');
@@ -420,7 +420,7 @@ export function mountAtlasFunnestChart(container, options = {}) {
     else if (event.key === 'End') { event.preventDefault(); releaseInitialRange(); chart.scrollToRealtime(); }
   };
   host.addEventListener('keydown', onKeyDown);
-  const releaseInitialRange = () => { initialRangeOwned = false; pendingRange = null; };
+  const releaseInitialRange = () => { initialRangeOwned = false; pendingRange = null; userRange = true; };
   container.addEventListener('pointerdown', releaseInitialRange, true);
   container.addEventListener('wheel', releaseInitialRange, { capture: true, passive: true });
   cleanups.push(() => {
@@ -462,6 +462,7 @@ export function mountAtlasFunnestChart(container, options = {}) {
     chart,
     host,
     get state() { return host.dataset.state || 'loading'; },
+    userOwnsRange() { return userRange; },
     ready() {
       if (!currentBars.length) return Promise.resolve({ painted: false, status: 'empty', bars: 0 });
       if (readyPromise) return readyPromise;
@@ -496,7 +497,7 @@ export function mountAtlasFunnestChart(container, options = {}) {
       if (previousRange) requestAnimationFrame(() => chart.setVisibleTimeRange(previousRange));
       readyPromise = null;
     },
-    setRange(nextRange) { if (!nextRange || !(nextRange.to > nextRange.from)) return false; ownedRange = nextRange; retainedRange = nextRange; retainedMaxSpan = sourceRangeSpan(currentBars, nextRange); retainedFitException = true; initialRangeOwned = true; pendingRange = null; configureRetainedRangeSpacing(nextRange); chart.setVisibleTimeRange(nextRange); return true; },
+    setRange(nextRange) { if (!nextRange || !(nextRange.to > nextRange.from)) return false; ownedRange = nextRange; retainedRange = nextRange; retainedMaxSpan = sourceRangeSpan(currentBars, nextRange); retainedFitException = true; initialRangeOwned = true; userRange = false; pendingRange = null; configureRetainedRangeSpacing(nextRange); chart.setVisibleTimeRange(nextRange); return true; },
     setChartType(nextType) {
       if (!['candles', 'line', 'area'].includes(nextType)) throw new RangeError('Unsupported Funnest chart type');
       if (sourceMode === 'close-only' && nextType !== 'line') throw new RangeError('Close-only sources cannot be presented as candles or area OHLC');
