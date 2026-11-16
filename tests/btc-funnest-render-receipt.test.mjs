@@ -837,6 +837,27 @@ test('a measurement that starts on a close with no candle is anchored to an obse
   });
 });
 
+const historyEvents = [
+  { id: 'before-first-candle', date: '2024-01-03', title: 'Before the first candle', label: 'Before', category: 'market' },
+  { id: 'on-candle-date', date: '2024-01-06', title: 'On a candle date', label: 'On candle', category: 'protocol' },
+];
+for (const sourceMode of ['ohlc', 'close-only']) test(`a BTC history event opens from its painted marker in ${sourceMode} mode`, async () => {
+  const opened = [], closeOnly = sourceMode === 'close-only' ? { sourceMode, chartType: 'line', observedCandles: [] } : {};
+  await withDailyCandlesAndCloses({ ...closeOnly, historicalEvents: historyEvents, onHistoricalEvent: id => opened.push(id) }, async ({ svg, window, mounted }) => {
+    const axis = mounted.getPriceScale(), markers = mounted.host.getAtlasBtcRenderSnapshot().paint.markers.filter(item => item.type === 'history');
+    assert.deepEqual(markers.map(marker => marker.id), historyEvents.map(event => event.id), 'each event in the window has a painted marker');
+    for (const marker of markers) {
+      const observed = (closeOnly.sourceMode ? null : venueCandleByDate.get(marker.date)?.close) ?? coinMetricsCloses.find(row => row.date === marker.date).price;
+      assert.deepEqual([marker.x, marker.y], [mounted.x(marker.date), axis.priceToY(observed)], `${marker.id} is painted on the observed price of its date`);
+      const target = svg.querySelector(`[data-btc-overlay-target="history"][data-id="${marker.id}"]`);
+      assert.ok(target, `${marker.id} has a pointer and keyboard target`);
+      assert.deepEqual([Number(target.getAttribute('cx')), Number(target.getAttribute('cy'))], [marker.x, marker.y], `the target of ${marker.id} is centered on its painted marker`);
+      target.dispatchEvent(new window.Event('click', { bubbles: true }));
+    }
+    assert.deepEqual(opened, historyEvents.map(event => event.id), 'a click on each target opens its event');
+  });
+});
+
 test('weekly candle mode keeps the weekly close of every week that has no completed candle', async () => {
   const closes = Array.from({ length: 38 }, (_, index) => ({ date: isoDay(date('2024-01-01') + index * DAY), price: 200 + index }));
   const closeOn = day => closes.find(row => row.date === day).price;
