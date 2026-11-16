@@ -153,6 +153,28 @@ test('Esc closes a reader onto its card, then in split focuses the room row with
   assert.equal(focus(), 'row naver');
 });
 
+const search = (root, window, query) => {
+  root.querySelector('[name="query"]').value = query;
+  root.querySelector('form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
+};
+
+test('a filter applied in the reader pops the reader entry, so one Back then leaves the room', async () => {
+  const { root, window, address } = await mount();
+  click(root, window, '[data-room="naver"]');
+  click(root, window, '[data-article="n1"]');
+  search(root, window, '세금');
+  assert.deepEqual([address.href, address.length, address.index], ['?room=naver', 3, 1], 'the reader entry stays forward, not overwritten');
+  assert.equal(root.querySelectorAll('.relay-reader').length, 0);
+  assert.match(root.querySelector('.relay-filter-note').textContent, /'세금'/);
+  address.back();
+  assert.deepEqual([address.href, address.index], ['', 0], 'the next Back leaves the room');
+
+  const deep = await mount({ search: '?room=naver&post=n1' });
+  search(deep.root, deep.window, '세금');
+  assert.deepEqual([deep.address.href, deep.address.length], ['?room=naver', 1], 'a shared reader link is replaced');
+  assert.equal(deep.root.querySelectorAll('.relay-reader').length, 0);
+});
+
 test('arrow keys, Home and End move focus between rows without opening a room', async () => {
   const { root, window, address, focus, active } = await mount();
   const rows = [...root.querySelectorAll('.relay-room-item')];

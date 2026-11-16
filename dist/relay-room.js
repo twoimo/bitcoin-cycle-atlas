@@ -831,9 +831,12 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
   }
 
   function applyFilters(filters, origin) {
-    let next = { ...model, filters };
-    if (view.article) { port.write({ room: view.room.id, post: null }, 'replace'); next = withAddress(next, { room: view.room.id, post: null }); }
+    const target = view.article ? { room: view.room.id, post: null } : null;
+    const step = target && leaveStep(port.from(), target, model, readLayout());
+    if (step === 'replace') port.write(target, 'replace');
+    const next = target ? withAddress({ ...model, filters }, target) : { ...model, filters };
     commit({ ...next, phase: { ...next.phase, edition: null } }, { focus: { kind: 'control', name: origin } });
+    if (step === 'back') port.back();
   }
 
   function setCursor(edition, page) {
