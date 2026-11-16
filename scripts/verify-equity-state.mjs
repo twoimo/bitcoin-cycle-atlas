@@ -38,7 +38,6 @@ export async function copyEquityFixtureDependencies(copy, { sourceRoot = root, e
   return [...files].sort();
 }
 
-// The current model runs last, after the replay and every control, so a failing property hides neither.
 const variants = [
   { id: 'original-boot-order', values: { BootOnRender: false, RespectSuspension: false }, invariant: 'UsableRenderReleasesBoot' },
   { id: 'unguarded-prices', values: { GuardPrices: false }, invariant: 'NoStalePublication' },

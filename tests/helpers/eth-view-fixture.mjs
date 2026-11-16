@@ -83,9 +83,7 @@ export function ethPayload(revision = 1) {
 /** Execute the complete production initializer and inline boot script. Only
  * imports, HTTP, animation-frame, timer and DOM boundaries are injected; no
  * private function is extracted or rewritten. Requests deliberately permit late
- * success after abort so ownership cannot accidentally rely on browser abort.
- * With paint 'manual', each chart paint confirmation stays pending until the
- * test settles it, so a case can order it against other events. */
+ * success after abort so ownership cannot accidentally rely on browser abort. */
 export async function ethViewFixture({ query = '', pathname = '/', paint = 'auto' } = {}) {
   const requests = [], liveRequests = [], frames = new Map(), timers = new Map(), draws = [], paints = [], emitted = [];
   const window = new Surface(), document = new Surface();
@@ -111,7 +109,6 @@ export async function ethViewFixture({ query = '', pathname = '/', paint = 'auto
   const atlasCandlesToFunnestBars = series => { const bars=series.candles.map(row=>({...row,time:row.time*1000}));barsToSeries.set(bars,series);return bars; };
   const mountObservedPriceChart = (_plot,options) => {
     const record={...options,setAtlasRangeCalls:0,nativeRange:options.range?{from:options.range.start*1000,to:options.range.end*1000}:null,nativeMagnet:false,atlasMagnet:options.magnet||'off',chart:{layout:{plotWidth:554},setMagnet(value){record.nativeMagnet=value;},getVisibleTimeRange(){return record.nativeRange;}}};draws.push(record);
-    // Like the runtime, one promise answers every ready() call until setData.
     let watch=null;
     const painted=()=>({painted:true,status:'ready',bars:record.series.candles.length});
     const ready=paint==='manual'?()=>watch??=new Promise((resolve,reject)=>paints.push({chart:record,resolve:()=>resolve(painted()),reject})):async()=>painted();
@@ -186,10 +183,6 @@ export async function ethViewFixture({ query = '', pathname = '/', paint = 'auto
     show: () => window.dispatchEvent({ type: 'pageshow', persisted: true }),
     resize: () => resize(), refresh: () => click('action', 'refresh'),
     interval: value => click('interval', value), span: value => click('span', value),
-    // pan and priceRange call the Atlas navigation callbacks directly. The real
-    // bindChartNavigation cannot deliver them once a chart is mounted, because
-    // getRange then returns null. nativeRange is the zoom or pan a user still has.
-    // The mount reports its new window unless it was destroyed.
     pan: range => navigation.onRangeChange(range), priceRange: range => navigation.onPriceRangeChange(range), navigationRange: () => navigation.getRange(),
     nativeRange: range => { const chart = draws.at(-1); if (chart.destroyed) return; chart.nativeRange = { from: range.start * 1000, to: range.end * 1000 }; chart.onViewport(chart.nativeRange); },
     paint: index => paints[index].resolve(),

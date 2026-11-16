@@ -11,21 +11,16 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const baselineCommit = '64c8207cb044d8990289c5a7d39972e21b74c240';
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const invariants = ['TypeOK', 'ReadyHasUsableView', 'NoHiddenPublication', 'NoStalePublication', 'NavigationSurvivesRefresh', 'NativeNavigationSurvivesRefresh', 'ReadinessOnce'];
-// The baseline predates the chart mount, so it keeps the six properties recorded for it.
-const recordedForBaseline = invariants.filter(name => name !== 'NativeNavigationSurvivesRefresh');
+const invariantsBeforeChartMount = invariants.filter(name => name !== 'NativeNavigationSurvivesRefresh');
 const failuresBeforeFix = ['ReadyHasUsableView', 'NoHiddenPublication', 'NavigationSurvivesRefresh'];
 const cases = 25;
+const TLC_FOUND_VIOLATION = 12, TESTS_FAILED = 1, PROCESS_TIMEOUT_MS = 180000;
 
-// One broken promise must not hide the rest of the receipt. Every expectation
-// is still required, and any entry here makes the run exit 1.
 const failures = [];
 const fail = (id, reason) => { failures.push({ id, reason }); console.log(id + ': FAILED (' + reason + ')'); };
 
-// A tool crash or timeout throws. The one accepted non-zero status belongs to a
-// completed run that found something, 12 from TLC and 1 from a failed test run.
-// The largest search, the baseline, generates about 7.7 million states.
 function run(command, args, { env = {}, found } = {}) {
-  const result = spawnSync(command, args, { cwd: root, env: { ...process.env, ...env }, encoding: 'utf8', timeout: 180000, maxBuffer: 16 * 1024 * 1024 });
+  const result = spawnSync(command, args, { cwd: root, env: { ...process.env, ...env }, encoding: 'utf8', timeout: PROCESS_TIMEOUT_MS, maxBuffer: 16 * 1024 * 1024 });
   return verificationProcessResult(result, { command, expectedStatus: result.status === found ? found : 0 });
 }
 
@@ -39,7 +34,7 @@ async function models(work) {
   const config = await readFile(path.join(directory, 'EthLoad.cfg'), 'utf8');
   const variants = [
     { id: 'current', values: {}, rules: invariants, broken: [] },
-    { id: 'baseline', values: { BootOnRender: false, RespectSuspension: false, PreserveNavigation: false }, rules: recordedForBaseline, broken: failuresBeforeFix },
+    { id: 'baseline', values: { BootOnRender: false, RespectSuspension: false, PreserveNavigation: false }, rules: invariantsBeforeChartMount, broken: failuresBeforeFix },
     { id: 'unguarded-response', values: { GuardResponses: false }, broken: ['NoStalePublication'] },
     { id: 'unguarded-error', values: { GuardErrors: false }, broken: ['NoStalePublication'] },
     { id: 'hidden-render', values: { RespectSuspension: false }, broken: ['NoHiddenPublication'] },
@@ -59,7 +54,7 @@ async function models(work) {
     const search = async rules => {
       const name = variant.id + '-' + ++searches, file = path.join(work, 'configs', name + '.cfg');
       await writeFile(file, reviewed.replace(/^INVARIANTS .*$/m, 'INVARIANTS ' + rules.join(' ')));
-      const result = run(process.env.JAVA || 'java', ['-XX:+UseParallelGC', '-Xmx1g', '-cp', TLC_JAR, 'tlc2.TLC', '-workers', '1', '-seed', '1', '-fp', '0', '-metadir', path.join(work, 'states', name), '-config', file, source], { found: 12 });
+      const result = run(process.env.JAVA || 'java', ['-XX:+UseParallelGC', '-Xmx1g', '-cp', TLC_JAR, 'tlc2.TLC', '-workers', '1', '-seed', '1', '-fp', '0', '-metadir', path.join(work, 'states', name), '-config', file, source], { found: TLC_FOUND_VIOLATION });
       const violated = result.output.match(/Invariant (\w+) is violated/)?.[1] ?? null;
       assert.equal(result.status === 12, Boolean(violated), 'TLC exit status and violation report disagree: ' + name + '\n' + result.output);
       if (!violated) assert.match(result.output, /Model checking completed\. No error has been found\./);
@@ -92,7 +87,7 @@ async function models(work) {
 }
 
 function replay(env) {
-  const result = run(process.execPath, ['--test-reporter=tap', 'tests/eth-load-ownership.test.mjs'], { env, found: 1 });
+  const result = run(process.execPath, ['--test-reporter=tap', 'tests/eth-load-ownership.test.mjs'], { env, found: TESTS_FAILED });
   // A zero exit code or a "tests" headline alone can also hide skips or a
   // wrapper that counts test files. Require actual, complete TAP case totals.
   const entries = [...result.output.matchAll(/^# (tests|pass|fail|cancelled|skipped|todo) (\d+)$/gm)];
@@ -169,7 +164,6 @@ async function implementation(work) {
       failure: /readiness must wait for the chart paint confirmation/,
     },
     {
-      // The catch handler carries both halves of the paint ownership guard.
       id: 'hidden-paint-failure', from: '.catch(error=>{if(state.funnestMount!==mount||suspended)return;', to: '.catch(error=>{if(state.funnestMount!==mount)return;',
       failure: /a suspended paint failure must not release the boot shell/,
     },
@@ -205,8 +199,6 @@ async function implementation(work) {
       await writeFile(temporary, source.replace(change.from, change.to));
       const result = replay({ ETH_VIEW_SOURCE: temporary });
       mutationExitStatuses[change.id] = result.status;
-      // The mutation must break, for its intended reason, a case that the
-      // unmutated source passes. A case that already fails proves nothing.
       const caught = [...result.failed].some(([name, block]) => !original.failed.has(name) && change.failure.test(block));
       mutations[change.id] = caught ? 'expected assertion failure' : 'not detected';
       if (caught) console.log('mutation/' + change.id + ': expected assertion failure');
