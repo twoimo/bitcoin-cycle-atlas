@@ -31,7 +31,7 @@ class Cdp{
 async function evaluate(cdp,fn,...args){const value=await cdp.send('Runtime.evaluate',{expression:`(${fn.toString()})(${args.map(arg=>JSON.stringify(arg)).join(',')})`,awaitPromise:true,returnByValue:true});if(value.exceptionDetails)throw new Error(JSON.stringify(value.exceptionDetails));return value.result.value;}
 async function until(fn,label){const deadline=Date.now()+45000;while(Date.now()<deadline){try{const value=await fn();if(value)return value;}catch(error){if(!/Execution context was destroyed|Cannot find context/.test(error.message))throw error;}await delay(100);}throw new Error('Timed out: '+label);}
 async function settle(cdp){await evaluate(cdp,async()=>{await document.fonts.ready;await new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)));});}
-export function conferenceReady(theme){if(document.documentElement.dataset.boot==='error')throw new Error('Product boot error');return document.documentElement.dataset.boot==='ready'&&document.body.dataset.page==='conference'&&document.documentElement.dataset.theme===theme&&Boolean(document.querySelector('.conference-player[data-state="ready"]'));}
+export function conferenceReady(theme){const boot=document.documentElement?.dataset.boot;if(boot==='error')throw new Error('Product boot error');return boot==='ready'&&document.body.dataset.page==='conference'&&document.documentElement.dataset.theme===theme&&Boolean(document.querySelector('.conference-player[data-state="ready"]'));}
 function inspect(){
   const button=document.querySelector('.conference-play');if(!button)throw new Error('Missing conference play button');
   const rect=el=>{const b=el.getBoundingClientRect();return {x:b.x,y:b.y,width:b.width,height:b.height};};
