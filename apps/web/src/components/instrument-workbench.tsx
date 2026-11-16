@@ -199,8 +199,6 @@ export function InstrumentWorkbench(props: Props) {
       else if (event.altKey && k === 'g') { action = 'pane'; value = 'date'; }
       else if (event.altKey && k === 'm') action = 'magnet';
       else if (event.altKey && k === 'r') action = 'fit';
-      else if (!event.ctrlKey && !event.metaKey && !event.altKey && (k === '+' || k === '=' && event.shiftKey || event.code === 'NumpadAdd')) { action = 'zoom'; value = .8; }
-      else if (!event.ctrlKey && !event.metaKey && !event.altKey && (k === '-' || k === '_' && event.shiftKey || event.code === 'NumpadSubtract')) { action = 'zoom'; value = 1.25; }
       else if (!event.ctrlKey && !event.metaKey && ['c', 'h', 'm'].includes(k)) { action = 'tool'; value = { c: 'crosshair', h: 'pan', m: 'measure' }[k]; }
       else if (['ArrowLeft', 'ArrowRight'].includes(event.key) && !event.ctrlKey && !event.metaKey && !event.altKey) { action = event.shiftKey ? 'pan' : 'step'; value = event.key === 'ArrowLeft' ? event.shiftKey ? -.3 : -1 : event.shiftKey ? .3 : 1; }
       if (action) { event.preventDefault(); event.stopPropagation(); command.current(action, value); }

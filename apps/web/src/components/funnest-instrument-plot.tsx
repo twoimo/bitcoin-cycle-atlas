@@ -4,7 +4,7 @@ import type { RsiRow } from '@atlas/domain/market-lab';
 import type { RsiBar } from '@atlas/domain/rsi-bars';
 import { BarPlot, CartesianChart, CandlePlot, Line, Point as ChartPoint, ReferenceLine, Scrubber, XAxis, YAxis, useCartesianChart } from '@funnest/charts-react';
 import { logTicks, ticks as niceTicks } from '@funnest/charts-viz';
-import { zoomRange, type ChartRange } from '../../../../dist/chart-navigation.js';
+import { panRange, zoomRange, type ChartRange } from '../../../../dist/chart-navigation.js';
 import { withChartSpacing } from '../../../../dist/chart-view-policy.js';
 import { scalePriceDomain } from '../../../../dist/price-axis.js';
 import type { InstrumentMarker } from './rsi-chart-canvas.js';
@@ -209,6 +209,17 @@ function shownPriceRange(svg: SVGSVGElement | null | undefined) {
   return Number.isFinite(min) && Number.isFinite(max) && max > min ? { min, max } : null;
 }
 
+type KeyCommand = 'menu' | 'reset' | 'in' | 'out' | 'left' | 'right';
+/** Main's navigation controller key map for a focused chart. */
+function keyCommand(event: { key: string; shiftKey: boolean; ctrlKey: boolean; metaKey: boolean; altKey: boolean }): KeyCommand | null {
+  if (event.key === 'ContextMenu' || event.shiftKey && event.key === 'F10') return 'menu';
+  if (event.altKey && !event.ctrlKey && !event.metaKey && event.key.toLowerCase() === 'r') return 'reset';
+  if (event.ctrlKey || event.metaKey) return ({ ArrowUp: 'in', ArrowDown: 'out', ArrowLeft: 'left', ArrowRight: 'right' } as Record<string, KeyCommand>)[event.key] ?? null;
+  if (event.altKey) return null;
+  if (event.shiftKey && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) return event.key === 'ArrowLeft' ? 'left' : 'right';
+  return ({ '+': 'in', '=': 'in', '-': 'out', '0': 'reset' } as Record<string, KeyCommand>)[event.key] ?? null;
+}
+
 /** Axis gestures wait for 3px of movement before they edit the view, as main's navigation controller did. */
 type PlotGesture =
   | { kind: 'pan'; x: number; start: string; end: string; width: number }
@@ -283,10 +294,19 @@ export function FunnestInstrumentPlot(props: Props) {
     return () => { (svgRef as { current: SVGSVGElement | null }).current = null; };
   }, [svgRef, dates.length, view.chartType, view.start, view.end, view.autoScale, description, symbol, unit, chartWidth, chartHeight, hasVolume, volumeAxisWidth]);
   useEffect(() => { if (menuPulse > 0) setMenuOpen(true); }, [menuPulse]);
-  const gesture = useRef<PlotGesture | null>(null), suppressClickUntil = useRef(0);
+  const gesture = useRef<PlotGesture | null>(null), suppressClickUntil = useRef(0), lastPointerX = useRef<number | null>(null);
   const priceSvg = () => host.current?.querySelector<SVGSVGElement>('svg[data-plot-right]');
   const fullView = (): RsiChartView => ({ ...view, start: timeline[0] ?? view.start, end: timeline.at(-1) ?? view.end, autoScale: true, domain: null });
   const applyEdit = (next: RsiChartView) => { onStart(); onView(next); onEnd(); };
+  const spacedRange = () => {
+    const svg = priceSvg(), plotWidth = Number(svg?.dataset.plotRight) - Number(svg?.dataset.plotLeft);
+    return withChartSpacing(series ? instrumentRange(view, series) : chartRange(view, prices), { frequency: view.frequency, plotWidth: Number.isFinite(plotWidth) ? plotWidth : chartWidth });
+  };
+  const releaseGesture = (state: PlotGesture) => {
+    gesture.current = null;
+    if (state.kind === 'pan' || state.active) onEnd();
+    if (state.kind !== 'pan' && state.active) suppressClickUntil.current = Date.now() + 500;
+  };
   useEffect(() => {
     const win = host.current?.ownerDocument.defaultView;
     if (!win) return;
@@ -314,9 +334,7 @@ export function FunnestInstrumentPlot(props: Props) {
       const state = gesture.current;
       if (!state) return;
       if (state.kind !== 'pan' && event.type === 'pointerup') move(event);
-      gesture.current = null;
-      if (state.kind === 'pan' || state.active) onEnd();
-      if (state.kind !== 'pan' && state.active) suppressClickUntil.current = Date.now() + 500;
+      releaseGesture(state);
     };
     win.addEventListener('pointermove', move as EventListener); win.addEventListener('pointerup', up as EventListener); win.addEventListener('pointercancel', up as EventListener);
     return () => { win.removeEventListener('pointermove', move as EventListener); win.removeEventListener('pointerup', up as EventListener); win.removeEventListener('pointercancel', up as EventListener); };
@@ -329,8 +347,7 @@ export function FunnestInstrumentPlot(props: Props) {
       return;
     }
     if (svg && regions && within(regions.time, event)) {
-      const range = withChartSpacing(series ? instrumentRange(view, series) : chartRange(view, prices),
-        { frequency: view.frequency, plotWidth: Number(svg.dataset.plotRight) - Number(svg.dataset.plotLeft) });
+      const range = spacedRange();
       if (range) { event.preventDefault(); gesture.current = { kind: 'time', x: event.clientX, width: regions.time.width, anchor: clamp((event.clientX - regions.time.left) / regions.time.width, 0, 1), range, active: false }; }
       return;
     }
@@ -345,6 +362,26 @@ export function FunnestInstrumentPlot(props: Props) {
     const domain = shown && event.deltaY ? scalePriceDomain({ ...shown, scale: view.scale }, Math.exp(clamp(event.deltaY * unit, -600, 600) * .0015), view.inverted ? y : 1 - y) : null;
     if (domain) applyEdit({ ...view, autoScale: false, domain });
     return true;
+  };
+  const recordPointer = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (within(plotRegions(priceSvg())?.plot, event) || (event.target as Element).closest('[data-panel="rsi"]')) lastPointerX.current = event.clientX;
+  };
+  const pointerAnchor = () => {
+    const plot = plotRegions(priceSvg())?.plot, x = lastPointerX.current;
+    return plot && x !== null ? clamp((x - plot.left) / plot.width, 0, 1) : .5;
+  };
+  const navigateByKey = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const state = gesture.current;
+    if (event.key === 'Escape' && state) { event.preventDefault(); event.stopPropagation(); releaseGesture(state); return; }
+    const command = active ? keyCommand(event) : null;
+    if (!command) return;
+    event.preventDefault(); event.stopPropagation();
+    if (command === 'menu') { setMenuOpen(true); return; }
+    if (command === 'reset') { applyEdit(fullView()); return; }
+    const range = spacedRange();
+    if (!range) return;
+    const next = command === 'left' || command === 'right' ? panRange(range, command === 'left' ? -.25 : .25) : zoomRange(range, command === 'in' ? .8 : 1.25, pointerAnchor());
+    applyEdit({ ...view, start: next.start, end: next.end, spacingBounds: next.spacingBounds });
   };
   const axisOwnsClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (Date.now() < suppressClickUntil.current) { suppressClickUntil.current = 0; return true; }
@@ -387,9 +424,11 @@ export function FunnestInstrumentPlot(props: Props) {
     role="group" aria-label={`${description || `${symbol} 가격 차트`} · ${view.start}부터 ${view.end}`}
     onWheel={event => { if (isPlotControlTarget(event.target)) return; event.preventDefault(); if (scalePriceAxis(event)) return; const first = Date.parse(view.start), last = Date.parse(view.end), duration = last - first; if (!Number.isFinite(duration) || duration <= 0) return; const rect = event.currentTarget.getBoundingClientRect(); const factor = event.deltaY < 0 ? 0.82 : 1.22; const anchor = Math.max(0, Math.min(1, (event.clientX - rect.left) / Math.max(1, rect.width))); const nextDuration = Math.max(86400000, duration * factor); const point = first + duration * anchor; const next = boundedWindow(point - nextDuration * anchor, point + nextDuration * (1-anchor), timeline); if (!next) return; onStart(); onView({ ...view, ...next }); onEnd(); }}
     onPointerDown={event => { if (isPlotControlTarget(event.target) || !active || event.button !== 0) return; startGesture(event); }}
+    onPointerMove={recordPointer}
     onClick={event => { if (isPlotControlTarget(event.target)) return; if (axisOwnsClick(event)) return; choose(current.current ?? selectedIndex, (event.target as Element).closest('[data-panel="rsi"]') ? 'rsi' : 'price'); }}
     onDoubleClick={event => { if (isPlotControlTarget(event.target) || !active || event.ctrlKey || event.metaKey || event.altKey) return; resetOnDoubleClick(event); }}
     onContextMenu={event => { if (isPlotControlTarget(event.target)) return; event.preventDefault(); setMenuOpen(true); }}
+    onKeyDownCapture={event => { if (isPlotControlTarget(event.target)) return; navigateByKey(event); }}
     onKeyDown={event => { if (isPlotControlTarget(event.target)) return; if (event.key === 'Escape' && menuOpen) { event.preventDefault(); setMenuOpen(false); } else if (event.key === 'Enter' && !(event.target as Element).closest('button,a,input,select,textarea,summary,[contenteditable="true"]')) { event.preventDefault(); choose(); } }}>
     <div className="atlas-funnest-axis-unit" aria-label={`가격 단위 ${unit}`}>{unit}</div>
     {bars.length > 0 && view.chartType === 'candles' ? <CartesianChart width={chartWidth} series={[
