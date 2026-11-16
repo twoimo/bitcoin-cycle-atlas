@@ -14,11 +14,11 @@ const parsed=p0CssDeclarations(css);
 assert.deepEqual(parsed.issues,[]);
 const tokens=readP0RootTokens(await readFile(new URL('../dist/styles.css',import.meta.url),'utf8'));
 const bodySelector='body[data-shell=dashboard]';
-const cardSelector='body[data-shell=dashboard] #main > :is(#evidence-view, #ipo-view, #data-view, #market-view, #relay-view, #conference-view)';
+const cardSelector='body[data-shell=dashboard] #main > :is(#evidence-view, #ipo-view, #data-view, #market-view, #relay-view)';
 const compact=text=>text.replace(/\s+/g,' ').trim();
 const declarations=selector=>Object.fromEntries(parsed.declarations.filter(row=>!row.ancestors.length&&compact(row.selector)===selector).map(row=>[row.property,row.value]));
 const body=declarations(bodySelector),card=declarations(cardSelector);
-const widths=[320,390,768,1440],pages={evidence:'리서치',data:'자산 비교',ipo:'공모주',relay:'릴레이 콘텐츠',conference:'컨퍼런스 복습'};
+const widths=[320,390,768,1440],pages={evidence:'리서치',data:'자산 비교',ipo:'공모주',relay:'릴레이 콘텐츠'};
 // The 2026-11-13 full-project Unslop direction supersedes the earlier P1
 // 16px card radius and broad shared-shadow assumptions. Shell sections now use
 // square, rule-defined edges and retain only the existing quiet local shadow.

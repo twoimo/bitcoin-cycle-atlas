@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// F1 only: native body-text D-1 evidence and six product screenshots. No media gate.
 import {spawn, execFileSync} from 'node:child_process';
 import {createServer} from 'node:http';
 import {createHash} from 'node:crypto';
@@ -16,9 +15,9 @@ const git=(...args)=>execFileSync('git',args,{cwd:root,encoding:'utf8',maxBuffer
 const baselineArg=option('--baseline-ref',null), baseline=baselineArg?git('rev-parse','--verify',baselineArg+'^{commit}'):null;
 const bin=process.env.ATLAS_BROWSER_PATH||(process.platform==='darwin'?'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome':'/usr/bin/chromium');
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex'), delay=ms=>new Promise(done=>setTimeout(done,ms));
-const specs=['conference','outlook','relay'].flatMap(page=>[320,1440].map(width=>({id:`${page}-${width}`,page,width,height:900})));
+const specs=['outlook','relay'].flatMap(page=>[320,1440].map(width=>({id:`${page}-${width}`,page,width,height:900})));
 const contentExclusions=[
-  '.conference-caption-text','.conference-transcript-text','.relay-room-name','.relay-room-sub',
+  '.relay-room-name','.relay-room-sub',
   '.relay-peer>h2','.relay-peer-sub','.relay-msg-text','.relay-msg-quote','.relay-reply-text',
   '.relay-reply-name','.relay-msg-author','.relay-preview','.relay-article-title','.relay-article-excerpt',
   '.relay-reader-head h2','.relay-body','.relay-reader-figure figcaption','#lab-chart-stage>svg',
@@ -78,7 +77,6 @@ function inspect(exclusions){
     if(rule.selectorText?.replace(/\s+/g,'').includes(':where(button,a,input,select,textarea,summary,[tabindex]):focus-visible'))focusRules.push({selector:rule.selectorText,outline:rule.style.outline,offset:rule.style.outlineOffset});}};
   for(const sheet of document.styleSheets)try{visit(sheet.cssRules);}catch{}
   return {boot:document.documentElement.dataset.boot,page:document.body.dataset.page,
-    conferenceState:document.querySelector('.conference-player')?.dataset.state||null,
     relayRoomCount:document.querySelectorAll('.relay-rooms .relay-room-item').length,
     viewport:{width:innerWidth,height:innerHeight},h1Count:document.querySelectorAll('h1').length,
     overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth,document.body.scrollWidth-innerWidth),
@@ -133,7 +131,7 @@ try{
           const boot=document.documentElement?.dataset.boot;
           if(boot==='error')throw new Error('product boot error');
           if(boot!=='ready'||document.body.dataset.page!==page)return false;
-          return page==='conference'?Boolean(document.querySelector('.conference-player[data-state="ready"]')):page==='relay'?Boolean(document.querySelector('.relay-rooms .relay-room-item')):Boolean(document.querySelector('#lab-chart path'));
+          return page==='relay'?Boolean(document.querySelector('.relay-rooms .relay-room-item')):Boolean(document.querySelector('#lab-chart path'));
         },spec.page),spec.id+' product ready');
         await evaluate(cdp,async()=>{await document.fonts.ready;await new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)));});
         result.state=await evaluate(cdp,inspect,contentExclusions);

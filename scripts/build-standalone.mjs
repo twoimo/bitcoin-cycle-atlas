@@ -21,8 +21,7 @@ html = html.replace(/\s*<link\b[^>]*id="atlas-optional-fonts"[^>]*>/, '')
   .replace(/\s*<script\b[^>]*id="atlas-fonts-script"[^>]*>[\s\S]*?<\/script>/, '');
 // Preload hints are only transport scheduling. Offline imports come from the
 // exact embedded module map, and must never request their former HTTP URLs.
-html = html.replace(/\s*<script\b[^>]*id="atlas-boot-preloads"[^>]*>[\s\S]*?<\/script>/, '')
-  .replace(/\s*<link\b(?=[^>]*\brel=["']modulepreload["'])[^>]*>/gi, '');
+html = html.replace(/\s*<link\b(?=[^>]*\brel=["']modulepreload["'])[^>]*>/gi, '');
 html = await inlineSiteStyles(html, dist);
 const favicon = Buffer.from(await readFile(resolve(dist, 'favicon.svg'))).toString('base64');
 html = html.replace('href="./favicon.svg"', `href="data:image/svg+xml;base64,${favicon}"`);

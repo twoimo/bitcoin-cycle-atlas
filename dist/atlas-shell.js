@@ -146,7 +146,7 @@ export function initAtlasShell() {
     const chart = page === 'outlook' || page === 'compare';
     document.body.dataset.shell = chart ? 'chart' : 'dashboard';
     if (chart) delete document.body.dataset.shellWidth;
-    else document.body.dataset.shellWidth = ['data', 'market', 'relay', 'conference'].includes(page) ? 'wide' : 'standard';
+    else document.body.dataset.shellWidth = ['data', 'market', 'relay'].includes(page) ? 'wide' : 'standard';
     header.hidden = chart; group.hidden = chart;
     // One top region per route: the chart frame keeps its own toolbar selector, and
     // the page header carries it only while the dashboard composition is active.

@@ -17,7 +17,7 @@ assert.equal(sourcePaddingLeft,sourcePaddingRight,'the model expects the authore
 // DOM lifecycle and scroll-geometry models, not native browser measurements.
 // The unchanged P1 gate still owns trusted Tab/pointer, paint and clipping proof.
 function fixture({left=60, width=200, total=1000, padding=sourcePaddingRight}={}) {
-  const names=['outlook','market-us','evidence','data','ipo','relay','conference'];
+  const names=['outlook','market-us','evidence','data','ipo','relay'];
   const {document,window}=parseHTML(`<html><body data-shell="dashboard" data-page="relay">
     <header class="atlas-dashboard-header"><h1>릴레이 콘텐츠</h1></header>
     <aside class="atlas-sidebar"><nav class="atlas-nav">${names.map(id=>`<button data-atlas-page="${id}">${id}</button>`).join('')}</nav><span id="next"></span></aside>
@@ -80,7 +80,6 @@ test('focus exposes whole Mac-sized clipped pills synchronously without moving f
     {id:'relay',left:60,width:200,right:323.67,itemWidth:150},
     {id:'evidence',left:60,width:270,right:348.5,itemWidth:100},
     {id:'ipo',left:60,width:270,right:380.25,itemWidth:100},
-    {id:'conference',left:60,width:270,right:440.5,itemWidth:160},
     {id:'relay',left:72,width:624,right:785.86,itemWidth:170},
   ]) {
     const f=fixture(sample),node=f.place(sample.id,sample.right-sample.left-sample.itemWidth,sample.itemWidth);
@@ -92,7 +91,7 @@ test('focus exposes whole Mac-sized clipped pills synchronously without moving f
     assert.equal(f.moves[0].behavior,'instant');
     assert.deepEqual(f.restoredFocus,[],'reveal does not synthesize another focus');
     assert.equal(f.document.querySelectorAll('.atlas-nav').length,1);
-    assert.equal(f.nav.children.length,7);
+    assert.equal(f.nav.children.length,6);
   }
 });
 
@@ -142,12 +141,12 @@ test('physical end padding leaves the fractional final pill inside the clip at m
   // The 768 Mac receipt ends 0.31px outside an integer client clip. Scroll
   // commands cannot exceed the real maximum; actual CSS edge space must exist.
   const bare=fixture({left:72,width:624,total:760,padding:0});
-  const bareLast=bare.place('conference',600.31,160);
+  const bareLast=bare.place('relay',590.31,170);
   bare.focus(bareLast);
   assert.equal(bare.nav.scrollLeft,136);
   assert.equal(bare.fullyExposed(bareLast),false,'negative control: no padding cannot reveal the fractional tail');
   const padded=fixture({left:72,width:624,total:Math.round(760.31+sourcePaddingRight)});
-  const paddedLast=padded.place('conference',600.31,160);
+  const paddedLast=padded.place('relay',590.31,170);
   padded.focus(paddedLast);
   assert.equal(padded.nav.scrollLeft,140);
   assert.equal(padded.fullyExposed(paddedLast),true);

@@ -126,12 +126,12 @@ for(const route of ['market-lab/','market-lab/us/']) {
   test(`${route} serves the current four stylesheet paths, digests and P1 source`,async()=>{
     await servedStyles(route,await read(route+'index.html'));
   });
-  test(`${route} CSS cascade gives all seven nav controls compact 4px corners and preserves 44px targets`,async()=>{
+  test(`${route} CSS cascade gives all six nav controls compact 4px corners and preserves 44px targets`,async()=>{
     const sheets=await servedStyles(route,await read(route+'index.html')),rows=declarations(sheets);
     assert.equal(tokens.get('--control-radius'),compactControlRadius);
     assert.equal(tokens.get('--pill-radius'),compactControlRadius,'the formerly pill-named token is constrained to the current compact control radius');
     for(const width of [768,1440])for(const tag of ['button','a']) {
-      const nodes=navNodes({tag});assert.equal(nodes.length,7);
+      const nodes=navNodes({tag});assert.equal(nodes.length,6);
       for(const node of nodes) {
         const winners=cascade(rows,node,width),label=`${route} ${width} ${tag} ${node.dataset.atlasPage}`;
         assertCompactControlCorners(winners,label);

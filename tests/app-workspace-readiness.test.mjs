@@ -29,7 +29,7 @@ const deferred = () => {
 // Only the heavy renderer/imports and layout APIs are doubles. These assertions
 // are DOM lifecycle evidence, not native paint, geometry or four-width passes.
 function fixture(t, width = 320) {
-  const pages = ['outlook','compare','evidence','data','ipo','market','relay','conference'];
+  const pages = ['outlook','compare','evidence','data','ipo','market','relay'];
   const destinations = pages.filter(page => page !== 'compare');
   const {document, window} = parseHTML(`<html data-boot="ready"><body data-page="relay">
     <aside class="atlas-sidebar"><button class="atlas-brand">Cycle Atlas</button>
@@ -88,7 +88,7 @@ function fixture(t, width = 320) {
     icon:() => '', hostCompareCenter:value => compareShell.setActive(value), render() {},
     loadViewport:() => { counts.imports++; return imports.viewport.promise; }, loadLab:() => imports.lab.promise,
     ensureEvidence() {}, btcRefreshStatus:{update() {}}, ipoController:{render() {}}, marketController:{render() {}},
-    relayController:{show() {}}, conferenceController:{setActive() {}},
+    relayController:{show() {}},
     header:document.querySelector('.atlas-dashboard-header'), group:document.querySelector('.atlas-sidebar-group'),
     sidebar:document.querySelector('.atlas-sidebar'), contentShell, CONTENT_SHELL_PAGES,
     pageDescription:{sync() {}}, preference() {}, atlasNavigationId, atlasPages, labPageFromLocation,

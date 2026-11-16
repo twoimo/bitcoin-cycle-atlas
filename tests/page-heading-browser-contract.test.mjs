@@ -1,13 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
 import {pageHeadingIntersectionArea, pageHeadingOverlapAreas, validatePageHeadingState} from '../scripts/page-heading-browser-contract.mjs';
-
-test('conference browser readiness accepts both empty and unavailable-manifest ready states', async () => {
-  const harness = await readFile(new URL('../scripts/verify-page-heading-browser.mjs', import.meta.url), 'utf8');
-  assert.match(harness, /instrument === 'conference'[\s\S]*?document\.body\?\.dataset\.page === 'conference'[\s\S]*?\['empty', 'ready'\]\.includes\(document\.querySelector\('\.conference-player'\)\?\.dataset\.state\)/);
-  assert.doesNotMatch(harness, /conference-player'\)\?\.dataset\.state === 'empty'/);
-});
 
 const rect = (left, top, width, height) => ({left, top, right:left + width, bottom:top + height, width, height});
 const clone = value => structuredClone(value);
@@ -20,7 +13,7 @@ function labelState() {
     headingInViewport:true, glyphsInViewport:true, headingInToolbar:false, glyphsInToolbar:false,
     color:'rgb(219, 219, 219)', fontSize:'12px', lineHeight:'14px', paintIssues:[],
     describedBy:'atlas-page-description', description:'가격 관측과 역사적 주기 자료를 함께 살펴보는 차트입니다.', descriptionCount:1,
-    followsToolbar:true, outsidePlot:true, inDashboardHeader:false,
+    followsToolbar:true, outsidePlot:true,
     placement:{kind:'label', anchor:null, expected:null, delta:null},
     labelRow:{rect:rect(0, 48, 1440, 22), glyphs, painted:true, inViewport:true, position:'static', order:'-1', padding:'4px 8px'},
     overflow:0, duplicateTitles:[], overlayCollisions:[], symbolCollision:false,
@@ -193,12 +186,4 @@ test('geometry preservation is applied only with an explicit prior state and rem
   const comparison = compareState(), changed = clone(comparison); changed.geometry.toolbar.width += .011;
   assert.match(validate(changed, comparison).join('\n'), /toolbar\.width/);
   assert.deepEqual(validate(comparison, clone(comparison)), [], 'compare restoration still uses its actual prior geometry');
-});
-
-test('conference retains its existing dashboard heading contract without adopting the chart label contract', () => {
-  const state = {...labelState(), title:'컨퍼런스 복습', inDashboardHeader:true, followsToolbar:false,
-    labelRow:null, placement:{kind:null, anchor:null, expected:null, delta:null},
-    symbolButton:null, symbolLabel:null, symbolGlyphs:[], geometry:{toolbar:null, plot:null, bottom:null, readout:null, source:null}};
-  assert.deepEqual(validate(state), []);
-  state.inDashboardHeader = false; assert.match(validate(state).join('\n'), /heading lost shell ownership/);
 });

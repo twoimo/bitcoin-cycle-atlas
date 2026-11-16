@@ -553,7 +553,6 @@
     "tests/treasury-instruments.test.mjs",
     "tests/treasury-model.test.mjs",
     "dist/compare-shell-host.js",
-    "dist/conference/player.css",
     "dist/content-shell.js",
     "dist/comparison-url-state.js",
     "dist/btc-funnest-chart.js",

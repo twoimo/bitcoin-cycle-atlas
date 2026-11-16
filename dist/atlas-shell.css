@@ -508,7 +508,7 @@ body[data-shell="dashboard"] .workbench-bottom-bar .footer {
   font-size: 11px;
   letter-spacing: 0;
 }
-body[data-shell="dashboard"] :is(.atlas-page, #evidence-view, #compare-view, #ipo-view, #relay-view, #conference-view) {
+body[data-shell="dashboard"] :is(.atlas-page, #evidence-view, #compare-view, #ipo-view, #relay-view) {
   color: var(--text);
   letter-spacing: 0;
 }
@@ -671,22 +671,6 @@ body[data-shell="dashboard"] .relay-room :is(.relay-msg-text, .relay-msg-quote, 
 }
 body[data-shell="dashboard"] .relay-room :is(input, select, button):focus-visible,
 body[data-shell="dashboard"] .relay-room summary:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
-}
-body[data-shell="dashboard"] .conference-player {
-  background: var(--bg);
-  color: var(--text);
-}
-body[data-shell="dashboard"] .conference-player :is(.conference-stage, .conference-transcript, .conference-controls) {
-  border-color: var(--border);
-  box-shadow: none;
-}
-body[data-shell="dashboard"] .conference-player :is(.conference-stage-message, .conference-notice, .conference-search-empty) {
-  color: var(--muted);
-  line-height: 1.55;
-}
-body[data-shell="dashboard"] .conference-player :is(button, input, select, textarea, summary):focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
 }

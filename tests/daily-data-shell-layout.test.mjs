@@ -65,7 +65,7 @@ test('unchanged row/header minima fit tall boards while the shorter board retain
   const header=px(find(shell,'body[data-shell=dashboard]'),'--app-header-height');
   const footer=px(atlas.find(rule=>rule.style?.getPropertyValue('--content-bottom-height')).style,'--content-bottom-height');
   const top=px(find(wideRules,workspaceSelector),'padding-top');
-  const card=find(shell,'body[data-shell=dashboard] #main > :is(#evidence-view, #ipo-view, #data-view, #market-view, #relay-view, #conference-view)');
+  const card=find(shell,'body[data-shell=dashboard] #main > :is(#evidence-view, #ipo-view, #data-view, #market-view, #relay-view)');
   const border=parseFloat(card.getPropertyValue('border'));
   const actions=px(find(daily,'#data-view .daily-heading'),'min-height');
   const filters=find(daily,'#data-view .asset-filters'),filterInset=px(filters,'padding');
