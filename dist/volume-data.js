@@ -36,8 +36,6 @@ function sourceScope(source = 'Bitstamp') {
     scope: 'single-exchange-spot-pair', globalMarketVolume: false };
 }
 
-export const VOLUME_ENDPOINT = VOLUME_PROVIDERS.Bitstamp.endpoint;
-export const VOLUME_DOCUMENTATION_URLS = VOLUME_PROVIDERS.Bitstamp.documentationUrls;
 export const VOLUME_SCOPE = Object.freeze(sourceScope());
 
 function validNow(now) {
@@ -221,19 +219,6 @@ export function aggregateWeeklyVolume(dailyBars, { source = 'Bitstamp', asOf, no
   return { ...sourceScope(source), interval: 'weekly', seconds: 7 * DAY_SECONDS, bars, asOf: dateFromDay(cutoff),
     completedOnly: true, incompleteGroups, firstDate: bars[0]?.date ?? null, lastDate: bars.at(-1)?.date ?? null,
     aggregation: 'Sum of seven completed UTC daily buckets; Monday start, Sunday chart label', imputedBars: 0 };
-}
-
-/** Filter observed daily or weekly bars, using inclusive display dates. */
-export function filterVolumeForView(bars, { start, end, asOf } = {}) {
-  if (!Array.isArray(bars)) throw new TypeError('Volume view requires bars');
-  const lower = start === undefined ? -Infinity : utcDay(start);
-  const upper = Math.min(end === undefined ? Infinity : utcDay(end), asOf === undefined ? Infinity : utcDay(asOf));
-  if (lower > upper) return [];
-  return bars.filter(row => {
-    if (!nonnegative(row?.volume)) throw new TypeError('Invalid observed volume');
-    const day = utcDay(row.date);
-    return day >= lower && day <= upper;
-  });
 }
 
 /** Public collection. No credentials, polling, retries or implicit provider fallback. */
