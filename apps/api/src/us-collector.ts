@@ -1,38 +1,19 @@
-import { createHash, randomUUID } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
 import type pg from 'pg';
 import type { MarketSnapshot, Point } from '@atlas/contracts/market-lab';
 import type { CollectionRun, CollectionSource, CollectionSchedule, UsSeries } from '@atlas/contracts/us-collection';
 import { validateSnapshot, validateSeries, calendarDate } from '@atlas/domain/market-lab';
 import { parseFredMacro } from '../../../scripts/import-market-lab-fred.mjs';
 import { readSnapshot, publishSnapshot } from './repository.js';
+import { locks, sha256 } from './db.js';
 
-const LOCK = 'atlas:us-official-collection';
 export const US_COLLECTION_INTERVAL = 15 * 60 * 1000;
 export const usSources = [
   { series: 'GDPC1', axis: 'alpha', frequency: 'quarterly', label: 'FRED / BEA 실질GDP 전기비', metric: '실질GDP 전기비(FRED/BEA 계절조정 수준비)' },
   { series: 'TB3MS', axis: 'beta', frequency: 'monthly', label: 'FRED / 연준 H.15 3개월 국채 월평균', metric: '3개월 미국 국채 할인수익률(월평균)' },
   { series: 'VIXCLS', axis: 'gamma', frequency: 'daily', label: 'FRED / Cboe VIX 일별 종가', metric: 'VIX: 심리의 변동성 대리지표' },
 ] as const;
-const digest = (body: string) => createHash('sha256').update(body).digest('hex');
 export const fredUrl = (series: UsSeries) => `https://fred.stlouisfed.org/graph/fredgraph.csv?id=${series}&cosd=2010-01-01`;
-
-export async function migrateUsCollection(pool: pg.Pool) {
-  const sql = await readFile(new URL('../../../db/migrations/004_us_collection.sql', import.meta.url), 'utf8');
-  const client = await pool.connect();
-  try {
-    await client.query('BEGIN');
-    await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [LOCK]);
-    const previous = await client.query('SELECT sha256 FROM atlas_schema_migrations WHERE name=$1', ['004_us_collection']);
-    if (previous.rowCount && previous.rows[0].sha256 !== digest(sql)) throw new Error('Applied collection migration checksum changed');
-    if (!previous.rowCount) {
-      await client.query(sql);
-      await client.query('INSERT INTO atlas_schema_migrations(name,sha256) VALUES ($1,$2)', ['004_us_collection', digest(sql)]);
-    }
-    await client.query('COMMIT');
-  } catch (error) { await client.query('ROLLBACK'); throw error; }
-  finally { client.release(); }
-}
 
 export function parseVixCsv(raw: string, now: Date): Point[] {
   const rows = raw.trim().split(/\r?\n/).map(row => row.split(','));
@@ -73,12 +54,13 @@ async function readBounded(response: Response) {
   } finally { reader.releaseLock(); }
   return Buffer.concat(chunks).toString('utf8');
 }
-function rowRun(row: Record<string, any>): CollectionRun {
+type RunRow = { id: string; started_at: Date; finished_at: Date | null; status: CollectionRun['status']; revision: string | null; sources: CollectionSource[]; error: string | null };
+function rowRun(row: RunRow): CollectionRun {
   return { id: row.id, startedAt: row.started_at.toISOString(), finishedAt: row.finished_at?.toISOString() ?? null, status: row.status, revision: row.revision, sources: row.sources, error: row.error };
 }
 export async function readUsCollection(pool: pg.Pool) {
-  const result = await pool.query(`SELECT * FROM market_lab_collection_runs ORDER BY run_order DESC LIMIT 1`);
-  const success = await pool.query(`SELECT * FROM market_lab_collection_runs WHERE status IN ('published','unchanged') ORDER BY run_order DESC LIMIT 1`);
+  const result = await pool.query<RunRow>(`SELECT * FROM market_lab_collection_runs ORDER BY run_order DESC LIMIT 1`);
+  const success = await pool.query<RunRow>(`SELECT * FROM market_lab_collection_runs WHERE status IN ('published','unchanged') ORDER BY run_order DESC LIMIT 1`);
   return { latest: result.rowCount ? rowRun(result.rows[0]) : null, lastSuccess: success.rowCount ? rowRun(success.rows[0]) : null };
 }
 
@@ -91,10 +73,10 @@ export async function runUsCollection(pool: pg.Pool, { fetchImpl = fetch, clock 
   const receipts: CollectionSource[] = [];
   try {
     signal?.throwIfAborted();
-    locked = (await client.query('SELECT pg_try_advisory_lock(hashtext($1)) AS locked', [LOCK])).rows[0].locked;
+    locked = (await client.query<{ locked: boolean }>('SELECT pg_try_advisory_lock(hashtext($1)) AS locked', [locks.usCollection])).rows[0].locked;
     signal?.throwIfAborted();
     if (!locked) return { status: 'busy' as const };
-    const last = (await client.query('SELECT started_at,finished_at,status FROM market_lab_collection_runs ORDER BY run_order DESC LIMIT 1')).rows[0];
+    const last = (await client.query<Pick<RunRow, 'started_at' | 'finished_at' | 'status'>>('SELECT started_at,finished_at,status FROM market_lab_collection_runs ORDER BY run_order DESC LIMIT 1')).rows[0];
     if (!force && last && last.status !== 'running' && +clock() - +(last.finished_at ?? last.started_at) < intervalMs) return { status: 'not_due' as const };
     signal?.throwIfAborted();
     const interruptedAt = clock().toISOString();
@@ -110,7 +92,7 @@ export async function runUsCollection(pool: pg.Pool, { fetchImpl = fetch, clock 
         const checkedAt = clock().toISOString();
         const values: Point[] = definition.series === 'VIXCLS' ? parseVixCsv(body, clock()) : parseFredMacro(body, definition.series, { now: clock() }).map(row => [String(row[0]),Number(row[1])] as Point);
         if (values.length < 40) throw new Error('Macro historical coverage insufficient');
-        const receipt: CollectionSource = { series: definition.series, axis: definition.axis, url, status: 'ready', checkedAt, sha256: digest(body), lastObservation: values.at(-1)![0], rows: values.length };
+        const receipt: CollectionSource = { series: definition.series, axis: definition.axis, url, status: 'ready', checkedAt, sha256: sha256(body), lastObservation: values.at(-1)![0], rows: values.length };
         return { definition, body, values, receipt };
       } catch (error) {
         const receipt: CollectionSource = { series: definition.series, axis: definition.axis, url, status: 'error', checkedAt: clock().toISOString(), error: error instanceof Error ? error.message.slice(0, 400) : 'Source request failed' };
@@ -156,13 +138,13 @@ export async function runUsCollection(pool: pg.Pool, { fetchImpl = fetch, clock 
     return { status: changed ? 'published' as const : 'unchanged' as const, revision, id };
   } catch (error) {
     if (!id) throw error;
-    const reconciled = (await client.query('SELECT status,revision FROM market_lab_collection_runs WHERE id=$1', [id])).rows[0];
-    if (reconciled?.status === 'published' || reconciled?.status === 'unchanged') return { status: reconciled.status as 'published' | 'unchanged', revision: reconciled.revision as string, id };
+    const reconciled = (await client.query<Pick<RunRow, 'status' | 'revision'>>('SELECT status,revision FROM market_lab_collection_runs WHERE id=$1', [id])).rows[0];
+    if (reconciled?.status === 'published' || reconciled?.status === 'unchanged') return { status: reconciled.status, revision: reconciled.revision as string, id };
     await client.query("UPDATE market_lab_collection_runs SET status='failed',finished_at=$2,sources=$3,error=$4 WHERE id=$1", [id, clock().toISOString(), JSON.stringify(receipts), error instanceof Error ? error.message.slice(0, 500) : 'Collection failed']);
     return { status: 'failed' as const, id };
   } finally {
     try {
-      if (locked) await client.query('SELECT pg_advisory_unlock(hashtext($1))', [LOCK]);
+      if (locked) await client.query('SELECT pg_advisory_unlock(hashtext($1))', [locks.usCollection]);
     } catch (error) {
       client.release(true);
       throw error;
