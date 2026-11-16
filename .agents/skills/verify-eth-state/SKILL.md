@@ -36,8 +36,9 @@ Last code/model synchronization commit: 1722f1fc (2026-11-16). It adds two fixes
 the review at 856e77422e0a43a77470aed2e3f64fa1e522880b (tree
 01720549f0a5f4e7fb05129b1c97f80389d993b6). d4f667d2 changed one statement on
 dist/eth-view.js:310. 1722f1fc added line 424, so later lines are one higher. The
-runtime change in c35f75cf added one line before ready(), so runtime citations from
-line 466 on are one higher than at 856e7742.
+runtime changed in c35f75cf and c3bcb58f, so runtime citations refer to c3bcb58f.
+Neither runtime change alters what the ETH view reads from onViewport except that
+setData no longer reports its interim window or the restore.
 Previous synchronization: fe93a5727277d15a934b7472588fb907e30b02b8. That commit is
 not an ancestor of this history. Its covered files equal those of c92c4871, so
 the review read c92c4871..856e7742.
@@ -50,7 +51,7 @@ Reviewed SHA-256:
 - dist/center-workbench.js 2decc81ec9db604edb6dd95b6beb92a9582b25e76f60f8c65b2506a6ffaa8f6c
 - dist/chart-navigation.js f6a987a9fc14e72f8de01fe0e21d0d142b872939188f8328cf153b7b8f7a03c0
 - dist/funnest-observed-price-adapter.js 6b4d25b84f99728987bde5d989cad191bd8059cf9e62b328da53cdef185fa683
-- src/charts/funnest-chart-runtime.js cad0f5e2c38a9c2c82dc248eade24b0aea92d3acff61d125f8ac72972471882d
+- src/charts/funnest-chart-runtime.js f44846672c8c0435e5c4fb8b8ab70c2e6b7952e460b06c43b082063ba17fc958
 - dist/ethereum-history.js 196e860ce7f4485071ca54685e8b5bf48e62ed9c9d00dc1012f8183de44053a6
 
 931ed189 moved ETH drawing to the Funnest observed-price adapter. This
@@ -206,8 +207,10 @@ or behavior after arbitrarily many generations.
 The replay injects the chart mount. It settles paint confirmations, reports
 chart windows and observes teardown at the adapter boundary. The Funnest
 engine's own range policy is outside both layers. Measured with the real adapter
-under linkedom, the engine restores the earlier window one frame after setData,
-and the next layout change returns to the range that setAtlasRange set.
+under linkedom at 856e7742, the engine restored the earlier window one frame after
+setData, and the next layout change returned to the range that setAtlasRange set.
+Since c3bcb58f a setRange made before that restore wins, and setData reports
+neither window (tests/funnest-chart-runtime.test.mjs).
 
 The model's navigated flag is the code's navigationRevision mismatch. The native
 flag covers a window chosen on the mounted chart, the path that skipped it until

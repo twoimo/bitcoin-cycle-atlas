@@ -41,9 +41,11 @@
 
 `node scripts/verify-equity-state.mjs`는 종료 코드 0으로 끝난다.
 
-### 남은 문제
+### `c3bcb58f`에서 고친 문제
 
-어느 성질도 이 둘을 말하지 않아서 검증은 통과한다. 둘 다 `tests/helpers/funnest-native-fixture.mjs` 위의 실제 런타임에서 측정했고, fixture로 실제 `dist/equity-view.js`에서 재생했다. 브라우저에서 관찰한 것은 아니다.
+`c3bcb58f`가 런타임에서 둘 다 고쳤다. 이제 휠·드래그·탐색 키 뒤의 보고만 `userOwnsRange()`를 참으로 만들고, 클릭은 그러지 않는다. `setData`는 중간 구간도 복원도 보고하지 않으며, 복원 전에 부른 `setRange`가 이긴다. `tests/funnest-chart-runtime.test.mjs`에 각각의 사례가 있고 둘 다 `c35f75cf`에서 실패한다. 마운트 fixture는 원래 `setData` 뒤에 보고하지 않으므로 재생과 모델은 바꾸지 않았다. 아래는 고치기 전의 기록이다.
+
+어느 성질도 이 둘을 말하지 않아서 검증은 통과했다. 둘 다 `tests/helpers/funnest-native-fixture.mjs` 위의 실제 런타임에서 측정했고, fixture로 실제 `dist/equity-view.js`에서 재생했다. 브라우저에서 관찰한 것은 아니다.
 
 1. 클릭도 사용자 구간으로 센다. `releaseInitialRange`는 플롯 안의 모든 `pointerdown`에서 실행된다. 구간을 움직이지 않은 클릭 뒤에도 `userOwnsRange()`가 참이다. 그 상태에서 `setData`는 밀린 구간과 이전 구간을 차례로 보고하고, `onViewport`는 `state.rangeTouched`를 쓴다. 클릭한 뒤 다시 조회하면 전망이 끝나도 관측 구간이 그대로 남는다. `28bf58de`에서는 같은 순서에서 구간이 전망까지 넓어졌다. `c35f75cf`에서 생겼다.
 2. 보고가 비워진 구간에 도착할 수 있다. 244행은 `state.range`를 `null`로 만들고 렌더를 예약한다. 코인 자료가 주가와 함께 준비되어 있으면 `setData` 뒤의 두 번째 보고가 그 렌더보다 먼저 온다. `onViewport`는 `{start,end}`만 적고, 194행은 `null`일 때만 구간을 다시 만든다. 전망 구간이 적용되지 않고, 날짜 이동은 `null`을 돌려주고, `changeInterval`은 `RangeError: Invalid native viewport grid`를 던진다. `931ed189`에서 생겼다. 단일 파일 빌드는 두 자료를 모두 내장한다.

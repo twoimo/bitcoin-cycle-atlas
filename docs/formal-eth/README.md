@@ -14,12 +14,12 @@ numbers.
 | Paint, inside Render, InitialFrame and PaintConfirmed | dist/eth-view.js:254-338 | render creates the mount once (309-311) or hands it a changed series (313). Both start a paint watch and clear state.funnestReady |
 | WaitForPaint | dist/eth-view.js:337 | render announces readiness only when state.funnestReady holds a painted confirmation |
 | PaintConfirmed | dist/eth-view.js:253 | The then handler clears the chart error, sets state.funnestReady, cancels the tracked frame and calls render |
-| PaintFailed | dist/eth-view.js:253; src/charts/funnest-chart-runtime.js:470,484 | A result without painted pixels, a rejection, or a throw from render records the chart error, announces readiness for the retry and schedules its paint |
+| PaintFailed | dist/eth-view.js:253; src/charts/funnest-chart-runtime.js:482,496 | A result without painted pixels, a rejection, or a throw from render records the chart error, announces readiness for the retry and schedules its paint |
 | GuardPaintSuspension | dist/eth-view.js:253 | Both handlers drop a result that arrives while the page is suspended |
-| StalePaintFailed, GuardPaintMount | dist/eth-view.js:253; src/charts/funnest-chart-runtime.js:472 | A destroyed mount rejects its pending watch. Both handlers drop a result whose mount is no longer state.funnestMount |
+| StalePaintFailed, GuardPaintMount | dist/eth-view.js:253; src/charts/funnest-chart-runtime.js:484 | A destroyed mount rejects its pending watch. Both handlers drop a result whose mount is no longer state.funnestMount |
 | Refresh after a chart error | dist/eth-view.js:388 | The retry destroys the mount and clears the error before it loads |
-| NativePan, TrackNativeNavigation | dist/eth-view.js:108,310; dist/chart-navigation.js:86,225-233; src/charts/funnest-chart-runtime.js:391-399 | A zoom or pan on the mounted chart reaches the view through onViewport. Since d4f667d2 it increments navigationRevision and writes state.range when the window changes. At 856e7742 it wrote state.range without a navigation revision. bindChartNavigation delivers no range callback once a mount exists |
-| ViewportEcho, GuardViewport | dist/eth-view.js:310; src/charts/funnest-chart-runtime.js:392,497 | The mount also reports windows that it sets itself. onViewport drops a report that arrives while the page is suspended |
+| NativePan, TrackNativeNavigation | dist/eth-view.js:108,310; dist/chart-navigation.js:86,225-233; src/charts/funnest-chart-runtime.js:391-401 | A zoom or pan on the mounted chart reaches the view through onViewport. Since d4f667d2 it increments navigationRevision and writes state.range when the window changes. At 856e7742 it wrote state.range without a navigation revision. bindChartNavigation delivers no range callback once a mount exists |
+| ViewportEcho, GuardViewport | dist/eth-view.js:310; src/charts/funnest-chart-runtime.js:392,509-518 | The mount also reports windows that move without a gesture, such as a relayout after a click. Since c3bcb58f, setData reports neither its interim window nor the restore. onViewport drops a report that arrives while the page is suspended |
 | Hide for a discarded document | dist/eth-view.js:419 | A pagehide that is not persisted also destroys the mount. The model covers it with a Hide that no Show follows |
 
 ### Readiness waits for a painted chart

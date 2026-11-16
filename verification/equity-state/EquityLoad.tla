@@ -241,7 +241,7 @@ InitialFrame ==
                  orphan, chartError, rangeLost>>
 
 \* Line 166 mount.ready() resolves with painted pixels for the current mount
-\* (src/charts/funnest-chart-runtime.js:483). The continuation returns while the
+\* (src/charts/funnest-chart-runtime.js:495). The continuation returns while the
 \* document is suspended and keeps no record of the confirmation. Show reads that
 \* result again. Otherwise the continuation clears the chart error, sets
 \* state.funnestReady, cancels the queued frame and calls render() itself.
@@ -263,7 +263,7 @@ PaintConfirmed ==
 
 \* Line 166 the .catch continuation: ready() rejects for the current mount at the
 \* runtime's five-second limit or on a canvas read error
-\* (src/charts/funnest-chart-runtime.js:470, 484). The .then branch without painted
+\* (src/charts/funnest-chart-runtime.js:482, 496). The .then branch without painted
 \* pixels writes the same. Both return while the document is suspended. Otherwise they
 \* publish the chart error and readiness directly, then schedule.
 PaintFails ==
@@ -279,7 +279,7 @@ PaintFails ==
                  forecastError, painted, errorPainted, initialFrameDone, staleWrite,
                  frequency, customRange, range, obscured, urlRange, mounted, orphan, rangeLost>>
 
-\* src/charts/funnest-chart-runtime.js:472 a destroyed mount rejects its pending
+\* src/charts/funnest-chart-runtime.js:484 a destroyed mount rejects its pending
 \* ready(). Line 166 compares state.funnestMount with the mount that owns the
 \* continuation and returns.
 OrphanSettles ==
@@ -309,7 +309,7 @@ Hide ==
 \* Line 285 pageshow resumes the document; Load models a missing projection retry.
 \* With a mounted chart whose paint is not confirmed, it first starts the paint watch
 \* again (line 166). mount.ready() returns its settled promise until the data changes
-\* (src/charts/funnest-chart-runtime.js:466-468 and 498), so the continuation for a
+\* (src/charts/funnest-chart-runtime.js:478-480 and 519), so the continuation for a
 \* confirmation that arrived while suspended runs in the same task, before any frame.
 \* It cancels the frame that the handler queued and calls render() itself. A failure
 \* that arrived while suspended is read the same way. PaintFails after Show covers it.
@@ -339,9 +339,10 @@ Pan ==
                  obscured, urlRange, mounted, orphan, funnestReady, chartError, discarded, rangeLost>>
 
 \* Line 197 onViewport: Funnest reports the visible range after a wheel, drag or key
-\* gesture (src/charts/funnest-chart-runtime.js:391-398 and 412-425). A pointer, wheel
-\* or key event first hands the range to the user (line 423 there), and
-\* userOwnsRange() says so until setRange takes it back (lines 465 and 500 there).
+\* gesture (src/charts/funnest-chart-runtime.js:391-401 and 414-441). The report that
+\* follows such a gesture makes userOwnsRange() true (line 399 there), and setRange
+\* takes it back (lines 477 and 521 there). A click, a relayout or setData does not.
+\* setData reports neither its interim window nor the restore (lines 509-518 there).
 \* The callback returns while the document is suspended. Otherwise it stores the
 \* reported start and end in state.range, and sets state.rangeTouched while
 \* userOwnsRange() holds. It does not schedule. The boot script keeps the app inert

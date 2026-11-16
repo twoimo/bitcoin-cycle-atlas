@@ -1,8 +1,9 @@
 ------------------------------ MODULE EthLoad ------------------------------
 EXTENDS Naturals, FiniteSets
 
-\* Line citations refer to dist/eth-view.js at 1722f1fc. Up to line 421 they match
-\* 856e77422e0a43a77470aed2e3f64fa1e522880b; later lines are one higher,
+\* Line citations refer to dist/eth-view.js at 1722f1fc and to the runtime at c3bcb58f.
+\* Up to line 421 the eth-view.js lines match 856e77422e0a43a77470aed2e3f64fa1e522880b;
+\* later lines are one higher,
 \* unless another file is named. src/charts/funnest-chart-runtime.js is the source
 \* of the shipped dist/funnest-chart-runtime.bundle.js.
 CONSTANTS RequestLimit, BootOnRender, RespectSuspension, PreserveNavigation,
@@ -197,7 +198,7 @@ Pan ==
   /\ s' = [s EXCEPT !.range = "custom", !.navigated = [i \in Ids |-> TRUE], !.renderPending = TRUE]
 
 \* A zoom or pan on the mounted chart moves the engine's own window, and the mount
-\* reports it through onViewport (line 310; src/charts/funnest-chart-runtime.js:391-399).
+\* reports it through onViewport (line 310; src/charts/funnest-chart-runtime.js:391-401).
 \* When the window changes, that handler increments navigationRevision and writes
 \* state.range. It does not schedule a paint.
 NativePan ==
@@ -206,8 +207,9 @@ NativePan ==
              !.navigated = IF TrackNativeNavigation THEN [i \in Ids |-> TRUE] ELSE s.navigated, \* line 310
              !.native = s.native \/ (s.active > 0 /\ s.phase[s.active] = "live")]
 
-\* The mount also reports windows that it sets itself, such as the range it
-\* restores one frame after setData (src/charts/funnest-chart-runtime.js:497). That
+\* The mount also reports windows that move without a gesture, such as a relayout
+\* after a click (src/charts/funnest-chart-runtime.js:391-401). setData reports
+\* neither its interim window nor the restore (lines 509-518 there). That
 \* callback can run after pagehide. Line 310 drops it while suspended; without that
 \* guard it writes state.range and refreshes the workbench footer. On a visible
 \* page the same report repeats the range that render pushed, which line 310 ignores,
@@ -274,8 +276,8 @@ PaintConfirmed ==
              ELSE IF CanRender /\ ~s.obscured THEN Paint(r) ELSE r
 
 \* Line 253: the watch resolves without painted pixels, or rejects after five
-\* unpainted seconds or a canvas read error (src/charts/funnest-chart-runtime.js:470,
-\* 484). A throw from render() inside the then handler reaches the same catch.
+\* unpainted seconds or a canvas read error (src/charts/funnest-chart-runtime.js:482,
+\* 496). A throw from render() inside the then handler reaches the same catch.
 \* Both handlers record the chart error, announce readiness for the retry and
 \* schedule its paint. They drop the result while suspended.
 PaintFailed ==
@@ -285,7 +287,7 @@ PaintFailed ==
              THEN Scheduled(Announce([w EXCEPT !.chartError = TRUE, !.painted = FALSE]))
              ELSE w
 
-\* A destroyed mount rejects its pending watch (src/charts/funnest-chart-runtime.js:472).
+\* A destroyed mount rejects its pending watch (src/charts/funnest-chart-runtime.js:484).
 \* Line 253 drops it because state.funnestMount is no longer that mount.
 StalePaintFailed ==
   /\ s.staleWatch
