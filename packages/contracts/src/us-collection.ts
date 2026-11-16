@@ -1,7 +1,8 @@
+import type { Axis } from './market-lab.js';
 export type UsSeries = 'GDPC1' | 'TB3MS' | 'VIXCLS';
 export interface CollectionSource {
   series: UsSeries;
-  axis: 'alpha' | 'beta' | 'gamma';
+  axis: Axis;
   url: string;
   status: 'ready' | 'error';
   checkedAt: string;

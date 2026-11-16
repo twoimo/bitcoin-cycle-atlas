@@ -26,8 +26,9 @@ export interface AxisSeries {
   staleAfterDays: number;
   values: Point[];
 }
+export type MarketId = 'spx' | 'nasdaq' | 'kospi' | 'kosdaq' | 'tqqq' | 'soxl' | 'kodex-kosdaq150';
 export interface Market {
-  id: string;
+  id: MarketId;
   sourceId: string;
   symbol: string;
   name: string;
@@ -46,6 +47,14 @@ export interface MarketSnapshot {
   markets: Market[];
   [key: string]: unknown;
 }
+export interface SpxDirection {
+  version: 'proxy-product-1';
+  direction: 'UP'|'DOWN'|null;
+  product: number|null;
+  factors: {key:Axis;z:number|null;date:string|null;status:string}[];
+  reason: string;
+  kind: 'proxy_model_direction';
+}
 export interface MarketLabEnvelope {
   schemaVersion: 1;
   revision: string;
@@ -54,12 +63,5 @@ export interface MarketLabEnvelope {
   evaluatedAt: string;
   snapshot: MarketSnapshot;
   diagnostics: Record<Region, unknown>;
-  usDirection?: {
-    version: 'proxy-product-1';
-    direction: 'UP'|'DOWN'|null;
-    product: number|null;
-    factors: {key:Axis;z:number|null;date:string|null;status:string}[];
-    reason: string;
-    kind: 'proxy_model_direction';
-  };
+  usDirection?: SpxDirection;
 }

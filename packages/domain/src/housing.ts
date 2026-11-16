@@ -6,7 +6,7 @@ export type HousingOptions = { region:string; window:number; band:number; lag:nu
 export type VolumeState = 'above'|'neutral'|'below'|'warmup';
 export type HousingRow = { month:string; volume:number|null; price:number|null; average:number|null; deviation:number|null; state:VolumeState; priceChange:number|null; volumeChange:number|null };
 const monthPattern=/^\d{4}-(0[1-9]|1[0-2])$/;
-export const monthNumber=(s:string)=>Number(s.slice(0,4))*12+Number(s.slice(5,7))-1;
+const monthNumber=(s:string)=>Number(s.slice(0,4))*12+Number(s.slice(5,7))-1;
 export const monthAfter=(s:string,n:number)=>{const m=monthNumber(s)+n;return `${Math.floor(m/12)}-${String(m%12+1).padStart(2,'0')}`;};
 export function validateHousing(input:unknown):HousingSnapshot {
   const d=input as HousingSnapshot;
@@ -77,4 +77,3 @@ export function analyzeHousing(snapshot:HousingSnapshot,options:HousingOptions){
   });
   return {options,region:region.label,rows,selectedCount:selected.length,relations,backtests};
 }
-export type HousingAnalysis=ReturnType<typeof analyzeHousing>;
