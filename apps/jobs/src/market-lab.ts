@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { createPool, migrate, publishSnapshot, readSnapshot } from '@atlas/api/repository';
+import { createPool, migrate } from '@atlas/api/db';
+import { publishSnapshot, readSnapshot } from '@atlas/api/repository';
 import { refreshMarketLab } from '../../../scripts/refresh-market-lab.mjs';
 
 const [command, ...args] = process.argv.slice(2);
@@ -10,7 +11,7 @@ if (!['migrate', 'import', 'refresh'].includes(command) || (command === 'import'
 if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is required');
 const pool = createPool(process.env.DATABASE_URL);
 try {
-  if (command === 'migrate') { await migrate(pool); console.log(JSON.stringify({ status: 'migrated' })); }
+  if (command === 'migrate') { await migrate(pool, ['001_market_lab']); console.log(JSON.stringify({ status: 'migrated' })); }
   else if (command === 'import') console.log(JSON.stringify(await publishSnapshot(pool, JSON.parse(await readFile(resolve(args[0]), 'utf8')))));
   else {
     // Collect/validate in memory. PostgreSQL owns publication; the legacy file

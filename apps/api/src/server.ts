@@ -1,4 +1,4 @@
-import Fastify from 'fastify';
+import Fastify, { type FastifyReply, type FastifyRequest } from 'fastify';
 import { atlasPages } from '../../../dist/atlas-navigation.js';
 import staticFiles from '@fastify/static';
 import { fileURLToPath } from 'node:url';
@@ -16,6 +16,17 @@ import { themeComparison,themePerformance,type ThemeDraft } from '@atlas/domain/
 import { spxDirection } from '@atlas/domain/us-direction';
 import { readUsCollection,US_COLLECTION_INTERVAL } from './us-collector.js';
 import type { CollectionSchedule } from '@atlas/contracts/us-collection';
+import { ApiError } from './api-error.js';
+
+const revision = { type: 'string', pattern: '^[a-f0-9]{64}$' } as const;
+const revisionQuery = { querystring: { type: 'object', additionalProperties: false, properties: { revision } } } as const;
+const dataUnavailable = new ApiError(503, 'DATA_UNAVAILABLE', '연구 자료를 지금 읽을 수 없습니다.');
+
+function fail(request: FastifyRequest, reply: FastifyReply, error: unknown, unavailable: ApiError) {
+  if (error instanceof ApiError) return reply.code(error.status).send(error.body);
+  request.log.error({ err: error }, unavailable.code);
+  return reply.code(unavailable.status).send(unavailable.body);
+}
 
 export async function buildServer({ pool, clock = () => new Date(), serveWeb = false, logger = false, collectionSchedule = () => ({enabled:false,intervalMs:US_COLLECTION_INTERVAL,running:false,nextDueAt:null}) }: { pool: pg.Pool; clock?: () => Date; serveWeb?: boolean; logger?: boolean; collectionSchedule?: () => CollectionSchedule }) {
   const app = Fastify({ logger, bodyLimit: 1024, requestTimeout: 15000, ajv: { customOptions: { removeAdditional: false } } });
@@ -27,34 +38,49 @@ export async function buildServer({ pool, clock = () => new Date(), serveWeb = f
     try {
       reply.header('Cache-Control','no-store');
       return {schemaVersion:1,evaluatedAt:clock().toISOString(),schedule:collectionSchedule(),...await readUsCollection(pool)};
-    } catch (error) {
-      request.log.error({err:error},'US collection status unavailable');
-      return reply.code(503).send({code:'COLLECTION_STATUS_UNAVAILABLE',message:'수집 상태를 확인할 수 없습니다.'});
-    }
+    } catch (error) { return fail(request, reply, error, new ApiError(503, 'COLLECTION_STATUS_UNAVAILABLE', '수집 상태를 확인할 수 없습니다.')); }
   });
-  app.get<{Querystring:{revision?:string}}>('/api/v1/themes',{schema:{querystring:{type:'object',additionalProperties:false,properties:{revision:{type:'string',pattern:'^[a-f0-9]{64}$'}}}}},async(request,reply)=>{
-    try{const stored=await readThemes(pool,request.query.revision);if(!stored)return reply.code(404).send({code:'THEME_NOT_FOUND'});reply.header('Cache-Control','no-store');return {schemaVersion:1,revision:stored.revision,snapshot:stored.snapshot,judgments:stored.judgments,comparison:themeComparison(stored.snapshot,stored.judgments),performance:stored.judgments.map(j=>({id:j.id,result:themePerformance(stored.snapshot,j)}))};}catch{return reply.code(503).send({code:'THEME_UNAVAILABLE',message:'테마 자료를 읽을 수 없습니다.'});}
+  app.get<{Querystring:{revision?:string}}>('/api/v1/themes',{schema:revisionQuery},async(request,reply)=>{
+    try {
+      const stored = await readThemes(pool, request.query.revision);
+      if (!stored) return reply.code(404).send({ code: 'THEME_NOT_FOUND' });
+      reply.header('Cache-Control', 'no-store');
+      return { schemaVersion: 1, revision: stored.revision, snapshot: stored.snapshot, judgments: stored.judgments, comparison: themeComparison(stored.snapshot, stored.judgments), performance: stored.judgments.map(j => ({ id: j.id, result: themePerformance(stored.snapshot, j) })) };
+    } catch (error) { return fail(request, reply, error, new ApiError(503, 'THEME_UNAVAILABLE', '테마 자료를 읽을 수 없습니다.')); }
   });
   app.get<{Params:{id:string}}>('/api/v1/themes/receipts/:id',{schema:{params:{type:'object',required:['id'],properties:{id:{type:'string',format:'uuid'}}}}},async(request,reply)=>{
-    try{const record=await readThemeReceipt(pool,request.params.id);reply.header('Cache-Control','no-store');return record??reply.code(404).send({code:'RECEIPT_NOT_FOUND'});}catch{return reply.code(503).send({code:'RECEIPT_UNAVAILABLE'});}
+    try {
+      const record = await readThemeReceipt(pool, request.params.id);
+      reply.header('Cache-Control', 'no-store');
+      return record ?? reply.code(404).send({ code: 'RECEIPT_NOT_FOUND' });
+    } catch (error) { return fail(request, reply, error, new ApiError(503, 'RECEIPT_UNAVAILABLE')); }
   });
   app.post<{Body:{requestId:string;revision:string;draft:ThemeDraft}}>('/api/v1/themes/judgments',{
-    bodyLimit:8192,schema:{body:{type:'object',additionalProperties:false,required:['requestId','revision','draft'],properties:{requestId:{type:'string',format:'uuid'},revision:{type:'string',pattern:'^[a-f0-9]{64}$'},draft:{type:'object',additionalProperties:false,required:['title','criteria'],properties:{title:{type:'string',minLength:1,maxLength:100},criteria:{type:'object'}}}}}}
+    bodyLimit:8192,schema:{body:{type:'object',additionalProperties:false,required:['requestId','revision','draft'],properties:{requestId:{type:'string',format:'uuid'},revision,draft:{type:'object',additionalProperties:false,required:['title','criteria'],properties:{title:{type:'string',minLength:1,maxLength:100},criteria:{type:'object'}}}}}}
   },async(request,reply)=>{
-    try{const saved=await saveThemeJudgment(pool,request.body,clock);return reply.code(saved.created?201:200).send(saved);}catch(e){const message=e instanceof Error?e.message:'저장 오류';if(message==='IDEMPOTENCY_CONFLICT')return reply.code(409).send({code:message,message:'같은 저장 번호의 내용이 다릅니다.'});if(message==='THEME_NOT_FOUND')return reply.code(404).send({code:message});if(/확인하세요|근거입니다|판정 기록|Future snapshot/.test(message))return reply.code(422).send({code:'INVALID_JUDGMENT',message});return reply.code(503).send({code:'SAVE_UNAVAILABLE',message:'저장 여부를 확인하세요.'});}
+    try {
+      const saved = await saveThemeJudgment(pool, request.body, clock);
+      return reply.code(saved.created ? 201 : 200).send(saved);
+    } catch (error) { return fail(request, reply, error, new ApiError(503, 'SAVE_UNAVAILABLE', '저장 여부를 확인하세요.')); }
   });
   app.get<{Querystring:{revision?:string}}>('/api/v1/housing',{
-    schema:{querystring:{type:'object',additionalProperties:false,properties:{revision:{type:'string',pattern:'^[a-f0-9]{64}$'}}}}
+    schema:revisionQuery
   },async(request,reply)=>{
-    try{const stored=await readHousing(pool,request.query.revision);if(!stored)return reply.code(404).send({code:'HOUSING_NOT_FOUND'});reply.header('Cache-Control','no-store');return {schemaVersion:1,revision:stored.revision,snapshot:stored.snapshot,importedAt:stored.importedAt};}
-    catch{return reply.code(503).send({code:'HOUSING_UNAVAILABLE',message:'부동산 자료를 읽을 수 없습니다.'});}
+    try {
+      const stored = await readHousing(pool, request.query.revision);
+      if (!stored) return reply.code(404).send({ code: 'HOUSING_NOT_FOUND' });
+      reply.header('Cache-Control', 'no-store');
+      return { schemaVersion: 1, revision: stored.revision, snapshot: stored.snapshot, importedAt: stored.importedAt };
+    } catch (error) { return fail(request, reply, error, new ApiError(503, 'HOUSING_UNAVAILABLE', '부동산 자료를 읽을 수 없습니다.')); }
   });
   app.post<{Body:HousingOptions&{revision:string}}>('/api/v1/housing/analysis',{
     schema:{body:{type:'object',additionalProperties:false,required:['revision','region','window','band','lag','start','end'],properties:{
-      revision:{type:'string',pattern:'^[a-f0-9]{64}$'},region:{type:'string',enum:['busan','seoul','gyeonggi','national']},window:{type:'integer',enum:[12,36,60]},band:{type:'integer',enum:[0,5,10,20]},lag:{type:'integer',enum:[0,1,2,3]},start:{type:'string',pattern:'^\\d{4}-(0[1-9]|1[0-2])$'},end:{type:'string',pattern:'^\\d{4}-(0[1-9]|1[0-2])$'}
+      revision,region:{type:'string',enum:['busan','seoul','gyeonggi','national']},window:{type:'integer',enum:[12,36,60]},band:{type:'integer',enum:[0,5,10,20]},lag:{type:'integer',enum:[0,1,2,3]},start:{type:'string',pattern:'^\\d{4}-(0[1-9]|1[0-2])$'},end:{type:'string',pattern:'^\\d{4}-(0[1-9]|1[0-2])$'}
     }}}
   },async(request,reply)=>{
-    let stored;try{stored=await readHousing(pool,request.body.revision);}catch{return reply.code(503).send({code:'HOUSING_UNAVAILABLE'});}
+    let stored;
+    try { stored = await readHousing(pool, request.body.revision); }
+    catch (error) { return fail(request, reply, error, new ApiError(503, 'HOUSING_UNAVAILABLE')); }
     if(!stored)return reply.code(404).send({code:'HOUSING_NOT_FOUND'});
     const {revision:_revision,...options}=request.body;
     try{reply.header('Cache-Control','no-store');return {revision:stored.revision,result:analyzeHousing(stored.snapshot,options)};}
@@ -62,14 +88,14 @@ export async function buildServer({ pool, clock = () => new Date(), serveWeb = f
   });
   app.post<{ Body: BacktestOptions & { symbol:string; revision:string } }>('/api/v1/market-lab/backtest', {
     schema:{ body:{ type:'object', additionalProperties:false, required:['symbol','revision','start','end','capital','buy','sell','feeBps'], properties:{
-      symbol:{type:'string',enum:['TQQQ','SOXL','233740']}, revision:{type:'string',pattern:'^[a-f0-9]{64}$'},
+      symbol:{type:'string',enum:['TQQQ','SOXL','233740']}, revision,
       start:{type:'string',pattern:'^\\d{4}-\\d{2}-\\d{2}$'},end:{type:'string',pattern:'^\\d{4}-\\d{2}-\\d{2}$'},
       capital:{type:'number',exclusiveMinimum:0,maximum:1e12},buy:{type:'number',minimum:0,maximum:100},sell:{type:'number',minimum:0,maximum:100},feeBps:{type:'number',minimum:0,maximum:1000}
     } } }
   }, async (request,reply) => {
     let stored;
     try { stored = await readSnapshot(pool,request.body.revision); }
-    catch { return reply.code(503).send({code:'DATA_UNAVAILABLE',message:'연구 자료를 지금 읽을 수 없습니다.'}); }
+    catch (error) { return fail(request, reply, error, dataUnavailable); }
     if (!stored) return reply.code(404).send({code:'SNAPSHOT_NOT_FOUND',message:'요청한 자료 판본이 없습니다.'});
     const instrument = rsiInstrument(request.body.symbol), market = stored.snapshot.markets.find(m => m.id === instrument?.id);
     const source = stored.snapshot.sources.find(s => s.id === market?.sourceId);
@@ -79,7 +105,7 @@ export async function buildServer({ pool, clock = () => new Date(), serveWeb = f
     catch (error) { return reply.code(422).send({code:'INVALID_BACKTEST',message:error instanceof Error ? error.message : '계산할 수 없습니다.'}); }
   });
   app.get<{ Querystring: { revision?: string } }>('/api/v1/market-lab', {
-    schema: { querystring: { type: 'object', additionalProperties: false, properties: { revision: { type: 'string', pattern: '^[a-f0-9]{64}$' } } } },
+    schema: revisionQuery,
   }, async (request, reply) => {
     try {
       const stored = await readSnapshot(pool, request.query.revision);
@@ -92,10 +118,7 @@ export async function buildServer({ pool, clock = () => new Date(), serveWeb = f
         diagnostics: { us: diagnoseRegion(stored.snapshot, 'us', { now }), kr: diagnoseRegion(stored.snapshot, 'kr', { now }) },
         usDirection: spxDirection(stored.snapshot, now),
       };
-    } catch (error) {
-      request.log.error({ err: error }, 'market-lab read failed');
-      return reply.code(503).send({ code: 'DATA_UNAVAILABLE', message: '연구 자료를 지금 읽을 수 없습니다.' });
-    }
+    } catch (error) { return fail(request, reply, error, dataUnavailable); }
   });
   if (serveWeb) {
     const dist = fileURLToPath(new URL('../../../dist/', import.meta.url));
