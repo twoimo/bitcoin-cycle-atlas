@@ -2,13 +2,14 @@
 EXTENDS Naturals, FiniteSets
 
 \* Line citations refer to dist/eth-view.js at 1722f1fc and to the runtime at c3bcb58f.
+\* Since 6d128dec line 310 increments navigationRevision only when userOwnsRange() holds.
 \* Up to line 421 the eth-view.js lines match 856e77422e0a43a77470aed2e3f64fa1e522880b;
 \* later lines are one higher,
 \* unless another file is named. src/charts/funnest-chart-runtime.js is the source
 \* of the shipped dist/funnest-chart-runtime.bundle.js.
 CONSTANTS RequestLimit, BootOnRender, RespectSuspension, PreserveNavigation,
           GuardResponses, GuardErrors, WaitForPaint, GuardPaintSuspension,
-          GuardPaintMount, GuardViewport, TrackNativeNavigation
+          GuardPaintMount, GuardViewport, TrackNativeNavigation, GateNativeNavigation
 Ids == 1..RequestLimit
 Phases == {"unused", "archive", "live", "done"}
 Intervals == {"daily", "weekly"}
@@ -25,6 +26,12 @@ vars == <<s>>
 \* mount settles like the first, so one flag stands for both. staleWatch: one is
 \* pending on a destroyed mount. native: the user moved the mounted chart's own
 \* window while the active refresh was pending.
+\* owned is the mount's userOwnsRange() (src/charts/funnest-chart-runtime.js:399, 477).
+\* It turns true at the report after a wheel, drag, touch or navigation key; setRange
+\* clears it (line 521 there). pushPending: state.range differs from the window the
+\* mount last received or reported, so the next render pushes it with setAtlasRange
+\* (line 316). excused: the viewer owned the window when the active request began, or
+\* navigated after it began. keptUnchosen: the active refresh kept a window anyway.
 Init ==
   \E url \in BOOLEAN:
   s = [issued |-> 0, active |-> 0, phase |-> [i \in Ids |-> "unused"],
@@ -37,7 +44,8 @@ Init ==
        obscured |-> FALSE, urlRange |-> url,
        mounted |-> FALSE, shownFrequency |-> "daily", shownOutdated |-> FALSE,
        painted |-> FALSE, chartError |-> FALSE, watching |-> FALSE, staleWatch |-> FALSE,
-       native |-> FALSE]
+       native |-> FALSE, owned |-> FALSE, pushPending |-> FALSE,
+       excused |-> FALSE, keptUnchosen |-> FALSE]
 
 \* Observed prices count once the mount confirmed painted pixels (lines 253, 337).
 \* A load error or a chart error shows the retry instead (lines 268-271, 280).
@@ -61,7 +69,8 @@ Scheduled(r) == [r EXCEPT !.renderPending = r.renderPending \/ (r.attached \/ ~R
 \* Both start a paint watch, which clears state.funnestReady (line 253). Readiness
 \* follows a confirmed paint (line 337) or, without a series, a load error (line 280).
 \* Line 275 destroys the mount when the series disappears. Daily and weekly prices
-\* never disappear, so in this model only Refresh destroys a mount.
+\* never disappear, so in this model only Refresh destroys a mount. A new mount and a
+\* pushed range (line 316) both leave the window to the view, so owned clears.
 Paint(r) ==
   LET series == r.prices > 0
       url == r.urlRange /\ series
@@ -70,6 +79,8 @@ Paint(r) ==
                          !.urlRange = r.urlRange /\ ~url,
                          !.range = IF url THEN "custom" ELSE r.range,
                          !.mounted = series,
+                         !.owned = r.owned /\ series /\ r.mounted /\ ~r.pushPending,
+                         !.pushPending = FALSE,
                          !.shownFrequency = IF series THEN r.frequency ELSE r.shownFrequency,
                          !.shownOutdated = FALSE,
                          !.painted = r.painted /\ ~watch,
@@ -82,13 +93,15 @@ Paint(r) ==
 \* Lines 348-376; RequestLimit is a model bound, never a runtime guard.
 \* changeInterval (lines 377-381) carries the previous viewport in intervalViewport
 \* and render retargets it (lines 292-302), so an interval change keeps the range
-\* class (tests/native-chart-viewport.test.mjs).
+\* class (tests/native-chart-viewport.test.mjs). It clears state.range, so the
+\* retargeted window is pushed.
 Begin(r, force, frequency) ==
   LET id == r.issued + 1
       phase == IF r.prices = 0 THEN "archive" ELSE IF force THEN "live" ELSE "done"
   IN [r EXCEPT !.issued = id, !.active = id, !.attached = TRUE,
                !.phase[id] = phase, !.forced[id] = force, !.navigated[id] = FALSE,
-               !.native = FALSE,
+               !.native = FALSE, !.excused = r.owned,
+               !.pushPending = r.pushPending \/ frequency # r.frequency,
                !.loading = phase # "done", !.priceError = FALSE, !.refreshError = FALSE,
                !.renderPending = TRUE, !.frequency = frequency]
 
@@ -111,7 +124,7 @@ Refresh ==
   /\ s.ready /\ s.attached \* lines 58, 349, 388
   /\ s.issued < RequestLimit \* verification/eth-state/EthLoad.cfg:3 finite bound
   /\ s' = Begin(IF s.chartError
-                THEN [s EXCEPT !.mounted = FALSE, !.shownFrequency = "daily",
+                THEN [s EXCEPT !.mounted = FALSE, !.owned = FALSE, !.shownFrequency = "daily",
                                !.shownOutdated = FALSE, !.painted = FALSE,
                                !.chartError = FALSE, !.watching = FALSE,
                                !.staleWatch = s.staleWatch \/ s.watching]
@@ -156,6 +169,7 @@ ArchiveFails(id) ==
 \* If an interval viewport is still pending (render obscured), its retarget can
 \* bring back the earlier range; "auto" then understates preservation, which
 \* cannot hide a lost navigation because that requires a navigated request.
+\* An accepted response replaces state.range (lines 368-369), so render pushes it.
 LiveArrives(id) ==
   /\ s.phase[id] = "live" \* line 363 pending fetchMarketCandles await
   /\ LET accepted == id = s.active \/ ~GuardResponses
@@ -168,6 +182,9 @@ LiveArrives(id) ==
        !.renderPending = s.renderPending \/ (id = s.active /\ (s.attached \/ ~RespectSuspension)),
        !.stalePublication = s.stalePublication \/ (accepted /\ id # s.active),
        !.native = s.native /\ id # s.active,
+       !.pushPending = s.pushPending \/ accepted,
+       !.keptUnchosen = s.keptUnchosen \/ (accepted /\ id = s.active /\ preserve /\ s.range = "custom"
+                                             /\ ~s.excused),
        !.lostNavigation = s.lostNavigation \/ (accepted /\ s.navigated[id] /\ s.range = "custom" /\ ~preserve),
        !.lostNative = s.lostNative \/ (accepted /\ id = s.active /\ s.native /\ s.range = "custom" /\ ~preserve)]
 
@@ -195,34 +212,41 @@ LiveFails(id) ==
 \* synchronous load lock or external-event guard inside the await.
 Pan ==
   /\ s.ready /\ s.attached /\ s.prices > 0 \* lines 58, 152, 408
-  /\ s' = [s EXCEPT !.range = "custom", !.navigated = [i \in Ids |-> TRUE], !.renderPending = TRUE]
+  /\ s' = [s EXCEPT !.range = "custom", !.navigated = [i \in Ids |-> TRUE], !.renderPending = TRUE,
+             !.excused = TRUE, !.pushPending = TRUE]
 
 \* A zoom or pan on the mounted chart moves the engine's own window, and the mount
 \* reports it through onViewport (line 310; src/charts/funnest-chart-runtime.js:391-401).
-\* When the window changes, that handler increments navigationRevision and writes
-\* state.range. It does not schedule a paint. It returns while state.range is null,
+\* The report follows the viewer's input, so userOwnsRange() now holds. When the
+\* window changes, that handler increments navigationRevision and writes state.range,
+\* which then matches the mount, so no push is pending. It does not schedule a paint.
+\* It returns while state.range is null,
 \* before the render that rebuilds the default window (e8873b88). range "auto" covers
 \* that state too, so a dropped report is a NativePan that did not happen.
 NativePan ==
   /\ s.ready /\ s.attached /\ s.mounted \* lines 58, 310
   /\ s' = [s EXCEPT !.range = "custom",
              !.navigated = IF TrackNativeNavigation THEN [i \in Ids |-> TRUE] ELSE s.navigated, \* line 310
-             !.native = s.native \/ (s.active > 0 /\ s.phase[s.active] = "live")]
+             !.native = s.native \/ (s.active > 0 /\ s.phase[s.active] = "live"),
+             !.excused = TRUE, !.owned = TRUE, !.pushPending = FALSE]
 
 \* The mount also reports windows that move without a gesture, such as a relayout
-\* after a click (src/charts/funnest-chart-runtime.js:391-401). setData reports
-\* neither its interim window nor the restore (lines 509-518 there). That
-\* callback can run after pagehide. Line 310 drops it while suspended; without that
-\* guard it writes state.range and refreshes the workbench footer. On a visible
-\* page the same report repeats the range that render pushed, which line 310 ignores,
-\* or returns to an earlier window, which line 310 counts as navigation. Counting it
-\* can only keep a window that LiveArrives would reset, and no invariant requires a
-\* reset, so only the suspended report is a step.
+\* after a click (src/charts/funnest-chart-runtime.js:391-401). A click releases the
+\* window the view pushed (line 425 there), and the next relayout moves it. A report
+\* that repeats the range render pushed changes nothing (line 310) and is no step.
+\* setData reports neither its interim window nor the restore (lines 509-518 there).
+\* The report writes state.range, so no push is pending, and line 310 increments
+\* navigationRevision only while userOwnsRange() holds. That callback can also run
+\* after pagehide. Line 310 drops it while suspended; without that guard it writes
+\* state.range and refreshes the workbench footer.
 ViewportEcho ==
   /\ s.mounted \* src/charts/funnest-chart-runtime.js:392 a destroyed mount is silent
-  /\ ~s.attached /\ ~GuardViewport \* line 310
+  /\ s.attached \/ ~GuardViewport \* line 310
   /\ \E class \in {"auto", "custom"}:
-       s' = [s EXCEPT !.range = class, !.hiddenPublication = TRUE]
+       s' = [s EXCEPT !.range = class, !.pushPending = FALSE,
+             !.hiddenPublication = s.hiddenPublication \/ ~s.attached,
+             !.navigated = IF TrackNativeNavigation /\ (s.owned \/ ~GateNativeNavigation)
+                           THEN [i \in Ids |-> TRUE] ELSE s.navigated] \* line 310
 
 \* dist/native-chart-workbench.js:85 undo/redo assigns a snapshot of frequency and
 \* range, then onRestore (line 409) loads a frequency with no series, and onChange
@@ -238,10 +262,12 @@ Restore ==
                IN s' = [s EXCEPT !.issued = id, !.active = id,
                          !.phase[id] = "archive", !.forced[id] = FALSE,
                          !.navigated = [i \in Ids |-> TRUE],
+                         !.excused = TRUE, !.pushPending = TRUE,
                          !.loading = TRUE, !.priceError = FALSE, !.refreshError = FALSE,
                          !.renderPending = TRUE, !.frequency = f, !.range = r]
        ELSE s' = [s EXCEPT !.frequency = f, !.range = r,
-                    !.navigated = [i \in Ids |-> TRUE], !.renderPending = TRUE]
+                    !.navigated = [i \in Ids |-> TRUE], !.renderPending = TRUE,
+                    !.excused = TRUE, !.pushPending = TRUE]
 
 \* Lines 254-338 a queued render is one synchronous continuation.
 Render ==
@@ -359,7 +385,7 @@ TypeOK ==
                    "ready","initialDone","badReadiness","hiddenPublication",
                    "stalePublication","lostNavigation","lostNative","obscured","urlRange",
                    "mounted","shownOutdated","painted","chartError","watching","staleWatch",
-                   "native"}: s[name] \in BOOLEAN
+                   "native","owned","pushPending","excused","keptUnchosen"}: s[name] \in BOOLEAN
 
 \* Readiness may be announced only when the selected chart has confirmed painted
 \* prices or a recorded actionable error. Guarded by lines 251, 253, 280, 337, 430.
@@ -379,8 +405,16 @@ NoStalePublication == ~s.stalePublication
 NavigationSurvivesRefresh == ~s.lostNavigation
 
 \* The same promise for a window chosen on the mounted chart. Guarded by line 310,
-\* which increments navigationRevision when the chart window changes.
+\* which increments navigationRevision when the viewer's input moves the chart window.
 NativeNavigationSurvivesRefresh == ~s.lostNative
+
+\* A completed refresh resets a window that the mount moved by itself, such as a
+\* relayout after a click, unless the viewer navigated after the request began.
+\* Guarded by line 310, which counts a report only while userOwnsRange() holds.
+\* Open: a window the viewer already owned when the request began is excluded. A
+\* relayout that moves it still counts, because userOwnsRange() stays true until the
+\* view pushes a range, so that refresh keeps the moved window.
+UnchosenWindowResetsOnRefresh == ~s.keptUnchosen
 
 \* One document announces readiness once, including retry and BFCache restore.
 \* Guarded by line 251.

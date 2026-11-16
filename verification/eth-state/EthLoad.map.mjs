@@ -5,6 +5,7 @@ export function state({ s }) {
   if (s.stalePublication) return 'Revoked request or replaced chart wrote current state';
   if (s.lostNavigation) return 'Refresh reset the chosen range';
   if (s.lostNative) return 'Refresh reset the window chosen on the chart';
+  if (s.keptUnchosen) return 'Refresh kept a window the chart moved by itself';
   if (!s.attached) return 'Page suspended';
   if (!s.ready) return s.prices > 0 ? 'Prices waiting for a painted chart' : s.priceError ? 'Retry waiting for first display' : 'Loading shell';
   if (s.prices === 0) return s.priceError ? 'Retry available' : 'Loading after retry';
@@ -32,6 +33,7 @@ export function cause(_state, _facts, invariant) {
     NoStalePublication: 'A late response or a replaced chart publishes without checking current ownership',
     NavigationSurvivesRefresh: 'A live response resets a date range the user selected while waiting',
     NativeNavigationSurvivesRefresh: 'A live response resets a window the user chose on the chart while waiting',
+    UnchosenWindowResetsOnRefresh: 'A chart report without the viewer\'s input counts as navigation, so a live response keeps a window nobody chose',
     ReadinessOnce: 'Readiness is emitted more than once for the same document',
   }[invariant] || invariant;
 }

@@ -10,8 +10,8 @@ import { prepareTlc, TLC_JAR, TLC_SHA256, verificationProcessResult } from './ve
 const root = fileURLToPath(new URL('../', import.meta.url));
 const baselineCommit = '64c8207cb044d8990289c5a7d39972e21b74c240';
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
-const invariants = ['TypeOK', 'ReadyHasUsableView', 'NoHiddenPublication', 'NoStalePublication', 'NavigationSurvivesRefresh', 'NativeNavigationSurvivesRefresh', 'ReadinessOnce'];
-const invariantsBeforeChartMount = invariants.filter(name => name !== 'NativeNavigationSurvivesRefresh');
+const invariants = ['TypeOK', 'ReadyHasUsableView', 'NoHiddenPublication', 'NoStalePublication', 'NavigationSurvivesRefresh', 'NativeNavigationSurvivesRefresh', 'UnchosenWindowResetsOnRefresh', 'ReadinessOnce'];
+const invariantsBeforeChartMount = invariants.filter(name => !['NativeNavigationSurvivesRefresh', 'UnchosenWindowResetsOnRefresh'].includes(name));
 const failuresBeforeFix = ['ReadyHasUsableView', 'NoHiddenPublication', 'NavigationSurvivesRefresh'];
 const cases = 27;
 const TLC_FOUND_VIOLATION = 12, TESTS_FAILED = 1, PROCESS_TIMEOUT_MS = 180000;
@@ -44,6 +44,7 @@ async function models(work) {
     { id: 'stale-mount-paint', values: { GuardPaintMount: false }, broken: ['NoStalePublication'] },
     { id: 'hidden-viewport', values: { GuardViewport: false }, broken: ['NoHiddenPublication'] },
     { id: 'lost-native-navigation', values: { TrackNativeNavigation: false }, broken: ['NativeNavigationSurvivesRefresh'] },
+    { id: 'ungated-native-navigation', values: { GateNativeNavigation: false }, broken: ['UnchosenWindowResetsOnRefresh'] },
   ];
   const results = {};
   let searches = 0;
