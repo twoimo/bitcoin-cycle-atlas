@@ -106,6 +106,20 @@ test('clicking the room split already shows makes its address shareable without 
   assert.deepEqual([address.href, address.length, writes()], ['?room=naver', 2, 2], 'only the visible change is a step');
 });
 
+test('the list marks a room current only when the address names it or split shows it', async () => {
+  const current = root => [...root.querySelectorAll('.relay-room-item[aria-current="true"]')].map(row => row.dataset.room);
+  const tabStop = root => [...root.querySelectorAll('.relay-room-item[tabindex="0"]')].map(row => row.dataset.room);
+  const split = await mount();
+  assert.deepEqual([current(split.root), tabStop(split.root)], [['telegram'], ['telegram']], 'split shows the default room, so it is current');
+
+  const stack = await mount({ stack: true });
+  assert.deepEqual([current(stack.root), tabStop(stack.root)], [[], ['telegram']], 'the stacked list shows no room, so none is current');
+  click(stack.root, stack.window, '[data-room="naver"]');
+  assert.deepEqual(current(stack.root), ['naver']);
+  stack.address.back();
+  assert.deepEqual(current(stack.root), [], 'back on the list, no room is current again');
+});
+
 test('an unknown room or a post outside an articles room is replaced with what the data honors', async () => {
   const unknown = await mount({ search: '?room=missing' });
   assert.deepEqual([unknown.address.href, unknown.address.length], ['', 1]);

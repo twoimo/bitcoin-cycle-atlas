@@ -707,13 +707,14 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
       painted.rows = filters;
       painted.selected = null;
     }
-    if (painted.selected !== next.room.id) {
+    const current = next.pane === 'room' || readLayout() === 'split' ? next.room.id : null;
+    const selected = `${next.room.id}\u0000${current ?? ''}`;
+    if (painted.selected !== selected) {
       for (const row of root.querySelectorAll('.relay-room-item')) {
-        const selected = row.dataset.room === next.room.id;
-        row.setAttribute('tabindex', selected ? '0' : '-1');
-        if (selected) row.setAttribute('aria-current', 'true'); else row.removeAttribute('aria-current');
+        row.setAttribute('tabindex', row.dataset.room === next.room.id ? '0' : '-1');
+        if (row.dataset.room === current) row.setAttribute('aria-current', 'true'); else row.removeAttribute('aria-current');
       }
-      painted.selected = next.room.id;
+      painted.selected = selected;
     }
     const totals = [...next.byRoom.values()].reduce((sum, rows) => sum + rows.length, 0);
     const status = `${totals} / ${next.data.rooms.reduce((sum, room) => sum + relayEntries(room).length, 0)}건 · 원문 키워드 분류`;
