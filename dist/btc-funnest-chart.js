@@ -62,8 +62,9 @@ function closesWithoutCandle(closePoints, candles) {
   });
 }
 
+// A number is an exact Unix second on the intraday candle grid. A UTC date as the end covers its whole day.
 function rangeTime(value, end = false) {
-  if (typeof value === 'number') return value * 1000 + (end ? DAY - 1 : 0);
+  if (typeof value === 'number') return value * 1000;
   return utcMs(value) + (end ? DAY - 1 : 0);
 }
 function scaleValue(value, display) { return display.toDisplay(value); }
