@@ -221,15 +221,21 @@ export function mountAtlasBtcFunnestChart({
   const closeBefore = new Map(closePoints.map((row, index) => [row.time, closePoints[index - 1]]));
   const observedTimeline = lineRows.length ? [...rawRows, ...lineRows].sort((a, b) => a.time - b.time) : rawRows;
   const volumeByDate = new Map(volumeBars.map(row => [row.endDate ?? row.date, row]));
-  const display = createPriceDisplay({ unit, rows: observedTimeline.map(row => ({ date: row.date, price: row.price ?? row.close })), denominator, denominatorDate, scale });
+  const forecastRows = forecast.filter(row => row?.date && finitePositive(row.price)).map(row => ({ ...row, time: utcMs(row.date) }));
+  const retrospectiveRows = retrospective.filter(row => row?.date && finitePositive(row.price)).map(row => ({ ...row, time: utcMs(row.date) }));
+  const initialRange = start && end ? { from: rangeTime(start), to: rangeTime(end, true) } : null;
+  const inRequestedWindow = row => !initialRange || (Number.isFinite(row.time) && row.time >= initialRange.from && row.time <= initialRange.to);
+  // The start-relative units measure from the first row of the requested window, as the SVG chart did. A window with no
+  // observed row starts at its first model row. A window with no row keeps the first observed row, so every price has a value.
+  const displayStart = observedTimeline.find(inRequestedWindow)
+    ?? [...forecastRows, ...retrospectiveRows].filter(inRequestedWindow).sort((a, b) => a.time - b.time)[0] ?? observedTimeline[0];
+  const display = createPriceDisplay({ unit, rows: [{ date: displayStart.date, price: displayStart.price ?? displayStart.close }], denominator, denominatorDate, scale });
   const volumeByTime = sourceMode === 'close-only' && showVolume ? rawRows.map(row => ({ time: row.time, volume: volumeByDate.get(row.date)?.volume })).filter(row => Number.isFinite(row.volume)) : null;
   const effectiveScale = display.effectiveScale === 'log' ? 'log' : 'normal';
   const toEngineBar = row => sourceMode === 'close-only'
     ? { time: row.time, close: scaleValue(row.close, display) }
     : { time: row.time, open: scaleValue(row.open, display), high: scaleValue(row.high, display), low: scaleValue(row.low, display), close: scaleValue(row.close, display), volume: row.volume };
   bars = rawRows.map(toEngineBar);
-  const forecastRows = forecast.filter(row => row?.date && finitePositive(row.price)).map(row => ({ ...row, time: utcMs(row.date) }));
-  const retrospectiveRows = retrospective.filter(row => row?.date && finitePositive(row.price)).map(row => ({ ...row, time: utcMs(row.date) }));
   const eventRows = [...events.map(row => ({ ...row, kind: 'forecast' })), ...historicalEvents.map(row => ({ ...row, kind: 'historical' }))].filter(row => row?.date).map(row => ({ ...row, time: utcMs(row.date) }));
   const turnsRows = turns.filter(row => row?.date && finitePositive(row.price)).map(row => ({ ...row, time: utcMs(row.date) }));
   const markerRows = cycleMarkers.filter(row => row?.date && finitePositive(row.price)).map(row => ({ ...row, time: utcMs(row.date) }));
@@ -259,7 +265,6 @@ export function mountAtlasBtcFunnestChart({
   const background = resolveThemeColor('--bg', '#17171c');
   const lineColor = resolveThemeColor('--accent-ink', '#74a7ee');
   const chartTheme = { ...ATLAS_FUNNEST_THEME, accent: lineColor, background, surface: resolveThemeColor('--surface-raised', background), text: resolveThemeColor('--text', '#e4e4e5'), textSecondary: resolveThemeColor('--muted', '#7e7e87'), grid: resolveThemeColor('--border', '#2c2c35'), border: resolveThemeColor('--border', '#2c2c35') };
-  const initialRange = start && end ? { from: rangeTime(start), to: rangeTime(end, true) } : null;
   let destroyed = false, pointerDetail = null, futurePointerActive = false, nativeInputCanvas = null, clearingNativeCrosshair = false;
   const clearNativeCrosshair = () => {
     if (clearingNativeCrosshair || !nativeInputCanvas) return;
@@ -798,7 +803,6 @@ export function mountAtlasBtcFunnestChart({
   mounted.setScale(effectiveScale);
   mounted.setInverted(invertScale);
   const values = [];
-  const inRequestedWindow = row => !initialRange || (Number.isFinite(row.time) && row.time >= initialRange.from && row.time <= initialRange.to);
   if (!priceDomain) {
     for (const row of observedTimeline.filter(inRequestedWindow)) for (const value of [row.price ?? row.close, row.low, row.high]) if (Number.isFinite(value) && value > 0) values.push(scaleValue(value, display));
     for (const row of [...forecastRows, ...retrospectiveRows].filter(inRequestedWindow)) for (const value of [row.price, row.lower, row.upper]) if (Number.isFinite(value) && value > 0 && (!priceOnlyAuto || value === row.price)) values.push(scaleValue(value, display));
