@@ -24,6 +24,15 @@ A drift review at `fe93a5727277d15a934b7472588fb907e30b02b8` read every change t
 
 Breaking each guard in a scratch copy left the 11-control runner passing, so receipts between those commits and this record could not fail on them. The coordinator test file already held a focused case for each guard. The runner now requires those three cases and four more real-source negative controls, **fifteen** in all. Three assertions in the test file gained messages so that a control can name the assertion it expects. The finite playback and selection alphabets and their measured counts are unchanged. The statechart gains one arrow for refused entry.
 
+## 2026-11-16 Funnest renewal synchronization
+
+A second drift review at `856e77422e0a43a77470aed2e3f64fa1e522880b` read every change to the covered files from `c92c4871f4e19b232f8d94ce792e5fc270ba64c0`. The previous review commit is not an ancestor of this history, but its covered files are byte-identical to `c92c4871` except the coordinator test file. The controller, the snapshot helper and the controller tests did not change. The coordinator changed in three renewal commits, and the merges `aa1e623c` and `6528a6aa` added nothing to it:
+
+- `ea73027b` and `98eaf0a0` move replay onto the Funnest renderer. `activate` keeps the live SVG children and `viewBox`, and `finishExit` restores them. A pending current-chart frame stays painted in `pendingDrawing` until the confirmed session replaces it. `showPickLine` reads the live price scale. These are synchronous rendering steps inside existing turns. They add no await, timer, ownership check or start confirmation, so the verification needed no change for them. All fifteen earlier controls stayed detected on the merged tree.
+- `c4923937` changes the forecast gate. `forecastEntryAvailable` now treats an unanswered gate (`null`) as refused and shows a notice to press replay again once the chart is ready. `start` rereads the gate before `controller.selectOrigin` fixes a forecast. The commit added a focused coordinator case for each change, and the runner required neither.
+
+Reverting either `c4923937` guard in a scratch copy left the fifteen-control runner passing. The runner now requires both cases and two more real-source negative controls, **seventeen** in all. The finite playback and selection alphabets and their measured counts are unchanged. The statechart gains one arrow for a refusal at confirmation.
+
 ## Reproduce
 
 Use Node 24 or newer from the repository root. The latest local follow-up used **Node v26.13.0**; earlier run receipts retain their original runtime versions.
@@ -47,7 +56,7 @@ The command requires no dependency install, edits no production file and rejects
 | Same coordinator: `save`, `exit`, `finishExit`, `destroy` | Interactive Exit keeps its pending-save guard; terminal destroy releases markers and inert controls once, and revoked save completions cannot publish or alter detached controls. |
 | Same coordinator: the `pointer` handler, `replayNavigationGeometry` | A click on the price axis or the time axis cannot confirm a start. Only an unmoved click inside the plot reaches `chooseStart`. |
 | Same coordinator: `blockSurrounding` | Each blocked owner's prior `inert` value is recorded once and restored on release, even when two selectors find the same node. The sheet opener, its close action and the original period controls stay reachable. |
-| Same coordinator: `forecastEntryAvailable` in `requestEntry` and `open` | A forecast refused before entry cannot activate replay, load an archive, build a session or change saved bytes. |
+| Same coordinator: `forecastEntryAvailable` in `requestEntry`, `open` and `start` | A gate that refuses or has not answered before entry cannot activate replay, load an archive, build a session or change saved bytes. A refusal between entry and confirmation makes `start` exit replay before it fixes a forecast. |
 | `tests/chart-replay-state.test.mjs`, `tests/chart-replay-ui.test.mjs` | Actual production exports, deterministic clocks and controlled async completions; coordinator DOM, source, model and renderer doubles. |
 
 A controller call and its synchronous notifications are one JavaScript turn. Awaited source/forecast completions and each timer callback are separate steps. The tests include reentrant notifications that close, fail or replace replay before an outer call returns. Session restoration accepts a validated saved cursor with the first ready notification, without briefly exposing the origin frame.
@@ -56,7 +65,7 @@ The coordinator's picker can preview a new start while retaining an older paused
 
 ## State transitions
 
-The following 21-arrow statechart is grounded in the actual transitions. It is an explanatory projection, not TLC output. `statechart.mmd` contains the same diagram. Every active state can exit to live; every state can be destroyed permanently. An interactive exit waits for its explicit save, while destroy releases ownership synchronously even during that wait. A refusal that arrives after entry leaves through that same exit edge at the next `open`. Those repeated exit/destroy edges, the save substate, no-op stale completions, speed-only changes, direct seeks to the end, one-bar completion, confirmed-settings preparation and invalid manual entry at the terminal state are omitted. Terminal Play stays at the last observed bar; only an explicit seek can rewind.
+The following 22-arrow statechart is grounded in the actual transitions. It is an explanatory projection, not TLC output. `statechart.mmd` contains the same diagram. Every active state can exit to live; every state can be destroyed permanently. An interactive exit waits for its explicit save, while destroy releases ownership synchronously even during that wait. A refusal that arrives between entry and confirmation leaves at `start`, which the diagram draws. A later refusal leaves through the omitted exit edge at the next `open` or `start`. Those repeated exit/destroy edges, the save substate, no-op stale completions, speed-only changes, direct seeks to the end, one-bar completion, confirmed-settings preparation and invalid manual entry at the terminal state are omitted. Terminal Play stays at the last observed bar; only an explicit seek can rewind.
 
 ```mermaid
 stateDiagram-v2
@@ -78,6 +87,7 @@ stateDiagram-v2
     SavedChoice --> Idle: Cancel
     Selecting --> Selecting: Change settings or reject invalid date
     Selecting --> Loading: Confirm date or bar
+    Selecting --> Idle: Confirm after the forecast gate refuses
     Loading --> Selecting: Change unconfirmed settings
     Loading --> Paused: Current request succeeds
     Loading --> Failed: Current request fails
@@ -106,6 +116,8 @@ The controller supports 0.3, 0.5, 1, 2, 4, 8 and 10 times playback. The 0.3 sett
 | Axis clicks during selection | One click on the price axis and one on the time axis from an unconfirmed selection | The focused case passes; the status stays `selecting` and no session is built |
 | Inert ownership | Period footer in the phone information sheet and in the desktop layout; one owner already inert before entry | The focused case passes in both layouts; destroy restores every prior `inert` value |
 | Refused forecast entry | Toolbar entry with a saved record, then exported `open` with that record; the refusal is known before entry | The focused case passes; replay stays inactive with zero archive loads, zero sessions and unchanged saved bytes |
+| Unanswered forecast gate | Toolbar entry while the gate returns `null`, date confirmation after the gate answers T3, then toolbar entry again | The focused case passes; replay stays inactive with the notice to press again, zero archive loads, zero sessions and no writes, and the T3 answer then refuses as before |
+| Gate reread at confirmation | Toolbar entry under an allowed gate, then date confirmation after the gate refuses | The focused case passes; `start` exits replay with the refusal notice, builds no session and writes nothing |
 
 Playback commands are play, pause, next, back, first, last, speed 4, current timer, stale timers and exit. The coordinator alphabet is current-chart mode, project-baseline mode, horizon 90, horizon 365, explicit date confirmation and opening the picker. Its entry state is fresh current-chart start selection. The model selector shares the mode handler, but ETH's other model paths and the default cutoff model are not exhaustively enumerated here.
 
@@ -146,7 +158,7 @@ The targeted source mutation reconnects the old unguarded handlers and must fail
 
 ## Negative controls
 
-All **fifteen** mutations are rejected by intended behavioral assertions:
+All **seventeen** mutations are rejected by intended behavioral assertions:
 
 | Mutation of real source | Required failure |
 | --- | --- |
@@ -165,18 +177,20 @@ All **fifteen** mutations are rejected by intended behavioral assertions:
 | Remove the owner deduplication in `blockSurrounding` | Overlapping discovery cannot replace the original inert value |
 | Remove the refusal check from `requestEntry` | A refused forecast cannot enter replay |
 | Remove the refusal check from `open` | A refused forecast cannot open replay |
+| Treat an unanswered gate (`null`) as allowed in `forecastEntryAvailable` | An unanswered forecast gate opens no replay |
+| Remove the gate reread from `start` | `start` rereads the gate before it fixes a forecast |
 
 The runner restores the exact original files in its temporary copy and requires the controller and coordinator checks to pass again. Failed imports, syntax errors, timeouts or missing assertions never count as detected controls.
 
 ## Source synchronization and limits
 
-The current synchronization commit is `fe93a5727277d15a934b7472588fb907e30b02b8`, reviewed on 2026-11-16 as committed code. The 2026-11-06 manual-date follow-up started from `aca73b74a5128a5466488a0c701e86f5e854af46`. The previous destruction baseline is `4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc`; the original audit began at `94a1b1dda9eb359de70747043808340da369d087`. Covered controller SHA-256: `063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908`. Covered coordinator SHA-256: `4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca`. An earlier revision of this paragraph listed coordinator `99a2675fd0c1018ef853da76980760705907a77f3fbdba8a908de473b21a81b8`; no receipt in the repository carries that hash. Historical receipts remain in `docs/deep-audit-2026-11-05/replay-state-verification.json` and `docs/design-closeout-2026-11-06/regression/formal-replay.json`.
+The current synchronization commit is `856e77422e0a43a77470aed2e3f64fa1e522880b`, reviewed on 2026-11-16 as committed code. The previous review was `fe93a5727277d15a934b7472588fb907e30b02b8`, which is not an ancestor of this history. The 2026-11-06 manual-date follow-up started from `aca73b74a5128a5466488a0c701e86f5e854af46`. The previous destruction baseline is `4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc`; the original audit began at `94a1b1dda9eb359de70747043808340da369d087`. Covered controller SHA-256: `063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908`. Covered coordinator SHA-256: `de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d`. The previous review bound `4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca`. An earlier revision of this paragraph listed coordinator `99a2675fd0c1018ef853da76980760705907a77f3fbdba8a908de473b21a81b8`; no receipt in the repository carries that hash. Historical receipts remain in `docs/deep-audit-2026-11-05/replay-state-verification.json` and `docs/design-closeout-2026-11-06/regression/formal-replay.json`.
 
 The [v1.31.3 release follow-up](../design-closeout-2026-11-06/cache-version-sync.md) changes only the coordinator's three import query versions. The current receipt reruns the same controller, selection, saved-entry, destruction and manual-date checks at the new source hash. Fixtures, behavior, finite alphabets and the explanatory statechart are unchanged; earlier dated receipts retain their original hashes.
 
-Review correspondence whenever a listed function, callback boundary, session shape, supported control or fixture changes. Rerun the command and review all fifteen controls before advancing a synchronization record. Keep the skill, verifier, tests, diagram and receipt in the same Git change. A later source hash mismatch means the old receipt is stale, not that the changed code passed. Use pstack `maintain-formal-verification-skill` for drift review. If this becomes a TLA+ model, interpret it with pstack `statechart` and retain actual TLC evidence.
+Review correspondence whenever a listed function, callback boundary, session shape, supported control or fixture changes. Rerun the command and review all seventeen controls before advancing a synchronization record. Keep the skill, verifier, tests, diagram and receipt in the same Git change. A later source hash mismatch means the old receipt is stale, not that the changed code passed. Use pstack `maintain-formal-verification-skill` for drift review. If this becomes a TLA+ model, interpret it with pstack `statechart` and retain actual TLC evidence.
 
-`start` does not read forecast availability. A refusal that arrives after entry takes effect only at the next `open`, and no case covers that order. Wheel, keyboard and drag navigation are exercised by the broader coordinator tests, not by this runner.
+`start` rereads forecast availability before `controller.selectOrigin` fixes a forecast. A refusal that arrives after `start` passes that check, while the session loads or plays, takes effect only at the next `open` or `start`, and no case covers that order. Wheel, keyboard and drag navigation are exercised by the broader coordinator tests, not by this runner.
 
 The bounded checks do not prove forecasting mathematics, market predictability, provider availability, wall-clock scheduling, native DOM behavior, pixels, every persistence/concurrent-tab interleaving, arbitrary event schedules or every cutoff-model load path. The coordinator doubles do not recompute a real forecast. Existing actual-engine, source-provenance, snapshot and native browser suites remain necessary. No replay forecast is published or reclassified as the 2026-10-21 initial-commit preserved baseline by these checks; that baseline's publication time remains unproven.
 

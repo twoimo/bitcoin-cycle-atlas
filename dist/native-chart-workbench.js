@@ -7,6 +7,8 @@ import { normalizePriceDomain } from './price-axis.js';
 import { createChartSvgExport, createChartPngFromSvg } from './chart-export.js';
 import { isIntradayInterval } from './ohlc-data.js';
 import { mountNativeChartLegend } from './ui/native-chart-legend.js?v=1.36.1';
+import { createThemeControl } from './ui/theme.js';
+import { initChartColors, createChartColorsControl } from './ui/chart-colors.js';
 
 const glyphs={
   crosshair:'<path d="M12 2v5m0 10v5M2 12h5m10 0h5"/><circle cx="12" cy="12" r="4"/>',
@@ -70,6 +72,7 @@ export function nativeDateRange(range,result) {
 
 export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,getSeries,navigation,actions,onChange,onRestore,cancelInteraction}) {
   const doc=app.ownerDocument,win=doc.defaultView,workspace=app.parentElement,sidebar=doc.querySelector('.atlas-sidebar');
+  initChartColors({document:doc});
   const $=selector=>app.querySelector(selector),top=$('.eth-topbar');top.classList.add('atlas-canvas-heading');
   const active=()=>!doc.body.dataset.centerTool&&svg.dataset.chartReplayActive!=='true'&&doc.documentElement.dataset.chartReplayActive!=='true';
   const make=(tag,className,text)=>{const node=doc.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;};
@@ -159,6 +162,7 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
       const price=make('button','native-reader-action',state.scale==='log'?'로그 → 선형 가격축':'선형 → 로그 가격축');price.type='button';price.onclick=()=>command('scale');body.append(price);
       const future=make('button','native-reader-action','미래 가정·표시 설정');future.type='button';future.onclick=()=>{closeReader({restoreFocus:false});actions.forecast?.();};body.append(future);
       const note=make('p','','거래량은 실제 완료 봉에만 표시합니다. 미래 가정에는 거래량을 생성하지 않습니다.');body.append(note);
+      if(readerKind==='settings')body.append(createChartColorsControl(doc),createThemeControl(doc));
     }else if(readerKind==='selection'){
       const current=inspection||state.controller?.getSelection?.();
       if(current){body.append(make('p','',current.label));if(current.fields){const list=make('dl','native-chart-data');for(const field of current.fields)list.append(make('dt','',field.label),make('dd','',field.value));body.append(list,make('p','',current.note));}else body.append(make('pre','',current.copyText));}
@@ -210,7 +214,7 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
   function releaseExport(){if(exportUrl){win.URL.revokeObjectURL(exportUrl);exportUrl=null;}}
   function openExport(){
     if(!getSeries()||!state.controller)return;releaseExport();const series=getSeries(),range=`${stamp(state.range?.start,isIntradayInterval(state.frequency))} ~ ${stamp(state.range?.end,isIntradayInterval(state.frequency))}`;
-    try{exportVector=createChartSvgExport(svg,{title:`${symbol} / USD / ${intervals.find(i=>i.id===state.frequency)?.label||state.frequency}`,readout:range,source:`${series.source} · ${series.product} · ${timeZone} · 수집 ${series.retrievedAt}`,note:[plot.querySelector('.eth-forecast-note:not([hidden]),.equity-legend')?.textContent,'현재 가격·날짜축과 완료한 측정을 저장합니다.'].filter(Boolean).join(' · ')});}catch(error){inspection={label:'내보내기 오류',copyText:error.message};openReader('selection');return;}
+    try{const surface=state.controller.getExportSurface?.();if(state.controller.engine==='funnest'&&(!surface?.canvas||!surface?.svg))throw new Error('Funnest 차트 캔버스가 아직 준비되지 않아 내보낼 수 없습니다.');exportVector=createChartSvgExport(surface?.svg||svg,{canvas:surface?.canvas,title:`${symbol} / USD / ${intervals.find(i=>i.id===state.frequency)?.label||state.frequency}`,readout:range,source:`${series.source} · ${series.product} · ${timeZone} · 수집 ${series.retrievedAt}`,note:[plot.querySelector('.eth-forecast-note:not([hidden]),.equity-legend')?.textContent,'현재 가격·날짜축과 완료한 측정을 저장합니다.'].filter(Boolean).join(' · ')});}catch(error){inspection={label:'내보내기 오류',copyText:error.message};openReader('selection');return;}
     exportUrl=win.URL.createObjectURL(new Blob([exportVector],{type:'image/svg+xml'}));const image=make('img','native-export-preview');image.src=exportUrl;image.alt=`${symbol} 현재 차트 내보내기 미리보기`;
     const exportName=`${symbol}-${stamp(state.range.start)}-${stamp(state.range.end)}`;
     const source=make('p','',`${symbol} · USD · ${timeZone} · ${range}`),download=make('a','native-reader-action','SVG 저장');download.href=exportUrl;download.download=`${exportName}.svg`;

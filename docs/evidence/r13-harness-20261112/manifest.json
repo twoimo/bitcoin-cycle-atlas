@@ -1,0 +1,861 @@
+{
+  "schemaVersion": 1,
+  "kind": "r13-evidence-integrity",
+  "sourceCommit": "4f934b3e3ec2050f6b9b3dff50e2b35db3d4a24d",
+  "createdAt": "2026-11-11T23:43:45.632Z",
+  "note": "Original report/log/probe byte streams are gzip-compressed unchanged. SHA-256 and byte counts cover both original and stored bytes. PNG and replay-download manifests distinguish verified-only generated payloads from retained representatives.",
+  "files": [
+    {
+      "file": "conference/chrome.stderr.log.gz",
+      "bytes": 1238,
+      "sha256": "0b4954a200ee791c6056ebcc7c1eff6a04ea7747c93b3e749f2be69575b0add7",
+      "kind": "original-gzip",
+      "source": "build/r13/conference/chrome.stderr.log",
+      "originalBytes": 11459,
+      "originalSha256": "bea3fce3cb8bde37f9bf5ec423ffe8c76db94b6280a2c94b81bed5b414a5fb4c"
+    },
+    {
+      "file": "conference/fixture-1440x900.png",
+      "bytes": 61028,
+      "sha256": "384214d54a88a08943c5aa4b8041234b81d0203acc56acbd66f248ad53ecbf71",
+      "kind": "representative-png",
+      "source": "build/r13/conference/fixture-1440x900.png"
+    },
+    {
+      "file": "conference/fixture-320x740.png",
+      "bytes": 24179,
+      "sha256": "11f1fd761ccfdf0686c5a81eea044855e7eb2212e16a5b9a470a57a243e8ba6e",
+      "kind": "representative-png",
+      "source": "build/r13/conference/fixture-320x740.png"
+    },
+    {
+      "file": "conference/report.json.gz",
+      "bytes": 76258,
+      "sha256": "e2f750f8491c0b02faee69efb1c70009b6364985373f2601cc9b991d6f983617",
+      "kind": "original-gzip",
+      "source": "build/r13/conference/report.json",
+      "originalBytes": 653673,
+      "originalSha256": "f257832daaae36ed8adf4c2efb622fd9c2c682942a22da24e3125435c5947b2f"
+    },
+    {
+      "file": "diagnostics/desktop-click-after/chrome.stderr.log.gz",
+      "bytes": 1153,
+      "sha256": "38c01a2014af81efece989ea8c820c0be1eb6ee975465b6facac26554fa2a0d4",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/desktop-click-after/chrome.stderr.log",
+      "originalBytes": 6794,
+      "originalSha256": "132ac4a14bc0e5a2e213a5457d3069ada0e11f874375a8bbedb76b6ef52a15bf"
+    },
+    {
+      "file": "diagnostics/desktop-click-after/report.json.gz",
+      "bytes": 50771,
+      "sha256": "8170afe4154159d216165baff67b7f3a9dc1cb5941c7f1cd59f762ce85539468",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/desktop-click-after/report.json",
+      "originalBytes": 164874,
+      "originalSha256": "99a99ffef134a83f361deb98316eeee98883a8e448a96c6f11fe9524576a1868"
+    },
+    {
+      "file": "diagnostics/desktop-click-before/chrome.stderr.log.gz",
+      "bytes": 1155,
+      "sha256": "a307dc2250ecfec82e0a1806a31ec909f96cd1e7becb8bf03f8fe3ec3d0e31a5",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/desktop-click-before/chrome.stderr.log",
+      "originalBytes": 6794,
+      "originalSha256": "79b6668976173fad3b0ea54aa8b8b30134e784177f6267462d6d0a7a2d468efc"
+    },
+    {
+      "file": "diagnostics/desktop-click-before/report.json.gz",
+      "bytes": 51178,
+      "sha256": "3691c53a2d0137fe99e48cd141a75720d964c852a773931d0e1b0a636bafee50",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/desktop-click-before/report.json",
+      "originalBytes": 175952,
+      "originalSha256": "1aaa871f0ef9410cd1b0a69fdd95f78f1a7f99c7a802cedf60eefd3e7060e5d5"
+    },
+    {
+      "file": "diagnostics/desktop-click-native-scroll/chrome.stderr.log.gz",
+      "bytes": 1151,
+      "sha256": "dc482858ea27ffd9b8e83435bf8e2343857b6de657b5c07023c597166e6dfdde",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/desktop-click-native-scroll/chrome.stderr.log",
+      "originalBytes": 6794,
+      "originalSha256": "c9d2fac6ba4187591c2b6d27994499caad79f251976f882e665d089b5725bcdc"
+    },
+    {
+      "file": "diagnostics/desktop-click-native-scroll/report.json.gz",
+      "bytes": 53704,
+      "sha256": "c91529c37399d92be2801cc15b68dbf74f67d7f52952e1d00962936795ef5693",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/desktop-click-native-scroll/report.json",
+      "originalBytes": 220081,
+      "originalSha256": "48436b8e99a2138c9e55a9ece96807f713b40431af8175026eb8c0356ba42394"
+    },
+    {
+      "file": "diagnostics/navigation-baseline-1/chrome.stderr.log.gz",
+      "bytes": 1385,
+      "sha256": "677e724e0eb732fe40b306ea024f16420ddf18dc16f6cd7456b84a5d883d8305",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/navigation-baseline-1/chrome.stderr.log",
+      "originalBytes": 10177,
+      "originalSha256": "c0d314c3267175cd648bacee4779a891094f9938d834386fb1f924df274474c1"
+    },
+    {
+      "file": "diagnostics/navigation-baseline-1/report.json.gz",
+      "bytes": 53346,
+      "sha256": "5a1208ba913e22cd4ccc44e4fc86790d6e5cdeef7f545cb62dda6ee5259ec468",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/navigation-baseline-1/report.json",
+      "originalBytes": 210555,
+      "originalSha256": "cf1149f93a2e7520ad6f259da50b14c90e31b72ee710354d902f88e5d2b50569"
+    },
+    {
+      "file": "diagnostics/navigation-baseline-2/chrome.stderr.log.gz",
+      "bytes": 1186,
+      "sha256": "20d87edf71e63d094cacb88404f8dfe47b3fcffe090135f8c7489091a727a48f",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/navigation-baseline-2/chrome.stderr.log",
+      "originalBytes": 8349,
+      "originalSha256": "3857d7c71ed3774775766520394e451bff490bda49efe60611a038cd014ee36e"
+    },
+    {
+      "file": "diagnostics/navigation-baseline-2/report.json.gz",
+      "bytes": 55881,
+      "sha256": "a6706aa8686d1de2eabfe6c26686c21319d5ea00de71f2c126579297747e3c92",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/navigation-baseline-2/report.json",
+      "originalBytes": 244938,
+      "originalSha256": "8dc7444703158e8789424b587754928c3edb7f137b9e0b5cbdd0dc604e262a3f"
+    },
+    {
+      "file": "diagnostics/navigation-font-response-race-2/chrome.stderr.log.gz",
+      "bytes": 1150,
+      "sha256": "0bf4d7cec80dd5657cbf6848dc0782a8ee014c0e828baea86c9da923ba31962d",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/navigation-font-response-race-2/chrome.stderr.log",
+      "originalBytes": 6794,
+      "originalSha256": "d7998ef8bf485dfbe185ba06834dd18ff5b2c24bb7a43e0733bf3524210e720c"
+    },
+    {
+      "file": "diagnostics/navigation-font-response-race-2/report.json.gz",
+      "bytes": 49919,
+      "sha256": "b4bf9dabcfc471fe5708e2be8961110a7ce6516f5d096260b729c4cdb5d4a32d",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/navigation-font-response-race-2/report.json",
+      "originalBytes": 162138,
+      "originalSha256": "4b400f12576ad457ed345713e9bcf50a5bb34e5f4a8611eb1ff1cabe084ca09c"
+    },
+    {
+      "file": "diagnostics/navigation-font-response-race-3/chrome.stderr.log.gz",
+      "bytes": 1154,
+      "sha256": "1740cf9b96ca52f12f9671be35e5c2bc0630d36cdf2ef307b288cdabe6649645",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/navigation-font-response-race-3/chrome.stderr.log",
+      "originalBytes": 6794,
+      "originalSha256": "56a14ec517b242a62ecbc50510a65535945b2be0e1b84c0e5c4a601bb4b3e5e6"
+    },
+    {
+      "file": "diagnostics/navigation-font-response-race-3/navigation-ETHUSD-failed.png",
+      "bytes": 60877,
+      "sha256": "d84f5d8472efb1863359c6c55772dcd889fddfb8c221f4f207c3b156800b81fe",
+      "kind": "representative-png",
+      "source": "build/r13-diagnostics/navigation-font-response-race-3/navigation-ETHUSD-failed.png"
+    },
+    {
+      "file": "diagnostics/navigation-font-response-race-3/report.json.gz",
+      "bytes": 49824,
+      "sha256": "dfaca33cd10b3de8ef23c7b39e98e568a3622affe630eaa6ff94c21dadcc894b",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/navigation-font-response-race-3/report.json",
+      "originalBytes": 164781,
+      "originalSha256": "4ca3ce05635eba9941b31185e6b013795196a4e3ad08a3c1050561ad476fbca0"
+    },
+    {
+      "file": "diagnostics/navigation-font-response-race/chrome.stderr.log.gz",
+      "bytes": 1150,
+      "sha256": "d6faa855ee734f604e4ff80fb59c67ad9939560c5227578e13e8d4ef63d43167",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/navigation-font-response-race/chrome.stderr.log",
+      "originalBytes": 6794,
+      "originalSha256": "2e8d61959e6d6d1a8f459637dc38efa1130948384e4b16c26bed920c4d8a2929"
+    },
+    {
+      "file": "diagnostics/navigation-font-response-race/report.json.gz",
+      "bytes": 49761,
+      "sha256": "e36cc5d94d6a6bfef3aeba5af817d859d43a02dc8bd638aed257aa2204e011c7",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/navigation-font-response-race/report.json",
+      "originalBytes": 161793,
+      "originalSha256": "0a57c4b376bad2304d464a3dc1ceeff70f080318affacff7af78e37d948f1db7"
+    },
+    {
+      "file": "diagnostics/probes/desktop-click-before.mjs.gz",
+      "bytes": 14440,
+      "sha256": "590bf39b735fb8c498e6dd637ce0438c996927b04d6ceb732f34d42de97d085a",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/probes/desktop-click-before.mjs",
+      "originalBytes": 50072,
+      "originalSha256": "2f65710a203e4a4f1f53cee91d93042acf66ff939f1f7aa0ce29c00d6085500d"
+    },
+    {
+      "file": "diagnostics/probes/desktop-click-manifest.json.gz",
+      "bytes": 527,
+      "sha256": "f270a6e9f6bc7bf31431d74d9cada2163efff672a1e6a4138379cd7ee535ffda",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/probes/desktop-click-manifest.json",
+      "originalBytes": 890,
+      "originalSha256": "3134dda116eb8c70dd6cc01c4f768be9ca6977b282297a2ec151870f8f32e3f2"
+    },
+    {
+      "file": "diagnostics/probes/manifest.json.gz",
+      "bytes": 699,
+      "sha256": "39a74bf99f705d7618ea14b68b8dbde251c12bc24725c666fb087df8f3911753",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/probes/manifest.json",
+      "originalBytes": 2063,
+      "originalSha256": "8ac7d3232e2cdc15e1fd12d991beb6da0f23a37f18b3ce627200da4a468065ef"
+    },
+    {
+      "file": "diagnostics/probes/navigation-baseline-2.mjs.gz",
+      "bytes": 13493,
+      "sha256": "fefc769b8a04f8c3e943dec8e1363453375606984611857c7958f8c41532100c",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/probes/navigation-baseline-2.mjs",
+      "originalBytes": 46324,
+      "originalSha256": "bf48fa9ff6547bfceacffddd0c4201ff658b5733e6aa0145953f9a1cada11f6f"
+    },
+    {
+      "file": "diagnostics/probes/navigation-font-response-race-3.mjs.gz",
+      "bytes": 13867,
+      "sha256": "f9da99c7ae89c3fe961185efc4338d40ade18e3baa28c3c9f9dea6ac04f730d8",
+      "kind": "original-gzip",
+      "source": "build/r13-diagnostics/probes/navigation-font-response-race-3.mjs",
+      "originalBytes": 47619,
+      "originalSha256": "54a2de61c8398e664e16d4355629253b95bc9881f19b750a202c070bf3c1c936"
+    },
+    {
+      "file": "diagnostics/summary.json",
+      "bytes": 275256,
+      "sha256": "d2f2c41680f73d127b2fa0220a5eff4dbbffbb3f2cd958d69ac33b80c3763208",
+      "kind": "derived-diagnostics"
+    },
+    {
+      "file": "failures.json",
+      "bytes": 106,
+      "sha256": "b4dbcf40c99c038f42bab4cf270dc9c9313b4a215708798328cfbf5df49b8abc",
+      "kind": "derived-failures"
+    },
+    {
+      "file": "heading/compare-320.png",
+      "bytes": 54120,
+      "sha256": "394d39b358f248bf18306fe3e6dadc934a1a82ba0680fea02747187d2733d607",
+      "kind": "representative-png",
+      "source": "build/r13/heading/compare-320.png"
+    },
+    {
+      "file": "heading/compare-390.png",
+      "bytes": 60488,
+      "sha256": "52993a0eb8eea4f3c73f0cb281b0cc86d7e2c932b5124da604e58653f4fc5917",
+      "kind": "representative-png",
+      "source": "build/r13/heading/compare-390.png"
+    },
+    {
+      "file": "heading/report.json.gz",
+      "bytes": 7311,
+      "sha256": "564187d90d6345d8140fd0c4699fcbfb9437fe48b352b041bcc667846782be62",
+      "kind": "original-gzip",
+      "source": "build/r13/heading/report.json",
+      "originalBytes": 125807,
+      "originalSha256": "8c9ba3996ce3f599ffb3a85d2c463141d3084a7ca9c2e645b66720b9f0054280"
+    },
+    {
+      "file": "interrupted-attempt-1/conference/fixture-1440x900-failed.png",
+      "bytes": 70486,
+      "sha256": "8d436ef6590cd4e23607e8fd5786f988b402e0a349e25f0e2d1b21629793208f",
+      "kind": "representative-png",
+      "source": "build/r13-attempt-1/conference/fixture-1440x900-failed.png"
+    },
+    {
+      "file": "interrupted-attempt-1/conference/report.json.gz",
+      "bytes": 71890,
+      "sha256": "630afd265629b496ddb37c3edfd692bbc86276d6cfb1fdbffed397d3b86e4819",
+      "kind": "original-gzip",
+      "source": "build/r13-attempt-1/conference/report.json",
+      "originalBytes": 569200,
+      "originalSha256": "461c06a5a345192703f7dffe49d9bf3c5e76e9a6cf680efe224464b330b700ff"
+    },
+    {
+      "file": "interrupted-attempt-1/interruption.json.gz",
+      "bytes": 299,
+      "sha256": "6e07507b0f535c213823bd1972df5b27bf697e0cdfe6210b1cd02909d7fed7c1",
+      "kind": "original-gzip",
+      "source": "build/r13-attempt-1/interruption.json",
+      "originalBytes": 408,
+      "originalSha256": "ced4a4df4c8312bd7e9550a5405cc236e8d15a445dfb04d7c8ec641a4082de3c"
+    },
+    {
+      "file": "interrupted-attempt-1/summary.json",
+      "bytes": 6688,
+      "sha256": "90fd76bd45fb9c7fd1993867bc1171c99b0aafbcdd632344087c4a834a04b210",
+      "kind": "derived-interrupted-attempt"
+    },
+    {
+      "file": "interrupted-attempt-1/tested-local-source.bundle.gz",
+      "bytes": 4386,
+      "sha256": "a9791a814e34fa9c60f2dba1d14ed1fe02f7236990a6a972a006e2ed698f4a72",
+      "kind": "original-gzip",
+      "source": "build/r13-attempt-1/tested-local-source.bundle",
+      "originalBytes": 4413,
+      "originalSha256": "832a1ea68c8bb2a698f35a7920988b998b113e9a298258fcde1df95ae85c72db"
+    },
+    {
+      "file": "interrupted-attempt-1/tested-local-source.json.gz",
+      "bytes": 417,
+      "sha256": "74d93a0f76bec6a4864f28d22159a092279ebf3e9456b26a7b38ad3f221ea09f",
+      "kind": "original-gzip",
+      "source": "build/r13-attempt-1/tested-local-source.json",
+      "originalBytes": 670,
+      "originalSha256": "a520c537339cb4966e36683b0997e8eb694d72a99e4f8d273e186d9921690bab"
+    },
+    {
+      "file": "interrupted-attempt-1/verification/conference.log.gz",
+      "bytes": 238,
+      "sha256": "a4a617647af188c7a092191c6858a6d0e51dc221241f11dc661ecbaf9a2fa904",
+      "kind": "original-gzip",
+      "source": "build/r13-attempt-1/verification/conference.log",
+      "originalBytes": 962,
+      "originalSha256": "f97f76d240a8da6ac86dbd1c29afd087a45f2849cf16917fd7fc9400dde9caab"
+    },
+    {
+      "file": "interrupted-attempt-1/verification/executions.json.gz",
+      "bytes": 1397,
+      "sha256": "0c74c94e35ce0fdee0ce025940cb87f804a2a1ec04746b4d9cbdc192830dfc17",
+      "kind": "original-gzip",
+      "source": "build/r13-attempt-1/verification/executions.json",
+      "originalBytes": 2801,
+      "originalSha256": "9a7c2df08cf2606a4a48983d46d535988ae3492b4cada8c6717a377903e545a6"
+    },
+    {
+      "file": "native-53/lanes/chart-replay/report.json.gz",
+      "bytes": 156503,
+      "sha256": "22edeee1910f6d902d70516115e52e8b419a7c3e0144e6067f6d6190c41acdaa",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/chart-replay/report.json",
+      "originalBytes": 3746269,
+      "originalSha256": "145dcd65ef687ce4d11bc0aec4878044890a94988231a97e4468583c4fafde5b"
+    },
+    {
+      "file": "native-53/lanes/chart-replay/stderr.log.gz",
+      "bytes": 20,
+      "sha256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/chart-replay/stderr.log",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "native-53/lanes/chart-replay/stdout.log.gz",
+      "bytes": 1188,
+      "sha256": "39588ae8920560a6255244d233f44c96c7f33646cb74df5086c2581e65e7a19d",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/chart-replay/stdout.log",
+      "originalBytes": 3173,
+      "originalSha256": "c0b96bfc5516ff045d41469681c4590c1a4c1fce29ccd36cf209886c87e7aaa5"
+    },
+    {
+      "file": "native-53/lanes/chart-replay/zero-fixture.json.gz",
+      "bytes": 3935,
+      "sha256": "2412e4258b7d4e3010240fe0796acf7d24d1286da12c54fcadcc163b76991f02",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/chart-replay/zero-fixture.json",
+      "originalBytes": 35829,
+      "originalSha256": "56fb4ff10aab4bd477fdbb14758bba404641fa1801611421e144019ded1b063e"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/historical-end-yf2HRn/atlas-replay-BTCUSD-2026-11-06.json.gz",
+      "bytes": 25495,
+      "sha256": "436e7062d6b42b4ef6d201be80b72c38c647126314f09ba7c27ced580a12f568",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/historical-end-yf2HRn/atlas-replay-BTCUSD-2026-11-06.json",
+      "originalBytes": 265240,
+      "originalSha256": "4d6609694e53129253746af16a8d5fd1b0f16bc9a0b5ccb6289bf8f8599de27a"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/historical-one-bar-PJemyB/atlas-replay-BTCUSD-2026-05-11.json.gz",
+      "bytes": 9203,
+      "sha256": "3735cdd45abc55dbacfb37a788c83b371bd1297ad986d010e1aecefaff3a9f3d",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/historical-one-bar-PJemyB/atlas-replay-BTCUSD-2026-05-11.json",
+      "originalBytes": 77692,
+      "originalSha256": "60ed1a87faceabbdfb129c10de935775bdf379954ea507671daf208ff333ebad"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-latest-X8Ny3G/atlas-replay-BTCUSD-2026-11-11.json.gz",
+      "bytes": 21811,
+      "sha256": "3790d65f1abf8ffb75b4569dec3d7094c10ecedd7a4b3137b7dc29feb929971f",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-latest-X8Ny3G/atlas-replay-BTCUSD-2026-11-11.json",
+      "originalBytes": 103286,
+      "originalSha256": "6647adad1d1d3a3431ad3042f1bb88f5e527c5b421e33d6e5fed9414276e7c75"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-next-lHv1Ze/atlas-replay-BTCUSD-2026-10-26.json.gz",
+      "bytes": 20729,
+      "sha256": "2d6c5c5e41aa3718931ccc2cfa5c1176636be98f6adc444aeda12a81a21e91f1",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-next-lHv1Ze/atlas-replay-BTCUSD-2026-10-26.json",
+      "originalBytes": 91844,
+      "originalSha256": "87fdb45cba169a091616707e3d8d905adf3a26cea20e329ec25a8926bb5c10b9"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-origin-DWZHdq/atlas-replay-BTCUSD-2026-10-25.json.gz",
+      "bytes": 20235,
+      "sha256": "9f83d14f656621475786a564d644e2dd19c2d19ced5188492a7879e9703aeb22",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-1440x900/recorded-origin-DWZHdq/atlas-replay-BTCUSD-2026-10-25.json",
+      "originalBytes": 90598,
+      "originalSha256": "daf7cbdb57dfc2f62b0c76d7b5572b155904d604217bbc90c201a4a8ad7be999"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/historical-end-vNDRlw/atlas-replay-BTCUSD-2026-11-06.json.gz",
+      "bytes": 25495,
+      "sha256": "97d2eef80839e5ea28d057d4ae388fa7535d884c498680f78b7f08507fb47954",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/historical-end-vNDRlw/atlas-replay-BTCUSD-2026-11-06.json",
+      "originalBytes": 265240,
+      "originalSha256": "bcf2c82382ec70aab480b559f27d50198d19c3ddaafe57d5ddd9b74b2e582528"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/historical-one-bar-bYDzKO/atlas-replay-BTCUSD-2026-05-11.json.gz",
+      "bytes": 9203,
+      "sha256": "333bdee90b40a7b1a85f7e0daca9e709c83085cd76030485632338fb357590cf",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/historical-one-bar-bYDzKO/atlas-replay-BTCUSD-2026-05-11.json",
+      "originalBytes": 77692,
+      "originalSha256": "c8da204b21fbaf4faa18ae124f25640108477eabcdb10d3ece113e76fbeac8ac"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-latest-ppUNSw/atlas-replay-BTCUSD-2026-11-11.json.gz",
+      "bytes": 21811,
+      "sha256": "0713a9acdd6eb9566a8181408d68ee26223bfadc96c26688bdaa7a7866c03412",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-latest-ppUNSw/atlas-replay-BTCUSD-2026-11-11.json",
+      "originalBytes": 103286,
+      "originalSha256": "d0245be970bbb419f9944d9cd465fbe4a01b8f0a8f099d2c8c61299b373f9870"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-next-1azJfe/atlas-replay-BTCUSD-2026-10-26.json.gz",
+      "bytes": 20729,
+      "sha256": "2d6c5c5e41aa3718931ccc2cfa5c1176636be98f6adc444aeda12a81a21e91f1",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-next-1azJfe/atlas-replay-BTCUSD-2026-10-26.json",
+      "originalBytes": 91844,
+      "originalSha256": "87fdb45cba169a091616707e3d8d905adf3a26cea20e329ec25a8926bb5c10b9"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-origin-AEiiT2/atlas-replay-BTCUSD-2026-10-25.json.gz",
+      "bytes": 20235,
+      "sha256": "9f83d14f656621475786a564d644e2dd19c2d19ced5188492a7879e9703aeb22",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-btc-900x430/recorded-origin-AEiiT2/atlas-replay-BTCUSD-2026-10-25.json",
+      "originalBytes": 90598,
+      "originalSha256": "daf7cbdb57dfc2f62b0c76d7b5572b155904d604217bbc90c201a4a8ad7be999"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/historical-end-DH8b3o/atlas-replay-ETHUSD-2026-10-27.json.gz",
+      "bytes": 40188,
+      "sha256": "6cdfa211fcd07195272a69df55f3c813d9ee9e1858ee72677dc87802f5c806a6",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/historical-end-DH8b3o/atlas-replay-ETHUSD-2026-10-27.json",
+      "originalBytes": 293810,
+      "originalSha256": "e7ec4fe6b0805da458df31b482a26a0449522a6ebb833fd990c00662697529d2"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/historical-one-bar-PZLV9Z/atlas-replay-ETHUSD-2026-05-01.json.gz",
+      "bytes": 21187,
+      "sha256": "2ee28caefbdb9006f4195ea7cefc7249610397b9a6dbb9216b8801d21dcb0099",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/historical-one-bar-PZLV9Z/atlas-replay-ETHUSD-2026-05-01.json",
+      "originalBytes": 109274,
+      "originalSha256": "744509db88c56e1b9be83402c3c8d58aa2b1bee8dab89db54ccade2b1a67c007"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-latest-isRIeG/atlas-replay-ETHUSD-2026-11-11.json.gz",
+      "bytes": 16547,
+      "sha256": "00afb0bc65c2aeb792fc0e0b1ff052bf1fda6c6888289b4e2c80ddb8d73bf572",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-latest-isRIeG/atlas-replay-ETHUSD-2026-11-11.json",
+      "originalBytes": 92223,
+      "originalSha256": "2d806b00b3e75716ecbe2895fed9e4307e971e94c5ae373e133576825c4b3f93"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-next-qxoAt5/atlas-replay-ETHUSD-2026-10-26.json.gz",
+      "bytes": 16343,
+      "sha256": "c9706642513f6642d099d086c79e688bcfda8636151bf30e0f893fe44ac8f8f4",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-next-qxoAt5/atlas-replay-ETHUSD-2026-10-26.json",
+      "originalBytes": 91286,
+      "originalSha256": "205306f3961776d84b24967aee774e7e4ebbbca78ce08523b24c87910bbbcdee"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-origin-gZBpJg/atlas-replay-ETHUSD-2026-10-25.json.gz",
+      "bytes": 15936,
+      "sha256": "20af76e92ba898b6ceb6d80faf3b799b2d13c4c8916c08004017a7fe638699db",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/recorded-origin-gZBpJg/atlas-replay-ETHUSD-2026-10-25.json",
+      "originalBytes": 90071,
+      "originalSha256": "b5d7218b2b7d19385966cc965d5153ef5b204bf96989a52767eaaca5f67a44c9"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/strict-before-issuance-FgfWNh/atlas-replay-ETHUSD-2026-10-25.json.gz",
+      "bytes": 1414,
+      "sha256": "e0115492f303ac6380232a9561045c9fc395f5df6f1efa8a989766c16e8c79e9",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/strict-before-issuance-FgfWNh/atlas-replay-ETHUSD-2026-10-25.json",
+      "originalBytes": 4322,
+      "originalSha256": "1205df3e95ef25a0c573c897afc036dc43b3ffa4055abef425e1f0d5aa1200ed"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/strict-current-0qwrNp/atlas-replay-ETHUSD-2026-10-28.json.gz",
+      "bytes": 16526,
+      "sha256": "197a91a1dd3776c59995571fe180c82a3dfcbe6236292cce6e1c1d1a277f68ad",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-1440x900/strict-current-0qwrNp/atlas-replay-ETHUSD-2026-10-28.json",
+      "originalBytes": 92207,
+      "originalSha256": "d3cfef1699a0ef3c93d7f88e15bb84b1596f7d50ba859aec8f489abdf7594152"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/historical-end-5Jme38/atlas-replay-ETHUSD-2026-10-27.json.gz",
+      "bytes": 40188,
+      "sha256": "f161dc0563bbfcc4cff275234b0ce817a74f5198e89e29101ba0909085a22783",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/historical-end-5Jme38/atlas-replay-ETHUSD-2026-10-27.json",
+      "originalBytes": 293810,
+      "originalSha256": "b479d38947af377d46d574fc4e49ac52960cde9455712faba3815bfcb3ad88b4"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/historical-one-bar-xuG70A/atlas-replay-ETHUSD-2026-05-01.json.gz",
+      "bytes": 21186,
+      "sha256": "24ccadd693412f3b2402d0b313b53b325a240425e69008c12b36159a69ba00da",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/historical-one-bar-xuG70A/atlas-replay-ETHUSD-2026-05-01.json",
+      "originalBytes": 109274,
+      "originalSha256": "e8e783280f094e9b0232e46e070414ce8af58c1372d3074f3cd3fb3e5270b62a"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-latest-ttjzL6/atlas-replay-ETHUSD-2026-11-11.json.gz",
+      "bytes": 16546,
+      "sha256": "70e220f71c94525511c5e2fb33c88e689ccadb50fd3b32f4dcf60492abdad828",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-latest-ttjzL6/atlas-replay-ETHUSD-2026-11-11.json",
+      "originalBytes": 92223,
+      "originalSha256": "c9624ca491a55dead9077728d6aff2ac1fd66cb1964338c3d5eb26338659ad1d"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-next-02KLuA/atlas-replay-ETHUSD-2026-10-26.json.gz",
+      "bytes": 16343,
+      "sha256": "c9706642513f6642d099d086c79e688bcfda8636151bf30e0f893fe44ac8f8f4",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-next-02KLuA/atlas-replay-ETHUSD-2026-10-26.json",
+      "originalBytes": 91286,
+      "originalSha256": "205306f3961776d84b24967aee774e7e4ebbbca78ce08523b24c87910bbbcdee"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-origin-ftZ8jH/atlas-replay-ETHUSD-2026-10-25.json.gz",
+      "bytes": 15936,
+      "sha256": "20af76e92ba898b6ceb6d80faf3b799b2d13c4c8916c08004017a7fe638699db",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/recorded-origin-ftZ8jH/atlas-replay-ETHUSD-2026-10-25.json",
+      "originalBytes": 90071,
+      "originalSha256": "b5d7218b2b7d19385966cc965d5153ef5b204bf96989a52767eaaca5f67a44c9"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/strict-before-issuance-mHbnxF/atlas-replay-ETHUSD-2026-10-25.json.gz",
+      "bytes": 1414,
+      "sha256": "e0115492f303ac6380232a9561045c9fc395f5df6f1efa8a989766c16e8c79e9",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/strict-before-issuance-mHbnxF/atlas-replay-ETHUSD-2026-10-25.json",
+      "originalBytes": 4322,
+      "originalSha256": "1205df3e95ef25a0c573c897afc036dc43b3ffa4055abef425e1f0d5aa1200ed"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/strict-current-eJwlAP/atlas-replay-ETHUSD-2026-10-28.json.gz",
+      "bytes": 16526,
+      "sha256": "197a91a1dd3776c59995571fe180c82a3dfcbe6236292cce6e1c1d1a277f68ad",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/replay-downloads/replay-eth-320x568/strict-current-eJwlAP/atlas-replay-ETHUSD-2026-10-28.json",
+      "originalBytes": 92207,
+      "originalSha256": "d3cfef1699a0ef3c93d7f88e15bb84b1596f7d50ba859aec8f489abdf7594152"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/report.json.gz",
+      "bytes": 489361,
+      "sha256": "f4e715da8c3fd09909c53aa35e01807f5dbcc1a4cb500c1703a904435e9710f8",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/report.json",
+      "originalBytes": 5604007,
+      "originalSha256": "39564037907f9e3343bd3fb086a31f6a886f6bceec5e5ed3b33c69baa7db36ee"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/stderr.log.gz",
+      "bytes": 20,
+      "sha256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/stderr.log",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/stdout.log.gz",
+      "bytes": 600,
+      "sha256": "fc4cfc6fd071254298b6360fd09e474fa0c0ebc6132e2df5cc8d441950c72c49",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/stdout.log",
+      "originalBytes": 4179,
+      "originalSha256": "8961612a8289e42d6f2d320c65c42bb6fda11a9ca7d6eb864add5c0d7f4fd70c"
+    },
+    {
+      "file": "native-53/lanes/non-chart-replay/zero-fixture.json.gz",
+      "bytes": 3935,
+      "sha256": "2412e4258b7d4e3010240fe0796acf7d24d1286da12c54fcadcc163b76991f02",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/lanes/non-chart-replay/zero-fixture.json",
+      "originalBytes": 35829,
+      "originalSha256": "56fb4ff10aab4bd477fdbb14758bba404641fa1801611421e144019ded1b063e"
+    },
+    {
+      "file": "native-53/report.json.gz",
+      "bytes": 636770,
+      "sha256": "72b2ab15bf657f92fd997e08d796bbdc276621de6b0351722884c1b5f67d9bf2",
+      "kind": "original-gzip",
+      "source": "build/r13/native-53/report.json",
+      "originalBytes": 9341366,
+      "originalSha256": "6ad4a782e1c33fc15b6fa4d3149f972da053a6ff5907a5061080fc5928195bdd"
+    },
+    {
+      "file": "png-verification.json",
+      "bytes": 374888,
+      "sha256": "db77a04077a9fea5d9766c3e62ae80d6d168fca6c174c014708b0d1131012de0",
+      "kind": "derived-png-manifest"
+    },
+    {
+      "file": "r10/chart-qa/report.json.gz",
+      "bytes": 72428,
+      "sha256": "9404897d9ec9593aef97e823fc7e0249659064c9540c0d79d1821190a208bc25",
+      "kind": "original-gzip",
+      "source": "build/r13/r10/chart-qa/report.json",
+      "originalBytes": 722712,
+      "originalSha256": "b9bba94ab22ea83ad97f143bae2cd6d3dcd2c7be81c76994ad33295168120fb8"
+    },
+    {
+      "file": "r10/chart-qa/run.log.gz",
+      "bytes": 284,
+      "sha256": "1a6eb0cff83c93dfe9b30ad23a2280b083a22ebb07880d42dc85fdc22bd9997f",
+      "kind": "original-gzip",
+      "source": "build/r13/r10/chart-qa/run.log",
+      "originalBytes": 882,
+      "originalSha256": "8294b9940ed86bbec241f115af0a0595018c89e5ec545d60fbdcc5a569e3bd61"
+    },
+    {
+      "file": "r10/responsive-BMNR/report.json.gz",
+      "bytes": 11675,
+      "sha256": "ed9e9e67ee33c60d53dc86eda7319c97f4849c6e4ffd761b346ec7d9fa75f9e1",
+      "kind": "original-gzip",
+      "source": "build/r13/r10/responsive-BMNR/report.json",
+      "originalBytes": 204892,
+      "originalSha256": "a6b66fb45da96c31996593b3db6d6cfe3147ca5417eb9f80ab23e7f8ec1ac62c"
+    },
+    {
+      "file": "r10/responsive-BMNR/run.log.gz",
+      "bytes": 490,
+      "sha256": "9acb4436f5c7b992be75a15e94e1801e83ab2da5c15a33a053fd17a528599ebb",
+      "kind": "original-gzip",
+      "source": "build/r13/r10/responsive-BMNR/run.log",
+      "originalBytes": 2244,
+      "originalSha256": "36df13beea69df1dc5c91cf51e062a4c17f75f0f44290a56cd46519104d6135b"
+    },
+    {
+      "file": "r10/responsive-BTCUSD/report.json.gz",
+      "bytes": 14296,
+      "sha256": "1a4d267517d44646bcf2084d3be393db283d2dc14a2274ac1e4c6ae241cf003a",
+      "kind": "original-gzip",
+      "source": "build/r13/r10/responsive-BTCUSD/report.json",
+      "originalBytes": 259117,
+      "originalSha256": "796ba67f4ffbe522171276623f1fc786ca38208a6c0f9537db6069d369b98fce"
+    },
+    {
+      "file": "r10/responsive-BTCUSD/run.log.gz",
+      "bytes": 492,
+      "sha256": "c5630ce893dd3629b4f475282f27e9dd4f48ee28dbcc419adcabb66e7bc34cf5",
+      "kind": "original-gzip",
+      "source": "build/r13/r10/responsive-BTCUSD/run.log",
+      "originalBytes": 2248,
+      "originalSha256": "67ec831c358f2e2796ac26338947c166eeca39f01037cc460e00b8d1fa2355ef"
+    },
+    {
+      "file": "r10/responsive-ETHUSD/report.json.gz",
+      "bytes": 11982,
+      "sha256": "6500d5be5b272f24286c14760c122666705aeb7150d5ea6368569ebe6065ac18",
+      "kind": "original-gzip",
+      "source": "build/r13/r10/responsive-ETHUSD/report.json",
+      "originalBytes": 223261,
+      "originalSha256": "552b414dba931a380b77db57308f5149a1309bcb476b90807f48aa4d31280cde"
+    },
+    {
+      "file": "r10/responsive-ETHUSD/run.log.gz",
+      "bytes": 490,
+      "sha256": "cf974fd665e49c300cd5c1da508f4b09cdcb6a6b0f099e8c5d31c66a17e56974",
+      "kind": "original-gzip",
+      "source": "build/r13/r10/responsive-ETHUSD/run.log",
+      "originalBytes": 2248,
+      "originalSha256": "2dcb992cfe78d054c025232be2f33658ffd7e40baac0e74c7a95ab141436a1c7"
+    },
+    {
+      "file": "r10/responsive-MSTR/report.json.gz",
+      "bytes": 11689,
+      "sha256": "9225e16484c1b038f1c70aecd38ebdbb432f93a147ea6751321d721fc5de7966",
+      "kind": "original-gzip",
+      "source": "build/r13/r10/responsive-MSTR/report.json",
+      "originalBytes": 204630,
+      "originalSha256": "1cf32da5263b19d5701c58bbe7292c548927853e6adc2f0d97a4d84e18f0c0e7"
+    },
+    {
+      "file": "r10/responsive-MSTR/run.log.gz",
+      "bytes": 489,
+      "sha256": "165246e11c8180322c15543bb59ace2e452d2ca34896556b4c80e15ebf490578",
+      "kind": "original-gzip",
+      "source": "build/r13/r10/responsive-MSTR/run.log",
+      "originalBytes": 2244,
+      "originalSha256": "4314c5437e71b21b80aba5b9d6402cedb41466a2d5a4f6de897405d4dbe16382"
+    },
+    {
+      "file": "r10/summary.json.gz",
+      "bytes": 953,
+      "sha256": "88107872d98caae483f46ca37f3d6a435d8c4ff44b8a7bb0d4077a73780d9e1e",
+      "kind": "original-gzip",
+      "source": "build/r13/r10/summary.json",
+      "originalBytes": 4398,
+      "originalSha256": "e1159a3e0396e7683a9472d6b1ad91371a8777a0b4f81022ba4e3b5da343ccff"
+    },
+    {
+      "file": "r10/wp6/report.json.gz",
+      "bytes": 105564,
+      "sha256": "2d7e2c76e7a81c27a18c4f0adab17d2288310e8e812353ca69314f35aa33b547",
+      "kind": "original-gzip",
+      "source": "build/r13/r10/wp6/report.json",
+      "originalBytes": 1611841,
+      "originalSha256": "3b063201e1eca48db3c8b01255290b5206110fceb22b6adb487cc3f356d21d08"
+    },
+    {
+      "file": "r10/wp6/run.log.gz",
+      "bytes": 349,
+      "sha256": "c54257d2b0db99f6a08739b8331653099e101bd9b1c89e1a06d099c0cdd2c9ad",
+      "kind": "original-gzip",
+      "source": "build/r13/r10/wp6/run.log",
+      "originalBytes": 1858,
+      "originalSha256": "106af6f27f32752d219874fb7a62f954f0790bc4e68fd9047d301954604ef11d"
+    },
+    {
+      "file": "replay-download-verification.json",
+      "bytes": 30520,
+      "sha256": "5f96633ec8b310e1a8bdd987dc4bb06858912d716ed06e00b3d51c1235fa1e5c",
+      "kind": "derived-download-manifest"
+    },
+    {
+      "file": "run-verification.mjs.gz",
+      "bytes": 2363,
+      "sha256": "b119d89e8b3d0b7ffe10e79a7ee1494d695350fdf9ce9118d885f6ba6e8368fa",
+      "kind": "original-gzip",
+      "source": "build/r13/run-verification.mjs",
+      "originalBytes": 5681,
+      "originalSha256": "0a186f2469898876fab00ae67511c67310e7ad90895f9060dec0d3b3b71669a0"
+    },
+    {
+      "file": "runtime/cleanup.json.gz",
+      "bytes": 567,
+      "sha256": "7a9b79bb52c1e5224e54c26bf3c5f0fcef8a77dbe92548ffdeee48da1e441fe5",
+      "kind": "original-gzip",
+      "source": "build/r13/runtime/cleanup.json",
+      "originalBytes": 870,
+      "originalSha256": "f48c39e884a98b8a1e5efb0e85c4f075e2a9a2f97ce6e8dc1dcee13a5cf87398"
+    },
+    {
+      "file": "runtime/setup.json.gz",
+      "bytes": 587,
+      "sha256": "2d1d1a7ed8864af9b0cb753f496c7661052a615112a6c6951064f310ee227691",
+      "kind": "original-gzip",
+      "source": "build/r13/runtime/setup.json",
+      "originalBytes": 1028,
+      "originalSha256": "969c70ca98100a568a3d18d72f87ef2a113e7b6f935cc616e493dd795d7e31b0"
+    },
+    {
+      "file": "summary.json",
+      "bytes": 20397,
+      "sha256": "9d074ce617dadd6103da637334470861c7c3f860b481006a09b78cc002118193",
+      "kind": "derived-summary"
+    },
+    {
+      "file": "verification/conference.log.gz",
+      "bytes": 266,
+      "sha256": "effc6e62987047bfe6520331fa884806dbd61bef31b32132955ce95e7e395f62",
+      "kind": "original-gzip",
+      "source": "build/r13/verification/conference.log",
+      "originalBytes": 956,
+      "originalSha256": "7af06e0a4e0d74ae990d75a49cb8ff55e81dba94ba22941981c1b5a7232ba5f6"
+    },
+    {
+      "file": "verification/executions.json.gz",
+      "bytes": 19385,
+      "sha256": "da46b2f9c5395d3650fdcde8704850927fa05f476103c8e691496b8d9b5ad62a",
+      "kind": "original-gzip",
+      "source": "build/r13/verification/executions.json",
+      "originalBytes": 33133,
+      "originalSha256": "01371cce34288d9d847138216847c5a4cb18477616be661d81d770653f990667"
+    },
+    {
+      "file": "verification/heading.log.gz",
+      "bytes": 323,
+      "sha256": "6a51781d7be823afb93fa26ae9907fcfc342d2395939477e24f65572def70b0a",
+      "kind": "original-gzip",
+      "source": "build/r13/verification/heading.log",
+      "originalBytes": 1606,
+      "originalSha256": "056e55d383f1b216b32c6a4735c6f9524b949fd39b7ea7bfc3ffa14fa0ef47e6"
+    },
+    {
+      "file": "verification/native-53.log.gz",
+      "bytes": 626754,
+      "sha256": "aaf2a05f44de2360df8ff91b58d4b1f9f257e75685097b394f48da8e79d91e06",
+      "kind": "original-gzip",
+      "source": "build/r13/verification/native-53.log",
+      "originalBytes": 934154,
+      "originalSha256": "d6008ebbd27c712db22d8baa4e7abe51ec504dd71d4aee393d11feea4099b4c4"
+    },
+    {
+      "file": "verification/npm-test.log.gz",
+      "bytes": 161442,
+      "sha256": "552e80119d284bc8fff8867768a6adb493bcb6a5f5659dabfdf72684f996d0e1",
+      "kind": "original-gzip",
+      "source": "build/r13/verification/npm-test.log",
+      "originalBytes": 823743,
+      "originalSha256": "b498ae07fba370927a2d46c0807ec9c07b12f38280c539a9d1980d09c6ce7c1d"
+    },
+    {
+      "file": "verification/pack-evidence.mjs.gz",
+      "bytes": 8460,
+      "sha256": "26bffbcf50d3235ece975a7fd3bc9ca9accdb1e4005a40ddd8629634e9588429",
+      "kind": "original-gzip",
+      "source": "build/r13/verification/pack-evidence.mjs",
+      "originalBytes": 28092,
+      "originalSha256": "1dc148d07f376cf10acc0c6c3275cc8f13c960359556ac24b617e0b64d3e9e0c"
+    },
+    {
+      "file": "verification/r10-regressions.log.gz",
+      "bytes": 1694,
+      "sha256": "2796e5cd971e304876f6a53911cf8e993366f450c6e69ba386292b1e5b9170b9",
+      "kind": "original-gzip",
+      "source": "build/r13/verification/r10-regressions.log",
+      "originalBytes": 15015,
+      "originalSha256": "0510bbdfcaa3ae911d9507040245db15e5a9647f297f3039f6c1da5a1bd0a688"
+    }
+  ]
+}

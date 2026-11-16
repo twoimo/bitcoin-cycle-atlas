@@ -1,9 +1,12 @@
+import { initTheme } from './ui/theme.js';
 import { enhanceBootSkeleton } from './loading-surfaces.js';
 import { initAtlasShell } from './atlas-shell.js?v=1.36.1';
 import { canonicalNativeChartEntry } from './atlas-navigation.js?v=1.36.1';
 import { canonicalWorkspaceChartEntry } from './atlas-navigation.js?v=1.36.1';
 import { mountJournalEntry } from './journal-entry.js?v=1.29.0';
 import { initPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
+
+initTheme();
 
 const chartEntry = canonicalNativeChartEntry(location) || canonicalWorkspaceChartEntry(location);
 if (chartEntry) {
@@ -16,7 +19,8 @@ if (chartEntry) {
   initPerformanceDiagnostics();
   mountJournalEntry();
   const requested = new URLSearchParams(location.search).get('symbol')?.toUpperCase();
-  const symbol = ['ETHUSD','MSTR','BMNR'].includes(requested) ? requested : 'BTCUSD';
+  const conference = new URLSearchParams(location.search).get('page') === 'conference';
+  const symbol = !conference && ['ETHUSD','MSTR','BMNR'].includes(requested) ? requested : 'BTCUSD';
   document.documentElement.dataset.symbol = symbol;
   const bootSymbol = document.querySelector('.atlas-boot-symbol');
   if (bootSymbol) bootSymbol.textContent = symbol;

@@ -1,0 +1,92 @@
+{
+  "schema": "atlas.wp-a.deck-lock/1",
+  "lockedAt": "2026-11-12T03:42:11+09:00",
+  "ownerSession": "yyOkfU0FkYzNPO8f",
+  "verifiedBy": "driver session 2026-11-12_Zb62FVNRyYGEsIla (sha256 · stat · pdfinfo read-only readback, no file writes)",
+  "contract": "docs/requirements/REQ_WP_ABC_20261110.md A-0",
+  "verification": {
+    "method": "저장소 밖 원본 경로에서 SHA-256을 다시 계산하고, 크기·수정 시각과 PDF 페이지 수를 파일에서 직접 읽었다. 복사본·렌더 결과물이 아니라 원본 파일 기준이다.",
+    "recomputedAt": "2026-11-12T03:42:00+09:00",
+    "sha256Match": true,
+    "bytesMatch": true,
+    "builtAtMatch": true,
+    "pageCountMatch": true,
+    "pageCountTool": "pdfinfo (Poppler)",
+    "tools": ["shasum -a 256", "stat -f %z/%Sm", "pdfinfo"]
+  },
+  "decks": [
+    {
+      "id": "final-290",
+      "label": "최종본 290쪽 (정본)",
+      "pdf": {
+        "path": "/Users/twoimo/Documents/projects/plspo-conference-20261031/00_열람/플스포_강연자료_최종.pdf",
+        "sha256": "4b1affb46789400a4079743bb8f5b29bfbdcc4aa36544f4a43c3c7516dbd24db",
+        "bytes": 63311016,
+        "pages": 290,
+        "builtAt": "2026-11-09T22:37:14+09:00"
+      },
+      "pptx": {
+        "path": "/Users/twoimo/Documents/projects/plspo-conference-20261031/00_열람/플스포_강연자료_최종.pptx",
+        "sha256": "30dac26b3895629e24e6c60c6d2b389acd61caee4c179099e5d8e18e760b0e94",
+        "bytes": 75209904,
+        "slides": 290,
+        "builtAt": "2026-11-09T22:37:14+09:00"
+      }
+    },
+    {
+      "id": "r17-clean-257",
+      "label": "R17 깔끔본 257쪽",
+      "pdf": {
+        "path": "/Users/twoimo/Documents/projects/plspo-conference-20261031/깔끔본_R17_로고_20261109/플스포_강연자료_최종본_깔끔본_20261110.pdf",
+        "sha256": "3760cd72c04c4625750f3fe80b0b28cc666fe9a0b9a8467823750c30b87c873e",
+        "bytes": 20233799,
+        "pages": 257,
+        "builtAt": "2026-11-10T14:29:38+09:00"
+      },
+      "pptx": {
+        "path": "/Users/twoimo/Documents/projects/plspo-conference-20261031/깔끔본_R17_로고_20261109/플스포_강연자료_최종본_깔끔본_20261110.pptx",
+        "sha256": "43fb4f2dbf996f0b1c478675fe19a3e9fe1bbf949ba738b46f260ef61d4cdb39",
+        "bytes": 74586163,
+        "slides": 257,
+        "builtAt": "2026-11-10T14:29:38+09:00"
+      }
+    }
+  ],
+  "unmappedCandidates": [
+    {
+      "id": "qa24-restored-257",
+      "adopted": false,
+      "note": "QA24 네이티브 복원 257쪽. 소유 세션이 2026-11-12 03:28에 쓴 README에서 스스로 '정본이 아니다'라고 밝혔다(정본은 00_열람 290쪽). R17 깔끔본과 다른 계보이므로 A-0 4항에 따라 채택하려면 재잠금이 필요하고, 그때 이미 만든 페이지 매핑은 전부 무효가 된다.",
+      "pdf": {
+        "path": "/Users/twoimo/.aside/u/0/sessions/2026-11-11_yyOkfU0FkYzNPO8f/artifacts/플스포_강연자료_QA24복원_257쪽_20261112.pdf",
+        "sha256": "59d6fdbe1c61ae1e12d96dc85b931f16d5e533987b28b49e377f8e055bfe6f16",
+        "bytes": 21553841,
+        "pages": 257,
+        "bookmarks": 35,
+        "builtAt": "2026-11-12T03:02:27+09:00"
+      },
+      "pptx": {
+        "path": "/Users/twoimo/.aside/u/0/sessions/2026-11-11_yyOkfU0FkYzNPO8f/artifacts/플스포_강연자료_QA24복원_257쪽_20261112.pptx",
+        "sha256": "1f75dee0abe5bf343c47a4e62763999771ffbec57fbb84df277a7fa1d577a3a6",
+        "bytes": 12457480,
+        "slides": 257,
+        "builtAt": "2026-11-12T03:02:27+09:00"
+      }
+    }
+  ],
+  "resolvedDiscrepancies": [
+    {
+      "item": "R17 깔끔본 해시 접두사",
+      "document": "docs/requirements/REQ_WP_ABC_20261110.md §5 첨부 목록",
+      "documentedPrefix": "baa2224e469cd2d2",
+      "actualPrefix": "3760cd72c04c46",
+      "resolution": "잠금은 디스크에 있는 실제 파일 해시 3760cd72…를 승인 해시로 고정한다. baa2224e…는 현재 어떤 파일과도 일치하지 않으므로 요청서 §5의 접두사는 이 잠금 값으로 대체해 읽는다."
+    }
+  ],
+  "pageNumberContract": {
+    "final-290": "1-based, 1..290",
+    "r17-clean-257": "1-based, 1..257",
+    "difference": "같은 발표라도 덱별 페이지 번호가 290과 257로 다르므로 페이지 매핑은 덱별로 분리해 만든다."
+  },
+  "reLockPolicy": "잠금 이후 어느 덱이든 해시·페이지 수가 바뀌면 이 파일을 새 날짜로 다시 만들고 기존 timeline.json 페이지 매핑을 전부 무효화한 뒤 재검증한다. 잠금 전에는 timeline.json·페이지 매핑·배포 패키지 자산 포함을 만들지 않는다(목업·구조·접근성 명세·스키마 검증기는 허용)."
+}

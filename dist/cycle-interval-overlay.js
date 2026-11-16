@@ -164,11 +164,11 @@ function spanMarkup(item) {
   }
   if (labelBox) {
     const center = fmt(labelBox.x + labelBox.width / 2);
-    markup += `<text class="cycle-interval-duration cycle-interval-label" x="${center}" y="${fmt(labelBox.baseline ?? labelBox.y + 11)}" text-anchor="middle" font-size="${labelBox.fontSize}" font-weight="${active ? 700 : 600}" fill="${color}" paint-order="stroke" stroke="#101a27" stroke-width="${labelBox.mode === 'compact' ? 2.3 : 3}" stroke-linejoin="round" pointer-events="visiblePainted">`;
+    markup += `<text class="cycle-interval-duration cycle-interval-label" x="${center}" y="${fmt(labelBox.baseline ?? labelBox.y + 11)}" text-anchor="middle" font-size="${labelBox.fontSize}" font-weight="${active ? 700 : 600}" fill="${color}" paint-order="stroke" stroke="var(--bg)" stroke-width="${labelBox.mode === 'compact' ? 2.3 : 3}" stroke-linejoin="round" pointer-events="visiblePainted">`;
     markup += labelBox.mode === 'compact' ? `<tspan class="cycle-interval-relation-label" x="${center}" y="${fmt(y - 14)}" font-size="8">${esc(relation.label)}</tspan><tspan x="${center}" y="${fmt(y - 4)}" font-size="9">${esc(item.duration)}</tspan>` : esc(labelBox.text);
     markup += '</text>';
   }
-  if (previewBox) markup += `<g class="cycle-interval-preview" visibility="hidden" pointer-events="none" aria-hidden="true"><text class="cycle-interval-preview-label" x="${fmt(previewBox.x + 4)}" y="${fmt(previewBox.y + 11)}" font-size="10" font-weight="600" fill="${color}" paint-order="stroke" stroke="#101a27" stroke-width="4" stroke-linejoin="round">${previewBox.lines.map((line, index) => `<tspan x="${fmt(previewBox.x + 4)}"${index ? ' dy="12"' : ''}>${esc(line)}</tspan>`).join('')}</text></g>`;
+  if (previewBox) markup += `<g class="cycle-interval-preview" visibility="hidden" pointer-events="none" aria-hidden="true"><text class="cycle-interval-preview-label" x="${fmt(previewBox.x + 4)}" y="${fmt(previewBox.y + 11)}" font-size="10" font-weight="600" fill="${color}" paint-order="stroke" stroke="var(--bg)" stroke-width="4" stroke-linejoin="round">${previewBox.lines.map((line, index) => `<tspan x="${fmt(previewBox.x + 4)}"${index ? ' dy="12"' : ''}>${esc(line)}</tspan>`).join('')}</text></g>`;
   return `${markup}</g>`;
 }
 

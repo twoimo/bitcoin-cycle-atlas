@@ -1,0 +1,23 @@
+{
+  "kind": "local-r19-p5-f3-baseline-native-chrome",
+  "sourceCommit": "513d8183b14a73284d4ce1dacf89bd3ded431bdb",
+  "browser": "Chrome headless via existing project CDP harness",
+  "coverage": {
+    "completeTypographyCases": 24,
+    "surfaces": ["chart", "relay", "conference"],
+    "themes": ["light", "dark"],
+    "viewports": [320, 390, 768, 1440],
+    "marketRoute": {"status": "blocked", "reason": "route did not reach data-boot=ready within the bounded harness wait; excluded from successful denominator"}
+  },
+  "baselineFindings": {
+    "chartVisibleNonAxisTextBelow11px": {"320": 18, "390": 23, "768": 26, "1440": 26},
+    "chartBodyCaptionBelow12px": 1,
+    "chartBodyCaptionLineHeightBelow1_4": 1,
+    "relayBodyCaptionBelow12px": {"320": 0, "390": 0, "768": 1, "1440": 1},
+    "conferenceBadgeAt320": {"computedFontPx": 13, "wordBreak": "keep-all", "overflowWrap": "anywhere", "observedText": "이 덱에 해당 장표 없음"},
+    "conferenceBodyCaptionLineHeightBelow1_4At320": 1,
+    "conferenceBodyCaptionBelow12pxAt768And1440": 1
+  },
+  "baselineLimit": "The chart shell booted but the BTC chart displayed a refresh/loading notice rather than completed candles. Axis contrast was therefore not observed in the baseline chart state.",
+  "screenshots": "baseline-native/ contains the 24 completed route/theme/viewport screenshots from this baseline run; the market route was excluded."
+}

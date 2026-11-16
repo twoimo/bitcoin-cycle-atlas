@@ -1,0 +1,2176 @@
+TAP version 13
+# Subtest: every analysis redraw reapplies presentation on its true layer and keeps numeric axis labels separately addressable
+ok 1 - every analysis redraw reapplies presentation on its true layer and keeps numeric axis labels separately addressable
+  ---
+  duration_ms: 486.927162
+  type: 'test'
+  ...
+# Subtest: cycle and peak exports retain exact observed USD prices and distinguish their independent normalization bases
+ok 2 - cycle and peak exports retain exact observed USD prices and distinguish their independent normalization bases
+  ---
+  duration_ms: 24.123444
+  type: 'test'
+  ...
+# Subtest: period export contains only the current actual page, named units and incomplete-period flags
+ok 3 - period export contains only the current actual page, named units and incomplete-period flags
+  ---
+  duration_ms: 5.709611
+  type: 'test'
+  ...
+# Subtest: CryptoCon export preserves claim timing, explicit missing deadlines and source evidence separately from measured prices
+ok 4 - CryptoCon export preserves claim timing, explicit missing deadlines and source evidence separately from measured prices
+  ---
+  duration_ms: 1.15229
+  type: 'test'
+  ...
+# Subtest: the initial HTML provides a visible loading status while unfinished controls stay inert
+ok 5 - the initial HTML provides a visible loading status while unfinished controls stay inert
+  ---
+  duration_ms: 26.377357
+  type: 'test'
+  ...
+# Subtest: render readiness releases the real workspace once and later errors cannot resurrect the skeleton
+ok 6 - render readiness releases the real workspace once and later errors cannot resurrect the skeleton
+  ---
+  duration_ms: 9.990245
+  type: 'test'
+  ...
+# Subtest: startup failures expose accessible recovery and a late ready event cannot reveal a broken page
+ok 7 - startup failures expose accessible recovery and a late ready event cannot reveal a broken page
+  ---
+  duration_ms: 46.08972
+  type: 'test'
+  ...
+# Subtest: a silent startup stalls for at most 20 seconds and exposes a working retry without releasing old content
+ok 8 - a silent startup stalls for at most 20 seconds and exposes a working retry without releasing old content
+  ---
+  duration_ms: 11.652494
+  type: 'test'
+  ...
+# Subtest: successful and failed startup both cancel the fallback deadline
+ok 9 - successful and failed startup both cancel the fallback deadline
+  ---
+  duration_ms: 37.670174
+  type: 'test'
+  ...
+# Subtest: optional resource failures do not abort boot while script and stylesheet failures do
+ok 10 - optional resource failures do not abort boot while script and stylesheet failures do
+  ---
+  duration_ms: 37.229051
+  type: 'test'
+  ...
+# Subtest: stylesheet failure during head parsing reaches recovery while early icon failure remains optional
+ok 11 - stylesheet failure during head parsing reaches recovery while early icon failure remains optional
+  ---
+  duration_ms: 12.440114
+  type: 'test'
+  ...
+# Subtest: optional webfonts cannot hold essential CSS or page boot behind a network request
+ok 12 - optional webfonts cannot hold essential CSS or page boot behind a network request
+  ---
+  duration_ms: 41.438538
+  type: 'test'
+  ...
+# Subtest: visible price CSV contains every original observation, no gap fill or future model rows
+ok 13 - visible price CSV contains every original observation, no gap fill or future model rows
+  ---
+  duration_ms: 2.402988
+  type: 'test'
+  ...
+# Subtest: intraday CSV preserves exact source OHLC and zero-volume completed candles
+ok 14 - intraday CSV preserves exact source OHLC and zero-volume completed candles
+  ---
+  duration_ms: 0.584192
+  type: 'test'
+  ...
+# Subtest: CSV distinguishes weekly chart label from candle opening time and escapes source text
+ok 15 - CSV distinguishes weekly chart label from candle opening time and escapes source text
+  ---
+  duration_ms: 0.435167
+  type: 'test'
+  ...
+# Subtest: an empty actual-data window fails explicitly instead of exporting simulated values
+ok 16 - an empty actual-data window fails explicitly instead of exporting simulated values
+  ---
+  duration_ms: 0.674389
+  type: 'test'
+  ...
+# Subtest: PNG size preserves the aspect ratio and bounds phone memory for large snapshots
+ok 17 - PNG size preserves the aspect ratio and bounds phone memory for large snapshots
+  ---
+  duration_ms: 1.403138
+  type: 'test'
+  ...
+# Subtest: PNG exports the source-labelled vector, releases its blob URL and clears the large canvas
+ok 18 - PNG exports the source-labelled vector, releases its blob URL and clears the large canvas
+  ---
+  duration_ms: 5.738004
+  type: 'test'
+  ...
+# Subtest: fully transparent PNG readbacks cannot be encoded or reported as a saved image
+ok 19 - fully transparent PNG readbacks cannot be encoded or reported as a saved image
+  ---
+  duration_ms: 2.352112
+  type: 'test'
+  ...
+# Subtest: PNG readback scans later bounded strips when the first rows are transparent
+ok 20 - PNG readback scans later bounded strips when the first rows are transparent
+  ---
+  duration_ms: 0.892117
+  type: 'test'
+  ...
+# Subtest: an unreadable PNG canvas provides an SVG fallback without encoding and releases resources
+ok 21 - an unreadable PNG canvas provides an SVG fallback without encoding and releases resources
+  ---
+  duration_ms: 1.107362
+  type: 'test'
+  ...
+# Subtest: a faint painted alpha is valid rather than being rejected for lacking full opacity
+ok 22 - a faint painted alpha is valid rather than being rejected for lacking full opacity
+  ---
+  duration_ms: 1.123316
+  type: 'test'
+  ...
+# Subtest: failed PNG decoding or encoding provides an SVG fallback and still releases its resources
+ok 23 - failed PNG decoding or encoding provides an SVG fallback and still releases its resources
+  ---
+  duration_ms: 1.677353
+  type: 'test'
+  ...
+# Subtest: SVG export keeps periods inside the price chart and strips transient interval previews and activation attributes
+ok 24 - SVG export keeps periods inside the price chart and strips transient interval previews and activation attributes
+  ---
+  duration_ms: 2.711244
+  type: 'test'
+  ...
+# Subtest: workspace export snapshots only visible expanded panes with their own labels and axes, without duplicate overlays
+ok 25 - workspace export snapshots only visible expanded panes with their own labels and axes, without duplicate overlays
+  ---
+  duration_ms: 5.26571
+  type: 'test'
+  ...
+# Subtest: PNG serialization captures geometry and metadata before pending fonts or image decoding can observe new state
+ok 26 - PNG serialization captures geometry and metadata before pending fonts or image decoding can observe new state
+  ---
+  duration_ms: 1.181744
+  type: 'test'
+  ...
+# Subtest: image clipboard starts write synchronously with the fixed PNG promise and releases resources after encoding
+ok 27 - image clipboard starts write synchronously with the fixed PNG promise and releases resources after encoding
+  ---
+  duration_ms: 1.363369
+  type: 'test'
+  ...
+# Subtest: display transformations distinguish prior latest=100 from starting=100 and percent without editing raw values
+ok 28 - display transformations distinguish prior latest=100 from starting=100 and percent without editing raw values
+  ---
+  duration_ms: 3.404611
+  type: 'test'
+  ...
+# Subtest: daily renderers publish the visible basis before returning a new controller
+ok 29 - daily renderers publish the visible basis before returning a new controller
+  ---
+  duration_ms: 22.331408
+  type: 'test'
+  ...
+# Subtest: daily start basis uses its first supplied visible row, never an invented left-edge observation
+ok 30 - daily start basis uses its first supplied visible row, never an invented left-edge observation
+  ---
+  duration_ms: 1.080572
+  type: 'test'
+  ...
+# Subtest: daily reverse axes mirror only screen geometry and keep manual raw USD bounds
+ok 31 - daily reverse axes mirror only screen geometry and keep manual raw USD bounds
+  ---
+  duration_ms: 2.028012
+  type: 'test'
+  ...
+# Subtest: daily an out-of-data viewport retains axes and real navigation surfaces without source rows or stale selections
+ok 32 - daily an out-of-data viewport retains axes and real navigation surfaces without source rows or stale selections
+  ---
+  duration_ms: 2.659626
+  type: 'test'
+  ...
+# Subtest: daily explicit touch preview follows the same real rows, does not commit, and cannot act through a stale controller
+ok 33 - daily explicit touch preview follows the same real rows, does not commit, and cannot act through a stale controller
+  ---
+  duration_ms: 3.767028
+  type: 'test'
+  ...
+# Subtest: intraday renderers publish the visible basis before returning a new controller
+ok 34 - intraday renderers publish the visible basis before returning a new controller
+  ---
+  duration_ms: 11.429397
+  type: 'test'
+  ...
+# Subtest: intraday start basis uses its first supplied visible row, never an invented left-edge observation
+ok 35 - intraday start basis uses its first supplied visible row, never an invented left-edge observation
+  ---
+  duration_ms: 1.549009
+  type: 'test'
+  ...
+# Subtest: intraday reverse axes mirror only screen geometry and keep manual raw USD bounds
+ok 36 - intraday reverse axes mirror only screen geometry and keep manual raw USD bounds
+  ---
+  duration_ms: 6.150316
+  type: 'test'
+  ...
+# Subtest: intraday an out-of-data viewport retains axes and real navigation surfaces without source rows or stale selections
+ok 37 - intraday an out-of-data viewport retains axes and real navigation surfaces without source rows or stale selections
+  ---
+  duration_ms: 2.514647
+  type: 'test'
+  ...
+# Subtest: intraday explicit touch preview follows the same real rows, does not commit, and cannot act through a stale controller
+ok 38 - intraday explicit touch preview follows the same real rows, does not commit, and cannot act through a stale controller
+  ---
+  duration_ms: 4.182195
+  type: 'test'
+  ...
+# Subtest: price-only auto excludes assumption and milestone extents while manual bounds remain authoritative
+ok 39 - price-only auto excludes assumption and milestone extents while manual bounds remain authoritative
+  ---
+  duration_ms: 9.995072
+  type: 'test'
+  ...
+# Subtest: saved intraday anchors preserve fractional UTC coordinates on daily charts and cannot trigger measurement or price selection
+ok 40 - saved intraday anchors preserve fractional UTC coordinates on daily charts and cannot trigger measurement or price selection
+  ---
+  duration_ms: 4.144367
+  type: 'test'
+  ...
+# Subtest: linear display scales support empty negative USD space and percent ticks without changing inversion math
+ok 41 - linear display scales support empty negative USD space and percent ticks without changing inversion math
+  ---
+  duration_ms: 0.938036
+  type: 'test'
+  ...
+# Subtest: light: vector export freezes current paint while keeping data, geometry and source tree intact
+ok 42 - light: vector export freezes current paint while keeping data, geometry and source tree intact
+  ---
+  duration_ms: 15.53023
+  type: 'test'
+  ...
+# Subtest: dark: vector export freezes current paint while keeping data, geometry and source tree intact
+ok 43 - dark: vector export freezes current paint while keeping data, geometry and source tree intact
+  ---
+  duration_ms: 5.149465
+  type: 'test'
+  ...
+# Subtest: materialization keeps inherited visibility reversible and leaves independent clones independent
+ok 44 - materialization keeps inherited visibility reversible and leaves independent clones independent
+  ---
+  duration_ms: 5.994011
+  type: 'test'
+  ...
+# Subtest: unsupported or unresolved live paint fails before mutating a clone
+ok 45 - unsupported or unresolved live paint fails before mutating a clone
+  ---
+  duration_ms: 1.0398
+  type: 'test'
+  ...
+# Subtest: theme probe cleanup is guaranteed when computed style fails
+ok 46 - theme probe cleanup is guaranteed when computed style fails
+  ---
+  duration_ms: 0.414546
+  type: 'test'
+  ...
+# Subtest: hosts without CSS computation retain source attributes and use scheme-aware system export chrome
+ok 47 - hosts without CSS computation retain source attributes and use scheme-aware system export chrome
+  ---
+  duration_ms: 0.311781
+  type: 'test'
+  ...
+# Subtest: export preview distinguishes displayed weekly OHLC from full daily source rows and always exports raw USD
+ok 48 - export preview distinguishes displayed weekly OHLC from full daily source rows and always exports raw USD
+  ---
+  duration_ms: 3.816693
+  type: 'test'
+  ...
+# Subtest: observed and conditional CSV are independent snapshots without observed anchors in the assumption file
+ok 49 - observed and conditional CSV are independent snapshots without observed anchors in the assumption file
+  ---
+  duration_ms: 1.187193
+  type: 'test'
+  ...
+# Subtest: intraday CSV includes only completed loaded Coinbase bars and preserves missing intervals and zero volume
+ok 50 - intraday CSV includes only completed loaded Coinbase bars and preserves missing intervals and zero volume
+  ---
+  duration_ms: 0.592535
+  type: 'test'
+  ...
+# Subtest: CSV cells defend source, labels and notes against formula injection without changing valid numeric data
+ok 51 - CSV cells defend source, labels and notes against formula injection without changing valid numeric data
+  ---
+  duration_ms: 0.837064
+  type: 'test'
+  ...
+# Subtest: empty, corrupt OHLC and invalid cutoffs report errors instead of fabricating export rows
+ok 52 - empty, corrupt OHLC and invalid cutoffs report errors instead of fabricating export rows
+  ---
+  duration_ms: 4.216736
+  type: 'test'
+  ...
+# Subtest: analysis CSV keeps its source and unit separate and accepts explicit daily numeric view ranges
+ok 53 - analysis CSV keeps its source and unit separate and accepts explicit daily numeric view ranges
+  ---
+  duration_ms: 0.779527
+  type: 'test'
+  ...
+# Subtest: clipboard option requires both image-capable ClipboardItem and a write API
+ok 54 - clipboard option requires both image-capable ClipboardItem and a write API
+  ---
+  duration_ms: 0.283538
+  type: 'test'
+  ...
+# Subtest: independent research axes export all supplied pane rows without applying the price viewport dates
+ok 55 - independent research axes export all supplied pane rows without applying the price viewport dates
+  ---
+  duration_ms: 0.990485
+  type: 'test'
+  ...
+# Subtest: temporary Ctrl/Command uses strong from off and disables either enabled mode without mutating it
+ok 56 - temporary Ctrl/Command uses strong from off and disables either enabled mode without mutating it
+  ---
+  duration_ms: 0.988132
+  type: 'test'
+  ...
+# Subtest: weak magnet has a screen-distance threshold while strong resolves OHLC at any distance on either axis
+ok 57 - weak magnet has a screen-distance threshold while strong resolves OHLC at any distance on either axis
+  ---
+  duration_ms: 1.024417
+  type: 'test'
+  ...
+# Subtest: a close-only line or future scenario never acquires invented OHLC candidates
+ok 58 - a close-only line or future scenario never acquires invented OHLC candidates
+  ---
+  duration_ms: 0.237289
+  type: 'test'
+  ...
+# Subtest: anchor prices and fields survive redraw and same-bar measurement measures the chosen prices
+ok 59 - anchor prices and fields survive redraw and same-bar measurement measures the chosen prices
+  ---
+  duration_ms: 0.373985
+  type: 'test'
+  ...
+# Subtest: daily and intraday measurement duration uses elapsed UTC time, including reversed and future anchors
+ok 60 - daily and intraday measurement duration uses elapsed UTC time, including reversed and future anchors
+  ---
+  duration_ms: 0.229166
+  type: 'test'
+  ...
+# Subtest: actual daily renderer commits high/low anchors while hover readout retains the actual close
+ok 61 - actual daily renderer commits high/low anchors while hover readout retains the actual close
+  ---
+  duration_ms: 19.964393
+  type: 'test'
+  ...
+# Subtest: actual minute renderer measures OHLC with the same magnet semantics and elapsed minutes
+ok 62 - actual minute renderer measures OHLC with the same magnet semantics and elapsed minutes
+  ---
+  duration_ms: 8.77855
+  type: 'test'
+  ...
+# Subtest: indicator turn readout reveals a reversal only after its confirmation date
+ok 63 - indicator turn readout reveals a reversal only after its confirmation date
+  ---
+  duration_ms: 2.957876
+  type: 'test'
+  ...
+# Subtest: BTC volume formatting preserves the base unit and distinguishes missing data from zero
+ok 64 - BTC volume formatting preserves the base unit and distinguishes missing data from zero
+  ---
+  duration_ms: 5.137848
+  type: 'test'
+  ...
+# Subtest: time tick labels stay separated and contained when long dates cluster in a short loaded window
+ok 65 - time tick labels stay separated and contained when long dates cluster in a short loaded window
+  ---
+  duration_ms: 0.70899
+  type: 'test'
+  ...
+# Subtest: selected date badges occupy a separate lane below normal date ticks
+ok 66 - selected date badges occupy a separate lane below normal date ticks
+  ---
+  duration_ms: 3.217899
+  type: 'test'
+  ...
+# Subtest: volume bars use reported BTC amounts and preserve missing timestamps rather than inserting bars
+ok 67 - volume bars use reported BTC amounts and preserve missing timestamps rather than inserting bars
+  ---
+  duration_ms: 5.158258
+  type: 'test'
+  ...
+# Subtest: empty volume has an explicit missing-data message, while source-returned zeros remain real rows
+ok 68 - empty volume has an explicit missing-data message, while source-returned zeros remain real rows
+  ---
+  duration_ms: 0.408647
+  type: 'test'
+  ...
+# Subtest: volume annotation escapes text and cannot produce projections without a fitted scenario
+ok 69 - volume annotation escapes text and cannot produce projections without a fitted scenario
+  ---
+  duration_ms: 0.358892
+  type: 'test'
+  ...
+# Subtest: conditional volume uses a separate dashed path and range while preserving actual BTC bars and zero
+ok 70 - conditional volume uses a separate dashed path and range while preserving actual BTC bars and zero
+  ---
+  duration_ms: 0.891166
+  type: 'test'
+  ...
+# Subtest: enabled chart panes remain ordered within the viewport at desktop and short mobile heights
+ok 71 - enabled chart panes remain ordered within the viewport at desktop and short mobile heights
+  ---
+  duration_ms: 0.849633
+  type: 'test'
+  ...
+# Subtest: all 128 compact and tall pane combinations keep each enabled title between neighboring data panes
+ok 72 - all 128 compact and tall pane combinations keep each enabled title between neighboring data panes
+  ---
+  duration_ms: 1.525643
+  type: 'test'
+  ...
+# Subtest: the market-state ribbon exports its own title without changing selected values or creating data
+ok 73 - the market-state ribbon exports its own title without changing selected values or creating data
+  ---
+  duration_ms: 27.767456
+  type: 'test'
+  ...
+# Subtest: historical names and focus previews avoid reserved HUD and period-arrow regions on narrow charts
+ok 74 - historical names and focus previews avoid reserved HUD and period-arrow regions on narrow charts
+  ---
+  duration_ms: 2.740679
+  type: 'test'
+  ...
+# Subtest: historical labels honor priority and collision limits while retaining lower-priority event dots
+ok 75 - historical labels honor priority and collision limits while retaining lower-priority event dots
+  ---
+  duration_ms: 1.760278
+  type: 'test'
+  ...
+# Subtest: narrow event labels stay inside both plot boundaries including the declared inset
+ok 76 - narrow event labels stay inside both plot boundaries including the declared inset
+  ---
+  duration_ms: 2.262246
+  type: 'test'
+  ...
+# Subtest: the research overview keeps only a readable set of names across eras and retains every event dot
+ok 77 - the research overview keeps only a readable set of names across eras and retains every event dot
+  ---
+  duration_ms: 7.515007
+  type: 'test'
+  ...
+# Subtest: zooming the same event set reveals more names, including lower-priority events
+ok 78 - zooming the same event set reveals more names, including lower-priority events
+  ---
+  duration_ms: 1.494597
+  type: 'test'
+  ...
+# Subtest: a dense local cluster does not receive extra names from empty plot space
+ok 79 - a dense local cluster does not receive extra names from empty plot space
+  ---
+  duration_ms: 1.677894
+  type: 'test'
+  ...
+# Subtest: date and id ties resolve deterministically regardless of input order
+ok 80 - date and id ties resolve deterministically regardless of input order
+  ---
+  duration_ms: 1.331591
+  type: 'test'
+  ...
+# Subtest: offscreen or invalid anchors do not consume names, spacing, or the active selection slot
+ok 81 - offscreen or invalid anchors do not consume names, spacing, or the active selection slot
+  ---
+  duration_ms: 11.918296
+  type: 'test'
+  ...
+# Subtest: the selected event keeps its name inside the same overview budget
+ok 82 - the selected event keeps its name inside the same overview budget
+  ---
+  duration_ms: 9.862952
+  type: 'test'
+  ...
+# Subtest: hidden names have clamped hover/focus previews that do not alter persistent counts or click targets
+ok 83 - hidden names have clamped hover/focus previews that do not alter persistent counts or click targets
+  ---
+  duration_ms: 1.325591
+  type: 'test'
+  ...
+# Subtest: zoomed names keep short leaders, avoid every event dot, and survive narrow or short plot geometry
+ok 84 - zoomed names keep short leaders, avoid every event dot, and survive narrow or short plot geometry
+  ---
+  duration_ms: 3.561006
+  type: 'test'
+  ...
+# Subtest: weekly candle and BTC volume share the Sunday display coordinate and sum actual daily amounts
+ok 85 - weekly candle and BTC volume share the Sunday display coordinate and sum actual daily amounts
+  ---
+  duration_ms: 2.997155
+  type: 'test'
+  ...
+# Subtest: daily volume stops at the observed cutoff, and indexed price mode leaves BTC geometry unchanged
+ok 86 - daily volume stops at the observed cutoff, and indexed price mode leaves BTC geometry unchanged
+  ---
+  duration_ms: 2.276407
+  type: 'test'
+  ...
+# Subtest: historical midweek events remain visible when weekly candles remove daily display rows
+ok 87 - historical midweek events remain visible when weekly candles remove daily display rows
+  ---
+  duration_ms: 1.434376
+  type: 'test'
+  ...
+# Subtest: intraday candles and volume preserve elapsed-time gaps and agree on each bar coordinate
+ok 88 - intraday candles and volume preserve elapsed-time gaps and agree on each bar coordinate
+  ---
+  duration_ms: 9.732175
+  type: 'test'
+  ...
+# Subtest: an empty intraday window keeps navigation geometry and clears stale point handlers
+ok 89 - an empty intraday window keeps navigation geometry and clears stale point handlers
+  ---
+  duration_ms: 2.29794
+  type: 'test'
+  ...
+# Subtest: keyboard price selections claim inspection ownership without forcing a panel, while initial renders do not
+ok 90 - keyboard price selections claim inspection ownership without forcing a panel, while initial renders do not
+  ---
+  duration_ms: 2.480966
+  type: 'test'
+  ...
+# Subtest: context-menu anchors select their own daily or intraday values without moving the pinned selection
+ok 91 - context-menu anchors select their own daily or intraday values without moving the pinned selection
+  ---
+  duration_ms: 3.00664
+  type: 'test'
+  ...
+# Subtest: an empty daily window clears handlers that reference rows from a preceding render
+ok 92 - an empty daily window clears handlers that reference rows from a preceding render
+  ---
+  duration_ms: 1.235896
+  type: 'test'
+  ...
+# Subtest: replay presentation preserves frozen tuple/object inputs and rereads later caller revisions
+ok 93 - replay presentation preserves frozen tuple/object inputs and rereads later caller revisions
+  ---
+  duration_ms: 376.677801
+  type: 'test'
+  ...
+# Subtest: a captured current forecast keeps its distinct input date and immutable path, while historical labels use only the replay origin
+ok 94 - a captured current forecast keeps its distinct input date and immutable path, while historical labels use only the replay origin
+  ---
+  duration_ms: 331.454789
+  type: 'test'
+  ...
+# Subtest: the same primary SVG retains Atlas cycle and interval layers and the exact orange forecast before and after revealing actual bars
+ok 95 - the same primary SVG retains Atlas cycle and interval layers and the exact orange forecast before and after revealing actual bars
+  ---
+  duration_ms: 118.301824
+  type: 'test'
+  ...
+# Subtest: unrevealed closes and candles cannot change the actual line, axis, inspection or frozen forecast
+ok 96 - unrevealed closes and candles cannot change the actual line, axis, inspection or frozen forecast
+  ---
+  duration_ms: 87.513266
+  type: 'test'
+  ...
+# Subtest: real venue candles are revealed by their actual date without replacing Coin Metrics comparison values
+ok 97 - real venue candles are revealed by their actual date without replacing Coin Metrics comparison values
+  ---
+  duration_ms: 47.497146
+  type: 'test'
+  ...
+# Subtest: mismatched forecast values and origins fail instead of scoring a different orange path
+ok 98 - mismatched forecast values and origins fail instead of scoring a different orange path
+  ---
+  duration_ms: 66.876947
+  type: 'test'
+  ...
+# Subtest: the original publication path remains a separately supported context with its original origin
+ok 99 - the original publication path remains a separately supported context with its original origin
+  ---
+  duration_ms: 21.651922
+  type: 'test'
+  ...
+# Subtest: a forecast-only viewport never exposes a nearest actual and preserves correct scaled coordinates
+ok 100 - a forecast-only viewport never exposes a nearest actual and preserves correct scaled coordinates
+  ---
+  duration_ms: 60.879462
+  type: 'test'
+  ...
+# Subtest: replay uses the current rendered viewport without rereading layout after SVG replacement, including empty views and resize
+ok 101 - replay uses the current rendered viewport without rereading layout after SVG replacement, including empty views and resize
+  ---
+  duration_ms: 132.670069
+  type: 'test'
+  ...
+# Subtest: old replay disposal cannot detach the newer native Atlas chart handlers
+ok 102 - old replay disposal cannot detach the newer native Atlas chart handlers
+  ---
+  duration_ms: 79.742139
+  type: 'test'
+  ...
+# Subtest: an empty replay viewport does not inherit unrevealed live prices and still identifies the frozen orange path
+ok 103 - an empty replay viewport does not inherit unrevealed live prices and still identifies the frozen orange path
+  ---
+  duration_ms: 45.524264
+  type: 'test'
+  ...
+# Subtest: one daily step grows the same weekly candle and volume at their fixed week coordinate
+ok 104 - one daily step grows the same weekly candle and volume at their fixed week coordinate
+  ---
+  duration_ms: 405.412079
+  type: 'test'
+  ...
+# Subtest: unrevealed weekly OHLC and volume cannot expand the replay scale or enter a forming bar
+ok 105 - unrevealed weekly OHLC and volume cannot expand the replay scale or enter a forming bar
+  ---
+  duration_ms: 191.067325
+  type: 'test'
+  ...
+# Subtest: a first-available replay can have an empty earlier prefix while retaining only the frozen assumptions
+ok 106 - a first-available replay can have an empty earlier prefix while retaining only the frozen assumptions
+  ---
+  duration_ms: 261.644694
+  type: 'test'
+  ...
+# Subtest: an intraday interval cannot silently reuse daily data as shorter candles
+ok 107 - an intraday interval cannot silently reuse daily data as shorter candles
+  ---
+  duration_ms: 0.876563
+  type: 'test'
+  ...
+# Subtest: unconfirmed start selection keeps the Atlas chart and coordinates without confirmed replay boundaries
+ok 108 - unconfirmed start selection keeps the Atlas chart and coordinates without confirmed replay boundaries
+  ---
+  duration_ms: 75.717397
+  type: 'test'
+  ...
+# Subtest: weekly start selection follows actual opening coordinates without selecting or changing a forming candle
+ok 109 - weekly start selection follows actual opening coordinates without selecting or changing a forming candle
+  ---
+  duration_ms: 38.456891
+  type: 'test'
+  ...
+# Subtest: the main SVG renders only revealed genuine OHLC and fixed predictions, with asset-correct titles
+ok 110 - the main SVG renders only revealed genuine OHLC and fixed predictions, with asset-correct titles
+  ---
+  duration_ms: 12.956162
+  type: 'test'
+  ...
+# Subtest: price scale ignores offscreen observations, unrevealed actuals, and the all-history frame domain
+ok 111 - price scale ignores offscreen observations, unrevealed actuals, and the all-history frame domain
+  ---
+  duration_ms: 2.978998
+  type: 'test'
+  ...
+# Subtest: close-only observations stay a line when candles are requested
+ok 112 - close-only observations stay a line when candles are requested
+  ---
+  duration_ms: 1.347135
+  type: 'test'
+  ...
+# Subtest: an explicit replay view domain controls only the visible axis and autoscale still ignores hidden actuals
+ok 113 - an explicit replay view domain controls only the visible axis and autoscale still ignores hidden actuals
+  ---
+  duration_ms: 4.970516
+  type: 'test'
+  ...
+# Subtest: zoomed replay candle bodies expand with shared spacing without changing OHLC or plot geometry
+ok 114 - zoomed replay candle bodies expand with shared spacing without changing OHLC or plot geometry
+  ---
+  duration_ms: 1.054002
+  type: 'test'
+  ...
+# Subtest: forecast-only viewport keeps its permitted price axis and never reports a nearest hidden actual
+ok 115 - forecast-only viewport keeps its permitted price axis and never reports a nearest hidden actual
+  ---
+  duration_ms: 5.096225
+  type: 'test'
+  ...
+# Subtest: missing forecast days break both the line and the conditional band
+ok 116 - missing forecast days break both the line and the conditional band
+  ---
+  duration_ms: 0.931236
+  type: 'test'
+  ...
+# Subtest: preserved equity forecasts keep zero to positive to zero segments on a linear axis
+ok 117 - preserved equity forecasts keep zero to positive to zero segments on a linear axis
+  ---
+  duration_ms: 1.595579
+  type: 'test'
+  ...
+# Subtest: a strict information-time frame hides prices and does not retain the preceding live-like price scale
+ok 118 - a strict information-time frame hides prices and does not retain the preceding live-like price scale
+  ---
+  duration_ms: 1.128894
+  type: 'test'
+  ...
+# Subtest: date coordinates and inspection remain correct at phone, tablet, desktop and CSS-scaled sizes
+ok 119 - date coordinates and inspection remain correct at phone, tablet, desktop and CSS-scaled sizes
+  ---
+  duration_ms: 6.077416
+  type: 'test'
+  ...
+# Subtest: redraw cancels queued native/replay hover, and an old destroy cannot detach the new renderer
+ok 120 - redraw cancels queued native/replay hover, and an old destroy cannot detach the new renderer
+  ---
+  duration_ms: 1.60881
+  type: 'test'
+  ...
+# Subtest: selection renders the supplied archive on the same chart without a prediction or invented weekly candles
+ok 121 - selection renders the supplied archive on the same chart without a prediction or invented weekly candles
+  ---
+  duration_ms: 1.718915
+  type: 'test'
+  ...
+# Subtest: the asset-neutral painter keeps price and date axes inside short mobile viewports
+ok 122 - the asset-neutral painter keeps price and date axes inside short mobile viewports
+  ---
+  duration_ms: 4.870223
+  type: 'test'
+  ...
+# Subtest: dense observed candles preserve every completed wick and body, including visible extrema
+ok 123 - dense observed candles preserve every completed wick and body, including visible extrema
+  ---
+  duration_ms: 7.568217
+  type: 'test'
+  ...
+# Subtest: completed weekly candles cover only their actual dates while later close-only observations remain visible
+ok 124 - completed weekly candles cover only their actual dates while later close-only observations remain visible
+  ---
+  duration_ms: 1.576169
+  type: 'test'
+  ...
+# Subtest: a separate frozen retrospective record leaves the original forecast and annotations unchanged
+ok 125 - a separate frozen retrospective record leaves the original forecast and annotations unchanged
+  ---
+  duration_ms: 567.510074
+  type: 'test'
+  ...
+# Subtest: each origin labels its own cutoff at the fixed path anchor on desktop and narrow charts
+ok 126 - each origin labels its own cutoff at the fixed path anchor on desktop and narrow charts
+  ---
+  duration_ms: 1140.272708
+  type: 'test'
+  ...
+# Subtest: panning past the retrospective origin does not move its date label to another point
+ok 127 - panning past the retrospective origin does not move its date label to another point
+  ---
+  duration_ms: 347.687072
+  type: 'test'
+  ...
+# Subtest: August 17 and 18 grow one genuine weekly candle underneath two independent fixed paths and ranges
+ok 128 - August 17 and 18 grow one genuine weekly candle underneath two independent fixed paths and ranges
+  ---
+  duration_ms: 313.802355
+  type: 'test'
+  ...
+# Subtest: inspection distinguishes retrospective prices and prefers the original at the shared boundary
+ok 129 - inspection distinguishes retrospective prices and prefers the original at the shared boundary
+  ---
+  duration_ms: 61.906491
+  type: 'test'
+  ...
+# Subtest: unrevealed high, low and close values cannot affect the scale or either fixed path
+ok 130 - unrevealed high, low and close values cannot affect the scale or either fixed path
+  ---
+  duration_ms: 111.819852
+  type: 'test'
+  ...
+# Subtest: a withheld or unavailable retrospective path cannot be replaced by actuals or joined to the original
+ok 131 - a withheld or unavailable retrospective path cannot be replaced by actuals or joined to the original
+  ---
+  duration_ms: 370.502865
+  type: 'test'
+  ...
+# Subtest: page=compare resolves to the compare view with and without the legacy alias
+ok 132 - page=compare resolves to the compare view with and without the legacy alias
+  ---
+  duration_ms: 6.502699
+  type: 'test'
+  ...
+# Subtest: the compare route keeps the price frame and replaces only its center
+ok 133 - the compare route keeps the price frame and replaces only its center
+  ---
+  duration_ms: 0.284119
+  type: 'test'
+  ...
+# Subtest: compare owns the chart shell and the single page heading
+ok 134 - compare owns the chart shell and the single page heading
+  ---
+  duration_ms: 0.525804
+  type: 'test'
+  ...
+# Subtest: the compare center hides price content without touching its own markup
+ok 135 - the compare center hides price content without touching its own markup
+  ---
+  duration_ms: 0.272641
+  type: 'test'
+  ...
+# Subtest: the compare toolbar is cached, moved and restored as the same node
+ok 136 - the compare toolbar is cached, moved and restored as the same node
+  ---
+  duration_ms: 0.483651
+  type: 'test'
+  ...
+# Subtest: price-only frame controls are locked with a reason and released by their own prior state
+ok 137 - price-only frame controls are locked with a reason and released by their own prior state
+  ---
+  duration_ms: 0.250508
+  type: 'test'
+  ...
+# Subtest: price-only controls leave the compare top row instead of staying inert
+ok 138 - price-only controls leave the compare top row instead of staying inert
+  ---
+  duration_ms: 0.449769
+  type: 'test'
+  ...
+# Subtest: all nine relationships render inside the caller plot without another SVG, panel, date axis, or price-axis allocation
+ok 139 - all nine relationships render inside the caller plot without another SVG, panel, date axis, or price-axis allocation
+  ---
+  duration_ms: 14.103354
+  type: 'test'
+  ...
+# Subtest: clipping uses original endpoint projection and full UTC elapsed days, with continuation chevrons at either clipped edge
+ok 140 - clipping uses original endpoint projection and full UTC elapsed days, with continuation chevrons at either clipped edge
+  ---
+  duration_ms: 1.719486
+  type: 'test'
+  ...
+# Subtest: disjoint relationships keep their canonical rows instead of changing rows as a viewport clips them
+ok 141 - disjoint relationships keep their canonical rows instead of changing rows as a viewport clips them
+  ---
+  duration_ms: 2.571723
+  type: 'test'
+  ...
+# Subtest: labels keep full names on one line, then two smaller lines, then duration only, without widening a tiny interval
+ok 142 - labels keep full names on one line, then two smaller lines, then duration only, without widening a tiny interval
+  ---
+  duration_ms: 1.832427
+  type: 'test'
+  ...
+# Subtest: ordinary HUDs use horizontal label gaps and bottom-docked controls keep continuous spans clear
+ok 143 - ordinary HUDs use horizontal label gaps and bottom-docked controls keep continuous spans clear
+  ---
+  duration_ms: 2.760257
+  type: 'test'
+  ...
+# Subtest: fixed tags clear the painted period and arrow strokes without changing UTC endpoints, rows or duration
+ok 144 - fixed tags clear the painted period and arrow strokes without changing UTC endpoints, rows or duration
+  ---
+  duration_ms: 3.665415
+  type: 'test'
+  ...
+# Subtest: price segments can shift labels horizontally but can never move a duration row upward
+ok 145 - price segments can shift labels horizontally but can never move a duration row upward
+  ---
+  duration_ms: 0.711895
+  type: 'test'
+  ...
+# Subtest: short mobile plots retain every relationship and its detail access while omitting crowded labels
+ok 146 - short mobile plots retain every relationship and its detail access while omitting crowded labels
+  ---
+  duration_ms: 1.73556
+  type: 'test'
+  ...
+# Subtest: observed, provisional, scenario-selected, mixed, and incomplete intervals retain their distinct statuses and dashed convention
+ok 147 - observed, provisional, scenario-selected, mixed, and incomplete intervals retain their distinct statuses and dashed convention
+  ---
+  duration_ms: 1.777785
+  type: 'test'
+  ...
+# Subtest: interaction consists of narrow stroke and painted text targets, with full keyboard and hover inspection
+ok 148 - interaction consists of narrow stroke and painted text targets, with full keyboard and hover inspection
+  ---
+  duration_ms: 0.704684
+  type: 'test'
+  ...
+# Subtest: zoom, pan, selection, price traces, and upper HUDs cannot change an existing relationship row
+ok 149 - zoom, pan, selection, price traces, and upper HUDs cannot change an existing relationship row
+  ---
+  duration_ms: 10.4911
+  type: 'test'
+  ...
+# Subtest: same-relation subtracks use all original UTC intervals, including overlaps outside the viewport
+ok 150 - same-relation subtracks use all original UTC intervals, including overlaps outside the viewport
+  ---
+  duration_ms: 0.692556
+  type: 'test'
+  ...
+# Subtest: resizing keeps lines, caps, labels and previews above the legend in the unchanged price plot
+ok 151 - resizing keeps lines, caps, labels and previews above the legend in the unchanged price plot
+  ---
+  duration_ms: 4.505824
+  type: 'test'
+  ...
+# Subtest: filtering, invalid dates, projection failures, and hostile metadata cannot alter source facts or inject SVG
+ok 152 - filtering, invalid dates, projection failures, and hostile metadata cannot alter source facts or inject SVG
+  ---
+  duration_ms: 1.03955
+  type: 'test'
+  ...
+# Subtest: short-plot fallback preserves endpoint identity and yields to a fully blocking HUD
+ok 153 - short-plot fallback preserves endpoint identity and yields to a fully blocking HUD
+  ---
+  duration_ms: 1.840909
+  type: 'test'
+  ...
+# Subtest: all nine interval relationships remain available when the viewport has no matching endpoints
+ok 154 - all nine interval relationships remain available when the viewport has no matching endpoints
+  ---
+  duration_ms: 8.952237
+  type: 'test'
+  ...
+# Subtest: duration clipping keeps actual UTC endpoints and exact elapsed days rather than relabeling the visible fragment
+ok 155 - duration clipping keeps actual UTC endpoints and exact elapsed days rather than relabeling the visible fragment
+  ---
+  duration_ms: 2.016805
+  type: 'test'
+  ...
+# Subtest: a span too narrow for its full duration never prints a truncated or minimum-width number
+ok 156 - a span too narrow for its full duration never prints a truncated or minimum-width number
+  ---
+  duration_ms: 3.119951
+  type: 'test'
+  ...
+# Subtest: overlapping spans in the same relationship receive distinct vertical lanes and retain keyboard access
+ok 157 - overlapping spans in the same relationship receive distinct vertical lanes and retain keyboard access
+  ---
+  duration_ms: 1.181243
+  type: 'test'
+  ...
+# Subtest: dense mobile markers preserve every visible point while labels stay in bounds and do not overlap
+ok 158 - dense mobile markers preserve every visible point while labels stay in bounds and do not overlap
+  ---
+  duration_ms: 7.845816
+  type: 'test'
+  ...
+# Subtest: date and geometry clipping skip offscreen markers rather than moving them onto a plot boundary
+ok 159 - date and geometry clipping skip offscreen markers rather than moving them onto a plot boundary
+  ---
+  duration_ms: 1.956244
+  type: 'test'
+  ...
+# Subtest: observed provisional and future markers use dashed circles without converting observed dates into assumptions
+ok 160 - observed provisional and future markers use dashed circles without converting observed dates into assumptions
+  ---
+  duration_ms: 5.193882
+  type: 'test'
+  ...
+# Subtest: untrusted labels and IDs are escaped while malformed dates, prices and intervals never reach SVG geometry
+ok 161 - untrusted labels and IDs are escaped while malformed dates, prices and intervals never reach SVG geometry
+  ---
+  duration_ms: 0.820419
+  type: 'test'
+  ...
+# Subtest: inspection preserves exact endpoint metadata, full duration and the scenario distinction
+ok 162 - inspection preserves exact endpoint metadata, full duration and the scenario distinction
+  ---
+  duration_ms: 0.545123
+  type: 'test'
+  ...
+# Subtest: the six-category legend remains explicit and distinct from observation status
+ok 163 - the six-category legend remains explicit and distinct from observation status
+  ---
+  duration_ms: 0.600777
+  type: 'test'
+  ...
+# Subtest: a selected relationship filters the duration pane without silently filtering the default overview
+ok 164 - a selected relationship filters the duration pane without silently filtering the default overview
+  ---
+  duration_ms: 1.487056
+  type: 'test'
+  ...
+# Subtest: coincident types retain different colored rings at the true shared date and price
+ok 165 - coincident types retain different colored rings at the true shared date and price
+  ---
+  duration_ms: 0.423239
+  type: 'test'
+  ...
+# Subtest: four-year duration ticks align with the price chart calendar grid on desktop and mobile
+ok 166 - four-year duration ticks align with the price chart calendar grid on desktop and mobile
+  ---
+  duration_ms: 8.286952
+  type: 'test'
+  ...
+# Subtest: selecting an interval highlights its real endpoints and projects the span without changing price coordinates
+ok 167 - selecting an interval highlights its real endpoints and projects the span without changing price coordinates
+  ---
+  duration_ms: 1.802262
+  type: 'test'
+  ...
+# Subtest: dense overview reserves room for two selected endpoint labels without overlapping them
+ok 168 - dense overview reserves room for two selected endpoint labels without overlapping them
+  ---
+  duration_ms: 1.657452
+  type: 'test'
+  ...
+# Subtest: selection geometry clips the span but never creates circles or endpoint guides at viewport edges
+ok 169 - selection geometry clips the span but never creates circles or endpoint guides at viewport edges
+  ---
+  duration_ms: 1.339022
+  type: 'test'
+  ...
+# Subtest: a selected endpoint outside the price scale remains absent while its date guide stays at the real date
+ok 170 - a selected endpoint outside the price scale remains absent while its date guide stays at the real date
+  ---
+  duration_ms: 0.48366
+  type: 'test'
+  ...
+# Subtest: multiple selected coincident rings retain their true shared coordinate and independent keyboard states
+ok 171 - multiple selected coincident rings retain their true shared coordinate and independent keyboard states
+  ---
+  duration_ms: 0.871636
+  type: 'test'
+  ...
+# Subtest: duration selection distinguishes the active span from other spans related to a selected marker
+ok 172 - duration selection distinguishes the active span from other spans related to a selected marker
+  ---
+  duration_ms: 1.017086
+  type: 'test'
+  ...
+# Subtest: observed prices chosen by a scenario and partial candidate windows retain explicit provenance
+ok 173 - observed prices chosen by a scenario and partial candidate windows retain explicit provenance
+  ---
+  duration_ms: 0.777864
+  type: 'test'
+  ...
+# Subtest: observed equity candles and conditional lines share a scale without synthetic forecast candles
+ok 174 - observed equity candles and conditional lines share a scale without synthetic forecast candles
+  ---
+  duration_ms: 24.836861
+  type: 'test'
+  ...
+# Subtest: equity volume keeps actual share quantities and New York session dates without future volume
+ok 175 - equity volume keeps actual share quantities and New York session dates without future volume
+  ---
+  duration_ms: 5.567256
+  type: 'test'
+  ...
+# Subtest: a future-only viewport renders and selects model values with no historical candle substitution
+ok 176 - a future-only viewport renders and selects model values with no historical candle substitution
+  ---
+  duration_ms: 1.106461
+  type: 'test'
+  ...
+# Subtest: forecast evidence clicks and keyboard activate only displayed markers
+ok 177 - forecast evidence clicks and keyboard activate only displayed markers
+  ---
+  duration_ms: 1.095824
+  type: 'test'
+  ...
+# Subtest: equity line connects actual Friday to Monday observations without inventing weekend records
+ok 178 - equity line connects actual Friday to Monday observations without inventing weekend records
+  ---
+  duration_ms: 0.963104
+  type: 'test'
+  ...
+# Subtest: malformed scenario intervals cannot silently enter the chart
+ok 179 - malformed scenario intervals cannot silently enter the chart
+  ---
+  duration_ms: 0.604212
+  type: 'test'
+  ...
+# Subtest: zooming between monthly scenario calculations preserves the future line and labelled interpolation
+ok 180 - zooming between monthly scenario calculations preserves the future line and labelled interpolation
+  ---
+  duration_ms: 1.205941
+  type: 'test'
+  ...
+# Subtest: a weekly candle start never relabels the observed forecast anchor as a future point
+ok 181 - a weekly candle start never relabels the observed forecast anchor as a future point
+  ---
+  duration_ms: 0.741229
+  type: 'test'
+  ...
+# Subtest: zero residuals stay zero in readouts and never become positive log-axis prices
+ok 182 - zero residuals stay zero in readouts and never become positive log-axis prices
+  ---
+  duration_ms: 1.081323
+  type: 'test'
+  ...
+# Subtest: a viewport between zero-valued calculation dates preserves the zero warning
+ok 183 - a viewport between zero-valued calculation dates preserves the zero warning
+  ---
+  duration_ms: 0.619476
+  type: 'test'
+  ...
+# Subtest: a positive-to-zero price transition explains log unavailability and stays available on a linear axis
+ok 184 - a positive-to-zero price transition explains log unavailability and stays available on a linear axis
+  ---
+  duration_ms: 1.319702
+  type: 'test'
+  ...
+# Subtest: a zero-crossing lower bound is not shown as early depletion or fabricated logarithmic interpolation
+ok 185 - a zero-crossing lower bound is not shown as early depletion or fabricated logarithmic interpolation
+  ---
+  duration_ms: 0.611122
+  type: 'test'
+  ...
+# Subtest: display interpolation never extrapolates before the observed anchor or beyond the forecast path
+ok 186 - display interpolation never extrapolates before the observed anchor or beyond the forecast path
+  ---
+  duration_ms: 0.267975
+  type: 'test'
+  ...
+# Subtest: linked daily and partial-week bars keep the observed boundary on narrow and wide viewports
+ok 187 - linked daily and partial-week bars keep the observed boundary on narrow and wide viewports
+  ---
+  duration_ms: 4.559073
+  type: 'test'
+  ...
+# Subtest: future-only daily and weekly path bars expose selected-path extrema separately from condition bounds
+ok 188 - future-only daily and weekly path bars expose selected-path extrema separately from condition bounds
+  ---
+  duration_ms: 2.07978
+  type: 'test'
+  ...
+# Subtest: linked line display retains weekend valuations without inventing weekend observed candles
+ok 189 - linked line display retains weekend valuations without inventing weekend observed candles
+  ---
+  duration_ms: 2.53014
+  type: 'test'
+  ...
+# Subtest: dense linked path bars batch SVG nodes while preserving source intervals and exact selections
+ok 190 - dense linked path bars batch SVG nodes while preserving source intervals and exact selections
+  ---
+  duration_ms: 188.848197
+  type: 'test'
+  ...
+# Subtest: hover, copying and magnet measurements preserve linked prices and label model-derived anchors
+ok 191 - hover, copying and magnet measurements preserve linked prices and label model-derived anchors
+  ---
+  duration_ms: 18.656439
+  type: 'test'
+  ...
+# Subtest: zero-valued linked bars retain zero in readouts and are not drawn as positive logarithmic candles
+ok 192 - zero-valued linked bars retain zero in readouts and are not drawn as positive logarithmic candles
+  ---
+  duration_ms: 1.231219
+  type: 'test'
+  ...
+# Subtest: a zero condition lower bound cannot zero or suppress a positive selected-path candle
+ok 193 - a zero condition lower bound cannot zero or suppress a positive selected-path candle
+  ---
+  duration_ms: 0.661228
+  type: 'test'
+  ...
+# Subtest: ETH conditional baseline uses its own prices and remains in both automatic scales with the envelope hidden
+ok 194 - ETH conditional baseline uses its own prices and remains in both automatic scales with the envelope hidden
+  ---
+  duration_ms: 5.263858
+  type: 'test'
+  ...
+# Subtest: ETH baseline is interpolated on the display scale at partial viewport edges without creating new model observations
+ok 195 - ETH baseline is interpolated on the display scale at partial viewport edges without creating new model observations
+  ---
+  duration_ms: 9.84819
+  type: 'test'
+  ...
+# Subtest: baseline display is limited to the ETH conditional illustration and leaves other models unchanged
+ok 196 - baseline display is limited to the ETH conditional illustration and leaves other models unchanged
+  ---
+  duration_ms: 5.971746
+  type: 'test'
+  ...
+# Subtest: ETH line and candle views identify the same observed OHLC across every supported interval
+ok 197 - ETH line and candle views identify the same observed OHLC across every supported interval
+  ---
+  duration_ms: 80.357506
+  type: 'test'
+  ...
+# Subtest: ETH volume retains exchange quantities and ETH units in individual and dense rendering
+ok 198 - ETH volume retains exchange quantities and ETH units in individual and dense rendering
+  ---
+  duration_ms: 17.122633
+  type: 'test'
+  ...
+# Subtest: current ETH conditional paths preserve real OHLC and render future prices as lines at desktop and mobile widths
+ok 199 - current ETH conditional paths preserve real OHLC and render future prices as lines at desktop and mobile widths
+  ---
+  duration_ms: 368.547319
+  type: 'test'
+  ...
+# Subtest: multiyear daily and weekly ETH charts show years on desktop and mobile without losing source selection
+ok 200 - multiyear daily and weekly ETH charts show years on desktop and mobile without losing source selection
+  ---
+  duration_ms: 26.371869
+  type: 'test'
+  ...
+# Subtest: intraday time labels retain hours while short daily labels use calendar dates
+ok 201 - intraday time labels retain hours while short daily labels use calendar dates
+  ---
+  duration_ms: 1.23858
+  type: 'test'
+  ...
+# Subtest: missing ETH minutes, days, and weeks break the close line without inventing candles
+ok 202 - missing ETH minutes, days, and weeks break the close line without inventing candles
+  ---
+  duration_ms: 1.413264
+  type: 'test'
+  ...
+# Subtest: an empty ETH viewport clears the prior readout while retaining ETH identity and unavailable state
+ok 203 - an empty ETH viewport clears the prior readout while retaining ETH identity and unavailable state
+  ---
+  duration_ms: 1.730423
+  type: 'test'
+  ...
+# Subtest: legacy series without an explicit product retain BTC identity in rendered and copied data
+ok 204 - legacy series without an explicit product retain BTC identity in rendered and copied data
+  ---
+  duration_ms: 0.626326
+  type: 'test'
+  ...
+# Subtest: buildEthereumAdaptiveForecast SVG titles and inspection use model quantiles rather than legacy external-condition labels
+ok 205 - buildEthereumAdaptiveForecast SVG titles and inspection use model quantiles rather than legacy external-condition labels
+  ---
+  duration_ms: 53.710117
+  type: 'test'
+  ...
+# Subtest: buildEthereumPooledForecast SVG titles and inspection use model quantiles rather than legacy external-condition labels
+ok 206 - buildEthereumPooledForecast SVG titles and inspection use model quantiles rather than legacy external-condition labels
+  ---
+  duration_ms: 51.933534
+  type: 'test'
+  ...
+# Subtest: adaptive example may lie outside its quantiles without widening the band or blocking render
+ok 207 - adaptive example may lie outside its quantiles without widening the band or blocking render
+  ---
+  duration_ms: 3.640307
+  type: 'test'
+  ...
+# Subtest: pooled example may lie outside its quantiles without widening the band or blocking render
+ok 208 - pooled example may lie outside its quantiles without widening the band or blocking render
+  ---
+  duration_ms: 1.686417
+  type: 'test'
+  ...
+# Subtest: CSV dialog previews source/range/raw USD, freezes original rows, isolates keys and restores opener focus
+ok 209 - CSV dialog previews source/range/raw USD, freezes original rows, isolates keys and restores opener focus
+  ---
+  duration_ms: 7.57015
+  type: 'test'
+  ...
+# Subtest: CSV dialog makes actual displayed OHLC the default for candle charts and disables an empty export
+ok 210 - CSV dialog makes actual displayed OHLC the default for candle charts and disables an empty export
+  ---
+  duration_ms: 2.793869
+  type: 'test'
+  ...
+# Subtest: research dialog saves multiple measurements, edits exact raw coordinates and preserves hidden locked state
+ok 211 - research dialog saves multiple measurements, edits exact raw coordinates and preserves hidden locked state
+  ---
+  duration_ms: 12.515747
+  type: 'test'
+  ...
+# Subtest: research dialog does not save an unfinished measurement and reports denied mutations without losing state
+ok 212 - research dialog does not save an unfinished measurement and reports denied mutations without losing state
+  ---
+  duration_ms: 2.04008
+  type: 'test'
+  ...
+# Subtest: research dialog wraps both Tab boundaries and recomputes enabled visible controls
+ok 213 - research dialog wraps both Tab boundaries and recomputes enabled visible controls
+  ---
+  duration_ms: 8.096184
+  type: 'test'
+  ...
+# Subtest: the IPO module keeps its title but does not add a second page-level H1
+ok 214 - the IPO module keeps its title but does not add a second page-level H1
+  ---
+  duration_ms: 5.707168
+  type: 'test'
+  ...
+# Subtest: the relay channel list label is a section heading, not a second H1
+ok 215 - the relay channel list label is a section heading, not a second H1
+  ---
+  duration_ms: 0.340674
+  type: 'test'
+  ...
+# Subtest: the page keeps exactly one shell heading owner and its visible titles
+ok 216 - the page keeps exactly one shell heading owner and its visible titles
+  ---
+  duration_ms: 0.449439
+  type: 'test'
+  ...
+# Subtest: the phone chart toolbar gives the reset control a 44px touch floor
+ok 217 - the phone chart toolbar gives the reset control a 44px touch floor
+  ---
+  duration_ms: 6.697783
+  type: 'test'
+  ...
+# Subtest: the price-chart h1 reserves a visible 22px normal-flow label row without symbol padding compensation
+ok 218 - the price-chart h1 reserves a visible 22px normal-flow label row without symbol padding compensation
+  ---
+  duration_ms: 8.730142
+  type: 'test'
+  ...
+# Subtest: the normal-flow label is visible outside the toolbar and plot with zero overlap area
+ok 219 - the normal-flow label is visible outside the toolbar and plot with zero overlap area
+  ---
+  duration_ms: 3.184459
+  type: 'test'
+  ...
+# Subtest: the historical 1680px² heading-on-button layout fails even when ticker glyphs do not overlap
+ok 220 - the historical 1680px² heading-on-button layout fails even when ticker glyphs do not overlap
+  ---
+  duration_ms: 0.630893
+  type: 'test'
+  ...
+# Subtest: touching an edge has zero area and remains valid, including label-to-plot contact
+ok 221 - touching an edge has zero area and remains valid, including label-to-plot contact
+  ---
+  duration_ms: 0.319873
+  type: 'test'
+  ...
+# Subtest: one pixel of button overlap fails using raw rectangles despite false summary flags
+ok 222 - one pixel of button overlap fails using raw rectangles despite false summary flags
+  ---
+  duration_ms: 0.279952
+  type: 'test'
+  ...
+# Subtest: positive subpixel overlap is not rounded away by the existing 0.01px coordinate tolerance
+ok 223 - positive subpixel overlap is not rounded away by the existing 0.01px coordinate tolerance
+  ---
+  duration_ms: 0.458973
+  type: 'test'
+  ...
+# Subtest: the symbol label rectangle is checked independently of its button and ticker text
+ok 224 - the symbol label rectangle is checked independently of its button and ticker text
+  ---
+  duration_ms: 0.586235
+  type: 'test'
+  ...
+# Subtest: actual ticker Range rectangles cannot overlap H1 Range rectangles
+ok 225 - actual ticker Range rectangles cannot overlap H1 Range rectangles
+  ---
+  duration_ms: 0.322007
+  type: 'test'
+  ...
+# Subtest: H1 glyph overhang cannot enter a symbol button or label even when the H1 box is clear
+ok 226 - H1 glyph overhang cannot enter a symbol button or label even when the H1 box is clear
+  ---
+  duration_ms: 0.350839
+  type: 'test'
+  ...
+# Subtest: only the normal-flow label, H1 and glyphs must clear the entire toolbar
+ok 227 - only the normal-flow label, H1 and glyphs must clear the entire toolbar
+  ---
+  duration_ms: 1.785566
+  type: 'test'
+  ...
+# Subtest: one pixel of label-row intrusion into the plot fails before the H1 itself touches the plot
+ok 228 - one pixel of label-row intrusion into the plot fails before the H1 itself touches the plot
+  ---
+  duration_ms: 0.406143
+  type: 'test'
+  ...
+# Subtest: the H1 box and its glyphs are checked separately against the plot
+ok 229 - the H1 box and its glyphs are checked separately against the plot
+  ---
+  duration_ms: 0.317279
+  type: 'test'
+  ...
+# Subtest: missing raw geometry and invalid numeric rectangles cannot masquerade as zero overlap
+ok 230 - missing raw geometry and invalid numeric rectangles cannot masquerade as zero overlap
+  ---
+  duration_ms: 2.500996
+  type: 'test'
+  ...
+# Subtest: the label must remain visible, in normal flow, outside the plot and in its shell-owned sibling
+ok 231 - the label must remain visible, in normal flow, outside the plot and in its shell-owned sibling
+  ---
+  duration_ms: 0.636581
+  type: 'test'
+  ...
+# Subtest: sole painted H1, duplicate-title, description, viewport, clipping and overlay checks remain strict
+ok 232 - sole painted H1, duplicate-title, description, viewport, clipping and overlay checks remain strict
+  ---
+  duration_ms: 2.536861
+  type: 'test'
+  ...
+# Subtest: compare retains the toolbar-owned fixed anchor and its unchanged 0.01px coordinate budget
+ok 233 - compare retains the toolbar-owned fixed anchor and its unchanged 0.01px coordinate budget
+  ---
+  duration_ms: 0.53616
+  type: 'test'
+  ...
+# Subtest: geometry preservation is applied only with an explicit prior state and remains 0.01px
+ok 234 - geometry preservation is applied only with an explicit prior state and remains 0.01px
+  ---
+  duration_ms: 0.836744
+  type: 'test'
+  ...
+# Subtest: conference retains its existing dashboard heading contract without adopting the chart label contract
+ok 235 - conference retains its existing dashboard heading contract without adopting the chart label contract
+  ---
+  duration_ms: 0.212521
+  type: 'test'
+  ...
+# Subtest: empty inset proof accepts only closed opposing sides, including valid CSS shorthand and zero lengths
+ok 236 - empty inset proof accepts only closed opposing sides, including valid CSS shorthand and zero lengths
+  ---
+  duration_ms: 1.513515
+  type: 'test'
+  ...
+# Subtest: decimal boundaries do not round a tiny positive clipping area into an empty one
+ok 237 - decimal boundaries do not round a tiny positive clipping area into an empty one
+  ---
+  duration_ms: 0.207033
+  type: 'test'
+  ...
+# Subtest: malformed, negative, nonzero lengths and unsupported clip grammars retain the strict path
+ok 238 - malformed, negative, nonzero lengths and unsupported clip grammars retain the strict path
+  ---
+  duration_ms: 2.147121
+  type: 'test'
+  ...
+# Subtest: serialized collector excludes proven-empty sr-only text and descendants while keeping a painted sibling
+ok 239 - serialized collector excludes proven-empty sr-only text and descendants while keeping a painted sibling
+  ---
+  duration_ms: 28.593343
+  type: 'test'
+  ...
+# Subtest: the same ID, aria-hidden, pointer-events:none and a 1px box cannot hide visible clock ink
+ok 240 - the same ID, aria-hidden, pointer-events:none and a 1px box cannot hide visible clock ink
+  ---
+  duration_ms: 15.919226
+  type: 'test'
+  ...
+# Subtest: an unknown descendant clip is irrelevant only when an ancestor box proves zero paint area
+ok 241 - an unknown descendant clip is irrelevant only when an ancestor box proves zero paint area
+  ---
+  duration_ms: 11.250237
+  type: 'test'
+  ...
+# Subtest: display:contents does not supply an empty clipping box for its visible descendants
+ok 242 - display:contents does not supply an empty clipping box for its visible descendants
+  ---
+  duration_ms: 9.261354
+  type: 'test'
+  ...
+# Subtest: empty clipping of a tick, latest badge or continuous boundary still fails its original paint contract
+ok 243 - empty clipping of a tick, latest badge or continuous boundary still fails its original paint contract
+  ---
+  duration_ms: 9.114422
+  type: 'test'
+  ...
+# Subtest: visible unsupported CSS clips remain explicit geometry failures
+ok 244 - visible unsupported CSS clips remain explicit geometry failures
+  ---
+  duration_ms: 23.245298
+  type: 'test'
+  ...
+# Subtest: nonrectangular SVG clip paths preserve the original unsupported-geometry failure
+ok 245 - nonrectangular SVG clip paths preserve the original unsupported-geometry failure
+  ---
+  duration_ms: 34.789079
+  type: 'test'
+  ...
+# Subtest: excluding the sr-only clock does not forgive a separate visible 13-square-pixel frame occlusion
+ok 246 - excluding the sr-only clock does not forgive a separate visible 13-square-pixel frame occlusion
+  ---
+  duration_ms: 2.775471
+  type: 'test'
+  ...
+# Subtest: independent source rows preserve BTC precision and select the candle source at the same cutoff
+ok 247 - independent source rows preserve BTC precision and select the candle source at the same cutoff
+  ---
+  duration_ms: 2.501867
+  type: 'test'
+  ...
+# Subtest: actual chart-owned hit surface and a continuous SVG frame satisfy the price-axis contract
+ok 248 - actual chart-owned hit surface and a continuous SVG frame satisfy the price-axis contract
+  ---
+  duration_ms: 4.128694
+  type: 'test'
+  ...
+# Subtest: price glyph ink is required even when a tag rectangle or axis hit surface remains visible
+ok 249 - price glyph ink is required even when a tag rectangle or axis hit surface remains visible
+  ---
+  duration_ms: 5.009414
+  type: 'test'
+  ...
+# Subtest: computed child visibility overrides a hidden ancestor while display and opacity suppress descendants
+ok 250 - computed child visibility overrides a hidden ancestor while display and opacity suppress descendants
+  ---
+  duration_ms: 2.578193
+  type: 'test'
+  ...
+# Subtest: actual CSS viewport must exactly match the requested matrix case
+ok 251 - actual CSS viewport must exactly match the requested matrix case
+  ---
+  duration_ms: 0.584823
+  type: 'test'
+  ...
+# Subtest: foreground paint cannot interrupt frame lines between labels, including a clipped half-stroke
+ok 252 - foreground paint cannot interrupt frame lines between labels, including a clipped half-stroke
+  ---
+  duration_ms: 4.031317
+  type: 'test'
+  ...
+# Subtest: direct label center hits are valid, but another chart or arbitrary overlay cannot own the hit
+ok 253 - direct label center hits are valid, but another chart or arbitrary overlay cannot own the hit
+  ---
+  duration_ms: 2.316799
+  type: 'test'
+  ...
+# Subtest: touching paint bounds pass, but every positive occlusion area fails without rounding
+ok 254 - touching paint bounds pass, but every positive occlusion area fails without rounding
+  ---
+  duration_ms: 3.310448
+  type: 'test'
+  ...
+# Subtest: legend, event, and forecast occlusions are all strict zero-area checks
+ok 255 - legend, event, and forecast occlusions are all strict zero-area checks
+  ---
+  duration_ms: 4.425863
+  type: 'test'
+  ...
+# Subtest: same-chart SVG underlap is recorded separately, but foreground paint blocks even without pointer events
+ok 256 - same-chart SVG underlap is recorded separately, but foreground paint blocks even without pointer events
+  ---
+  duration_ms: 1.173983
+  type: 'test'
+  ...
+# Subtest: overlay coverage distinguishes absent cases and requires actual paint somewhere in the matrix
+ok 257 - overlay coverage distinguishes absent cases and requires actual paint somewhere in the matrix
+  ---
+  duration_ms: 1.724043
+  type: 'test'
+  ...
+# Subtest: two painted labels cannot overlap even when center hits reach their shared layer
+ok 258 - two painted labels cannot overlap even when center hits reach their shared layer
+  ---
+  duration_ms: 0.627637
+  type: 'test'
+  ...
+# Subtest: the visible cursor can represent the hidden latest only for the same independent price and date
+ok 259 - the visible cursor can represent the hidden latest only for the same independent price and date
+  ---
+  duration_ms: 3.205269
+  type: 'test'
+  ...
+# Subtest: candles require the venue close and reject the old Coin Metrics latest label
+ok 260 - candles require the venue close and reject the old Coin Metrics latest label
+  ---
+  duration_ms: 0.956554
+  type: 'test'
+  ...
+# Subtest: correct rounded text does not hide a raw readout precision or source mismatch
+ok 261 - correct rounded text does not hide a raw readout precision or source mismatch
+  ---
+  duration_ms: 0.272201
+  type: 'test'
+  ...
+# Subtest: hidden or empty ticks, missing ownership, and clipping cannot count as a pass
+ok 262 - hidden or empty ticks, missing ownership, and clipping cannot count as a pass
+  ---
+  duration_ms: 0.524341
+  type: 'test'
+  ...
+# Subtest: frame lines must meet raw endpoints without gaps, dashes, or transparent paint
+ok 263 - frame lines must meet raw endpoints without gaps, dashes, or transparent paint
+  ---
+  duration_ms: 1.874992
+  type: 'test'
+  ...
+# Subtest: BTC/ETH alignment allows exactly 2 CSS pixels and rejects 2.001 without rounding
+ok 264 - BTC/ETH alignment allows exactly 2 CSS pixels and rejects 2.001 without rounding
+  ---
+  duration_ms: 0.984437
+  type: 'test'
+  ...
+# Subtest: the ±2 comparison allowance does not allow overflow or subpixel gutter intrusion
+ok 265 - the ±2 comparison allowance does not allow overflow or subpixel gutter intrusion
+  ---
+  duration_ms: 0.768561
+  type: 'test'
+  ...
+# Subtest: 64px axis measures real glyphs and fits full normal quotes without changing their numeric notation
+ok 266 - 64px axis measures real glyphs and fits full normal quotes without changing their numeric notation
+  ---
+  duration_ms: 6.800267
+  type: 'test'
+  ...
+# Subtest: font metric identity detects loaded glyphs even when the family name and gutter stay unchanged
+ok 267 - font metric identity detects loaded glyphs even when the family name and gutter stay unchanged
+  ---
+  duration_ms: 1.189727
+  type: 'test'
+  ...
+# Subtest: 390×844: native price/empty and RSI/loading layouts share a 64px gutter
+ok 268 - 390×844: native price/empty and RSI/loading layouts share a 64px gutter
+  ---
+  duration_ms: 35.39934
+  type: 'test'
+  ...
+# Subtest: 320×740: native price/empty and RSI/loading layouts share a 64px gutter
+ok 269 - 320×740: native price/empty and RSI/loading layouts share a 64px gutter
+  ---
+  duration_ms: 3.618994
+  type: 'test'
+  ...
+# Subtest: 768×1024: native price/empty and RSI/loading layouts share a 64px gutter
+ok 270 - 768×1024: native price/empty and RSI/loading layouts share a 64px gutter
+  ---
+  duration_ms: 4.660637
+  type: 'test'
+  ...
+# Subtest: 1024×768: native price/empty and RSI/loading layouts share a 64px gutter
+ok 271 - 1024×768: native price/empty and RSI/loading layouts share a 64px gutter
+  ---
+  duration_ms: 5.06592
+  type: 'test'
+  ...
+# Subtest: 1440×900: native price/empty and RSI/loading layouts share a 64px gutter
+ok 272 - 1440×900: native price/empty and RSI/loading layouts share a 64px gutter
+  ---
+  duration_ms: 3.187433
+  type: 'test'
+  ...
+# Subtest: 1920×1080: native price/empty and RSI/loading layouts share a 64px gutter
+ok 273 - 1920×1080: native price/empty and RSI/loading layouts share a 64px gutter
+  ---
+  duration_ms: 2.94764
+  type: 'test'
+  ...
+# Subtest: price ticks and current-price badge yield only the rows occupied by the live selection badge
+ok 274 - price ticks and current-price badge yield only the rows occupied by the live selection badge
+  ---
+  duration_ms: 0.800799
+  type: 'test'
+  ...
+# Subtest: daily mobile ticks, latest quotes and live cursor fit all units/scales without mutating OHLC or chart height
+ok 275 - daily mobile ticks, latest quotes and live cursor fit all units/scales without mutating OHLC or chart height
+  ---
+  duration_ms: 380.607619
+  type: 'test'
+  ...
+# Subtest: daily free pan into empty time/negative USD space preserves a stable right gutter and does not manufacture rows
+ok 276 - daily free pan into empty time/negative USD space preserves a stable right gutter and does not manufacture rows
+  ---
+  duration_ms: 2.33736
+  type: 'test'
+  ...
+# Subtest: intraday mobile ticks, latest quotes and live cursor fit all units/scales without mutating OHLC or chart height
+ok 277 - intraday mobile ticks, latest quotes and live cursor fit all units/scales without mutating OHLC or chart height
+  ---
+  duration_ms: 368.137611
+  type: 'test'
+  ...
+# Subtest: intraday free pan into empty time/negative USD space preserves a stable right gutter and does not manufacture rows
+ok 278 - intraday free pan into empty time/negative USD space preserves a stable right gutter and does not manufacture rows
+  ---
+  duration_ms: 1.286573
+  type: 'test'
+  ...
+# Subtest: very small prices stay nonzero and extremely narrow large-price ticks stay distinct
+ok 279 - very small prices stay nonzero and extremely narrow large-price ticks stay distinct
+  ---
+  duration_ms: 2.254995
+  type: 'test'
+  ...
+# Subtest: font and fitted bounds survive the actual SVG export and PNG input serialization while CSV retains raw precision
+ok 280 - font and fitted bounds survive the actual SVG export and PNG input serialization while CSV retains raw precision
+  ---
+  duration_ms: 13.696791
+  type: 'test'
+  ...
+# Subtest: glyph caches are document-scoped and composition falls back to raw when it drifts
+ok 281 - glyph caches are document-scoped and composition falls back to raw when it drifts
+  ---
+  duration_ms: 1.328596
+  type: 'test'
+  ...
+# Subtest: font completion updates hover fitting but preserves the previous render identity
+ok 282 - font completion updates hover fitting but preserves the previous render identity
+  ---
+  duration_ms: 0.758946
+  type: 'test'
+  ...
+# Subtest: equal sample totals cannot leak different digit widths across documents
+ok 283 - equal sample totals cannot leak different digit widths across documents
+  ---
+  duration_ms: 0.447606
+  type: 'test'
+  ...
+# Subtest: cross-draw exact-width caching avoids repeated probes but remains bounded
+ok 284 - cross-draw exact-width caching avoids repeated probes but remains bounded
+  ---
+  duration_ms: 26.234512
+  type: 'test'
+  ...
+# Subtest: automatic daily log axes give narrow movement useful height and multiple distinct ticks
+ok 285 - automatic daily log axes give narrow movement useful height and multiple distinct ticks
+  ---
+  duration_ms: 2.112049
+  type: 'test'
+  ...
+# Subtest: manual price domains stay exact across data, unit labels and both scale types
+ok 286 - manual price domains stay exact across data, unit labels and both scale types
+  ---
+  duration_ms: 1.094353
+  type: 'test'
+  ...
+# Subtest: price-axis drag scales ratios in log space and distances in linear space
+ok 287 - price-axis drag scales ratios in log space and distances in linear space
+  ---
+  duration_ms: 0.47004
+  type: 'test'
+  ...
+# Subtest: price domains reject invalid values without silently changing the supplied scale
+ok 288 - price domains reject invalid values without silently changing the supplied scale
+  ---
+  duration_ms: 1.399753
+  type: 'test'
+  ...
+# Subtest: header returns are previous-close based while open-based change remains explicit
+ok 289 - header returns are previous-close based while open-based change remains explicit
+  ---
+  duration_ms: 0.453806
+  type: 'test'
+  ...
+# Subtest: subnormal and indistinguishable manual bounds recover without a tick-loop hang or NaN axis
+ok 290 - subnormal and indistinguishable manual bounds recover without a tick-loop hang or NaN axis
+  ---
+  duration_ms: 0.376259
+  type: 'test'
+  ...
+# Subtest: native compact legend retains every semantic entry while hiding its replaced inline list
+ok 291 - native compact legend retains every semantic entry while hiding its replaced inline list
+  ---
+  duration_ms: 3.825317
+  type: 'test'
+  ...
+# Subtest: responsive legend adaptation preserves the original native chart/document invariants
+ok 292 - responsive legend adaptation preserves the original native chart/document invariants
+  ---
+  duration_ms: 1.207032
+  type: 'test'
+  ...
+# Subtest: the full sheet must expose all meanings in a bounded native vertical scroll owner
+ok 293 - the full sheet must expose all meanings in a bounded native vertical scroll owner
+  ---
+  duration_ms: 1.091648
+  type: 'test'
+  ...
+# Subtest: saved anchors retain raw USD, source and calendar elapsed separately from actual loaded rows
+ok 294 - saved anchors retain raw USD, source and calendar elapsed separately from actual loaded rows
+  ---
+  duration_ms: 2.624512
+  type: 'test'
+  ...
+# Subtest: multiple measurements, exact edit, lock, hide and delete are independent reversible commands
+ok 295 - multiple measurements, exact edit, lock, hide and delete are independent reversible commands
+  ---
+  duration_ms: 1.579355
+  type: 'test'
+  ...
+# Subtest: observed and conditional anchors are explicit and saved scenario coordinates survive a scenario change
+ok 296 - observed and conditional anchors are explicit and saved scenario coordinates survive a scenario change
+  ---
+  duration_ms: 0.809382
+  type: 'test'
+  ...
+# Subtest: saved annotation geometry projects exact coordinates and clips only SVG drawing, not endpoint meaning
+ok 297 - saved annotation geometry projects exact coordinates and clips only SVG drawing, not endpoint meaning
+  ---
+  duration_ms: 0.601138
+  type: 'test'
+  ...
+# Subtest: bounded persistence rejects corrupt dates/prices and survives storage denial
+ok 298 - bounded persistence rejects corrupt dates/prices and survives storage denial
+  ---
+  duration_ms: 2.678123
+  type: 'test'
+  ...
+# Subtest: unfinished measurement and invalid edits never create fabricated anchors
+ok 299 - unfinished measurement and invalid edits never create fabricated anchors
+  ---
+  duration_ms: 0.506215
+  type: 'test'
+  ...
+# Subtest: completed intraday anchors use the Coinbase source even when the daily model cutoff is older
+ok 300 - completed intraday anchors use the Coinbase source even when the daily model cutoff is older
+  ---
+  duration_ms: 0.247895
+  type: 'test'
+  ...
+# Subtest: Coin Metrics line coordinates are never attributed to concurrently loaded Bitstamp candles
+ok 301 - Coin Metrics line coordinates are never attributed to concurrently loaded Bitstamp candles
+  ---
+  duration_ms: 0.288926
+  type: 'test'
+  ...
+# Subtest: dashboard navigation is a flat left-aligned list rather than centred pills
+ok 302 - dashboard navigation is a flat left-aligned list rather than centred pills
+  ---
+  duration_ms: 28.113719
+  type: 'test'
+  ...
+# Subtest: dashboard surfaces use rules and hairlines instead of rounded cards
+ok 303 - dashboard surfaces use rules and hairlines instead of rounded cards
+  ---
+  duration_ms: 7.411991
+  type: 'test'
+  ...
+# Subtest: the outer dashboard header stays one compact row
+ok 304 - the outer dashboard header stays one compact row
+  ---
+  duration_ms: 4.003946
+  type: 'test'
+  ...
+# Subtest: page-context chrome keeps its compact size while prose keeps a reading size
+ok 305 - page-context chrome keeps its compact size while prose keeps a reading size
+  ---
+  duration_ms: 80.978669
+  type: 'test'
+  ...
+# Subtest: no decorative gradients, blur or large shadows enter the shell
+ok 306 - no decorative gradients, blur or large shadows enter the shell
+  ---
+  duration_ms: 1.313413
+  type: 'test'
+  ...
+# Subtest: the data heading keeps its dark opaque sticky surface
+ok 307 - the data heading keeps its dark opaque sticky surface
+  ---
+  duration_ms: 68.524725
+  type: 'test'
+  ...
+# Subtest: the requested phone perimeter is one bottom dock with 44px controls
+ok 308 - the requested phone perimeter is one bottom dock with 44px controls
+  ---
+  duration_ms: 0.400925
+  type: 'test'
+  ...
+# Subtest: scoped panels and rows drop pill and card radii
+ok 309 - scoped panels and rows drop pill and card radii
+  ---
+  duration_ms: 1.378041
+  type: 'test'
+  ...
+# Subtest: scoped surfaces keep circular data dots and semantic media treatment
+ok 310 - scoped surfaces keep circular data dots and semantic media treatment
+  ---
+  duration_ms: 0.81449
+  type: 'test'
+  ...
+# Subtest: the data filter row keeps native horizontal access for clipped controls
+ok 311 - the data filter row keeps native horizontal access for clipped controls
+  ---
+  duration_ms: 0.905337
+  type: 'test'
+  ...
+# Subtest: dashboard return and navigation keep 44px targets on wide coarse-pointer screens
+ok 312 - dashboard return and navigation keep 44px targets on wide coarse-pointer screens
+  ---
+  duration_ms: 0.210527
+  type: 'test'
+  ...
+# Subtest: matrix fixes both instruments, both themes, both widths and separate fallback cases
+ok 313 - matrix fixes both instruments, both themes, both widths and separate fallback cases
+  ---
+  duration_ms: 2.245731
+  type: 'test'
+  ...
+# Subtest: twenty token pairs and twenty painted elements are distinct fixed inventories
+ok 314 - twenty token pairs and twenty painted elements are distinct fixed inventories
+  ---
+  duration_ms: 0.386303
+  type: 'test'
+  ...
+# Subtest: relative luminance has exact white/black and equal-colour anchors
+ok 315 - relative luminance has exact white/black and equal-colour anchors
+  ---
+  duration_ms: 2.192451
+  type: 'test'
+  ...
+# Subtest: sRGB parser preserves alpha and rejects unsupported or out-of-range colour spaces
+ok 316 - sRGB parser preserves alpha and rejects unsupported or out-of-range colour spaces
+  ---
+  duration_ms: 0.945027
+  type: 'test'
+  ...
+# Subtest: alpha colours are composited against actual opaque backing, never silently against white
+ok 317 - alpha colours are composited against actual opaque backing, never silently against white
+  ---
+  duration_ms: 0.224129
+  type: 'test'
+  ...
+# Subtest: balanced CSS inventory respects nested media, vendor properties, quoted delimiters and comments
+ok 318 - balanced CSS inventory respects nested media, vendor properties, quoted delimiters and comments
+  ---
+  duration_ms: 0.628209
+  type: 'test'
+  ...
+# Subtest: colour literals include fallbacks, modern constructors and named paint but exclude token names and resources
+ok 319 - colour literals include fallbacks, modern constructors and named paint but exclude token names and resources
+  ---
+  duration_ms: 1.896473
+  type: 'test'
+  ...
+# Subtest: only canonical root custom-property literals pass source ownership
+ok 320 - only canonical root custom-property literals pass source ownership
+  ---
+  duration_ms: 1.644293
+  type: 'test'
+  ...
+# Subtest: hardcoded component, theme override, root fallback and boot colours fail with source locations
+ok 321 - hardcoded component, theme override, root fallback and boot colours fail with source locations
+  ---
+  duration_ms: 4.157918
+  type: 'test'
+  ...
+# Subtest: multiple canonical colour root blocks, duplicate tokens and malformed CSS cannot report zero as success
+ok 322 - multiple canonical colour root blocks, duplicate tokens and malformed CSS cannot report zero as success
+  ---
+  duration_ms: 5.096326
+  type: 'test'
+  ...
+# Subtest: global paint aliases cannot override the canonical root even when the override has no literal colour
+ok 323 - global paint aliases cannot override the canonical root even when the override has no literal colour
+  ---
+  duration_ms: 7.426904
+  type: 'test'
+  ...
+# Subtest: valid responsive type aliases and geometry are not misclassified as global paint overrides
+ok 324 - valid responsive type aliases and geometry are not misclassified as global paint overrides
+  ---
+  duration_ms: 0.699767
+  type: 'test'
+  ...
+# Subtest: all canonical paint aliases resolve in each theme, including shadows; cycles cannot disappear as geometry
+ok 325 - all canonical paint aliases resolve in each theme, including shadows; cycles cannot disappear as geometry
+  ---
+  duration_ms: 0.942884
+  type: 'test'
+  ...
+# Subtest: light-dark aliases and nested variable fallbacks resolve separately with provenance
+ok 326 - light-dark aliases and nested variable fallbacks resolve separately with provenance
+  ---
+  duration_ms: 0.378381
+  type: 'test'
+  ...
+# Subtest: the agreed accessible palette passes all forty exact token pairs; old subtle and dark accent fail
+ok 327 - the agreed accessible palette passes all forty exact token pairs; old subtle and dark accent fail
+  ---
+  duration_ms: 2.616881
+  type: 'test'
+  ...
+# Subtest: actual BTC observed line/isolated point and ETH close line use theme ink with at least 3:1 plot contrast
+ok 328 - actual BTC observed line/isolated point and ETH close line use theme ink with at least 3:1 plot contrast
+  ---
+  duration_ms: 77.046858
+  type: 'test'
+  ...
+# Subtest: native paint checks composite ancestry and retain unsupported backgrounds as unverified
+ok 329 - native paint checks composite ancestry and retain unsupported backgrounds as unverified
+  ---
+  duration_ms: 0.609951
+  type: 'test'
+  ...
+# Subtest: paint thresholds are applied without rounding a sub-threshold observation up
+ok 330 - paint thresholds are applied without rounding a sub-threshold observation up
+  ---
+  duration_ms: 0.312492
+  type: 'test'
+  ...
+# Subtest: computed UI ink must match the active canonical role palette even when a preserved literal has enough contrast
+ok 331 - computed UI ink must match the active canonical role palette even when a preserved literal has enough contrast
+  ---
+  duration_ms: 0.524913
+  type: 'test'
+  ...
+# Subtest: fixed coverage needs every ID in both themes and never substitutes repeated passing samples
+ok 332 - fixed coverage needs every ID in both themes and never substitutes repeated passing samples
+  ---
+  duration_ms: 3.961052
+  type: 'test'
+  ...
+# Subtest: body/prose size contract records dense controls separately without treating them as body exceptions
+ok 333 - body/prose size contract records dense controls separately without treating them as body exceptions
+  ---
+  duration_ms: 0.343629
+  type: 'test'
+  ...
+# Subtest: font success requires same-origin bytes, a loaded face and actual custom-font glyph ownership
+ok 334 - font success requires same-origin bytes, a loaded face and actual custom-font glyph ownership
+  ---
+  duration_ms: 0.799467
+  type: 'test'
+  ...
+# Subtest: fallback evidence needs induced local failure plus real system glyphs and visible Korean text
+ok 335 - fallback evidence needs induced local failure plus real system glyphs and visible Korean text
+  ---
+  duration_ms: 0.268536
+  type: 'test'
+  ...
+# Subtest: a blocked or absent browser cannot qualify P0 even with all static checks passing
+ok 336 - a blocked or absent browser cannot qualify P0 even with all static checks passing
+  ---
+  duration_ms: 2.719626
+  type: 'test'
+  ...
+# Subtest: matching totals alone cannot replace complete unique token, paint or browser evidence
+ok 337 - matching totals alone cannot replace complete unique token, paint or browser evidence
+  ---
+  duration_ms: 0.96754
+  type: 'test'
+  ...
+# Subtest: CLI requires a concrete new output directory and rejects unknown/incomplete options
+ok 338 - CLI requires a concrete new output directory and rejects unknown/incomplete options
+  ---
+  duration_ms: 0.328286
+  type: 'test'
+  ...
+# Subtest: actual collector survives CDP-style serialization with no imported helper globals
+ok 339 - actual collector survives CDP-style serialization with no imported helper globals
+  ---
+  duration_ms: 2.375196
+  type: 'test'
+  ...
+# Subtest: collector never turns unsupported group opacity into a passing colour sample or real-ink proof
+ok 340 - collector never turns unsupported group opacity into a passing colour sample or real-ink proof
+  ---
+  duration_ms: 1.447235
+  type: 'test'
+  ...
+# Subtest: a control inside the viewport but outside its reader scroll clip is not counted as visible ink
+ok 341 - a control inside the viewport but outside its reader scroll clip is not counted as visible ink
+  ---
+  duration_ms: 0.947761
+  type: 'test'
+  ...
+# Subtest: the restored price-axis explanation participates in the P0 prose floor
+ok 342 - the restored price-axis explanation participates in the P0 prose floor
+  ---
+  duration_ms: 2.065389
+  type: 'test'
+  ...
+# Subtest: reader scrolling uses native wheel geometry and never treats overflow:hidden as user-scrollable
+ok 343 - reader scrolling uses native wheel geometry and never treats overflow:hidden as user-scrollable
+  ---
+  duration_ms: 0.812877
+  type: 'test'
+  ...
+# Subtest: native settings scan retains both scroll positions, fixed IDs, screenshots and earlier failed observations
+ok 344 - native settings scan retains both scroll positions, fixed IDs, screenshots and earlier failed observations
+  ---
+  duration_ms: 0.647257
+  type: 'test'
+  ...
+# Subtest: a reader that cannot scroll or does not advance leaves missing samples unverified without fabricated exposure
+ok 345 - a reader that cannot scroll or does not advance leaves missing samples unverified without fabricated exposure
+  ---
+  duration_ms: 0.455007
+  type: 'test'
+  ...
+# Subtest: current authored CSS and pinned local font bytes satisfy the source contract without claiming a browser pass
+ok 346 - current authored CSS and pinned local font bytes satisfy the source contract without claiming a browser pass
+  ---
+  duration_ms: 587.763064
+  type: 'test'
+  ...
+# Subtest: a real CLI preflight failure creates missing parents, records the reason, and never overwrites its receipt
+ok 347 - a real CLI preflight failure creates missing parents, records the reason, and never overwrites its receipt
+  ---
+  duration_ms: 1142.265394
+  type: 'test'
+  ...
+# Subtest: the default is light and only explicit light/dark preferences are accepted
+ok 348 - the default is light and only explicit light/dark preferences are accepted
+  ---
+  duration_ms: 1.138489
+  type: 'test'
+  ...
+# Subtest: initialization honors a saved choice and the early head fallback without writing storage
+ok 349 - initialization honors a saved choice and the early head fallback without writing storage
+  ---
+  duration_ms: 5.018888
+  type: 'test'
+  ...
+# Subtest: native settings buttons toggle and persist one choice while keeping focus and chart nodes intact
+ok 350 - native settings buttons toggle and persist one choice while keeping focus and chart nodes intact
+  ---
+  duration_ms: 0.940059
+  type: 'test'
+  ...
+# Subtest: reopening settings keeps the current choice when storage writes are blocked
+ok 351 - reopening settings keeps the current choice when storage writes are blocked
+  ---
+  duration_ms: 0.51002
+  type: 'test'
+  ...
+# Subtest: cross-tab preference changes update controls without re-persisting or accepting session storage
+ok 352 - cross-tab preference changes update controls without re-persisting or accepting session storage
+  ---
+  duration_ms: 0.845667
+  type: 'test'
+  ...
+# Subtest: document initialization is idempotent and teardown removes external listeners
+ok 353 - document initialization is idempotent and teardown removes external listeners
+  ---
+  duration_ms: 1.087462
+  type: 'test'
+  ...
+# Subtest: parent messages require both a matching origin and the actual parent window
+ok 354 - parent messages require both a matching origin and the actual parent window
+  ---
+  duration_ms: 2.150106
+  type: 'test'
+  ...
+# Subtest: a new child requests the parent choice before sending any fallback back to it
+ok 355 - a new child requests the parent choice before sending any fallback back to it
+  ---
+  duration_ms: 3.094352
+  type: 'test'
+  ...
+# Subtest: child requests receive the current theme at an exact origin, including late-loaded frames
+ok 356 - child requests receive the current theme at an exact origin, including late-loaded frames
+  ---
+  duration_ms: 1.236316
+  type: 'test'
+  ...
+# Subtest: a same-origin child choice reaches siblings without echoing or rewriting source data
+ok 357 - a same-origin child choice reaches siblings without echoing or rewriting source data
+  ---
+  duration_ms: 0.748349
+  type: 'test'
+  ...
+# Subtest: opaque-origin standalone documents keep local controls without sending wildcard messages
+ok 358 - opaque-origin standalone documents keep local controls without sending wildcard messages
+  ---
+  duration_ms: 0.381156
+  type: 'test'
+  ...
+# Subtest: applyTheme rejects malformed input and does not need a mounted control
+ok 359 - applyTheme rejects malformed input and does not need a mounted control
+  ---
+  duration_ms: 0.305161
+  type: 'test'
+  ...
+# Subtest: a shared manual USD price domain survives indexed units and preserves the independent time window
+ok 360 - a shared manual USD price domain survives indexed units and preserves the independent time window
+  ---
+  duration_ms: 4.14607
+  type: 'test'
+  ...
+# Subtest: invalid shared price ranges safely return to Auto and zero is accepted only on a linear axis
+ok 361 - invalid shared price ranges safely return to Auto and zero is accepted only on a linear axis
+  ---
+  duration_ms: 0.697103
+  type: 'test'
+  ...
+1..361
+# tests 361
+# suites 0
+# pass 361
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4863.535753

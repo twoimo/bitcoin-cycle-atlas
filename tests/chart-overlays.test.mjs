@@ -265,7 +265,7 @@ test('the research overview keeps only a readable set of names across eras and r
   assert.ok(dates.some(date => date >= '2016-01-01' && date < '2023-01-01'));
   assert.ok(dates.some(date => date >= '2024-01-01'), 'early chronology must not consume every label slot');
   assert.equal((result.markup.match(/role="button" tabindex="0"/g) || []).length, anchors.length);
-  assert.equal((result.markup.match(/r="4" fill="#111b27"/g) || []).length, anchors.length);
+  assert.equal((result.markup.match(/r="4" fill="var\(--bg\)"/g) || []).length, anchors.length);
   for (const anchor of anchors) assert.ok(result.markup.includes(`data-history-event="${anchor.event.id}"`));
 });
 

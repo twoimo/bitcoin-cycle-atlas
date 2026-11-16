@@ -3,6 +3,7 @@ import { getMacroCycles, aggregateCloseBars, computeRollingStates, STATE_LABELS 
 import { analyzePeakZones } from './peak-zones.js?v=1.29.0';
 import { utcDay, dateFromDay, getAnchors } from './cycle-engine.js?v=1.29.0';
 import { shiftCalendarMonths } from './cycle-timing.js?v=1.29.0';
+import {linearScale as fLinear,logScale as fLog,bandScale as fBand,ticks as fTicks,logTicks as fLogTicks,linePath as fLine,barPath as fBar} from './funnest-research-primitives.bundle.js?v=1.29.0';
 
 const cache = new WeakMap();
 const selections = new WeakMap();
@@ -57,22 +58,8 @@ function nearest(rows, day, key='day') {
   while(lo<hi){const mid=(lo+hi)>>1;if(rows[mid][key]<day)lo=mid+1;else hi=mid;}
   return lo>0&&Math.abs(rows[lo-1][key]-day)<Math.abs(rows[lo][key]-day)?lo-1:lo;
 }
-function tickValues(min, max, count=5) {
-  if(!Number.isFinite(min)||!Number.isFinite(max))return [0,1];
-  if(max===min)max=min+1;
-  const raw=(max-min)/count,power=10**Math.floor(Math.log10(raw)),ratio=raw/power;
-  const step=(ratio<=1?1:ratio<=2?2:ratio<=5?5:10)*power;
-  const ticks=[];
-  for(let v=Math.ceil(min/step)*step;v<=max+step*.001;v+=step)ticks.push(Math.abs(v)<step*.0001?0:v);
-  return ticks;
-}
-function logTicks(min,max) {
-  const ticks=[];
-  for(let power=Math.floor(Math.log10(min));power<=Math.ceil(Math.log10(max));power++){
-    const v=10**power;if(v>=min&&v<=max)ticks.push(v);
-  }
-  return ticks;
-}
+const tickValues=(min,max,count=5)=>fTicks(min,max,count);
+const logTicks=(min,max)=>fLogTicks(min,max);
 function geometry(svg) {
   const width=Math.max(1,Math.round(svg.clientWidth||svg.parentElement?.clientWidth||1000)),small=width<650;
   const height=Math.max(1,Math.round(svg.clientHeight||svg.parentElement?.clientHeight||500)),short=height<330;
@@ -85,9 +72,7 @@ function frame(svg,g,title,description) {
   svg.setAttribute('aria-label',`${title}。그래프를 누르거나 좌우 방향키로 값을 확인할 수 있습니다.`);
   return `<title>${esc(title)}</title><desc>${esc(description)}</desc>`;
 }
-function line(rows,x,y,key='value') {
-  return rows.map((p,i)=>`${i?'L':'M'}${x(p).toFixed(2)},${y(p[key]).toFixed(2)}`).join('');
-}
+function line(rows,x,y,key='value') {return fLine(rows.map(p=>({x:x(p),y:y(p[key])})));}
 function svgPointer(svg,event,g) {
   const rect=svg.getBoundingClientRect();
   // The root may give the SVG a taller viewport. Account for xMidYMid meet.
@@ -132,7 +117,7 @@ function renderCycles({svg,dataset,alignment,onInspect,presentation}) {
   let selected=saved?.key===key?saved.index:series.at(-1).points.at(-1).elapsed;
   selected=clamp(selected,0,maxDay);
   const all=series.flatMap(s=>s.points),min=Math.min(...all.map(p=>p.value))*.75,max=Math.max(...all.map(p=>p.value))*1.3;
-  const x=day=>g.L+day/maxDay*(g.W-g.L-g.R),y=value=>g.B-(Math.log(value)-Math.log(min))/(Math.log(max)-Math.log(min))*(g.B-g.T);
+  const xScale=fLinear([0,maxDay],[g.L,g.W-g.R]),yScale=fLog([min,max],[g.B,g.T]),x=day=>xScale(day),y=value=>yScale(value);
   const label=alignment==='halving'?'반감기':alignment==='calendar'?'달력 구간 시작':'사후 저점';
   const title=`${label}부터 같은 4년 비교`,caption='같은 출발값 100 · 관측된 가격만 표시';
   const note=alignment==='calendar'?'달력 4년은 비교를 위한 구획입니다. 2010년은 7월 18일부터 관측되어 그 첫 가격을 100으로 삼습니다.':alignment==='halving'?'가로축은 각 반감기 이후 경과일입니다. 각 선의 끝은 관측이 끝났거나 4년을 채운 지점입니다.':'저점은 후속 가격으로 사후에 정한 기준입니다. 2010년은 최종 저점이 아닌 첫 관측일이며, 최신 4년 창은 아직 진행 중입니다.';
@@ -167,7 +152,7 @@ function renderDuration({svg,dataset,onInspect,presentation}) {
   const g=geometry(svg),cycles=macro(dataset).cycles,key='duration',saved=selections.get(svg);
   let selected=clamp(saved?.key===key?saved.index:cycles.length-1,0,cycles.length-1);
   const left=g.small?60:91,plotTop=g.short?35:53,plotBottom=g.H-10,rowHeight=(plotBottom-plotTop)/cycles.length,maxDays=Math.max(1461,...cycles.map(c=>c.cycleDays));
-  const x=days=>left+days/maxDays*(g.W-left-g.R);
+  const durationScale=fLinear([0,maxDays],[left,g.W-g.R]),x=days=>durationScale(days);
   const title='상승과 하락에 실제로 걸린 시간',caption='저점 → 고점 → 다음 저점 · 달력 일수';
   const note='색칠된 길이는 사후에 구분한 기간입니다. 2026년 저점은 현재까지의 후보이며, 하락 기간이 확정된 것은 아닙니다.';
   let initialInspection;
@@ -194,7 +179,7 @@ function renderPhases({svg,dataset,phaseLeg,onInspect,presentation}) {
   const g=geometry(svg),windows=phaseWindows(dataset,phaseLeg),key=`phases:${phaseLeg}`,saved=selections.get(svg);
   let selected=clamp(saved?.key===key?saved.index:windows.length-1,0,windows.length-1);
   const left=g.small?60:91,plotTop=g.short?35:53,plotBottom=g.H-10,rowHeight=(plotBottom-plotTop)/windows.length,maxDays=Math.ceil(Math.max(...windows.map(c=>c.days))/100)*100;
-  const x=days=>left+days/maxDays*(g.W-left-g.R),isBull=phaseLeg==='bull';
+  const phaseScale=fLinear([0,maxDays],[left,g.W-g.R]),x=days=>phaseScale(days),isBull=phaseLeg==='bull';
   const title=`${isBull?'상승장':'하락장'} 안에서 반복된 흐름`,caption='색의 순서 = 실제 발생 순서 · 가로 길이 = 실제 일수';
   const note='각 날짜는 당시까지 알려진 자료로 한 가지 상태에만 분류합니다. 전체 상승·하락 구간의 경계는 사후에 정했으며, 국면 이름이 미래 방향을 보장하지 않습니다.';
   let initialInspection;
@@ -250,12 +235,12 @@ function renderPeriods({svg,dataset,period,metric,scope,onInspect,presentation})
     if(scope!=='all'){if(selected<start)start=selected;if(selected>=start+pageSize)start=selected-pageSize+1;start=clamp(start,0,Math.max(0,all.length-pageSize));}else start=0;
     const rows=all.slice(start,start+pageSize),values=rows.map(p=>p[metric]).filter(Number.isFinite);
     const min=Math.min(0,...values),max=Math.max(0,...values),pad=(max-min||1)*.12,low=min<0?min-pad:0,high=max>0?max+pad:0;
-    const y=value=>g.B-(value-low)/(high-low||1)*(g.B-g.T),barSpace=(g.W-g.L-g.R)/rows.length,barWidth=Math.max(.6,barSpace*.72),x=i=>g.L+barSpace*(i+.5),zero=y(0);
+    const yScale=fLinear([low,high],[g.B,g.T]),y=value=>yScale(value),bands=fBand(rows.length,[g.L,g.W-g.R],.28),barWidth=bands.bandwidth,x=i=>bands.center(i),zero=y(0);
     let out=frame(svg,g,title,note);
     for(const v of tickValues(low,high,g.ticks)){const yy=y(v);out+=`<line x1="${g.L}" x2="${g.W-g.R}" y1="${yy}" y2="${yy}" stroke="${GRID}"/><text data-indicator-axis-label x="${g.L-9}" y="${yy+4}" text-anchor="end" fill="${MUTED}" font-size="12">${format(v,1)}${definition.unit}</text>`;}
     out+=`<line x1="${g.L}" x2="${g.W-g.R}" y1="${zero}" y2="${zero}" stroke="#758193"/><text x="${g.L}" y="${g.short?16:20}" fill="${MUTED}" font-size="12">${esc(rows[0]?.period)} — ${esc(rows.at(-1)?.period)}</text>`;
     rows.forEach((row,i)=>{const value=row[metric];if(!Number.isFinite(value))return;const yy=y(value),fill=metric==='returnPct'?(value<0?'#cf969f':'#7fc5b0'):metric==='maxDrawdownPct'?'#cf969f':GOLD;
-      out+=`<rect data-indicator-fill x="${x(i)-barWidth/2}" y="${Math.min(zero,yy)}" width="${barWidth}" height="${Math.max(1,Math.abs(yy-zero))}" fill="${fill}" opacity="${i+start===selected?1:.7}"${!row.complete?' stroke="#e9eff6" stroke-width="1.2" stroke-dasharray="3 2"':''}><title>${esc(row.period)} · ${definition.label} ${format(value,1)}${definition.unit}</title></rect>`;
+      out+=`<path data-indicator-fill d="${fBar(x(i)-barWidth/2,barWidth,zero,yy)}" fill="${fill}" opacity="${i+start===selected?1:.7}"${!row.complete?' stroke="#e9eff6" stroke-width="1.2" stroke-dasharray="3 2"':''}><title>${esc(row.period)} · ${definition.label} ${format(value,1)}${definition.unit}</title></path>`;
     });
     const labelCount=Math.max(2,Math.min(7,Math.floor((g.W-g.L-g.R)/72))),stride=Math.max(1,Math.ceil(rows.length/labelCount));
     rows.forEach((row,i)=>{if(i%stride!==0&&i!==rows.length-1)return;if(i===rows.length-1&&i%stride<stride*.6&&i!==0)return;const xx=x(i);out+=`<text data-indicator-axis-label x="${xx}" y="${g.axisY}" fill="${MUTED}" font-size="12" text-anchor="${xx>g.W-40?'end':i===0?'start':'middle'}">${esc(row.period.replace('-Q','.Q'))}</text>`;});
@@ -274,7 +259,7 @@ function renderPeaks({svg,dataset,onInspect,presentation}) {
   const series=analysis.cycles.map((c,i)=>({...c,color:i===analysis.cycles.length-1?GOLD:COLORS[i],points:rows.filter(p=>p.date>=c.halvingDate&&p.date<=c.peak.date).map(p=>({...p,elapsed:p.day-D(c.halvingDate),value:p.price/c.peak.price*100}))}));
   let selected=clamp(saved?.key===key?saved.index:series.length-1,0,series.length-1);
   const maxDay=Math.ceil(Math.max(...series.map(s=>s.peak.dayAfterHalving))/100)*100;
-  const x=day=>g.L+day/maxDay*(g.W-g.L-g.R),y=value=>g.B-(value/110)*(g.B-g.T),title='고점 부근에 언제 먼저 도착했나',caption='각 사이클의 관측 최고값 = 100% · 고점권 95%는 사후 정의';
+  const peakXScale=fLinear([0,maxDay],[g.L,g.W-g.R]),peakYScale=fLinear([0,110],[g.B,g.T]),x=day=>peakXScale(day),y=value=>peakYScale(value),title='고점 부근에 언제 먼저 도착했나',caption='각 사이클의 관측 최고값 = 100% · 고점권 95%는 사후 정의';
   const note='최고값의 95%에 처음 도착한 날과 최종 관측 최고값 날짜를 구분합니다. 최고값을 나중에 알아야 계산할 수 있는 사후 비교입니다.';
   let initialInspection;
   function inspect(){const s=series[selected];return {label:`${s.peakYear}년 고점 · 95% 구간`,date:s.firstEntry.date,kind:'observed',fields:[{label:'고점 부근 첫 도착',value:dateText(s.firstEntry.date)},{label:'최고값까지 남았던 시간',value:`${format(s.firstEntry.daysBeforePeak)}일`},{label:'최고 일말 가격 날짜',value:dateText(s.peak.date)},{label:'최고 일말 가격',value:money(s.peak.price)},{label:'첫 도착 이후 최대 하락',value:percent(s.zoneStats.maxDrawdownPct)}],note:`95% 고점권은 나중에 확인한 최고값으로 계산하는 사후 정의입니다. 당시 알 수 있던 신호가 아닙니다. 반감기 후 ${format(s.firstEntry.dayAfterHalving)}일에 95% 구간 첫 진입. ${s.current?'최신 사이클 최고값은 현재까지 관측한 비교 기준입니다. ':''}그 뒤 내내 횡보하거나 95% 이상을 유지했다는 뜻은 아닙니다.`};}

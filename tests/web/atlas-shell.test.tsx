@@ -18,17 +18,28 @@ test('dashboard/chart shell moves the existing navigation without replacing hand
   const stop = initAtlasShell();
   t.after(() => { stop?.(); for (const [key, old] of originals) { if (old) Object.defineProperty(globalThis, key, old); else Reflect.deleteProperty(globalThis, key); } });
   assert.equal(document.body.dataset.shell, 'dashboard');
+  assert.equal(nav.parentElement, document.querySelector('.atlas-dashboard-nav'));
+  assert.equal(document.body.dataset.shellWidth, 'wide');
   assert.equal(exportButton.parentElement, document.querySelector('.daily-heading'));
   const rail = document.createElement('aside'); rail.className = 'workbench-rail'; document.querySelector('.workspace')!.append(rail);
   document.body.dataset.page = 'outlook'; await new Promise(resolve => setImmediate(resolve));
   assert.equal(nav.parentElement, rail); assert.equal(document.body.dataset.shell, 'chart');
   nav.querySelector('button')!.dispatchEvent(new window.Event('click', { bubbles: true })); assert.equal(clicks, 1);
   document.body.dataset.page = 'evidence'; await new Promise(resolve => setImmediate(resolve));
-  assert.equal(nav.parentElement, document.querySelector('.atlas-sidebar'));
+  assert.equal(nav.parentElement, document.querySelector('.atlas-dashboard-header > .atlas-dashboard-nav'));
+  assert.equal(document.querySelectorAll('.atlas-nav').length, 1);
+  assert.equal(document.querySelector('.atlas-nav'), nav);
+  assert.equal(document.body.dataset.shellWidth, 'standard');
+  nav.querySelector('button')!.dispatchEvent(new window.Event('click', { bubbles: true })); assert.equal(clicks, 2);
   assert.equal(document.querySelector('.atlas-shell-heading')!.textContent, '리서치');
   const pageHeading = document.querySelector('.atlas-shell-heading')!;
   assert.equal(document.getElementById(pageHeading.getAttribute('aria-describedby')!)!.textContent, atlasPageDescription('evidence').description);
   assert.equal(exportButton.parentElement, document.querySelector('.daily-heading'));
+  document.body.dataset.page = 'outlook'; await new Promise(resolve => setImmediate(resolve));
+  assert.equal(nav.parentElement, rail);
+  assert.equal(document.body.dataset.shellWidth, undefined);
+  assert.equal(document.querySelector('.atlas-dashboard-nav'), null);
+  nav.querySelector('button')!.dispatchEvent(new window.Event('click', { bubbles: true })); assert.equal(clicks, 3);
 });
 
 test('the React standalone shell keeps its actual title and current destination with the shared description', () => {

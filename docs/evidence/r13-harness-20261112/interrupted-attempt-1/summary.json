@@ -1,0 +1,106 @@
+{
+  "id": "attempt-1",
+  "scope": "Interrupted integration attempt only; excluded from final acceptance totals",
+  "status": "interrupted",
+  "exitCode": 130,
+  "sourceCommit": "30f0b665d615bc6f24f0510485c887688517ae1d",
+  "counts": {
+    "total": 12,
+    "passed": 8,
+    "failed": 4
+  },
+  "originalRunnerStatus": "running",
+  "startedGates": [
+    "conference"
+  ],
+  "report": "interrupted-attempt-1/conference/report.json.gz",
+  "reason": "Stopped after desktop transcript close click/focus failures; full requested gates have not run. Original report and logs unchanged.",
+  "failures": [
+    {
+      "id": "fixture-1024x768",
+      "error": "AssertionError [ERR_ASSERTION]: Transcript restores opener focus\n\nfalse !== true\n\n    at coreInteractions (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:222:60)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:610\n    at async runCase (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:308:45)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:35"
+    },
+    {
+      "id": "fixture-1440x900",
+      "error": "AssertionError [ERR_ASSERTION]: Transcript restores opener focus\n\nfalse !== true\n\n    at coreInteractions (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:222:60)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:610\n    at async runCase (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:308:45)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:35"
+    },
+    {
+      "id": "fixture-1920x1080",
+      "error": "AssertionError [ERR_ASSERTION]: Transcript restores opener focus\n\nfalse !== true\n\n    at coreInteractions (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:222:60)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:610\n    at async runCase (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:308:45)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:35"
+    },
+    {
+      "id": "fixture-1280x900",
+      "error": "AssertionError [ERR_ASSERTION]: Transcript restores opener focus\n\nfalse !== true\n\n    at coreInteractions (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:222:60)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:610\n    at async runCase (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:308:45)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:35"
+    }
+  ],
+  "cases": [
+    {
+      "id": "fixture-390x844",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "id": "fixture-320x740",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "id": "fixture-768x1024",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "id": "fixture-1024x768",
+      "status": "failed",
+      "failures": [
+        "AssertionError [ERR_ASSERTION]: Transcript restores opener focus\n\nfalse !== true\n\n    at coreInteractions (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:222:60)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:610\n    at async runCase (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:308:45)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:35"
+      ]
+    },
+    {
+      "id": "fixture-1440x900",
+      "status": "failed",
+      "failures": [
+        "AssertionError [ERR_ASSERTION]: Transcript restores opener focus\n\nfalse !== true\n\n    at coreInteractions (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:222:60)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:610\n    at async runCase (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:308:45)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:35"
+      ]
+    },
+    {
+      "id": "fixture-1920x1080",
+      "status": "failed",
+      "failures": [
+        "AssertionError [ERR_ASSERTION]: Transcript restores opener focus\n\nfalse !== true\n\n    at coreInteractions (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:222:60)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:610\n    at async runCase (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:308:45)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:35"
+      ]
+    },
+    {
+      "id": "fixture-1280x900",
+      "status": "failed",
+      "failures": [
+        "AssertionError [ERR_ASSERTION]: Transcript restores opener focus\n\nfalse !== true\n\n    at coreInteractions (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:222:60)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:610\n    at async runCase (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:308:45)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:35"
+      ]
+    },
+    {
+      "id": "fixture-1023x900",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "id": "fixture-767x900",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "id": "missing-timeline",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "id": "invalid-timeline",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "id": "navigation-lifecycle",
+      "status": "passed",
+      "failures": []
+    }
+  ]
+}

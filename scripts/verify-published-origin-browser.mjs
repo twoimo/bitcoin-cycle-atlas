@@ -199,7 +199,7 @@ export function validatePage(state,spec){
     assert.equal(link.pathname,target.center?'/market-lab/charts/':'/');
     if(target.region)assert.equal(link.searchParams.get('region'),target.region,'Price link lost the selected housing region');}
   assert.deepEqual(Object.values(state.ownerCounts),[1,1,1,1],'The four workbench owners must remain unique');
-  assert.deepEqual(state.nav,['outlook','market-us','evidence','data','ipo','relay']);
+  assert.deepEqual(state.nav,['outlook','market-us','evidence','data','ipo','relay','conference']);
   assert.ok(Math.max(state.rootWidth,state.bodyWidth)<=spec.width+1,'Page overflows the viewport');
   const inside=(box,label)=>assert.ok(box?.painted&&box.width>0&&box.height>0&&box.left>=-1&&box.right<=spec.width+1&&box.top>=-1&&box.bottom<=spec.height+1,label+' exceeds or is absent from the viewport');
   inside(state.top,'Top controls');inside(state.bottom,'Bottom controls');inside(state.chart.allocation,'Price plot');inside(state.chart.box,'Price SVG');

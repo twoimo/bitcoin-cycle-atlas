@@ -1,0 +1,4802 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-wp-c-compare-shell-browser",
+  "qualifiesFullVerification": false,
+  "scope": "Route inventory (C-1b), viewport contract 320-1920 (C-5), real user input for the compare route (C-1, C-2, C-3, C-4, C-6) in isolated headless Chrome. No build, deploy or release claim.",
+  "testedHead": "d36766ea7fbdf39d1c81cb9523462df471ee3834",
+  "chrome": "Chrome/157.0.8103.38",
+  "base": "http://127.0.0.1:42765/bitcoin-cycle-atlas/",
+  "recordedAt": "2026-11-11T17:08:18.729Z",
+  "inventory": [
+    {
+      "route": "outlook",
+      "url": "index.html?page=outlook",
+      "href": "http://127.0.0.1:42765/bitcoin-cycle-atlas/index.html?page=outlook",
+      "search": "?page=outlook",
+      "title": "Bitcoin Cycle Atlas",
+      "shell": "chart",
+      "page": "outlook",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "headings": [],
+      "duplicates": [],
+      "compare": {
+        "exists": true,
+        "visible": false,
+        "hidden": true,
+        "parent": "main",
+        "rows": 0,
+        "unitPressed": [
+          "rebased"
+        ],
+        "structureChart": true,
+        "structureRows": 0
+      },
+      "heading": {
+        "x": 52,
+        "y": 0,
+        "w": 1388,
+        "h": 38,
+        "dock": null
+      },
+      "docWidth": 1440,
+      "winWidth": 1440,
+      "overflow": 0,
+      "docHeight": 900,
+      "bodyHeight": 900,
+      "dockInViewport": true,
+      "coveredCount": 0,
+      "coveredSample": [],
+      "coveredNote": "advisory center hit-test only; not a clipping proof",
+      "tinyCount": 40,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 0,
+          "y": 0,
+          "w": 52,
+          "h": 42
+        },
+        {
+          "name": "십자선 · C · 클릭 고정 / 드래그 이동",
+          "x": 7,
+          "y": 48,
+          "w": 38,
+          "h": 38
+        },
+        {
+          "name": "차트 이동 · H · 좌클릭 드래그",
+          "x": 7,
+          "y": 86,
+          "w": 38,
+          "h": 38
+        },
+        {
+          "name": "두 지점 측정 · M",
+          "x": 7,
+          "y": 124,
+          "w": 38,
+          "h": 38
+        },
+        {
+          "name": "자석 · 끄기 · 두 지점 측정 · Alt+M · 설정",
+          "x": 7,
+          "y": 162,
+          "w": 38,
+          "h": 38
+        },
+        {
+          "name": "차트 확대 · +",
+          "x": 7,
+          "y": 259,
+          "w": 38,
+          "h": 38
+        }
+      ],
+      "interactiveCount": 55,
+      "otherSmallCount": 23,
+      "otherSmallSample": [
+        {
+          "name": "거래소 캔들 새로 조회",
+          "x": 269,
+          "y": 74,
+          "w": 22,
+          "h": 19
+        },
+        {
+          "name": "거래량 설정",
+          "x": 281,
+          "y": 99,
+          "w": 24,
+          "h": 24
+        },
+        {
+          "name": "거래량 표시",
+          "x": 307,
+          "y": 99,
+          "w": 24,
+          "h": 24
+        },
+        {
+          "name": "거래량 삭제",
+          "x": 333,
+          "y": 99,
+          "w": 24,
+          "h": 24
+        },
+        {
+          "name": "역사 사건 설정",
+          "x": 281,
+          "y": 123,
+          "w": 24,
+          "h": 24
+        },
+        {
+          "name": "역사 사건 숨기기",
+          "x": 307,
+          "y": 123,
+          "w": 24,
+          "h": 24
+        }
+      ],
+      "sidebarToggle": false,
+      "bootState": "ready",
+      "errors": [],
+      "shellRegions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "visible"
+      }
+    },
+    {
+      "route": "market-us",
+      "url": "market-lab/us/index.html",
+      "href": "http://127.0.0.1:42765/bitcoin-cycle-atlas/market-lab/",
+      "search": "",
+      "title": "미국 시장 진단 · Cycle Atlas",
+      "shell": "chart",
+      "page": "outlook",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "collapsed"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "headings": [],
+      "duplicates": [],
+      "compare": {
+        "exists": true,
+        "visible": false,
+        "hidden": true,
+        "parent": "main",
+        "rows": 0,
+        "unitPressed": [
+          "rebased"
+        ],
+        "structureChart": true,
+        "structureRows": 0
+      },
+      "heading": {
+        "x": 52,
+        "y": 0,
+        "w": 1388,
+        "h": 38,
+        "dock": null
+      },
+      "docWidth": 1440,
+      "winWidth": 1440,
+      "overflow": 0,
+      "docHeight": 900,
+      "bodyHeight": 900,
+      "dockInViewport": true,
+      "coveredCount": 0,
+      "coveredSample": [],
+      "coveredNote": "advisory center hit-test only; not a clipping proof",
+      "tinyCount": 10,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 0,
+          "y": 0,
+          "w": 52,
+          "h": 42
+        },
+        {
+          "name": "종목 선택 · 비트코인 / USD · BTCUSD",
+          "x": 56,
+          "y": 5,
+          "w": 128,
+          "h": 28
+        },
+        {
+          "name": "US미국",
+          "x": 198,
+          "y": 3,
+          "w": 63,
+          "h": 32
+        },
+        {
+          "name": "KR국내",
+          "x": 265,
+          "y": 3,
+          "w": 63,
+          "h": 32
+        },
+        {
+          "name": "조건 실험",
+          "x": 332,
+          "y": 3,
+          "w": 74,
+          "h": 32
+        },
+        {
+          "name": "현금흐름",
+          "x": 410,
+          "y": 3,
+          "w": 70,
+          "h": 32
+        }
+      ],
+      "interactiveCount": 16,
+      "otherSmallCount": 0,
+      "otherSmallSample": [],
+      "sidebarToggle": false,
+      "bootState": "ready",
+      "errors": [],
+      "shellRegions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "collapsed"
+      }
+    },
+    {
+      "route": "market-kr",
+      "url": "market-lab/kr/index.html",
+      "href": "http://127.0.0.1:42765/bitcoin-cycle-atlas/market-lab/",
+      "search": "",
+      "title": "미국 시장 진단 · Cycle Atlas",
+      "shell": "chart",
+      "page": "outlook",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "collapsed"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "headings": [],
+      "duplicates": [],
+      "compare": {
+        "exists": true,
+        "visible": false,
+        "hidden": true,
+        "parent": "main",
+        "rows": 0,
+        "unitPressed": [
+          "rebased"
+        ],
+        "structureChart": true,
+        "structureRows": 0
+      },
+      "heading": {
+        "x": 52,
+        "y": 0,
+        "w": 1388,
+        "h": 38,
+        "dock": null
+      },
+      "docWidth": 1440,
+      "winWidth": 1440,
+      "overflow": 0,
+      "docHeight": 900,
+      "bodyHeight": 900,
+      "dockInViewport": true,
+      "coveredCount": 0,
+      "coveredSample": [],
+      "coveredNote": "advisory center hit-test only; not a clipping proof",
+      "tinyCount": 10,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 0,
+          "y": 0,
+          "w": 52,
+          "h": 42
+        },
+        {
+          "name": "종목 선택 · 비트코인 / USD · BTCUSD",
+          "x": 56,
+          "y": 5,
+          "w": 128,
+          "h": 28
+        },
+        {
+          "name": "US미국",
+          "x": 198,
+          "y": 3,
+          "w": 63,
+          "h": 32
+        },
+        {
+          "name": "KR국내",
+          "x": 265,
+          "y": 3,
+          "w": 63,
+          "h": 32
+        },
+        {
+          "name": "조건 실험",
+          "x": 332,
+          "y": 3,
+          "w": 74,
+          "h": 32
+        },
+        {
+          "name": "현금흐름",
+          "x": 410,
+          "y": 3,
+          "w": 70,
+          "h": 32
+        }
+      ],
+      "interactiveCount": 16,
+      "otherSmallCount": 0,
+      "otherSmallSample": [],
+      "sidebarToggle": false,
+      "bootState": "ready",
+      "errors": [],
+      "shellRegions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "collapsed"
+      }
+    },
+    {
+      "route": "scenario",
+      "url": "market-lab/scenario/index.html",
+      "href": "http://127.0.0.1:42765/bitcoin-cycle-atlas/market-lab/",
+      "search": "",
+      "title": "미국 시장 진단 · Cycle Atlas",
+      "shell": "chart",
+      "page": "outlook",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "collapsed"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "headings": [],
+      "duplicates": [],
+      "compare": {
+        "exists": true,
+        "visible": false,
+        "hidden": true,
+        "parent": "main",
+        "rows": 0,
+        "unitPressed": [
+          "rebased"
+        ],
+        "structureChart": true,
+        "structureRows": 0
+      },
+      "heading": {
+        "x": 52,
+        "y": 0,
+        "w": 1388,
+        "h": 38,
+        "dock": null
+      },
+      "docWidth": 1440,
+      "winWidth": 1440,
+      "overflow": 0,
+      "docHeight": 900,
+      "bodyHeight": 900,
+      "dockInViewport": true,
+      "coveredCount": 0,
+      "coveredSample": [],
+      "coveredNote": "advisory center hit-test only; not a clipping proof",
+      "tinyCount": 10,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 0,
+          "y": 0,
+          "w": 52,
+          "h": 42
+        },
+        {
+          "name": "종목 선택 · 비트코인 / USD · BTCUSD",
+          "x": 56,
+          "y": 5,
+          "w": 128,
+          "h": 28
+        },
+        {
+          "name": "US미국",
+          "x": 198,
+          "y": 3,
+          "w": 63,
+          "h": 32
+        },
+        {
+          "name": "KR국내",
+          "x": 265,
+          "y": 3,
+          "w": 63,
+          "h": 32
+        },
+        {
+          "name": "조건 실험",
+          "x": 332,
+          "y": 3,
+          "w": 74,
+          "h": 32
+        },
+        {
+          "name": "현금흐름",
+          "x": 410,
+          "y": 3,
+          "w": 70,
+          "h": 32
+        }
+      ],
+      "interactiveCount": 16,
+      "otherSmallCount": 0,
+      "otherSmallSample": [],
+      "sidebarToggle": false,
+      "bootState": "ready",
+      "errors": [],
+      "shellRegions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "collapsed"
+      }
+    },
+    {
+      "route": "cashflow",
+      "url": "market-lab/cashflow/index.html",
+      "href": "http://127.0.0.1:42765/bitcoin-cycle-atlas/market-lab/",
+      "search": "",
+      "title": "미국 시장 진단 · Cycle Atlas",
+      "shell": "chart",
+      "page": "outlook",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "collapsed"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "headings": [],
+      "duplicates": [],
+      "compare": {
+        "exists": true,
+        "visible": false,
+        "hidden": true,
+        "parent": "main",
+        "rows": 0,
+        "unitPressed": [
+          "rebased"
+        ],
+        "structureChart": true,
+        "structureRows": 0
+      },
+      "heading": {
+        "x": 52,
+        "y": 0,
+        "w": 1388,
+        "h": 38,
+        "dock": null
+      },
+      "docWidth": 1440,
+      "winWidth": 1440,
+      "overflow": 0,
+      "docHeight": 900,
+      "bodyHeight": 900,
+      "dockInViewport": true,
+      "coveredCount": 0,
+      "coveredSample": [],
+      "coveredNote": "advisory center hit-test only; not a clipping proof",
+      "tinyCount": 10,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 0,
+          "y": 0,
+          "w": 52,
+          "h": 42
+        },
+        {
+          "name": "종목 선택 · 비트코인 / USD · BTCUSD",
+          "x": 56,
+          "y": 5,
+          "w": 128,
+          "h": 28
+        },
+        {
+          "name": "US미국",
+          "x": 198,
+          "y": 3,
+          "w": 63,
+          "h": 32
+        },
+        {
+          "name": "KR국내",
+          "x": 265,
+          "y": 3,
+          "w": 63,
+          "h": 32
+        },
+        {
+          "name": "조건 실험",
+          "x": 332,
+          "y": 3,
+          "w": 74,
+          "h": 32
+        },
+        {
+          "name": "현금흐름",
+          "x": 410,
+          "y": 3,
+          "w": 70,
+          "h": 32
+        }
+      ],
+      "interactiveCount": 16,
+      "otherSmallCount": 0,
+      "otherSmallSample": [],
+      "sidebarToggle": false,
+      "bootState": "ready",
+      "errors": [],
+      "shellRegions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "collapsed"
+      }
+    },
+    {
+      "route": "rsi",
+      "url": "market-lab/rsi/index.html",
+      "href": "http://127.0.0.1:42765/bitcoin-cycle-atlas/market-lab/",
+      "search": "",
+      "title": "미국 시장 진단 · Cycle Atlas",
+      "shell": "chart",
+      "page": "outlook",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "collapsed"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "headings": [],
+      "duplicates": [],
+      "compare": {
+        "exists": true,
+        "visible": false,
+        "hidden": true,
+        "parent": "main",
+        "rows": 0,
+        "unitPressed": [
+          "rebased"
+        ],
+        "structureChart": true,
+        "structureRows": 0
+      },
+      "heading": {
+        "x": 52,
+        "y": 0,
+        "w": 1388,
+        "h": 38,
+        "dock": null
+      },
+      "docWidth": 1440,
+      "winWidth": 1440,
+      "overflow": 0,
+      "docHeight": 900,
+      "bodyHeight": 900,
+      "dockInViewport": true,
+      "coveredCount": 0,
+      "coveredSample": [],
+      "coveredNote": "advisory center hit-test only; not a clipping proof",
+      "tinyCount": 10,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 0,
+          "y": 0,
+          "w": 52,
+          "h": 42
+        },
+        {
+          "name": "종목 선택 · 비트코인 / USD · BTCUSD",
+          "x": 56,
+          "y": 5,
+          "w": 128,
+          "h": 28
+        },
+        {
+          "name": "US미국",
+          "x": 198,
+          "y": 3,
+          "w": 63,
+          "h": 32
+        },
+        {
+          "name": "KR국내",
+          "x": 265,
+          "y": 3,
+          "w": 63,
+          "h": 32
+        },
+        {
+          "name": "조건 실험",
+          "x": 332,
+          "y": 3,
+          "w": 74,
+          "h": 32
+        },
+        {
+          "name": "현금흐름",
+          "x": 410,
+          "y": 3,
+          "w": 70,
+          "h": 32
+        }
+      ],
+      "interactiveCount": 16,
+      "otherSmallCount": 0,
+      "otherSmallSample": [],
+      "sidebarToggle": false,
+      "bootState": "ready",
+      "errors": [],
+      "shellRegions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "collapsed"
+      }
+    },
+    {
+      "route": "housing",
+      "url": "market-lab/housing/index.html",
+      "href": "http://127.0.0.1:42765/bitcoin-cycle-atlas/market-lab/",
+      "search": "",
+      "title": "미국 시장 진단 · Cycle Atlas",
+      "shell": "chart",
+      "page": "outlook",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "collapsed"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "headings": [],
+      "duplicates": [],
+      "compare": {
+        "exists": true,
+        "visible": false,
+        "hidden": true,
+        "parent": "main",
+        "rows": 0,
+        "unitPressed": [
+          "rebased"
+        ],
+        "structureChart": true,
+        "structureRows": 0
+      },
+      "heading": {
+        "x": 52,
+        "y": 0,
+        "w": 1388,
+        "h": 38,
+        "dock": null
+      },
+      "docWidth": 1440,
+      "winWidth": 1440,
+      "overflow": 0,
+      "docHeight": 900,
+      "bodyHeight": 900,
+      "dockInViewport": true,
+      "coveredCount": 0,
+      "coveredSample": [],
+      "coveredNote": "advisory center hit-test only; not a clipping proof",
+      "tinyCount": 10,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 0,
+          "y": 0,
+          "w": 52,
+          "h": 42
+        },
+        {
+          "name": "종목 선택 · 비트코인 / USD · BTCUSD",
+          "x": 56,
+          "y": 5,
+          "w": 128,
+          "h": 28
+        },
+        {
+          "name": "US미국",
+          "x": 198,
+          "y": 3,
+          "w": 63,
+          "h": 32
+        },
+        {
+          "name": "KR국내",
+          "x": 265,
+          "y": 3,
+          "w": 63,
+          "h": 32
+        },
+        {
+          "name": "조건 실험",
+          "x": 332,
+          "y": 3,
+          "w": 74,
+          "h": 32
+        },
+        {
+          "name": "현금흐름",
+          "x": 410,
+          "y": 3,
+          "w": 70,
+          "h": 32
+        }
+      ],
+      "interactiveCount": 16,
+      "otherSmallCount": 0,
+      "otherSmallSample": [],
+      "sidebarToggle": false,
+      "bootState": "ready",
+      "errors": [],
+      "shellRegions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "collapsed"
+      }
+    },
+    {
+      "route": "themes",
+      "url": "market-lab/themes/index.html",
+      "href": "http://127.0.0.1:42765/bitcoin-cycle-atlas/market-lab/",
+      "search": "",
+      "title": "미국 시장 진단 · Cycle Atlas",
+      "shell": "chart",
+      "page": "outlook",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "collapsed"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "headings": [],
+      "duplicates": [],
+      "compare": {
+        "exists": true,
+        "visible": false,
+        "hidden": true,
+        "parent": "main",
+        "rows": 0,
+        "unitPressed": [
+          "rebased"
+        ],
+        "structureChart": true,
+        "structureRows": 0
+      },
+      "heading": {
+        "x": 52,
+        "y": 0,
+        "w": 1388,
+        "h": 38,
+        "dock": null
+      },
+      "docWidth": 1440,
+      "winWidth": 1440,
+      "overflow": 0,
+      "docHeight": 900,
+      "bodyHeight": 900,
+      "dockInViewport": true,
+      "coveredCount": 0,
+      "coveredSample": [],
+      "coveredNote": "advisory center hit-test only; not a clipping proof",
+      "tinyCount": 10,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 0,
+          "y": 0,
+          "w": 52,
+          "h": 42
+        },
+        {
+          "name": "종목 선택 · 비트코인 / USD · BTCUSD",
+          "x": 56,
+          "y": 5,
+          "w": 128,
+          "h": 28
+        },
+        {
+          "name": "US미국",
+          "x": 198,
+          "y": 3,
+          "w": 63,
+          "h": 32
+        },
+        {
+          "name": "KR국내",
+          "x": 265,
+          "y": 3,
+          "w": 63,
+          "h": 32
+        },
+        {
+          "name": "조건 실험",
+          "x": 332,
+          "y": 3,
+          "w": 74,
+          "h": 32
+        },
+        {
+          "name": "현금흐름",
+          "x": 410,
+          "y": 3,
+          "w": 70,
+          "h": 32
+        }
+      ],
+      "interactiveCount": 16,
+      "otherSmallCount": 0,
+      "otherSmallSample": [],
+      "sidebarToggle": false,
+      "bootState": "ready",
+      "errors": [],
+      "shellRegions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "collapsed"
+      }
+    },
+    {
+      "route": "evidence",
+      "url": "index.html?page=evidence",
+      "href": "http://127.0.0.1:42765/bitcoin-cycle-atlas/index.html?page=evidence",
+      "search": "?page=evidence",
+      "title": "Bitcoin Cycle Atlas",
+      "shell": "dashboard",
+      "page": "evidence",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "headings": [
+        {
+          "id": "atlas-page-heading",
+          "text": "리서치",
+          "parent": "atlas-shell-copy"
+        }
+      ],
+      "duplicates": [],
+      "compare": {
+        "exists": true,
+        "visible": false,
+        "hidden": true,
+        "parent": "main",
+        "rows": 0,
+        "unitPressed": [
+          "rebased"
+        ],
+        "structureChart": true,
+        "structureRows": 0
+      },
+      "heading": {
+        "x": 216,
+        "y": 0,
+        "w": 1224,
+        "h": 48,
+        "dock": null
+      },
+      "docWidth": 1440,
+      "winWidth": 1440,
+      "overflow": 0,
+      "docHeight": 948,
+      "bodyHeight": 900,
+      "dockInViewport": true,
+      "coveredCount": 0,
+      "coveredSample": [],
+      "coveredNote": "advisory center hit-test only; not a clipping proof",
+      "tinyCount": 8,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 8,
+          "y": 12,
+          "w": 199,
+          "h": 36
+        },
+        {
+          "name": "가격 차트",
+          "x": 8,
+          "y": 60,
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "시장 분석",
+          "x": 8,
+          "y": 93,
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "리서치",
+          "x": 8,
+          "y": 126,
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "자산 비교",
+          "x": 8,
+          "y": 159,
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "공모주",
+          "x": 8,
+          "y": 192,
+          "w": 199,
+          "h": 32
+        }
+      ],
+      "interactiveCount": 8,
+      "otherSmallCount": 30,
+      "otherSmallSample": [
+        {
+          "name": "연구 자료 검색",
+          "x": 240,
+          "y": 68,
+          "w": 168,
+          "h": 32
+        },
+        {
+          "name": "리서치 종목",
+          "x": 416,
+          "y": 68,
+          "w": 84,
+          "h": 32
+        },
+        {
+          "name": "리서치 분류",
+          "x": 508,
+          "y": 68,
+          "w": 116,
+          "h": 32
+        },
+        {
+          "name": "MSTR 실제 가격 · 일별 OHLC 연구 본문",
+          "x": 304,
+          "y": 190,
+          "w": 615,
+          "h": 38
+        },
+        {
+          "name": "MSTR 실제 가격 · 일별 OHLC 요약과 검",
+          "x": 1317,
+          "y": 193,
+          "w": 32,
+          "h": 32
+        },
+        {
+          "name": "MSTR 가격 교차 확인 · 최근 5거래일 연구",
+          "x": 304,
+          "y": 238,
+          "w": 615,
+          "h": 38
+        }
+      ],
+      "sidebarToggle": false,
+      "bootState": "ready",
+      "errors": [],
+      "shellRegions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      }
+    },
+    {
+      "route": "data",
+      "url": "index.html?page=data",
+      "href": "http://127.0.0.1:42765/bitcoin-cycle-atlas/index.html?page=data",
+      "search": "?page=data",
+      "title": "자산 비교표 · Bitcoin Cycle Atlas",
+      "shell": "dashboard",
+      "page": "data",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "headings": [
+        {
+          "id": "atlas-page-heading",
+          "text": "자산 비교",
+          "parent": "atlas-shell-copy"
+        }
+      ],
+      "duplicates": [],
+      "compare": {
+        "exists": true,
+        "visible": false,
+        "hidden": true,
+        "parent": "main",
+        "rows": 0,
+        "unitPressed": [
+          "rebased"
+        ],
+        "structureChart": true,
+        "structureRows": 0
+      },
+      "heading": {
+        "x": 216,
+        "y": 0,
+        "w": 1224,
+        "h": 48,
+        "dock": null
+      },
+      "docWidth": 1440,
+      "winWidth": 1440,
+      "overflow": 0,
+      "docHeight": 948,
+      "bodyHeight": 900,
+      "dockInViewport": true,
+      "coveredCount": 0,
+      "coveredSample": [],
+      "coveredNote": "advisory center hit-test only; not a clipping proof",
+      "tinyCount": 7,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 8,
+          "y": 12,
+          "w": 199,
+          "h": 36
+        },
+        {
+          "name": "가격 차트",
+          "x": 8,
+          "y": 60,
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "시장 분석",
+          "x": 8,
+          "y": 93,
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "리서치",
+          "x": 8,
+          "y": 126,
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "자산 비교",
+          "x": 8,
+          "y": 159,
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "공모주",
+          "x": 8,
+          "y": 192,
+          "w": 199,
+          "h": 32
+        }
+      ],
+      "interactiveCount": 7,
+      "otherSmallCount": 52,
+      "otherSmallSample": [
+        {
+          "name": "가격 자료 갱신",
+          "x": 1066,
+          "y": 55,
+          "w": 65,
+          "h": 32
+        },
+        {
+          "name": "자산군별 판단 이력",
+          "x": 1135,
+          "y": 55,
+          "w": 91,
+          "h": 32
+        },
+        {
+          "name": "자산 비교표 읽는 법",
+          "x": 1230,
+          "y": 55,
+          "w": 79,
+          "h": 32
+        },
+        {
+          "name": "표시된 20개 자산 CSV 내려받기",
+          "x": 1313,
+          "y": 55,
+          "w": 67,
+          "h": 32
+        },
+        {
+          "name": "asset-search",
+          "x": 224,
+          "y": 102,
+          "w": 645,
+          "h": 32
+        },
+        {
+          "name": "자산군 선택",
+          "x": 877,
+          "y": 102,
+          "w": 98,
+          "h": 32
+        }
+      ],
+      "sidebarToggle": false,
+      "bootState": "ready",
+      "errors": [],
+      "shellRegions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      }
+    },
+    {
+      "route": "ipo",
+      "url": "index.html?page=ipo",
+      "href": "http://127.0.0.1:42765/bitcoin-cycle-atlas/index.html?page=ipo",
+      "search": "?page=ipo",
+      "title": "공모주 캘린더 · Bitcoin Cycle Atlas",
+      "shell": "dashboard",
+      "page": "ipo",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "headings": [
+        {
+          "id": "atlas-page-heading",
+          "text": "공모주",
+          "parent": "atlas-shell-copy"
+        }
+      ],
+      "duplicates": [],
+      "compare": {
+        "exists": true,
+        "visible": false,
+        "hidden": true,
+        "parent": "main",
+        "rows": 0,
+        "unitPressed": [
+          "rebased"
+        ],
+        "structureChart": true,
+        "structureRows": 0
+      },
+      "heading": {
+        "x": 216,
+        "y": 0,
+        "w": 1224,
+        "h": 48,
+        "dock": null
+      },
+      "docWidth": 1440,
+      "winWidth": 1440,
+      "overflow": 0,
+      "docHeight": 948,
+      "bodyHeight": 900,
+      "dockInViewport": true,
+      "coveredCount": 0,
+      "coveredSample": [],
+      "coveredNote": "advisory center hit-test only; not a clipping proof",
+      "tinyCount": 7,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 8,
+          "y": 12,
+          "w": 199,
+          "h": 36
+        },
+        {
+          "name": "가격 차트",
+          "x": 8,
+          "y": 60,
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "시장 분석",
+          "x": 8,
+          "y": 93,
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "리서치",
+          "x": 8,
+          "y": 126,
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "자산 비교",
+          "x": 8,
+          "y": 159,
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "공모주",
+          "x": 8,
+          "y": 192,
+          "w": 199,
+          "h": 32
+        }
+      ],
+      "interactiveCount": 7,
+      "otherSmallCount": 10,
+      "otherSmallSample": [
+        {
+          "name": "예정",
+          "x": 923,
+          "y": 65,
+          "w": 46,
+          "h": 35
+        },
+        {
+          "name": "마감",
+          "x": 969,
+          "y": 65,
+          "w": 46,
+          "h": 35
+        },
+        {
+          "name": "전체",
+          "x": 1015,
+          "y": 65,
+          "w": 46,
+          "h": 35
+        },
+        {
+          "name": "공모주 검색",
+          "x": 1070,
+          "y": 64,
+          "w": 240,
+          "h": 37
+        },
+        {
+          "name": "이전 장",
+          "x": 240,
+          "y": 124,
+          "w": 36,
+          "h": 36
+        },
+        {
+          "name": "다음 장",
+          "x": 440,
+          "y": 124,
+          "w": 36,
+          "h": 36
+        }
+      ],
+      "sidebarToggle": false,
+      "bootState": "ready",
+      "errors": [],
+      "shellRegions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      }
+    },
+    {
+      "route": "relay",
+      "url": "index.html?page=relay",
+      "href": "http://127.0.0.1:42765/bitcoin-cycle-atlas/index.html?page=relay",
+      "search": "?page=relay",
+      "title": "릴레이 콘텐츠 · Bitcoin Cycle Atlas",
+      "shell": "dashboard",
+      "page": "relay",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "headings": [
+        {
+          "id": "atlas-page-heading",
+          "text": "릴레이 콘텐츠",
+          "parent": "atlas-shell-copy"
+        }
+      ],
+      "duplicates": [],
+      "compare": {
+        "exists": true,
+        "visible": false,
+        "hidden": true,
+        "parent": "main",
+        "rows": 0,
+        "unitPressed": [
+          "rebased"
+        ],
+        "structureChart": true,
+        "structureRows": 0
+      },
+      "heading": {
+        "x": 216,
+        "y": 0,
+        "w": 1224,
+        "h": 48,
+        "dock": null
+      },
+      "docWidth": 1440,
+      "winWidth": 1440,
+      "overflow": 0,
+      "docHeight": 900,
+      "bodyHeight": 900,
+      "dockInViewport": true,
+      "coveredCount": 0,
+      "coveredSample": [],
+      "coveredNote": "advisory center hit-test only; not a clipping proof",
+      "tinyCount": 7,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 8,
+          "y": 12,
+          "w": 199,
+          "h": 36
+        },
+        {
+          "name": "가격 차트",
+          "x": 8,
+          "y": 60,
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "시장 분석",
+          "x": 8,
+          "y": 93,
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "리서치",
+          "x": 8,
+          "y": 126,
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "자산 비교",
+          "x": 8,
+          "y": 159,
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "공모주",
+          "x": 8,
+          "y": 192,
+          "w": 199,
+          "h": 32
+        }
+      ],
+      "interactiveCount": 7,
+      "otherSmallCount": 27,
+      "otherSmallSample": [
+        {
+          "name": "릴레이 새로고침",
+          "x": 1344,
+          "y": 61,
+          "w": 34,
+          "h": 34
+        },
+        {
+          "name": "https://www.aitimes.com/ne",
+          "x": 560,
+          "y": -15970,
+          "w": 442,
+          "h": 17
+        },
+        {
+          "name": "https://news.einfomax.co.k",
+          "x": 560,
+          "y": -10117,
+          "w": 473,
+          "h": 17
+        },
+        {
+          "name": "엔비디아 주주, 젠슨 황 집단소송",
+          "x": 560,
+          "y": -7275,
+          "w": 190,
+          "h": 17
+        },
+        {
+          "name": "젠슨황 내연녀, AI칩 中 밀반입 의혹",
+          "x": 560,
+          "y": -7253,
+          "w": 209,
+          "h": 17
+        },
+        {
+          "name": "젠슨 황 스캔들 조사, 한국계 前검사",
+          "x": 560,
+          "y": -7230,
+          "w": 208,
+          "h": 17
+        }
+      ],
+      "sidebarToggle": false,
+      "bootState": "ready",
+      "errors": [],
+      "shellRegions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      }
+    },
+    {
+      "route": "compare+legacy",
+      "url": "index.html?page=compare&legacy=1&compare-unit=rebased",
+      "href": "http://127.0.0.1:42765/bitcoin-cycle-atlas/index.html?page=compare&legacy=1&compare-unit=rebased",
+      "search": "?page=compare&legacy=1&compare-unit=rebased",
+      "title": "사이클 비교 · Bitcoin Cycle Atlas",
+      "shell": "chart",
+      "page": "compare",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "headings": [],
+      "duplicates": [],
+      "compare": {
+        "exists": true,
+        "visible": true,
+        "hidden": false,
+        "parent": "atlas-plot",
+        "rows": 97,
+        "unitPressed": [
+          "rebased"
+        ],
+        "structureChart": true,
+        "structureRows": 8
+      },
+      "heading": {
+        "x": 52,
+        "y": 0,
+        "w": 1388,
+        "h": 38,
+        "dock": null
+      },
+      "docWidth": 1440,
+      "winWidth": 1440,
+      "overflow": 0,
+      "docHeight": 900,
+      "bodyHeight": 1009,
+      "dockInViewport": true,
+      "coveredCount": 0,
+      "coveredSample": [],
+      "coveredNote": "advisory center hit-test only; not a clipping proof",
+      "tinyCount": 30,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 0,
+          "y": 0,
+          "w": 52,
+          "h": 42
+        },
+        {
+          "name": "역사 차트의 4년 구간",
+          "x": 56,
+          "y": 5,
+          "w": 157,
+          "h": 29
+        },
+        {
+          "name": "일봉",
+          "x": 224,
+          "y": 3,
+          "w": 44,
+          "h": 32
+        },
+        {
+          "name": "주봉",
+          "x": 270,
+          "y": 3,
+          "w": 44,
+          "h": 32
+        },
+        {
+          "name": "방향 전환 확인 임계값",
+          "x": 326,
+          "y": 4,
+          "w": 126,
+          "h": 29
+        },
+        {
+          "name": "JSON ↓",
+          "x": 460,
+          "y": 2,
+          "w": 44,
+          "h": 33
+        }
+      ],
+      "interactiveCount": 48,
+      "otherSmallCount": 11,
+      "otherSmallSample": [
+        {
+          "name": "대조검증 결과와 판정 규칙 ↗",
+          "x": 97,
+          "y": 2886,
+          "w": 159,
+          "h": 15
+        },
+        {
+          "name": "원자료 대조 · 이슈 · X/레딧/보고서 교차 ",
+          "x": 97,
+          "y": 2934,
+          "w": 261,
+          "h": 15
+        },
+        {
+          "name": "미래 고저점 보기 ↓",
+          "x": 1090,
+          "y": 2666,
+          "w": 92,
+          "h": 17
+        },
+        {
+          "name": "PriceUSD 정의",
+          "x": 151,
+          "y": 7008,
+          "w": 81,
+          "h": 19
+        },
+        {
+          "name": "일별 원자료",
+          "x": 392,
+          "y": 7008,
+          "w": 59,
+          "h": 19
+        },
+        {
+          "name": "FPP3 5장",
+          "x": 638,
+          "y": 7008,
+          "w": 52,
+          "h": 19
+        }
+      ],
+      "sidebarToggle": false,
+      "bootState": "ready",
+      "errors": [],
+      "shellRegions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "visible"
+      }
+    },
+    {
+      "route": "compare+bare",
+      "url": "index.html?page=compare",
+      "href": "http://127.0.0.1:42765/bitcoin-cycle-atlas/index.html?page=compare",
+      "search": "?page=compare",
+      "title": "사이클 비교 · Bitcoin Cycle Atlas",
+      "shell": "chart",
+      "page": "compare",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "headings": [],
+      "duplicates": [],
+      "compare": {
+        "exists": true,
+        "visible": true,
+        "hidden": false,
+        "parent": "atlas-plot",
+        "rows": 97,
+        "unitPressed": [
+          "rebased"
+        ],
+        "structureChart": true,
+        "structureRows": 8
+      },
+      "heading": {
+        "x": 52,
+        "y": 0,
+        "w": 1388,
+        "h": 38,
+        "dock": null
+      },
+      "docWidth": 1440,
+      "winWidth": 1440,
+      "overflow": 0,
+      "docHeight": 900,
+      "bodyHeight": 1009,
+      "dockInViewport": true,
+      "coveredCount": 0,
+      "coveredSample": [],
+      "coveredNote": "advisory center hit-test only; not a clipping proof",
+      "tinyCount": 30,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 0,
+          "y": 0,
+          "w": 52,
+          "h": 42
+        },
+        {
+          "name": "역사 차트의 4년 구간",
+          "x": 56,
+          "y": 5,
+          "w": 157,
+          "h": 29
+        },
+        {
+          "name": "일봉",
+          "x": 224,
+          "y": 3,
+          "w": 44,
+          "h": 32
+        },
+        {
+          "name": "주봉",
+          "x": 270,
+          "y": 3,
+          "w": 44,
+          "h": 32
+        },
+        {
+          "name": "방향 전환 확인 임계값",
+          "x": 326,
+          "y": 4,
+          "w": 126,
+          "h": 29
+        },
+        {
+          "name": "JSON ↓",
+          "x": 460,
+          "y": 2,
+          "w": 44,
+          "h": 33
+        }
+      ],
+      "interactiveCount": 48,
+      "otherSmallCount": 11,
+      "otherSmallSample": [
+        {
+          "name": "대조검증 결과와 판정 규칙 ↗",
+          "x": 97,
+          "y": 2886,
+          "w": 159,
+          "h": 15
+        },
+        {
+          "name": "원자료 대조 · 이슈 · X/레딧/보고서 교차 ",
+          "x": 97,
+          "y": 2934,
+          "w": 261,
+          "h": 15
+        },
+        {
+          "name": "미래 고저점 보기 ↓",
+          "x": 1090,
+          "y": 2666,
+          "w": 92,
+          "h": 17
+        },
+        {
+          "name": "PriceUSD 정의",
+          "x": 151,
+          "y": 7008,
+          "w": 81,
+          "h": 19
+        },
+        {
+          "name": "일별 원자료",
+          "x": 392,
+          "y": 7008,
+          "w": 59,
+          "h": 19
+        },
+        {
+          "name": "FPP3 5장",
+          "x": 638,
+          "y": 7008,
+          "w": 52,
+          "h": 19
+        }
+      ],
+      "sidebarToggle": false,
+      "bootState": "ready",
+      "errors": [],
+      "shellRegions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "visible"
+      }
+    },
+    {
+      "route": "compare+legacy-unit-alias",
+      "url": "index.html?page=compare&legacy=1&unit=indexed",
+      "href": "http://127.0.0.1:42765/bitcoin-cycle-atlas/index.html?page=compare&legacy=1&unit=indexed",
+      "search": "?page=compare&legacy=1&unit=indexed",
+      "title": "사이클 비교 · Bitcoin Cycle Atlas",
+      "shell": "chart",
+      "page": "compare",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "headings": [],
+      "duplicates": [],
+      "compare": {
+        "exists": true,
+        "visible": true,
+        "hidden": false,
+        "parent": "atlas-plot",
+        "rows": 97,
+        "unitPressed": [
+          "indexed"
+        ],
+        "structureChart": true,
+        "structureRows": 8
+      },
+      "heading": {
+        "x": 52,
+        "y": 0,
+        "w": 1388,
+        "h": 38,
+        "dock": null
+      },
+      "docWidth": 1440,
+      "winWidth": 1440,
+      "overflow": 0,
+      "docHeight": 900,
+      "bodyHeight": 1009,
+      "dockInViewport": true,
+      "coveredCount": 0,
+      "coveredSample": [],
+      "coveredNote": "advisory center hit-test only; not a clipping proof",
+      "tinyCount": 30,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 0,
+          "y": 0,
+          "w": 52,
+          "h": 42
+        },
+        {
+          "name": "역사 차트의 4년 구간",
+          "x": 56,
+          "y": 5,
+          "w": 157,
+          "h": 29
+        },
+        {
+          "name": "일봉",
+          "x": 224,
+          "y": 3,
+          "w": 44,
+          "h": 32
+        },
+        {
+          "name": "주봉",
+          "x": 270,
+          "y": 3,
+          "w": 44,
+          "h": 32
+        },
+        {
+          "name": "방향 전환 확인 임계값",
+          "x": 326,
+          "y": 4,
+          "w": 126,
+          "h": 29
+        },
+        {
+          "name": "JSON ↓",
+          "x": 460,
+          "y": 2,
+          "w": 44,
+          "h": 33
+        }
+      ],
+      "interactiveCount": 48,
+      "otherSmallCount": 11,
+      "otherSmallSample": [
+        {
+          "name": "대조검증 결과와 판정 규칙 ↗",
+          "x": 97,
+          "y": 2886,
+          "w": 159,
+          "h": 15
+        },
+        {
+          "name": "원자료 대조 · 이슈 · X/레딧/보고서 교차 ",
+          "x": 97,
+          "y": 2934,
+          "w": 261,
+          "h": 15
+        },
+        {
+          "name": "미래 고저점 보기 ↓",
+          "x": 1090,
+          "y": 2666,
+          "w": 92,
+          "h": 17
+        },
+        {
+          "name": "PriceUSD 정의",
+          "x": 151,
+          "y": 7008,
+          "w": 81,
+          "h": 19
+        },
+        {
+          "name": "일별 원자료",
+          "x": 392,
+          "y": 7008,
+          "w": 59,
+          "h": 19
+        },
+        {
+          "name": "FPP3 5장",
+          "x": 638,
+          "y": 7008,
+          "w": 52,
+          "h": 19
+        }
+      ],
+      "sidebarToggle": false,
+      "bootState": "ready",
+      "errors": [],
+      "shellRegions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "visible"
+      }
+    }
+  ],
+  "widths": [
+    {
+      "viewport": "320x740",
+      "klass": "phone",
+      "boot": "ready",
+      "dock": "phone-dock",
+      "headingHeight": 48,
+      "regions": {
+        "top": "visible",
+        "left": "collapsed",
+        "right": "collapsed",
+        "bottom": "collapsed"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "rows": 97,
+      "structureRows": 8,
+      "unitPressed": [
+        "rebased"
+      ],
+      "tiny": 0,
+      "tinySample": [],
+      "interactive": 34,
+      "covered": 0,
+      "coveredSample": [],
+      "docHeight": 740,
+      "bodyHeight": 915,
+      "dockInViewport": true,
+      "errors": []
+    },
+    {
+      "viewport": "390x844",
+      "klass": "phone",
+      "boot": "ready",
+      "dock": "phone-dock",
+      "headingHeight": 48,
+      "regions": {
+        "top": "visible",
+        "left": "collapsed",
+        "right": "collapsed",
+        "bottom": "collapsed"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "rows": 97,
+      "structureRows": 8,
+      "unitPressed": [
+        "rebased"
+      ],
+      "tiny": 0,
+      "tinySample": [],
+      "interactive": 34,
+      "covered": 0,
+      "coveredSample": [],
+      "docHeight": 844,
+      "bodyHeight": 990,
+      "dockInViewport": true,
+      "errors": []
+    },
+    {
+      "viewport": "456x900",
+      "klass": "phone",
+      "boot": "ready",
+      "dock": "phone-dock",
+      "headingHeight": 48,
+      "regions": {
+        "top": "visible",
+        "left": "collapsed",
+        "right": "collapsed",
+        "bottom": "collapsed"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "rows": 97,
+      "structureRows": 8,
+      "unitPressed": [
+        "rebased"
+      ],
+      "tiny": 0,
+      "tinySample": [],
+      "interactive": 34,
+      "covered": 0,
+      "coveredSample": [],
+      "docHeight": 900,
+      "bodyHeight": 1046,
+      "dockInViewport": true,
+      "errors": []
+    },
+    {
+      "viewport": "620x900",
+      "klass": "phone",
+      "boot": "ready",
+      "dock": "phone-dock",
+      "headingHeight": 48,
+      "regions": {
+        "top": "visible",
+        "left": "collapsed",
+        "right": "collapsed",
+        "bottom": "collapsed"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "rows": 97,
+      "structureRows": 8,
+      "unitPressed": [
+        "rebased"
+      ],
+      "tiny": 0,
+      "tinySample": [],
+      "interactive": 34,
+      "covered": 0,
+      "coveredSample": [],
+      "docHeight": 900,
+      "bodyHeight": 1046,
+      "dockInViewport": true,
+      "errors": []
+    },
+    {
+      "viewport": "768x1024",
+      "klass": "tablet",
+      "boot": "ready",
+      "dock": null,
+      "headingHeight": 48,
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "rows": 97,
+      "structureRows": 8,
+      "unitPressed": [
+        "rebased"
+      ],
+      "tiny": 0,
+      "tinySample": [],
+      "interactive": 48,
+      "covered": 0,
+      "coveredSample": [],
+      "docHeight": 1024,
+      "bodyHeight": 1133,
+      "dockInViewport": true,
+      "errors": []
+    },
+    {
+      "viewport": "1024x768",
+      "klass": "desktop",
+      "boot": "ready",
+      "dock": null,
+      "headingHeight": 48,
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "rows": 97,
+      "structureRows": 8,
+      "unitPressed": [
+        "rebased"
+      ],
+      "tiny": 0,
+      "tinySample": [],
+      "interactive": 48,
+      "covered": 0,
+      "coveredSample": [],
+      "docHeight": 768,
+      "bodyHeight": 877,
+      "dockInViewport": true,
+      "errors": []
+    },
+    {
+      "viewport": "1280x800",
+      "klass": "desktop",
+      "boot": "ready",
+      "dock": null,
+      "headingHeight": 38,
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "rows": 97,
+      "structureRows": 8,
+      "unitPressed": [
+        "rebased"
+      ],
+      "tiny": 30,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 0,
+          "y": 0,
+          "w": 52,
+          "h": 42
+        },
+        {
+          "name": "역사 차트의 4년 구간",
+          "x": 56,
+          "y": 5,
+          "w": 157,
+          "h": 29
+        },
+        {
+          "name": "일봉",
+          "x": 224,
+          "y": 3,
+          "w": 44,
+          "h": 32
+        },
+        {
+          "name": "주봉",
+          "x": 270,
+          "y": 3,
+          "w": 44,
+          "h": 32
+        },
+        {
+          "name": "방향 전환 확인 임계값",
+          "x": 326,
+          "y": 4,
+          "w": 126,
+          "h": 29
+        },
+        {
+          "name": "JSON ↓",
+          "x": 460,
+          "y": 2,
+          "w": 44,
+          "h": 33
+        }
+      ],
+      "interactive": 48,
+      "covered": 0,
+      "coveredSample": [],
+      "docHeight": 800,
+      "bodyHeight": 909,
+      "dockInViewport": true,
+      "errors": []
+    },
+    {
+      "viewport": "1440x900",
+      "klass": "desktop",
+      "boot": "ready",
+      "dock": null,
+      "headingHeight": 38,
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "rows": 97,
+      "structureRows": 8,
+      "unitPressed": [
+        "rebased"
+      ],
+      "tiny": 30,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 0,
+          "y": 0,
+          "w": 52,
+          "h": 42
+        },
+        {
+          "name": "역사 차트의 4년 구간",
+          "x": 56,
+          "y": 5,
+          "w": 157,
+          "h": 29
+        },
+        {
+          "name": "일봉",
+          "x": 224,
+          "y": 3,
+          "w": 44,
+          "h": 32
+        },
+        {
+          "name": "주봉",
+          "x": 270,
+          "y": 3,
+          "w": 44,
+          "h": 32
+        },
+        {
+          "name": "방향 전환 확인 임계값",
+          "x": 326,
+          "y": 4,
+          "w": 126,
+          "h": 29
+        },
+        {
+          "name": "JSON ↓",
+          "x": 460,
+          "y": 2,
+          "w": 44,
+          "h": 33
+        }
+      ],
+      "interactive": 48,
+      "covered": 0,
+      "coveredSample": [],
+      "docHeight": 900,
+      "bodyHeight": 1009,
+      "dockInViewport": true,
+      "errors": []
+    },
+    {
+      "viewport": "1920x1080",
+      "klass": "desktop",
+      "boot": "ready",
+      "dock": null,
+      "headingHeight": 38,
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "rows": 97,
+      "structureRows": 8,
+      "unitPressed": [
+        "rebased"
+      ],
+      "tiny": 30,
+      "tinySample": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "x": 0,
+          "y": 0,
+          "w": 52,
+          "h": 42
+        },
+        {
+          "name": "역사 차트의 4년 구간",
+          "x": 56,
+          "y": 5,
+          "w": 157,
+          "h": 29
+        },
+        {
+          "name": "일봉",
+          "x": 224,
+          "y": 3,
+          "w": 44,
+          "h": 32
+        },
+        {
+          "name": "주봉",
+          "x": 270,
+          "y": 3,
+          "w": 44,
+          "h": 32
+        },
+        {
+          "name": "방향 전환 확인 임계값",
+          "x": 326,
+          "y": 4,
+          "w": 126,
+          "h": 29
+        },
+        {
+          "name": "JSON ↓",
+          "x": 460,
+          "y": 2,
+          "w": 44,
+          "h": 33
+        }
+      ],
+      "interactive": 48,
+      "covered": 0,
+      "coveredSample": [],
+      "docHeight": 1080,
+      "bodyHeight": 1189,
+      "dockInViewport": true,
+      "errors": []
+    }
+  ],
+  "interactions": {
+    "390x844": {
+      "openedDrawer": null,
+      "returnControl": {
+        "selector": "#mobile-chart-home",
+        "kind": "home",
+        "state": {
+          "w": 44,
+          "h": 44,
+          "top": 799,
+          "bottom": 843,
+          "painted": true,
+          "inHeading": true,
+          "label": "통합 차트로 돌아가기",
+          "disabled": false
+        }
+      },
+      "navClick": {
+        "ok": true,
+        "x": 26,
+        "y": 821,
+        "hit": {
+          "tag": "svg",
+          "id": null,
+          "inside": true
+        }
+      },
+      "nav": "통합 차트로 돌아가기",
+      "before": {
+        "search": "?page=compare&legacy=1&compare-unit=rebased",
+        "page": "compare",
+        "compareVisible": true
+      },
+      "afterNav": {
+        "search": "?legacy=1&compare-unit=rebased",
+        "page": "outlook",
+        "compareVisible": false,
+        "headings": []
+      },
+      "nodeIdentityAfterNav": {
+        "compareSame": true,
+        "chartSame": true,
+        "headingSame": true,
+        "footSame": true,
+        "compareParentNow": "MAIN",
+        "compareParentAt": "DIV",
+        "headingParentNow": "DIV",
+        "headingParentAt": "DIV",
+        "footParentNow": "ASIDE",
+        "footParentAt": "ASIDE",
+        "chartConnected": true,
+        "compareHidden": true
+      },
+      "afterBack": {
+        "search": "?page=compare&legacy=1&compare-unit=rebased",
+        "page": "compare",
+        "compareVisible": true,
+        "unitPressed": [
+          "usd",
+          "rebased"
+        ],
+        "headings": []
+      },
+      "nodeIdentityAfterBack": {
+        "compareSame": true,
+        "chartSame": true,
+        "compareVisible": true
+      },
+      "compareControls": {
+        "priceCardUnitControl": "locked by the compare route (not a user target here)",
+        "frequency": {
+          "before": {
+            "pressed": "false",
+            "rows": 8
+          },
+          "click": {
+            "ok": true,
+            "x": 315,
+            "y": 821,
+            "hit": {
+              "tag": "BUTTON",
+              "id": null,
+              "inside": true
+            }
+          },
+          "after": {
+            "group": [
+              "daily=true",
+              "weekly=false"
+            ],
+            "rows": 8,
+            "firstRow": "2026-11−4.8%−8.5%−41.0%48.3%0일"
+          }
+        },
+        "pager": {
+          "beforeFirstRow": "2026-11−4.8%−8.5%−41.0%4",
+          "click": {
+            "ok": true,
+            "x": 308,
+            "y": 742,
+            "hit": {
+              "tag": "svg",
+              "id": null,
+              "inside": true
+            }
+          },
+          "after": {
+            "firstRow": "2026-03+1.9%−11.7%−45.4%",
+            "countLabel": "9–16 / 197개 기간 · MDD는 전기 마지막 종가 포함",
+            "rows": 97,
+            "search": "?page=compare&legacy=1&compare-unit=rebased"
+          }
+        },
+        "reloadBoot": "ready",
+        "searchAfterReload": "?page=compare&legacy=1&compare-unit=rebased",
+        "modeAfterReload": {
+          "firstRow": "2026-11−4.8%−8.5%−41.0%4",
+          "freq": [
+            "daily=false",
+            "weekly=true"
+          ]
+        },
+        "rowsAfterReload": 97
+      }
+    },
+    "456x900": {
+      "openedDrawer": null,
+      "returnControl": {
+        "selector": "#mobile-chart-home",
+        "kind": "home",
+        "state": {
+          "w": 44,
+          "h": 44,
+          "top": 855,
+          "bottom": 899,
+          "painted": true,
+          "inHeading": true,
+          "label": "통합 차트로 돌아가기",
+          "disabled": false
+        }
+      },
+      "navClick": {
+        "ok": true,
+        "x": 26,
+        "y": 877,
+        "hit": {
+          "tag": "svg",
+          "id": null,
+          "inside": true
+        }
+      },
+      "nav": "통합 차트로 돌아가기",
+      "before": {
+        "search": "?page=compare&legacy=1&compare-unit=rebased",
+        "page": "compare",
+        "compareVisible": true
+      },
+      "afterNav": {
+        "search": "?legacy=1&compare-unit=rebased",
+        "page": "outlook",
+        "compareVisible": false,
+        "headings": []
+      },
+      "nodeIdentityAfterNav": {
+        "compareSame": true,
+        "chartSame": true,
+        "headingSame": true,
+        "footSame": true,
+        "compareParentNow": "MAIN",
+        "compareParentAt": "DIV",
+        "headingParentNow": "DIV",
+        "headingParentAt": "DIV",
+        "footParentNow": "ASIDE",
+        "footParentAt": "ASIDE",
+        "chartConnected": true,
+        "compareHidden": true
+      },
+      "afterBack": {
+        "search": "?page=compare&legacy=1&compare-unit=rebased",
+        "page": "compare",
+        "compareVisible": true,
+        "unitPressed": [
+          "usd",
+          "rebased"
+        ],
+        "headings": []
+      },
+      "nodeIdentityAfterBack": {
+        "compareSame": true,
+        "chartSame": true,
+        "compareVisible": true
+      },
+      "compareControls": {
+        "priceCardUnitControl": "locked by the compare route (not a user target here)",
+        "frequency": {
+          "before": {
+            "pressed": "false",
+            "rows": 8
+          },
+          "click": {
+            "ok": true,
+            "x": 381,
+            "y": 877,
+            "hit": {
+              "tag": "BUTTON",
+              "id": null,
+              "inside": true
+            }
+          },
+          "after": {
+            "group": [
+              "daily=true",
+              "weekly=false"
+            ],
+            "rows": 8,
+            "firstRow": "2026-11−4.8%−8.5%−41.0%48.3%0일"
+          }
+        },
+        "pager": {
+          "beforeFirstRow": "2026-11−4.8%−8.5%−41.0%4",
+          "click": {
+            "ok": true,
+            "x": 362,
+            "y": 786,
+            "hit": {
+              "tag": "svg",
+              "id": null,
+              "inside": true
+            }
+          },
+          "after": {
+            "firstRow": "2026-03+1.9%−11.7%−45.4%",
+            "countLabel": "9–16 / 197개 기간 · MDD는 전기 마지막 종가 포함",
+            "rows": 97,
+            "search": "?page=compare&legacy=1&compare-unit=rebased"
+          }
+        },
+        "reloadBoot": "ready",
+        "searchAfterReload": "?page=compare&legacy=1&compare-unit=rebased",
+        "modeAfterReload": {
+          "firstRow": "2026-11−4.8%−8.5%−41.0%4",
+          "freq": [
+            "daily=false",
+            "weekly=true"
+          ]
+        },
+        "rowsAfterReload": 97
+      }
+    },
+    "620x900": {
+      "openedDrawer": null,
+      "returnControl": {
+        "selector": "#mobile-chart-home",
+        "kind": "home",
+        "state": {
+          "w": 44,
+          "h": 44,
+          "top": 855,
+          "bottom": 899,
+          "painted": true,
+          "inHeading": true,
+          "label": "통합 차트로 돌아가기",
+          "disabled": false
+        }
+      },
+      "navClick": {
+        "ok": true,
+        "x": 26,
+        "y": 877,
+        "hit": {
+          "tag": "svg",
+          "id": null,
+          "inside": true
+        }
+      },
+      "nav": "통합 차트로 돌아가기",
+      "before": {
+        "search": "?page=compare&legacy=1&compare-unit=rebased",
+        "page": "compare",
+        "compareVisible": true
+      },
+      "afterNav": {
+        "search": "?legacy=1&compare-unit=rebased",
+        "page": "outlook",
+        "compareVisible": false,
+        "headings": []
+      },
+      "nodeIdentityAfterNav": {
+        "compareSame": true,
+        "chartSame": true,
+        "headingSame": true,
+        "footSame": true,
+        "compareParentNow": "MAIN",
+        "compareParentAt": "DIV",
+        "headingParentNow": "DIV",
+        "headingParentAt": "DIV",
+        "footParentNow": "ASIDE",
+        "footParentAt": "ASIDE",
+        "chartConnected": true,
+        "compareHidden": true
+      },
+      "afterBack": {
+        "search": "?page=compare&legacy=1&compare-unit=rebased",
+        "page": "compare",
+        "compareVisible": true,
+        "unitPressed": [
+          "usd",
+          "rebased"
+        ],
+        "headings": []
+      },
+      "nodeIdentityAfterBack": {
+        "compareSame": true,
+        "chartSame": true,
+        "compareVisible": true
+      },
+      "compareControls": {
+        "priceCardUnitControl": "locked by the compare route (not a user target here)",
+        "frequency": {
+          "before": {
+            "pressed": "false",
+            "rows": 8
+          },
+          "click": {
+            "ok": true,
+            "x": 230,
+            "y": 877,
+            "hit": {
+              "tag": "BUTTON",
+              "id": null,
+              "inside": true
+            }
+          },
+          "after": {
+            "group": [
+              "daily=true",
+              "weekly=false"
+            ],
+            "rows": 8,
+            "firstRow": "2026-11−4.8%−8.5%−41.0%48.3%0일"
+          }
+        },
+        "pager": {
+          "beforeFirstRow": "2026-11−4.8%−8.5%−41.0%4",
+          "click": {
+            "ok": true,
+            "x": 497,
+            "y": 756,
+            "hit": {
+              "tag": "svg",
+              "id": null,
+              "inside": true
+            }
+          },
+          "after": {
+            "firstRow": "2026-03+1.9%−11.7%−45.4%",
+            "countLabel": "9–16 / 197개 기간 · MDD는 전기 마지막 종가 포함",
+            "rows": 97,
+            "search": "?page=compare&legacy=1&compare-unit=rebased"
+          }
+        },
+        "reloadBoot": "ready",
+        "searchAfterReload": "?page=compare&legacy=1&compare-unit=rebased",
+        "modeAfterReload": {
+          "firstRow": "2026-11−4.8%−8.5%−41.0%4",
+          "freq": [
+            "daily=false",
+            "weekly=true"
+          ]
+        },
+        "rowsAfterReload": 97
+      }
+    },
+    "1440x900": {
+      "openedDrawer": null,
+      "returnControl": {
+        "selector": ".atlas-nav button[data-view=\"outlook\"]",
+        "kind": "nav",
+        "state": null
+      },
+      "navClick": {
+        "ok": true,
+        "x": 1418,
+        "y": 66,
+        "hit": {
+          "tag": "svg",
+          "id": null,
+          "inside": true
+        }
+      },
+      "nav": "가격 차트",
+      "before": {
+        "search": "?page=compare&legacy=1&compare-unit=rebased",
+        "page": "compare",
+        "compareVisible": true
+      },
+      "afterNav": {
+        "search": "?legacy=1&compare-unit=rebased",
+        "page": "outlook",
+        "compareVisible": false,
+        "headings": []
+      },
+      "nodeIdentityAfterNav": {
+        "compareSame": true,
+        "chartSame": true,
+        "headingSame": true,
+        "footSame": true,
+        "compareParentNow": "MAIN",
+        "compareParentAt": "DIV",
+        "headingParentNow": "DIV",
+        "headingParentAt": "DIV",
+        "footParentNow": "DIV",
+        "footParentAt": "DIV",
+        "chartConnected": true,
+        "compareHidden": true
+      },
+      "afterBack": {
+        "search": "?page=compare&legacy=1&compare-unit=rebased",
+        "page": "compare",
+        "compareVisible": true,
+        "unitPressed": [
+          "usd",
+          "rebased"
+        ],
+        "headings": []
+      },
+      "nodeIdentityAfterBack": {
+        "compareSame": true,
+        "chartSame": true,
+        "compareVisible": true
+      },
+      "compareControls": {
+        "priceCardUnitControl": "locked by the compare route (not a user target here)",
+        "frequency": {
+          "before": {
+            "pressed": "false",
+            "rows": 8
+          },
+          "click": {
+            "ok": true,
+            "x": 246,
+            "y": 19,
+            "hit": {
+              "tag": "BUTTON",
+              "id": null,
+              "inside": true
+            }
+          },
+          "after": {
+            "group": [
+              "daily=true",
+              "weekly=false"
+            ],
+            "rows": 8,
+            "firstRow": "2026-11−4.8%−8.5%−41.0%48.3%0일"
+          }
+        },
+        "pager": {
+          "beforeFirstRow": "2026-11−4.8%−8.5%−41.0%4",
+          "click": {
+            "ok": true,
+            "x": 1208,
+            "y": 707,
+            "hit": {
+              "tag": "svg",
+              "id": null,
+              "inside": true
+            }
+          },
+          "after": {
+            "firstRow": "2026-03+1.9%−11.7%−45.4%",
+            "countLabel": "9–16 / 197개 기간 · MDD는 전기 마지막 종가 포함",
+            "rows": 97,
+            "search": "?page=compare&legacy=1&compare-unit=rebased"
+          }
+        },
+        "reloadBoot": "ready",
+        "searchAfterReload": "?page=compare&legacy=1&compare-unit=rebased",
+        "modeAfterReload": {
+          "firstRow": "2026-11−4.8%−8.5%−41.0%4",
+          "freq": [
+            "daily=false",
+            "weekly=true"
+          ]
+        },
+        "rowsAfterReload": 97
+      }
+    }
+  },
+  "failures": [
+    "inventory outlook: visible h1 count 0 ()",
+    "inventory market-us: visible h1 count 0 ()",
+    "inventory market-kr: visible h1 count 0 ()",
+    "inventory scenario: visible h1 count 0 ()",
+    "inventory cashflow: visible h1 count 0 ()",
+    "inventory rsi: visible h1 count 0 ()",
+    "inventory housing: visible h1 count 0 ()",
+    "inventory themes: visible h1 count 0 ()",
+    "inventory compare+legacy: visible h1 count 0 ()",
+    "inventory compare+bare: visible h1 count 0 ()",
+    "inventory compare+legacy-unit-alias: visible h1 count 0 ()",
+    "width 320x740: visible h1 count 0",
+    "width 390x844: visible h1 count 0",
+    "width 456x900: visible h1 count 0",
+    "width 620x900: visible h1 count 0",
+    "width 768x1024: visible h1 count 0",
+    "width 1024x768: visible h1 count 0",
+    "width 1280x800: visible h1 count 0",
+    "width 1440x900: visible h1 count 0",
+    "width 1920x1080: visible h1 count 0"
+  ],
+  "findings": [],
+  "assertions": {
+    "explicit1920": {
+      "viewport": "1920x1080",
+      "overflow": 0,
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "resultRows": 97,
+      "structureRows": 8,
+      "dock": null,
+      "headingHeight": 38,
+      "tiny": 30,
+      "units": [
+        "rebased"
+      ]
+    },
+    "widthsCovered": [
+      "320x740",
+      "390x844",
+      "456x900",
+      "620x900",
+      "768x1024",
+      "1024x768",
+      "1280x800",
+      "1440x900",
+      "1920x1080"
+    ],
+    "widthsWithOverflow": [],
+    "routesWithAllRegions": [
+      "outlook",
+      "market-us",
+      "market-kr",
+      "scenario",
+      "cashflow",
+      "rsi",
+      "housing",
+      "themes",
+      "evidence",
+      "data",
+      "ipo",
+      "relay",
+      "compare+legacy",
+      "compare+bare",
+      "compare+legacy-unit-alias"
+    ],
+    "contentWidthsCovered": [
+      "evidence 320x740",
+      "evidence 390x844",
+      "evidence 768x1024",
+      "evidence 1024x768",
+      "evidence 1440x900",
+      "evidence 1920x1080",
+      "data 320x740",
+      "data 390x844",
+      "data 768x1024",
+      "data 1024x768",
+      "data 1440x900",
+      "data 1920x1080",
+      "ipo 320x740",
+      "ipo 390x844",
+      "ipo 768x1024",
+      "ipo 1024x768",
+      "ipo 1440x900",
+      "ipo 1920x1080",
+      "relay 320x740",
+      "relay 390x844",
+      "relay 768x1024",
+      "relay 1024x768",
+      "relay 1440x900",
+      "relay 1920x1080"
+    ],
+    "contentWidthsWithOverflow": [],
+    "failureCount": 20
+  },
+  "nativeWindowEnvelope": {
+    "windowId": 1514584560,
+    "bounds": {
+      "left": 10,
+      "top": 10,
+      "width": 2048,
+      "height": 1600,
+      "windowState": "normal"
+    },
+    "client": {
+      "width": 2048,
+      "height": 1457
+    },
+    "requestedViewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "verifiedBeforeEmulation": true
+  },
+  "contentWidths": [
+    {
+      "route": "evidence",
+      "viewport": "320x740",
+      "klass": "phone",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "collapsed",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 9,
+      "tiny": [],
+      "railOwnsNav": true,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": false,
+      "sidebarOwnsNav": false,
+      "railPainted": true,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "evidence",
+      "viewport": "390x844",
+      "klass": "phone",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "collapsed",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 9,
+      "tiny": [],
+      "railOwnsNav": true,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": false,
+      "sidebarOwnsNav": false,
+      "railPainted": true,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "evidence",
+      "viewport": "768x1024",
+      "klass": "tablet",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 10,
+      "tiny": [],
+      "railOwnsNav": false,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": true,
+      "sidebarOwnsNav": true,
+      "railPainted": false,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "evidence",
+      "viewport": "1024x768",
+      "klass": "desktop",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 10,
+      "tiny": [],
+      "railOwnsNav": false,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": true,
+      "sidebarOwnsNav": true,
+      "railPainted": false,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "evidence",
+      "viewport": "1440x900",
+      "klass": "desktop",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 10,
+      "tiny": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "w": 199,
+          "h": 36
+        },
+        {
+          "name": "가격 차트",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "시장 분석",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "리서치",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "자산 비교",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "공모주",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "릴레이 콘텐츠",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "Coin Metrics",
+          "w": 68,
+          "h": 13
+        },
+        {
+          "name": "CC BY-NC 4.0",
+          "w": 72,
+          "h": 13
+        },
+        {
+          "name": "데이터와 출처, 이용 조건",
+          "w": 123,
+          "h": 43
+        }
+      ],
+      "railOwnsNav": false,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": true,
+      "sidebarOwnsNav": true,
+      "railPainted": false,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "evidence",
+      "viewport": "1920x1080",
+      "klass": "desktop",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 10,
+      "tiny": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "w": 199,
+          "h": 36
+        },
+        {
+          "name": "가격 차트",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "시장 분석",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "리서치",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "자산 비교",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "공모주",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "릴레이 콘텐츠",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "Coin Metrics",
+          "w": 68,
+          "h": 13
+        },
+        {
+          "name": "CC BY-NC 4.0",
+          "w": 72,
+          "h": 13
+        },
+        {
+          "name": "데이터와 출처, 이용 조건",
+          "w": 123,
+          "h": 43
+        }
+      ],
+      "railOwnsNav": false,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": true,
+      "sidebarOwnsNav": true,
+      "railPainted": false,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "evidence",
+      "infoSheet": {
+        "opener": {
+          "found": true,
+          "sameNode": true,
+          "label": "데이터와 출처, 이용 조건",
+          "readiness": "ready",
+          "disabled": false,
+          "ariaDisabled": null,
+          "reason": null,
+          "description": null
+        },
+        "sourceReady": true,
+        "click": {
+          "ok": true,
+          "x": 505,
+          "y": 879,
+          "hit": {
+            "tag": "BUTTON",
+            "id": null,
+            "inside": true
+          }
+        },
+        "dialog": {
+          "open": true,
+          "chars": 1744,
+          "readerOpen": false,
+          "readerKind": null,
+          "readerChars": 0
+        }
+      }
+    },
+    {
+      "route": "data",
+      "viewport": "320x740",
+      "klass": "phone",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "collapsed",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 8,
+      "tiny": [],
+      "railOwnsNav": true,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": false,
+      "sidebarOwnsNav": false,
+      "railPainted": true,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "data",
+      "viewport": "390x844",
+      "klass": "phone",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "collapsed",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 8,
+      "tiny": [],
+      "railOwnsNav": true,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": false,
+      "sidebarOwnsNav": false,
+      "railPainted": true,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "data",
+      "viewport": "768x1024",
+      "klass": "tablet",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 9,
+      "tiny": [],
+      "railOwnsNav": false,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": true,
+      "sidebarOwnsNav": true,
+      "railPainted": false,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "data",
+      "viewport": "1024x768",
+      "klass": "desktop",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 9,
+      "tiny": [],
+      "railOwnsNav": false,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": true,
+      "sidebarOwnsNav": true,
+      "railPainted": false,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "data",
+      "viewport": "1440x900",
+      "klass": "desktop",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 9,
+      "tiny": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "w": 199,
+          "h": 36
+        },
+        {
+          "name": "가격 차트",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "시장 분석",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "리서치",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "자산 비교",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "공모주",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "릴레이 콘텐츠",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "Coin Metrics",
+          "w": 68,
+          "h": 13
+        },
+        {
+          "name": "CC BY-NC 4.0",
+          "w": 72,
+          "h": 13
+        }
+      ],
+      "railOwnsNav": false,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": true,
+      "sidebarOwnsNav": true,
+      "railPainted": false,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "data",
+      "viewport": "1920x1080",
+      "klass": "desktop",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 9,
+      "tiny": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "w": 199,
+          "h": 36
+        },
+        {
+          "name": "가격 차트",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "시장 분석",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "리서치",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "자산 비교",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "공모주",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "릴레이 콘텐츠",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "Coin Metrics",
+          "w": 68,
+          "h": 13
+        },
+        {
+          "name": "CC BY-NC 4.0",
+          "w": 72,
+          "h": 13
+        }
+      ],
+      "railOwnsNav": false,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": true,
+      "sidebarOwnsNav": true,
+      "railPainted": false,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "data",
+      "infoSheet": {
+        "opener": {
+          "found": true,
+          "sameNode": true,
+          "label": "데이터와 출처, 이용 조건",
+          "readiness": "unset",
+          "disabled": true,
+          "ariaDisabled": "true",
+          "reason": "가격 자료가 없어 방법론 시트를 열 수 없습니다. 가격 차트에서 자료를 불러온 뒤 사용할 수 있습니다.",
+          "description": "가격 자료가 없어 방법론 시트를 열 수 없습니다. 가격 차트에서 자료를 불러온 뒤 사용할 수 있습니다."
+        },
+        "sourceReady": false,
+        "click": null,
+        "dialog": {
+          "open": false,
+          "chars": 0,
+          "readerOpen": false,
+          "readerKind": null,
+          "readerChars": 0
+        }
+      }
+    },
+    {
+      "route": "ipo",
+      "viewport": "320x740",
+      "klass": "phone",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "collapsed",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 8,
+      "tiny": [],
+      "railOwnsNav": true,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": false,
+      "sidebarOwnsNav": false,
+      "railPainted": true,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "ipo",
+      "viewport": "390x844",
+      "klass": "phone",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "collapsed",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 8,
+      "tiny": [],
+      "railOwnsNav": true,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": false,
+      "sidebarOwnsNav": false,
+      "railPainted": true,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "ipo",
+      "viewport": "768x1024",
+      "klass": "tablet",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 9,
+      "tiny": [],
+      "railOwnsNav": false,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": true,
+      "sidebarOwnsNav": true,
+      "railPainted": false,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "ipo",
+      "viewport": "1024x768",
+      "klass": "desktop",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 9,
+      "tiny": [],
+      "railOwnsNav": false,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": true,
+      "sidebarOwnsNav": true,
+      "railPainted": false,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "ipo",
+      "viewport": "1440x900",
+      "klass": "desktop",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 9,
+      "tiny": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "w": 199,
+          "h": 36
+        },
+        {
+          "name": "가격 차트",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "시장 분석",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "리서치",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "자산 비교",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "공모주",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "릴레이 콘텐츠",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "Coin Metrics",
+          "w": 68,
+          "h": 13
+        },
+        {
+          "name": "CC BY-NC 4.0",
+          "w": 72,
+          "h": 13
+        }
+      ],
+      "railOwnsNav": false,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": true,
+      "sidebarOwnsNav": true,
+      "railPainted": false,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "ipo",
+      "viewport": "1920x1080",
+      "klass": "desktop",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 9,
+      "tiny": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "w": 199,
+          "h": 36
+        },
+        {
+          "name": "가격 차트",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "시장 분석",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "리서치",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "자산 비교",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "공모주",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "릴레이 콘텐츠",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "Coin Metrics",
+          "w": 68,
+          "h": 13
+        },
+        {
+          "name": "CC BY-NC 4.0",
+          "w": 72,
+          "h": 13
+        }
+      ],
+      "railOwnsNav": false,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": true,
+      "sidebarOwnsNav": true,
+      "railPainted": false,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "ipo",
+      "infoSheet": {
+        "opener": {
+          "found": true,
+          "sameNode": true,
+          "label": "데이터와 출처, 이용 조건",
+          "readiness": "unset",
+          "disabled": true,
+          "ariaDisabled": "true",
+          "reason": "가격 자료가 없어 방법론 시트를 열 수 없습니다. 가격 차트에서 자료를 불러온 뒤 사용할 수 있습니다.",
+          "description": "가격 자료가 없어 방법론 시트를 열 수 없습니다. 가격 차트에서 자료를 불러온 뒤 사용할 수 있습니다."
+        },
+        "sourceReady": false,
+        "click": null,
+        "dialog": {
+          "open": false,
+          "chars": 0,
+          "readerOpen": false,
+          "readerKind": null,
+          "readerChars": 0
+        }
+      }
+    },
+    {
+      "route": "relay",
+      "viewport": "320x740",
+      "klass": "phone",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "collapsed",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 8,
+      "tiny": [],
+      "railOwnsNav": true,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": false,
+      "sidebarOwnsNav": false,
+      "railPainted": true,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "relay",
+      "viewport": "390x844",
+      "klass": "phone",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "collapsed",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 8,
+      "tiny": [],
+      "railOwnsNav": true,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": false,
+      "sidebarOwnsNav": false,
+      "railPainted": true,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "relay",
+      "viewport": "768x1024",
+      "klass": "tablet",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 9,
+      "tiny": [],
+      "railOwnsNav": false,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": true,
+      "sidebarOwnsNav": true,
+      "railPainted": false,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "relay",
+      "viewport": "1024x768",
+      "klass": "desktop",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 9,
+      "tiny": [],
+      "railOwnsNav": false,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": true,
+      "sidebarOwnsNav": true,
+      "railPainted": false,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "relay",
+      "viewport": "1440x900",
+      "klass": "desktop",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 9,
+      "tiny": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "w": 199,
+          "h": 36
+        },
+        {
+          "name": "가격 차트",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "시장 분석",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "리서치",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "자산 비교",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "공모주",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "릴레이 콘텐츠",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "Coin Metrics",
+          "w": 68,
+          "h": 13
+        },
+        {
+          "name": "CC BY-NC 4.0",
+          "w": 72,
+          "h": 13
+        }
+      ],
+      "railOwnsNav": false,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": true,
+      "sidebarOwnsNav": true,
+      "railPainted": false,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "relay",
+      "viewport": "1920x1080",
+      "klass": "desktop",
+      "boot": "ready",
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "collapsed",
+        "bottom": "visible"
+      },
+      "present": {
+        "top": true,
+        "left": true,
+        "right": true,
+        "bottom": true,
+        "pageHeading": true
+      },
+      "overflow": 0,
+      "headings": 1,
+      "duplicates": [],
+      "shellTargets": 9,
+      "tiny": [
+        {
+          "name": "비트코인 사이클 통합 차트",
+          "w": 199,
+          "h": 36
+        },
+        {
+          "name": "가격 차트",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "시장 분석",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "리서치",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "자산 비교",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "공모주",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "릴레이 콘텐츠",
+          "w": 199,
+          "h": 32
+        },
+        {
+          "name": "Coin Metrics",
+          "w": 68,
+          "h": 13
+        },
+        {
+          "name": "CC BY-NC 4.0",
+          "w": 72,
+          "h": 13
+        }
+      ],
+      "railOwnsNav": false,
+      "navItems": 6,
+      "navLabelled": 6,
+      "headerIsTop": true,
+      "sidebarRendered": true,
+      "sidebarOwnsNav": true,
+      "railPainted": false,
+      "bottomOwnsFooter": true,
+      "errors": []
+    },
+    {
+      "route": "relay",
+      "infoSheet": {
+        "opener": {
+          "found": true,
+          "sameNode": true,
+          "label": "데이터와 출처, 이용 조건",
+          "readiness": "unset",
+          "disabled": true,
+          "ariaDisabled": "true",
+          "reason": "가격 자료가 없어 방법론 시트를 열 수 없습니다. 가격 차트에서 자료를 불러온 뒤 사용할 수 있습니다.",
+          "description": "가격 자료가 없어 방법론 시트를 열 수 없습니다. 가격 차트에서 자료를 불러온 뒤 사용할 수 있습니다."
+        },
+        "sourceReady": false,
+        "click": null,
+        "dialog": {
+          "open": false,
+          "chars": 0,
+          "readerOpen": false,
+          "readerKind": null,
+          "readerChars": 0
+        }
+      }
+    }
+  ],
+  "structureToolbar": [
+    {
+      "viewport": "320x844",
+      "initial": {
+        "scrollWidth": 544,
+        "clientWidth": 268,
+        "scrollLeft": 0,
+        "viewport": 320,
+        "point": {
+          "x": 182,
+          "y": 821
+        },
+        "threshold": {
+          "left": 324,
+          "right": 540,
+          "width": 216,
+          "inViewport": false,
+          "hit": false
+        },
+        "json": {
+          "left": 548,
+          "right": 592,
+          "width": 44,
+          "inViewport": false,
+          "hit": false
+        }
+      },
+      "scrolled": {
+        "scrollWidth": 544,
+        "clientWidth": 268,
+        "scrollLeft": 276,
+        "viewport": 320,
+        "point": {
+          "x": 182,
+          "y": 821
+        },
+        "threshold": {
+          "left": 48,
+          "right": 264,
+          "width": 216,
+          "inViewport": true,
+          "hit": true
+        },
+        "json": {
+          "left": 272,
+          "right": 316,
+          "width": 44,
+          "inViewport": true,
+          "hit": true
+        }
+      }
+    },
+    {
+      "viewport": "390x844",
+      "initial": {
+        "scrollWidth": 684,
+        "clientWidth": 338,
+        "scrollLeft": 0,
+        "viewport": 390,
+        "point": {
+          "x": 217,
+          "y": 821
+        },
+        "threshold": {
+          "left": 394,
+          "right": 680,
+          "width": 286,
+          "inViewport": false,
+          "hit": false
+        },
+        "json": {
+          "left": 688,
+          "right": 732,
+          "width": 44,
+          "inViewport": false,
+          "hit": false
+        }
+      },
+      "scrolled": {
+        "scrollWidth": 684,
+        "clientWidth": 338,
+        "scrollLeft": 346,
+        "viewport": 390,
+        "point": {
+          "x": 217,
+          "y": 821
+        },
+        "threshold": {
+          "left": 48,
+          "right": 334,
+          "width": 286,
+          "inViewport": true,
+          "hit": true
+        },
+        "json": {
+          "left": 342,
+          "right": 386,
+          "width": 44,
+          "inViewport": true,
+          "hit": true
+        }
+      }
+    }
+  ],
+  "contentTrips": [
+    {
+      "route": "evidence",
+      "viewport": "1440x900",
+      "navClick": {
+        "ok": true,
+        "x": 108,
+        "y": 76,
+        "hit": {
+          "tag": "BUTTON",
+          "id": null,
+          "inside": true
+        }
+      },
+      "before": {
+        "page": "evidence",
+        "shell": "dashboard",
+        "railInDoc": true,
+        "bottomInDoc": true,
+        "railHidden": true,
+        "navInRail": false,
+        "footerInBottom": true,
+        "navInSidebar": true,
+        "sidebarRendered": true,
+        "railCount": 0,
+        "bottomCount": 1,
+        "sourceReadiness": "ready",
+        "sourceDisabled": false,
+        "sourceReason": null
+      },
+      "onChart": {
+        "page": "outlook",
+        "shell": "chart",
+        "contentRailPresent": false,
+        "contentBottomPresent": false,
+        "railCount": 1,
+        "bottomCount": 1,
+        "railIsNative": true,
+        "nativeRailOwnsNav": true,
+        "topIsChartToolbar": true,
+        "headerHidden": true,
+        "sourceDisabled": false,
+        "sourceReason": null,
+        "footerInMain": true,
+        "nodesPreserved": {
+          "nav": true,
+          "footer": true,
+          "source": true
+        }
+      },
+      "back": {
+        "page": "evidence",
+        "shell": "dashboard",
+        "sameRail": true,
+        "sameBottom": true,
+        "navInRail": false,
+        "navInSidebar": true,
+        "footerInBottom": true,
+        "railCount": 0,
+        "bottomCount": 1,
+        "railVisible": false,
+        "sidebarRendered": true,
+        "navHit": {
+          "inside": true,
+          "w": 199,
+          "h": 32
+        },
+        "sourceReadiness": "ready",
+        "sourceDisabled": false,
+        "sourceReason": null
+      },
+      "backSourceClick": {
+        "ok": true,
+        "x": 505,
+        "y": 879,
+        "hit": {
+          "tag": "BUTTON",
+          "id": null,
+          "inside": true
+        }
+      },
+      "backSourceSheet": {
+        "readerOpen": true,
+        "readerKind": "method",
+        "readerChars": 787,
+        "dialogOpen": false,
+        "chars": 1744
+      }
+    },
+    {
+      "route": "evidence",
+      "viewport": "390x844",
+      "navClick": {
+        "ok": true,
+        "x": 365,
+        "y": 80,
+        "hit": {
+          "tag": "svg",
+          "id": null,
+          "inside": true
+        }
+      },
+      "before": {
+        "page": "evidence",
+        "shell": "dashboard",
+        "railInDoc": true,
+        "bottomInDoc": true,
+        "railHidden": false,
+        "navInRail": true,
+        "footerInBottom": true,
+        "navInSidebar": false,
+        "sidebarRendered": false,
+        "railCount": 1,
+        "bottomCount": 1,
+        "sourceReadiness": "ready",
+        "sourceDisabled": false,
+        "sourceReason": null
+      },
+      "onChart": {
+        "page": "outlook",
+        "shell": "chart",
+        "contentRailPresent": false,
+        "contentBottomPresent": false,
+        "railCount": 0,
+        "bottomCount": 0,
+        "railIsNative": true,
+        "nativeRailOwnsNav": true,
+        "topIsChartToolbar": true,
+        "headerHidden": true,
+        "sourceDisabled": false,
+        "sourceReason": null,
+        "footerInMain": true,
+        "nodesPreserved": {
+          "nav": true,
+          "footer": true,
+          "source": true
+        }
+      },
+      "back": {
+        "page": "evidence",
+        "shell": "dashboard",
+        "sameRail": true,
+        "sameBottom": true,
+        "navInRail": true,
+        "navInSidebar": false,
+        "footerInBottom": true,
+        "railCount": 1,
+        "bottomCount": 1,
+        "railVisible": true,
+        "sidebarRendered": false,
+        "navHit": {
+          "inside": true,
+          "w": 44,
+          "h": 44
+        },
+        "sourceReadiness": "ready",
+        "sourceDisabled": false,
+        "sourceReason": null
+      },
+      "backSourceClick": null,
+      "backSourceSheet": {
+        "readerOpen": false,
+        "readerKind": null,
+        "readerChars": 0,
+        "dialogOpen": false,
+        "chars": 0
+      }
+    },
+    {
+      "route": "relay",
+      "viewport": "1440x900",
+      "navClick": {
+        "ok": true,
+        "x": 108,
+        "y": 76,
+        "hit": {
+          "tag": "BUTTON",
+          "id": null,
+          "inside": true
+        }
+      },
+      "before": {
+        "page": "relay",
+        "shell": "dashboard",
+        "railInDoc": true,
+        "bottomInDoc": true,
+        "railHidden": true,
+        "navInRail": false,
+        "footerInBottom": true,
+        "navInSidebar": true,
+        "sidebarRendered": true,
+        "railCount": 0,
+        "bottomCount": 1,
+        "sourceReadiness": "unset",
+        "sourceDisabled": true,
+        "sourceReason": "가격 자료가 없어 방법론 시트를 열 수 없습니다. 가격 차트에서 자료를 불러온 뒤 사용할 수 있습니다."
+      },
+      "onChart": {
+        "page": "outlook",
+        "shell": "chart",
+        "contentRailPresent": false,
+        "contentBottomPresent": false,
+        "railCount": 1,
+        "bottomCount": 1,
+        "railIsNative": true,
+        "nativeRailOwnsNav": true,
+        "topIsChartToolbar": true,
+        "headerHidden": true,
+        "sourceDisabled": false,
+        "sourceReason": null,
+        "footerInMain": true,
+        "nodesPreserved": {
+          "nav": true,
+          "footer": true,
+          "source": true
+        }
+      },
+      "back": {
+        "page": "relay",
+        "shell": "dashboard",
+        "sameRail": true,
+        "sameBottom": true,
+        "navInRail": false,
+        "navInSidebar": true,
+        "footerInBottom": true,
+        "railCount": 0,
+        "bottomCount": 1,
+        "railVisible": false,
+        "sidebarRendered": true,
+        "navHit": {
+          "inside": true,
+          "w": 199,
+          "h": 32
+        },
+        "sourceReadiness": "ready",
+        "sourceDisabled": false,
+        "sourceReason": null
+      },
+      "backSourceClick": {
+        "ok": true,
+        "x": 505,
+        "y": 879,
+        "hit": {
+          "tag": "BUTTON",
+          "id": null,
+          "inside": true
+        }
+      },
+      "backSourceSheet": {
+        "readerOpen": true,
+        "readerKind": "method",
+        "readerChars": 787,
+        "dialogOpen": false,
+        "chars": 1744
+      }
+    },
+    {
+      "route": "relay",
+      "viewport": "390x844",
+      "navClick": {
+        "ok": true,
+        "x": 365,
+        "y": 80,
+        "hit": {
+          "tag": "svg",
+          "id": null,
+          "inside": true
+        }
+      },
+      "before": {
+        "page": "relay",
+        "shell": "dashboard",
+        "railInDoc": true,
+        "bottomInDoc": true,
+        "railHidden": false,
+        "navInRail": true,
+        "footerInBottom": true,
+        "navInSidebar": false,
+        "sidebarRendered": false,
+        "railCount": 1,
+        "bottomCount": 1,
+        "sourceReadiness": "unset",
+        "sourceDisabled": true,
+        "sourceReason": "가격 자료가 없어 방법론 시트를 열 수 없습니다. 가격 차트에서 자료를 불러온 뒤 사용할 수 있습니다."
+      },
+      "onChart": {
+        "page": "outlook",
+        "shell": "chart",
+        "contentRailPresent": false,
+        "contentBottomPresent": false,
+        "railCount": 0,
+        "bottomCount": 0,
+        "railIsNative": true,
+        "nativeRailOwnsNav": true,
+        "topIsChartToolbar": true,
+        "headerHidden": true,
+        "sourceDisabled": false,
+        "sourceReason": null,
+        "footerInMain": true,
+        "nodesPreserved": {
+          "nav": true,
+          "footer": true,
+          "source": true
+        }
+      },
+      "back": {
+        "page": "relay",
+        "shell": "dashboard",
+        "sameRail": true,
+        "sameBottom": true,
+        "navInRail": true,
+        "navInSidebar": false,
+        "footerInBottom": true,
+        "railCount": 1,
+        "bottomCount": 1,
+        "railVisible": true,
+        "sidebarRendered": false,
+        "navHit": {
+          "inside": true,
+          "w": 44,
+          "h": 44
+        },
+        "sourceReadiness": "ready",
+        "sourceDisabled": false,
+        "sourceReason": null
+      },
+      "backSourceClick": null,
+      "backSourceSheet": {
+        "readerOpen": false,
+        "readerKind": null,
+        "readerChars": 0,
+        "dialogOpen": false,
+        "chars": 0
+      }
+    }
+  ],
+  "status": "FAILED"
+}

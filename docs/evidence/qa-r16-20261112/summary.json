@@ -1,0 +1,414 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-r16-qa",
+  "recordedAt": "2026-11-12T07:22:39.972Z",
+  "windowKst": "2026-11-12 16:12-16:34",
+  "testedHead": "386376591428fb0a9badc4dfef750ee70ef802d2",
+  "recordedCommit": "5ced9d8",
+  "chrome": "Chrome/157.0.8103.79",
+  "worktree": "/private/tmp/atlas-r16-3863765/wt",
+  "site": {
+    "files": 1530,
+    "manifestBytes": 163622,
+    "manifestSha256": "3380d7d513dc81cd218ba9edad64dd88c258e32d7741aea3ea7e7dbf9266bb5e"
+  },
+  "axes": {
+    "functional": {
+      "headingHarness": {
+        "status": "failed",
+        "cases": [
+          {
+            "id": "BTCUSD-320",
+            "status": "passed",
+            "h1Count": 1,
+            "paintedH1": 1,
+            "placement": "label",
+            "headingSymbolButtonArea": 0,
+            "glyphSymbolLabelArea": 0,
+            "labelPlotArea": 0,
+            "symbolButton": {
+              "w": 88,
+              "h": 44
+            },
+            "duplicateTitles": 0,
+            "overflow": 0
+          },
+          {
+            "id": "ETHUSD-320",
+            "status": "passed",
+            "h1Count": 1,
+            "paintedH1": 1,
+            "placement": "label",
+            "headingSymbolButtonArea": 0,
+            "glyphSymbolLabelArea": 0,
+            "labelPlotArea": 0,
+            "symbolButton": {
+              "w": 88,
+              "h": 44
+            },
+            "duplicateTitles": 0,
+            "overflow": 0
+          },
+          {
+            "id": "MSTR-320",
+            "status": "passed",
+            "h1Count": 1,
+            "paintedH1": 1,
+            "placement": "label",
+            "headingSymbolButtonArea": 0,
+            "glyphSymbolLabelArea": 0,
+            "labelPlotArea": 0,
+            "symbolButton": {
+              "w": 88,
+              "h": 44
+            },
+            "duplicateTitles": 0,
+            "overflow": 0
+          },
+          {
+            "id": "BMNR-320",
+            "status": "passed",
+            "h1Count": 1,
+            "paintedH1": 1,
+            "placement": "label",
+            "headingSymbolButtonArea": 0,
+            "glyphSymbolLabelArea": 0,
+            "labelPlotArea": 0,
+            "symbolButton": {
+              "w": 88,
+              "h": 44
+            },
+            "duplicateTitles": 0,
+            "overflow": 0
+          },
+          {
+            "id": "compare-320",
+            "status": "passed",
+            "h1Count": 1,
+            "paintedH1": 1,
+            "placement": "compare",
+            "headingSymbolButtonArea": 0,
+            "glyphSymbolLabelArea": 0,
+            "labelPlotArea": 0,
+            "symbolButton": {
+              "w": 0,
+              "h": 0
+            },
+            "duplicateTitles": 0,
+            "overflow": 0
+          },
+          {
+            "id": "BTCUSD-768",
+            "status": "passed",
+            "h1Count": 1,
+            "paintedH1": 1,
+            "placement": "label",
+            "headingSymbolButtonArea": 0,
+            "glyphSymbolLabelArea": 0,
+            "labelPlotArea": 0,
+            "symbolButton": {
+              "w": 103.8,
+              "h": 44
+            },
+            "duplicateTitles": 0,
+            "overflow": 0
+          },
+          {
+            "id": "ETHUSD-768",
+            "status": "passed",
+            "h1Count": 1,
+            "paintedH1": 1,
+            "placement": "label",
+            "headingSymbolButtonArea": 0,
+            "glyphSymbolLabelArea": 0,
+            "labelPlotArea": 0,
+            "symbolButton": {
+              "w": 103.8,
+              "h": 44
+            },
+            "duplicateTitles": 0,
+            "overflow": 0
+          },
+          {
+            "id": "MSTR-768",
+            "status": "passed",
+            "h1Count": 1,
+            "paintedH1": 1,
+            "placement": "label",
+            "headingSymbolButtonArea": 0,
+            "glyphSymbolLabelArea": 0,
+            "labelPlotArea": 0,
+            "symbolButton": {
+              "w": 85.9,
+              "h": 44
+            },
+            "duplicateTitles": 0,
+            "overflow": 0
+          },
+          {
+            "id": "BMNR-768",
+            "status": "passed",
+            "h1Count": 1,
+            "paintedH1": 1,
+            "placement": "label",
+            "headingSymbolButtonArea": 0,
+            "glyphSymbolLabelArea": 0,
+            "labelPlotArea": 0,
+            "symbolButton": {
+              "w": 87.6,
+              "h": 44
+            },
+            "duplicateTitles": 0,
+            "overflow": 0
+          },
+          {
+            "id": "compare-768",
+            "status": "passed",
+            "h1Count": 1,
+            "paintedH1": 1,
+            "placement": "compare",
+            "headingSymbolButtonArea": 0,
+            "glyphSymbolLabelArea": 0,
+            "labelPlotArea": 0,
+            "symbolButton": {
+              "w": 0,
+              "h": 0
+            },
+            "duplicateTitles": 0,
+            "overflow": 0
+          },
+          {
+            "id": "BTCUSD-1440",
+            "status": "passed",
+            "h1Count": 1,
+            "paintedH1": 1,
+            "placement": "label",
+            "headingSymbolButtonArea": 0,
+            "glyphSymbolLabelArea": 0,
+            "labelPlotArea": 0,
+            "symbolButton": {
+              "w": 128,
+              "h": 28
+            },
+            "duplicateTitles": 0,
+            "overflow": 0
+          },
+          {
+            "id": "ETHUSD-1440",
+            "status": "passed",
+            "h1Count": 1,
+            "paintedH1": 1,
+            "placement": "label",
+            "headingSymbolButtonArea": 0,
+            "glyphSymbolLabelArea": 0,
+            "labelPlotArea": 0,
+            "symbolButton": {
+              "w": 128,
+              "h": 28
+            },
+            "duplicateTitles": 0,
+            "overflow": 0
+          },
+          {
+            "id": "MSTR-1440",
+            "status": "passed",
+            "h1Count": 1,
+            "paintedH1": 1,
+            "placement": "label",
+            "headingSymbolButtonArea": 0,
+            "glyphSymbolLabelArea": 0,
+            "labelPlotArea": 0,
+            "symbolButton": {
+              "w": 128,
+              "h": 28
+            },
+            "duplicateTitles": 0,
+            "overflow": 0
+          },
+          {
+            "id": "BMNR-1440",
+            "status": "passed",
+            "h1Count": 1,
+            "paintedH1": 1,
+            "placement": "label",
+            "headingSymbolButtonArea": 0,
+            "glyphSymbolLabelArea": 0,
+            "labelPlotArea": 0,
+            "symbolButton": {
+              "w": 128,
+              "h": 28
+            },
+            "duplicateTitles": 0,
+            "overflow": 0
+          },
+          {
+            "id": "compare-1440",
+            "status": "passed",
+            "h1Count": 1,
+            "paintedH1": 1,
+            "placement": "compare",
+            "headingSymbolButtonArea": 0,
+            "glyphSymbolLabelArea": 0,
+            "labelPlotArea": 0,
+            "symbolButton": {
+              "w": 0,
+              "h": 0
+            },
+            "duplicateTitles": 0,
+            "overflow": 0
+          }
+        ],
+        "supplemental": {
+          "total": 9,
+          "passed": 5
+        },
+        "layoutShifts": {
+          "total": 2,
+          "passed": 2
+        }
+      },
+      "supplemental": [
+        {
+          "id": "BTCUSD-390",
+          "status": "passed",
+          "firstFailure": ""
+        },
+        {
+          "id": "ETHUSD-390",
+          "status": "passed",
+          "firstFailure": ""
+        },
+        {
+          "id": "MSTR-390",
+          "status": "passed",
+          "firstFailure": ""
+        },
+        {
+          "id": "BMNR-390",
+          "status": "passed",
+          "firstFailure": ""
+        },
+        {
+          "id": "compare-390",
+          "status": "passed",
+          "firstFailure": ""
+        },
+        {
+          "id": "conference-320",
+          "status": "failed",
+          "firstFailure": "Error: Timed out: conference-320 ready data"
+        },
+        {
+          "id": "conference-390",
+          "status": "failed",
+          "firstFailure": "Error: Timed out: conference-390 ready data"
+        },
+        {
+          "id": "conference-768",
+          "status": "failed",
+          "firstFailure": "Error: Timed out: conference-768 ready data"
+        },
+        {
+          "id": "conference-1440",
+          "status": "failed",
+          "firstFailure": "Error: Timed out: conference-1440 ready data"
+        }
+      ],
+      "reports": {
+        "heading": "build/qa-r16-20261112/heading/report.json",
+        "conference": "build/qa-r16-20261112/conf-browser/report.json",
+        "media": "build/qa-r16-20261112/media-browser/report.json",
+        "a9": "build/qa-r16-20261112/a9/report.json"
+      }
+    },
+    "visual": {
+      "screenshots": "build/qa-r16-20261112/heading/*.png",
+      "count": 20
+    },
+    "accessibility": {
+      "symbolButtonAriaLabel": "종목 선택 · 비트코인 / USD · BTCUSD",
+      "ariaHasPopup": "dialog",
+      "nativeButton": true,
+      "focusOutline": "2px",
+      "targets": {
+        "w320": "88x44",
+        "w768": "104x44",
+        "w1440": "128x28 (데스크톱 fine 포인터, h1용 padding 제거로 원래 높이 복원)"
+      },
+      "h1DescribedBy": "atlas-page-description"
+    },
+    "performance": {
+      "status": "passed",
+      "passed": 6,
+      "total": 6,
+      "paintedMs": [
+        {
+          "id": "390x844",
+          "ms": 2251.9
+        },
+        {
+          "id": "320x740",
+          "ms": 2246.1
+        },
+        {
+          "id": "768x1024",
+          "ms": 2246.6
+        },
+        {
+          "id": "1024x768",
+          "ms": 2270.7
+        },
+        {
+          "id": "1440x900",
+          "ms": 2308.6
+        },
+        {
+          "id": "1920x1080",
+          "ms": 2314.7
+        }
+      ],
+      "budgetMs": 2500
+    },
+    "consistency": {
+      "addedGradients": 0,
+      "addedShadows": 0,
+      "addedBackdrop": 0,
+      "newFontSizes": [
+        "12px"
+      ],
+      "headingColor": "var(--text)"
+    }
+  },
+  "regressions": {
+    "conference": {
+      "status": "passed",
+      "passed": 14,
+      "total": 14
+    },
+    "media": {
+      "status": "passed",
+      "counts": {
+        "cases": 20,
+        "passed": 20,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exitCode": 0,
+      "humanListening": "not-performed"
+    }
+  },
+  "findings": [
+    {
+      "id": "Q-R16-1",
+      "summary": "h1 하네스 컨퍼런스 보충 4케이스가 준비 조건 불일치로 항상 타임아웃",
+      "scope": "harness only",
+      "evidence": {
+        "harnessPredicate": "conference-player.dataset.state === empty",
+        "observedState": "ready",
+        "observed": "boot ready · page conference · h1 컨퍼런스 복습 그려진 1개 · 320/390/768/1440 오버플로 0"
+      },
+      "interim": "R19 P5(테스트 정비)로 이관",
+      "productDefect": false
+    }
+  ]
+}

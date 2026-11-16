@@ -1,0 +1,336 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-conference-p1c-b-verification",
+  "recordedAt": "2026-11-12T04:18:27.183929+00:00",
+  "testSourceBase": "97154333e039b97c8eadd1864edba743b58323a2",
+  "integratedParent": "9cc24f155303fe1a432ec134e7c7c00361e1340f",
+  "upstreamDocumentationPreserved": [
+    "29f1646",
+    "9cc24f1"
+  ],
+  "upstreamExecutableChanges": false,
+  "sourceHashes": {
+    "scripts/verify-conference-media-browser.mjs": "5a49d09195555309652839217af05ca76df93af31a10fdb99bb0d8184d212639",
+    "scripts/conference-media-browser-contract.mjs": "ad6dab083488d1bae5186969bebbca6d713273ea528d6e5952b7be31be92f914",
+    "scripts/conference-media-server.mjs": "0606548a5cf1f2739ce057ae184cbd37f55dbe9d2ad96d81be8b30abd38afdd9",
+    "tests/conference-media-build.test.mjs": "341fb34555fe1deca7064e7e7ff3ffd667fd55b4b360158087343f1bd1c1c9e1",
+    "tests/conference-media-browser-contract.test.mjs": "6d25f2070e1b0d070fd52244e1d922d2ed8a3923fa13591553f12bd2fedb7fb1",
+    "tests/conference-media-browser.test.mjs": "8cd95fe09cd04c6daff66b6469f6b9ea118c2bf34313d191bf65e37f9548ef1c",
+    "tests/conference-media-server.test.mjs": "5f8038864c9d63834cc73769f1b461ba63bcc4e3dfdeeac16354e62a311960d4",
+    "package.json": "847bfd2ec1883331ae147d5dff2f8ffa3c598958b76e91207e80109af4add977"
+  },
+  "environment": {
+    "node": "v24.22.2",
+    "platform": "linux",
+    "architecture": "x64",
+    "python": "3.12.14",
+    "ffmpeg": "7.1.5",
+    "ffprobe": "7.1.5",
+    "pymupdf": "1.26.6",
+    "pillow": "13.0.0",
+    "newToolInstallations": 0,
+    "browserLaunches": 0
+  },
+  "commands": [
+    {
+      "command": "node --test --test-reporter=tap tests/conference-media-build.test.mjs tests/conference-media-browser-contract.test.mjs tests/conference-media-browser.test.mjs tests/conference-media-server.test.mjs",
+      "exit": 0,
+      "counts": {
+        "tests": 60,
+        "pass": 60,
+        "fail": 0,
+        "skipped": 0
+      },
+      "durationMs": 25678.268541,
+      "suites": {
+        "buildFixtures": 18,
+        "playbackPlanAndContinuity": 15,
+        "cliAndBrowserHttp": 8,
+        "httpServer": 19
+      }
+    },
+    {
+      "command": "npm test",
+      "exit": 0,
+      "complete": true,
+      "tests": 3563,
+      "pass": 3563,
+      "fail": 0,
+      "skipped": 0,
+      "batches": 1,
+      "durationMs": 199341.711185
+    },
+    {
+      "command": "npm run typecheck",
+      "exit": 0,
+      "errors": 0
+    },
+    {
+      "command": "npm run verify:static",
+      "exit": 0,
+      "files": 968,
+      "checkedScripts": 219,
+      "checkedReferences": 972
+    },
+    {
+      "command": "npm run verify:conference -- --timeline dist/conference/timeline.json --sources docs/conference/source-segments.json --out build/p1cb-timeline-verification.json",
+      "exit": 0,
+      "segments": 9168,
+      "expected": 9168,
+      "missing": 0,
+      "unexpected": 0,
+      "duplicates": 0,
+      "changed": 0
+    },
+    {
+      "command": "node scripts/build-site-styles.mjs --check",
+      "exit": 0,
+      "sourceStylesheets": 41,
+      "generatedFiles": 2
+    },
+    {
+      "command": "node scripts/build-site-preloads.mjs --check",
+      "exit": 0,
+      "moduleUrls": 55,
+      "conferenceModulePreloads": 54,
+      "sharedModulePreloads": 1,
+      "staticImportEdges": 81
+    },
+    {
+      "command": "npm run verify:conference:media -- --dist dist --out build/p1cb-media-browser-linux-integrated",
+      "exit": 2,
+      "status": "skipped",
+      "browserLaunched": false,
+      "cases": 0,
+      "passed": 0,
+      "skipped": 1
+    },
+    {
+      "command": "npm run verify:pages",
+      "exit": 1,
+      "knownExistingFailure": "Pages artifact file coverage changed",
+      "committedAsset": "market-lab/app/assets/index-ByyNTPeH.js",
+      "rebuiltAsset": "market-lab/app/assets/index-C6TQnx3Q.js"
+    }
+  ],
+  "logs": {
+    "p1cb-npm-test-final.log": {
+      "file": "build/p1cb-npm-test-final.log",
+      "bytes": 855550,
+      "sha256": "9df06ba26f39ebe3221a2ca64510444b4280ac7dc4c362db9804ca8af1d47cd2"
+    },
+    "p1cb-media-tests-final.log": {
+      "file": "build/p1cb-media-tests-final.log",
+      "bytes": 14276,
+      "sha256": "b090d42454e8f58ad22f65a9f1a31af0234c65e10fad882743ef650b4d28f2cc"
+    },
+    "p1cb-typecheck.log": {
+      "file": "build/p1cb-typecheck.log",
+      "bytes": 206,
+      "sha256": "d9185066952b9395d37541b6167aa9e7b4bb93fd4f5a9ec49f0afba63fa3697d"
+    },
+    "p1cb-static.log": {
+      "file": "build/p1cb-static.log",
+      "bytes": 354,
+      "sha256": "20bb18326d53d16da3dedefaf95bbcc89dcf5cadd6a752e203ed095a53fa296b"
+    },
+    "p1cb-timeline.log": {
+      "file": "build/p1cb-timeline.log",
+      "bytes": 1342,
+      "sha256": "f49eab7d064c17ab4abf56fb540f853635b088b468eb995bfbe467557d7f73f7"
+    },
+    "p1cb-pages.log": {
+      "file": "build/p1cb-pages.log",
+      "bytes": 5116,
+      "sha256": "b65f82b88e4c3e919e972dd5a09baa5d70f095090e5520d325c9979c23349096"
+    },
+    "p1cb-media-browser-linux-integrated.log": {
+      "file": "build/p1cb-media-browser-linux-integrated.log",
+      "bytes": 615,
+      "sha256": "09a34c3e2f55b0293a477459f73b43b5bd96642ea15e141b9788a003ff480e74"
+    }
+  },
+  "shortPcmFixture": {
+    "marker": "Info",
+    "originalFrames": 43,
+    "declaredFrames": 64,
+    "probeDurationSec": 1.536,
+    "decodedSamples": 48431,
+    "requiredDurationSec": 1.25,
+    "requiredSamples": 60000
+  },
+  "timelineVerification": {
+    "schemaVersion": 1,
+    "kind": "atlas-conference-timeline-verification",
+    "recordedAt": "2026-11-12T04:08:16.389Z",
+    "status": "passed",
+    "valid": true,
+    "syntheticFixture": false,
+    "timeline": {
+      "file": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/dist/conference/timeline.json",
+      "bytes": 1044921,
+      "sha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad"
+    },
+    "sources": {
+      "file": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/docs/conference/source-segments.json",
+      "bytes": 985201,
+      "sha256": "894bbd9598e7766d0790f92ae74f9274ef891fcdda71abdc58dd2c04ed5a35a6"
+    },
+    "summary": {
+      "audioDurationSec": 20400,
+      "segmentCount": 9168,
+      "talkCount": 15,
+      "deckCount": 2,
+      "lastSegmentT1": 20396.7,
+      "coverage": {
+        "checked": true,
+        "expectedCount": 9168,
+        "missing": [],
+        "unexpected": [],
+        "duplicates": [],
+        "changed": []
+      }
+    },
+    "errors": []
+  },
+  "mediaBrowser": {
+    "schemaVersion": 1,
+    "kind": "atlas-conference-p1c-b-media-browser",
+    "status": "skipped",
+    "startedAt": "2026-11-12T04:17:42.942Z",
+    "sourceCommit": "9cc24f155303fe1a432ec134e7c7c00361e1340f",
+    "workingChanges": "M docs/conference/P1C_A_MEDIA_CONTRACT_20261112.md\n M package.json\n M tests/conference-media-build.test.mjs\n?? docs/conference/P1C_A_MACOS_RENDER_20261112.json\n?? docs/conference/P1C_B_MEDIA_VERIFICATION_20261112.md\n?? scripts/conference-media-browser-contract.mjs\n?? scripts/conference-media-server.mjs\n?? scripts/verify-conference-media-browser.mjs\n?? tests/conference-media-browser-contract.test.mjs\n?? tests/conference-media-browser.test.mjs\n?? tests/conference-media-server.test.mjs",
+    "dist": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/dist",
+    "syntheticFixture": false,
+    "productionDeployment": false,
+    "humanListening": "not-performed",
+    "browserLaunched": false,
+    "viewport": {
+      "width": 1440,
+      "height": 900,
+      "mobile": false
+    },
+    "network": {
+      "local": true,
+      "cacheDisabled": true,
+      "encoding": "identity",
+      "cpuThrottling": 1,
+      "throttled": false
+    },
+    "budgets": {
+      "pageTransitionMs": 150,
+      "initialLoad": "not-measured; use unchanged A-9 fast4g harness"
+    },
+    "cases": [],
+    "failures": [],
+    "skipReason": "media manifest declares unavailable; real media checks were not run",
+    "harnessSources": {
+      "scripts/verify-conference-media-browser.mjs": "5a49d09195555309652839217af05ca76df93af31a10fdb99bb0d8184d212639",
+      "scripts/conference-media-browser-contract.mjs": "ad6dab083488d1bae5186969bebbca6d713273ea528d6e5952b7be31be92f914",
+      "scripts/conference-media-server.mjs": "0606548a5cf1f2739ce057ae184cbd37f55dbe9d2ad96d81be8b30abd38afdd9",
+      "scripts/headless-browser-window.mjs": "eeda1713107d631cb9766a3b487bc9e8e61c2ece4e67dff2fc081b8cba3ff812"
+    },
+    "preflight": {
+      "status": "skipped",
+      "passed": false,
+      "skipped": true,
+      "reason": "media manifest declares unavailable; real media checks were not run",
+      "errors": [],
+      "dist": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/dist",
+      "identities": {
+        "manifest": {
+          "file": "conference/media-manifest.json",
+          "bytes": 167,
+          "sha256": "ff3e3f2b16f4435e71c5e9f07740a9a2af2b9e9fe46aaf013f70972a658d0088"
+        },
+        "timeline": {
+          "file": "conference/timeline.json",
+          "bytes": 1044921,
+          "sha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad"
+        }
+      },
+      "counts": {
+        "pageCount": 0,
+        "audioCount": 0,
+        "assetCount": 0,
+        "assetBytes": 0,
+        "fileCount": 0,
+        "siteFileCount": 0,
+        "verifiedAssetCount": 0
+      },
+      "assets": []
+    },
+    "unexecuted": [
+      "real image decoding/transitions",
+      "native audio playback/session seeks",
+      "session-13 source join continuity",
+      "installed-media HTTP Range/206",
+      "browser missing/unavailable fallback"
+    ],
+    "finishedAt": "2026-11-12T04:17:43.021Z",
+    "exitCode": 2,
+    "counts": {
+      "cases": 0,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 1
+    }
+  },
+  "plannedNotExecuted": {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "browserCases": 20,
+    "timelinePageTransitions": 200,
+    "mappedPagesByDeck": {
+      "final-290": 73,
+      "r17-clean-257": 127
+    },
+    "sessionSeekAndPlay": 15,
+    "sessionBoundaries": 14,
+    "sourceJoin": {
+      "session": "session-13",
+      "eventTime": 18000,
+      "localTime": 43.49
+    },
+    "fallbackCases": 2,
+    "httpHeadAssets": 562,
+    "httpValidRanges": 45,
+    "httpUnsatisfiableRanges": 15
+  },
+  "notRun": [
+    "real source render/check in Linux",
+    "real-media browser playback/image decode/150ms measurement",
+    "installed-media HTTP audit",
+    "macOS FFmpeg9 corrected padding fixture",
+    "A-9 and existing conference/heading/compare/responsive/WP6/chart-qa browsers",
+    "Cloudflare production build and deployment",
+    "human listening/visual review",
+    "A-10 one-hour memory"
+  ],
+  "scopeChecks": {
+    "productDistUnchanged": true,
+    "mediaGeneratorAndRendererUnchanged": true,
+    "requirementsPinsUnchanged": true,
+    "existingBrowserHarnessesUnchanged": true,
+    "gitignoreUnchanged": true,
+    "mediaFilesCommitted": 0
+  },
+  "priorInvocations": [
+    {
+      "command": "npm test",
+      "exit": 0,
+      "tests": 3561,
+      "pass": 3561,
+      "fail": 0,
+      "skipped": 0,
+      "note": "Before two additional capture timestamp regression tests; superseded by final3563 suite."
+    },
+    {
+      "command": "npm run verify:conference",
+      "exit": 1,
+      "note": "Missing required timeline/source CLI arguments; usage output only, followed by explicit coverage command above."
+    }
+  ]
+}

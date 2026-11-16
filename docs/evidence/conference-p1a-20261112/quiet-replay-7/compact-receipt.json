@@ -1,0 +1,702 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-eth-candidate-browser-compact-receipt",
+  "recordedAt": "2026-11-11T20:15:25.260263Z",
+  "scope": "Actual final-source local Linux/Chrome chart-replay scope rerun. Seven declared chart-replay cases executed; this is not a full 53-case rerun, Safari or physical-device claim.",
+  "status": "passed",
+  "observedExitCode": 0,
+  "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "sourceTree": "7ce03ecfccd2b953c50d4f0efd10afa45b97a790",
+  "startedAt": "2026-11-11T20:01:32.163Z",
+  "finishedAt": "2026-11-11T20:13:40.390Z",
+  "browserVersion": {
+    "protocolVersion": "1.3",
+    "product": "HeadlessChrome/157.0.8103.38",
+    "revision": "@a733b5afbb3ba618844ff8876b89ad1a774b2f18",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.8103.38 Safari/537.36",
+    "jsVersion": "15.7.112.23"
+  },
+  "caseScope": "chart-replay",
+  "declaredCaseCount": 53,
+  "expectedCaseCount": 7,
+  "counts": {
+    "executed": 7,
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0
+  },
+  "sourceIntegrity": {
+    "checkedFiles": 158,
+    "changedSources": [],
+    "unchangedDuringRun": true
+  },
+  "recordedRuntimeErrors": 0,
+  "cleanupError": null,
+  "rawReport": {
+    "file": "report.json",
+    "bytes": 3739169,
+    "sha256": "1add8bedfd19cddd2fb480c8af8620002d07241735b3063953bdf24bfae09490"
+  },
+  "rawLog": {
+    "file": "../p1a-chart-replay-quiet.log",
+    "bytes": 7270777,
+    "sha256": "bfcd2551177ed5b35d22c072412aca7c9bb8c1e6779834163c2d9f7786becf2a"
+  },
+  "screenshotValidation": {
+    "file": "screenshot-validation.json",
+    "bytes": 30215,
+    "sha256": "7f969c31c41feb62ddbb85f44bf2e415406c32f07a13f98a1814b650692ebf35",
+    "valid": true,
+    "references": 111,
+    "uniqueFiles": 111,
+    "validatedReferences": 111,
+    "failures": 0
+  },
+  "cases": [
+    {
+      "case": 1,
+      "caseSpec": {
+        "symbol": "BTCUSD",
+        "surface": "btc",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "page": "chart-replay-btc",
+        "chartReplay": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 2,
+      "caseSpec": {
+        "symbol": "BTCUSD",
+        "surface": "btc",
+        "width": 320,
+        "height": 568,
+        "touch": true,
+        "page": "chart-replay-btc",
+        "chartReplay": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 3,
+      "caseSpec": {
+        "symbol": "BTCUSD",
+        "surface": "btc",
+        "width": 900,
+        "height": 430,
+        "touch": true,
+        "page": "chart-replay-btc",
+        "chartReplay": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 4,
+      "caseSpec": {
+        "symbol": "ETHUSD",
+        "surface": "eth",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "page": "chart-replay-eth",
+        "chartReplay": true,
+        "route": "/?symbol=ETHUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 5,
+      "caseSpec": {
+        "symbol": "ETHUSD",
+        "surface": "eth",
+        "width": 320,
+        "height": 568,
+        "touch": true,
+        "page": "chart-replay-eth",
+        "chartReplay": true,
+        "route": "/?symbol=ETHUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 6,
+      "caseSpec": {
+        "symbol": "MSTR",
+        "surface": "mstr",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "page": "chart-replay-mstr",
+        "chartReplay": true,
+        "route": "/?symbol=MSTR&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 7,
+      "caseSpec": {
+        "symbol": "BMNR",
+        "surface": "bmnr",
+        "width": 390,
+        "height": 844,
+        "touch": true,
+        "page": "chart-replay-bmnr",
+        "chartReplay": true,
+        "route": "/?symbol=BMNR&granularity=daily&type=line"
+      },
+      "status": "passed"
+    }
+  ],
+  "cadence": [
+    {
+      "case": 1,
+      "caseSpec": {
+        "symbol": "BTCUSD",
+        "surface": "btc",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "page": "chart-replay-btc",
+        "chartReplay": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "measurements": [
+        {
+          "speed": 10,
+          "expectedMilliseconds": 100,
+          "observations": [
+            {
+              "cursor": "2026-10-21",
+              "at": 21066.10000000149
+            },
+            {
+              "cursor": "2026-10-22",
+              "at": 21297.5
+            },
+            {
+              "cursor": "2026-10-23",
+              "at": 21376.60000000149
+            },
+            {
+              "cursor": "2026-10-24",
+              "at": 21475.199999999255
+            },
+            {
+              "cursor": "2026-10-25",
+              "at": 21592.199999999255
+            },
+            {
+              "cursor": "2026-10-26",
+              "at": 21736.300000000745
+            },
+            {
+              "cursor": "2026-10-27",
+              "at": 21864.699999999255
+            },
+            {
+              "cursor": "2026-10-28",
+              "at": 21976.900000002235
+            },
+            {
+              "cursor": "2026-10-29",
+              "at": 22068.300000000745
+            },
+            {
+              "cursor": "2026-10-30",
+              "at": 22178.199999999255
+            },
+            {
+              "cursor": "2026-10-31",
+              "at": 22281.699999999255
+            },
+            {
+              "cursor": "2026-11-01",
+              "at": 22367.5
+            },
+            {
+              "cursor": "2026-11-02",
+              "at": 22502.900000002235
+            },
+            {
+              "cursor": "2026-11-03",
+              "at": 22695.10000000149
+            },
+            {
+              "cursor": "2026-11-04",
+              "at": 22786.60000000149
+            },
+            {
+              "cursor": "2026-11-05",
+              "at": 22876.699999999255
+            },
+            {
+              "cursor": "2026-11-06",
+              "at": 22961
+            }
+          ],
+          "intervals": [
+            231.39999999850988,
+            79.10000000149012,
+            98.59999999776483,
+            117,
+            144.10000000149012,
+            128.39999999850988,
+            112.20000000298023,
+            91.39999999850988,
+            109.89999999850988,
+            103.5,
+            85.80000000074506,
+            135.40000000223517,
+            192.19999999925494,
+            91.5,
+            90.09999999776483,
+            84.30000000074506
+          ],
+          "meanMilliseconds": 118.43124999990687,
+          "averageUpdatesPerSecond": 8.443717346568464,
+          "allowedMeanRatio": [
+            0.85,
+            1.3
+          ],
+          "completionTimeoutMilliseconds": 7210,
+          "setupAllowanceMilliseconds": 5000
+        },
+        {
+          "speed": 1,
+          "expectedMilliseconds": 1000,
+          "observations": [
+            {
+              "cursor": "2026-10-21",
+              "at": 138556
+            },
+            {
+              "cursor": "2026-10-22",
+              "at": 139577.1000000015
+            },
+            {
+              "cursor": "2026-10-23",
+              "at": 140550.30000000075
+            },
+            {
+              "cursor": "2026-10-24",
+              "at": 141577.30000000075
+            },
+            {
+              "cursor": "2026-10-25",
+              "at": 142564
+            },
+            {
+              "cursor": "2026-10-26",
+              "at": 143587.5
+            },
+            {
+              "cursor": "2026-10-27",
+              "at": 144567.19999999925
+            },
+            {
+              "cursor": "2026-10-28",
+              "at": 145547.90000000224
+            },
+            {
+              "cursor": "2026-10-29",
+              "at": 146544.30000000075
+            },
+            {
+              "cursor": "2026-10-30",
+              "at": 147589.6000000015
+            },
+            {
+              "cursor": "2026-10-31",
+              "at": 148531.1000000015
+            },
+            {
+              "cursor": "2026-11-01",
+              "at": 149564.19999999925
+            },
+            {
+              "cursor": "2026-11-02",
+              "at": 150533.30000000075
+            },
+            {
+              "cursor": "2026-11-03",
+              "at": 151539.30000000075
+            },
+            {
+              "cursor": "2026-11-04",
+              "at": 152547.5
+            },
+            {
+              "cursor": "2026-11-05",
+              "at": 153584.30000000075
+            },
+            {
+              "cursor": "2026-11-06",
+              "at": 154597.19999999925
+            }
+          ],
+          "intervals": [
+            1021.1000000014901,
+            973.1999999992549,
+            1027,
+            986.6999999992549,
+            1023.5,
+            979.6999999992549,
+            980.7000000029802,
+            996.3999999985099,
+            1045.300000000745,
+            941.5,
+            1033.0999999977648,
+            969.1000000014901,
+            1006,
+            1008.1999999992549,
+            1036.800000000745,
+            1012.8999999985099
+          ],
+          "meanMilliseconds": 1002.5749999999534,
+          "averageUpdatesPerSecond": 0.9974316135950392,
+          "allowedMeanRatio": [
+            0.85,
+            1.3
+          ],
+          "completionTimeoutMilliseconds": 27100,
+          "setupAllowanceMilliseconds": 5000
+        },
+        {
+          "speed": 0.5,
+          "expectedMilliseconds": 2000,
+          "observations": [
+            {
+              "cursor": "2026-10-21",
+              "at": 160529.69999999925
+            },
+            {
+              "cursor": "2026-10-22",
+              "at": 162527.6000000015
+            },
+            {
+              "cursor": "2026-10-23",
+              "at": 164604.5
+            },
+            {
+              "cursor": "2026-10-24",
+              "at": 166523
+            },
+            {
+              "cursor": "2026-10-25",
+              "at": 168530.69999999925
+            },
+            {
+              "cursor": "2026-10-26",
+              "at": 170515.30000000075
+            },
+            {
+              "cursor": "2026-10-27",
+              "at": 172525.90000000224
+            },
+            {
+              "cursor": "2026-10-28",
+              "at": 174534.40000000224
+            },
+            {
+              "cursor": "2026-10-29",
+              "at": 176518.80000000075
+            },
+            {
+              "cursor": "2026-10-30",
+              "at": 178533.19999999925
+            },
+            {
+              "cursor": "2026-10-31",
+              "at": 180692.90000000224
+            },
+            {
+              "cursor": "2026-11-01",
+              "at": 182543.80000000075
+            },
+            {
+              "cursor": "2026-11-02",
+              "at": 184533.30000000075
+            },
+            {
+              "cursor": "2026-11-03",
+              "at": 186511.1000000015
+            },
+            {
+              "cursor": "2026-11-04",
+              "at": 188514.6000000015
+            },
+            {
+              "cursor": "2026-11-05",
+              "at": 190548.19999999925
+            },
+            {
+              "cursor": "2026-11-06",
+              "at": 192502.30000000075
+            }
+          ],
+          "intervals": [
+            1997.9000000022352,
+            2076.89999999851,
+            1918.5,
+            2007.699999999255,
+            1984.6000000014901,
+            2010.6000000014901,
+            2008.5,
+            1984.3999999985099,
+            2014.3999999985099,
+            2159.7000000029802,
+            1850.8999999985099,
+            1989.5,
+            1977.800000000745,
+            2003.5,
+            2033.5999999977648,
+            1954.1000000014901
+          ],
+          "meanMilliseconds": 1998.2875000000931,
+          "averageUpdatesPerSecond": 0.5004284918961628,
+          "allowedMeanRatio": [
+            0.85,
+            1.3
+          ],
+          "completionTimeoutMilliseconds": 49200,
+          "setupAllowanceMilliseconds": 5000
+        },
+        {
+          "speed": 0.3,
+          "expectedMilliseconds": 3000,
+          "observations": [
+            {
+              "cursor": "2026-10-21",
+              "at": 199290.6000000015
+            },
+            {
+              "cursor": "2026-10-22",
+              "at": 202256.6000000015
+            },
+            {
+              "cursor": "2026-10-23",
+              "at": 205252.19999999925
+            },
+            {
+              "cursor": "2026-10-24",
+              "at": 208265
+            },
+            {
+              "cursor": "2026-10-25",
+              "at": 211256.80000000075
+            },
+            {
+              "cursor": "2026-10-26",
+              "at": 214276.1000000015
+            },
+            {
+              "cursor": "2026-10-27",
+              "at": 217302.19999999925
+            },
+            {
+              "cursor": "2026-10-28",
+              "at": 220285.6000000015
+            },
+            {
+              "cursor": "2026-10-29",
+              "at": 223465
+            },
+            {
+              "cursor": "2026-10-30",
+              "at": 226281.19999999925
+            },
+            {
+              "cursor": "2026-10-31",
+              "at": 229290.40000000224
+            },
+            {
+              "cursor": "2026-11-01",
+              "at": 232263.6000000015
+            },
+            {
+              "cursor": "2026-11-02",
+              "at": 235324.19999999925
+            },
+            {
+              "cursor": "2026-11-03",
+              "at": 238279.5
+            },
+            {
+              "cursor": "2026-11-04",
+              "at": 241295
+            },
+            {
+              "cursor": "2026-11-05",
+              "at": 244260.1000000015
+            },
+            {
+              "cursor": "2026-11-06",
+              "at": 247253.6000000015
+            }
+          ],
+          "intervals": [
+            2966,
+            2995.599999997765,
+            3012.800000000745,
+            2991.800000000745,
+            3019.300000000745,
+            3026.099999997765,
+            2983.400000002235,
+            3179.39999999851,
+            2816.199999999255,
+            3009.2000000029802,
+            2973.199999999255,
+            3060.599999997765,
+            2955.300000000745,
+            3015.5,
+            2965.10000000149,
+            2993.5
+          ],
+          "meanMilliseconds": 2997.6875,
+          "averageUpdatesPerSecond": 0.33359047599191044,
+          "allowedMeanRatio": [
+            0.85,
+            1.3
+          ],
+          "completionTimeoutMilliseconds": 71300,
+          "setupAllowanceMilliseconds": 5000
+        }
+      ],
+      "earlyCadence": {
+        "status": "passed",
+        "startedAt": "2026-11-11T20:01:49.163Z",
+        "completedAt": "2026-11-11T20:02:02.507Z",
+        "fixture": {
+          "origin": "2026-10-20",
+          "displayFrequency": "weekly",
+          "updateInterval": "daily",
+          "viewStart": "2024-11-06",
+          "viewEnd": "2028-11-06"
+        },
+        "measurement": {
+          "speed": 10,
+          "expectedMilliseconds": 100,
+          "observations": [
+            {
+              "cursor": "2026-10-21",
+              "at": 21066.10000000149
+            },
+            {
+              "cursor": "2026-10-22",
+              "at": 21297.5
+            },
+            {
+              "cursor": "2026-10-23",
+              "at": 21376.60000000149
+            },
+            {
+              "cursor": "2026-10-24",
+              "at": 21475.199999999255
+            },
+            {
+              "cursor": "2026-10-25",
+              "at": 21592.199999999255
+            },
+            {
+              "cursor": "2026-10-26",
+              "at": 21736.300000000745
+            },
+            {
+              "cursor": "2026-10-27",
+              "at": 21864.699999999255
+            },
+            {
+              "cursor": "2026-10-28",
+              "at": 21976.900000002235
+            },
+            {
+              "cursor": "2026-10-29",
+              "at": 22068.300000000745
+            },
+            {
+              "cursor": "2026-10-30",
+              "at": 22178.199999999255
+            },
+            {
+              "cursor": "2026-10-31",
+              "at": 22281.699999999255
+            },
+            {
+              "cursor": "2026-11-01",
+              "at": 22367.5
+            },
+            {
+              "cursor": "2026-11-02",
+              "at": 22502.900000002235
+            },
+            {
+              "cursor": "2026-11-03",
+              "at": 22695.10000000149
+            },
+            {
+              "cursor": "2026-11-04",
+              "at": 22786.60000000149
+            },
+            {
+              "cursor": "2026-11-05",
+              "at": 22876.699999999255
+            },
+            {
+              "cursor": "2026-11-06",
+              "at": 22961
+            }
+          ],
+          "intervals": [
+            231.39999999850988,
+            79.10000000149012,
+            98.59999999776483,
+            117,
+            144.10000000149012,
+            128.39999999850988,
+            112.20000000298023,
+            91.39999999850988,
+            109.89999999850988,
+            103.5,
+            85.80000000074506,
+            135.40000000223517,
+            192.19999999925494,
+            91.5,
+            90.09999999776483,
+            84.30000000074506
+          ],
+          "meanMilliseconds": 118.43124999990687,
+          "averageUpdatesPerSecond": 8.443717346568464,
+          "allowedMeanRatio": [
+            0.85,
+            1.3
+          ],
+          "completionTimeoutMilliseconds": 7210,
+          "setupAllowanceMilliseconds": 5000
+        },
+        "restoration": {
+          "frequency": "daily",
+          "cursor": "2026-10-20",
+          "outputHash": "db161473898087b9523c8645bee776e3d9c4f648b4f346526c224849393c4803",
+          "viewStart": "2024-11-06",
+          "viewEnd": "2028-11-06",
+          "persistedStateSha256": "e4f52acab933d3c642cc2ecd286f3e81bd507169df8338e07a5e71efcec41b7c",
+          "unchanged": true
+        }
+      },
+      "derivedEarlyObservationWindow": {
+        "basis": "Initial retained document performance.timeOrigin + the early 10x measurement performance.now values.",
+        "documentTimeOriginMilliseconds": 1794427293495.4,
+        "documentTimeOriginUTC": "2026-11-11T20:01:33.495400Z",
+        "firstObservationUTC": "2026-11-11T20:01:54.561500Z",
+        "lastObservationUTC": "2026-11-11T20:01:56.456400Z"
+      }
+    }
+  ],
+  "failures": [],
+  "interpretation": "All seven targeted chart-replay cases passed with their existing thresholds. The earlier full 53-case run on 180c55d remains recorded as 52 passed and 1 failed; these runs are not spliced into a 53/53 pass. This rerun alone does not establish the cause of the earlier timing failure."
+}

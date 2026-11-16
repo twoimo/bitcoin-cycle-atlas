@@ -37,7 +37,7 @@ body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface
 .eth-ohlc-details>summary::-webkit-details-marker{display:none}
 .eth-ohlc-details>summary::before{content:"";position:absolute;inset:-13px -6px}
 .eth-ohlc-details>summary:focus-visible{outline:2px solid var(--eth-view-rule);outline-offset:2px}
-.eth-ohlc{position:absolute;top:calc(100% + 5px);left:0;display:flex;gap:14px;padding:5px 8px;background:var(--atlas-surface);border:1px solid var(--eth-view-rule-3);border-radius:2px;font-size:11px;color:var(--eth-view-ink-13);z-index:3;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+.eth-ohlc{position:absolute;top:calc(100% + 5px);left:0;display:flex;gap:14px;padding:5px 8px;background:var(--atlas-surface);border:1px solid var(--eth-view-rule-3);border-radius:2px;font-size:11px;color:var(--eth-view-ink-13);z-index:3;box-shadow:0 4px 12px var(--shadow-color)}
 .eth-ohlc-details:not([open])>.eth-ohlc{display:none}
 .eth-ohlc i{font-style:normal;color:var(--eth-view-ink-14);margin-right:2px}
 .eth-empty{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:var(--atlas-surface);color:var(--eth-view-ink-15);font-size:12px}
@@ -73,7 +73,10 @@ body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface
   .eth-topbar .workbench-symbol{font-size:12px;padding:4px 8px}
   .eth-app .eth-icon{height:34px;width:33px;padding:8px}
   .eth-divider{margin:0 1px}.eth-top-spacer{min-width:0}
-  .eth-readout{top:7px;left:9px;max-width:calc(100% - 18px)}.eth-readout-line{flex-wrap:wrap;row-gap:1px}.eth-readout-source{top:48px;left:9px}.eth-readout-name{display:none}.eth-readout-line>strong{font-size:16px}
+  /* Reserve the measured price gutter plus its 7px gap; wrap complete values
+     and the date before the axis instead of clipping the readout. The source
+     starts after the 7px inset and the full 44px two-line readout budget. */
+  .eth-readout{top:7px;left:9px;max-width:calc(100% - var(--plot-right-gap,71px) - 9px)}.eth-readout-line{flex-wrap:wrap;row-gap:1px}.eth-readout-source{top:52px;left:9px}.eth-readout-name{display:none}.eth-readout-line>strong{font-size:16px}
   .eth-ohlc{gap:12px;font-size:11px}.eth-venue{font-size:11px}#eth-bar-time{font-size:11px}
   .eth-bottom{gap:1px;padding:0 4px env(safe-area-inset-bottom,0px)}.eth-periods{display:none}#eth-period-select{display:block;max-width:66px;font-size:11px;padding:4px 4px}
   #eth-status{padding:0 4px;font-size:11px}.eth-timezone{padding:0 4px;font-size:11px}.eth-bottom button{padding:4px 8px}
@@ -83,7 +86,7 @@ body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface
 @media(max-width:360px){.eth-topbar{gap:4px}.eth-app .eth-icon{width:30px}.eth-chart-types{gap:0}.eth-ohlc{gap:8px}#eth-status{font-size:11px}}
 @media(max-height:420px){.eth-readout{top:3px}.eth-readout-source{top:24px}.eth-readout-name{display:none}.eth-readout-line>strong{font-size:14px}.eth-ohlc{font-size:11px}.eth-plot .chart-navigation{bottom:43px}}
 .eth-forecast-note{position:absolute;left:13px;right:12px;top:54px;display:flex;flex-wrap:wrap;gap:4px 12px;line-height:1.25;font-size:11px;color:var(--equity-view-ink-8);pointer-events:none;white-space:nowrap;overflow:hidden}.eth-forecast-note .eth-sample-key,.eth-forecast-note .eth-envelope-key,#eth-kind{color:var(--equity-view-ink-9)}.eth-forecast-note .eth-baseline-key{color:var(--eth-view-ink-28)}.eth-forecast-note .eth-sample-key{flex-basis:100%}#eth-kind{font-size:11px}.eth-forecast-controls{display:grid;gap:12px;font-size:12px}.eth-forecast-controls select{min-width:0;width:100%;padding:8px;background:var(--equity-view-surface-6);color:var(--equity-view-ink-18);border:1px solid var(--equity-view-rule-2);border-radius:5px;font:inherit}.eth-data-dialog [data-open-forecast-journal]{font:inherit;font-size:12px;padding:8px;border:1px solid var(--equity-view-rule-2);background:var(--equity-view-surface-5);color:var(--equity-view-ink-12);border-radius:5px;cursor:pointer}.eth-data-dialog select:focus-visible,.eth-data-dialog [data-open-forecast-journal]:focus-visible{outline:2px solid var(--equity-view-rule-3);outline-offset:2px}.eth-plot .equity-forecast-evidence{cursor:pointer}.eth-plot .equity-forecast-evidence:focus-visible circle{stroke:var(--chart-details-panel-rule-8);stroke-width:3}
-@media(max-width:620px){body[data-market="ETHUSD"] .eth-topbar .eth-icon{width:29px;padding:8px}.eth-forecast-note{top:68px;left:10px;gap:4px 12px;font-size:11px}#eth-kind{font-size:11px}}
+@media(max-width:620px){body[data-market="ETHUSD"] .eth-topbar .eth-icon{width:29px;padding:8px}.eth-forecast-note{top:72px;left:10px;gap:4px 12px;font-size:11px}#eth-kind{font-size:11px}}
 @media(max-width:360px){body[data-market="ETHUSD"] .eth-topbar .eth-icon{width:25px;padding:4px}body[data-market="ETHUSD"] .eth-divider{display:none}body[data-market="ETHUSD"] .eth-topbar{gap:2px}}
 
 /* ETH and equities occupy the same shell as BTC. Asset-specific chart/model
@@ -108,7 +111,7 @@ body[data-shell=chart] .native-chart-workbench .workbench-update :is(#eth-status
 .native-reader-action{display:block;box-sizing:border-box;width:100%;min-height:36px;margin:4px 0;padding:8px 12px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font:12px var(--font);text-align:left;text-decoration:none;cursor:pointer}
 .native-reader-action:hover{background:var(--surface-hover)}
 .native-command-search,.native-date-form>label{display:flex;flex-direction:column;gap:8px;margin:8px 0;font-size:12px;color:var(--muted)}
-.native-command-search input,.native-date-form :is(input,select){box-sizing:border-box;min-width:0;width:100%;min-height:36px;padding:8px;border:1px solid var(--border-strong);border-radius:4px;color:var(--text);background:var(--surface);font:12px var(--font);color-scheme:dark}
+.native-command-search input,.native-date-form :is(input,select){box-sizing:border-box;min-width:0;width:100%;min-height:36px;padding:8px;border:1px solid var(--border-strong);border-radius:4px;color:var(--text);background:var(--surface);font:12px var(--font);color-scheme:inherit}
 .native-chart-dialog{display:none;overflow:hidden;padding:16px;box-sizing:border-box;width:min(640px,calc(100% - 24px));max-height:calc(100dvh - 24px);background:var(--surface);color:var(--text)}
 .native-chart-dialog[open]{display:flex;flex-direction:column;gap:12px}
 .native-chart-dialog>header{flex:none;margin:0}.native-chart-dialog>.native-dialog-body{min-height:0;overflow:auto;overscroll-behavior:contain}
@@ -116,7 +119,8 @@ body[data-shell=chart] .native-chart-workbench .workbench-update :is(#eth-status
 .native-chart-dialog header button svg{width:20px;height:20px}
 .native-export-preview{display:block;width:100%;height:auto;max-height:58dvh;object-fit:contain;margin:8px 0}
 .native-chart-error{color:var(--red);min-height:18px}
-@media(min-width:621px){body[data-shell=chart] .workspace.native-chart-workspace>#main.native-chart-workbench{padding:42px 4px 0 0!important}}
+@media(min-width:621px){body[data-shell=chart] .workspace.native-chart-workspace>#main.native-chart-workbench{padding:48px 4px 0 0!important}}
+@media(min-width:1120px){body[data-shell=chart] .workspace.native-chart-workspace>#main.native-chart-workbench{padding:42px 4px 0 0!important}}
 @media(min-width:621px) and (pointer:coarse){body[data-shell=chart] .workspace.native-chart-workspace>#main.native-chart-workbench{padding-top:52px!important}}
 @media(max-width:1100px){
   /* The chart's own touch contract reaches 1100px; the reader is part of the
@@ -140,5 +144,28 @@ body[data-shell=chart] .native-chart-workbench .workbench-update :is(#eth-status
   .native-command-search input,.native-date-form :is(input,select){min-height:44px}
 }
 @media(max-height:420px){.eth-forecast-note{top:42px}}
+/* Short phones retain the two-line budget even when the wide landscape
+   rule above moves the one-line source to 24px. Keep the next note below it. */
+@media(max-width:620px) and (max-height:420px){
+  .eth-readout-source{top:48px}
+  .eth-forecast-note{top:68px}
+}
 
 .eth-data-dialog p { font-size: var(--copy-size); line-height: var(--copy-leading); }
+
+/* Instrument indicator legend: the same top-left surface as the BTC chart,
+   stacked under the readout and the forecast keys. Collapsed by default on
+   narrow screens so the price plot keeps its first rows visible. */
+.instrument-indicator-manager{max-width:min(360px,calc(100% - 24px))}
+.instrument-indicator-manager[data-collapsed=true] .chart-indicator-list{display:none}
+.instrument-indicator-manager[data-collapsed=true]{min-height:0}
+.instrument-indicator-manager .indicator-row{min-height:22px}
+@media(max-width:620px){.instrument-indicator-manager{left:10px;max-width:calc(100% - 20px)}}
+/* Touch widths get a real 44px visibility target; the icon keeps its size. */
+@media(max-width:620px),(pointer:coarse){
+  .instrument-indicator-manager .indicator-row{min-height:44px}
+  .instrument-indicator-manager .indicator-row-action{width:44px;height:44px;padding:12px}
+}
+@media(max-width:620px),(pointer:coarse){
+  .instrument-indicator-manager .indicator-legend-toggle{width:44px;height:44px;min-width:44px;min-height:44px;padding:10px}
+}

@@ -1,0 +1,108 @@
+{
+  "kind": "r19-p5-f1-evidence",
+  "baselineCommit": "b2226d77ddf4ff4fe6e05953e02cbb753ea4f7f8",
+  "scope": "F1 only",
+  "status": "implemented-native-acceptance-blocked",
+  "authoredProductFiles": [
+    "dist/atlas-shell.js",
+    "dist/atlas-shell.css"
+  ],
+  "domModel": {
+    "report": "dom-model.json",
+    "nativeBrowser": false,
+    "routes": 3,
+    "beforeCounts": [
+      1,
+      1,
+      1
+    ],
+    "afterCounts": [
+      0,
+      0,
+      0
+    ],
+    "beforeTotal": 3,
+    "afterTotal": 0,
+    "svgAndAccessibleName": 3,
+    "toggleRoundTrips": 3,
+    "h1Counts": [
+      1,
+      1,
+      1
+    ]
+  },
+  "native": {
+    "report": "native-blocked.json",
+    "requiredScreenshots": 6,
+    "completedScreenshots": 0,
+    "d1Before": null,
+    "d1After": null,
+    "complete": false,
+    "status": "blocked",
+    "reason": "Chromium ProcessSingleton socket() failed: Operation not permitted (1)",
+    "screenshots": []
+  },
+  "existingTests": [
+    {
+      "command": "node --import tsx --test tests/web/atlas-shell.test.tsx tests/web/atlas-shell-current-workspace.test.tsx",
+      "passed": 4,
+      "failed": 0,
+      "exitCode": 0
+    },
+    {
+      "command": "node --test tests/r19p1-shell.test.mjs tests/page-heading-and-touch-floor.test.mjs",
+      "passed": 10,
+      "failed": 0,
+      "exitCode": 0
+    },
+    {
+      "command": "node --test tests/r19p1-served-shell.test.mjs tests/site-styles.test.mjs tests/site-preloads.test.mjs tests/boot-preloads.test.mjs",
+      "passed": 26,
+      "failed": 0,
+      "exitCode": 0
+    }
+  ],
+  "existingTestTotals": {
+    "passed": 40,
+    "failed": 0
+  },
+  "generation": {
+    "pagesCheck": "passed",
+    "styleBundleCheck": "passed",
+    "preloadGraphCheck": "passed",
+    "generatedCssDelta": "Only the shared sidebar toggle 26px dimensions become 44px with min-width/min-height 44px.",
+    "generatedJavaScriptDelta": "Only the generated CSS asset filename reference changes."
+  },
+  "preserved": {
+    "dist/equity-view.js": {
+      "sha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5",
+      "unchanged": true
+    },
+    "dist/eth-view.js": {
+      "sha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4",
+      "unchanged": true
+    },
+    "dist/instrument-indicator-overlay.js": {
+      "sha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a",
+      "unchanged": true
+    },
+    "scripts/verify-eth-candidate-browser.mjs": {
+      "sha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e",
+      "unchanged": true
+    },
+    "dist/price-axis.js": {
+      "sha256": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2",
+      "unchanged": true
+    },
+    "dist/styles.css": {
+      "sha256": "190305d7b15c3a6b64ff3a8a06bf40b2c4594b395d2f32c112fe2f4b2f9da08c",
+      "unchanged": true
+    }
+  },
+  "existingInspectorsModified": [],
+  "conferenceProductFilesModified": [],
+  "fullNpmTestRerun": false,
+  "p4MediaCountRerun": false,
+  "p4MediaBrowserRerun": false,
+  "qualifiesNativeF1Acceptance": false
+}

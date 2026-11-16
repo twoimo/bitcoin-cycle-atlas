@@ -1,0 +1,230 @@
+{
+  "request": "Q-R19P0-2-e3ef789",
+  "dateKst": "2026-11-12",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "branch": "fix/tradingview-responsive-20261110",
+  "baseHead": "2c4a536fafaa9d5ebc4c63336b4496175d9344e9",
+  "productHead": "48c314cc2729b156dcf2450727387b6de75039bc",
+  "status": "harness-fixed-mac-rerun-pending",
+  "qClosed": false,
+  "p0Closed": false,
+  "qualifiesP0Verification": false,
+  "qualifiesFullVerification": false,
+  "changedCode": [
+    "scripts/ui-renewal-p0-text-hit.mjs",
+    "tests/ui-renewal-p0-text-hit.test.mjs"
+  ],
+  "productFilesChanged": 0,
+  "distMatchesProductByteForByte": true,
+  "protected": [
+    {
+      "path": "dist/equity-view.js",
+      "unchanged": true,
+      "sha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5"
+    },
+    {
+      "path": "dist/eth-view.js",
+      "unchanged": true,
+      "sha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4"
+    },
+    {
+      "path": "dist/instrument-indicator-overlay.js",
+      "unchanged": true,
+      "sha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a"
+    },
+    {
+      "path": "scripts/verify-eth-candidate-browser.mjs",
+      "unchanged": true,
+      "sha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e"
+    }
+  ],
+  "preserved": [
+    {
+      "path": "scripts/ui-renewal-p0-contract.mjs",
+      "unchanged": true,
+      "sha256": "d34d2644e93f3a8805b0e4043f3c31bf4fcfee4eb3b5bb46bf3bca0f47324f39"
+    },
+    {
+      "path": "scripts/verify-ui-renewal-p0-browser.mjs",
+      "unchanged": true,
+      "sha256": "d31fda26f00111f8d3b949e64bad629395af009cb516ac46c2e0165ad90eea26"
+    },
+    {
+      "path": "scripts/verify-price-axis-browser.mjs",
+      "unchanged": true,
+      "sha256": "55bf56030d7f7529a6fa9ebc4c0b5486392e812ffee1472ff86d578698f846b9"
+    },
+    {
+      "path": "scripts/price-axis-browser-contract.mjs",
+      "unchanged": true,
+      "sha256": "a5ba1bb5ab6809ec9784ca2e1700f9536ef61afb4bdadc9c14c0fce07e6b986b"
+    },
+    {
+      "path": "scripts/verify-conference-data-browser.mjs",
+      "unchanged": true,
+      "sha256": "45fb940df434f5452e02d3fa611041c4ff40ef2aa7834ea8094f92d6b68a5b3a"
+    },
+    {
+      "path": "scripts/verify-conference-media-browser.mjs",
+      "unchanged": true,
+      "sha256": "55806dbdb7d0d44a6eb56b005050617de970645c3295747295d13c600bafe082"
+    },
+    {
+      "path": "scripts/verify-page-heading-browser.mjs",
+      "unchanged": true,
+      "sha256": "80667a6d589cada3ecb308f250e21a953cba9a7f907e12b537d4268e8053bdef"
+    },
+    {
+      "path": "docs/evidence/qa-r19p0-20261112/p0-e3ef789.json",
+      "unchanged": true,
+      "sha256": "c15aa491dbd1d45bb8f53bfdf850243a482a1ac0bb0d1bb33ee5e1998afe2d5b"
+    },
+    {
+      "path": "docs/evidence/qa-r19p0-20261112/p0-48c314c.json",
+      "unchanged": true,
+      "sha256": "869f1ce76bfaa73d97420e772efd4ceecc812f65b48d9f4d4e5574841c24b978"
+    }
+  ],
+  "method": {
+    "rawGeometry": "unrounded non-whitespace grapheme Range and candidate paint rectangles; not raster glyph silhouettes",
+    "clipReference": "single actual native border box; native DOM.getBoxModel quad for pseudos",
+    "supportedClip": "rectangular inset() with 1-4 nonnegative percent/px values or unitless zero, optional border-box",
+    "emptyDecision": "exact decimal arithmetic for opposing insets, no tolerance or rounding-to-empty",
+    "evidence": "clippedPaintCandidates: rawRect, clips[].referenceRect, clips[].clipRect, computed value, paintRect and status",
+    "positiveIntersection": "existing exact text-owner/TextNode native CDP probes retained; foreign paint owner fails",
+    "unverified": "unsupported/missing/fragmented geometry, changed measurement, positive intersection without an interior integer probe",
+    "requiredHeading": "clipped/hidden/empty heading never passes",
+    "productMutations": false,
+    "fixedPaintSampleIdsChanged": 0
+  },
+  "unitContract": {
+    "focused": {
+      "tests": 83,
+      "pass": 83,
+      "fail": 0,
+      "skipped": 0,
+      "receipt": "focused-contract.tap",
+      "command": "focused-contract-command.json"
+    },
+    "preserved": {
+      "tests": 64,
+      "pass": 64,
+      "fail": 0,
+      "skipped": 0,
+      "receipt": "preserved-contract.tap",
+      "command": "preserved-contract-command.json"
+    },
+    "distinctTests": 147,
+    "passed": 147,
+    "failed": 0,
+    "skipped": 0,
+    "existingTextHitCases": 29,
+    "newTextHitRegressionCases": 18,
+    "textHitCases": 47,
+    "nativeMeasurements": 0
+  },
+  "syntax": {
+    "files": 2,
+    "failed": 0,
+    "commands": [
+      "node --check scripts/ui-renewal-p0-text-hit.mjs",
+      "node --check tests/ui-renewal-p0-text-hit.test.mjs"
+    ]
+  },
+  "diffCheck": "passed",
+  "static": {
+    "files": 1064,
+    "checkedScripts": 220,
+    "checkedReferences": 1068,
+    "siteStylesCheck": "passed",
+    "sourceStylesheets": 41,
+    "bundles": 2,
+    "sitePreloadsCheck": "passed",
+    "moduleUrls": 56,
+    "uniqueModuleFiles": 54,
+    "staticImportEdges": 82,
+    "receipt": "static-checks.json"
+  },
+  "sourceChecks": {
+    "staticTokenPairs": 40,
+    "staticTokenPairsPassed": 40,
+    "fontFacesVerified": 92,
+    "fontBytes": 2957724,
+    "sourceStable": true
+  },
+  "browser": {
+    "command": [
+      "node",
+      "scripts/verify-ui-renewal-p0-browser.mjs",
+      "--out",
+      "docs/evidence/q-r19p0-2-e3ef789/linux-20261112"
+    ],
+    "exitCode": 1,
+    "status": "unverified",
+    "counts": {
+      "required": 10,
+      "attempted": 0,
+      "passed": 0,
+      "failed": 0,
+      "unattempted": 10
+    },
+    "harnessFailures": 1,
+    "blockedAt": "Chromium launch",
+    "failure": "Chromium launch: Error: Chromium exited null/SIGABRT: /usr/bin/chromium: 9: [: 5225713664: unexpected operator\n[29:29:1112/194234.761598:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/194234.761769:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n\n    at file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p0-browser.mjs:307:144\n    at until (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p0-browser.mjs:102:127)\n    at async verifyUiRenewalP0Browser (file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p0-browser.mjs:307:18)\n    at async file:///workspace/scratch/577747000761/bitcoin-cycle-atlas/scripts/verify-ui-renewal-p0-browser.mjs:392:90",
+    "report": "linux-20261112/report.json",
+    "screenshots": 0,
+    "actualContrastSamples": 0,
+    "actualFontCases": 0,
+    "actualHeadingHitCases": 0
+  },
+  "preservedThresholds": {
+    "p0Cases": 10,
+    "fixedPaintSamplesPerTheme": 20,
+    "requiredCoverageRows": 40,
+    "textContrast": 4.5,
+    "iconContrast": 3.0,
+    "horizontalOverflow": 0,
+    "r17Cases": 16,
+    "alignmentPx": 2,
+    "axisMinRightPx": 64,
+    "h1": 1,
+    "a9Ms": 2500,
+    "mediaTransitionMs": 150,
+    "rangeStatus": [
+      206,
+      416
+    ],
+    "exactSeek": "unchanged",
+    "mediaUnavailableExit": 2
+  },
+  "priorMacReceipt": "../qa-r19p0-20261112/p0-e3ef789.json",
+  "priorMacEvidenceNotCountedAsThisFixPassing": true,
+  "notRun": [
+    "Native 10-case pages: Chromium socket() EPERM / SIGABRT before first page",
+    "Native heading hits, screenshots, actual font and contrast measurements: zero",
+    "Existing R17/A-9 native browser gates and full npm test were not rerun; focused existing contracts ran",
+    "Product rebuild not performed because product bytes are unchanged; CSS/preload --check ran"
+  ],
+  "remaining": [
+    "Mac rerun of unchanged 10-case P0 gate into new output directory",
+    "Q-R19P0-2 and overall P0 remain open before that rerun; no P1 or unrelated fixes"
+  ],
+  "macRerunCommand": "node scripts/verify-ui-renewal-p0-browser.mjs --out build/qa-r19p0-20261112/p0-Q-R19P0-2-clipped-paint",
+  "sourceHashes": {
+    "scripts/ui-renewal-p0-text-hit.mjs": "ea481867cdf818d1cd41a1979467152c5a4a1230eed40e75bf1306a102078f64",
+    "tests/ui-renewal-p0-text-hit.test.mjs": "3fd0fe7ec8cf39ab91ca4275fea2da1e68af227321ce0301f09b100300b4b2dd"
+  },
+  "commitParent": "5aae222493f705c054031e951af8ddf742df9685",
+  "concurrentDocumentationPreserved": {
+    "observedHead": "5aae222493f705c054031e951af8ddf742df9685",
+    "commits": 3,
+    "files": [
+      "docs/LAUNCH_CHECKLIST_20261110.md",
+      "docs/requirements/README.md",
+      "docs/requirements/REQ_RELAY_RAG_20261109.md",
+      "docs/requirements/REQ_RELAY_TELEGRAM_CLONE_20261112.md"
+    ],
+    "productOrHarnessChanges": 0,
+    "resolution": "preserved latest documentation byte-for-byte except the separately requested Q-R19P0-2 checklist row; single-parent commit, no merge or force push"
+  }
+}

@@ -1,0 +1,265 @@
+{
+  "status": "partial",
+  "observedAt": "2026-11-13T09:21:43.042Z",
+  "scope": "Parent-owned Aside preview, actual Funnest canvas, full observed archive parity and overlay painter arguments. Not full native acceptance; source still under integration.",
+  "checks": {
+    "actualObservedBars": 3823,
+    "observedPricePixels": 5821,
+    "volumePixels": 11728,
+    "forecastSegments": 730,
+    "baselineSegments": 730
+  },
+  "knownDefect": "Initial compact price/date/readout remained blank despite populated chart; delegated to native owner.",
+  "core": {
+    "snapshot": {
+      "engine": "funnest",
+      "version": "0.6.22",
+      "state": "ready",
+      "painted": true,
+      "source": {
+        "provider": "Coinbase Exchange",
+        "product": "ETH-USD",
+        "interval": "daily",
+        "originalTimeUnit": "UTC seconds",
+        "outputTimeUnit": "UTC milliseconds",
+        "retrievedAt": "2026-11-07T05:58:53.392Z",
+        "volumeSource": null
+      },
+      "sourceMode": "ohlc",
+      "symbol": "ETH-USD",
+      "currency": "USD",
+      "timeUnit": "UTC milliseconds",
+      "chartType": "line",
+      "settings": {
+        "highLowMarkers": true,
+        "lastPriceLine": true,
+        "gridHorizontal": true,
+        "gridVertical": true,
+        "volume": true,
+        "navigationButtons": true,
+        "priceScale": "log",
+        "countdown": true,
+        "upColor": null,
+        "downColor": null,
+        "background": null,
+        "gridColor": null,
+        "textColor": null
+      },
+      "range": {
+        "from": 1715040000000,
+        "to": 1841270400000
+      },
+      "layout": {
+        "width": 1333,
+        "height": 700,
+        "plotWidth": 1261,
+        "panesHeight": 672,
+        "timeAxisHeight": 28,
+        "panes": [
+          {
+            "id": "main",
+            "kind": "main",
+            "top": 0,
+            "height": 538
+          },
+          {
+            "id": "volume",
+            "kind": "volume",
+            "top": 538,
+            "height": 134
+          }
+        ]
+      },
+      "inverted": false,
+      "canvases": [
+        {
+          "width": 1333,
+          "height": 700,
+          "visible": true,
+          "readable": true,
+          "opaquePixels": 20285,
+          "sampledColors": 161
+        },
+        {
+          "width": 1333,
+          "height": 700,
+          "visible": true,
+          "readable": true,
+          "opaquePixels": 0,
+          "sampledColors": 1
+        }
+      ],
+      "legacy": {
+        "svgCount": 16,
+        "priceNodes": 0
+      },
+      "observedCount": 3823,
+      "engineBarCount": 3823,
+      "firstObservation": {
+        "time": 1463529600000,
+        "open": 12.5,
+        "high": 14.93,
+        "low": 12.5,
+        "close": 13.18,
+        "volume": 482.52182654
+      },
+      "lastObservation": {
+        "time": 1793923200000,
+        "open": 2234.64,
+        "high": 2250.35,
+        "low": 2205.74,
+        "close": 2235.37,
+        "volume": 137058.06629847
+      },
+      "observationsSha256": "2a309c501076b2cfc414f5ce9bc7cc0cf75b63221ca0bfe7df2062a8082371da"
+    },
+    "hostBounds": {
+      "left": 57,
+      "top": 161,
+      "right": 1390,
+      "bottom": 861,
+      "width": 1333,
+      "height": 700
+    },
+    "mainBounds": {
+      "left": 57,
+      "top": 161,
+      "right": 1318,
+      "bottom": 699,
+      "width": 1261,
+      "height": 538
+    },
+    "volumeBounds": {
+      "left": 57,
+      "top": 699,
+      "right": 1318,
+      "bottom": 833,
+      "width": 1261,
+      "height": 134
+    },
+    "ink": {
+      "readable": true,
+      "mainPixels": 5821,
+      "volumePixels": 11728,
+      "targets": {
+        "background": [
+          20,
+          20,
+          21
+        ],
+        "main": [
+          [
+            155,
+            186,
+            255
+          ]
+        ],
+        "volume": [
+          [
+            97,
+            37,
+            42
+          ],
+          [
+            30,
+            59,
+            100
+          ]
+        ]
+      }
+    }
+  },
+  "overlay": {
+    "sequence": 3,
+    "forecast": {
+      "input": {
+        "present": true,
+        "pathRows": 731
+      },
+      "segments": 730,
+      "length": 3261.1313000678333,
+      "dash": [
+        7,
+        5
+      ],
+      "first": {
+        "from": {
+          "x": 788.0171115674195,
+          "y": 264.3008486880474
+        },
+        "to": {
+          "x": 788.880219028063,
+          "y": 260.056041698101
+        },
+        "color": "#d8b56d",
+        "width": 1.8,
+        "dash": [
+          7,
+          5
+        ]
+      },
+      "last": {
+        "from": {
+          "x": 1417.2224503764544,
+          "y": 226.1936252433997
+        },
+        "to": {
+          "x": 1418.085557837098,
+          "y": 219.55707830891123
+        },
+        "color": "#d8b56d",
+        "width": 1.8,
+        "dash": [
+          7,
+          5
+        ]
+      },
+      "coordinatesSha256": "ed6b90d58e04177c78364bfcb7b3babe989e672e264b7c34867b4f9afe45e931"
+    },
+    "baseline": {
+      "input": {
+        "present": true,
+        "pathRows": 731
+      },
+      "segments": 730,
+      "length": 1404.088660363783,
+      "dash": [
+        2,
+        4
+      ],
+      "first": {
+        "from": {
+          "x": 788.0171115674195,
+          "y": 264.3008486880474
+        },
+        "to": {
+          "x": 788.880219028063,
+          "y": 264.5031315049844
+        },
+        "color": "#2962ff",
+        "width": 1.7,
+        "dash": [
+          2,
+          4
+        ]
+      },
+      "last": {
+        "from": {
+          "x": 1417.2224503764544,
+          "y": 254.38283345199832
+        },
+        "to": {
+          "x": 1418.085557837098,
+          "y": 252.89376989109442
+        },
+        "color": "#2962ff",
+        "width": 1.7,
+        "dash": [
+          2,
+          4
+        ]
+      },
+      "coordinatesSha256": "b36d5d2d21ae62823b74de26cbdb4d735f8b83d604401944854a36c0291b648b"
+    }
+  }
+}

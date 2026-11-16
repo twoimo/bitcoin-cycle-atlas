@@ -1,0 +1,5577 @@
+{
+  "schemaVersion": 2,
+  "kind": "atlas-page-heading-browser",
+  "qualifiesFullVerification": false,
+  "recordedAt": "2026-11-13T05:00:23.172Z",
+  "testedHead": "513d8183b14a73284d4ce1dacf89bd3ded431bdb",
+  "sourceFiles": {
+    "dist/atlas-shell.css": "47f3f24bab8b68ad06212a607a6acb8f3fcac978c9df8c968281ab88999e0e46",
+    "dist/ui/page-description.js": "a3ea1350945329c98db494aa929255cce4b9ffd68a27c24af1ef31f6991dacd0",
+    "dist/index.html": "380a165d402e88f8a933d9b1db249c37ac73176b6f37157608514f25e10203b4",
+    "dist/app.js": "7a9dd50b29487f155c31e9a04dfdf576b4f4fd2f33098246b459cf2747bc29a7",
+    "dist/btc-refresh-status.js": "90bf073c462c7c97a995ee15cd9157f1c908535fa27f8ae7785576a546100e70",
+    "dist/daily-data-view.js": "c20f197801abdcd5265c5e15f5a6d2ed08ef8c9d778145876029e40c69a6133e",
+    "dist/daily-data.css": "925f3bd1efa83ad356e3bdf402238c1cb69c1d60141ee295f1b046b70dcd7236",
+    "dist/research-reader.js": "2e1cb92676692b0b904df5fabcaed924423a5e61fbeb51a87ef4eef1db0a2b42",
+    "dist/research-reader.css": "8c5931c953b1b03cf9696839bf27370db791ede2e690d24f3660092b4273a00c",
+    "dist/editorial-ledgers.css": "20723c1a59c58820f95888cb3bbe2e860f9e88ea68f5d197a8acd5b6fa49c0ba",
+    "dist/relay-room.js": "b001b38bbbfd562ac42736e8b1564a3ad20b0732cdebdda5c8a9d4b22d752482",
+    "dist/relay-room.css": "26429da0ee31a8b35101d0eff411c4faac3d462eef37607565580fb54461cbc8",
+    "scripts/verify-page-heading-browser.mjs": "3ed30ab7e0d7409520158ef93082b94f52c35d7c5bf4f5b8af80c830e83b419a",
+    "scripts/page-heading-browser-contract.mjs": "83ad77cd421ee9508adaa6bc7317edf3e79ccb2018c2addf2fe14ba79b41427e",
+    "dist/conference/route.js": "2211cfbaba16f187a51d0e8e7f2c8849a7f6e02185cc0f02345895173eef145d",
+    "dist/conference/player.js": "f854c1a23503ce3b7bea166d8e712fcbdaf1737fd822d607ccafcb1648346927",
+    "dist/conference/player.css": "cb9bf91606db62490890cf063ba9bc3bb1e6cb39890baace93198f0abb51448a"
+  },
+  "chrome": "Chrome/157.0.8103.79",
+  "baseline": null,
+  "cases": [
+    {
+      "id": "BTCUSD-320",
+      "instrument": "BTCUSD",
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 9,
+          "top": 58,
+          "right": 311,
+          "bottom": 72,
+          "width": 302,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 9,
+            "top": 58,
+            "right": 53.421875,
+            "bottom": 72,
+            "width": 44.421875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "labelRow": {
+          "rect": {
+            "left": 1,
+            "top": 54,
+            "right": 319,
+            "bottom": 76,
+            "width": 318,
+            "height": 22
+          },
+          "glyphs": [
+            {
+              "left": 9,
+              "top": 58,
+              "right": 53.421875,
+              "bottom": 72,
+              "width": 44.421875,
+              "height": 14
+            }
+          ],
+          "painted": true,
+          "inViewport": true,
+          "position": "static",
+          "order": "-1",
+          "padding": "4px 8px"
+        },
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "label",
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 900
+          },
+          "stage": {
+            "left": 0,
+            "top": 53,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 847
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "refreshing",
+          "hidden": false,
+          "busy": true,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 53,
+            "width": 320,
+            "height": 53
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 18.65625,
+            "top": 868.90625,
+            "right": 62.328125,
+            "bottom": 881.90625,
+            "width": 43.671875,
+            "height": 13
+          }
+        ],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 5,
+          "top": 853.5,
+          "right": 91,
+          "bottom": 897.5,
+          "width": 86,
+          "height": 44
+        },
+        "symbolLabel": {
+          "left": 18.65625,
+          "top": 868.90625,
+          "right": 62.328125,
+          "bottom": 882.09375,
+          "width": 43.671875,
+          "height": 13.1875
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "11px",
+          "lineHeight": "13.2px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 1,
+            "top": 851,
+            "right": 319,
+            "bottom": 899,
+            "width": 318,
+            "height": 48
+          },
+          "plot": {
+            "left": 1,
+            "top": 76,
+            "right": 319,
+            "bottom": 851,
+            "width": 318,
+            "height": 775
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": {
+            "left": 11,
+            "top": 84,
+            "right": 165,
+            "bottom": 131,
+            "width": 154,
+            "height": 47
+          },
+          "source": {
+            "left": 11,
+            "top": 134,
+            "right": 165,
+            "bottom": 158,
+            "width": 154,
+            "height": 24
+          }
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0,
+          "labelToolbar": 0,
+          "headingToolbar": 0,
+          "glyphToolbar": 0
+        }
+      },
+      "screenshot": {
+        "file": "BTCUSD-320.png",
+        "sha256": "50030de228d1752eed8a848b7d8dafa01ded811e5e3ebfbd02765c2d6aeebd42",
+        "bytes": 92171
+      }
+    },
+    {
+      "id": "ETHUSD-320",
+      "instrument": "ETHUSD",
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 9,
+          "top": 5,
+          "right": 311,
+          "bottom": 19,
+          "width": 302,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 9,
+            "top": 5,
+            "right": 53.421875,
+            "bottom": 19,
+            "width": 44.421875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "labelRow": {
+          "rect": {
+            "left": 1,
+            "top": 1,
+            "right": 319,
+            "bottom": 23,
+            "width": 318,
+            "height": 22
+          },
+          "glyphs": [
+            {
+              "left": 9,
+              "top": 5,
+              "right": 53.421875,
+              "bottom": 19,
+              "width": 44.421875,
+              "height": 14
+            }
+          ],
+          "painted": true,
+          "inViewport": true,
+          "position": "static",
+          "order": "-1",
+          "padding": "4px 8px"
+        },
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "label",
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 900
+          },
+          "stage": null
+        },
+        "btcRefreshNotice": null,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 19.265625,
+            "top": 868.703125,
+            "right": 62.734375,
+            "bottom": 881.703125,
+            "width": 43.46875,
+            "height": 13
+          }
+        ],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 5,
+          "top": 853.5,
+          "right": 91,
+          "bottom": 897.5,
+          "width": 86,
+          "height": 44
+        },
+        "symbolLabel": {
+          "left": 19.265625,
+          "top": 866.703125,
+          "right": 62.734375,
+          "bottom": 884.296875,
+          "width": 43.46875,
+          "height": 17.59375
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "11px",
+          "lineHeight": "17.6px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 1,
+            "top": 851,
+            "right": 319,
+            "bottom": 899,
+            "width": 318,
+            "height": 48
+          },
+          "plot": {
+            "left": 1,
+            "top": 23,
+            "right": 319,
+            "bottom": 851,
+            "width": 318,
+            "height": 828
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": {
+            "left": 10,
+            "top": 30,
+            "right": 248,
+            "bottom": 72.84375,
+            "width": 238,
+            "height": 42.84375
+          },
+          "source": {
+            "left": 10,
+            "top": 75,
+            "right": 118.984375,
+            "bottom": 90.390625,
+            "width": 108.984375,
+            "height": 15.390625
+          }
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0,
+          "labelToolbar": 0,
+          "headingToolbar": 0,
+          "glyphToolbar": 0
+        }
+      },
+      "screenshot": {
+        "file": "ETHUSD-320.png",
+        "sha256": "ed4c4aa037c31b3b827fbcf7125b959449ab3dc6227c33443a1e65c72ba06e52",
+        "bytes": 68335
+      }
+    },
+    {
+      "id": "MSTR-320",
+      "instrument": "MSTR",
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 9,
+          "top": 5,
+          "right": 311,
+          "bottom": 19,
+          "width": 302,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 9,
+            "top": 5,
+            "right": 53.421875,
+            "bottom": 19,
+            "width": 44.421875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "labelRow": {
+          "rect": {
+            "left": 1,
+            "top": 1,
+            "right": 319,
+            "bottom": 23,
+            "width": 318,
+            "height": 22
+          },
+          "glyphs": [
+            {
+              "left": 9,
+              "top": 5,
+              "right": 53.421875,
+              "bottom": 19,
+              "width": 44.421875,
+              "height": 14
+            }
+          ],
+          "painted": true,
+          "inViewport": true,
+          "position": "static",
+          "order": "-1",
+          "padding": "4px 8px"
+        },
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "label",
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 900
+          },
+          "stage": null
+        },
+        "btcRefreshNotice": null,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 25.859375,
+            "top": 868.703125,
+            "right": 56.140625,
+            "bottom": 881.703125,
+            "width": 30.28125,
+            "height": 13
+          }
+        ],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 5,
+          "top": 853.5,
+          "right": 91,
+          "bottom": 897.5,
+          "width": 86,
+          "height": 44
+        },
+        "symbolLabel": {
+          "left": 25.859375,
+          "top": 866.703125,
+          "right": 56.140625,
+          "bottom": 884.296875,
+          "width": 30.28125,
+          "height": 17.59375
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "11px",
+          "lineHeight": "17.6px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 1,
+            "top": 851,
+            "right": 319,
+            "bottom": 899,
+            "width": 318,
+            "height": 48
+          },
+          "plot": {
+            "left": 1,
+            "top": 23,
+            "right": 319,
+            "bottom": 851,
+            "width": 318,
+            "height": 828
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": {
+            "left": 10,
+            "top": 30,
+            "right": 232,
+            "bottom": 72.84375,
+            "width": 222,
+            "height": 42.84375
+          },
+          "source": {
+            "left": 10,
+            "top": 75,
+            "right": 75.125,
+            "bottom": 90.390625,
+            "width": 65.125,
+            "height": 15.390625
+          }
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0,
+          "labelToolbar": 0,
+          "headingToolbar": 0,
+          "glyphToolbar": 0
+        }
+      },
+      "screenshot": {
+        "file": "MSTR-320.png",
+        "sha256": "d58e08927de3d283b99594f0e5cf1ebc681c3d07b08a0d36bb7e7e352c35406b",
+        "bytes": 67545
+      }
+    },
+    {
+      "id": "BMNR-320",
+      "instrument": "BMNR",
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 9,
+          "top": 5,
+          "right": 311,
+          "bottom": 19,
+          "width": 302,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 9,
+            "top": 5,
+            "right": 53.421875,
+            "bottom": 19,
+            "width": 44.421875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "labelRow": {
+          "rect": {
+            "left": 1,
+            "top": 1,
+            "right": 319,
+            "bottom": 23,
+            "width": 318,
+            "height": 22
+          },
+          "glyphs": [
+            {
+              "left": 9,
+              "top": 5,
+              "right": 53.421875,
+              "bottom": 19,
+              "width": 44.421875,
+              "height": 14
+            }
+          ],
+          "painted": true,
+          "inViewport": true,
+          "position": "static",
+          "order": "-1",
+          "padding": "4px 8px"
+        },
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "label",
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 900
+          },
+          "stage": null
+        },
+        "btcRefreshNotice": null,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 25.375,
+            "top": 868.703125,
+            "right": 56.625,
+            "bottom": 881.703125,
+            "width": 31.25,
+            "height": 13
+          }
+        ],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 5,
+          "top": 853.5,
+          "right": 91,
+          "bottom": 897.5,
+          "width": 86,
+          "height": 44
+        },
+        "symbolLabel": {
+          "left": 25.375,
+          "top": 866.703125,
+          "right": 56.625,
+          "bottom": 884.296875,
+          "width": 31.25,
+          "height": 17.59375
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "11px",
+          "lineHeight": "17.6px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 1,
+            "top": 851,
+            "right": 319,
+            "bottom": 899,
+            "width": 318,
+            "height": 48
+          },
+          "plot": {
+            "left": 1,
+            "top": 23,
+            "right": 319,
+            "bottom": 851,
+            "width": 318,
+            "height": 828
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": {
+            "left": 10,
+            "top": 30,
+            "right": 232,
+            "bottom": 72.84375,
+            "width": 222,
+            "height": 42.84375
+          },
+          "source": {
+            "left": 10,
+            "top": 75,
+            "right": 75.125,
+            "bottom": 90.390625,
+            "width": 65.125,
+            "height": 15.390625
+          }
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0,
+          "labelToolbar": 0,
+          "headingToolbar": 0,
+          "glyphToolbar": 0
+        }
+      },
+      "screenshot": {
+        "file": "BMNR-320.png",
+        "sha256": "dcd75f0030352cd9f7866377d985ee822fa5a142f8b3ecd6912e1c60ba29719c",
+        "bytes": 58976
+      }
+    },
+    {
+      "id": "compare-320",
+      "instrument": "compare",
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "사이클 비교",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 48,
+          "top": 869.5,
+          "right": 116,
+          "bottom": 883.5,
+          "width": 68,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 54.59375,
+            "top": 869.5,
+            "right": 109.390625,
+            "bottom": 883.5,
+            "width": 54.796875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": true,
+        "glyphsInToolbar": true,
+        "labelRow": null,
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(242, 242, 244)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "반감일 이후 경과일을 기준으로 과거 사이클과 현재 사이클을 겹쳐 비교합니다. 기준: 일별 종가(UTC).",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "compare",
+          "anchor": {
+            "left": 124,
+            "top": 855,
+            "right": 316,
+            "bottom": 898,
+            "width": 192,
+            "height": 43
+          },
+          "expected": {
+            "left": 48,
+            "top": 869.5
+          },
+          "delta": {
+            "left": 0,
+            "top": 0
+          }
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 900
+          },
+          "stage": {
+            "left": 0,
+            "top": 53,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 847
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "refreshing",
+          "hidden": false,
+          "busy": true,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 53,
+            "width": 320,
+            "height": 53
+          },
+          "compareReservedHeight": "53px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolLabel": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "11px",
+          "lineHeight": "13.2px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 852,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 48
+          },
+          "plot": {
+            "left": 0,
+            "top": 53,
+            "right": 320,
+            "bottom": 852,
+            "width": 320,
+            "height": 799
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": null,
+          "source": null
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0
+        }
+      },
+      "screenshot": {
+        "file": "compare-320.png",
+        "sha256": "45687d09d391da3e05fe21f7f0de0462f6ffbc10b792c7eada5b9c98d5b8eeb0",
+        "bytes": 62178
+      }
+    },
+    {
+      "id": "BTCUSD-768",
+      "instrument": "BTCUSD",
+      "width": 768,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 65,
+          "top": 5,
+          "right": 710,
+          "bottom": 19,
+          "width": 645,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 65,
+            "top": 5,
+            "right": 109.421875,
+            "bottom": 19,
+            "width": 44.421875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "labelRow": {
+          "rect": {
+            "left": 57,
+            "top": 1,
+            "right": 718,
+            "bottom": 23,
+            "width": 661,
+            "height": 22
+          },
+          "glyphs": [
+            {
+              "left": 65,
+              "top": 5,
+              "right": 109.421875,
+              "bottom": 19,
+              "width": 44.421875,
+              "height": 14
+            }
+          ],
+          "painted": true,
+          "inViewport": true,
+          "position": "static",
+          "order": "-1",
+          "padding": "4px 8px"
+        },
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "label",
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 56,
+            "top": 0,
+            "right": 768,
+            "bottom": 900,
+            "width": 712,
+            "height": 900
+          },
+          "stage": {
+            "left": 56,
+            "top": 0,
+            "right": 719,
+            "bottom": 900,
+            "width": 663,
+            "height": 900
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "idle",
+          "hidden": true,
+          "busy": false,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 73,
+            "top": 38.59375,
+            "right": 128.578125,
+            "bottom": 54.59375,
+            "width": 55.578125,
+            "height": 16
+          }
+        ],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 61,
+          "top": 25,
+          "right": 162.578125,
+          "bottom": 69,
+          "width": 101.578125,
+          "height": 44
+        },
+        "symbolLabel": {
+          "left": 73,
+          "top": 38.59375,
+          "right": 128.578125,
+          "bottom": 55.390625,
+          "width": 55.578125,
+          "height": 16.796875
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "44px",
+          "paddingTop": "0px",
+          "paddingBottom": "0px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "14px",
+          "lineHeight": "16.8px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 57,
+            "top": 23,
+            "right": 718,
+            "bottom": 71,
+            "width": 661,
+            "height": 48
+          },
+          "plot": {
+            "left": 57,
+            "top": 71,
+            "right": 718,
+            "bottom": 851,
+            "width": 661,
+            "height": 780
+          },
+          "bottom": {
+            "left": 57,
+            "top": 851,
+            "right": 718,
+            "bottom": 899,
+            "width": 661,
+            "height": 48
+          },
+          "readout": {
+            "left": 67,
+            "top": 79,
+            "right": 382.640625,
+            "bottom": 100,
+            "width": 315.640625,
+            "height": 21
+          },
+          "source": {
+            "left": 67,
+            "top": 103,
+            "right": 274.859375,
+            "bottom": 122,
+            "width": 207.859375,
+            "height": 19
+          }
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0,
+          "labelToolbar": 0,
+          "headingToolbar": 0,
+          "glyphToolbar": 0
+        }
+      },
+      "screenshot": {
+        "file": "BTCUSD-768.png",
+        "sha256": "516d1458e5c878b59a8d737019dd5dfe11a44bb0ac85ccfb28eb20e4f994acd5",
+        "bytes": 186474
+      }
+    },
+    {
+      "id": "ETHUSD-768",
+      "instrument": "ETHUSD",
+      "width": 768,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 65,
+          "top": 5,
+          "right": 710,
+          "bottom": 19,
+          "width": 645,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 65,
+            "top": 5,
+            "right": 109.421875,
+            "bottom": 19,
+            "width": 44.421875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "labelRow": {
+          "rect": {
+            "left": 57,
+            "top": 1,
+            "right": 718,
+            "bottom": 23,
+            "width": 661,
+            "height": 22
+          },
+          "glyphs": [
+            {
+              "left": 65,
+              "top": 5,
+              "right": 109.421875,
+              "bottom": 19,
+              "width": 44.421875,
+              "height": 14
+            }
+          ],
+          "painted": true,
+          "inViewport": true,
+          "position": "static",
+          "order": "-1",
+          "padding": "4px 8px"
+        },
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "label",
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 56,
+            "top": 0,
+            "right": 768,
+            "bottom": 900,
+            "width": 712,
+            "height": 900
+          },
+          "stage": null
+        },
+        "btcRefreshNotice": null,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 73,
+            "top": 38.796875,
+            "right": 128.328125,
+            "bottom": 54.796875,
+            "width": 55.328125,
+            "height": 16
+          }
+        ],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 61,
+          "top": 25,
+          "right": 162.328125,
+          "bottom": 69,
+          "width": 101.328125,
+          "height": 44
+        },
+        "symbolLabel": {
+          "left": 73,
+          "top": 35.796875,
+          "right": 128.328125,
+          "bottom": 58.1875,
+          "width": 55.328125,
+          "height": 22.390625
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "44px",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "14px",
+          "lineHeight": "22.4px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 57,
+            "top": 23,
+            "right": 718,
+            "bottom": 71,
+            "width": 661,
+            "height": 48
+          },
+          "plot": {
+            "left": 57,
+            "top": 71,
+            "right": 718,
+            "bottom": 851,
+            "width": 661,
+            "height": 780
+          },
+          "bottom": {
+            "left": 57,
+            "top": 851,
+            "right": 718,
+            "bottom": 899,
+            "width": 661,
+            "height": 48
+          },
+          "readout": {
+            "left": 69,
+            "top": 80,
+            "right": 371.09375,
+            "bottom": 102.9375,
+            "width": 302.09375,
+            "height": 22.9375
+          },
+          "source": {
+            "left": 69,
+            "top": 102,
+            "right": 177.828125,
+            "bottom": 117.390625,
+            "width": 108.828125,
+            "height": 15.390625
+          }
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0,
+          "labelToolbar": 0,
+          "headingToolbar": 0,
+          "glyphToolbar": 0
+        }
+      },
+      "screenshot": {
+        "file": "ETHUSD-768.png",
+        "sha256": "6bb2da853b44290439eba6e6d06b02a9bfb4200650612f2c19a11b538dcba52f",
+        "bytes": 125059
+      }
+    },
+    {
+      "id": "MSTR-768",
+      "instrument": "MSTR",
+      "width": 768,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 65,
+          "top": 5,
+          "right": 710,
+          "bottom": 19,
+          "width": 645,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 65,
+            "top": 5,
+            "right": 109.421875,
+            "bottom": 19,
+            "width": 44.421875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "labelRow": {
+          "rect": {
+            "left": 57,
+            "top": 1,
+            "right": 718,
+            "bottom": 23,
+            "width": 661,
+            "height": 22
+          },
+          "glyphs": [
+            {
+              "left": 65,
+              "top": 5,
+              "right": 109.421875,
+              "bottom": 19,
+              "width": 44.421875,
+              "height": 14
+            }
+          ],
+          "painted": true,
+          "inViewport": true,
+          "position": "static",
+          "order": "-1",
+          "padding": "4px 8px"
+        },
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "label",
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 56,
+            "top": 0,
+            "right": 768,
+            "bottom": 900,
+            "width": 712,
+            "height": 900
+          },
+          "stage": null
+        },
+        "btcRefreshNotice": null,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 73,
+            "top": 38.796875,
+            "right": 111.53125,
+            "bottom": 54.796875,
+            "width": 38.53125,
+            "height": 16
+          }
+        ],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 61,
+          "top": 25,
+          "right": 145.53125,
+          "bottom": 69,
+          "width": 84.53125,
+          "height": 44
+        },
+        "symbolLabel": {
+          "left": 73,
+          "top": 35.796875,
+          "right": 111.53125,
+          "bottom": 58.1875,
+          "width": 38.53125,
+          "height": 22.390625
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "44px",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "14px",
+          "lineHeight": "22.4px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 57,
+            "top": 23,
+            "right": 718,
+            "bottom": 71,
+            "width": 661,
+            "height": 48
+          },
+          "plot": {
+            "left": 57,
+            "top": 71,
+            "right": 718,
+            "bottom": 851,
+            "width": 661,
+            "height": 780
+          },
+          "bottom": {
+            "left": 57,
+            "top": 851,
+            "right": 718,
+            "bottom": 899,
+            "width": 661,
+            "height": 48
+          },
+          "readout": {
+            "left": 69,
+            "top": 80,
+            "right": 362.9375,
+            "bottom": 102.9375,
+            "width": 293.9375,
+            "height": 22.9375
+          },
+          "source": {
+            "left": 69,
+            "top": 102,
+            "right": 238.203125,
+            "bottom": 117.390625,
+            "width": 169.203125,
+            "height": 15.390625
+          }
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0,
+          "labelToolbar": 0,
+          "headingToolbar": 0,
+          "glyphToolbar": 0
+        }
+      },
+      "screenshot": {
+        "file": "MSTR-768.png",
+        "sha256": "91a0a23a9539c7ed550275c61de33d6b7902510411ecb1cad44bf12e9bf5b214",
+        "bytes": 125193
+      }
+    },
+    {
+      "id": "BMNR-768",
+      "instrument": "BMNR",
+      "width": 768,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 65,
+          "top": 5,
+          "right": 710,
+          "bottom": 19,
+          "width": 645,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 65,
+            "top": 5,
+            "right": 109.421875,
+            "bottom": 19,
+            "width": 44.421875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "labelRow": {
+          "rect": {
+            "left": 57,
+            "top": 1,
+            "right": 718,
+            "bottom": 23,
+            "width": 661,
+            "height": 22
+          },
+          "glyphs": [
+            {
+              "left": 65,
+              "top": 5,
+              "right": 109.421875,
+              "bottom": 19,
+              "width": 44.421875,
+              "height": 14
+            }
+          ],
+          "painted": true,
+          "inViewport": true,
+          "position": "static",
+          "order": "-1",
+          "padding": "4px 8px"
+        },
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "label",
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 56,
+            "top": 0,
+            "right": 768,
+            "bottom": 900,
+            "width": 712,
+            "height": 900
+          },
+          "stage": null
+        },
+        "btcRefreshNotice": null,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 73,
+            "top": 38.796875,
+            "right": 112.765625,
+            "bottom": 54.796875,
+            "width": 39.765625,
+            "height": 16
+          }
+        ],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 61,
+          "top": 25,
+          "right": 146.765625,
+          "bottom": 69,
+          "width": 85.765625,
+          "height": 44
+        },
+        "symbolLabel": {
+          "left": 73,
+          "top": 35.796875,
+          "right": 112.765625,
+          "bottom": 58.1875,
+          "width": 39.765625,
+          "height": 22.390625
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "44px",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "14px",
+          "lineHeight": "22.4px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 57,
+            "top": 23,
+            "right": 718,
+            "bottom": 71,
+            "width": 661,
+            "height": 48
+          },
+          "plot": {
+            "left": 57,
+            "top": 71,
+            "right": 718,
+            "bottom": 851,
+            "width": 661,
+            "height": 780
+          },
+          "bottom": {
+            "left": 57,
+            "top": 851,
+            "right": 718,
+            "bottom": 899,
+            "width": 661,
+            "height": 48
+          },
+          "readout": {
+            "left": 69,
+            "top": 80,
+            "right": 352.453125,
+            "bottom": 102.9375,
+            "width": 283.453125,
+            "height": 22.9375
+          },
+          "source": {
+            "left": 69,
+            "top": 102,
+            "right": 221.625,
+            "bottom": 117.390625,
+            "width": 152.625,
+            "height": 15.390625
+          }
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0,
+          "labelToolbar": 0,
+          "headingToolbar": 0,
+          "glyphToolbar": 0
+        }
+      },
+      "screenshot": {
+        "file": "BMNR-768.png",
+        "sha256": "2ab2b4e65e9f3a17b709175a20e481ea82ccb9566c225f4f3ea32943ab318379",
+        "bytes": 108342
+      }
+    },
+    {
+      "id": "compare-768",
+      "instrument": "compare",
+      "width": 768,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "사이클 비교",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 56,
+          "top": 17,
+          "right": 124,
+          "bottom": 31,
+          "width": 68,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 62.59375,
+            "top": 17,
+            "right": 117.390625,
+            "bottom": 31,
+            "width": 54.796875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": true,
+        "glyphsInToolbar": true,
+        "labelRow": null,
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(242, 242, 244)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "반감일 이후 경과일을 기준으로 과거 사이클과 현재 사이클을 겹쳐 비교합니다. 기준: 일별 종가(UTC).",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "compare",
+          "anchor": {
+            "left": 132,
+            "top": 0,
+            "right": 764,
+            "bottom": 48,
+            "width": 632,
+            "height": 48
+          },
+          "expected": {
+            "left": 56,
+            "top": 17
+          },
+          "delta": {
+            "left": 0,
+            "top": 0
+          }
+        },
+        "layout": {
+          "workspace": {
+            "left": 56,
+            "top": 0,
+            "right": 768,
+            "bottom": 900,
+            "width": 712,
+            "height": 900
+          },
+          "stage": {
+            "left": 56,
+            "top": 52,
+            "right": 719,
+            "bottom": 900,
+            "width": 663,
+            "height": 848
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "idle",
+          "hidden": true,
+          "busy": false,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolLabel": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "44px",
+          "paddingTop": "0px",
+          "paddingBottom": "0px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "14px",
+          "lineHeight": "16.8px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 52,
+            "top": 0,
+            "right": 768,
+            "bottom": 48,
+            "width": 716,
+            "height": 48
+          },
+          "plot": {
+            "left": 56,
+            "top": 52,
+            "right": 719,
+            "bottom": 852,
+            "width": 663,
+            "height": 800
+          },
+          "bottom": {
+            "left": 56,
+            "top": 852,
+            "right": 719,
+            "bottom": 900,
+            "width": 663,
+            "height": 48
+          },
+          "readout": null,
+          "source": null
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0
+        }
+      },
+      "screenshot": {
+        "file": "compare-768.png",
+        "sha256": "de6600a105025829ae3ddbe0837e9380c21298697412d99a491db35158329725",
+        "bytes": 96307
+      }
+    },
+    {
+      "id": "BTCUSD-1440",
+      "instrument": "BTCUSD",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 65,
+          "top": 5,
+          "right": 1382,
+          "bottom": 19,
+          "width": 1317,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 65,
+            "top": 5,
+            "right": 109.421875,
+            "bottom": 19,
+            "width": 44.421875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "labelRow": {
+          "rect": {
+            "left": 57,
+            "top": 1,
+            "right": 1390,
+            "bottom": 23,
+            "width": 1333,
+            "height": 22
+          },
+          "glyphs": [
+            {
+              "left": 65,
+              "top": 5,
+              "right": 109.421875,
+              "bottom": 19,
+              "width": 44.421875,
+              "height": 14
+            }
+          ],
+          "painted": true,
+          "inViewport": true,
+          "position": "static",
+          "order": "-1",
+          "padding": "4px 8px"
+        },
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "label",
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 56,
+            "top": 0,
+            "right": 1440,
+            "bottom": 900,
+            "width": 1384,
+            "height": 900
+          },
+          "stage": {
+            "left": 56,
+            "top": 0,
+            "right": 1391,
+            "bottom": 900,
+            "width": 1335,
+            "height": 900
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "idle",
+          "hidden": true,
+          "busy": false,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 86.203125,
+            "top": 33.59375,
+            "right": 141.78125,
+            "bottom": 49.59375,
+            "width": 55.578125,
+            "height": 16
+          }
+        ],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 61,
+          "top": 28,
+          "right": 189,
+          "bottom": 56,
+          "width": 128,
+          "height": 28
+        },
+        "symbolLabel": {
+          "left": 86.203125,
+          "top": 33.59375,
+          "right": 141.78125,
+          "bottom": 50.390625,
+          "width": 55.578125,
+          "height": 16.796875
+        },
+        "symbolButtonStyle": {
+          "height": "28px",
+          "minHeight": "28px",
+          "maxHeight": "none",
+          "paddingTop": "0px",
+          "paddingBottom": "0px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "14px",
+          "lineHeight": "16.8px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 57,
+            "top": 23,
+            "right": 1390,
+            "bottom": 61,
+            "width": 1333,
+            "height": 38
+          },
+          "plot": {
+            "left": 57,
+            "top": 61,
+            "right": 1390,
+            "bottom": 861,
+            "width": 1333,
+            "height": 800
+          },
+          "bottom": {
+            "left": 57,
+            "top": 861,
+            "right": 1390,
+            "bottom": 899,
+            "width": 1333,
+            "height": 38
+          },
+          "readout": {
+            "left": 67,
+            "top": 69,
+            "right": 382.078125,
+            "bottom": 90,
+            "width": 315.078125,
+            "height": 21
+          },
+          "source": {
+            "left": 67,
+            "top": 93,
+            "right": 274.21875,
+            "bottom": 112,
+            "width": 207.21875,
+            "height": 19
+          }
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0,
+          "labelToolbar": 0,
+          "headingToolbar": 0,
+          "glyphToolbar": 0
+        }
+      },
+      "screenshot": {
+        "file": "BTCUSD-1440.png",
+        "sha256": "15c90b28957cddcbb8d3f33b1ef8d75909b68d1df865517464bbd31e54c93697",
+        "bytes": 269470
+      }
+    },
+    {
+      "id": "ETHUSD-1440",
+      "instrument": "ETHUSD",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 65,
+          "top": 5,
+          "right": 1382,
+          "bottom": 19,
+          "width": 1317,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 65,
+            "top": 5,
+            "right": 109.421875,
+            "bottom": 19,
+            "width": 44.421875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "labelRow": {
+          "rect": {
+            "left": 57,
+            "top": 1,
+            "right": 1390,
+            "bottom": 23,
+            "width": 1333,
+            "height": 22
+          },
+          "glyphs": [
+            {
+              "left": 65,
+              "top": 5,
+              "right": 109.421875,
+              "bottom": 19,
+              "width": 44.421875,
+              "height": 14
+            }
+          ],
+          "painted": true,
+          "inViewport": true,
+          "position": "static",
+          "order": "-1",
+          "padding": "4px 8px"
+        },
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "label",
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 56,
+            "top": 0,
+            "right": 1440,
+            "bottom": 900,
+            "width": 1384,
+            "height": 900
+          },
+          "stage": null
+        },
+        "btcRefreshNotice": null,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 86.328125,
+            "top": 33.8125,
+            "right": 141.65625,
+            "bottom": 49.8125,
+            "width": 55.328125,
+            "height": 16
+          }
+        ],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 61,
+          "top": 28,
+          "right": 189,
+          "bottom": 56,
+          "width": 128,
+          "height": 28
+        },
+        "symbolLabel": {
+          "left": 86.328125,
+          "top": 30.8125,
+          "right": 141.65625,
+          "bottom": 53.203125,
+          "width": 55.328125,
+          "height": 22.390625
+        },
+        "symbolButtonStyle": {
+          "height": "28px",
+          "minHeight": "28px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "14px",
+          "lineHeight": "22.4px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 57,
+            "top": 23,
+            "right": 1390,
+            "bottom": 61,
+            "width": 1333,
+            "height": 38
+          },
+          "plot": {
+            "left": 57,
+            "top": 61,
+            "right": 1390,
+            "bottom": 861,
+            "width": 1333,
+            "height": 800
+          },
+          "bottom": {
+            "left": 57,
+            "top": 861,
+            "right": 1390,
+            "bottom": 899,
+            "width": 1333,
+            "height": 38
+          },
+          "readout": {
+            "left": 69,
+            "top": 70,
+            "right": 370.546875,
+            "bottom": 92.9375,
+            "width": 301.546875,
+            "height": 22.9375
+          },
+          "source": {
+            "left": 69,
+            "top": 92,
+            "right": 177.65625,
+            "bottom": 107.390625,
+            "width": 108.65625,
+            "height": 15.390625
+          }
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0,
+          "labelToolbar": 0,
+          "headingToolbar": 0,
+          "glyphToolbar": 0
+        }
+      },
+      "screenshot": {
+        "file": "ETHUSD-1440.png",
+        "sha256": "bdaf7e9dee0470f33c9a246211a3169546ec4c1a684039af66e3cabb01492ca5",
+        "bytes": 173877
+      }
+    },
+    {
+      "id": "MSTR-1440",
+      "instrument": "MSTR",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 65,
+          "top": 5,
+          "right": 1382,
+          "bottom": 19,
+          "width": 1317,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 65,
+            "top": 5,
+            "right": 109.421875,
+            "bottom": 19,
+            "width": 44.421875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "labelRow": {
+          "rect": {
+            "left": 57,
+            "top": 1,
+            "right": 1390,
+            "bottom": 23,
+            "width": 1333,
+            "height": 22
+          },
+          "glyphs": [
+            {
+              "left": 65,
+              "top": 5,
+              "right": 109.421875,
+              "bottom": 19,
+              "width": 44.421875,
+              "height": 14
+            }
+          ],
+          "painted": true,
+          "inViewport": true,
+          "position": "static",
+          "order": "-1",
+          "padding": "4px 8px"
+        },
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "label",
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 56,
+            "top": 0,
+            "right": 1440,
+            "bottom": 900,
+            "width": 1384,
+            "height": 900
+          },
+          "stage": null
+        },
+        "btcRefreshNotice": null,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 94.734375,
+            "top": 33.8125,
+            "right": 133.265625,
+            "bottom": 49.8125,
+            "width": 38.53125,
+            "height": 16
+          }
+        ],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 61,
+          "top": 28,
+          "right": 189,
+          "bottom": 56,
+          "width": 128,
+          "height": 28
+        },
+        "symbolLabel": {
+          "left": 94.734375,
+          "top": 30.8125,
+          "right": 133.265625,
+          "bottom": 53.203125,
+          "width": 38.53125,
+          "height": 22.390625
+        },
+        "symbolButtonStyle": {
+          "height": "28px",
+          "minHeight": "28px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "14px",
+          "lineHeight": "22.4px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 57,
+            "top": 23,
+            "right": 1390,
+            "bottom": 61,
+            "width": 1333,
+            "height": 38
+          },
+          "plot": {
+            "left": 57,
+            "top": 61,
+            "right": 1390,
+            "bottom": 861,
+            "width": 1333,
+            "height": 800
+          },
+          "bottom": {
+            "left": 57,
+            "top": 861,
+            "right": 1390,
+            "bottom": 899,
+            "width": 1333,
+            "height": 38
+          },
+          "readout": {
+            "left": 69,
+            "top": 70,
+            "right": 363.703125,
+            "bottom": 92.9375,
+            "width": 294.703125,
+            "height": 22.9375
+          },
+          "source": {
+            "left": 69,
+            "top": 92,
+            "right": 238,
+            "bottom": 107.390625,
+            "width": 169,
+            "height": 15.390625
+          }
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0,
+          "labelToolbar": 0,
+          "headingToolbar": 0,
+          "glyphToolbar": 0
+        }
+      },
+      "screenshot": {
+        "file": "MSTR-1440.png",
+        "sha256": "96174e1d9d5c4d12083ee2fc4814f7cd3c8f0c9454717edd63cce61eca3f3547",
+        "bytes": 172665
+      }
+    },
+    {
+      "id": "BMNR-1440",
+      "instrument": "BMNR",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 65,
+          "top": 5,
+          "right": 1382,
+          "bottom": 19,
+          "width": 1317,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 65,
+            "top": 5,
+            "right": 109.421875,
+            "bottom": 19,
+            "width": 44.421875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "labelRow": {
+          "rect": {
+            "left": 57,
+            "top": 1,
+            "right": 1390,
+            "bottom": 23,
+            "width": 1333,
+            "height": 22
+          },
+          "glyphs": [
+            {
+              "left": 65,
+              "top": 5,
+              "right": 109.421875,
+              "bottom": 19,
+              "width": 44.421875,
+              "height": 14
+            }
+          ],
+          "painted": true,
+          "inViewport": true,
+          "position": "static",
+          "order": "-1",
+          "padding": "4px 8px"
+        },
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "label",
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 56,
+            "top": 0,
+            "right": 1440,
+            "bottom": 900,
+            "width": 1384,
+            "height": 900
+          },
+          "stage": null
+        },
+        "btcRefreshNotice": null,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 94.109375,
+            "top": 33.8125,
+            "right": 133.875,
+            "bottom": 49.8125,
+            "width": 39.765625,
+            "height": 16
+          }
+        ],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 61,
+          "top": 28,
+          "right": 189,
+          "bottom": 56,
+          "width": 128,
+          "height": 28
+        },
+        "symbolLabel": {
+          "left": 94.109375,
+          "top": 30.8125,
+          "right": 133.875,
+          "bottom": 53.203125,
+          "width": 39.765625,
+          "height": 22.390625
+        },
+        "symbolButtonStyle": {
+          "height": "28px",
+          "minHeight": "28px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "14px",
+          "lineHeight": "22.4px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 57,
+            "top": 23,
+            "right": 1390,
+            "bottom": 61,
+            "width": 1333,
+            "height": 38
+          },
+          "plot": {
+            "left": 57,
+            "top": 61,
+            "right": 1390,
+            "bottom": 861,
+            "width": 1333,
+            "height": 800
+          },
+          "bottom": {
+            "left": 57,
+            "top": 861,
+            "right": 1390,
+            "bottom": 899,
+            "width": 1333,
+            "height": 38
+          },
+          "readout": {
+            "left": 69,
+            "top": 70,
+            "right": 353.21875,
+            "bottom": 92.9375,
+            "width": 284.21875,
+            "height": 22.9375
+          },
+          "source": {
+            "left": 69,
+            "top": 92,
+            "right": 221.421875,
+            "bottom": 107.390625,
+            "width": 152.421875,
+            "height": 15.390625
+          }
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0,
+          "labelToolbar": 0,
+          "headingToolbar": 0,
+          "glyphToolbar": 0
+        }
+      },
+      "screenshot": {
+        "file": "BMNR-1440.png",
+        "sha256": "92f55847802b79e6ca7c61a024eed1a5ad303dd45a25fc43492877bce5fc0fa3",
+        "bytes": 150699
+      }
+    },
+    {
+      "id": "compare-1440",
+      "instrument": "compare",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "사이클 비교",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 56,
+          "top": 12,
+          "right": 124,
+          "bottom": 26,
+          "width": 68,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 62.59375,
+            "top": 12,
+            "right": 117.390625,
+            "bottom": 26,
+            "width": 54.796875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": true,
+        "glyphsInToolbar": true,
+        "labelRow": null,
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(242, 242, 244)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "반감일 이후 경과일을 기준으로 과거 사이클과 현재 사이클을 겹쳐 비교합니다. 기준: 일별 종가(UTC).",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "compare",
+          "anchor": {
+            "left": 132,
+            "top": 0,
+            "right": 1436,
+            "bottom": 38,
+            "width": 1304,
+            "height": 38
+          },
+          "expected": {
+            "left": 56,
+            "top": 12
+          },
+          "delta": {
+            "left": 0,
+            "top": 0
+          }
+        },
+        "layout": {
+          "workspace": {
+            "left": 56,
+            "top": 0,
+            "right": 1440,
+            "bottom": 900,
+            "width": 1384,
+            "height": 900
+          },
+          "stage": {
+            "left": 56,
+            "top": 42,
+            "right": 1391,
+            "bottom": 900,
+            "width": 1335,
+            "height": 858
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "idle",
+          "hidden": true,
+          "busy": false,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolLabel": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolButtonStyle": {
+          "height": "28px",
+          "minHeight": "28px",
+          "maxHeight": "none",
+          "paddingTop": "0px",
+          "paddingBottom": "0px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "14px",
+          "lineHeight": "16.8px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 52,
+            "top": 0,
+            "right": 1440,
+            "bottom": 38,
+            "width": 1388,
+            "height": 38
+          },
+          "plot": {
+            "left": 56,
+            "top": 42,
+            "right": 1391,
+            "bottom": 862,
+            "width": 1335,
+            "height": 820
+          },
+          "bottom": {
+            "left": 56,
+            "top": 862,
+            "right": 1391,
+            "bottom": 900,
+            "width": 1335,
+            "height": 38
+          },
+          "readout": null,
+          "source": null
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0
+        }
+      },
+      "screenshot": {
+        "file": "compare-1440.png",
+        "sha256": "7c155a499f823b294e28cc447f7ead78495129d72b71c5216a3fc0edbb77df45",
+        "bytes": 118802
+      }
+    }
+  ],
+  "supplementalCases": [
+    {
+      "id": "BTCUSD-390",
+      "instrument": "BTCUSD",
+      "width": 390,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 9,
+          "top": 5,
+          "right": 381,
+          "bottom": 19,
+          "width": 372,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 9,
+            "top": 5,
+            "right": 53.421875,
+            "bottom": 19,
+            "width": 44.421875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "labelRow": {
+          "rect": {
+            "left": 1,
+            "top": 1,
+            "right": 389,
+            "bottom": 23,
+            "width": 388,
+            "height": 22
+          },
+          "glyphs": [
+            {
+              "left": 9,
+              "top": 5,
+              "right": 53.421875,
+              "bottom": 19,
+              "width": 44.421875,
+              "height": 14
+            }
+          ],
+          "painted": true,
+          "inViewport": true,
+          "position": "static",
+          "order": "-1",
+          "padding": "4px 8px"
+        },
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "label",
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 900
+          },
+          "stage": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 900
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "idle",
+          "hidden": true,
+          "busy": false,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 53.65625,
+            "top": 868.90625,
+            "right": 97.328125,
+            "bottom": 881.90625,
+            "width": 43.671875,
+            "height": 13
+          }
+        ],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 5,
+          "top": 853.5,
+          "right": 161,
+          "bottom": 897.5,
+          "width": 156,
+          "height": 44
+        },
+        "symbolLabel": {
+          "left": 53.65625,
+          "top": 868.90625,
+          "right": 97.328125,
+          "bottom": 882.09375,
+          "width": 43.671875,
+          "height": 13.1875
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "11px",
+          "lineHeight": "13.2px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 1,
+            "top": 851,
+            "right": 389,
+            "bottom": 899,
+            "width": 388,
+            "height": 48
+          },
+          "plot": {
+            "left": 1,
+            "top": 23,
+            "right": 389,
+            "bottom": 851,
+            "width": 388,
+            "height": 828
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": {
+            "left": 11,
+            "top": 31,
+            "right": 235,
+            "bottom": 62,
+            "width": 224,
+            "height": 31
+          },
+          "source": {
+            "left": 11,
+            "top": 65,
+            "right": 225.5,
+            "bottom": 89,
+            "width": 214.5,
+            "height": 24
+          }
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0,
+          "labelToolbar": 0,
+          "headingToolbar": 0,
+          "glyphToolbar": 0
+        }
+      },
+      "screenshot": {
+        "file": "BTCUSD-390.png",
+        "sha256": "cf3f1cf95951f15a6c8bc0dae59bcdf9448441b58f6f63146260478ab05096a1",
+        "bytes": 107489
+      }
+    },
+    {
+      "id": "ETHUSD-390",
+      "instrument": "ETHUSD",
+      "width": 390,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 9,
+          "top": 5,
+          "right": 381,
+          "bottom": 19,
+          "width": 372,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 9,
+            "top": 5,
+            "right": 53.421875,
+            "bottom": 19,
+            "width": 44.421875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "labelRow": {
+          "rect": {
+            "left": 1,
+            "top": 1,
+            "right": 389,
+            "bottom": 23,
+            "width": 388,
+            "height": 22
+          },
+          "glyphs": [
+            {
+              "left": 9,
+              "top": 5,
+              "right": 53.421875,
+              "bottom": 19,
+              "width": 44.421875,
+              "height": 14
+            }
+          ],
+          "painted": true,
+          "inViewport": true,
+          "position": "static",
+          "order": "-1",
+          "padding": "4px 8px"
+        },
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "label",
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 900
+          },
+          "stage": null
+        },
+        "btcRefreshNotice": null,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 52.28125,
+            "top": 867.90625,
+            "right": 99.703125,
+            "bottom": 881.90625,
+            "width": 47.421875,
+            "height": 14
+          }
+        ],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 5,
+          "top": 853.5,
+          "right": 161,
+          "bottom": 897.5,
+          "width": 156,
+          "height": 44
+        },
+        "symbolLabel": {
+          "left": 52.28125,
+          "top": 865.90625,
+          "right": 99.703125,
+          "bottom": 885.09375,
+          "width": 47.421875,
+          "height": 19.1875
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "12px",
+          "lineHeight": "19.2px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 1,
+            "top": 851,
+            "right": 389,
+            "bottom": 899,
+            "width": 388,
+            "height": 48
+          },
+          "plot": {
+            "left": 1,
+            "top": 23,
+            "right": 389,
+            "bottom": 851,
+            "width": 388,
+            "height": 828
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": {
+            "left": 10,
+            "top": 30,
+            "right": 307.65625,
+            "bottom": 51.59375,
+            "width": 297.65625,
+            "height": 21.59375
+          },
+          "source": {
+            "left": 10,
+            "top": 75,
+            "right": 118.984375,
+            "bottom": 90.390625,
+            "width": 108.984375,
+            "height": 15.390625
+          }
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0,
+          "labelToolbar": 0,
+          "headingToolbar": 0,
+          "glyphToolbar": 0
+        }
+      },
+      "screenshot": {
+        "file": "ETHUSD-390.png",
+        "sha256": "da456ab5718bf4ea80924b586df39434c1e962b0d088f21a1393acaedc952d32",
+        "bytes": 73714
+      }
+    },
+    {
+      "id": "MSTR-390",
+      "instrument": "MSTR",
+      "width": 390,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 9,
+          "top": 5,
+          "right": 381,
+          "bottom": 19,
+          "width": 372,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 9,
+            "top": 5,
+            "right": 53.421875,
+            "bottom": 19,
+            "width": 44.421875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "labelRow": {
+          "rect": {
+            "left": 1,
+            "top": 1,
+            "right": 389,
+            "bottom": 23,
+            "width": 388,
+            "height": 22
+          },
+          "glyphs": [
+            {
+              "left": 9,
+              "top": 5,
+              "right": 53.421875,
+              "bottom": 19,
+              "width": 44.421875,
+              "height": 14
+            }
+          ],
+          "painted": true,
+          "inViewport": true,
+          "position": "static",
+          "order": "-1",
+          "padding": "4px 8px"
+        },
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "label",
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 900
+          },
+          "stage": null
+        },
+        "btcRefreshNotice": null,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 60.859375,
+            "top": 868.703125,
+            "right": 91.140625,
+            "bottom": 881.703125,
+            "width": 30.28125,
+            "height": 13
+          }
+        ],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 5,
+          "top": 853.5,
+          "right": 161,
+          "bottom": 897.5,
+          "width": 156,
+          "height": 44
+        },
+        "symbolLabel": {
+          "left": 60.859375,
+          "top": 866.703125,
+          "right": 91.140625,
+          "bottom": 884.296875,
+          "width": 30.28125,
+          "height": 17.59375
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "11px",
+          "lineHeight": "17.6px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 1,
+            "top": 851,
+            "right": 389,
+            "bottom": 899,
+            "width": 388,
+            "height": 48
+          },
+          "plot": {
+            "left": 1,
+            "top": 23,
+            "right": 389,
+            "bottom": 851,
+            "width": 388,
+            "height": 828
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": {
+            "left": 10,
+            "top": 30,
+            "right": 299.125,
+            "bottom": 51.59375,
+            "width": 289.125,
+            "height": 21.59375
+          },
+          "source": {
+            "left": 10,
+            "top": 75,
+            "right": 75.125,
+            "bottom": 90.390625,
+            "width": 65.125,
+            "height": 15.390625
+          }
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0,
+          "labelToolbar": 0,
+          "headingToolbar": 0,
+          "glyphToolbar": 0
+        }
+      },
+      "screenshot": {
+        "file": "MSTR-390.png",
+        "sha256": "cf64b9d53dd7377a5613cc8452927d70107d60d646d00a3c5419c5240b3888a9",
+        "bytes": 73644
+      }
+    },
+    {
+      "id": "BMNR-390",
+      "instrument": "BMNR",
+      "width": 390,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 9,
+          "top": 5,
+          "right": 381,
+          "bottom": 19,
+          "width": 372,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 9,
+            "top": 5,
+            "right": 53.421875,
+            "bottom": 19,
+            "width": 44.421875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "labelRow": {
+          "rect": {
+            "left": 1,
+            "top": 1,
+            "right": 389,
+            "bottom": 23,
+            "width": 388,
+            "height": 22
+          },
+          "glyphs": [
+            {
+              "left": 9,
+              "top": 5,
+              "right": 53.421875,
+              "bottom": 19,
+              "width": 44.421875,
+              "height": 14
+            }
+          ],
+          "painted": true,
+          "inViewport": true,
+          "position": "static",
+          "order": "-1",
+          "padding": "4px 8px"
+        },
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "label",
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 900
+          },
+          "stage": null
+        },
+        "btcRefreshNotice": null,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 60.375,
+            "top": 868.703125,
+            "right": 91.625,
+            "bottom": 881.703125,
+            "width": 31.25,
+            "height": 13
+          }
+        ],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 5,
+          "top": 853.5,
+          "right": 161,
+          "bottom": 897.5,
+          "width": 156,
+          "height": 44
+        },
+        "symbolLabel": {
+          "left": 60.375,
+          "top": 866.703125,
+          "right": 91.625,
+          "bottom": 884.296875,
+          "width": 31.25,
+          "height": 17.59375
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "11px",
+          "lineHeight": "17.6px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 1,
+            "top": 851,
+            "right": 389,
+            "bottom": 899,
+            "width": 388,
+            "height": 48
+          },
+          "plot": {
+            "left": 1,
+            "top": 23,
+            "right": 389,
+            "bottom": 851,
+            "width": 388,
+            "height": 828
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": {
+            "left": 10,
+            "top": 30,
+            "right": 289.265625,
+            "bottom": 51.59375,
+            "width": 279.265625,
+            "height": 21.59375
+          },
+          "source": {
+            "left": 10,
+            "top": 75,
+            "right": 75.125,
+            "bottom": 90.390625,
+            "width": 65.125,
+            "height": 15.390625
+          }
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0,
+          "labelToolbar": 0,
+          "headingToolbar": 0,
+          "glyphToolbar": 0
+        }
+      },
+      "screenshot": {
+        "file": "BMNR-390.png",
+        "sha256": "99091b2056634ee5a032965fb28c09a2a619012157417917f744e0f46b2a36de",
+        "bytes": 65300
+      }
+    },
+    {
+      "id": "compare-390",
+      "instrument": "compare",
+      "width": 390,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "사이클 비교",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 48,
+          "top": 869.5,
+          "right": 116,
+          "bottom": 883.5,
+          "width": 68,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 54.59375,
+            "top": 869.5,
+            "right": 109.390625,
+            "bottom": 883.5,
+            "width": 54.796875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": true,
+        "glyphsInToolbar": true,
+        "labelRow": null,
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(242, 242, 244)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "반감일 이후 경과일을 기준으로 과거 사이클과 현재 사이클을 겹쳐 비교합니다. 기준: 일별 종가(UTC).",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "compare",
+          "anchor": {
+            "left": 124,
+            "top": 855,
+            "right": 386,
+            "bottom": 898,
+            "width": 262,
+            "height": 43
+          },
+          "expected": {
+            "left": 48,
+            "top": 869.5
+          },
+          "delta": {
+            "left": 0,
+            "top": 0
+          }
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 900
+          },
+          "stage": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 900
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "idle",
+          "hidden": true,
+          "busy": false,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolLabel": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "11px",
+          "lineHeight": "13.2px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 852,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 48
+          },
+          "plot": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 852,
+            "width": 390,
+            "height": 852
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": null,
+          "source": null
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0
+        }
+      },
+      "screenshot": {
+        "file": "compare-390.png",
+        "sha256": "fef35eefaa3ae9b6ad7c0319b257e14486c9390d02f92ebc32f24b0c71be3b4f",
+        "bytes": 66602
+      }
+    },
+    {
+      "id": "conference-320",
+      "instrument": "conference",
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "컨퍼런스 복습",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 12,
+          "top": 18,
+          "right": 104.140625,
+          "bottom": 42,
+          "width": 92.140625,
+          "height": 24
+        },
+        "glyphs": [
+          {
+            "left": 12,
+            "top": 20,
+            "right": 104.140625,
+            "bottom": 40,
+            "width": 92.140625,
+            "height": 20
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": true,
+        "glyphsInToolbar": true,
+        "labelRow": null,
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "17px",
+        "lineHeight": "24px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "장표와 녹음 자막을 함께 봅니다. 기준: 행사 시작부터 경과한 시각 · 선택한 덱.",
+        "descriptionCount": 1,
+        "followsToolbar": false,
+        "outsidePlot": true,
+        "inDashboardHeader": true,
+        "placement": {
+          "kind": null,
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 112,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 788
+          },
+          "stage": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "idle",
+          "hidden": true,
+          "busy": false,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": null,
+        "symbolLabel": null,
+        "symbolButtonStyle": null,
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 112,
+            "width": 320,
+            "height": 112
+          },
+          "plot": null,
+          "bottom": {
+            "left": 0,
+            "top": 856,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 44
+          },
+          "readout": null,
+          "source": null
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0
+        }
+      },
+      "screenshot": {
+        "file": "conference-320.png",
+        "sha256": "635356ba919564a75b6aa4808a08c2e682208046713b8f4fc97cf1d564acfb74",
+        "bytes": 34513
+      }
+    },
+    {
+      "id": "conference-390",
+      "instrument": "conference",
+      "width": 390,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "컨퍼런스 복습",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 12,
+          "top": 18,
+          "right": 104.140625,
+          "bottom": 42,
+          "width": 92.140625,
+          "height": 24
+        },
+        "glyphs": [
+          {
+            "left": 12,
+            "top": 20,
+            "right": 104.140625,
+            "bottom": 40,
+            "width": 92.140625,
+            "height": 20
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": true,
+        "glyphsInToolbar": true,
+        "labelRow": null,
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "17px",
+        "lineHeight": "24px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "장표와 녹음 자막을 함께 봅니다. 기준: 행사 시작부터 경과한 시각 · 선택한 덱.",
+        "descriptionCount": 1,
+        "followsToolbar": false,
+        "outsidePlot": true,
+        "inDashboardHeader": true,
+        "placement": {
+          "kind": null,
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 112,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 788
+          },
+          "stage": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "idle",
+          "hidden": true,
+          "busy": false,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": null,
+        "symbolLabel": null,
+        "symbolButtonStyle": null,
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 112,
+            "width": 390,
+            "height": 112
+          },
+          "plot": null,
+          "bottom": {
+            "left": 0,
+            "top": 856,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 44
+          },
+          "readout": null,
+          "source": null
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0
+        }
+      },
+      "screenshot": {
+        "file": "conference-390.png",
+        "sha256": "fc7e1d84bc81a775f0507c95247bed8fe4eb534a535c314e64ac694fc57aac63",
+        "bytes": 38832
+      }
+    },
+    {
+      "id": "conference-768",
+      "instrument": "conference",
+      "width": 768,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "컨퍼런스 복습",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 24,
+          "top": 16,
+          "right": 132.40625,
+          "bottom": 44,
+          "width": 108.40625,
+          "height": 28
+        },
+        "glyphs": [
+          {
+            "left": 24,
+            "top": 18,
+            "right": 132.40625,
+            "bottom": 42,
+            "width": 108.40625,
+            "height": 24
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": true,
+        "glyphsInToolbar": true,
+        "labelRow": null,
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "20px",
+        "lineHeight": "28px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "장표와 녹음 자막을 함께 봅니다. 기준: 행사 시작부터 경과한 시각 · 선택한 덱.",
+        "descriptionCount": 1,
+        "followsToolbar": false,
+        "outsidePlot": true,
+        "inDashboardHeader": true,
+        "placement": {
+          "kind": null,
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 112,
+            "right": 768,
+            "bottom": 900,
+            "width": 768,
+            "height": 788
+          },
+          "stage": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "idle",
+          "hidden": true,
+          "busy": false,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": null,
+        "symbolLabel": null,
+        "symbolButtonStyle": null,
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 0,
+            "right": 768,
+            "bottom": 112,
+            "width": 768,
+            "height": 112
+          },
+          "plot": null,
+          "bottom": {
+            "left": 0,
+            "top": 856,
+            "right": 768,
+            "bottom": 900,
+            "width": 768,
+            "height": 44
+          },
+          "readout": null,
+          "source": null
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0
+        }
+      },
+      "screenshot": {
+        "file": "conference-768.png",
+        "sha256": "64c8fd491a4e6e4ae448c6e6a48681a3c0f706ea1a3e6a71288bd644177f2029",
+        "bytes": 61675
+      }
+    },
+    {
+      "id": "conference-1440",
+      "instrument": "conference",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "failures": [],
+      "state": {
+        "title": "컨퍼런스 복습",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 80,
+          "top": 16,
+          "right": 188.40625,
+          "bottom": 44,
+          "width": 108.40625,
+          "height": 28
+        },
+        "glyphs": [
+          {
+            "left": 80,
+            "top": 18,
+            "right": 188.40625,
+            "bottom": 42,
+            "width": 108.40625,
+            "height": 24
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": true,
+        "glyphsInToolbar": true,
+        "labelRow": null,
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(25, 31, 40)",
+        "fontSize": "20px",
+        "lineHeight": "28px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "장표와 녹음 자막을 함께 봅니다. 기준: 행사 시작부터 경과한 시각 · 선택한 덱.",
+        "descriptionCount": 1,
+        "followsToolbar": false,
+        "outsidePlot": true,
+        "inDashboardHeader": true,
+        "placement": {
+          "kind": null,
+          "anchor": null,
+          "expected": null,
+          "delta": null
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 112,
+            "right": 1440,
+            "bottom": 900,
+            "width": 1440,
+            "height": 788
+          },
+          "stage": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "idle",
+          "hidden": true,
+          "busy": false,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": null,
+        "symbolLabel": null,
+        "symbolButtonStyle": null,
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 0,
+            "right": 1440,
+            "bottom": 112,
+            "width": 1440,
+            "height": 112
+          },
+          "plot": null,
+          "bottom": {
+            "left": 0,
+            "top": 856,
+            "right": 1440,
+            "bottom": 900,
+            "width": 1440,
+            "height": 44
+          },
+          "readout": null,
+          "source": null
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0
+        }
+      },
+      "screenshot": {
+        "file": "conference-1440.png",
+        "sha256": "cc42c60d6ac195f17a459a134ed8b8ea11c067d35d85a03b5f043236a74e3224",
+        "bytes": 67324
+      }
+    }
+  ],
+  "layoutShiftCases": [
+    {
+      "id": "compare-320-ancestor-resize",
+      "status": "passed",
+      "failures": [],
+      "before": {
+        "title": "사이클 비교",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 48,
+          "top": 869.5,
+          "right": 116,
+          "bottom": 883.5,
+          "width": 68,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 54.59375,
+            "top": 869.5,
+            "right": 109.390625,
+            "bottom": 883.5,
+            "width": 54.796875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": true,
+        "glyphsInToolbar": true,
+        "labelRow": null,
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(242, 242, 244)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "반감일 이후 경과일을 기준으로 과거 사이클과 현재 사이클을 겹쳐 비교합니다. 기준: 일별 종가(UTC).",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "compare",
+          "anchor": {
+            "left": 124,
+            "top": 855,
+            "right": 316,
+            "bottom": 898,
+            "width": 192,
+            "height": 43
+          },
+          "expected": {
+            "left": 48,
+            "top": 869.5
+          },
+          "delta": {
+            "left": 0,
+            "top": 0
+          }
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 900
+          },
+          "stage": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 900
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "checked",
+          "hidden": true,
+          "busy": false,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolLabel": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "11px",
+          "lineHeight": "13.2px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 852,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 48
+          },
+          "plot": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 852,
+            "width": 320,
+            "height": 852
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": null,
+          "source": null
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0
+        }
+      },
+      "shifted": {
+        "title": "사이클 비교",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 48,
+          "top": 797.5,
+          "right": 116,
+          "bottom": 811.5,
+          "width": 68,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 54.59375,
+            "top": 797.5,
+            "right": 109.390625,
+            "bottom": 811.5,
+            "width": 54.796875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": true,
+        "glyphsInToolbar": true,
+        "labelRow": null,
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(242, 242, 244)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "반감일 이후 경과일을 기준으로 과거 사이클과 현재 사이클을 겹쳐 비교합니다. 기준: 일별 종가(UTC).",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "compare",
+          "anchor": {
+            "left": 124,
+            "top": 783,
+            "right": 316,
+            "bottom": 826,
+            "width": 192,
+            "height": 43
+          },
+          "expected": {
+            "left": 48,
+            "top": 797.5
+          },
+          "delta": {
+            "left": 0,
+            "top": 0
+          }
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 900
+          },
+          "stage": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 828,
+            "width": 320,
+            "height": 828
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "checked",
+          "hidden": true,
+          "busy": false,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolLabel": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "11px",
+          "lineHeight": "13.2px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 780,
+            "right": 320,
+            "bottom": 828,
+            "width": 320,
+            "height": 48
+          },
+          "plot": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 780,
+            "width": 320,
+            "height": 780
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": null,
+          "source": null
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0
+        }
+      },
+      "restored": {
+        "title": "사이클 비교",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 48,
+          "top": 869.5,
+          "right": 116,
+          "bottom": 883.5,
+          "width": 68,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 54.59375,
+            "top": 869.5,
+            "right": 109.390625,
+            "bottom": 883.5,
+            "width": 54.796875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": true,
+        "glyphsInToolbar": true,
+        "labelRow": null,
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(242, 242, 244)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "반감일 이후 경과일을 기준으로 과거 사이클과 현재 사이클을 겹쳐 비교합니다. 기준: 일별 종가(UTC).",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "compare",
+          "anchor": {
+            "left": 124,
+            "top": 855,
+            "right": 316,
+            "bottom": 898,
+            "width": 192,
+            "height": 43
+          },
+          "expected": {
+            "left": 48,
+            "top": 869.5
+          },
+          "delta": {
+            "left": 0,
+            "top": 0
+          }
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 900
+          },
+          "stage": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 900
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "checked",
+          "hidden": true,
+          "busy": false,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolLabel": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "11px",
+          "lineHeight": "13.2px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 852,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 48
+          },
+          "plot": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 852,
+            "width": 320,
+            "height": 852
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": null,
+          "source": null
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0
+        }
+      }
+    },
+    {
+      "id": "compare-390-ancestor-resize",
+      "status": "passed",
+      "failures": [],
+      "before": {
+        "title": "사이클 비교",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 48,
+          "top": 869.5,
+          "right": 116,
+          "bottom": 883.5,
+          "width": 68,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 54.59375,
+            "top": 869.5,
+            "right": 109.390625,
+            "bottom": 883.5,
+            "width": 54.796875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": true,
+        "glyphsInToolbar": true,
+        "labelRow": null,
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(242, 242, 244)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "반감일 이후 경과일을 기준으로 과거 사이클과 현재 사이클을 겹쳐 비교합니다. 기준: 일별 종가(UTC).",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "compare",
+          "anchor": {
+            "left": 124,
+            "top": 855,
+            "right": 386,
+            "bottom": 898,
+            "width": 262,
+            "height": 43
+          },
+          "expected": {
+            "left": 48,
+            "top": 869.5
+          },
+          "delta": {
+            "left": 0,
+            "top": 0
+          }
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 900
+          },
+          "stage": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 900
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "idle",
+          "hidden": true,
+          "busy": false,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolLabel": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "11px",
+          "lineHeight": "13.2px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 852,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 48
+          },
+          "plot": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 852,
+            "width": 390,
+            "height": 852
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": null,
+          "source": null
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0
+        }
+      },
+      "shifted": {
+        "title": "사이클 비교",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 48,
+          "top": 797.5,
+          "right": 116,
+          "bottom": 811.5,
+          "width": 68,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 54.59375,
+            "top": 797.5,
+            "right": 109.390625,
+            "bottom": 811.5,
+            "width": 54.796875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": true,
+        "glyphsInToolbar": true,
+        "labelRow": null,
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(242, 242, 244)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "반감일 이후 경과일을 기준으로 과거 사이클과 현재 사이클을 겹쳐 비교합니다. 기준: 일별 종가(UTC).",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "compare",
+          "anchor": {
+            "left": 124,
+            "top": 783,
+            "right": 386,
+            "bottom": 826,
+            "width": 262,
+            "height": 43
+          },
+          "expected": {
+            "left": 48,
+            "top": 797.5
+          },
+          "delta": {
+            "left": 0,
+            "top": 0
+          }
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 900
+          },
+          "stage": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 828,
+            "width": 390,
+            "height": 828
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "idle",
+          "hidden": true,
+          "busy": false,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolLabel": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "11px",
+          "lineHeight": "13.2px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 780,
+            "right": 390,
+            "bottom": 828,
+            "width": 390,
+            "height": 48
+          },
+          "plot": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 780,
+            "width": 390,
+            "height": 780
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": null,
+          "source": null
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0
+        }
+      },
+      "restored": {
+        "title": "사이클 비교",
+        "h1Count": 1,
+        "paintedH1Count": 1,
+        "heading": {
+          "left": 48,
+          "top": 869.5,
+          "right": 116,
+          "bottom": 883.5,
+          "width": 68,
+          "height": 14
+        },
+        "glyphs": [
+          {
+            "left": 54.59375,
+            "top": 869.5,
+            "right": 109.390625,
+            "bottom": 883.5,
+            "width": 54.796875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": true,
+        "glyphsInToolbar": true,
+        "labelRow": null,
+        "painted": true,
+        "paintIssues": [],
+        "color": "rgb(242, 242, 244)",
+        "fontSize": "12px",
+        "lineHeight": "14px",
+        "fontFamily": "\"Pretendard Variable\", -apple-system, \"system-ui\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif",
+        "describedBy": "atlas-page-description",
+        "description": "반감일 이후 경과일을 기준으로 과거 사이클과 현재 사이클을 겹쳐 비교합니다. 기준: 일별 종가(UTC).",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "inDashboardHeader": false,
+        "placement": {
+          "kind": "compare",
+          "anchor": {
+            "left": 124,
+            "top": 855,
+            "right": 386,
+            "bottom": 898,
+            "width": 262,
+            "height": 43
+          },
+          "expected": {
+            "left": 48,
+            "top": 869.5
+          },
+          "delta": {
+            "left": 0,
+            "top": 0
+          }
+        },
+        "layout": {
+          "workspace": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 900
+          },
+          "stage": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 900
+          }
+        },
+        "btcRefreshNotice": {
+          "state": "idle",
+          "hidden": true,
+          "busy": false,
+          "rect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "compareReservedHeight": "0px"
+        },
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolGlyphsInToolbar": true,
+        "symbolCollision": false,
+        "symbolButton": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolLabel": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "symbolButtonStyle": {
+          "height": "44px",
+          "minHeight": "44px",
+          "maxHeight": "none",
+          "paddingTop": "4px",
+          "paddingBottom": "4px",
+          "marginTop": "0px",
+          "marginBottom": "0px",
+          "fontSize": "11px",
+          "lineHeight": "13.2px"
+        },
+        "pointer": {
+          "fine": true,
+          "coarse": false,
+          "none": false
+        },
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 852,
+            "right": 390,
+            "bottom": 900,
+            "width": 390,
+            "height": 48
+          },
+          "plot": {
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 852,
+            "width": 390,
+            "height": 852
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": null,
+          "source": null
+        },
+        "overlapAreas": {
+          "headingSymbolButton": 0,
+          "headingSymbolLabel": 0,
+          "glyphSymbolButton": 0,
+          "glyphSymbolLabel": 0,
+          "headingSymbolGlyphs": 0,
+          "labelPlot": 0,
+          "headingPlot": 0,
+          "glyphPlot": 0
+        }
+      }
+    }
+  ],
+  "failures": [],
+  "nativeWindowEnvelope": {
+    "windowId": 837329368,
+    "bounds": {
+      "left": 22,
+      "top": 22,
+      "width": 2048,
+      "height": 1600,
+      "windowState": "normal"
+    },
+    "client": {
+      "width": 2048,
+      "height": 1513
+    },
+    "requestedViewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "verifiedBeforeEmulation": true
+  },
+  "status": "passed",
+  "counts": {
+    "cases": {
+      "total": 15,
+      "passed": 15
+    },
+    "supplementalCases": {
+      "total": 9,
+      "passed": 9
+    },
+    "layoutShiftCases": {
+      "total": 2,
+      "passed": 2
+    }
+  }
+}

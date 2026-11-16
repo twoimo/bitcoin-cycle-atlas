@@ -1,0 +1,196 @@
+{
+  "sourceCommit": "a4f127f2552db288bba1483510cc57ce9be13784",
+  "command": [
+    "npm",
+    "test"
+  ],
+  "hostRuntime": "v24.22.1 linux/x64",
+  "exitCode": 1,
+  "hostBatch": {
+    "tests": 3920,
+    "pass": 3903,
+    "fail": 17,
+    "skip": 0,
+    "cancelled": 0
+  },
+  "runner": {
+    "complete": false,
+    "batches": 2,
+    "frozenRuntime": "v24.22.2 linux/x64",
+    "error": "Unable to start the declared test runtime: spawn docker ENOENT"
+  },
+  "baseline": {
+    "sourceCommit": "b230fa87291176cf81a687cab1158c5800405597",
+    "providedResult": {
+      "pass": 3898,
+      "fail": 17,
+      "skip": 5,
+      "complete": false
+    },
+    "receipt": "../qa-q-p2chrome-2-mac-3b79d63/README.md",
+    "interpretation": "Existing receipt records replay of the same six files at b230fa8 with the same 17 failures. This run matches those six failure groups; no new baseline replay was run here."
+  },
+  "groups": [
+    {
+      "file": "tests/comparison-history-render.test.mjs",
+      "count": 1,
+      "names": [
+        "tests/comparison-history-render.test.mjs"
+      ],
+      "reason": "Module initialization fails: the old dark-theme source delimiter is absent."
+    },
+    {
+      "file": "tests/comparison-url-state.test.mjs",
+      "count": 1,
+      "names": [
+        "the owned key list cannot drift from what persistUrl writes"
+      ],
+      "reason": "The old source delimiter is absent; the lexical slice captures unrelated data/ipo/outlook keys."
+    },
+    {
+      "file": "tests/eth-review-packet.test.mjs",
+      "count": 1,
+      "names": [
+        "declared ETH review inventory includes every top-level browser source and root stylesheet"
+      ],
+      "reason": "Existing review seed omits chart-chrome.css and the Pretendard stylesheet."
+    },
+    {
+      "file": "tests/eth-view-state.test.mjs",
+      "count": 2,
+      "names": [
+        "ETH routing loads and awaits only the ETH workspace, while BTC and unsupported symbols retain the BTC entry",
+        "a failed ETH import or initialization reports the boot error and never falls back to a mislabeled BTC chart"
+      ],
+      "reason": "VM source preprocessing leaves initTheme import: Cannot use import statement outside a module."
+    },
+    {
+      "file": "tests/native-chart-routing.test.mjs",
+      "count": 11,
+      "names": [
+        "MSTR / enters its own native chart before any ETF frame can mount",
+        "MSTR /market-lab/charts/ enters its own native chart before any ETF frame can mount",
+        "BMNR / enters its own native chart before any ETF frame can mount",
+        "BMNR /market-lab/charts/ enters its own native chart before any ETF frame can mount",
+        "BTCUSD root deep link dispatches to the instrument's own chart family",
+        "ETHUSD root deep link dispatches to the instrument's own chart family",
+        "MSTR root deep link dispatches to the instrument's own chart family",
+        "TQQQ root deep link dispatches to the instrument's own chart family",
+        "SOXL root deep link dispatches to the instrument's own chart family",
+        "233740 root deep link dispatches to the instrument's own chart family",
+        "workspace root routing preserves explicit non-chart owners and existing fallback boundaries"
+      ],
+      "reason": "VM context has no initTheme stub: initTheme is not defined before routing."
+    },
+    {
+      "file": "tests/standalone-packaging.test.mjs",
+      "count": 1,
+      "names": [
+        "the real standalone is deterministic, preserves every module and snapshot, and passes the runtime parser/linker"
+      ],
+      "reason": "Fixed stylesheet count expects 42, actual remains 43."
+    }
+  ],
+  "baselineIdentity": [
+    {
+      "file": "tests/comparison-history-render.test.mjs",
+      "baselineSha256": "52c7fa3ce68a40aa727c7f6e9b501eac014389bcc10cba36fbe0c24a3fac21a4",
+      "productSha256": "52c7fa3ce68a40aa727c7f6e9b501eac014389bcc10cba36fbe0c24a3fac21a4",
+      "same": true
+    },
+    {
+      "file": "tests/comparison-url-state.test.mjs",
+      "baselineSha256": "f704fc2a930bbf354d18ae3ec4ef9da0c9e833351466f827804bd80b30fe8327",
+      "productSha256": "f704fc2a930bbf354d18ae3ec4ef9da0c9e833351466f827804bd80b30fe8327",
+      "same": true
+    },
+    {
+      "file": "tests/eth-review-packet.test.mjs",
+      "baselineSha256": "2a8bca1048a48b1ab84f5e205823afdec1bd0083a301108d915bda0ed67ff345",
+      "productSha256": "2a8bca1048a48b1ab84f5e205823afdec1bd0083a301108d915bda0ed67ff345",
+      "same": true
+    },
+    {
+      "file": "tests/eth-view-state.test.mjs",
+      "baselineSha256": "ebe969ef4f05da3c650f938707981c6307eae6fc6015426d7414d14a38ef6ecf",
+      "productSha256": "ebe969ef4f05da3c650f938707981c6307eae6fc6015426d7414d14a38ef6ecf",
+      "same": true
+    },
+    {
+      "file": "tests/native-chart-routing.test.mjs",
+      "baselineSha256": "4159f8abfe733393f8b35f756b744ca06124f6d62f7851d000a29bf0d0c59b5b",
+      "productSha256": "4159f8abfe733393f8b35f756b744ca06124f6d62f7851d000a29bf0d0c59b5b",
+      "same": true
+    },
+    {
+      "file": "tests/standalone-packaging.test.mjs",
+      "baselineSha256": "a2622fa260460a95297603d5712f152fd2163804e6c3df16fc2f0a0d1ca39eb3",
+      "productSha256": "a2622fa260460a95297603d5712f152fd2163804e6c3df16fc2f0a0d1ca39eb3",
+      "same": true
+    },
+    {
+      "file": "dist/app.js",
+      "baselineSha256": "7a9dd50b29487f155c31e9a04dfdf576b4f4fd2f33098246b459cf2747bc29a7",
+      "productSha256": "7a9dd50b29487f155c31e9a04dfdf576b4f4fd2f33098246b459cf2747bc29a7",
+      "same": true
+    },
+    {
+      "file": "dist/comparison-url-state.js",
+      "baselineSha256": "5c8d26ca71fd5b145b946f6dbc26526732087e790f0739de24b4b95bcec82a4c",
+      "productSha256": "5c8d26ca71fd5b145b946f6dbc26526732087e790f0739de24b4b95bcec82a4c",
+      "same": true
+    },
+    {
+      "file": "dist/site-entry.js",
+      "baselineSha256": "2a3d474c69079e742e4890bb0522633009c11e2c989a5315c88ed37e0ea0ce75",
+      "productSha256": "2a3d474c69079e742e4890bb0522633009c11e2c989a5315c88ed37e0ea0ce75",
+      "same": true
+    },
+    {
+      "file": "dist/atlas-navigation.js",
+      "baselineSha256": "070b8ea1f27834ac53182065341b5ed208a0ebcb8cfa91725671f9b577dbc46b",
+      "productSha256": "070b8ea1f27834ac53182065341b5ed208a0ebcb8cfa91725671f9b577dbc46b",
+      "same": true
+    },
+    {
+      "file": "research-data/eth-review-scope.json",
+      "baselineSha256": "24cd4a5005fa4b6e13faf9c173545de7f9b12e0a6eb69ed43ae02d9f78f9e527",
+      "productSha256": "24cd4a5005fa4b6e13faf9c173545de7f9b12e0a6eb69ed43ae02d9f78f9e527",
+      "same": true
+    },
+    {
+      "file": "scripts/standalone-verification.mjs",
+      "baselineSha256": "5185416aef998b4631f62c088d0542c4f4f4ab7a793804386a76ba67e5efd467",
+      "productSha256": "5185416aef998b4631f62c088d0542c4f4f4ab7a793804386a76ba67e5efd467",
+      "same": true
+    },
+    {
+      "file": "scripts/standalone-modules.mjs",
+      "baselineSha256": "b320e35d6b877f074da86fbccffc33ec7f98354a8c85f6481bf96bbb39c05499",
+      "productSha256": "b320e35d6b877f074da86fbccffc33ec7f98354a8c85f6481bf96bbb39c05499",
+      "same": true
+    },
+    {
+      "file": "scripts/build-standalone.mjs",
+      "baselineSha256": "834dff6ccd96faaf00ffa766bd7ec1e73a196ff2a5c774cd232c5667b5a67040",
+      "productSha256": "834dff6ccd96faaf00ffa766bd7ec1e73a196ff2a5c774cd232c5667b5a67040",
+      "same": true
+    },
+    {
+      "file": "scripts/build-site-styles.mjs",
+      "baselineSha256": "b7b130b5e8198a5ee76fc4d0d0e81416b1f4c175f69393e560cd67f21eae847a",
+      "productSha256": "b7b130b5e8198a5ee76fc4d0d0e81416b1f4c175f69393e560cd67f21eae847a",
+      "same": true
+    }
+  ],
+  "sameFiles": 15,
+  "rootStylesheetPaths": [
+    "./fonts/pretendard/pretendard-variable.css",
+    "./styles.css",
+    "./site-before-shell.css",
+    "./atlas-shell.css",
+    "./site-after-shell.css"
+  ],
+  "rootStylesheetPathListUnchanged": true,
+  "disposition": "Existing 17 failures remain a pre-merge gate; no fixes or assertion changes made."
+}

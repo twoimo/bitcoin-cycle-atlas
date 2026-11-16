@@ -1,0 +1,18 @@
+{
+  "name": "unit",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "--test-concurrency=4"
+  ],
+  "sourceCommit": "15cb6792d96c6c8b77cf62a8db97d004e41cdc3b",
+  "sourceTree": "5f3c94efcb7431c9f69aa1bb08fb04830bf6b5a2",
+  "startedAt": "2026-11-11T19:25:31.317411+00:00",
+  "exitCode": 1,
+  "durationSec": 491.291,
+  "finishedAt": "2026-11-11T19:33:42.605561+00:00",
+  "headAfter": "15cb6792d96c6c8b77cf62a8db97d004e41cdc3b",
+  "trackedDiffAfter": "",
+  "logSha256": "557c47d63511552db4c4bdc5236539efb24fb0986dc1b24d5b571cd805daa77a"
+}

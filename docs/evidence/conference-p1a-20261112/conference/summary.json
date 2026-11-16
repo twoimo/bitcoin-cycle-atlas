@@ -1,0 +1,152 @@
+{
+  "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "status": "passed",
+  "cases": 14,
+  "passed": 14,
+  "failures": 0,
+  "runtimeErrors": 0,
+  "resourceErrors": 0,
+  "verifiedScreenshots": 24,
+  "sourceIntegrity": {
+    "checkedFiles": 968,
+    "changedSources": [],
+    "unchangedDuringRun": true
+  },
+  "layout": [
+    {
+      "viewport": "390x844",
+      "stage": [
+        338,
+        190.125
+      ],
+      "overflow": 0,
+      "play": [
+        56,
+        56
+      ],
+      "controlsBottom": 800,
+      "mainBottom": 800,
+      "transcript": "sheet"
+    },
+    {
+      "viewport": "320x740",
+      "stage": [
+        268,
+        150.75
+      ],
+      "overflow": 0,
+      "play": [
+        56,
+        56
+      ],
+      "controlsBottom": 696,
+      "mainBottom": 696,
+      "transcript": "sheet"
+    },
+    {
+      "viewport": "768x1024",
+      "stage": [
+        632,
+        355.5
+      ],
+      "overflow": 0,
+      "play": [
+        56,
+        56
+      ],
+      "controlsBottom": 980,
+      "mainBottom": 980,
+      "transcript": "sheet"
+    },
+    {
+      "viewport": "1024x768",
+      "stage": [
+        748,
+        420.75
+      ],
+      "overflow": 0,
+      "play": [
+        56,
+        56
+      ],
+      "controlsBottom": 724,
+      "mainBottom": 724,
+      "transcript": "dock"
+    },
+    {
+      "viewport": "1440x900",
+      "stage": [
+        976,
+        549
+      ],
+      "overflow": 0,
+      "play": [
+        56,
+        56
+      ],
+      "controlsBottom": 856,
+      "mainBottom": 856,
+      "transcript": "dock"
+    },
+    {
+      "viewport": "1920x1080",
+      "stage": [
+        1120,
+        630
+      ],
+      "overflow": 0,
+      "play": [
+        56,
+        56
+      ],
+      "controlsBottom": 1036,
+      "mainBottom": 1036,
+      "transcript": "dock"
+    },
+    {
+      "viewport": "1280x900",
+      "stage": [
+        976,
+        549
+      ],
+      "overflow": 0,
+      "play": [
+        56,
+        56
+      ],
+      "controlsBottom": 856,
+      "mainBottom": 856,
+      "transcript": "dock"
+    },
+    {
+      "viewport": "1023x900",
+      "stage": [
+        739,
+        415.6875
+      ],
+      "overflow": 0,
+      "play": [
+        56,
+        56
+      ],
+      "controlsBottom": 856,
+      "mainBottom": 856,
+      "transcript": "sheet"
+    },
+    {
+      "viewport": "767x900",
+      "stage": [
+        647,
+        363.9375
+      ],
+      "overflow": 0,
+      "play": [
+        56,
+        56
+      ],
+      "controlsBottom": 856,
+      "mainBottom": 856,
+      "transcript": "sheet"
+    }
+  ]
+}

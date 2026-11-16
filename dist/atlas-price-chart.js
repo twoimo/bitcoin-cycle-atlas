@@ -5,7 +5,7 @@ import { MILESTONE_TYPES } from "./cycle-milestones.js?v=1.29.0";
 import { utcDay } from './cycle-engine.js?v=1.29.0';
 import { shiftCalendarMonths } from './cycle-timing.js?v=1.29.0';
 import { STATE_LABELS } from "./market-structure.js?v=1.29.0";
-import { chartPaneLayout, historicalMarkersMarkup, volumePaneMarkup, cycleTimingMarkup, formatBtcVolume } from './chart-overlays.js?v=1.29.0';
+import { chartPaneLayout, historicalMarkersMarkup, volumePaneMarkup, cycleTimingMarkup } from './chart-overlays.js?v=1.29.0';
 import { createPriceScale, barPriceChange, nearestDailyIndex as nearest } from './chart-math.js?v=1.29.0';
 import { candleBodyWidth } from './chart-view-policy.js?v=1.36.1';
 import { priceAxisMarkup, timeAxisMarkup, createPriceAxisLayout, createPriceAxisFormatter, createPriceAxisLabelVisibility } from './price-axis.js?v=1.29.0';
@@ -15,6 +15,7 @@ import { researchAnnotationsMarkup } from './research-annotations.js?v=1.29.0';
 import { refreshChartLegendGeometry } from './ui/chart-legend.js?v=1.36.1';
 import { chartLegendSlot, placePlotLabel } from './ui/chart-legend-layout.js';
 import { createChartAnnotationLayout } from './ui/chart-annotation-layout.js';
+import {linearScale as fLinear,logScale as fLog,linePath as fLine,areaPath as fArea,barPath as fBar,segments as fSegments} from './funnest-research-primitives.bundle.js?v=1.29.0';
 
 import { resolveMagnetPoint, advanceMeasurement, measurePriceAnchors, measurementOverlayMarkup, createMeasurementOverlay } from './chart-magnet.js?v=1.29.0';
 
@@ -70,14 +71,35 @@ function sample(rows,frequency,retainedDates){return frequency==='daily'?rows:ro
 // Split the daily source before weekly/pixel sampling. Otherwise a missing
 // weekday disappears between two Sundays and looks like continuous evidence.
 function dailyRuns(rows,omit=()=>false){
-  const runs=[];let run=[];
+  const values=[];let previous=null;
   for(const row of rows){
-    if(omit(row)){if(run.length)runs.push(run);run=[];continue;}
-    if(run.length&&dayOf(row.date)!==dayOf(run.at(-1).date)+1){runs.push(run);run=[];}
-    run.push(row);
+    if(omit(row)){values.push(null);previous=null;continue;}
+    if(previous&&dayOf(row.date)!==dayOf(previous.date)+1)values.push(null);
+    values.push(row);previous=row;
   }
-  if(run.length)runs.push(run);
-  return runs;
+  return fSegments(values).map(segment=>segment.values);
+}
+function formatFunnestPath(path){return path.replace(/-?(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?/gi,value=>Number(value).toFixed(2));}
+function funnestVerticalPath(x,y1,y2){const path=fLine([{x,y:y1},{x,y:y2}]),formatted=value=>(Math.round(value*100)/100).toString();return formatFunnestPath(path.replace(`L${formatted(x)},${formatted(y2)}`,`V${formatted(y2)}`));}
+function funnestBarPath(x,width,baseY,valueY){const path=fBar(x,width,baseY,valueY),match=path.match(/^M([^,]+),([^H]+)H([^V]+)V([^H]+)H([^Z]+)Z$/);if(!match)return formatFunnestPath(path);const [,sx,sy,ex,ey,baseX]=match.map((value,index)=>index?Number(value):value);return `M${Number(sx).toFixed(2)},${Number(sy).toFixed(2)}h${(Number(ex)-Number(sx)).toFixed(2)}v${(Number(ey)-Number(sy)).toFixed(2)}h${(Number(baseX)-Number(ex)).toFixed(2)}Z`;}
+function funnestCandleBody(x,width,openY,closeY){const top=Math.min(openY,closeY),height=Math.max(1,Math.abs(openY-closeY));return funnestBarPath(x-width/2,width,top+height,top);}
+function funnestLogScale(domain,range){const scale=fLog(domain,range),[min,max]=domain,[start,end]=range,low=Math.log(min),extent=Math.log(max)-low;const y=value=>value>=min&&value<=max?scale(value):value>0?start+(Math.log(value)-low)/extent*(end-start):NaN;y.invert=scale.invert;return y;}
+function funnestVolumeMarkup(volume,{bars,x,left,right,top,bottom,barWidth,source,unit='BTC',clock='UTC',dateLabel=value=>value,clipId,futureX=null,projection=[],projectionLabel='점선 · 조건부 평균 거래량'}){
+  const validBars=bars.filter(bar=>Number.isFinite(bar.volume)&&bar.volume>=0&&Number.isFinite(x(bar))&&x(bar)>=left&&x(bar)<=right);
+  const validProjection=projection.filter(point=>point.kind==='scenario'&&Number.isFinite(point.volume)&&point.volume>0&&Number.isFinite(point.lower)&&point.lower>0&&Number.isFinite(point.upper)&&point.lower<=point.volume&&point.upper>=point.volume&&Number.isFinite(x(point))&&x(point)>=left&&x(point)<=right&&(!Number.isFinite(futureX)||x(point)>futureX));
+  const max=volume.max,scale=volume.scale,valueScale=scale==='log'?fLog([1,max+1],[bottom,top]):fLinear([0,max||1],[bottom,top]);
+  const y=value=>scale==='log'?valueScale(value+1):valueScale(value),dense=volume.rendering==='batched';
+  const barGroup=`<g class="volume-bars" clip-path="url(#${esc(clipId)})">`+(dense?(()=>{const paths=['',''];for(const bar of validBars){const side=bar.close>=bar.open?0:1;paths[side]+=funnestBarPath(x(bar)-barWidth/2,barWidth,bottom,y(bar.volume));}return paths.map((path,side)=>path?`<path class="volume-bars-batch" d="${path}" data-indicator-fill fill="${side?'var(--chart-candle-down)':'var(--chart-candle-up)'}" opacity=".78"/>`:'').join('')+`<title>${validBars.length}개 실제 거래량 막대 · 화면의 같은 가격 날짜에서 정확한 ${esc(unit)} 수량을 확인할 수 있습니다.</title>`;})():validBars.map(bar=>{const xx=x(bar),color=bar.close>=bar.open?'var(--chart-candle-up)':'var(--chart-candle-down)',time=bar.time??'',period=bar.endDate?`${dateLabel(bar.startDate||bar.date)}–${dateLabel(bar.endDate)}`:dateLabel(bar.startDate||bar.date);const yy=y(bar.volume);return `<rect class="volume-bar" data-indicator-fill data-volume="${bar.volume}" data-time="${time}" data-date="${esc(bar.date)}" x="${xx-barWidth/2}" y="${yy}" width="${barWidth}" height="${Math.max(0,bottom-yy)}" fill="${color}" opacity=".78"><title>${esc(`${period} ${clock} · ${source} · ${nf(bar.volume,8)} ${unit}`)}</title></rect>`;}).join('')+'</g>');
+  let markup=volume.markup;
+  const groupStart=markup.indexOf('<g class="volume-bars"'),groupEnd=markup.indexOf('</g>',groupStart)+4;
+  if(groupStart>=0&&groupEnd>=4)markup=markup.slice(0,groupStart)+barGroup+markup.slice(groupEnd);
+
+  if(validProjection.length){const reduced=pixelExtrema(validProjection,point=>x(point),['volume','lower','upper']),upper=reduced.map(point=>({x:x(point),y:y(point.upper)})),lower=reduced.map(point=>({x:x(point),y:y(point.lower)})),central=reduced.map(point=>({x:x(point),y:y(point.volume)})),area=formatFunnestPath(fArea(upper,lower)),line=formatFunnestPath(fLine(central));
+    markup=markup.replace(/(<path class="volume-scenario-range" data-indicator-fill d=")[^"]*(")/,(_,before,after)=>before+area+after);
+    markup=markup.replace(/(<path data-indicator-fill d=")[^"]*(" fill="url\()/,(_,before,after)=>before+area+after);
+    markup=markup.replace(/(<path class="volume-scenario-line" data-indicator-line d=")[^"]*(")/,(_,before,after)=>before+line+after);
+  }
+  return markup;
 }
 
 /** A compact, non-cryptographic identity of the values handed to the painter.
@@ -124,7 +146,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   // Ordinary completed-week archives retain their existing display date.
   const candleCoordinate=c=>c.periodStartDate??c.endDate??c.date;
   const pointCoordinate=p=>p.candle?candleCoordinate(p.candle):p.date;
-  const minDay=dayOf(start),maxDay=dayOf(end),span=Math.max(1,maxDay-minDay),xday=d=>L+(d-minDay)/span*(W-L-R),x=p=>xday(dayOf(pointCoordinate(p)));
+  const minDay=dayOf(start),maxDay=dayOf(end),span=Math.max(1,maxDay-minDay),xCoordinate=fLinear([minDay,minDay+span],[L,W-R]),xday=d=>xCoordinate(d),x=p=>xday(dayOf(pointCoordinate(p)));
   Object.assign(svg.dataset,{start,end,interval:frequency});
   svg.dataset.forecastEvidenceCount='0';svg.dataset.cycleIntervalCount='0';svg.dataset.cycleIntervalLabelCount='0';svg.dataset.cycleMarkerCount='0';svg.dataset.cycleMarkerLabelCount='0';svg.dataset.historyLabelCount='0';svg.dataset.historyEventCount='0';svg.dataset.historyLabelMode='off';svg.dataset.historyHiddenLabelCount='0';
   delete svg.dataset.cycleIntervalBandTop;delete svg.dataset.cycleIntervalBandBottom;
@@ -172,7 +194,9 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   if(!priceOnlyAuto)for(const marker of visibleCycleMarkers)includePrice(marker.price);
   const values=[valueLow,valueHigh];
   const tickCount=Math.max(2,Math.min(small?5:7,Math.floor((priceBottom-T)/38)+1));
-  const priceScale=createPriceScale(values,{scale:effectiveScale,top:T,bottom:priceBottom,tickCount,factor,offset,inverted:invertScale,domain:priceDomain}),{min,max,y}=priceScale;
+  const basePriceScale=createPriceScale(values,{scale:effectiveScale,top:T,bottom:priceBottom,tickCount,factor,offset,inverted:invertScale,domain:priceDomain}),{min,max}=basePriceScale;
+  const yScale=effectiveScale==='log'?funnestLogScale([min,max],invertScale?[T,priceBottom]:[priceBottom,T]):fLinear([min,max],invertScale?[T,priceBottom]:[priceBottom,T]),y=value=>yScale(value);
+  const priceScale={...basePriceScale,y,invert:yScale.invert};
   const axisLabels=createPriceAxisFormatter({axis:priceScale,display,layout:axisText});
   retainPriceViewport(svg,priceScale);
   const yd=v=>ddTop+Math.min(100,Math.max(0,-(v??0)))/100*(ddBottom-ddTop);
@@ -182,7 +206,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
     const selected=new Set(reduced);
     return ps.filter(point=>selected.has(point)||retainedDates.has(point.date));
   };
-  const path=(ps,yy=y,key='price')=>tracePoints(ps,key).map((p,i)=>`${i?'L':'M'}${x(p).toFixed(2)},${yy(p[key]).toFixed(2)}`).join('');
+  const path=(ps,yy=y,key='price')=>formatFunnestPath(fLine(tracePoints(ps,key).map(p=>({x:x(p),y:yy(p[key])}))));
   const observedTrace=(source,yy=y,key='price',omit)=>{
     // Weekly context retains the exact daily landmark anchors. A Wednesday
     // peak must not float away from a Sunday-only polyline or pixel reduction.
@@ -197,7 +221,12 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   const timingSeries=cycleCalibration?.series||[],visibleTiming=showCycleTiming?dateWindow(timingSeries,start,end):[];
   const clip=`${svg.id}-clip`,priceClip=`${svg.id}-price-clip`,axisClip=`${svg.id}-price-axis-clip`,fullHistory=span>3000;
   let s=`<title>${historical?'실제 비트코인 가격':'실제 비트코인 가격과 미래 가정'}</title><desc>가격 실선은 실제 관측, 금색 가격 점선은 미래 가정입니다. 색 원과 기간선의 실선은 사후 기준, 점선은 잠정 또는 가정 기준입니다. 그래프를 누르면 값을 고정해 읽을 수 있습니다. 미래 음영은 보정된 확률 구간이 아닙니다.</desc><defs><clipPath id="${clip}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${bottom-T}"/></clipPath><clipPath id="${priceClip}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${priceBottom-T}"/></clipPath><clipPath id="${axisClip}"><rect x="${W-R}" y="${T}" width="${R}" height="${priceBottom-T}"/></clipPath></defs>`;
-  for(const price of priceScale.ticks){const yy=y(price),label=axisLabels.tick(price);s+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="#28323f"/><text x="${W-R+axisText.inset}" y="${yy+4}" text-anchor="start" ${axisText.attributes(label)} fill="#b0bbca" font-size="${axisText.fontSize}">${esc(label)}</text>`;}
+  // The complete frame adds paint, not a larger DOM budget. Batch identical
+  // grid strokes while retaining every original tick coordinate and label.
+  // Keep both endpoints explicit like the plotted series: narrowing the reader
+  // column changes X only, while each coordinate pair retains the same Y.
+  s+=`<path class="price-axis-grid" d="${priceScale.ticks.map(price=>{const yy=y(price);return `M${L},${yy}L${W-R},${yy}`;}).join('')}" fill="none" stroke="var(--grid)"/>`;
+  for(const price of priceScale.ticks){const yy=y(price),label=axisLabels.tick(price);s+=`<text x="${W-R+axisText.inset}" y="${yy+4}" text-anchor="start" ${axisText.attributes(label)} fill="var(--chart-axis-ink)" font-size="${axisText.fontSize}">${esc(label)}</text>`;}
   let months=span>5000?(small?60:24):span>3000?(small?36:24):span>1100?(small?12:6):span>550?(small?6:3):span>270?3:1;
   if(Number.isFinite(dateTickMinSpacing)&&dateTickMinSpacing>0){
     const capacity=Math.max(1,Math.floor(Math.max(1,W-L-R)/dateTickMinSpacing));
@@ -205,18 +234,18 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
     months=[1,2,3,6,12,24,36,60,120,240].find(value=>value>=minimum)||minimum;
   }
   let tick=`${start.slice(0,4)}-01-01`;while(dayOf(tick)<minDay)tick=shiftCalendarMonths(tick,months);
-  while(dayOf(tick)<=maxDay){const xx=xday(dayOf(tick));s+=`<line x1="${xx}" x2="${xx}" y1="${T}" y2="${bottom}" stroke="#222c37"/><text class="price-time-label" x="${xx}" y="${axisY}" text-anchor="${xx>W-35?'end':'middle'}" fill="#aebaca" font-size="12">${months>=12?tick.slice(0,4):tick.slice(2,7).replace('-','.')}</text>`;tick=shiftCalendarMonths(tick,months);}
+  while(dayOf(tick)<=maxDay){const xx=xday(dayOf(tick));s+=`<line x1="${xx}" x2="${xx}" y1="${T}" y2="${bottom}" stroke="var(--grid)"/><text class="price-time-label" x="${xx}" y="${axisY}" text-anchor="${xx>W-35?'end':'middle'}" fill="var(--chart-axis-ink)" font-size="12">${months>=12?tick.slice(0,4):tick.slice(2,7).replace('-','.')}</text>`;tick=shiftCalendarMonths(tick,months);}
   if(split&&dayOf(split)>=minDay&&dayOf(split)<=maxDay){
     const xx=xday(dayOf(split));
-    s+=`<rect x="${xx}" y="${T}" width="${W-R-xx}" height="${bottom-T}" fill="#e9b366" opacity=".025"/><line class="observed-split-boundary" x1="${xx}" x2="${xx}" y1="${T}" y2="${bottom}" stroke="#a5b1bf" stroke-dasharray="3 5"/>`;
+    s+=`<rect x="${xx}" y="${T}" width="${W-R-xx}" height="${bottom-T}" fill="#e9b366" opacity=".025"/><line class="observed-split-boundary" x1="${xx}" x2="${xx}" y1="${T}" y2="${bottom}" stroke="var(--muted)" stroke-dasharray="3 5"/>`;
   }
-  if(showDrawdown){s+=`<text x="${L}" y="${layout.ddTitleY}" fill="#aebaca" font-size="${layout.ddTitleFontSize}">이전 최고가에서 떨어진 폭</text>`;for(const dd of(ddHeight<44?[0,-100]:[0,-50,-100]))s+=`<line x1="${L}" x2="${W-R}" y1="${yd(dd)}" y2="${yd(dd)}" stroke="#25303c"/><g data-indicator-layer="drawdown"><text data-indicator-axis-label x="${W-R+8}" y="${yd(dd)+4}" text-anchor="start" fill="#aab7c8" font-size="11">${dd}%</text></g>`;}
-  if(showStates)s+=`<text class="state-pane-title" x="${L}" y="${layout.stateTitleY}" fill="#a8b9ca" font-size="${layout.stateTitleFontSize}">시장 국면 · 관측 / 가정<title>가격 경로에서 계산한 상승·횡보·하락 분류입니다. 관측 기준일 이후는 선택한 가정 경로의 분류이며 확정된 미래나 매매 신호가 아닙니다.</title></text>`;
+  if(showDrawdown){s+=`<text x="${L}" y="${layout.ddTitleY}" fill="var(--chart-axis-ink)" font-size="${layout.ddTitleFontSize}">이전 최고가에서 떨어진 폭</text>`;for(const dd of(ddHeight<44?[0,-100]:[0,-50,-100]))s+=`<line x1="${L}" x2="${W-R}" y1="${yd(dd)}" y2="${yd(dd)}" stroke="var(--grid)"/><g data-indicator-layer="drawdown"><text data-indicator-axis-label x="${W-R+8}" y="${yd(dd)+4}" text-anchor="start" fill="var(--chart-axis-ink)" font-size="11">${dd}%</text></g>`;}
+  if(showStates)s+=`<text class="state-pane-title" x="${L}" y="${layout.stateTitleY}" fill="var(--muted)" font-size="${layout.stateTitleFontSize}">시장 국면 · 관측 / 가정<title>가격 경로에서 계산한 상승·횡보·하락 분류입니다. 관측 기준일 이후는 선택한 가정 경로의 분류이며 확정된 미래나 매매 신호가 아닙니다.</title></text>`;
   s+=`<g clip-path="url(#${clip})"><g class="price-series-layer" clip-path="url(#${priceClip})">`;
   if(nextTurn){const left=xday(Math.max(minDay,dayOf(nextTurn.lowerDate||nextTurn.date))),right=xday(Math.min(maxDay,dayOf(nextTurn.upperDate||nextTurn.date)));if(right>left)s+=`<rect x="${left}" y="${T}" width="${right-left}" height="${priceBottom-T}" fill="#87bde7" opacity=".065"/>`;}
   if(band&&(future.length||retrospective.length)){
     s+='<g data-indicator-layer="range">';
-    for(const [points,attribute] of [[future,hasFixedForecast?' data-replay-forecast-band="true"':''],[retrospective,' data-replay-retrospective-band="true"']])if(points.length)s+=`<path data-indicator-fill${attribute} d="${path(points,y,'upper')}${tracePoints(points,'lower').reverse().map(p=>`L${x(p).toFixed(2)},${y(p.lower).toFixed(2)}`).join('')}Z" fill="#efb45f" opacity=".13" pointer-events="none"/>`;
+    for(const [points,attribute] of [[future,hasFixedForecast?' data-replay-forecast-band="true"':''],[retrospective,' data-replay-retrospective-band="true"']])if(points.length){const kept=new Set([...tracePoints(points,'upper'),...tracePoints(points,'lower')]),paired=points.filter(point=>kept.has(point)),upper=paired.map(point=>({x:x(point),y:y(point.upper)})),lower=paired.map(point=>({x:x(point),y:y(point.lower)}));s+=`<path data-indicator-fill${attribute} d="${formatFunnestPath(fArea(upper,lower))}" fill="#efb45f" opacity=".13" pointer-events="none"/>`;}
     s+='</g>';
   }
   if(fib.length)s+='<g data-indicator-layer="fibonacci">';
@@ -224,25 +253,25 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   if(fib.length)s+='</g>';
   if(observed.length){
     const trace=observedTrace(observed,y,'price',point=>Boolean(point.candle));
-    s+=`<path class="observed-close-line" d="${trace.path}" fill="none" stroke="#e2eaf3" stroke-width="1.8"/>`;
-    for(const p of trace.isolated)s+=`<circle class="observed-close-point" cx="${x(p).toFixed(2)}" cy="${y(p.price).toFixed(2)}" r="1.8" fill="#e2eaf3"/>`;
+    s+=`<path class="observed-close-line" d="${trace.path}" fill="none" stroke="var(--observed-close-ink)" stroke-width="1.8"/>`;
+    for(const p of trace.isolated)s+=`<circle class="observed-close-point" cx="${x(p).toFixed(2)}" cy="${y(p.price).toFixed(2)}" r="1.8" fill="var(--observed-close-ink)"/>`;
   }
   const candleWidth=candleBodyWidth(W-L-R,span,candleDays);
   const denseCandles=candleRows.length>256&&candleWidth<2;
   if(denseCandles){
     const wicks=['',''],bodies=['',''];
-    for(const c of candleRows){const xx=xday(dayOf(candleCoordinate(c))),side=c.close>=c.open?0:1,top=Math.min(y(c.open),y(c.close)),height=Math.max(1,Math.abs(y(c.open)-y(c.close)));wicks[side]+=`M${xx.toFixed(2)},${y(c.high).toFixed(2)}V${y(c.low).toFixed(2)}`;bodies[side]+=`M${(xx-candleWidth/2).toFixed(2)},${top.toFixed(2)}h${candleWidth.toFixed(2)}v${height.toFixed(2)}h${(-candleWidth).toFixed(2)}Z`;}
+    for(const c of candleRows){const xx=xday(dayOf(candleCoordinate(c))),side=c.close>=c.open?0:1;wicks[side]+=funnestVerticalPath(xx,y(c.high),y(c.low));bodies[side]+=funnestCandleBody(xx,candleWidth,y(c.open),y(c.close));}
     s+=`<g class="observed-candles-batched" data-count="${candleRows.length}"><title>${candleRows.length}개 실제 캔들 · 모든 OHLC를 보존하며, 날짜 선택으로 정확한 값을 확인합니다.</title>`;
-    for(let side=0;side<2;side++){const color=side?'#dd7e8d':'#62bca5';if(wicks[side])s+=`<path d="${wicks[side]}" fill="none" stroke="${color}"/>`;if(bodies[side])s+=`<path d="${bodies[side]}" fill="${color}"/>`;}s+='</g>';
+    for(let side=0;side<2;side++){const color=side?'var(--chart-candle-down)':'var(--chart-candle-up)';if(wicks[side])s+=`<path d="${wicks[side]}" fill="none" stroke="${color}"/>`;if(bodies[side])s+=`<path d="${bodies[side]}" fill="${color}"/>`;}s+='</g>';
   }else {
-  for(const c of candleRows){const xx=xday(dayOf(candleCoordinate(c))),color=c.close>=c.open?'#62bca5':'#dd7e8d',top=Math.min(y(c.open),y(c.close)),height=Math.max(1,Math.abs(y(c.open)-y(c.close)));s+=`<g class="observed-candle" data-date="${c.endDate}" data-open="${c.open}" data-high="${c.high}" data-low="${c.low}" data-close="${c.close}"${Number.isFinite(c.volume)?` data-volume="${c.volume}"`:''}${c.periodStartDate?` data-period-start="${c.periodStartDate}" data-period-end="${c.periodEndDate}" data-complete="${c.complete!==false}" data-days-included="${c.daysIncluded}"`:''}><line x1="${xx}" x2="${xx}" y1="${y(c.high)}" y2="${y(c.low)}" stroke="${color}"/><rect x="${xx-candleWidth/2}" y="${top}" width="${candleWidth}" height="${height}" fill="${color}"/><title>${esc(candleSource)} BTC-USD · ${c.startDate}${candleDays>1?`–${c.endDate}`:''} UTC${c.complete===false?' · 진행 중 주봉':''} · O ${money(c.open)} H ${money(c.high)} L ${money(c.low)} C ${money(c.close)}</title></g>`;}
+  for(const c of candleRows){const xx=xday(dayOf(candleCoordinate(c))),color=c.close>=c.open?'var(--chart-candle-up)':'var(--chart-candle-down)',top=Math.min(y(c.open),y(c.close)),height=Math.max(1,Math.abs(y(c.open)-y(c.close)));s+=`<g class="observed-candle" data-date="${c.endDate}" data-open="${c.open}" data-high="${c.high}" data-low="${c.low}" data-close="${c.close}"${Number.isFinite(c.volume)?` data-volume="${c.volume}"`:''}${c.periodStartDate?` data-period-start="${c.periodStartDate}" data-period-end="${c.periodEndDate}" data-complete="${c.complete!==false}" data-days-included="${c.daysIncluded}"`:''}><line x1="${xx}" x2="${xx}" y1="${y(c.high)}" y2="${y(c.low)}" stroke="${color}"/><rect x="${xx-candleWidth/2}" y="${top}" width="${candleWidth}" height="${height}" fill="${color}"/><title>${esc(candleSource)} BTC-USD · ${c.startDate}${candleDays>1?`–${c.endDate}`:''} UTC${c.complete===false?' · 진행 중 주봉':''} · O ${money(c.open)} H ${money(c.high)} L ${money(c.low)} C ${money(c.close)}</title></g>`;}
   }
   // Independent fixed records never share a connecting segment. Keep both
   // ranges below actuals, then every contrast halo below every dashed path.
   const fixedPaths=[];
   if(retrospective.length)fixedPaths.push({kind:'retrospective',d:path(retrospective),dash:'1 5'});
   if(hasFixedForecast&&future.length)fixedPaths.push({kind:'forecast',d:path(future),dash:'5 3'});
-  for(const line of fixedPaths)s+=`<path data-replay-${line.kind}-halo="true" d="${line.d}" fill="none" stroke="var(--bg,#10151c)" stroke-width="4.2" stroke-dasharray="${line.dash}" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>`;
+  for(const line of fixedPaths)s+=`<path data-replay-${line.kind}-halo="true" d="${line.d}" fill="none" stroke="var(--bg)" stroke-width="4.2" stroke-dasharray="${line.dash}" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>`;
   for(const line of fixedPaths)s+=`<path data-replay-${line.kind}-path="true" d="${line.d}" fill="none" stroke="${line.kind==='retrospective'?'var(--replay-retrospective-ink,#74a7ee)':'#f2b960'}" stroke-width="2.2" stroke-dasharray="${line.dash}" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>`;
   if(!hasFixedForecast&&future.length)s+=`<path d="${path(future)}" fill="none" stroke="#f2b960" stroke-width="1.8" stroke-dasharray="5 3"/>`;
   // The label belongs to the frozen record's actual input anchor, never the
@@ -254,7 +283,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
     if(yy>=T&&yy<=priceBottom&&labelWidth+8<=W-L-R){
       const rightFits=xx+10+labelWidth<=W-R-4,leftFits=xx-10-labelWidth>=L+4,anchor=rightFits||!leftFits?'start':'end';
       const tx=rightFits?xx+10:leftFits?xx-10:L+4,ty=Math.max(T+fontSize+4,Math.min(priceBottom-4,yy-T>=fontSize+20?yy-14:yy+fontSize+14));
-      s+=`<g data-replay-retrospective-origin-label="true" data-input-through="${esc(retrospectiveOrigin)}" data-anchor-x="${xx}" data-anchor-y="${yy}" role="img" aria-label="${esc(label)}까지의 자료로 현재 생성한 고정 회고 경로" pointer-events="none"><title>${esc(label)}까지의 자료로 현재 생성한 고정 회고 경로</title><path d="M${xx},${yy}V${ty+3}H${tx+(anchor==='end'?4:-4)}" fill="none" stroke="var(--accent,#f2b960)" stroke-width="1" opacity=".65"/><circle cx="${xx}" cy="${yy}" r="2.8" fill="var(--accent,#f2b960)" stroke="var(--bg,#10151c)" stroke-width="1.5"/><text data-replay-retrospective-input-date="true" x="${tx}" y="${ty}" text-anchor="${anchor}" fill="var(--accent,#f2b960)" stroke="var(--bg,#10151c)" stroke-width="3" stroke-linejoin="round" paint-order="stroke" font-size="${fontSize}">${esc(label)}</text></g>`;
+      s+=`<g data-replay-retrospective-origin-label="true" data-input-through="${esc(retrospectiveOrigin)}" data-anchor-x="${xx}" data-anchor-y="${yy}" role="img" aria-label="${esc(label)}까지의 자료로 현재 생성한 고정 회고 경로" pointer-events="none"><title>${esc(label)}까지의 자료로 현재 생성한 고정 회고 경로</title><path d="M${xx},${yy}V${ty+3}H${tx+(anchor==='end'?4:-4)}" fill="none" stroke="var(--data-gold)" stroke-width="1" opacity=".65"/><circle cx="${xx}" cy="${yy}" r="2.8" fill="var(--data-gold)" stroke="var(--bg)" stroke-width="1.5"/><text data-replay-retrospective-input-date="true" x="${tx}" y="${ty}" text-anchor="${anchor}" fill="var(--data-gold)" stroke="var(--bg)" stroke-width="3" stroke-linejoin="round" paint-order="stroke" font-size="${fontSize}">${esc(label)}</text></g>`;
     }
   }
   s+='</g>';
@@ -276,7 +305,10 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   if(showTurns)for(const p of visibleTurns){const actual=!isAssumption(p),color=p.type==='high'?'#e7bb73':'#85bfdc';s+=`<circle data-date="${p.date}" clip-path="url(#${priceClip})" data-indicator-line cx="${xday(dayOf(p.date))}" cy="${y(p.price)}" r="${fullHistory?2.5:4}" fill="${actual?color:'#10151c'}" stroke="${color}" stroke-width="1.4"><title>${esc(`${actual?'관측':'예시 경로'} ${p.type==='high'?'고점':'저점'} ${date(p.date)} · ${money(p.price)}`)}</title></circle>`;}
   if(showTurns&&visibleTurns.length)s+='</g>';s+='</g>';
   if(showCycleTiming)s+=cycleTimingMarkup({points:visibleTiming,x,left:L,right:W-R,top:cycleTop,bottom:cycleBottom,titleY:layout.cycleTitleY,titleFontSize:layout.cycleTitleFontSize,dayWidth:(W-L-R)/span,split}).markup;
-  if(showVolume)s+=volumePaneMarkup({bars:visibleVolume,x:bar=>xday(dayOf(bar.periodStartDate??bar.date)),left:L,right:W-R,top:volumeTop,bottom:volumeBottom,titleY:layout.volumeTitleY,titleFontSize:layout.volumeTitleFontSize,separatorY:layout.volumeSeparatorY,barWidth:candleBodyWidth(W-L-R,span,candleDays),source:volumeSource,projectionLabel:volumeProjection?.summary?.centralMethod==='persistence'?'중앙 · 최근 90일 활동 유지':'점선 · 조건부 평균 거래량',projection:projectedVolume,clipId:`${svg.id}-volume-clip`,futureX:split&&dayOf(split)>=minDay&&dayOf(split)<maxDay?xday(dayOf(split)):null}).markup;
+  if(showVolume){const volumeX=bar=>xday(dayOf(bar.periodStartDate??bar.date)),barWidth=candleBodyWidth(W-L-R,span,candleDays),clipId=`${svg.id}-volume-clip`,projectionLabel=volumeProjection?.summary?.centralMethod==='persistence'?'중앙 · 최근 90일 활동 유지':'점선 · 조건부 평균 거래량',futureX=split&&dayOf(split)>=minDay&&dayOf(split)<maxDay?xday(dayOf(split)):null;
+    const volume=volumePaneMarkup({bars:visibleVolume,x:volumeX,left:L,right:W-R,top:volumeTop,bottom:volumeBottom,titleY:layout.volumeTitleY,titleFontSize:layout.volumeTitleFontSize,separatorY:layout.volumeSeparatorY,barWidth,source:volumeSource,projectionLabel,projection:projectedVolume,clipId,futureX});
+    s+=funnestVolumeMarkup(volume,{bars:visibleVolume,x:volumeX,left:L,right:W-R,top:volumeTop,bottom:volumeBottom,barWidth,source:volumeSource,clipId,futureX,projection:projectedVolume,projectionLabel});
+  }
   // Evidence controls stay on their original model date and price. Reserve
   // their painted dot and title before placing surrounding period labels.
   const evidenceMarkers=forecastEvidence.filter(item=>item.date>split&&item.date>=start&&item.date<=end&&Number.isFinite(item.price)&&item.price>0);
@@ -315,7 +347,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
     const xx=xday(dayOf(nextTurn.date)),headerFixed=small||fullHistory,anchor=headerFixed||xx>W-190?'end':'start',tx=headerFixed?W-R:anchor==='end'?xx-7:xx+7,label=`${nextTurn.type==='high'?'조정':'반등'} 후보 · D-${nf(nextTurn.days)}`,width=137;
     const box=placePlotLabel({x:anchor==='end'?tx-132:tx-5,y:Math.max(2,T-29),width,height:23,left:L,right:W-R,top:2,bottom:priceBottom,obstacles:[...upperOverlayObstacles,...evidenceObstacles,...historyLabelObstacles]});
     s+=`<line x1="${xx}" x2="${xx}" y1="${T}" y2="${bottom}" stroke="#9bc8e8" stroke-dasharray="4 5" opacity=".8"/>`;
-    if(showNextTurnLabel&&box)s+=`<g data-next-turn="${nextTurn.type}" role="button" tabindex="0" aria-label="${esc(label)} · 날짜와 범위 보기" style="cursor:pointer"><title>가정 · ${date(nextTurn.date)} · ${date(nextTurn.lowerDate)}–${date(nextTurn.upperDate)}</title><rect x="${box.x}" y="${box.y}" width="${width}" height="23" rx="3" fill="#172737"/><text x="${box.x+width/2}" y="${box.y+15}" text-anchor="middle" fill="#badcf2" font-size="11">${esc(label)}</text></g>`;
+    if(showNextTurnLabel&&box)s+=`<g data-next-turn="${nextTurn.type}" role="button" tabindex="0" aria-label="${esc(label)} · 날짜와 범위 보기" style="cursor:pointer"><title>가정 · ${date(nextTurn.date)} · ${date(nextTurn.lowerDate)}–${date(nextTurn.upperDate)}</title><rect x="${box.x}" y="${box.y}" width="${width}" height="23" rx="3" fill="var(--surface-raised)"/><text x="${box.x+width/2}" y="${box.y+15}" text-anchor="middle" fill="var(--text)" font-size="11">${esc(label)}</text></g>`;
   }
   if(!fullHistory&&!small){
     let lastX=-999;const placed=[];
@@ -359,17 +391,19 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   }
   if(milestoneLayer){if(milestoneLayer.markers.length||activeCycleInterval)s+=`<g data-indicator-layer="cycle-landmarks">${milestoneLayer.markup}</g>`;svg.dataset.cycleMarkerCount=String(milestoneLayer.markers.length);svg.dataset.cycleMarkerLabelCount=String(milestoneLayer.labelCount);}
 
-  const latest=originalVisible.find(p=>p.date===split);
+  // The active candle source owns its displayed close. Keep the cutoff date,
+  // but do not put the underlying daily-line quote on a venue candle chart.
+  const latest=observed.find(p=>p.date===split);
   if(latest&&latest.price>=min&&latest.price<=max){const yy=y(latest.price),labelTop=Math.max(T,Math.min(priceBottom-18,yy-9)),label=axisLabels.price(latest.price);s+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="#7da89c" stroke-dasharray="2 5" opacity=".5"/><g class="chart-latest-price-tag" pointer-events="none"><rect x="${W-R}" y="${labelTop}" width="${R-3}" height="18" rx="2" fill="#2b6558"/><text x="${W-R+axisText.inset}" y="${labelTop+13}" ${axisText.attributes(label,{badge:true,kind:'latest'})} fill="#edf8f3" font-size="${axisText.badgeFontSize}">${esc(label)}</text></g>`;}
   const annotations=researchAnnotationsMarkup({annotations:researchAnnotations,start,end,x:({date:value})=>xday(typeof value==='number'?value/86400:value.length>10?Date.parse(value)/86400000:dayOf(value)),y,left:L,right:W-R,top:T,bottom:priceBottom,clipId:priceClip,activeId:selectedAnnotation,scenarioId});
   s+=annotations.markup;svg.dataset.researchAnnotationCount=String(annotations.visibleCount);
   s+='<g class="forecast-evidence-layer" clip-path="url(#'+priceClip+')">';
-  for(const {item,xx,yy,labelX,labelY,labelBox} of evidenceLayout)s+=`<g data-forecast-evidence="${esc(item.id)}" role="button" tabindex="0" aria-label="${esc(item.title)}: ${esc(item.description)}"><circle class="forecast-evidence-dot" cx="${xx}" cy="${yy}" r="9" fill="#151f2c" stroke="#a8c695" stroke-width="1.5"/><text x="${xx}" y="${yy+3.2}" text-anchor="middle" fill="#d5e5c7" font-size="10">i</text>${labelBox?`<rect class="forecast-evidence-label" x="${labelX-33}" y="${labelY-11}" width="66" height="17" rx="4" fill="#192a23"/><text x="${labelX}" y="${labelY+1}" text-anchor="middle" fill="#c1d8ad" font-size="9">${esc(item.title)}</text>`:''}<title>${esc(item.description)}</title></g>`;
+  for(const {item,xx,yy,labelX,labelY,labelBox} of evidenceLayout)s+=`<g data-forecast-evidence="${esc(item.id)}" role="button" tabindex="0" aria-label="${esc(item.title)}: ${esc(item.description)}"><circle class="forecast-evidence-dot" cx="${xx}" cy="${yy}" r="9" fill="var(--surface-raised)" stroke="#a8c695" stroke-width="1.5"/><text x="${xx}" y="${yy+3.2}" text-anchor="middle" fill="var(--icon)" font-size="10">i</text>${labelBox?`<rect class="forecast-evidence-label" x="${labelX-33}" y="${labelY-11}" width="66" height="17" rx="4" fill="var(--surface-raised)"/><text x="${labelX}" y="${labelY+1}" text-anchor="middle" fill="var(--text)" font-size="9">${esc(item.title)}</text>`:''}<title>${esc(item.description)}</title></g>`;
   s+='</g>';svg.dataset.forecastEvidenceCount=String(evidenceLayout.length);
 
-  s+=`<g id="${svg.id}-cross" pointer-events="none"><line class="cross-time" y1="${T}" y2="${bottom}" stroke="#afc4dd" stroke-dasharray="3 3" opacity=".6"/><line class="cross-price" clip-path="url(#${priceClip})" x1="${L}" x2="${W-R}" stroke="#afc4dd" stroke-dasharray="3 3" opacity=".6"/><circle clip-path="url(#${priceClip})" r="4" fill="#10151c" stroke="#f4dcac" stroke-width="1.5"/><g class="cross-price-tag" clip-path="url(#${axisClip})"><rect x="${W-R}" width="${R-3}" height="18" rx="2" fill="#465366"/><text x="${W-R+axisText.inset}" fill="#edf2f9" font-size="${axisText.badgeFontSize}"></text></g><g class="cross-date-tag"><rect width="80" height="18" rx="2" fill="#39485b"/><text fill="#edf2f9" font-size="10" text-anchor="middle"></text></g></g>`;
+  s+=`<g id="${svg.id}-cross" pointer-events="none"><line class="cross-time" y1="${T}" y2="${bottom}" stroke="var(--muted)" stroke-dasharray="3 3" opacity=".6"/><line class="cross-price" clip-path="url(#${priceClip})" x1="${L}" x2="${W-R}" stroke="var(--muted)" stroke-dasharray="3 3" opacity=".6"/><circle clip-path="url(#${priceClip})" r="4" fill="var(--bg)" stroke="var(--data-gold)" stroke-width="1.5"/><g class="cross-price-tag" clip-path="url(#${axisClip})"><rect x="${W-R}" width="${R-3}" height="18" rx="2" fill="var(--chart-tag-bg)"/><text x="${W-R+axisText.inset}" fill="var(--chart-tag-ink)" font-size="${axisText.badgeFontSize}"></text></g><g class="cross-date-tag"><rect width="80" height="18" rx="2" fill="var(--chart-tag-bg)"/><text fill="var(--chart-tag-ink)" font-size="10" text-anchor="middle"></text></g></g>`;
   s+=measurementOverlayMarkup(priceClip);
-  s+=priceAxisMarkup({left:W-R,right:W,top:T,bottom:priceBottom})+timeAxisMarkup({left:L,right:W-R,top:bottom+8,bottom:H});
+  s+=priceAxisMarkup({left:W-R,right:W,top:T,bottom:priceBottom,surfaceBottom:H})+timeAxisMarkup({left:L,right:W-R,top:bottom+8,bottom:H});
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.dataset.plotLeft=String(L);svg.dataset.plotRight=String(W-R);svg.dataset.plotTop=String(T);svg.dataset.plotBottom=String(bottom);svg.dataset.priceBottom=String(priceBottom);svg.parentElement?.style.setProperty('--plot-bottom-gap',`${H-bottom+6}px`);svg.parentElement?.style.setProperty('--plot-right-gap',`${R+7}px`);svg.dataset.scale=effectiveScale;svg.dataset.unit=unit;svg.dataset.invertScale=String(Boolean(invertScale));svg.dataset.timeAxisTop=String(bottom+8);svg.dataset.tool=tool;svg.dataset.chartType=chartType;svg.dataset.visiblePointCount=String(visible.length);svg.dataset.observedCandleCount=String(candleRows.length);svg.dataset.candleRendering=denseCandles?'batched':'individual';svg.innerHTML=s;
   const cross=svg.querySelector('[id$="-cross"]'),crossLine=cross.querySelector('.cross-time'),crossPrice=cross.querySelector('.cross-price'),crossDot=cross.querySelector('circle'),priceTag=cross.querySelector('.cross-price-tag'),dateTag=cross.querySelector('.cross-date-tag'),stateByDate=new Map(dateWindow(states,start,end).map(p=>[p.date,p]));
   const updateAxisLabels=createPriceAxisLabelVisibility(svg,{cursorTag:priceTag});

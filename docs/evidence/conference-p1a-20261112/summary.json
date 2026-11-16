@@ -1,0 +1,423 @@
+{
+  "kind": "atlas-conference-p1a-local-verification",
+  "recordedAt": "2026-11-11T20:19:41.454142+00:00",
+  "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "sourceTree": "7ce03ecfccd2b953c50d4f0efd10afa45b97a790",
+  "baselineCommit": "38554a4b076ebfc5b7e519ec048e34b63a13bfb8",
+  "requestedBase": "46039d6",
+  "productionDeployment": false,
+  "realConferenceAssets": false,
+  "physicalDeviceVerification": false,
+  "unit": {
+    "tests": 3424,
+    "pass": 3424,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+    "durationSec": 529.726
+  },
+  "conference": {
+    "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+    "status": "passed",
+    "cases": 14,
+    "passed": 14,
+    "failures": 0,
+    "runtimeErrors": 0,
+    "resourceErrors": 0,
+    "verifiedScreenshots": 24,
+    "sourceIntegrity": {
+      "checkedFiles": 968,
+      "changedSources": [],
+      "unchangedDuringRun": true
+    },
+    "layout": [
+      {
+        "viewport": "390x844",
+        "stage": [
+          338,
+          190.125
+        ],
+        "overflow": 0,
+        "play": [
+          56,
+          56
+        ],
+        "controlsBottom": 800,
+        "mainBottom": 800,
+        "transcript": "sheet"
+      },
+      {
+        "viewport": "320x740",
+        "stage": [
+          268,
+          150.75
+        ],
+        "overflow": 0,
+        "play": [
+          56,
+          56
+        ],
+        "controlsBottom": 696,
+        "mainBottom": 696,
+        "transcript": "sheet"
+      },
+      {
+        "viewport": "768x1024",
+        "stage": [
+          632,
+          355.5
+        ],
+        "overflow": 0,
+        "play": [
+          56,
+          56
+        ],
+        "controlsBottom": 980,
+        "mainBottom": 980,
+        "transcript": "sheet"
+      },
+      {
+        "viewport": "1024x768",
+        "stage": [
+          748,
+          420.75
+        ],
+        "overflow": 0,
+        "play": [
+          56,
+          56
+        ],
+        "controlsBottom": 724,
+        "mainBottom": 724,
+        "transcript": "dock"
+      },
+      {
+        "viewport": "1440x900",
+        "stage": [
+          976,
+          549
+        ],
+        "overflow": 0,
+        "play": [
+          56,
+          56
+        ],
+        "controlsBottom": 856,
+        "mainBottom": 856,
+        "transcript": "dock"
+      },
+      {
+        "viewport": "1920x1080",
+        "stage": [
+          1120,
+          630
+        ],
+        "overflow": 0,
+        "play": [
+          56,
+          56
+        ],
+        "controlsBottom": 1036,
+        "mainBottom": 1036,
+        "transcript": "dock"
+      },
+      {
+        "viewport": "1280x900",
+        "stage": [
+          976,
+          549
+        ],
+        "overflow": 0,
+        "play": [
+          56,
+          56
+        ],
+        "controlsBottom": 856,
+        "mainBottom": 856,
+        "transcript": "dock"
+      },
+      {
+        "viewport": "1023x900",
+        "stage": [
+          739,
+          415.6875
+        ],
+        "overflow": 0,
+        "play": [
+          56,
+          56
+        ],
+        "controlsBottom": 856,
+        "mainBottom": 856,
+        "transcript": "sheet"
+      },
+      {
+        "viewport": "767x900",
+        "stage": [
+          647,
+          363.9375
+        ],
+        "overflow": 0,
+        "play": [
+          56,
+          56
+        ],
+        "controlsBottom": 856,
+        "mainBottom": 856,
+        "transcript": "sheet"
+      }
+    ]
+  },
+  "r10": [
+    {
+      "id": "responsive-BTCUSD",
+      "cases": 11,
+      "status": "passed",
+      "verifiedScreenshots": 25
+    },
+    {
+      "id": "responsive-ETHUSD",
+      "cases": 11,
+      "status": "passed",
+      "verifiedScreenshots": 25
+    },
+    {
+      "id": "responsive-MSTR",
+      "cases": 11,
+      "status": "passed",
+      "verifiedScreenshots": 25
+    },
+    {
+      "id": "responsive-BMNR",
+      "cases": 11,
+      "status": "passed",
+      "verifiedScreenshots": 25
+    },
+    {
+      "id": "wp6",
+      "cases": 30,
+      "status": "passed",
+      "verifiedScreenshots": 45
+    },
+    {
+      "id": "chart-qa",
+      "cases": 12,
+      "status": "passed",
+      "verifiedScreenshots": 18
+    }
+  ],
+  "compare": {
+    "status": "PASSED",
+    "inventory": 16,
+    "widths": 9,
+    "contentWidths": 30,
+    "failures": 0,
+    "findings": [],
+    "assertions": {
+      "explicit1920": {
+        "viewport": "1920x1080",
+        "overflow": 0,
+        "regions": {
+          "top": "visible",
+          "left": "visible",
+          "right": "visible",
+          "bottom": "visible"
+        },
+        "resultRows": 97,
+        "structureRows": 8,
+        "dock": null,
+        "headingHeight": 38,
+        "tiny": 30,
+        "units": [
+          "rebased"
+        ]
+      },
+      "widthsCovered": [
+        "320x740",
+        "390x844",
+        "456x900",
+        "620x900",
+        "768x1024",
+        "1024x768",
+        "1280x800",
+        "1440x900",
+        "1920x1080"
+      ],
+      "widthsWithOverflow": [],
+      "routesWithAllRegions": [
+        "outlook",
+        "market-us",
+        "market-kr",
+        "scenario",
+        "cashflow",
+        "rsi",
+        "housing",
+        "themes",
+        "evidence",
+        "data",
+        "ipo",
+        "relay",
+        "conference",
+        "compare+legacy",
+        "compare+bare",
+        "compare+legacy-unit-alias"
+      ],
+      "contentWidthsCovered": [
+        "evidence 320x740",
+        "evidence 390x844",
+        "evidence 768x1024",
+        "evidence 1024x768",
+        "evidence 1440x900",
+        "evidence 1920x1080",
+        "data 320x740",
+        "data 390x844",
+        "data 768x1024",
+        "data 1024x768",
+        "data 1440x900",
+        "data 1920x1080",
+        "ipo 320x740",
+        "ipo 390x844",
+        "ipo 768x1024",
+        "ipo 1024x768",
+        "ipo 1440x900",
+        "ipo 1920x1080",
+        "relay 320x740",
+        "relay 390x844",
+        "relay 768x1024",
+        "relay 1024x768",
+        "relay 1440x900",
+        "relay 1920x1080",
+        "conference 320x740",
+        "conference 390x844",
+        "conference 768x1024",
+        "conference 1024x768",
+        "conference 1440x900",
+        "conference 1920x1080"
+      ],
+      "contentWidthsWithOverflow": [],
+      "failureCount": 0
+    }
+  },
+  "timeline": {
+    "audioDurationSec": 4000,
+    "segmentCount": 23,
+    "talkCount": 15,
+    "deckCount": 2,
+    "lastSegmentT1": 4000,
+    "coverage": {
+      "checked": true,
+      "expectedCount": 23,
+      "missing": [],
+      "unexpected": [],
+      "duplicates": [],
+      "changed": []
+    }
+  },
+  "supplemental": {
+    "supplemental-53": {
+      "sourceCommit": "180c55df48242ae8afe83f8b80ada457d552d2a7",
+      "status": "failed",
+      "cases": 53,
+      "passed": 52,
+      "failed": 1,
+      "skipped": 0,
+      "failures": [
+        {
+          "page": "chart-replay-btc",
+          "width": 1440,
+          "error": "AssertionError [ERR_ASSERTION]: Observed 10× cadence does not match the requested update interval: {\"speed\":10,\"expectedMilliseconds\":100,\"observations\":[{\"cursor\":\"2026-10-21\",\"at\":21996.699999999255},{\"cursor\":\"2026-10-22\",\"at\":22246.199999999255},{\"cursor\":\"2026-10-23\",\"at\":22347.599999997765},{\"cursor\":\"2026-10-24\",\"at\":22470.099999997765},{\"cursor\":\"2026-10-25\",\"at\":22596.599999997765},{\"cursor\":\"2026-10-26\",\"at\":22746.5},{\"cursor\":\"2026-10-27\",\"at\":22921.79999999702},{\"cursor\":\"2026-10-28\",\"at\":23055.199999999255},{\"cursor\":\"2026-10-29\",\"at\":23192.199999999255},{\"cursor\":\"2026-10-30\",\"at\":23273.79999999702},{\"cursor\":\"2026-10-31\",\"at\":23374.79999999702},{\"cursor\":\"2026-11-01\",\"at\":23503.5},{\"cursor\":\"2026-11-02\",\"at\":23678.79999999702},{\"cursor\":\"2026-11-03\",\"at\":23830.199999999255},{\"cursor\":\"2026-11-04\",\"at\":23953.699999999255},{\"cursor\":\"2026-11-05\",\"at\":24063.599999997765},{\"cursor\":\"2026-11-06\",\"at\":24251.699999999255}],\"intervals\":[249.5,101.39999999850988,122.5,126.5,149.90000000223517,175.29999999701977,133.40000000223517,137,81.59999999776483,101,128.70000000298023,175.29999999701977,151.40000000223517,123.5,109.89999999850988,188.10000000149012],\"meanMilliseconds\":140.9375,\"averageUpdatesPerSecond\":7.095343680709535,\"allowedMeanRatio\":[0.85,1.3],\"completionTimeoutMilliseconds\":7210,\"setupAllowanceMilliseconds\":5000}\n    at measureCadence (file:///workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/scripts/verify-chart-replay-browser.mjs:1528:14)\n    at async verifyEarlyChartReplayCadence (file:///workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/scripts/verify-chart-replay-browser.mjs:261:22)\n    at async verifyChartReplaySurface (file:///workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/scripts/verify-chart-replay-browser.mjs:2022:12)\n    at async main (file:///workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:1211:32)\n    at async file:///workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:1256:5"
+        }
+      ],
+      "sourceIntegrity": {
+        "checkedFiles": 158,
+        "changedSources": [],
+        "unchangedDuringRun": true
+      }
+    },
+    "quiet-replay-7": {
+      "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+      "status": "passed",
+      "cases": 7,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "failures": [],
+      "sourceIntegrity": {
+        "checkedFiles": 158,
+        "changedSources": [],
+        "unchangedDuringRun": true
+      },
+      "btc10xCadence": {
+        "speed": 10,
+        "expectedMilliseconds": 100,
+        "meanMilliseconds": 118.43124999990687,
+        "allowedMeanRatio": [
+          0.85,
+          1.3
+        ],
+        "observationCount": 17,
+        "intervalCount": 16
+      }
+    }
+  },
+  "changedProductFiles": [
+    "M\tdist/app.js",
+    "M\tdist/atlas-navigation.js",
+    "M\tdist/center-workbench.js",
+    "M\tdist/comparison-url-state.js",
+    "A\tdist/conference/player.css",
+    "A\tdist/conference/player.js",
+    "A\tdist/conference/route.js",
+    "A\tdist/conference/timeline.js",
+    "M\tdist/content-shell.js",
+    "M\tdist/index.html",
+    "R096\tdist/market-lab/app/assets/index-C4HVsr7P.js\tdist/market-lab/app/assets/index-ByyNTPeH.js",
+    "M\tdist/market-lab/app/index.html",
+    "M\tdist/market-lab/cashflow/index.html",
+    "M\tdist/market-lab/charts/index.html",
+    "M\tdist/market-lab/housing/index.html",
+    "M\tdist/market-lab/index.html",
+    "M\tdist/market-lab/kr/index.html",
+    "M\tdist/market-lab/rsi/index.html",
+    "M\tdist/market-lab/scenario/index.html",
+    "M\tdist/market-lab/themes/index.html",
+    "M\tdist/market-lab/us/index.html",
+    "M\tdist/site-entry.js",
+    "M\tdist/ui/page-description.js",
+    "M\tdist/ui/shell-slots.js",
+    "A\tdocs/conference/P1A_PLAYER_SKELETON.md",
+    "M\tpackage.json",
+    "M\tresearch-data/eth-review-scope.json",
+    "M\tscripts/build-standalone.mjs",
+    "M\tscripts/verify-compare-shell-browser.mjs",
+    "A\tscripts/verify-conference-browser.mjs",
+    "A\tscripts/verify-conference-timeline.mjs",
+    "M\tscripts/verify-consolidated-workspace-browser.mjs",
+    "M\tscripts/verify-native-chart-workbench-browser.mjs",
+    "M\tscripts/verify-published-origin-browser.mjs",
+    "M\tscripts/verify-ui-contract-browser.mjs",
+    "M\tscripts/verify-workspace-browser.mjs",
+    "A\ttests/conference-player.test.mjs",
+    "A\ttests/conference-route.test.mjs",
+    "A\ttests/conference-timeline.test.mjs",
+    "A\ttests/fixtures/conference/README.md",
+    "A\ttests/fixtures/conference/sources.synthetic.json",
+    "A\ttests/fixtures/conference/timeline.synthetic.json",
+    "M\ttests/native-chart-workbench.test.mjs",
+    "M\ttests/page-description.test.mjs",
+    "M\ttests/published-origin-browser.test.mjs",
+    "M\ttests/shell-slots.test.mjs",
+    "M\ttests/standalone-packaging.test.mjs",
+    "M\ttests/web/unified-workspace.test.tsx",
+    "M\ttests/workspace-navigation.test.mjs"
+  ],
+  "remaining": [
+    "real assets/SRT conversion and mapping",
+    "real source coverage and10 human listening samples within±0.5s",
+    "A-9 real assets under local4G and150ms transition",
+    "A-10 one-hour memory run",
+    "R7 excluded; existing R12 not verified"
+  ]
+}

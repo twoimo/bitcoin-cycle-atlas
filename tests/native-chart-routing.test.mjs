@@ -18,6 +18,7 @@ async function boot(url) {
   const document = { documentElement: { dataset: {} }, querySelector: () => symbolNode, dispatchEvent: event => events.push(event.type) };
   await runInNewContext(`(async () => {${entrySource}\n})()`, {
     location, document, URLSearchParams, canonicalNativeChartEntry, canonicalWorkspaceChartEntry, console,
+    initTheme: () => {},
     enhanceBootSkeleton: () => calls.push('skeleton'), initAtlasShell: () => calls.push('shell'),
     initPerformanceDiagnostics: () => calls.push('diagnostics'), mountJournalEntry: () => calls.push('journal'),
     CustomEvent: class { constructor(type) { this.type = type; } },

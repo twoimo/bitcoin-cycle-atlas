@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "task": "P4 real-media site file count",
+  "baseCommit": "a80882e7baf1387ac10bbb1fc2cdfea89d918956",
+  "status": "refresh-command-implemented-real-Mac-package-not-accessible-here",
+  "measuredAt": "2026-11-13T02:45:26.533788+00:00",
+  "node": "v24.22.1",
+  "recalculated": {
+    "existingSiteFileCount": 1158,
+    "assetCount": 562,
+    "manifestCount": 1,
+    "siteFileCount": 1721,
+    "counter": "scripts/prepare-conference-media.mjs#countRetainedSiteFiles",
+    "plan": "scripts/prepare-conference-media.mjs#createConferenceMediaPlan"
+  },
+  "observed": {
+    "localDistFileCount": 1159,
+    "localPageFiles": 0,
+    "localAudioFiles": 0,
+    "userMacDistFileCount": 1721,
+    "userMacIsolatedSiteFileCount": 1721,
+    "userMacObservationSource": "Current user report and a80882e documentation; not remeasured from this environment."
+  },
+  "realReadyManifestRefreshedHere": false,
+  "realInstalledPreflightRun": false,
+  "browserStarted": false,
+  "syntheticRealMediaReplacement": false,
+  "focused": {
+    "command": [
+      "node",
+      "--test",
+      "tests/conference-media-site-refresh.test.mjs",
+      "tests/conference-media.test.mjs",
+      "tests/conference-media-server.test.mjs",
+      "tests/conference-media-browser-contract.test.mjs"
+    ],
+    "passed": 76,
+    "failed": 0,
+    "skipped": 0,
+    "newRefreshTestsIncluded": 23,
+    "note": "Small identity fixtures test the preparation command only; not562-asset or20-case real-media evidence.",
+    "logSha256": "b4781597f0813de030b9baceeb592f55a6acaea416b7714f169269e44126b8ed",
+    "compressedLogSha256": "51d09f6968b6191b81e2787b3819e5117a5479ab7eb0de42a70a587e89a6b172"
+  },
+  "preserved": [
+    {
+      "file": "scripts/prepare-conference-media.mjs",
+      "bytes": 30596,
+      "sha256": "d28fddb270f0c699ca060789678ae6d40ac03cd6764856dc63ab1a8dea40da03",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/conference/render-media.py",
+      "bytes": 5156,
+      "sha256": "79c234933d64db9a650f21e35aada499091a770265a61b4eda9b6dd6922af97e",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/conference-media-server.mjs",
+      "bytes": 17530,
+      "sha256": "0606548a5cf1f2739ce057ae184cbd37f55dbe9d2ad96d81be8b30abd38afdd9",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/verify-conference-media-browser.mjs",
+      "bytes": 36747,
+      "sha256": "55806dbdb7d0d44a6eb56b005050617de970645c3295747295d13c600bafe082",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/verify-conference-browser.mjs",
+      "bytes": 50034,
+      "sha256": "2f07bb91d2dbd804bc6d1eee597491676363007ea1981591e75641bc7c32b3ed",
+      "unchanged": true
+    },
+    {
+      "file": "dist/conference/media.js",
+      "bytes": 15734,
+      "sha256": "2c43d1ccc695da10e17ebd66a78d4827b4c69432711e189fc1f8d59c17797346",
+      "unchanged": true
+    },
+    {
+      "file": "dist/conference/media-manifest.json",
+      "bytes": 167,
+      "sha256": "ff3e3f2b16f4435e71c5e9f07740a9a2af2b9e9fe46aaf013f70972a658d0088",
+      "unchanged": true
+    },
+    {
+      "file": "dist/equity-view.js",
+      "bytes": 51366,
+      "sha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5",
+      "unchanged": true
+    },
+    {
+      "file": "dist/eth-view.js",
+      "bytes": 41723,
+      "sha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4",
+      "unchanged": true
+    },
+    {
+      "file": "dist/instrument-indicator-overlay.js",
+      "bytes": 7068,
+      "sha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a",
+      "unchanged": true
+    },
+    {
+      "file": "scripts/verify-eth-candidate-browser.mjs",
+      "bytes": 114296,
+      "sha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e",
+      "unchanged": true
+    },
+    {
+      "file": "dist/price-axis.js",
+      "bytes": 16555,
+      "sha256": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2",
+      "unchanged": true
+    }
+  ],
+  "newSources": [
+    {
+      "file": "scripts/refresh-conference-media-site.mjs",
+      "bytes": 10040,
+      "sha256": "a340f84e5461dbdb887cf3f00827eb786e485a9c4fbeb512d577c1eee4007ad1"
+    },
+    {
+      "file": "tests/conference-media-site-refresh.test.mjs",
+      "bytes": 12980,
+      "sha256": "0807087959bccac14c5e60e405df68710b6a5a271b8f113c3a8780e1191a005e"
+    }
+  ],
+  "trackedDistFilesChanged": 0,
+  "changedReadyFields": [
+    "totals.existingSiteFileCount",
+    "totals.siteFileCount"
+  ],
+  "siteFileCountEqualityRelaxed": false,
+  "mainPushed": false,
+  "deployed": false,
+  "forcePushed": false,
+  "p4Closed": false
+}

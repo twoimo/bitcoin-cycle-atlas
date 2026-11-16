@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-price-axis-harness-rerun",
+  "item": "Q-R17-2",
+  "recordedAt": "2026-11-12T17:57:00+09:00",
+  "testedHead": "fb4cb4c",
+  "testedHeadFull": "fb4cb4c1a111f6cef2b52cf58ad32ac6e6a58a03",
+  "parentDocs": "1f68dfb2fd9a76bdcc9457189245c5305191f5d6",
+  "worktree": "/private/tmp/atlas-r17/wt",
+  "command": "node scripts/verify-price-axis-browser.mjs --out build/qa-r17-20261112/axis3-fb4cb4c",
+  "chrome": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "counts": {
+    "required": 16,
+    "attempted": 16,
+    "unattempted": 0,
+    "passed": 16,
+    "failed": 0,
+    "alignmentPairs": 8,
+    "alignmentPassed": 8,
+    "coverage": "passed",
+    "exitCode": 0
+  },
+  "eth320Date": {
+    "before": {
+      "left": 210.95,
+      "right": 277.4,
+      "gutterStart": 256,
+      "occludedPx2": 13
+    },
+    "after": {
+      "default": {
+        "left": 9,
+        "right": 75.453125,
+        "top": 53.59375,
+        "bottom": 66.59375
+      },
+      "candles": {
+        "left": 9,
+        "right": 75.453125,
+        "top": 53.59375,
+        "bottom": 66.59375
+      }
+    },
+    "gutter": {
+      "left": 256,
+      "right": 320
+    },
+    "occludedArea": 0
+  },
+  "eth390DateRight": 274.984375,
+  "eth390GutterStart": 326,
+  "visual": "ETHUSD-320 default and candles show 2026-11-06 wrapped onto the second readout line, fully left of the price-axis gutter. Date text is complete, not clipped.",
+  "accessibility": "CSS max-width only. No aria, keyboard, or hit-target change. Date remains visible text.",
+  "performance": "A-9 not remeasured. Boot path unchanged from 91cf41c, where 6/6 passed at 2231.1-2262.0ms against 2500ms.",
+  "consistency": "CSS delta adds no color, font, gradient, or shadow.",
+  "newFindings": 0,
+  "screenshots": "build/qa-r17-20261112/axis3-fb4cb4c/ (16 png)"
+}

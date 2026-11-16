@@ -1,0 +1,24 @@
+{
+  "name": "timeline-final",
+  "command": [
+    "npm",
+    "run",
+    "verify:conference",
+    "--",
+    "--timeline",
+    "tests/fixtures/conference/timeline.synthetic.json",
+    "--sources",
+    "tests/fixtures/conference/sources.synthetic.json",
+    "--out",
+    "build/conference-p1a/timeline-verification-final.json"
+  ],
+  "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "sourceTree": "7ce03ecfccd2b953c50d4f0efd10afa45b97a790",
+  "startedAt": "2026-11-11T19:40:50.362228+00:00",
+  "exitCode": 0,
+  "durationSec": 0.413,
+  "finishedAt": "2026-11-11T19:40:50.771088+00:00",
+  "headAfter": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "trackedDiffAfter": "",
+  "logSha256": "031b72f8e91059d04825c0a5369ae44dc37a349d222281d206f410ee5d69c994"
+}

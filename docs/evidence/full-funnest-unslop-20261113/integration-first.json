@@ -1,0 +1,168 @@
+{
+  "recordedAt": "2026-11-13T08:20:59.245Z",
+  "kind": "intermediate-diagnostic-not-final-acceptance",
+  "head": "cd884574bbb1c59ee29c15c7544c4be8e2bd583f",
+  "sourceWasBeingEditedDuringDiagnostic": true,
+  "host": {
+    "tests": 3974,
+    "pass": 3934,
+    "fail": 34,
+    "skipped": 6
+  },
+  "originalLog": {
+    "path": "/Users/twoimo/.aside/u/0/sessions/2026-11-11_RSR5NcqeBZVwniFE/tmp/full-funnest-integration-first.log",
+    "sha256": "1e776c6a598d884d8bf6e91cbebff06ca23f9ddfac65d65c38c7d49992014d72"
+  },
+  "frozen": {
+    "tests": 41,
+    "pass": 41,
+    "fail": 0,
+    "skipped": 0,
+    "runtime": "node:24.22.2 linux/amd64",
+    "image": "node@sha256:8fa96264f302f58bbb13aa7339c541547b56975766ce956c875da149452a3e40"
+  },
+  "protectedData": {
+    "total": 167,
+    "matching": 167,
+    "mismatches": []
+  },
+  "failures": [
+    {
+      "id": 160,
+      "name": "the committed preload HTML and graph match all current source bytes and import edges"
+    },
+    {
+      "id": 1377,
+      "name": "the actual formal fixture runs in isolation with its complete UI dependency closure"
+    },
+    {
+      "id": 1548,
+      "name": "declared ETH review inventory includes every top-level browser source and root stylesheet"
+    },
+    {
+      "id": 1557,
+      "name": "the complete ETH module graph excludes BTC workspaces, forecast engines and cycle-analysis controllers"
+    },
+    {
+      "id": 2411,
+      "name": "standalone retains the complete replay module graph and exact outcome archive bytes"
+    },
+    {
+      "id": 2412,
+      "name": "packaged ETH, MSTR and BMNR journals verify their real frozen records and replay offline"
+    },
+    {
+      "id": 2413,
+      "name": "embedded replay rejects missing or altered outcome bytes instead of substituting older ETH"
+    },
+    {
+      "id": 2414,
+      "name": "offline journal verifies every indexed record, including an unselected asset, before exposing data"
+    },
+    {
+      "id": 2415,
+      "name": "a superseded offline verification cannot replace the current asset selection"
+    },
+    {
+      "id": 2840,
+      "name": "ETHUSD restores shared viewport keys without first-entry URL or history writes"
+    },
+    {
+      "id": 2841,
+      "name": "MSTR restores shared viewport keys without first-entry URL or history writes"
+    },
+    {
+      "id": 2842,
+      "name": "BMNR restores shared viewport keys without first-entry URL or history writes"
+    },
+    {
+      "id": 2863,
+      "name": "MSTR weekly switch and scale mode retain the source-correct manual viewport"
+    },
+    {
+      "id": 2864,
+      "name": "BMNR weekly switch and scale mode retain the source-correct manual viewport"
+    },
+    {
+      "id": 2865,
+      "name": "ETHUSD real-source initializer keeps the right endpoint when zoom expands before its first observation"
+    },
+    {
+      "id": 2866,
+      "name": "MSTR real-source initializer keeps the right endpoint when zoom expands before its first observation"
+    },
+    {
+      "id": 2867,
+      "name": "BMNR real-source initializer keeps the right endpoint when zoom expands before its first observation"
+    },
+    {
+      "id": 3152,
+      "name": "P1 heading correction is dashboard-only and retains the shared palette and card contract"
+    },
+    {
+      "id": 3154,
+      "name": "negative model: fixing body origin alone cannot prove the original broad card shadow"
+    },
+    {
+      "id": 3159,
+      "name": "negative model: an unsupported clip remains unverified with the title and old shadow present"
+    },
+    {
+      "id": 3161,
+      "name": "market-lab/ serves the current four stylesheet paths, digests and P1 source"
+    },
+    {
+      "id": 3162,
+      "name": "market-lab/ CSS cascade gives all seven 768/1440 nav items 999px corners without changing 44px controls"
+    },
+    {
+      "id": 3163,
+      "name": "market-lab/us/ serves the current four stylesheet paths, digests and P1 source"
+    },
+    {
+      "id": 3164,
+      "name": "market-lab/us/ CSS cascade gives all seven 768/1440 nav items 999px corners without changing 44px controls"
+    },
+    {
+      "id": 3165,
+      "name": "omitting the served P1 source reproduces the seven 768px 4px corners and cannot pass this contract"
+    },
+    {
+      "id": 3166,
+      "name": "P1 nav paint preserves the existing 320/390 phone control geometry and exact current-role markup"
+    },
+    {
+      "id": 3167,
+      "name": "a late important radius override wins the model and is rejected instead of trusting the earlier P1 rule"
+    },
+    {
+      "id": 3177,
+      "name": "P1 uses exact shared containers and appends only shell-scoped CSS after authored surfaces"
+    },
+    {
+      "id": 3392,
+      "name": "page-context chrome keeps its compact size while prose keeps a reading size"
+    },
+    {
+      "id": 3426,
+      "name": "the real standalone is deterministic, preserves every module and snapshot, and passes the runtime parser/linker"
+    },
+    {
+      "id": 3603,
+      "name": "current authored CSS and pinned local font bytes satisfy the source contract without claiming a browser pass"
+    },
+    {
+      "id": 3604,
+      "name": "a real CLI preflight failure creates missing parents, records the reason, and never overwrites its receipt"
+    },
+    {
+      "id": 3734,
+      "name": "scale controls retain the exact existing light role endpoints and alias provenance"
+    },
+    {
+      "id": 3735,
+      "name": "the recorded ETH intermediate channels still fail role validation despite sufficient contrast"
+    }
+  ],
+  "release": "no push, merge or deployment; final tests and human gates remain open"
+}

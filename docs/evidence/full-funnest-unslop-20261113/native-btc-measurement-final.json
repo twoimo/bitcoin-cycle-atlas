@@ -1,0 +1,179 @@
+{
+  "checkedAt": "2026-11-13T12:46:16.991Z",
+  "focus": {
+    "before": {
+      "tag": "circle",
+      "id": "sab-122-2025",
+      "label": "2025-01-23 SEC 직원 회계지침 SAB 122 발표 · 사건 원문 보기"
+    },
+    "after": {
+      "tag": "circle",
+      "id": "sab-122-2025",
+      "label": "2025-01-23 SEC 직원 회계지침 SAB 122 발표 · 사건 원문 보기"
+    }
+  },
+  "baseline": {
+    "nativeRange": {
+      "from": 1732176091939.339,
+      "to": 1857686399999
+    },
+    "pane": {
+      "width": 1245,
+      "height": 730
+    },
+    "painted": true,
+    "version": "0.6.22",
+    "sourceMode": "close-only",
+    "source": {
+      "name": "Coin Metrics",
+      "volumeSource": "Coin Metrics"
+    },
+    "legacy": {
+      "svgCount": 61,
+      "priceNodes": 0
+    },
+    "svgData": {
+      "chartEngine": "funnest",
+      "observedMode": "close-only",
+      "source": "Coin Metrics",
+      "replaySelectionPreview": "false",
+      "observedCandleCount": "0",
+      "observedLineCount": "5962",
+      "chartType": "line",
+      "scale": "log",
+      "invertScale": "false",
+      "historyLabelCount": "5",
+      "historyEventCount": "14",
+      "historyLabelMode": "context",
+      "historyHiddenLabelCount": "9",
+      "cycleMarkerCount": "5",
+      "cycleMarkerLabelCount": "5",
+      "cycleIntervalCount": "13",
+      "cycleIntervalLabelCount": "12",
+      "replayBoundaryCount": "0",
+      "replayCycleTimingCount": "721",
+      "cycleIntervalBandTop": "502",
+      "cycleIntervalBandBottom": "702",
+      "plotLeft": "0",
+      "plotRight": "1245",
+      "plotTop": "0",
+      "plotBottom": "730",
+      "priceBottom": "730",
+      "timeAxisTop": "730",
+      "visiblePointCount": "5962"
+    },
+    "bounds": {
+      "left": 57,
+      "top": 61,
+      "width": 1333,
+      "height": 800
+    },
+    "row": {
+      "time": 1769904000000,
+      "close": 76911.0523772648,
+      "date": "2026-02-01",
+      "price": 76911.0523772648,
+      "x": 374.24213406595356,
+      "projectedY": {
+        "close": 450.4341709138567
+      }
+    }
+  },
+  "weakFar": {
+    "anchor": {
+      "price": 81854.9040504808,
+      "field": "free",
+      "snapped": false,
+      "mode": "weak",
+      "time": 1769904000000,
+      "date": "2026-02-01",
+      "kind": "observed"
+    },
+    "snap": null,
+    "pointer": {
+      "time": 1769904000000,
+      "value": 76911.0523772648,
+      "x": 374,
+      "y": 400
+    }
+  },
+  "weakNear": {
+    "anchor": {
+      "price": 76911.0523772648,
+      "field": "C",
+      "snapped": true,
+      "mode": "weak",
+      "time": 1769904000000,
+      "date": "2026-02-01",
+      "kind": "observed"
+    },
+    "snap": {
+      "price": 76911.0523772648,
+      "field": "C",
+      "snapped": true,
+      "mode": "weak",
+      "time": 1769904000000,
+      "date": "2026-02-01",
+      "kind": "observed",
+      "x": 374.24213406595356,
+      "y": 450.4341709138567,
+      "radius": 7
+    }
+  },
+  "strongFar": {
+    "anchor": {
+      "price": 76911.0523772648,
+      "field": "C",
+      "snapped": true,
+      "mode": "strong",
+      "time": 1769904000000,
+      "date": "2026-02-01",
+      "kind": "observed"
+    },
+    "snap": {
+      "price": 76911.0523772648,
+      "field": "C",
+      "snapped": true,
+      "mode": "strong",
+      "time": 1769904000000,
+      "date": "2026-02-01",
+      "kind": "observed",
+      "x": 374.24213406595356,
+      "y": 450.4341709138567,
+      "radius": 7
+    }
+  },
+  "measured": {
+    "paint": [
+      {
+        "kind": "start",
+        "date": "2026-02-01",
+        "price": 76911.0523772648,
+        "field": "C",
+        "x": 374.24213406595356,
+        "y": 450.4341709138567
+      },
+      {
+        "kind": "end",
+        "date": "2026-03-16",
+        "price": 74723.9575534775,
+        "field": "C",
+        "x": 411.0950752427159,
+        "y": 473.78889034732333,
+        "from": {
+          "x": 374.24213406595356,
+          "y": 450.4341709138567
+        },
+        "dash": [
+          4,
+          3
+        ]
+      }
+    ],
+    "selected": "2026-03-16",
+    "nativeRange": {
+      "from": 1732176091939.339,
+      "to": 1857686399999
+    }
+  }
+}

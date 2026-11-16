@@ -1,0 +1,21 @@
+{
+  "request": "Q-R19P0-2-e3ef789",
+  "baseHead": "2c4a536fafaa9d5ebc4c63336b4496175d9344e9",
+  "count": 13,
+  "files": [
+    "docs/LAUNCH_CHECKLIST_20261110.md",
+    "docs/evidence/q-r19p0-2-e3ef789/README.md",
+    "docs/evidence/q-r19p0-2-e3ef789/browser-command.json",
+    "docs/evidence/q-r19p0-2-e3ef789/changed-files.json",
+    "docs/evidence/q-r19p0-2-e3ef789/focused-contract-command.json",
+    "docs/evidence/q-r19p0-2-e3ef789/focused-contract.tap",
+    "docs/evidence/q-r19p0-2-e3ef789/linux-20261112/report.json",
+    "docs/evidence/q-r19p0-2-e3ef789/preserved-contract-command.json",
+    "docs/evidence/q-r19p0-2-e3ef789/preserved-contract.tap",
+    "docs/evidence/q-r19p0-2-e3ef789/static-checks.json",
+    "docs/evidence/q-r19p0-2-e3ef789/summary.json",
+    "scripts/ui-renewal-p0-text-hit.mjs",
+    "tests/ui-renewal-p0-text-hit.test.mjs"
+  ],
+  "commitParent": "5aae222493f705c054031e951af8ddf742df9685"
+}

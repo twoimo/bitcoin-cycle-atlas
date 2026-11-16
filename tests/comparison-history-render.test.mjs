@@ -5,7 +5,7 @@ import {runInNewContext} from 'node:vm';
 import {parseComparisonUrl,comparisonUrlChanged} from '../dist/comparison-url-state.js';
 const source=readFileSync(new URL('../dist/app.js',import.meta.url),'utf8');
 const part=(start,end)=>{const a=source.indexOf(start),b=source.indexOf(end,a);assert.ok(a>=0&&b>a);return source.slice(a,b);};
-const persist=part('function persistUrl() {',"document.documentElement.dataset.theme = 'dark';");
+const persist=part('function persistUrl() {','// The shared head/site entry owns the saved light/dark presentation preference.');
 const pop=part("window.addEventListener('popstate'",'function render(recalculate');
 const draw=part('function render(recalculate','function renderTiming()');
 function fixture(destination,{late=false,mutated=false}={}){

@@ -52,7 +52,7 @@ body[data-instrument-workbench=true] #ml-panel {
   cursor: inherit;
   touch-action: inherit;
 }
-.instrument-workbench .rsi-price-text { fill: var(--on-accent); }
+.instrument-workbench .rsi-price-text { fill: var(--on-data-gold); }
 .instrument-workbench .rsi-date-text { fill: var(--text); }
 .instrument-volume-label {
   paint-order: stroke;
@@ -84,8 +84,47 @@ body[data-instrument-workbench=true] #ml-panel {
 .instrument-method code, .instrument-revision { overflow-wrap: anywhere; font: 11px var(--font-mono); }
 .theme-workbench > .theme-editor { flex: none; max-height: 70%; overflow: auto; }
 .theme-workbench > .theme-write-status, .theme-workbench > .theme-error, .housing-workbench > .housing-error { flex: none; }
+@media (min-width: 641px) and (max-width: 800px) {
+  .instrument-workbench .rsi-workbench-panel { position: absolute; inset: 0 0 0 auto; z-index: 40; width: 288px; }
+}
 @media (max-width: 640px) {
   .instrument-workbench .rsi-workbench-panel { flex-basis: auto; width: min(340px, 100%); }
   .instrument-workbench .rsi-workbench-panel > header { min-height: 48px; }
   .instrument-workbench .rsi-workbench-panel > header button { min-width: 44px; min-height: 44px; }
+}
+
+/* Funnest chart mounts keep their own geometry and SVG semantics; scope sizing to the mount hooks only. */
+.atlas-funnest-instrument-plot { position: relative; display: block; flex: 1 1 auto; width: 100%; height: 100%; min-width: 0; min-height: 0; }
+.atlas-funnest-instrument-plot .atlas-funnest-source-table { position: absolute; z-index: 8; inset: auto 0 0; box-sizing: border-box; display: flex; flex-direction: column; max-height: 100%; min-width: 0; margin: 0; border-top: 1px solid var(--border); background: var(--surface); }
+.atlas-funnest-instrument-plot .atlas-funnest-source-table:not([open]) { height: 44px; }
+.atlas-funnest-instrument-plot .atlas-funnest-source-table[open] { height: min(420px, 100%); }
+.atlas-funnest-instrument-plot .atlas-funnest-source-table > summary { position: absolute; z-index: 1; inset: auto 0 0; box-sizing: border-box; display: flex; align-items: center; height: 44px; min-height: 44px; padding: 0 12px; cursor: pointer; list-style-position: inside; font-size: 13px; background: var(--surface); }
+.atlas-funnest-instrument-plot .atlas-funnest-source-table > summary:focus-visible, .atlas-funnest-instrument-plot .atlas-funnest-marker-list button:focus-visible { outline: 2px solid var(--focus, var(--accent)); outline-offset: -2px; }
+.atlas-funnest-instrument-plot .atlas-funnest-source-body { position: absolute; inset: 0 0 44px; min-width: 0; overflow: auto; overscroll-behavior: contain; }
+.atlas-funnest-instrument-plot .atlas-funnest-marker-list { margin: 0; padding: 8px; list-style: none; }
+.atlas-funnest-instrument-plot .atlas-funnest-marker-list button { box-sizing: border-box; width: 100%; min-height: 44px; padding: 8px 10px; text-align: left; white-space: normal; }
+.atlas-funnest-instrument-plot .atlas-funnest-table-scroll { max-width: 100%; overflow: auto; overscroll-behavior: contain; }
+.atlas-funnest-instrument-plot .atlas-funnest-table-scroll table { border-collapse: collapse; white-space: nowrap; }
+.atlas-funnest-instrument-plot .atlas-funnest-table-scroll th, .atlas-funnest-instrument-plot .atlas-funnest-table-scroll td { padding: 6px 10px; }
+.atlas-funnest-instrument-plot > .atlas-funnest-axis-unit { box-sizing: border-box; width: 100%; padding-right: 12px; text-align: right; }
+.housing-chart .atlas-funnest-observed-chart, .ml-chart .atlas-funnest-observed-chart { display: block; width: 100%; max-width: 100%; min-width: 0; height: auto; }
+.housing-relation-layout .atlas-funnest-scatter { display: block; width: 100%; max-width: 100%; min-width: 0; height: auto; }
+
+/* The compact chart pane owns a finite height. The plot takes only the remaining flex space. */
+#market-view .atlas-funnest-observed-chart > .ml-viewport-chart {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+#market-view .atlas-funnest-observed-chart > .ml-viewport-chart > .atlas-funnest-observed-plot-slot {
+  flex: 1 1 0%;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+#market-view .atlas-funnest-observed-chart > .ml-viewport-chart > .atlas-funnest-source-table {
+  flex: 0 0 auto;
 }

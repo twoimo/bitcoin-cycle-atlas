@@ -72,7 +72,7 @@ function bootstrap({ earlyErrors = [] } = {}) {
     return content.filter(node => positions.get(node) < parsingPosition);
   };
   let reloads = 0;
-  const location = { reload() { reloads += 1; } };
+  const location = { pathname: '/', search: '', reload() { reloads += 1; } };
   window.location = location;
   window.document = document;
   const emit = (type, target = document) => target.dispatchEvent(new Event(type));
@@ -223,4 +223,17 @@ test('optional webfonts cannot hold essential CSS or page boot behind a network 
   fonts.media = 'print'; fonts.sheet = {};
   runInNewContext(fontScript, { document: { getElementById: () => fonts } });
   assert.equal(fonts.media, 'all', 'An already cached stylesheet is activated too');
+});
+
+
+test('runtime boot diagnostics retain the first actual error event, source and phase', () => {
+  const f = bootstrap(); const event = new Event('error');
+  Object.defineProperties(event, { message: { value: 'renderer failed' }, error: { value: new Error('renderer failed') }, filename: { value: 'http://127.0.0.1/chart.js' } });
+  f.window.dispatchEvent(event);
+  const first = JSON.parse(f.root.dataset.bootFailure);
+  assert.equal(first.kind, 'error'); assert.equal(first.reason, 'renderer failed');
+  assert.equal(first.url, 'http://127.0.0.1/chart.js'); assert.equal(first.phase, 'boot'); assert.equal(first.route, '/');
+  assert.equal(f.root.dataset.boot, 'error'); assert.ok(f.content.every(node => node.inert));
+  f.emit('atlas:ready'); f.emit('error', f.window);
+  assert.deepEqual(JSON.parse(f.root.dataset.bootFailure), first, 'late events cannot overwrite the first causal evidence');
 });

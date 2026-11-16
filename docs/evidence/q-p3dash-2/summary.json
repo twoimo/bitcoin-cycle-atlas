@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "kind": "q-p3dash-2-relay-paint-candidate",
+  "recordedAt": "2026-11-13T06:45:31.819614+09:00",
+  "baselineDocsCommit": "7ebab472d14aade899bc9cfeccc84b70d8e75883",
+  "baselineProductCommit": "042b04a4de56ece2bf5a6bd898b750ec5170e9f0",
+  "productCommit": "6e33d0fb8a6b489a1c7571d3aba254f84a54bb5b",
+  "productTree": "8e483903e27dc434f0051394620a68fed36cca4e",
+  "branch": "fix/tradingview-responsive-20261110",
+  "status": "implemented; original native gate blocked; issue remains open",
+  "productChange": {
+    "file": "dist/relay-room.css",
+    "selector": ".relay-room .relay-detail .relay-detail-body",
+    "declaration": "clip-path:inset(0)",
+    "authoredCssFiles": 1,
+    "newDeclarations": 1,
+    "generatedProductFiles": 11,
+    "intent": "Bound scrolled message paint to the existing detail-pane border box while retaining rounded overflow, padding, native scroll, sticky dates and inset focus."
+  },
+  "baselineMac": {
+    "receipt": "../qa-q-p3dash-1-mac-042b04a/summary.json",
+    "chrome": "157.0.8103.79",
+    "layouts": {
+      "required": 28,
+      "attempted": 28,
+      "passed": 25
+    },
+    "navigation": {
+      "required": 56,
+      "attempted": 56,
+      "passed": 56
+    },
+    "chartReturns": {
+      "required": 8,
+      "attempted": 8,
+      "passed": 8
+    },
+    "sourceStable": true,
+    "complete": true,
+    "qualifiesP1Verification": false,
+    "p3OverflowZero": 20,
+    "marketChildOverflowZero": 4,
+    "failedCases": [
+      "relay-320",
+      "relay-390",
+      "relay-768"
+    ]
+  },
+  "checks": {
+    "focused": {
+      "tests": 142,
+      "passed": 142,
+      "failed": 0,
+      "skipped": 0
+    },
+    "styles": {
+      "sourceStylesheets": 43,
+      "bundles": 2,
+      "exitCode": 0
+    },
+    "preloads": {
+      "exitCode": 0
+    },
+    "static": {
+      "files": 1159,
+      "scripts": 221,
+      "references": 847,
+      "exitCode": 0
+    },
+    "pages": {
+      "files": 104,
+      "routes": 9,
+      "exitCode": 0
+    }
+  },
+  "native": {
+    "command": [
+      "node",
+      "scripts/verify-ui-renewal-p1-browser.mjs",
+      "--out",
+      "build/q-p3dash-2/native-p1"
+    ],
+    "testedHead": "6e33d0fb8a6b489a1c7571d3aba254f84a54bb5b",
+    "workingTree": [],
+    "status": "unverified",
+    "blockedAt": "Chromium launch",
+    "counts": {
+      "requiredLayouts": 28,
+      "attemptedLayouts": 0,
+      "passedLayouts": 0,
+      "requiredNavigationActivations": 56,
+      "attemptedNavigationActivations": 0,
+      "passedNavigationActivations": 0,
+      "requiredChartReturns": 8,
+      "attemptedChartReturns": 0,
+      "passedChartReturns": 0
+    },
+    "sourceStable": true,
+    "complete": false,
+    "qualifiesP1Verification": false,
+    "exitCode": 1,
+    "sourceFiles": 1164,
+    "finalSourceRecheckChanged": 0,
+    "screenshots": 0,
+    "overflowPx": null,
+    "h1NativeTextPaint": null,
+    "focus": null,
+    "targetGeometry": null,
+    "clipRect": null,
+    "paintRect": null,
+    "blocker": "Chromium SIGABRT: socket() failed: Operation not permitted (1)"
+  },
+  "preservation": {
+    "protectedFour": {
+      "files": 4,
+      "same": 4,
+      "changed": 0
+    },
+    "priceAxis": {
+      "files": 1,
+      "same": 1,
+      "changed": 0
+    },
+    "scripts": {
+      "files": 217,
+      "same": 217,
+      "changed": 0
+    },
+    "tests": {
+      "files": 424,
+      "same": 424,
+      "changed": 0
+    },
+    "dataAndConference": {
+      "files": 191,
+      "same": 191,
+      "changed": 0
+    },
+    "runtimeJavaScript": {
+      "files": 196,
+      "same": 196,
+      "changed": 0
+    },
+    "tableStyles": {
+      "files": 3,
+      "same": 3,
+      "changed": 0
+    },
+    "rootTokensAndShell": {
+      "files": 4,
+      "same": 4,
+      "changed": 0
+    },
+    "appsAndPackages": {
+      "files": 76,
+      "same": 76,
+      "changed": 0
+    },
+    "dependencies": {
+      "files": 2,
+      "same": 2,
+      "changed": 0
+    },
+    "existingEvidence": {
+      "files": 661,
+      "same": 661,
+      "changed": 0,
+      "method": "Git blob identity"
+    }
+  },
+  "bundle": {
+    "rootCssRequests": 4,
+    "afterShellRawDeltaBytes": 101,
+    "afterShellGzip9DeltaBytes": 45
+  },
+  "fullNpmTest": {
+    "rerun": false,
+    "existing17Failures": "unchanged; held for pre-merge gate"
+  },
+  "acceptanceRequired": {
+    "layoutsPassed": 28,
+    "navigationPassed": 56,
+    "chartReturnsPassed": 8,
+    "sourceStable": true,
+    "complete": true,
+    "qualifiesP1Verification": true
+  },
+  "publication": {
+    "parentCommit": "7ebab472d14aade899bc9cfeccc84b70d8e75883",
+    "force": false,
+    "localUpdate": "fetch then merge --ff-only",
+    "resetUsed": false,
+    "mainPush": false,
+    "deployment": false
+  },
+  "evidence": {
+    "checks": "checks.json",
+    "sourcePreservation": "source-preservation.json.gz",
+    "nativeReport": "raw/native-p1/report.json.gz",
+    "rawManifest": "raw-manifest.json"
+  }
+}

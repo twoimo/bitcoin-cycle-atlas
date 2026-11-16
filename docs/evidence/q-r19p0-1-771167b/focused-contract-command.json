@@ -1,0 +1,10 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "tests/ui-renewal-p0-contract.test.mjs",
+    "tests/ui-renewal-p0-text-hit.test.mjs"
+  ],
+  "exitCode": 0
+}

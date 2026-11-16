@@ -1,0 +1,652 @@
+{
+  "kind": "r13-native-text-follow-up",
+  "sourceCommit": "74653b1979af0515ca0fed698dd2852c7a9cef29",
+  "sourceTree": "8aaa78d6574b76d98dbc65760429278f9a1656b2",
+  "baseCommit": "7f2982d944e329f3f00ecd0a592d22117eac6032",
+  "recordedAt": "2026-11-12T00:33:00.154129+00:00",
+  "status": "passed",
+  "productionDeployment": false,
+  "environment": {
+    "platform": "linux",
+    "arch": "x64",
+    "node": "v24.22.2",
+    "browser": "/workspace/scratch/55a6bfaf803b/conference-tools/chrome-with-proxy",
+    "browserLauncherSha256": "a80450b5fb18bb3de07cda1f3041237577d1634b6fe5520bbff95e205f45293a",
+    "xdgDataHome": "/workspace/scratch/a7a56e32088b/browser-r13-type-runtime/xdg-data"
+  },
+  "browserVersion": {
+    "protocolVersion": "1.3",
+    "product": "HeadlessChrome/157.0.8103.38",
+    "revision": "@a733b5afbb3ba618844ff8876b89ad1a774b2f18",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.8103.38 Safari/537.36",
+    "jsVersion": "15.7.112.23"
+  },
+  "unit": {
+    "tests": 31,
+    "pass": 31,
+    "fail": 0,
+    "skipped": 0,
+    "nativeInputTests": 9,
+    "existingNativeSelectTests": 22,
+    "platformCoverage": "Mocked CDP transport branches for darwin/linux/win32; not macOS browser execution"
+  },
+  "conference": {
+    "total": 14,
+    "passed": 14,
+    "failed": 0,
+    "cases": [
+      {
+        "id": "fixture-390x844",
+        "status": "passed",
+        "failures": []
+      },
+      {
+        "id": "fixture-320x740",
+        "status": "passed",
+        "failures": []
+      },
+      {
+        "id": "fixture-768x1024",
+        "status": "passed",
+        "failures": []
+      },
+      {
+        "id": "fixture-1024x768",
+        "status": "passed",
+        "failures": []
+      },
+      {
+        "id": "fixture-1440x900",
+        "status": "passed",
+        "failures": []
+      },
+      {
+        "id": "fixture-1920x1080",
+        "status": "passed",
+        "failures": []
+      },
+      {
+        "id": "fixture-1280x900",
+        "status": "passed",
+        "failures": []
+      },
+      {
+        "id": "fixture-1023x900",
+        "status": "passed",
+        "failures": []
+      },
+      {
+        "id": "fixture-767x900",
+        "status": "passed",
+        "failures": []
+      },
+      {
+        "id": "missing-timeline",
+        "status": "passed",
+        "failures": []
+      },
+      {
+        "id": "invalid-timeline",
+        "status": "passed",
+        "failures": []
+      },
+      {
+        "id": "navigation-lifecycle",
+        "status": "passed",
+        "failures": []
+      },
+      {
+        "id": "navigation-BTCUSD",
+        "status": "passed",
+        "failures": []
+      },
+      {
+        "id": "navigation-ETHUSD",
+        "status": "passed",
+        "failures": []
+      }
+    ]
+  },
+  "nativeTextInput": {
+    "total": 19,
+    "exactReadbacks": 19,
+    "transcriptSearches": 18,
+    "pageInputs": 1,
+    "receipts": [
+      {
+        "caseId": "fixture-390x844",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "",
+        "selection": {
+          "value": "",
+          "focused": true,
+          "start": 0,
+          "end": 0
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-390x844",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "3725초",
+        "selection": {
+          "value": "3725초",
+          "focused": true,
+          "start": 0,
+          "end": 5
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-320x740",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "",
+        "selection": {
+          "value": "",
+          "focused": true,
+          "start": 0,
+          "end": 0
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-320x740",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "3725초",
+        "selection": {
+          "value": "3725초",
+          "focused": true,
+          "start": 0,
+          "end": 5
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-768x1024",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "",
+        "selection": {
+          "value": "",
+          "focused": true,
+          "start": 0,
+          "end": 0
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-768x1024",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "3725초",
+        "selection": {
+          "value": "3725초",
+          "focused": true,
+          "start": 0,
+          "end": 5
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-1024x768",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "",
+        "selection": {
+          "value": "",
+          "focused": true,
+          "start": 0,
+          "end": 0
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-1024x768",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "3725초",
+        "selection": {
+          "value": "3725초",
+          "focused": true,
+          "start": 0,
+          "end": 5
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-1440x900",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "",
+        "selection": {
+          "value": "",
+          "focused": true,
+          "start": 0,
+          "end": 0
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-1440x900",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "3725초",
+        "selection": {
+          "value": "3725초",
+          "focused": true,
+          "start": 0,
+          "end": 5
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-1440x900",
+        "selector": "[data-role=page]",
+        "requested": "2",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "1",
+        "selection": {
+          "value": "1",
+          "focused": true,
+          "start": null,
+          "end": null
+        },
+        "observed": "2"
+      },
+      {
+        "caseId": "fixture-1920x1080",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "",
+        "selection": {
+          "value": "",
+          "focused": true,
+          "start": 0,
+          "end": 0
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-1920x1080",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "3725초",
+        "selection": {
+          "value": "3725초",
+          "focused": true,
+          "start": 0,
+          "end": 5
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-1280x900",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "",
+        "selection": {
+          "value": "",
+          "focused": true,
+          "start": 0,
+          "end": 0
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-1280x900",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "3725초",
+        "selection": {
+          "value": "3725초",
+          "focused": true,
+          "start": 0,
+          "end": 5
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-1023x900",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "",
+        "selection": {
+          "value": "",
+          "focused": true,
+          "start": 0,
+          "end": 0
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-1023x900",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "3725초",
+        "selection": {
+          "value": "3725초",
+          "focused": true,
+          "start": 0,
+          "end": 5
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-767x900",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "",
+        "selection": {
+          "value": "",
+          "focused": true,
+          "start": 0,
+          "end": 0
+        },
+        "observed": "3725초"
+      },
+      {
+        "caseId": "fixture-767x900",
+        "selector": "[data-role=transcript-search]",
+        "requested": "3725초",
+        "platform": "linux",
+        "modifiers": 2,
+        "before": "3725초",
+        "selection": {
+          "value": "3725초",
+          "focused": true,
+          "start": 0,
+          "end": 5
+        },
+        "observed": "3725초"
+      }
+    ]
+  },
+  "nativeSelect": {
+    "calls": 89,
+    "trustedEvents": 420,
+    "untrustedEvents": 0
+  },
+  "sourceIntegrity": {
+    "checkedFiles": 970,
+    "changedSources": [],
+    "unchangedDuringRun": true
+  },
+  "protectedPathsUnchanged": [
+    "dist",
+    "scripts/verify-page-heading-browser.mjs",
+    "scripts/native-select-keyboard.mjs"
+  ],
+  "screenshots": {
+    "verified": 24,
+    "retained": 2,
+    "receipts": [
+      {
+        "file": "fixture-390x844.png",
+        "bytes": 26476,
+        "sha256": "7af8e503adc180e397bca8b48c200572f1984b1138478a954779a8ccb23af6a9",
+        "retained": false
+      },
+      {
+        "file": "fixture-390x844-transcript.png",
+        "bytes": 17340,
+        "sha256": "df735052bb8332eef0adc5e884fe5e338d4c9ed4f9cb3e028e0b3d33ff610397",
+        "retained": false
+      },
+      {
+        "file": "fixture-320x740.png",
+        "bytes": 24179,
+        "sha256": "11f1fd761ccfdf0686c5a81eea044855e7eb2212e16a5b9a470a57a243e8ba6e",
+        "retained": false
+      },
+      {
+        "file": "fixture-320x740-transcript.png",
+        "bytes": 16412,
+        "sha256": "2d7c63bc72b02ae497c4543b77a4b632627dfd1b54ffbef1a10f368ddb158521",
+        "retained": true
+      },
+      {
+        "file": "fixture-768x1024.png",
+        "bytes": 46940,
+        "sha256": "81eef7d1beea065c278900f37329a28803d7c2e93a4a5b083435c95a99f7ba31",
+        "retained": false
+      },
+      {
+        "file": "fixture-768x1024-transcript.png",
+        "bytes": 27867,
+        "sha256": "068ee0ce0c02d47c4ae63004a60039d54d518373c73e14042f6465714960fd55",
+        "retained": false
+      },
+      {
+        "file": "fixture-1024x768.png",
+        "bytes": 54540,
+        "sha256": "4a65dc992f397feac9772cc3be1c4e6b9f3a28cbaa1e60f280d28c24986ccaec",
+        "retained": false
+      },
+      {
+        "file": "fixture-1024x768-transcript.png",
+        "bytes": 61514,
+        "sha256": "eafbb981e39671ee1e77d808169c1eab0486b2fc13efe31d18c561bb1ce0c2ac",
+        "retained": false
+      },
+      {
+        "file": "fixture-1440x900.png",
+        "bytes": 61028,
+        "sha256": "384214d54a88a08943c5aa4b8041234b81d0203acc56acbd66f248ad53ecbf71",
+        "retained": false
+      },
+      {
+        "file": "fixture-1440x900-transcript.png",
+        "bytes": 70491,
+        "sha256": "40f556a83512532c63905ea23748e3bf9b0f5ae737f7e3f3252c2282c4c634c4",
+        "retained": true
+      },
+      {
+        "file": "fixture-1440x900-resized-focus.png",
+        "bytes": 24225,
+        "sha256": "333a9ebf3bd098420f0cb01f0b73ec818812159c7fba1f79f1c91d5c2f02cd13",
+        "retained": false
+      },
+      {
+        "file": "fixture-1920x1080.png",
+        "bytes": 67603,
+        "sha256": "49fcf5cfd5730c97748498ffd55dbe16cf20b8d9f3b6f1394a5050811c05e8f7",
+        "retained": false
+      },
+      {
+        "file": "fixture-1920x1080-transcript.png",
+        "bytes": 78772,
+        "sha256": "d07bfa598409225af3565ed46ba26ab63a5012dd5ca0830b58d61dc367707470",
+        "retained": false
+      },
+      {
+        "file": "fixture-1280x900.png",
+        "bytes": 59324,
+        "sha256": "e5d886c691d86346ed641dd69b492e3377a1f4802ec4a738fda61e1d0f171948",
+        "retained": false
+      },
+      {
+        "file": "fixture-1280x900-transcript.png",
+        "bytes": 65860,
+        "sha256": "24fb3f3fc1fbd5264945351f62deace0366a2d0a42ae8515d072896b9feeaddb",
+        "retained": false
+      },
+      {
+        "file": "fixture-1023x900.png",
+        "bytes": 54980,
+        "sha256": "72d61293515bca52705bbe1190f82dcc8c091a64c7096ab1702bef4402ce2f91",
+        "retained": false
+      },
+      {
+        "file": "fixture-1023x900-transcript.png",
+        "bytes": 35512,
+        "sha256": "5f0f63edd0c7c47fadf7b67ec7fb4f2d48cec89941c8169c6d71e10bc36944b6",
+        "retained": false
+      },
+      {
+        "file": "fixture-767x900.png",
+        "bytes": 39121,
+        "sha256": "02773e0b33bc2f139b7faa7b45ed7165bef1aa13b0e75c50ccd1e044d91c95d8",
+        "retained": false
+      },
+      {
+        "file": "fixture-767x900-transcript.png",
+        "bytes": 26077,
+        "sha256": "e725a1d320127caa92a4374af1be578dea80f80e61d1ce74eb6fcf8e49dc9869",
+        "retained": false
+      },
+      {
+        "file": "missing-timeline.png",
+        "bytes": 22800,
+        "sha256": "54e27d0fbcb6dd59213c3b820554f4ca5080a400578b452ffa0540b2119fd150",
+        "retained": false
+      },
+      {
+        "file": "invalid-timeline.png",
+        "bytes": 37741,
+        "sha256": "2b0f5a01066c1973e8fdcd6e8f0dacfd75adfb06eab4b9e7f836bb9a2705408b",
+        "retained": false
+      },
+      {
+        "file": "navigation-lifecycle.png",
+        "bytes": 62258,
+        "sha256": "a3c30fdef01b8403338fa0e099e1a072eb8ea4225743161b26a34dddfe64a8dc",
+        "retained": false
+      },
+      {
+        "file": "navigation-BTCUSD.png",
+        "bytes": 133340,
+        "sha256": "0864ca581b4f839b81bfe6522c97ff224fb11277311eed05ea10af315f211ee3",
+        "retained": false
+      },
+      {
+        "file": "navigation-ETHUSD.png",
+        "bytes": 200856,
+        "sha256": "466a378e30443a1ac4700fe9df872859332c4468eaa0d50d3b672548f646847f",
+        "retained": false
+      }
+    ]
+  },
+  "executions": [
+    {
+      "id": "unit",
+      "command": [
+        "/workspace/scratch/55a6bfaf803b/conference-tools/node-v24.22.2-linux-x64/bin/node",
+        "--test",
+        "tests/native-input-keyboard.test.mjs",
+        "tests/native-select-keyboard.test.mjs"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T00:29:16.204Z",
+      "log": "unit.log",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "finishedAt": "2026-11-12T00:29:16.642Z",
+      "durationMs": 433,
+      "logBytes": 2775,
+      "logSha256": "4c6b9c8318840eccef0386eff66af01df46c32dfc0e52aa7bd6e3bb64a26913d",
+      "sourceUnchanged": true
+    },
+    {
+      "id": "conference",
+      "command": [
+        "/workspace/scratch/55a6bfaf803b/conference-tools/node-v24.22.2-linux-x64/bin/node",
+        "scripts/verify-conference-browser.mjs",
+        "--out",
+        "build/r13-native-text/conference"
+      ],
+      "cwd": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas",
+      "startedAt": "2026-11-12T00:29:16.690Z",
+      "log": "conference.log",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "finishedAt": "2026-11-12T00:32:49.314Z",
+      "durationMs": 212623,
+      "logBytes": 968,
+      "logSha256": "ec99f0c05ec2caf9ff670af9c10b009781062c324b33d53435e4c9760012f00e",
+      "sourceUnchanged": true
+    }
+  ],
+  "userReportedMacOSAtBase": {
+    "source": "User-provided follow-up report; not independently rerun here",
+    "chrome": "157.0.8103.79",
+    "heading": {
+      "contract": 15,
+      "supplemental": 9,
+      "layoutShift": 2,
+      "failures": 0,
+      "h1Top": [
+        869.5,
+        797.5,
+        869.5
+      ]
+    },
+    "conference": {
+      "passed": 5,
+      "total": 14,
+      "failure": "Repeated transcript search appended because type() used Control+A on macOS"
+    }
+  },
+  "remaining": [
+    "Independent macOS conference 14-case remeasurement of this follow-up",
+    "Unchanged navigationState can read documentElement.scrollWidth while documentElement is null during destination navigation",
+    "Previously reported initial pageshow playback reset remains outside this text-input fix"
+  ],
+  "priorAttempts": {
+    "firstCompleted": {
+      "total": 14,
+      "passed": 13,
+      "failed": 1,
+      "failedCase": "navigation-ETHUSD",
+      "sourceCommit": "74653b1979af0515ca0fed698dd2852c7a9cef29",
+      "evidenceLimitation": "The first full report.json and executions.json were overwritten after an archive-precondition failure was followed by an accidental retry. Original completed stdout, failure screenshot and previously observed excerpts are preserved; the lost files are not reconstructed."
+    },
+    "interruptedRetry": {
+      "observedCases": 1,
+      "passed": 1,
+      "exitCode": 130,
+      "complete": false
+    },
+    "finalRun": "One deliberate full rerun of the identical source after preserving remaining evidence. Prior attempts are not combined with final counts."
+  }
+}

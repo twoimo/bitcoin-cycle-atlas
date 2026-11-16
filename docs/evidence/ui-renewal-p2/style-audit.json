@@ -1,0 +1,186 @@
+{
+  "kind": "p2-chart-chrome-source-paint-audit",
+  "sourceTree": "40d3bba1901203ecebd1b5f17ff7bc9c498d97a7",
+  "nativeMeasurements": false,
+  "authoredCssFiles": 49,
+  "cssStatus": "passed",
+  "literalViolations": [],
+  "globalTokenViolations": [],
+  "issues": [],
+  "rootPaintStatus": "passed",
+  "originalTokenPairs": {
+    "required": 40,
+    "passed": 40
+  },
+  "fonts": {
+    "status": "passed",
+    "faces": 92,
+    "bytes": 2957724
+  },
+  "chartRoles": [
+    {
+      "theme": "light",
+      "palette": "korean",
+      "direction": "up",
+      "ink": [
+        179,
+        50,
+        75,
+        1
+      ],
+      "background": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "contrast": 6.043892501994452,
+      "volumeContrast": 4.018476032356621,
+      "badgeContrast": 6.043892501994452
+    },
+    {
+      "theme": "light",
+      "palette": "korean",
+      "direction": "down",
+      "ink": [
+        36,
+        95,
+        189,
+        1
+      ],
+      "background": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "contrast": 6.092745857647522,
+      "volumeContrast": 3.8534525520154927,
+      "badgeContrast": 6.092745857647522
+    },
+    {
+      "theme": "light",
+      "palette": "international",
+      "direction": "up",
+      "ink": [
+        9,
+        115,
+        84,
+        1
+      ],
+      "background": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "contrast": 5.846443101635576,
+      "volumeContrast": 3.756357052171778,
+      "badgeContrast": 5.846443101635576
+    },
+    {
+      "theme": "light",
+      "palette": "international",
+      "direction": "down",
+      "ink": [
+        179,
+        50,
+        75,
+        1
+      ],
+      "background": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "contrast": 6.043892501994452,
+      "volumeContrast": 4.018476032356621,
+      "badgeContrast": 6.043892501994452
+    },
+    {
+      "theme": "dark",
+      "palette": "korean",
+      "direction": "up",
+      "ink": [
+        236,
+        129,
+        144,
+        1
+      ],
+      "background": [
+        23,
+        23,
+        28,
+        1
+      ],
+      "contrast": 6.89716587169954,
+      "volumeContrast": 4.660552024324372,
+      "badgeContrast": 6.395579477541663
+    },
+    {
+      "theme": "dark",
+      "palette": "korean",
+      "direction": "down",
+      "ink": [
+        141,
+        178,
+        255,
+        1
+      ],
+      "background": [
+        23,
+        23,
+        28,
+        1
+      ],
+      "contrast": 8.458118123513824,
+      "volumeContrast": 5.609055271941753,
+      "badgeContrast": 7.8430137386327194
+    },
+    {
+      "theme": "dark",
+      "palette": "international",
+      "direction": "up",
+      "ink": [
+        102,
+        195,
+        171,
+        1
+      ],
+      "background": [
+        23,
+        23,
+        28,
+        1
+      ],
+      "contrast": 8.470324499309253,
+      "volumeContrast": 5.606863980208024,
+      "badgeContrast": 7.854332423435232
+    },
+    {
+      "theme": "dark",
+      "palette": "international",
+      "direction": "down",
+      "ink": [
+        236,
+        129,
+        144,
+        1
+      ],
+      "background": [
+        23,
+        23,
+        28,
+        1
+      ],
+      "contrast": 6.89716587169954,
+      "volumeContrast": 4.660552024324372,
+      "badgeContrast": 6.395579477541663
+    }
+  ],
+  "minTextContrast": 5.846443101635576,
+  "minVolumeContrast": 3.756357052171778,
+  "minBadgeContrast": 5.846443101635576,
+  "newSheetSha256": "f5b1da697ca80244047ce541ec3f52f0f122b727de3b890cae6a8c954658d096"
+}

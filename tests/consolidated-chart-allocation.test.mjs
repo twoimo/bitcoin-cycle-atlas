@@ -1,12 +1,24 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {assertConsolidatedChartAllocation,assertSimulationDetailsRoundTrip} from '../scripts/verify-consolidated-workspace-browser.mjs';
+import {assertConsolidatedChartAllocation,assertSimulationDetailsRoundTrip,consolidatedFunnestPriceSvgSelector,findConsolidatedFunnestPriceSvg} from '../scripts/verify-consolidated-workspace-browser.mjs';
 import {createEthBrowserCaseSpecs,selectEthBrowserCaseSpecs} from '../scripts/eth-browser-case-specs.mjs';
 
 const rect=(left,top,width,height)=>({left,right:left+width,top,bottom:top+height,width,height});
 const measured=(box,extra={})=>({rect:box,content:{...box},visible:true,marginTop:0,marginBottom:0,...extra});
 const criteriaRows=['criteria','win-rate','current','buy','sell','strong','neutral'];
 const hudFields=['holdings','quantity','average-cost','current-price','pnl','next-trigger','updated-at'];
+
+test('keyboard helpers target the visible Funnest price SVG, never an earlier icon or RSI SVG',()=>{
+  const plot={querySelectorAll:selector=>{assert.equal(selector,'svg[role="img"]');return nodes;}},other={};
+  const makeSvg=({name,owner=plot,role='img',start=null,end=null})=>({name,getAttribute:key=>key==='role'?role:null,
+    hasAttribute:key=>key==='data-start'?start!==null:key==='data-end'?end!==null:false,
+    closest:selector=>selector==='.atlas-funnest-instrument-plot'?owner:null});
+  const icon=makeSvg({name:'toolbar-icon'}),rsi=makeSvg({name:'rsi-pane'}),foreign=makeSvg({name:'foreign-price',owner:other,start:'2026-01-01',end:'2026-12-31'}),price=makeSvg({name:'price-pane',start:'2026-01-01',end:'2026-12-31'});
+  const nodes=[icon,rsi,foreign,price];
+  assert.equal(consolidatedFunnestPriceSvgSelector,'.rsi-chart-canvas .atlas-funnest-instrument-plot svg[role="img"][data-start][data-end]');
+  assert.equal(findConsolidatedFunnestPriceSvg(plot),price);
+  assert.equal(findConsolidatedFunnestPriceSvg({...plot,querySelectorAll:()=>[icon,rsi,foreign]}),null);
+});
 
 // Saved native f12 dimensions, used only as oracle boundary fixtures. These
 // tests do not substitute for rerunning the unchanged native browser cases.
@@ -17,15 +29,17 @@ function allocation({width=390,height=708,statusHeight=0,symbol='TQQQ'}={}){
   if(statusHeight)rows.push({kind:'status',...measured(rect(0,0,width,statusHeight))});
   const bodyTop=rows.reduce((sum,row)=>sum+row.rect.height,0)+16*rows.length;
   const body=measured(rect(0,bodyTop,width,height-bodyTop));
-  const canvas=measured({...body.rect}),svg=measured({...body.rect});
+  const canvas=measured({...body.rect}),priceHeight=Math.max(180,body.rect.height-120),svg=measured(rect(0,body.rect.top,width,priceHeight));
+  const plot=measured({...body.rect}),rsiPanel=measured(rect(0,body.rect.top+priceHeight,width,120)),rsiSvg=measured({...rsiPanel.rect});
   rows.push({kind:'body',...structuredClone(body)});
   const criteriaTop=canvas.rect.top+24,criteriaHeight=Math.min(120,canvas.rect.height-48),rowHeight=(criteriaHeight-8)/criteriaRows.length;
   const criteria={...measured(rect(canvas.rect.left+8,criteriaTop,width-16,criteriaHeight)),symbol,label:symbol+' 매매 기준 상세 · 현재 미충족',hasPopup:'dialog',expanded:'false',collapsed:'false',chip:null,
     fields:criteriaRows.map((key,index)=>({key,text:key,...measured(rect(canvas.rect.left+12,criteriaTop+4+index*rowHeight,width-24,rowHeight-2))}))};
   return {svg:{width,height:svg.rect.height,visible:true},childHeight:height,allocation:{
     frame:{source:'https://example.test/bitcoin-cycle-atlas/market-lab/app/?embedded=1',documentUrl:'https://example.test/bitcoin-cycle-atlas/market-lab/app/?embedded=1',parentUrl:'https://example.test/bitcoin-cycle-atlas/market-lab/charts/?symbol=TQQQ',rect:rect(0,92,width,height)},
-    viewport:{width,height},owners:{activeWindow:true,svgInActiveFrame:true,canvasOwnsSvg:true,bodyOwnsCanvas:true,criteriaSharesCanvas:true},
-    svg,canvas,body,workbench:measured(rect(0,0,width,height)),flow:{display:'flex',direction:'column',gap:16,children:rows},
+    viewport:{width,height},owners:{activeWindow:true,svgInActiveFrame:true,plotContainsSvg:true,canvasOwnsPlot:true,bodyOwnsCanvas:true,criteriaSharesCanvas:true,rsiPanelInPlot:true,plotContainsRsiSvg:true,rsiSvgInPanel:true,rsiSvgInActiveFrame:true},
+    svg,rsiPanel,rsiSvg,rsiLineCount:1,plot,canvas,body,workbench:measured(rect(0,0,width,height)),flow:{display:'flex',direction:'column',gap:16,children:rows},
+
     criteria,
   }};
 }
@@ -51,26 +65,54 @@ test('each RSI instrument requires its own in-chart criteria; removing it cannot
     const result=allocation({symbol});
     assert.doesNotThrow(()=>assertConsolidatedChartAllocation(result,symbol));
     result.allocation.criteria=null;
-    assert.throws(()=>assertConsolidatedChartAllocation(result,symbol),/actual in-chart trading criteria and chart allocation must exist/);
+    assert.throws(()=>assertConsolidatedChartAllocation(result,symbol),/actual in-chart trading criteria and Funnest plot allocation must exist/);
     result.allocation.criteria=allocation({symbol}).allocation.criteria;
     result.allocation.criteria.symbol=symbol==='SOXL'?'TQQQ':'SOXL';
     assert.throws(()=>assertConsolidatedChartAllocation(result,symbol),/criteria overlay retains its selected instrument owner/);
   }
 });
 
-test('non-HUD instruments retain the original 75% child-viewport threshold',()=>{
-  const result={svg:{height:600,visible:true},childHeight:800};
+function setPaneHeights(result,priceHeight,rsiHeight){
+  const a=result.allocation,top=a.plot.rect.top;
+  a.svg=measured(rect(a.plot.rect.left,top,a.plot.rect.width,priceHeight));result.svg={width:a.svg.rect.width,height:priceHeight,visible:true};
+  if(rsiHeight===null){a.rsiPanel=null;a.rsiSvg=null;a.rsiLineCount=0;a.owners.rsiPanelInPlot=false;a.owners.plotContainsRsiSvg=false;a.owners.rsiSvgInPanel=false;a.owners.rsiSvgInActiveFrame=false;}
+  else{a.rsiPanel=measured(rect(a.plot.rect.left,top+priceHeight,a.plot.rect.width,rsiHeight));a.rsiSvg=measured({...a.rsiPanel.rect});a.rsiLineCount=1;}
+}
+
+test('non-HUD instruments retain the original 75% child-viewport threshold using only their painted price pane',()=>{
+  // HYPE and housing render through initialInstrumentView (showRsi:false), so
+  // no RSI pane exists and the price pane alone must meet the legacy threshold.
   for(const symbol of ['HYPE','HOUSING-SEOUL']){
+    const result=allocation({height:800});result.childHeight=800;
+    setPaneHeights(result,600,null);
+    assert.ok(result.svg.height>=result.childHeight*.75,symbol+' has no RSI rows, so its painted price pane must itself meet the legacy threshold');
     assert.doesNotThrow(()=>assertConsolidatedChartAllocation(result,symbol));
-    assert.throws(()=>assertConsolidatedChartAllocation({...result,svg:{height:599,visible:true}},symbol),/chart fills its allocated work area/);
+    const below=structuredClone(result);setPaneHeights(below,599,null);
+    assert.throws(()=>assertConsolidatedChartAllocation(below,symbol),/chart fills its allocated work area/);
+    // An RSI pane in the default view is a product regression, and it must not
+    // be allowed to top up an undersized price pane either.
+    const withRsi=structuredClone(result);setPaneHeights(withRsi,480,120);
+    assert.throws(()=>assertConsolidatedChartAllocation(withRsi,symbol),/default instrument view \(showRsi:false\) must not paint an RSI pane/);
   }
 });
 
-test('a SVG below 75% of the real canvas fails even when the criteria overlay is present',()=>{
-  const result=allocation();
-  result.svg.height=result.allocation.canvas.content.height*.74;
-  result.allocation.svg=measured(rect(0,result.allocation.canvas.rect.top,390,result.svg.height));
+test('the combined painted price and RSI panes must cover 75% of the real plot',()=>{
+  const result=allocation(),plotHeight=result.allocation.plot.content.height;
+  setPaneHeights(result,plotHeight*.48,120);
   assert.throws(()=>assertConsolidatedChartAllocation(result,'TQQQ'),/chart fills its allocated work area/);
+});
+
+test('RSI layout rejects missing, collapsed, unpainted, escaped, or foreign-owner panes',()=>{
+  const missing=allocation();setPaneHeights(missing,missing.allocation.svg.rect.height,null);
+  assert.throws(()=>assertConsolidatedChartAllocation(missing,'TQQQ'),/actual visible Funnest RSI pane/);
+  const collapsed=allocation();setPaneHeights(collapsed,collapsed.allocation.svg.rect.height,60);
+  assert.throws(()=>assertConsolidatedChartAllocation(collapsed,'TQQQ'),/retains its native 120px layout/);
+  const unpainted=allocation();unpainted.allocation.rsiLineCount=0;
+  assert.throws(()=>assertConsolidatedChartAllocation(unpainted,'TQQQ'),/painted source data/);
+  const outside=allocation();outside.allocation.rsiSvg.rect.right+=5;
+  assert.throws(()=>assertConsolidatedChartAllocation(outside,'TQQQ'),/RSI pane and its painted SVG stay inside/);
+  const foreign=allocation();foreign.allocation.owners.rsiSvgInPanel=false;
+  assert.throws(()=>assertConsolidatedChartAllocation(foreign,'TQQQ'),/same active Funnest plot owner/);
 });
 
 test('shrinking the body, canvas and SVG together cannot hide unused remaining height',()=>{
@@ -82,11 +124,11 @@ test('shrinking the body, canvas and SVG together cannot hide unused remaining h
 
 test('a correctly sized SVG outside its canvas and a blank margin inside its body both fail',()=>{
   const outside=allocation();outside.allocation.svg.rect.left=-5;outside.allocation.svg.rect.right-=5;
-  assert.throws(()=>assertConsolidatedChartAllocation(outside,'TQQQ'),/SVG stays contained/);
+  assert.throws(()=>assertConsolidatedChartAllocation(outside,'TQQQ'),/price pane is painted and contained/);
   const blank=allocation(),a=blank.allocation;
   a.canvas=measured(rect(0,a.canvas.rect.top+12,390,a.canvas.rect.height-12));
   a.svg=measured({...a.canvas.rect});blank.svg.height=a.svg.rect.height;
-  assert.throws(()=>assertConsolidatedChartAllocation(blank,'TQQQ'),/canvas fills its allocated body/);
+  assert.throws(()=>assertConsolidatedChartAllocation(blank,'TQQQ'),/price and RSI panes are stacked without overlap/);
 });
 
 test('criteria overlay that is unpainted, outside its canvas or missing a row remains a failure',()=>{

@@ -12,7 +12,7 @@ const expectedDates = archive.bars.filter(row => row.date > '2026-10-20').map(ro
 // Exercise the actual checker orchestration with injected native-action
 // boundaries. The timestamps below are unit inputs, not Chrome evidence.
 function phaseFixture({ original = {}, weekly = {}, restored = {}, persistenceChange, measurementChange, measurementError, milestoneError } = {}) {
-  const baseline = { mode: 'atlas-chart', renderer: 'atlas', state: 'paused', frequency: 'daily', chartType: 'candles', speed: '1',
+  const baseline = { mode: 'atlas-chart', renderer: 'funnest', state: 'paused', frequency: 'daily', chartType: 'candles', speed: '1',
     origin: '2026-10-20', playbackStartDate: '2026-10-21', cursor: '2026-10-20', index: 0, actualCount: 0, lastIndex: expectedDates.length,
     viewStart: '2024-11-06', viewEnd: '2028-11-06', outputHash: 'frozen-output', forecastValueSignature: 'frozen-forecast',
     snapshotDigest: 'frozen-capture', forecastCount: 8822, annotationSignature: 'frozen-annotations', cycleMarkerCount: 5, cycleIntervalCount: 12,

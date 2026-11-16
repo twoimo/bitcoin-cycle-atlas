@@ -51,7 +51,7 @@ for (const symbol of ['ETHUSD', 'MSTR', 'BMNR']) test(`${symbol} restores shared
   const view=f.latest();
   assert.equal(new Date(view.range.start*1000).toISOString().slice(0,10),'2026-09-07');
   assert.equal(new Date(view.range.end*1000).toISOString().slice(0,10),'2026-10-19');
-  assert.deepEqual(view.priceDomain,{min:70,max:180});assert.equal(view.invertScale,true);assert.equal(view.magnet,'weak');
+  assert.deepEqual(view.priceDomain,{min:70,max:180});assert.equal(view.invertScale,true);assert.equal(view.magnet,'weak','Atlas URL mode remains available to explicit persistence');assert.equal(view.atlasMagnet,'weak','Atlas preserves the selected snap strength for its interaction layer');assert.equal(view.nativeMagnet,false,'Funnest drawing-only boolean magnet stays disabled for Atlas measurements');
   assert.deepEqual(f.urlWrites,[],'restoring a shared URL is initialization, not an edit');
   assert.equal(f.location.pathname+f.location.search,`/?symbol=${symbol}${query}`);
   f.interval('weekly');await f.settle();

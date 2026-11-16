@@ -1,0 +1,22 @@
+{
+  "request": "Q-R19P0-1-771167b",
+  "baseHead": "771167bc960c1bac166339aaabe8cace9c56cd25",
+  "count": 14,
+  "productFiles": 0,
+  "paths": [
+    "docs/LAUNCH_CHECKLIST_20261110.md",
+    "docs/evidence/q-r19p0-1-771167b/README.md",
+    "docs/evidence/q-r19p0-1-771167b/changed-files.json",
+    "docs/evidence/q-r19p0-1-771167b/focused-contract-command.json",
+    "docs/evidence/q-r19p0-1-771167b/focused-contract.tap",
+    "docs/evidence/q-r19p0-1-771167b/linux-20261112/report.json",
+    "docs/evidence/q-r19p0-1-771167b/preserved-contract-command.json",
+    "docs/evidence/q-r19p0-1-771167b/preserved-contract.tap",
+    "docs/evidence/q-r19p0-1-771167b/static-checks.json",
+    "docs/evidence/q-r19p0-1-771167b/summary.json",
+    "scripts/ui-renewal-p0-text-hit.mjs",
+    "scripts/verify-ui-renewal-p0-browser.mjs",
+    "tests/ui-renewal-p0-contract.test.mjs",
+    "tests/ui-renewal-p0-text-hit.test.mjs"
+  ]
+}

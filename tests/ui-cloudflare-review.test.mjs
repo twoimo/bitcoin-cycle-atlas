@@ -20,7 +20,7 @@ test('the isolated baseline copies only the declared verifier modules and links 
   assert.equal(uiReviewHarnessFiles,uiReviewVerifierFiles,'baseline copying and source hashing must share one dependency inventory');
   assert.deepEqual(uiReviewHarnessFiles,[
     'scripts/verify-eth-candidate-browser.mjs','scripts/verify-ui-contract-browser.mjs',
-    'scripts/browser-source-identity.mjs','scripts/browser-paint-readiness.mjs','scripts/btc-offline-refresh-policy.mjs','scripts/chart-replay-profile.mjs',
+    'scripts/browser-source-identity.mjs','scripts/browser-paint-readiness.mjs','scripts/funnest-browser-evidence.mjs','scripts/btc-offline-refresh-policy.mjs','scripts/chart-replay-profile.mjs',
   ]);
   assert.ok(uiReviewHarnessFiles.every(file=>file.startsWith('scripts/')&&file.endsWith('.mjs')),'application and market data cannot be copied into the baseline');
   const directory=await mkdtemp(resolve(tmpdir(),'atlas-ui-verifier-link-'));

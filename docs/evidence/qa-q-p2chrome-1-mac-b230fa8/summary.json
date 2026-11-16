@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-p2-chrome-mac-receipt",
+  "request": "Q-P2CHROME-1-6fd74fe",
+  "sourceCommit": "f93d4ecf3de9477a1665a4541f2bbc3a2b8dc4fb",
+  "productCommit": "b230fa87291176cf81a687cab1158c5800405597",
+  "branch": "fix/tradingview-responsive-20261110",
+  "startedAt": "2026-11-13T03:58:35+09:00",
+  "finishedAt": "2026-11-13T04:27:26+09:00",
+  "browser": "Chrome/157.0.8103.79",
+  "nativePlatform": "darwin",
+  "sourceStable": true,
+  "complete": true,
+  "qualifies": false,
+  "localOut": "build/qa-q-p2chrome-1-mac-b230fa8",
+  "gates": [
+    {
+      "id": "eth53",
+      "required": 53,
+      "attempted": 53,
+      "passed": 42,
+      "failed": 11,
+      "qualified": false,
+      "exit": 1
+    },
+    {
+      "id": "responsive-BTCUSD",
+      "required": 11,
+      "attempted": 11,
+      "passed": 11,
+      "failed": 0,
+      "qualified": true,
+      "exit": 0
+    },
+    {
+      "id": "responsive-ETHUSD",
+      "required": 11,
+      "attempted": 11,
+      "passed": 11,
+      "failed": 0,
+      "qualified": true,
+      "exit": 0
+    },
+    {
+      "id": "responsive-MSTR",
+      "required": 11,
+      "attempted": 11,
+      "passed": 11,
+      "failed": 0,
+      "qualified": true,
+      "exit": 0
+    },
+    {
+      "id": "responsive-BMNR",
+      "required": 11,
+      "attempted": 11,
+      "passed": 11,
+      "failed": 0,
+      "qualified": true,
+      "exit": 0
+    },
+    {
+      "id": "axis16",
+      "required": 16,
+      "attempted": 16,
+      "passed": 16,
+      "failed": 0,
+      "qualified": true,
+      "qualifiesPriceAxisVerification": true,
+      "exit": 0
+    },
+    {
+      "id": "a9",
+      "required": 6,
+      "attempted": 6,
+      "passed": 6,
+      "failed": 0,
+      "qualified": true,
+      "initialPaintedMs": [
+        2173.3,
+        2206
+      ],
+      "exit": 0
+    }
+  ],
+  "failureSignatures": [
+    {
+      "count": 1,
+      "page": "eth",
+      "width": 320,
+      "height": 900,
+      "signature": "Source line overlaps the readout: eth"
+    },
+    {
+      "count": 2,
+      "pages": ["bmnr", "mstr"],
+      "width": 320,
+      "height": 900,
+      "signature": "Source line overlaps the readout: equity"
+    },
+    {
+      "count": 4,
+      "page": "data",
+      "sizes": ["1620x1008", "1620x1100", "1920x1440", "900x430"],
+      "gapPx": 24,
+      "signature": "Data view no longer fills its content area"
+    },
+    {
+      "count": 1,
+      "page": "data",
+      "width": 320,
+      "height": 568,
+      "gapPx": 12,
+      "signature": "Data view no longer fills its content area"
+    },
+    {
+      "count": 2,
+      "page": "workspace-evidence",
+      "widths": [320, 1440],
+      "height": 900,
+      "signature": "Focused action is clipped or occluded: #evidence-body"
+    },
+    {
+      "count": 1,
+      "page": "workspace-legacy",
+      "width": 1440,
+      "height": 900,
+      "signature": "Opening the reader changed the plotted values of chart path 0"
+    }
+  ],
+  "notes": [
+    "Runner finished. qualifies false because ETH failed 11.",
+    "Responsive sum is 44/44. Axis 16/16 with qualifiesPriceAxisVerification true.",
+    "A-9 painted 2173.3-2206ms under 2500. No paired baseline, so 0ms impact is not claimed.",
+    "The 11 failure strings do not contain the previous dataCase undefined, dark() channel, title-move, or research-density signatures.",
+    "P2 remains open. P1 and P2a-0 stay closed."
+  ]
+}

@@ -2,6 +2,7 @@ import { useMemo, type ReactNode } from 'react';
 import type { HousingRow } from '@atlas/domain/housing';
 import { InstrumentWorkbench } from '../components/instrument-workbench.js';
 import type { InstrumentChartCache, InstrumentSeries } from '../instrument-chart-model.js';
+import { linearScale, ticks as niceTicks } from '@funnest/charts-viz';
 export const stateName={above:'상회',neutral:'중립',below:'하회',warmup:'산정 전'};
 const number=(n:number|null,digits=0)=>n===null?'—':n.toLocaleString('ko-KR',{maximumFractionDigits:digits,minimumFractionDigits:digits});
 interface Props {
@@ -29,5 +30,19 @@ export function HousingChart(props: Props) {
 }
 export function HousingScatter({rows}:{rows:HousingRow[]}){
   const pairs=rows.filter(r=>r.deviation!==null&&r.priceChange!==null),maxX=Math.max(20,...pairs.map(r=>Math.abs(r.deviation!))),maxY=Math.max(1,...pairs.map(r=>Math.abs(r.priceChange!)));
-  return <svg className="housing-scatter" viewBox="0 0 540 260" role="img" aria-label="거래량 평균 대비 편차와 같은 달 가격 전월비 산점도"><title>수평축: 거래량 평균 대비 편차 %, 수직축: 가격 전월비 %</title><line className="housing-grid" x1={40} x2={510} y1={125} y2={125}/><line className="housing-grid" x1={275} x2={275} y1={20} y2={230}/>{pairs.map(r=><circle key={r.month} className={`housing-scatter-dot ${r.state}`} cx={275+r.deviation!/maxX*225} cy={125-r.priceChange!/maxY*100} r={3}><title>{r.month} · 거래량 편차 {number(r.deviation,1)}% · 가격 전월비 {number(r.priceChange,2)}%</title></circle>)}<text x={40} y={252}>−{number(maxX)}%</text><text x={260} y={252}>0</text><text x={460} y={252}>+{number(maxX)}%</text><text x={5} y={25}>+{number(maxY,1)}%</text><text x={5} y={230}>−{number(maxY,1)}%</text></svg>;
+  const left=54,right=520,top=18,bottom=226;
+  const x=linearScale([-maxX,maxX],[left,right]),y=linearScale([-maxY,maxY],[bottom,top]);
+  const xTicks=niceTicks(-maxX,maxX,5),yTicks=niceTicks(-maxY,maxY,5);
+  if(!pairs.length)return <p className="housing-scatter" role="status">산점도에 사용할 거래량 편차와 가격 변화가 모두 있는 월이 없습니다.</p>;
+  return <div className="housing-scatter atlas-funnest-scatter" data-chart-engine="funnest">
+    <svg viewBox="0 0 540 260" role="img" aria-label="거래량 평균 대비 편차와 같은 달 가격 전월비 산점도">
+      <title>수평축: 거래량 평균 대비 편차 %, 수직축: 가격 전월비 % · Funnest 선형 축</title>
+      {xTicks.map((value:number)=><g key={`x${value}`}><line className="housing-grid" x1={x(value)} x2={x(value)} y1={top} y2={bottom}/><text x={x(value)} y={bottom+18} textAnchor="middle">{number(value,0)}%</text></g>)}
+      {yTicks.map((value:number)=><g key={`y${value}`}><line className="housing-grid" x1={left} x2={right} y1={y(value)} y2={y(value)}/><text x={left-6} y={y(value)+4} textAnchor="end">{number(value,1)}%</text></g>)}
+      <line className="housing-grid" x1={x(0)} x2={x(0)} y1={top} y2={bottom}/><line className="housing-grid" x1={left} x2={right} y1={y(0)} y2={y(0)}/>
+      {pairs.map(row=><circle key={row.month} className={`housing-scatter-dot ${row.state}`} cx={x(row.deviation!)} cy={y(row.priceChange!)} r={4} tabIndex={0} aria-label={`${row.month} · 거래량 평균 대비 ${number(row.deviation,1)}% · 가격 전월비 ${number(row.priceChange,2)}%`}><title>{row.month} · 거래량 평균 대비 {number(row.deviation,1)}% · 가격 전월비 {number(row.priceChange,2)}%</title></circle>)}
+      <text x={(left+right)/2} y={258} textAnchor="middle">거래량 평균 대비 편차 (%)</text>
+    </svg>
+    <details className="atlas-funnest-source-table"><summary>산점도 원자료 표 · {pairs.length}행</summary><div className="atlas-funnest-table-scroll"><table><caption>같은 달 거래량 평균 대비 편차와 가격 전월비</caption><thead><tr><th scope="col">월</th><th scope="col">거래량 평균 대비 편차 (%)</th><th scope="col">가격 전월비 (%)</th><th scope="col">거래량 상태</th></tr></thead><tbody>{pairs.map(row=><tr key={row.month}><th scope="row">{row.month}</th><td>{number(row.deviation,1)}</td><td>{number(row.priceChange,2)}</td><td>{stateName[row.state]}</td></tr>)}</tbody></table></div></details>
+  </div>;
 }

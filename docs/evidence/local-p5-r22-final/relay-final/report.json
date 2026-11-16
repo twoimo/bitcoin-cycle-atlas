@@ -1,0 +1,5161 @@
+{
+  "kind": "native-relay-topics",
+  "startedAt": "2026-11-13T05:57:59.323Z",
+  "sourceBefore": {
+    "dist/relay-room.js": "aa387e9bb18b03584261b3f0cb5c042ea04789f9418bc1b8bb577e45f3446c5c",
+    "dist/relay-topics.js": "b210b01559ec8fc9bd15a99436040293e7b3929cc601f23804f4b5aa9d2d675e",
+    "dist/relay-room.css": "4ff13f7df907154e8d16fc954b42b1f0e3453af4b18d1c261da6ac97d780fb56",
+    "dist/site-after-shell.css": "a6d9c98db8b108449eb9036df295f066cd7859c5ec2414447fbc9cf828bd2c85",
+    "dist/data/relay/index.json": "be11c563ac9fa76160118649a4577d5ea8f2e4d6b83b1384a9486642710abd33"
+  },
+  "cases": [
+    {
+      "theme": "light",
+      "width": 320,
+      "failures": [],
+      "window": {
+        "windowId": 1083275299,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 320,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "initial": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 320,
+        "childWidth": 320,
+        "bodyWidth": 320,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 110.19999998807907,
+        "theme": "light"
+      },
+      "inputFocus": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 320,
+        "childWidth": 320,
+        "bodyWidth": 320,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 110.19999998807907,
+        "theme": "light"
+      },
+      "submitted": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 320,
+        "childWidth": 320,
+        "bodyWidth": 320,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 110.19999998807907,
+        "theme": "light"
+      },
+      "search": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 320,
+        "childWidth": 320,
+        "bodyWidth": 320,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 110.19999998807907,
+        "theme": "light"
+      },
+      "keyboard": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 320,
+        "childWidth": 320,
+        "bodyWidth": 320,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BUTTON",
+          "label": null,
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 110.19999998807907,
+        "theme": "light"
+      },
+      "screenshot": "relay-light-320.png",
+      "nativeSelection": {
+        "selector": "[name=\"topic\"]",
+        "platform": "darwin",
+        "emulated": "desktop",
+        "internalPopupMode": true,
+        "layoutLocked": {
+          "innerWidth": 320,
+          "innerHeight": 900,
+          "clientWidth": 320,
+          "clientHeight": 900,
+          "scrollWidth": 320,
+          "bodyWidth": 320,
+          "devicePixelRatio": 1,
+          "coarsePointer": false,
+          "heading": null,
+          "plot": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restored": true,
+        "transitions": [
+          {
+            "step": "enable-internal-popup",
+            "mobile": true,
+            "width": 320,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          {
+            "step": "restore-case-emulation",
+            "mobile": false,
+            "width": 320,
+            "height": 900,
+            "deviceScaleFactor": 1
+          }
+        ],
+        "popupMenu": {
+          "before": "external-appkit",
+          "during": "internal",
+          "after": "external-appkit"
+        },
+        "sequence": {
+          "keys": [
+            "Home",
+            "ArrowDown",
+            "Enter"
+          ]
+        }
+      },
+      "zero": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 320,
+        "childWidth": 320,
+        "bodyWidth": 320,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 0,
+        "articles": 0,
+        "status": "0 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "crypto",
+        "text": "",
+        "evidence": "",
+        "empty": true,
+        "focus": {
+          "tag": "SELECT",
+          "label": "릴레이 주제",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 110.19999998807907,
+        "theme": "light"
+      },
+      "articleList": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 320,
+        "childWidth": 320,
+        "bodyWidth": 320,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 0,
+        "articles": 8,
+        "status": "8 / 8건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "",
+        "evidence": "",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 110.19999998807907,
+        "theme": "light"
+      },
+      "article": {
+        "hasBody": true,
+        "hasSource": true,
+        "hasEvidence": true
+      },
+      "alias": {
+        "url": "http://127.0.0.1:8193/?page=outlook&center=relay",
+        "center": "relay",
+        "width": 320,
+        "childWidth": 318,
+        "bodyWidth": 318,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 262,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 290
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 262,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 290
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 28,
+            "right": 72
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 80,
+            "right": 129.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 56.900000005960464,
+        "theme": "light"
+      },
+      "resizedAlias": {
+        "url": "http://127.0.0.1:8193/?page=outlook&center=relay",
+        "center": "relay",
+        "width": 1440,
+        "childWidth": 1333,
+        "bodyWidth": 1333,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 575.9375,
+            "height": 44,
+            "font": 16,
+            "left": 32,
+            "right": 607.9375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 575.9375,
+            "height": 44,
+            "font": 16,
+            "left": 615.9375,
+            "right": 1191.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1199.875,
+            "right": 1243.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1251.875,
+            "right": 1301
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 56.900000005960464,
+        "theme": "light"
+      },
+      "status": "passed"
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "failures": [],
+      "window": {
+        "windowId": 1083275301,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 390,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "initial": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 390,
+        "childWidth": 390,
+        "bodyWidth": 390,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 89.7999999821186,
+        "theme": "light"
+      },
+      "inputFocus": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 390,
+        "childWidth": 390,
+        "bodyWidth": 390,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 89.7999999821186,
+        "theme": "light"
+      },
+      "submitted": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 390,
+        "childWidth": 390,
+        "bodyWidth": 390,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 89.7999999821186,
+        "theme": "light"
+      },
+      "search": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 390,
+        "childWidth": 390,
+        "bodyWidth": 390,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 89.7999999821186,
+        "theme": "light"
+      },
+      "keyboard": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 390,
+        "childWidth": 390,
+        "bodyWidth": 390,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BUTTON",
+          "label": null,
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 89.7999999821186,
+        "theme": "light"
+      },
+      "screenshot": "relay-light-390.png",
+      "nativeSelection": {
+        "selector": "[name=\"topic\"]",
+        "platform": "darwin",
+        "emulated": "desktop",
+        "internalPopupMode": true,
+        "layoutLocked": {
+          "innerWidth": 390,
+          "innerHeight": 900,
+          "clientWidth": 390,
+          "clientHeight": 900,
+          "scrollWidth": 390,
+          "bodyWidth": 390,
+          "devicePixelRatio": 1,
+          "coarsePointer": false,
+          "heading": null,
+          "plot": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restored": true,
+        "transitions": [
+          {
+            "step": "enable-internal-popup",
+            "mobile": true,
+            "width": 390,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          {
+            "step": "restore-case-emulation",
+            "mobile": false,
+            "width": 390,
+            "height": 900,
+            "deviceScaleFactor": 1
+          }
+        ],
+        "popupMenu": {
+          "before": "external-appkit",
+          "during": "internal",
+          "after": "external-appkit"
+        },
+        "sequence": {
+          "keys": [
+            "Home",
+            "ArrowDown",
+            "Enter"
+          ]
+        }
+      },
+      "zero": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 390,
+        "childWidth": 390,
+        "bodyWidth": 390,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 0,
+        "articles": 0,
+        "status": "0 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "crypto",
+        "text": "",
+        "evidence": "",
+        "empty": true,
+        "focus": {
+          "tag": "SELECT",
+          "label": "릴레이 주제",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 89.7999999821186,
+        "theme": "light"
+      },
+      "articleList": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 390,
+        "childWidth": 390,
+        "bodyWidth": 390,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 0,
+        "articles": 8,
+        "status": "8 / 8건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "",
+        "evidence": "",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 89.7999999821186,
+        "theme": "light"
+      },
+      "article": {
+        "hasBody": true,
+        "hasSource": true,
+        "hasEvidence": true
+      },
+      "alias": {
+        "url": "http://127.0.0.1:8193/?page=outlook&center=relay",
+        "center": "relay",
+        "width": 390,
+        "childWidth": 388,
+        "bodyWidth": 388,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 332,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 360
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 332,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 360
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 28,
+            "right": 72
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 80,
+            "right": 129.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 48,
+        "theme": "light"
+      },
+      "resizedAlias": {
+        "url": "http://127.0.0.1:8193/?page=outlook&center=relay",
+        "center": "relay",
+        "width": 320,
+        "childWidth": 318,
+        "bodyWidth": 318,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 262,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 290
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 262,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 290
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 28,
+            "right": 72
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 80,
+            "right": 129.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 48,
+        "theme": "light"
+      },
+      "status": "passed"
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "failures": [],
+      "window": {
+        "windowId": 1083275303,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 768,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "initial": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 768,
+        "childWidth": 768,
+        "bodyWidth": 768,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 41,
+            "right": 325.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 333.4375,
+            "right": 617.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 625.875,
+            "right": 669.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 677.875,
+            "right": 727
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 113.90000000596046,
+        "theme": "light"
+      },
+      "inputFocus": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 768,
+        "childWidth": 768,
+        "bodyWidth": 768,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 41,
+            "right": 325.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 333.4375,
+            "right": 617.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 625.875,
+            "right": 669.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 677.875,
+            "right": 727
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 113.90000000596046,
+        "theme": "light"
+      },
+      "submitted": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 768,
+        "childWidth": 768,
+        "bodyWidth": 768,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 41,
+            "right": 325.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 333.4375,
+            "right": 617.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 625.875,
+            "right": 669.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 677.875,
+            "right": 727
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 113.90000000596046,
+        "theme": "light"
+      },
+      "search": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 768,
+        "childWidth": 768,
+        "bodyWidth": 768,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 41,
+            "right": 325.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 333.4375,
+            "right": 617.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 625.875,
+            "right": 669.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 677.875,
+            "right": 727
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 113.90000000596046,
+        "theme": "light"
+      },
+      "keyboard": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 768,
+        "childWidth": 768,
+        "bodyWidth": 768,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 41,
+            "right": 325.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 333.4375,
+            "right": 617.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 625.875,
+            "right": 669.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 677.875,
+            "right": 727
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BUTTON",
+          "label": null,
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 113.90000000596046,
+        "theme": "light"
+      },
+      "screenshot": "relay-light-768.png",
+      "nativeSelection": {
+        "selector": "[name=\"topic\"]",
+        "platform": "darwin",
+        "emulated": "desktop",
+        "internalPopupMode": true,
+        "layoutLocked": {
+          "innerWidth": 768,
+          "innerHeight": 900,
+          "clientWidth": 768,
+          "clientHeight": 900,
+          "scrollWidth": 768,
+          "bodyWidth": 768,
+          "devicePixelRatio": 1,
+          "coarsePointer": false,
+          "heading": null,
+          "plot": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restored": true,
+        "transitions": [
+          {
+            "step": "enable-internal-popup",
+            "mobile": true,
+            "width": 768,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          {
+            "step": "restore-case-emulation",
+            "mobile": false,
+            "width": 768,
+            "height": 900,
+            "deviceScaleFactor": 1
+          }
+        ],
+        "popupMenu": {
+          "before": "external-appkit",
+          "during": "internal",
+          "after": "external-appkit"
+        },
+        "sequence": {
+          "keys": [
+            "Home",
+            "ArrowDown",
+            "Enter"
+          ]
+        }
+      },
+      "zero": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 768,
+        "childWidth": 768,
+        "bodyWidth": 768,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 41,
+            "right": 325.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 333.4375,
+            "right": 617.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 625.875,
+            "right": 669.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 677.875,
+            "right": 727
+          }
+        ],
+        "count": 0,
+        "articles": 0,
+        "status": "0 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "crypto",
+        "text": "",
+        "evidence": "",
+        "empty": true,
+        "focus": {
+          "tag": "SELECT",
+          "label": "릴레이 주제",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 113.90000000596046,
+        "theme": "light"
+      },
+      "articleList": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 768,
+        "childWidth": 768,
+        "bodyWidth": 768,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 41,
+            "right": 325.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 333.4375,
+            "right": 617.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 625.875,
+            "right": 669.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 677.875,
+            "right": 727
+          }
+        ],
+        "count": 0,
+        "articles": 8,
+        "status": "8 / 8건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "",
+        "evidence": "",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 113.90000000596046,
+        "theme": "light"
+      },
+      "article": {
+        "hasBody": true,
+        "hasSource": true,
+        "hasEvidence": true
+      },
+      "alias": {
+        "url": "http://127.0.0.1:8193/?page=outlook&center=relay",
+        "center": "relay",
+        "width": 768,
+        "childWidth": 661,
+        "bodyWidth": 661,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 239.9375,
+            "height": 44,
+            "font": 16,
+            "left": 32,
+            "right": 271.9375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 239.9375,
+            "height": 44,
+            "font": 16,
+            "left": 279.9375,
+            "right": 519.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 527.875,
+            "right": 571.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 579.875,
+            "right": 629
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 65.59999999403954,
+        "theme": "light"
+      },
+      "resizedAlias": {
+        "url": "http://127.0.0.1:8193/?page=outlook&center=relay",
+        "center": "relay",
+        "width": 320,
+        "childWidth": 318,
+        "bodyWidth": 318,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 262,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 290
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 262,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 290
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 28,
+            "right": 72
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 80,
+            "right": 129.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 65.59999999403954,
+        "theme": "light"
+      },
+      "status": "passed"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "failures": [],
+      "window": {
+        "windowId": 1083275305,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "initial": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 1440,
+        "childWidth": 1440,
+        "bodyWidth": 1440,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 97,
+            "right": 661.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 669.4375,
+            "right": 1233.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1241.875,
+            "right": 1285.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1293.875,
+            "right": 1343
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 114,
+        "theme": "light"
+      },
+      "inputFocus": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 1440,
+        "childWidth": 1440,
+        "bodyWidth": 1440,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 97,
+            "right": 661.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 669.4375,
+            "right": 1233.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1241.875,
+            "right": 1285.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1293.875,
+            "right": 1343
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 114,
+        "theme": "light"
+      },
+      "submitted": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 1440,
+        "childWidth": 1440,
+        "bodyWidth": 1440,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 97,
+            "right": 661.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 669.4375,
+            "right": 1233.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1241.875,
+            "right": 1285.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1293.875,
+            "right": 1343
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 114,
+        "theme": "light"
+      },
+      "search": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 1440,
+        "childWidth": 1440,
+        "bodyWidth": 1440,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 97,
+            "right": 661.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 669.4375,
+            "right": 1233.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1241.875,
+            "right": 1285.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1293.875,
+            "right": 1343
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 114,
+        "theme": "light"
+      },
+      "keyboard": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 1440,
+        "childWidth": 1440,
+        "bodyWidth": 1440,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 97,
+            "right": 661.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 669.4375,
+            "right": 1233.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1241.875,
+            "right": 1285.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1293.875,
+            "right": 1343
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BUTTON",
+          "label": null,
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 114,
+        "theme": "light"
+      },
+      "screenshot": "relay-light-1440.png",
+      "nativeSelection": {
+        "selector": "[name=\"topic\"]",
+        "platform": "darwin",
+        "emulated": "desktop",
+        "internalPopupMode": true,
+        "layoutLocked": {
+          "innerWidth": 1440,
+          "innerHeight": 900,
+          "clientWidth": 1440,
+          "clientHeight": 900,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440,
+          "devicePixelRatio": 1,
+          "coarsePointer": false,
+          "heading": null,
+          "plot": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restored": true,
+        "transitions": [
+          {
+            "step": "enable-internal-popup",
+            "mobile": true,
+            "width": 1440,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          {
+            "step": "restore-case-emulation",
+            "mobile": false,
+            "width": 1440,
+            "height": 900,
+            "deviceScaleFactor": 1
+          }
+        ],
+        "popupMenu": {
+          "before": "external-appkit",
+          "during": "internal",
+          "after": "external-appkit"
+        },
+        "sequence": {
+          "keys": [
+            "Home",
+            "ArrowDown",
+            "Enter"
+          ]
+        }
+      },
+      "zero": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 1440,
+        "childWidth": 1440,
+        "bodyWidth": 1440,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 97,
+            "right": 661.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 669.4375,
+            "right": 1233.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1241.875,
+            "right": 1285.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1293.875,
+            "right": 1343
+          }
+        ],
+        "count": 0,
+        "articles": 0,
+        "status": "0 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "crypto",
+        "text": "",
+        "evidence": "",
+        "empty": true,
+        "focus": {
+          "tag": "SELECT",
+          "label": "릴레이 주제",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 114,
+        "theme": "light"
+      },
+      "articleList": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 1440,
+        "childWidth": 1440,
+        "bodyWidth": 1440,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 97,
+            "right": 661.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 669.4375,
+            "right": 1233.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1241.875,
+            "right": 1285.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1293.875,
+            "right": 1343
+          }
+        ],
+        "count": 0,
+        "articles": 8,
+        "status": "8 / 8건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "",
+        "evidence": "",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 114,
+        "theme": "light"
+      },
+      "article": {
+        "hasBody": true,
+        "hasSource": true,
+        "hasEvidence": true
+      },
+      "alias": {
+        "url": "http://127.0.0.1:8193/?page=outlook&center=relay",
+        "center": "relay",
+        "width": 1440,
+        "childWidth": 1333,
+        "bodyWidth": 1333,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 575.9375,
+            "height": 44,
+            "font": 16,
+            "left": 32,
+            "right": 607.9375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 575.9375,
+            "height": 44,
+            "font": 16,
+            "left": 615.9375,
+            "right": 1191.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1199.875,
+            "right": 1243.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1251.875,
+            "right": 1301
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 50.20000001788139,
+        "theme": "light"
+      },
+      "resizedAlias": {
+        "url": "http://127.0.0.1:8193/?page=outlook&center=relay",
+        "center": "relay",
+        "width": 320,
+        "childWidth": 318,
+        "bodyWidth": 318,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 262,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 290
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 262,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 290
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 28,
+            "right": 72
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 80,
+            "right": 129.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 50.20000001788139,
+        "theme": "light"
+      },
+      "status": "passed"
+    },
+    {
+      "theme": "dark",
+      "width": 320,
+      "failures": [],
+      "window": {
+        "windowId": 1083275307,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 320,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "initial": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 320,
+        "childWidth": 320,
+        "bodyWidth": 320,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 93.69999998807907,
+        "theme": "dark"
+      },
+      "inputFocus": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 320,
+        "childWidth": 320,
+        "bodyWidth": 320,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 93.69999998807907,
+        "theme": "dark"
+      },
+      "submitted": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 320,
+        "childWidth": 320,
+        "bodyWidth": 320,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 93.69999998807907,
+        "theme": "dark"
+      },
+      "search": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 320,
+        "childWidth": 320,
+        "bodyWidth": 320,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 93.69999998807907,
+        "theme": "dark"
+      },
+      "keyboard": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 320,
+        "childWidth": 320,
+        "bodyWidth": 320,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BUTTON",
+          "label": null,
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 93.69999998807907,
+        "theme": "dark"
+      },
+      "screenshot": "relay-dark-320.png",
+      "nativeSelection": {
+        "selector": "[name=\"topic\"]",
+        "platform": "darwin",
+        "emulated": "desktop",
+        "internalPopupMode": true,
+        "layoutLocked": {
+          "innerWidth": 320,
+          "innerHeight": 900,
+          "clientWidth": 320,
+          "clientHeight": 900,
+          "scrollWidth": 320,
+          "bodyWidth": 320,
+          "devicePixelRatio": 1,
+          "coarsePointer": false,
+          "heading": null,
+          "plot": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restored": true,
+        "transitions": [
+          {
+            "step": "enable-internal-popup",
+            "mobile": true,
+            "width": 320,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          {
+            "step": "restore-case-emulation",
+            "mobile": false,
+            "width": 320,
+            "height": 900,
+            "deviceScaleFactor": 1
+          }
+        ],
+        "popupMenu": {
+          "before": "external-appkit",
+          "during": "internal",
+          "after": "external-appkit"
+        },
+        "sequence": {
+          "keys": [
+            "Home",
+            "ArrowDown",
+            "Enter"
+          ]
+        }
+      },
+      "zero": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 320,
+        "childWidth": 320,
+        "bodyWidth": 320,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 0,
+        "articles": 0,
+        "status": "0 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "crypto",
+        "text": "",
+        "evidence": "",
+        "empty": true,
+        "focus": {
+          "tag": "SELECT",
+          "label": "릴레이 주제",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 93.69999998807907,
+        "theme": "dark"
+      },
+      "articleList": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 320,
+        "childWidth": 320,
+        "bodyWidth": 320,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 270,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 295
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 0,
+        "articles": 8,
+        "status": "8 / 8건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "",
+        "evidence": "",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 93.69999998807907,
+        "theme": "dark"
+      },
+      "article": {
+        "hasBody": true,
+        "hasSource": true,
+        "hasEvidence": true
+      },
+      "alias": {
+        "url": "http://127.0.0.1:8193/?page=outlook&center=relay",
+        "center": "relay",
+        "width": 320,
+        "childWidth": 318,
+        "bodyWidth": 318,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 262,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 290
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 262,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 290
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 28,
+            "right": 72
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 80,
+            "right": 129.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 58.10000002384186,
+        "theme": "dark"
+      },
+      "resizedAlias": {
+        "url": "http://127.0.0.1:8193/?page=outlook&center=relay",
+        "center": "relay",
+        "width": 1440,
+        "childWidth": 1333,
+        "bodyWidth": 1333,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 575.9375,
+            "height": 44,
+            "font": 16,
+            "left": 32,
+            "right": 607.9375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 575.9375,
+            "height": 44,
+            "font": 16,
+            "left": 615.9375,
+            "right": 1191.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1199.875,
+            "right": 1243.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1251.875,
+            "right": 1301
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 58.10000002384186,
+        "theme": "dark"
+      },
+      "status": "passed"
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "failures": [],
+      "window": {
+        "windowId": 1083275309,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 390,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "initial": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 390,
+        "childWidth": 390,
+        "bodyWidth": 390,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 115.5,
+        "theme": "dark"
+      },
+      "inputFocus": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 390,
+        "childWidth": 390,
+        "bodyWidth": 390,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 115.5,
+        "theme": "dark"
+      },
+      "submitted": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 390,
+        "childWidth": 390,
+        "bodyWidth": 390,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 115.5,
+        "theme": "dark"
+      },
+      "search": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 390,
+        "childWidth": 390,
+        "bodyWidth": 390,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 115.5,
+        "theme": "dark"
+      },
+      "keyboard": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 390,
+        "childWidth": 390,
+        "bodyWidth": 390,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BUTTON",
+          "label": null,
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 115.5,
+        "theme": "dark"
+      },
+      "screenshot": "relay-dark-390.png",
+      "nativeSelection": {
+        "selector": "[name=\"topic\"]",
+        "platform": "darwin",
+        "emulated": "desktop",
+        "internalPopupMode": true,
+        "layoutLocked": {
+          "innerWidth": 390,
+          "innerHeight": 900,
+          "clientWidth": 390,
+          "clientHeight": 900,
+          "scrollWidth": 390,
+          "bodyWidth": 390,
+          "devicePixelRatio": 1,
+          "coarsePointer": false,
+          "heading": null,
+          "plot": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restored": true,
+        "transitions": [
+          {
+            "step": "enable-internal-popup",
+            "mobile": true,
+            "width": 390,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          {
+            "step": "restore-case-emulation",
+            "mobile": false,
+            "width": 390,
+            "height": 900,
+            "deviceScaleFactor": 1
+          }
+        ],
+        "popupMenu": {
+          "before": "external-appkit",
+          "during": "internal",
+          "after": "external-appkit"
+        },
+        "sequence": {
+          "keys": [
+            "Home",
+            "ArrowDown",
+            "Enter"
+          ]
+        }
+      },
+      "zero": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 390,
+        "childWidth": 390,
+        "bodyWidth": 390,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 0,
+        "articles": 0,
+        "status": "0 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "crypto",
+        "text": "",
+        "evidence": "",
+        "empty": true,
+        "focus": {
+          "tag": "SELECT",
+          "label": "릴레이 주제",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 115.5,
+        "theme": "dark"
+      },
+      "articleList": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 390,
+        "childWidth": 390,
+        "bodyWidth": 390,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 340,
+            "height": 44,
+            "font": 16,
+            "left": 25,
+            "right": 365
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 25,
+            "right": 69
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 77,
+            "right": 126.125
+          }
+        ],
+        "count": 0,
+        "articles": 8,
+        "status": "8 / 8건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "",
+        "evidence": "",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 115.5,
+        "theme": "dark"
+      },
+      "article": {
+        "hasBody": true,
+        "hasSource": true,
+        "hasEvidence": true
+      },
+      "alias": {
+        "url": "http://127.0.0.1:8193/?page=outlook&center=relay",
+        "center": "relay",
+        "width": 390,
+        "childWidth": 388,
+        "bodyWidth": 388,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 332,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 360
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 332,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 360
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 28,
+            "right": 72
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 80,
+            "right": 129.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 60.5,
+        "theme": "dark"
+      },
+      "resizedAlias": {
+        "url": "http://127.0.0.1:8193/?page=outlook&center=relay",
+        "center": "relay",
+        "width": 320,
+        "childWidth": 318,
+        "bodyWidth": 318,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 262,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 290
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 262,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 290
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 28,
+            "right": 72
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 80,
+            "right": 129.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 60.5,
+        "theme": "dark"
+      },
+      "status": "passed"
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "failures": [],
+      "window": {
+        "windowId": 1083275311,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 768,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "initial": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 768,
+        "childWidth": 768,
+        "bodyWidth": 768,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 41,
+            "right": 325.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 333.4375,
+            "right": 617.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 625.875,
+            "right": 669.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 677.875,
+            "right": 727
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 98.30000001192093,
+        "theme": "dark"
+      },
+      "inputFocus": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 768,
+        "childWidth": 768,
+        "bodyWidth": 768,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 41,
+            "right": 325.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 333.4375,
+            "right": 617.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 625.875,
+            "right": 669.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 677.875,
+            "right": 727
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 98.30000001192093,
+        "theme": "dark"
+      },
+      "submitted": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 768,
+        "childWidth": 768,
+        "bodyWidth": 768,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 41,
+            "right": 325.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 333.4375,
+            "right": 617.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 625.875,
+            "right": 669.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 677.875,
+            "right": 727
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 98.30000001192093,
+        "theme": "dark"
+      },
+      "search": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 768,
+        "childWidth": 768,
+        "bodyWidth": 768,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 41,
+            "right": 325.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 333.4375,
+            "right": 617.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 625.875,
+            "right": 669.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 677.875,
+            "right": 727
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 98.30000001192093,
+        "theme": "dark"
+      },
+      "keyboard": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 768,
+        "childWidth": 768,
+        "bodyWidth": 768,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 41,
+            "right": 325.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 333.4375,
+            "right": 617.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 625.875,
+            "right": 669.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 677.875,
+            "right": 727
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BUTTON",
+          "label": null,
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 98.30000001192093,
+        "theme": "dark"
+      },
+      "screenshot": "relay-dark-768.png",
+      "nativeSelection": {
+        "selector": "[name=\"topic\"]",
+        "platform": "darwin",
+        "emulated": "desktop",
+        "internalPopupMode": true,
+        "layoutLocked": {
+          "innerWidth": 768,
+          "innerHeight": 900,
+          "clientWidth": 768,
+          "clientHeight": 900,
+          "scrollWidth": 768,
+          "bodyWidth": 768,
+          "devicePixelRatio": 1,
+          "coarsePointer": false,
+          "heading": null,
+          "plot": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restored": true,
+        "transitions": [
+          {
+            "step": "enable-internal-popup",
+            "mobile": true,
+            "width": 768,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          {
+            "step": "restore-case-emulation",
+            "mobile": false,
+            "width": 768,
+            "height": 900,
+            "deviceScaleFactor": 1
+          }
+        ],
+        "popupMenu": {
+          "before": "external-appkit",
+          "during": "internal",
+          "after": "external-appkit"
+        },
+        "sequence": {
+          "keys": [
+            "Home",
+            "ArrowDown",
+            "Enter"
+          ]
+        }
+      },
+      "zero": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 768,
+        "childWidth": 768,
+        "bodyWidth": 768,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 41,
+            "right": 325.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 333.4375,
+            "right": 617.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 625.875,
+            "right": 669.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 677.875,
+            "right": 727
+          }
+        ],
+        "count": 0,
+        "articles": 0,
+        "status": "0 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "crypto",
+        "text": "",
+        "evidence": "",
+        "empty": true,
+        "focus": {
+          "tag": "SELECT",
+          "label": "릴레이 주제",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 98.30000001192093,
+        "theme": "dark"
+      },
+      "articleList": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 768,
+        "childWidth": 768,
+        "bodyWidth": 768,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 41,
+            "right": 325.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 284.4375,
+            "height": 44,
+            "font": 16,
+            "left": 333.4375,
+            "right": 617.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 625.875,
+            "right": 669.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 677.875,
+            "right": 727
+          }
+        ],
+        "count": 0,
+        "articles": 8,
+        "status": "8 / 8건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "",
+        "evidence": "",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 98.30000001192093,
+        "theme": "dark"
+      },
+      "article": {
+        "hasBody": true,
+        "hasSource": true,
+        "hasEvidence": true
+      },
+      "alias": {
+        "url": "http://127.0.0.1:8193/?page=outlook&center=relay",
+        "center": "relay",
+        "width": 768,
+        "childWidth": 661,
+        "bodyWidth": 661,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 239.9375,
+            "height": 44,
+            "font": 16,
+            "left": 32,
+            "right": 271.9375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 239.9375,
+            "height": 44,
+            "font": 16,
+            "left": 279.9375,
+            "right": 519.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 527.875,
+            "right": 571.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 579.875,
+            "right": 629
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 56.400000005960464,
+        "theme": "dark"
+      },
+      "resizedAlias": {
+        "url": "http://127.0.0.1:8193/?page=outlook&center=relay",
+        "center": "relay",
+        "width": 320,
+        "childWidth": 318,
+        "bodyWidth": 318,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 262,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 290
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 262,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 290
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 28,
+            "right": 72
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 80,
+            "right": 129.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 56.400000005960464,
+        "theme": "dark"
+      },
+      "status": "passed"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "failures": [],
+      "window": {
+        "windowId": 1083275313,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "initial": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 1440,
+        "childWidth": 1440,
+        "bodyWidth": 1440,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 97,
+            "right": 661.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 669.4375,
+            "right": 1233.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1241.875,
+            "right": 1285.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1293.875,
+            "right": 1343
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 77.39999997615814,
+        "theme": "dark"
+      },
+      "inputFocus": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 1440,
+        "childWidth": 1440,
+        "bodyWidth": 1440,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 97,
+            "right": 661.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 669.4375,
+            "right": 1233.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1241.875,
+            "right": 1285.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1293.875,
+            "right": 1343
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 77.39999997615814,
+        "theme": "dark"
+      },
+      "submitted": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 1440,
+        "childWidth": 1440,
+        "bodyWidth": 1440,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 97,
+            "right": 661.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 669.4375,
+            "right": 1233.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1241.875,
+            "right": 1285.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1293.875,
+            "right": 1343
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 77.39999997615814,
+        "theme": "dark"
+      },
+      "search": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 1440,
+        "childWidth": 1440,
+        "bodyWidth": 1440,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 97,
+            "right": 661.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 669.4375,
+            "right": 1233.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1241.875,
+            "right": 1285.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1293.875,
+            "right": 1343
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "INPUT",
+          "label": "릴레이 제목·본문 검색",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 77.39999997615814,
+        "theme": "dark"
+      },
+      "keyboard": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 1440,
+        "childWidth": 1440,
+        "bodyWidth": 1440,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 97,
+            "right": 661.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 669.4375,
+            "right": 1233.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1241.875,
+            "right": 1285.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1293.875,
+            "right": 1343
+          }
+        ],
+        "count": 9,
+        "articles": 0,
+        "status": "9 / 60건 · 원문 키워드 분류",
+        "query": "엔비디아",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "증시·기업 · 정치·국제 · 분류 근거증시·기업: 「엔비디아」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>정치·국제: 「민주당」<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BUTTON",
+          "label": null,
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 77.39999997615814,
+        "theme": "dark"
+      },
+      "screenshot": "relay-dark-1440.png",
+      "nativeSelection": {
+        "selector": "[name=\"topic\"]",
+        "platform": "darwin",
+        "emulated": "desktop",
+        "internalPopupMode": true,
+        "layoutLocked": {
+          "innerWidth": 1440,
+          "innerHeight": 900,
+          "clientWidth": 1440,
+          "clientHeight": 900,
+          "scrollWidth": 1440,
+          "bodyWidth": 1440,
+          "devicePixelRatio": 1,
+          "coarsePointer": false,
+          "heading": null,
+          "plot": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "restored": true,
+        "transitions": [
+          {
+            "step": "enable-internal-popup",
+            "mobile": true,
+            "width": 1440,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          {
+            "step": "restore-case-emulation",
+            "mobile": false,
+            "width": 1440,
+            "height": 900,
+            "deviceScaleFactor": 1
+          }
+        ],
+        "popupMenu": {
+          "before": "external-appkit",
+          "during": "internal",
+          "after": "external-appkit"
+        },
+        "sequence": {
+          "keys": [
+            "Home",
+            "ArrowDown",
+            "Enter"
+          ]
+        }
+      },
+      "zero": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 1440,
+        "childWidth": 1440,
+        "bodyWidth": 1440,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 97,
+            "right": 661.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 669.4375,
+            "right": 1233.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1241.875,
+            "right": 1285.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1293.875,
+            "right": 1343
+          }
+        ],
+        "count": 0,
+        "articles": 0,
+        "status": "0 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "crypto",
+        "text": "",
+        "evidence": "",
+        "empty": true,
+        "focus": {
+          "tag": "SELECT",
+          "label": "릴레이 주제",
+          "outline": "solid",
+          "outlineWidth": "2px"
+        },
+        "domContentLoadedMs": 77.39999997615814,
+        "theme": "dark"
+      },
+      "articleList": {
+        "url": "http://127.0.0.1:8193/?page=relay",
+        "center": null,
+        "width": 1440,
+        "childWidth": 1440,
+        "bodyWidth": 1440,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 97,
+            "right": 661.4375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 564.4375,
+            "height": 44,
+            "font": 16,
+            "left": 669.4375,
+            "right": 1233.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1241.875,
+            "right": 1285.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1293.875,
+            "right": 1343
+          }
+        ],
+        "count": 0,
+        "articles": 8,
+        "status": "8 / 8건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "",
+        "evidence": "",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 77.39999997615814,
+        "theme": "dark"
+      },
+      "article": {
+        "hasBody": true,
+        "hasSource": true,
+        "hasEvidence": true
+      },
+      "alias": {
+        "url": "http://127.0.0.1:8193/?page=outlook&center=relay",
+        "center": "relay",
+        "width": 1440,
+        "childWidth": 1333,
+        "bodyWidth": 1333,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 575.9375,
+            "height": 44,
+            "font": 16,
+            "left": 32,
+            "right": 607.9375
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 575.9375,
+            "height": 44,
+            "font": 16,
+            "left": 615.9375,
+            "right": 1191.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 1199.875,
+            "right": 1243.875
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 1251.875,
+            "right": 1301
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 58.099999994039536,
+        "theme": "dark"
+      },
+      "resizedAlias": {
+        "url": "http://127.0.0.1:8193/?page=outlook&center=relay",
+        "center": "relay",
+        "width": 320,
+        "childWidth": 318,
+        "bodyWidth": 318,
+        "overflow": 0,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "label": "릴레이 주제",
+            "width": 262,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 290
+          },
+          {
+            "tag": "INPUT",
+            "label": "릴레이 제목·본문 검색",
+            "width": 262,
+            "height": 44,
+            "font": 16,
+            "left": 28,
+            "right": 290
+          },
+          {
+            "tag": "BUTTON",
+            "label": "검색",
+            "width": 44,
+            "height": 44,
+            "font": 12,
+            "left": 28,
+            "right": 72
+          },
+          {
+            "tag": "BUTTON",
+            "label": "초기화",
+            "width": 49.125,
+            "height": 44,
+            "font": 12,
+            "left": 80,
+            "right": 129.125
+          }
+        ],
+        "count": 60,
+        "articles": 0,
+        "status": "60 / 60건 · 원문 키워드 분류",
+        "query": "",
+        "topic": "all",
+        "text": "<🎙민주당도 엔비디아 공격 가세, 기록 보존 요구>",
+        "evidence": "미분류 · 분류 근거미분류: 분류할 원문 텍스트 없음 · 이미지 내용 미판독원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.",
+        "empty": false,
+        "focus": {
+          "tag": "BODY",
+          "label": null,
+          "outline": "none",
+          "outlineWidth": "3px"
+        },
+        "domContentLoadedMs": 58.099999994039536,
+        "theme": "dark"
+      },
+      "status": "passed"
+    }
+  ],
+  "failures": [],
+  "scope": "R22 reader interactions, source evidence, 4 widths, light/dark; no R23 or full A-9 acceptance",
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/157.0.8103.79",
+    "revision": "@6dc9bc3bdaea5c35ed6d41fceab2f7a3a2227c4f",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+    "jsVersion": "15.7.112.43"
+  },
+  "sourceAfter": {
+    "dist/relay-room.js": "aa387e9bb18b03584261b3f0cb5c042ea04789f9418bc1b8bb577e45f3446c5c",
+    "dist/relay-topics.js": "b210b01559ec8fc9bd15a99436040293e7b3929cc601f23804f4b5aa9d2d675e",
+    "dist/relay-room.css": "4ff13f7df907154e8d16fc954b42b1f0e3453af4b18d1c261da6ac97d780fb56",
+    "dist/site-after-shell.css": "a6d9c98db8b108449eb9036df295f066cd7859c5ec2414447fbc9cf828bd2c85",
+    "dist/data/relay/index.json": "be11c563ac9fa76160118649a4577d5ea8f2e4d6b83b1384a9486642710abd33"
+  },
+  "sourceStable": true,
+  "complete": true,
+  "status": "passed",
+  "finishedAt": "2026-11-13T05:58:26.365Z"
+}

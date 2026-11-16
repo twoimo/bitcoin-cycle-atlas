@@ -1,0 +1,30 @@
+{
+  "measuredHead": "72d3aa122ee044f8005c40a20a70402f3b3069e5",
+  "candidate": "a4485e69ab2d38266dd5a813e6a2b456e9e3c64b",
+  "observedAt": "2026-11-13T01:56:34+09:00/2026-11-13T01:57:21+09:00",
+  "chrome": "157.0.8103.79",
+  "out": "build/qa-q-p2a0-1-mac-72d3aa1",
+  "status": "passed",
+  "qualifiesP2a0NativeVerification": true,
+  "complete": true,
+  "sourceStable": true,
+  "workingTree": [],
+  "failures": 0,
+  "exitCode": 0,
+  "counts": {
+    "startup": {"required": 6, "attempted": 6, "passed": 6, "failed": 0},
+    "features": {"required": 7, "attempted": 7, "passed": 7, "failed": 0},
+    "keyboard": {"required": 4, "attempted": 4, "passed": 4, "failed": 0},
+    "touch": {"required": 4, "attempted": 4, "passed": 4, "failed": 0}
+  },
+  "startupPaintedMs": [1104.9, 1123.9],
+  "allInitialPaintedMs": [1073.7, 1169.2],
+  "budgetMs": 2500,
+  "startupOverflow": 0,
+  "symbolIconContrast": 4.440810712577725,
+  "controlTextContrast": 14.056959465600228,
+  "reportRawSha256": "44226f2f778ab508110f8ee13613e7411ef67b16c449ba7c0156aca930baab83",
+  "reportGzipSha256": "fc38f5646cfdb9955f1ac26564a9427dff7ee56386fd42b9f63c2bc253c6693d",
+  "a9Rerun": false,
+  "qClosed": "Q-P2A0-1"
+}

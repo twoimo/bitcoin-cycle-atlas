@@ -1,0 +1,3919 @@
+{
+  "schemaVersion": 1,
+  "eventId": "plspo-2026-10-31",
+  "preparedAt": "2026-11-12",
+  "status": "provisional-text-derived-program-boundaries; not-audio-or-page-timing-validated",
+  "event": {
+    "clockStart": "12:33:00",
+    "timezone": "Asia/Seoul",
+    "durationSeconds": 20400,
+    "recordingOffsets": {
+      "plaud-1": 0,
+      "plaud-2": 18000
+    }
+  },
+  "sourcePins": [
+    {
+      "path": "docs/conference/deck-lock-20261112.json",
+      "sha256": "3602c9f07fdd44ae761e3e2c5c8d0a4124a9b4f2d31994809b0b07b9a7ed4272",
+      "bytes": 4730
+    },
+    {
+      "path": "docs/conference/inputs/deck-inputs.json",
+      "sha256": "28a56df72cc567e88a88c1b793c170277741fb7155642b41b0b35a8c09508c7a",
+      "bytes": 8386
+    },
+    {
+      "path": "docs/conference/inputs/deck-pages-final-290.json",
+      "sha256": "fc2efa7885fd4c17bec4c3f190a360ef16c6ccf4e5c4e7329ff4700b96601c35",
+      "bytes": 291186
+    },
+    {
+      "path": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+      "sha256": "a9c008e7fc8f258a18c8d13da3ea959e0e13ef82eb17b1338fef41ea4574d660",
+      "bytes": 71592
+    },
+    {
+      "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+      "sha256": "90544fc7481d1445b667e858ce19379fbbdbbc1f207a932f296de7a188a8259c",
+      "bytes": 485003
+    },
+    {
+      "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+      "sha256": "78647f0ded22969fd66cac7fddafaa057d7edf957db5d08b5c6b7c74216d8976",
+      "bytes": 75582
+    }
+  ],
+  "policy": {
+    "intervals": "15 continuous non-overlapping half-open program intervals [t0,t1), IDs 00..14. The event end is 20400 seconds.",
+    "assignment": "Assign each unchanged SRT row by its original event-normalized t0; never split, trim, deduplicate, stretch or invent source text/timestamps.",
+    "programBoundaryMeaning": "Host-introduction-based organizational blocks where supported; scheduled-only fallback at 7020,8220,9420; these are not slide-on-screen boundaries.",
+    "mappingExclusions": "All source rows longer than 30 seconds, all rows straddling a program boundary, nonlecture rows and the explicitly conflicted pages are ineligible for automatic page mapping.",
+    "confidence": "Categorical provenance only; no percentage or estimated probability of boundary accuracy.",
+    "verificationLimit": "The original audio/video and original PDFs/PPTX were unavailable here. Evidence quotes are exact supplied SRT/PPTX/OCR text. Human/audio comparison remains 0/10.",
+    "pageConflictScope": "Only the listed contradictions are quarantined; this is not an exhaustive visual validation of all 547 pages and does not modify the locked decks, input metadata or bookmark ranges."
+  },
+  "programs": [
+    {
+      "id": "00",
+      "kind": "opening",
+      "title": "개회·사전 안내",
+      "speaker": null,
+      "t0": 0,
+      "t1": 2116.38,
+      "clockStart": "12:33:00",
+      "clockEnd": "13:08:16.38",
+      "scheduled": {
+        "t0": 0,
+        "t1": 2220,
+        "clockStart": "12:33:00",
+        "clockEnd": "13:10:00",
+        "status": "complementary-recording-interval-not-printed-program-slot",
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "text": null
+      },
+      "boundaryEvidence": {
+        "start": {
+          "boundaryIndex": 0,
+          "t": 0,
+          "status": "recording-bound",
+          "source": "docs/conference/inputs/deck-inputs.json#srt.plaud-1",
+          "policy": "입력 메타데이터의 녹음 시작 12:33:00을 이벤트 원점으로 삼는다. 개회 발화가 0초에 시작되었다는 주장이 아니다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        },
+        "end": {
+          "boundaryIndex": 1,
+          "t": 2116.38,
+          "status": "transcript-anchored",
+          "source": "plaud-1#224",
+          "anchor": {
+            "source": "plaud-1#224",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "00:35:16,380",
+            "originalT1": "00:35:17,480",
+            "t0": 2116.38,
+            "t1": 2117.48,
+            "text": " 첫 번째로"
+          },
+          "context": [
+            {
+              "source": "plaud-1#220",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:35:11,010",
+              "originalT1": "00:35:12,170",
+              "t0": 2111.01,
+              "t1": 2112.17,
+              "text": " 대표님 말씀"
+            },
+            {
+              "source": "plaud-1#221",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:35:12,170",
+              "originalT1": "00:35:13,690",
+              "t0": 2112.17,
+              "t1": 2113.69,
+              "text": " 진심으로 감사드립니다."
+            },
+            {
+              "source": "plaud-1#223",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:35:14,200",
+              "originalT1": "00:35:16,380",
+              "t0": 2114.2,
+              "t1": 2116.38,
+              "text": " 바로 강연 들어가도록 하겠습니다."
+            },
+            {
+              "source": "plaud-1#225",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:35:17,480",
+              "originalT1": "00:35:19,780",
+              "t0": 2117.48,
+              "t1": 2119.78,
+              "text": " 아파트 매매 거래량으로 보는"
+            },
+            {
+              "source": "plaud-1#226",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:35:19,780",
+              "originalT1": "00:35:21,180",
+              "t0": 2119.78,
+              "t1": 2121.18,
+              "text": " 매수 타이밍"
+            },
+            {
+              "source": "plaud-1#228",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:35:22,780",
+              "originalT1": "00:35:24,620",
+              "t0": 2122.78,
+              "t1": 2124.62,
+              "text": " 규동산 멘토를 모시겠습니다."
+            },
+            {
+              "source": "plaud-1#233",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:35:35,120",
+              "originalT1": "00:35:37,660",
+              "t0": 2135.12,
+              "t1": 2137.66,
+              "text": " 저는 규동산이라고 하고요."
+            }
+          ],
+          "policy": "진행자의 다음 강연 소개가 시작되는 원본 SRT 행의 t0를 강연 블록 경계로 채택한다. 발표자 첫 발화나 슬라이드 등장 시각을 뜻하지 않는다. SRT 텍스트만 대조했으며 오디오 검증은 하지 않았다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        }
+      },
+      "confidence": "recording-bound-and-transcript-context",
+      "verification": {
+        "audio": "not-performed-source-audio-unavailable",
+        "slideTiming": "not-verified",
+        "scope": "SRT 문맥·입력 일정표·추출된 책갈피만 대조. 강연 블록은 연속 구간 분류이며 전사 완전성이나 페이지 동시성을 보장하지 않는다."
+      },
+      "sourceRowsByStart": 223,
+      "boundaryStraddlingSources": [],
+      "coarseSourcesOver30Seconds": [
+        "plaud-1#1",
+        "plaud-1#17",
+        "plaud-1#19"
+      ]
+    },
+    {
+      "id": "01",
+      "kind": "lecture",
+      "title": "아파트 매매 거래량으로 보는 매수 타이밍",
+      "speaker": "규동산",
+      "t0": 2116.38,
+      "t1": 3282.34,
+      "clockStart": "13:08:16.38",
+      "clockEnd": "13:27:42.34",
+      "scheduled": {
+        "t0": 2220,
+        "t1": 3420,
+        "clockStart": "13:10:00",
+        "clockEnd": "13:30:00",
+        "status": "printed-page1-ocr-schedule",
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "text": "13:10~13:30"
+      },
+      "boundaryEvidence": {
+        "start": {
+          "boundaryIndex": 1,
+          "t": 2116.38,
+          "status": "transcript-anchored",
+          "source": "plaud-1#224",
+          "anchor": {
+            "source": "plaud-1#224",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "00:35:16,380",
+            "originalT1": "00:35:17,480",
+            "t0": 2116.38,
+            "t1": 2117.48,
+            "text": " 첫 번째로"
+          },
+          "context": [
+            {
+              "source": "plaud-1#220",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:35:11,010",
+              "originalT1": "00:35:12,170",
+              "t0": 2111.01,
+              "t1": 2112.17,
+              "text": " 대표님 말씀"
+            },
+            {
+              "source": "plaud-1#221",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:35:12,170",
+              "originalT1": "00:35:13,690",
+              "t0": 2112.17,
+              "t1": 2113.69,
+              "text": " 진심으로 감사드립니다."
+            },
+            {
+              "source": "plaud-1#223",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:35:14,200",
+              "originalT1": "00:35:16,380",
+              "t0": 2114.2,
+              "t1": 2116.38,
+              "text": " 바로 강연 들어가도록 하겠습니다."
+            },
+            {
+              "source": "plaud-1#225",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:35:17,480",
+              "originalT1": "00:35:19,780",
+              "t0": 2117.48,
+              "t1": 2119.78,
+              "text": " 아파트 매매 거래량으로 보는"
+            },
+            {
+              "source": "plaud-1#226",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:35:19,780",
+              "originalT1": "00:35:21,180",
+              "t0": 2119.78,
+              "t1": 2121.18,
+              "text": " 매수 타이밍"
+            },
+            {
+              "source": "plaud-1#228",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:35:22,780",
+              "originalT1": "00:35:24,620",
+              "t0": 2122.78,
+              "t1": 2124.62,
+              "text": " 규동산 멘토를 모시겠습니다."
+            },
+            {
+              "source": "plaud-1#233",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:35:35,120",
+              "originalT1": "00:35:37,660",
+              "t0": 2135.12,
+              "t1": 2137.66,
+              "text": " 저는 규동산이라고 하고요."
+            }
+          ],
+          "policy": "진행자의 다음 강연 소개가 시작되는 원본 SRT 행의 t0를 강연 블록 경계로 채택한다. 발표자 첫 발화나 슬라이드 등장 시각을 뜻하지 않는다. SRT 텍스트만 대조했으며 오디오 검증은 하지 않았다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        },
+        "end": {
+          "boundaryIndex": 2,
+          "t": 3282.34,
+          "status": "transcript-anchored",
+          "source": "plaud-1#597",
+          "anchor": {
+            "source": "plaud-1#597",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "00:54:42,340",
+            "originalT1": "00:54:45,300",
+            "t0": 3282.34,
+            "t1": 3285.3,
+            "text": " 네, 바로 두 번째로 이어가도록 하겠습니다."
+          },
+          "context": [
+            {
+              "source": "plaud-1#584",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:53:54,400",
+              "originalT1": "00:53:55,200",
+              "t0": 3234.4,
+              "t1": 3235.2,
+              "text": " 감사합니다."
+            },
+            {
+              "source": "plaud-1#585",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:53:55,200",
+              "originalT1": "00:53:56,200",
+              "t0": 3235.2,
+              "t1": 3236.2,
+              "text": " 감사합니다."
+            },
+            {
+              "source": "plaud-1#598",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:54:45,300",
+              "originalT1": "00:54:49,300",
+              "t0": 3285.3,
+              "t1": 3289.3,
+              "text": " 두 번째로 내 삶을 바꾸는 부동산 매진마련"
+            },
+            {
+              "source": "plaud-1#599",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:54:49,300",
+              "originalT1": "00:54:57,330",
+              "t0": 3289.3,
+              "t1": 3297.33,
+              "text": " 자산 스케일업 전략이라는 주제로 강연하실 드립캐스트 멘토입니다."
+            },
+            {
+              "source": "plaud-1#600",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:54:57,330",
+              "originalT1": "00:55:07,490",
+              "t0": 3297.33,
+              "t1": 3307.49,
+              "text": " 큰 박수 부탁드리겠습니다."
+            },
+            {
+              "source": "plaud-1#614",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:56:11,310",
+              "originalT1": "00:56:14,650",
+              "t0": 3371.31,
+              "t1": 3374.65,
+              "text": " 네, 준비되시는 대로 바로 진행하겠습니다."
+            },
+            {
+              "source": "plaud-1#615",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:56:16,050",
+              "originalT1": "00:56:18,250",
+              "t0": 3376.05,
+              "t1": 3378.25,
+              "text": " 안녕하세요. 포인트 이슈가 있어가지고요."
+            }
+          ],
+          "policy": "진행자의 다음 강연 소개가 시작되는 원본 SRT 행의 t0를 강연 블록 경계로 채택한다. 발표자 첫 발화나 슬라이드 등장 시각을 뜻하지 않는다. SRT 텍스트만 대조했으며 오디오 검증은 하지 않았다. ASR의 드립캐스트 표기는 덱 책갈피의 드림캐스트와 구분해 원문 그대로 보존한다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        }
+      },
+      "confidence": "transcript-boundary-evidence-only",
+      "verification": {
+        "audio": "not-performed-source-audio-unavailable",
+        "slideTiming": "not-verified",
+        "scope": "SRT 문맥·입력 일정표·추출된 책갈피만 대조. 강연 블록은 연속 구간 분류이며 전사 완전성이나 페이지 동시성을 보장하지 않는다."
+      },
+      "titleEvidence": {
+        "sourceIds": [
+          "plaud-1#225",
+          "plaud-1#226"
+        ],
+        "method": "adjacent-host-title-fragments"
+      },
+      "sourceRowsByStart": 373,
+      "boundaryStraddlingSources": [],
+      "coarseSourcesOver30Seconds": []
+    },
+    {
+      "id": "02",
+      "kind": "lecture",
+      "title": "내 삶을 바꾸는 부동산 : 내집마련 & 자산 스케일업 전략",
+      "speaker": "드림캐스트",
+      "t0": 3282.34,
+      "t1": 4659.04,
+      "clockStart": "13:27:42.34",
+      "clockEnd": "13:50:39.04",
+      "scheduled": {
+        "t0": 3420,
+        "t1": 4620,
+        "clockStart": "13:30:00",
+        "clockEnd": "13:50:00",
+        "status": "printed-page1-ocr-schedule",
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "text": "13:30~13:50"
+      },
+      "boundaryEvidence": {
+        "start": {
+          "boundaryIndex": 2,
+          "t": 3282.34,
+          "status": "transcript-anchored",
+          "source": "plaud-1#597",
+          "anchor": {
+            "source": "plaud-1#597",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "00:54:42,340",
+            "originalT1": "00:54:45,300",
+            "t0": 3282.34,
+            "t1": 3285.3,
+            "text": " 네, 바로 두 번째로 이어가도록 하겠습니다."
+          },
+          "context": [
+            {
+              "source": "plaud-1#584",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:53:54,400",
+              "originalT1": "00:53:55,200",
+              "t0": 3234.4,
+              "t1": 3235.2,
+              "text": " 감사합니다."
+            },
+            {
+              "source": "plaud-1#585",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:53:55,200",
+              "originalT1": "00:53:56,200",
+              "t0": 3235.2,
+              "t1": 3236.2,
+              "text": " 감사합니다."
+            },
+            {
+              "source": "plaud-1#598",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:54:45,300",
+              "originalT1": "00:54:49,300",
+              "t0": 3285.3,
+              "t1": 3289.3,
+              "text": " 두 번째로 내 삶을 바꾸는 부동산 매진마련"
+            },
+            {
+              "source": "plaud-1#599",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:54:49,300",
+              "originalT1": "00:54:57,330",
+              "t0": 3289.3,
+              "t1": 3297.33,
+              "text": " 자산 스케일업 전략이라는 주제로 강연하실 드립캐스트 멘토입니다."
+            },
+            {
+              "source": "plaud-1#600",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:54:57,330",
+              "originalT1": "00:55:07,490",
+              "t0": 3297.33,
+              "t1": 3307.49,
+              "text": " 큰 박수 부탁드리겠습니다."
+            },
+            {
+              "source": "plaud-1#614",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:56:11,310",
+              "originalT1": "00:56:14,650",
+              "t0": 3371.31,
+              "t1": 3374.65,
+              "text": " 네, 준비되시는 대로 바로 진행하겠습니다."
+            },
+            {
+              "source": "plaud-1#615",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "00:56:16,050",
+              "originalT1": "00:56:18,250",
+              "t0": 3376.05,
+              "t1": 3378.25,
+              "text": " 안녕하세요. 포인트 이슈가 있어가지고요."
+            }
+          ],
+          "policy": "진행자의 다음 강연 소개가 시작되는 원본 SRT 행의 t0를 강연 블록 경계로 채택한다. 발표자 첫 발화나 슬라이드 등장 시각을 뜻하지 않는다. SRT 텍스트만 대조했으며 오디오 검증은 하지 않았다. ASR의 드립캐스트 표기는 덱 책갈피의 드림캐스트와 구분해 원문 그대로 보존한다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        },
+        "end": {
+          "boundaryIndex": 3,
+          "t": 4659.04,
+          "status": "transcript-anchored",
+          "source": "plaud-1#1389",
+          "anchor": {
+            "source": "plaud-1#1389",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "01:17:39,040",
+            "originalT1": "01:17:40,040",
+            "t0": 4659.04,
+            "t1": 4660.04,
+            "text": " 세번째 강의"
+          },
+          "context": [
+            {
+              "source": "plaud-1#1365",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:17:06,650",
+              "originalT1": "01:17:07,610",
+              "t0": 4626.65,
+              "t1": 4627.61,
+              "text": " 감사합니다."
+            },
+            {
+              "source": "plaud-1#1367",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:17:12,650",
+              "originalT1": "01:17:13,650",
+              "t0": 4632.65,
+              "t1": 4633.65,
+              "text": " 드림캐스트"
+            },
+            {
+              "source": "plaud-1#1368",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:17:13,650",
+              "originalT1": "01:17:14,650",
+              "t0": 4633.65,
+              "t1": 4634.65,
+              "text": " 멘토님의 강연을 잘 들었습니다."
+            },
+            {
+              "source": "plaud-1#1392",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:17:42,000",
+              "originalT1": "01:17:43,000",
+              "t0": 4662.0,
+              "t1": 4663.0,
+              "text": " 마지막 강연입니다."
+            },
+            {
+              "source": "plaud-1#1393",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:17:43,000",
+              "originalT1": "01:17:45,030",
+              "t0": 4663.0,
+              "t1": 4665.03,
+              "text": " 실존 투자 사례로 배우는"
+            },
+            {
+              "source": "plaud-1#1394",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:17:45,030",
+              "originalT1": "01:17:47,030",
+              "t0": 4665.03,
+              "t1": 4667.03,
+              "text": " 경매물건 고르는 법"
+            },
+            {
+              "source": "plaud-1#1396",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:17:49,020",
+              "originalT1": "01:17:51,020",
+              "t0": 4669.02,
+              "t1": 4671.02,
+              "text": " 우리 셀프 멘토 모시겠습니다."
+            },
+            {
+              "source": "plaud-1#1402",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:18:46,550",
+              "originalT1": "01:18:47,550",
+              "t0": 4726.55,
+              "t1": 4727.55,
+              "text": " 셀프라고 합니다."
+            }
+          ],
+          "policy": "진행자의 다음 강연 소개가 시작되는 원본 SRT 행의 t0를 강연 블록 경계로 채택한다. 발표자 첫 발화나 슬라이드 등장 시각을 뜻하지 않는다. SRT 텍스트만 대조했으며 오디오 검증은 하지 않았다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        }
+      },
+      "confidence": "transcript-boundary-evidence-only",
+      "verification": {
+        "audio": "not-performed-source-audio-unavailable",
+        "slideTiming": "not-verified",
+        "scope": "SRT 문맥·입력 일정표·추출된 책갈피만 대조. 강연 블록은 연속 구간 분류이며 전사 완전성이나 페이지 동시성을 보장하지 않는다."
+      },
+      "titleEvidence": {
+        "source": "docs/conference/inputs/deck-pages-r17-clean-257.json#page=9",
+        "method": "PPTX-text-title-linebreaks-joined"
+      },
+      "sourceRowsByStart": 792,
+      "boundaryStraddlingSources": [],
+      "coarseSourcesOver30Seconds": []
+    },
+    {
+      "id": "03",
+      "kind": "lecture",
+      "title": "실전 투자 사례를 배우는 경매 물건 고르는 법",
+      "speaker": "셀프",
+      "t0": 4659.04,
+      "t1": 5897.35,
+      "clockStart": "13:50:39.04",
+      "clockEnd": "14:11:17.35",
+      "scheduled": {
+        "t0": 4620,
+        "t1": 5820,
+        "clockStart": "13:50:00",
+        "clockEnd": "14:10:00",
+        "status": "printed-page1-ocr-schedule",
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "text": "13:50~14:10"
+      },
+      "boundaryEvidence": {
+        "start": {
+          "boundaryIndex": 3,
+          "t": 4659.04,
+          "status": "transcript-anchored",
+          "source": "plaud-1#1389",
+          "anchor": {
+            "source": "plaud-1#1389",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "01:17:39,040",
+            "originalT1": "01:17:40,040",
+            "t0": 4659.04,
+            "t1": 4660.04,
+            "text": " 세번째 강의"
+          },
+          "context": [
+            {
+              "source": "plaud-1#1365",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:17:06,650",
+              "originalT1": "01:17:07,610",
+              "t0": 4626.65,
+              "t1": 4627.61,
+              "text": " 감사합니다."
+            },
+            {
+              "source": "plaud-1#1367",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:17:12,650",
+              "originalT1": "01:17:13,650",
+              "t0": 4632.65,
+              "t1": 4633.65,
+              "text": " 드림캐스트"
+            },
+            {
+              "source": "plaud-1#1368",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:17:13,650",
+              "originalT1": "01:17:14,650",
+              "t0": 4633.65,
+              "t1": 4634.65,
+              "text": " 멘토님의 강연을 잘 들었습니다."
+            },
+            {
+              "source": "plaud-1#1392",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:17:42,000",
+              "originalT1": "01:17:43,000",
+              "t0": 4662.0,
+              "t1": 4663.0,
+              "text": " 마지막 강연입니다."
+            },
+            {
+              "source": "plaud-1#1393",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:17:43,000",
+              "originalT1": "01:17:45,030",
+              "t0": 4663.0,
+              "t1": 4665.03,
+              "text": " 실존 투자 사례로 배우는"
+            },
+            {
+              "source": "plaud-1#1394",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:17:45,030",
+              "originalT1": "01:17:47,030",
+              "t0": 4665.03,
+              "t1": 4667.03,
+              "text": " 경매물건 고르는 법"
+            },
+            {
+              "source": "plaud-1#1396",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:17:49,020",
+              "originalT1": "01:17:51,020",
+              "t0": 4669.02,
+              "t1": 4671.02,
+              "text": " 우리 셀프 멘토 모시겠습니다."
+            },
+            {
+              "source": "plaud-1#1402",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:18:46,550",
+              "originalT1": "01:18:47,550",
+              "t0": 4726.55,
+              "t1": 4727.55,
+              "text": " 셀프라고 합니다."
+            }
+          ],
+          "policy": "진행자의 다음 강연 소개가 시작되는 원본 SRT 행의 t0를 강연 블록 경계로 채택한다. 발표자 첫 발화나 슬라이드 등장 시각을 뜻하지 않는다. SRT 텍스트만 대조했으며 오디오 검증은 하지 않았다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        },
+        "end": {
+          "boundaryIndex": 4,
+          "t": 5897.35,
+          "status": "transcript-anchored",
+          "source": "plaud-1#2101",
+          "anchor": {
+            "source": "plaud-1#2101",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "01:38:17,350",
+            "originalT1": "01:38:18,350",
+            "t0": 5897.35,
+            "t1": 5898.35,
+            "text": " 약 20분 정도"
+          },
+          "context": [
+            {
+              "source": "plaud-1#2073",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:37:49,220",
+              "originalT1": "01:37:50,220",
+              "t0": 5869.22,
+              "t1": 5870.22,
+              "text": " 마치겠습니다."
+            },
+            {
+              "source": "plaud-1#2074",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:37:50,220",
+              "originalT1": "01:37:51,220",
+              "t0": 5870.22,
+              "t1": 5871.22,
+              "text": " 감사합니다."
+            },
+            {
+              "source": "plaud-1#2102",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:38:18,350",
+              "originalT1": "01:38:19,350",
+              "t0": 5898.35,
+              "t1": 5899.35,
+              "text": " 휴식시간을 갖고"
+            },
+            {
+              "source": "plaud-1#2103",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:38:19,350",
+              "originalT1": "01:38:49,180",
+              "t0": 5899.35,
+              "t1": 5929.18,
+              "text": " 2시 30분에"
+            },
+            {
+              "source": "plaud-1#2105",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:38:50,180",
+              "originalT1": "01:38:51,180",
+              "t0": 5930.18,
+              "t1": 5931.18,
+              "text": " 컨퍼런스 진행하도록"
+            },
+            {
+              "source": "plaud-1#2106",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:38:51,180",
+              "originalT1": "01:38:52,180",
+              "t0": 5931.18,
+              "t1": 5932.18,
+              "text": " 하겠습니다."
+            }
+          ],
+          "policy": "휴식 약 20분과 14:30 재개를 안내하는 문장의 시작을 첫 휴식 블록 경계로 채택한다. 녹음상 무음 시작이나 실제 퇴장 시각은 검증하지 않았다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        }
+      },
+      "confidence": "transcript-boundary-evidence-only",
+      "verification": {
+        "audio": "not-performed-source-audio-unavailable",
+        "slideTiming": "not-verified",
+        "scope": "SRT 문맥·입력 일정표·추출된 책갈피만 대조. 강연 블록은 연속 구간 분류이며 전사 완전성이나 페이지 동시성을 보장하지 않는다."
+      },
+      "titleEvidence": {
+        "source": "docs/conference/inputs/deck-pages-r17-clean-257.json#page=23",
+        "method": "PPTX-text-title"
+      },
+      "sourceRowsByStart": 712,
+      "boundaryStraddlingSources": [],
+      "coarseSourcesOver30Seconds": []
+    },
+    {
+      "id": "04",
+      "kind": "break",
+      "title": "첫 번째 휴식",
+      "speaker": null,
+      "t0": 5897.35,
+      "t1": 7020,
+      "clockStart": "14:11:17.35",
+      "clockEnd": "14:30:00",
+      "scheduled": {
+        "t0": 5820,
+        "t1": 7020,
+        "clockStart": "14:10:00",
+        "clockEnd": "14:30:00",
+        "status": "printed-page1-ocr-schedule",
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "text": "14:10~14:30"
+      },
+      "boundaryEvidence": {
+        "start": {
+          "boundaryIndex": 4,
+          "t": 5897.35,
+          "status": "transcript-anchored",
+          "source": "plaud-1#2101",
+          "anchor": {
+            "source": "plaud-1#2101",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "01:38:17,350",
+            "originalT1": "01:38:18,350",
+            "t0": 5897.35,
+            "t1": 5898.35,
+            "text": " 약 20분 정도"
+          },
+          "context": [
+            {
+              "source": "plaud-1#2073",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:37:49,220",
+              "originalT1": "01:37:50,220",
+              "t0": 5869.22,
+              "t1": 5870.22,
+              "text": " 마치겠습니다."
+            },
+            {
+              "source": "plaud-1#2074",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:37:50,220",
+              "originalT1": "01:37:51,220",
+              "t0": 5870.22,
+              "t1": 5871.22,
+              "text": " 감사합니다."
+            },
+            {
+              "source": "plaud-1#2102",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:38:18,350",
+              "originalT1": "01:38:19,350",
+              "t0": 5898.35,
+              "t1": 5899.35,
+              "text": " 휴식시간을 갖고"
+            },
+            {
+              "source": "plaud-1#2103",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:38:19,350",
+              "originalT1": "01:38:49,180",
+              "t0": 5899.35,
+              "t1": 5929.18,
+              "text": " 2시 30분에"
+            },
+            {
+              "source": "plaud-1#2105",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:38:50,180",
+              "originalT1": "01:38:51,180",
+              "t0": 5930.18,
+              "t1": 5931.18,
+              "text": " 컨퍼런스 진행하도록"
+            },
+            {
+              "source": "plaud-1#2106",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:38:51,180",
+              "originalT1": "01:38:52,180",
+              "t0": 5931.18,
+              "t1": 5932.18,
+              "text": " 하겠습니다."
+            }
+          ],
+          "policy": "휴식 약 20분과 14:30 재개를 안내하는 문장의 시작을 첫 휴식 블록 경계로 채택한다. 녹음상 무음 시작이나 실제 퇴장 시각은 검증하지 않았다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        },
+        "end": {
+          "boundaryIndex": 5,
+          "t": 7020,
+          "status": "scheduled-only",
+          "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+          "scheduleText": "14:30~14:50",
+          "scheduledClock": "14:30:00",
+          "context": [
+            {
+              "source": "plaud-1#2103",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:38:19,350",
+              "originalT1": "01:38:49,180",
+              "t0": 5899.35,
+              "t1": 5929.18,
+              "text": " 2시 30분에"
+            },
+            {
+              "source": "plaud-1#2131",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:50:57,200",
+              "originalT1": "01:56:44,310",
+              "t0": 6657.2,
+              "t1": 7004.31,
+              "text": " 화면이 좀"
+            },
+            {
+              "source": "plaud-1#2132",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:56:44,310",
+              "originalT1": "01:56:45,310",
+              "t0": 7004.31,
+              "t1": 7005.31,
+              "text": " 문제가 있는데"
+            },
+            {
+              "source": "plaud-1#2133",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:56:45,310",
+              "originalT1": "01:56:47,310",
+              "t0": 7005.31,
+              "t1": 7007.31,
+              "text": " 양해 부탁드리겠습니다."
+            },
+            {
+              "source": "plaud-1#2137",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:56:50,350",
+              "originalT1": "01:56:51,450",
+              "t0": 7010.35,
+              "t1": 7011.45,
+              "text": " 시작하려고 하는데"
+            },
+            {
+              "source": "plaud-1#2138",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:56:51,450",
+              "originalT1": "02:13:18,030",
+              "t0": 7011.45,
+              "t1": 7998.03,
+              "text": " 하려고 합니다."
+            }
+          ],
+          "policy": "겜보이 강연 시작을 확인할 분해된 전사가 없다. 7011.45..7998.03의 한 행이 이 경계를 가로지르므로 일정표 14:30을 잠정 경계로만 쓴다. 실제 시작·발표자·슬라이드 시각의 증거가 아니다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        }
+      },
+      "confidence": "provisional-scheduled-boundary",
+      "verification": {
+        "audio": "not-performed-source-audio-unavailable",
+        "slideTiming": "not-verified",
+        "scope": "SRT 문맥·입력 일정표·추출된 책갈피만 대조. 강연 블록은 연속 구간 분류이며 전사 완전성이나 페이지 동시성을 보장하지 않는다."
+      },
+      "sourceRowsByStart": 38,
+      "boundaryStraddlingSources": [
+        "plaud-1#2138"
+      ],
+      "coarseSourcesOver30Seconds": [
+        "plaud-1#2122",
+        "plaud-1#2131",
+        "plaud-1#2138"
+      ]
+    },
+    {
+      "id": "05",
+      "kind": "lecture",
+      "title": "이렇게 하면 주식 망합니다",
+      "speaker": "겜보이",
+      "t0": 7020,
+      "t1": 8220,
+      "clockStart": "14:30:00",
+      "clockEnd": "14:50:00",
+      "scheduled": {
+        "t0": 7020,
+        "t1": 8220,
+        "clockStart": "14:30:00",
+        "clockEnd": "14:50:00",
+        "status": "printed-page1-ocr-schedule",
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "text": "14:30~14:50"
+      },
+      "boundaryEvidence": {
+        "start": {
+          "boundaryIndex": 5,
+          "t": 7020,
+          "status": "scheduled-only",
+          "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+          "scheduleText": "14:30~14:50",
+          "scheduledClock": "14:30:00",
+          "context": [
+            {
+              "source": "plaud-1#2103",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:38:19,350",
+              "originalT1": "01:38:49,180",
+              "t0": 5899.35,
+              "t1": 5929.18,
+              "text": " 2시 30분에"
+            },
+            {
+              "source": "plaud-1#2131",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:50:57,200",
+              "originalT1": "01:56:44,310",
+              "t0": 6657.2,
+              "t1": 7004.31,
+              "text": " 화면이 좀"
+            },
+            {
+              "source": "plaud-1#2132",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:56:44,310",
+              "originalT1": "01:56:45,310",
+              "t0": 7004.31,
+              "t1": 7005.31,
+              "text": " 문제가 있는데"
+            },
+            {
+              "source": "plaud-1#2133",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:56:45,310",
+              "originalT1": "01:56:47,310",
+              "t0": 7005.31,
+              "t1": 7007.31,
+              "text": " 양해 부탁드리겠습니다."
+            },
+            {
+              "source": "plaud-1#2137",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:56:50,350",
+              "originalT1": "01:56:51,450",
+              "t0": 7010.35,
+              "t1": 7011.45,
+              "text": " 시작하려고 하는데"
+            },
+            {
+              "source": "plaud-1#2138",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:56:51,450",
+              "originalT1": "02:13:18,030",
+              "t0": 7011.45,
+              "t1": 7998.03,
+              "text": " 하려고 합니다."
+            }
+          ],
+          "policy": "겜보이 강연 시작을 확인할 분해된 전사가 없다. 7011.45..7998.03의 한 행이 이 경계를 가로지르므로 일정표 14:30을 잠정 경계로만 쓴다. 실제 시작·발표자·슬라이드 시각의 증거가 아니다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        },
+        "end": {
+          "boundaryIndex": 6,
+          "t": 8220,
+          "status": "scheduled-only",
+          "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+          "scheduleText": "14:50~15:10",
+          "scheduledClock": "14:50:00",
+          "context": [
+            {
+              "source": "plaud-1#2138",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:56:51,450",
+              "originalT1": "02:13:18,030",
+              "t0": 7011.45,
+              "t1": 7998.03,
+              "text": " 하려고 합니다."
+            },
+            {
+              "source": "plaud-1#2139",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "02:13:18,030",
+              "originalT1": "02:23:09,600",
+              "t0": 7998.03,
+              "t1": 8589.6,
+              "text": " 와"
+            },
+            {
+              "source": "plaud-1#2140",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "02:23:09,600",
+              "originalT1": "02:23:09,700",
+              "t0": 8589.6,
+              "t1": 8589.7,
+              "text": " 블로그"
+            },
+            {
+              "source": "plaud-1#2141",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "02:23:09,600",
+              "originalT1": "02:37:36,080",
+              "t0": 8589.6,
+              "t1": 9456.08,
+              "text": " 알겠습니다."
+            }
+          ],
+          "policy": "관점킹 강연 전환을 확인할 분해된 전사가 없다. 7998.03..8589.60의 한 행이 이 경계를 가로지르므로 일정표 14:50을 잠정 경계로만 쓴다. 실제 시작·발표자·슬라이드 시각의 증거가 아니다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        }
+      },
+      "confidence": "provisional-scheduled-boundary",
+      "verification": {
+        "audio": "not-performed-source-audio-unavailable",
+        "slideTiming": "not-verified",
+        "scope": "SRT 문맥·입력 일정표·추출된 책갈피만 대조. 강연 블록은 연속 구간 분류이며 전사 완전성이나 페이지 동시성을 보장하지 않는다."
+      },
+      "speakerIdentification": "input-bookmark-order-only; no-distinct-speaker-introduction-in-supplied-SRT",
+      "titleEvidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "method": "OCR-program-title-preserved; speaker-association-by-bookmark-order"
+      },
+      "sourceRowsByStart": 1,
+      "boundaryStraddlingSources": [
+        "plaud-1#2139"
+      ],
+      "coarseSourcesOver30Seconds": [
+        "plaud-1#2139"
+      ]
+    },
+    {
+      "id": "06",
+      "kind": "lecture",
+      "title": "주식 초보자인 '나 어떻게 하면 잘할 수 있을까?",
+      "speaker": "관점킹",
+      "t0": 8220,
+      "t1": 9420,
+      "clockStart": "14:50:00",
+      "clockEnd": "15:10:00",
+      "scheduled": {
+        "t0": 8220,
+        "t1": 9420,
+        "clockStart": "14:50:00",
+        "clockEnd": "15:10:00",
+        "status": "printed-page1-ocr-schedule",
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "text": "14:50~15:10"
+      },
+      "boundaryEvidence": {
+        "start": {
+          "boundaryIndex": 6,
+          "t": 8220,
+          "status": "scheduled-only",
+          "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+          "scheduleText": "14:50~15:10",
+          "scheduledClock": "14:50:00",
+          "context": [
+            {
+              "source": "plaud-1#2138",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "01:56:51,450",
+              "originalT1": "02:13:18,030",
+              "t0": 7011.45,
+              "t1": 7998.03,
+              "text": " 하려고 합니다."
+            },
+            {
+              "source": "plaud-1#2139",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "02:13:18,030",
+              "originalT1": "02:23:09,600",
+              "t0": 7998.03,
+              "t1": 8589.6,
+              "text": " 와"
+            },
+            {
+              "source": "plaud-1#2140",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "02:23:09,600",
+              "originalT1": "02:23:09,700",
+              "t0": 8589.6,
+              "t1": 8589.7,
+              "text": " 블로그"
+            },
+            {
+              "source": "plaud-1#2141",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "02:23:09,600",
+              "originalT1": "02:37:36,080",
+              "t0": 8589.6,
+              "t1": 9456.08,
+              "text": " 알겠습니다."
+            }
+          ],
+          "policy": "관점킹 강연 전환을 확인할 분해된 전사가 없다. 7998.03..8589.60의 한 행이 이 경계를 가로지르므로 일정표 14:50을 잠정 경계로만 쓴다. 실제 시작·발표자·슬라이드 시각의 증거가 아니다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        },
+        "end": {
+          "boundaryIndex": 7,
+          "t": 9420,
+          "status": "scheduled-only",
+          "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+          "scheduleText": "15:10~15:35",
+          "scheduledClock": "15:10:00",
+          "context": [
+            {
+              "source": "plaud-1#2141",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "02:23:09,600",
+              "originalT1": "02:37:36,080",
+              "t0": 8589.6,
+              "t1": 9456.08,
+              "text": " 알겠습니다."
+            },
+            {
+              "source": "plaud-1#2142",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "02:37:36,080",
+              "originalT1": "02:37:37,040",
+              "t0": 9456.08,
+              "t1": 9457.04,
+              "text": " 고객센터"
+            },
+            {
+              "source": "plaud-1#2149",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "02:37:43,270",
+              "originalT1": "02:37:45,280",
+              "t0": 9463.27,
+              "t1": 9465.28,
+              "text": " 위험 분석을"
+            },
+            {
+              "source": "plaud-1#2153",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "02:37:52,740",
+              "originalT1": "02:37:56,750",
+              "t0": 9472.74,
+              "t1": 9476.75,
+              "text": " 리포트 작성의 이유"
+            },
+            {
+              "source": "plaud-1#2183",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "02:39:15,180",
+              "originalT1": "02:39:38,990",
+              "t0": 9555.18,
+              "t1": 9578.99,
+              "text": " 여러분의 동기루트입니다."
+            },
+            {
+              "source": "plaud-1#3195",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:00:29,460",
+              "originalT1": "03:00:30,460",
+              "t0": 10829.46,
+              "t1": 10830.46,
+              "text": " 지금까지 루틴이었습니다"
+            }
+          ],
+          "policy": "루틴의 종료 자기소개는 존재하지만 시작 소개는 확인되지 않는다. 8589.60..9456.08의 한 행이 경계를 가로지르므로 일정표 15:10을 잠정 경계로만 쓴다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        }
+      },
+      "confidence": "provisional-scheduled-boundary",
+      "verification": {
+        "audio": "not-performed-source-audio-unavailable",
+        "slideTiming": "not-verified",
+        "scope": "SRT 문맥·입력 일정표·추출된 책갈피만 대조. 강연 블록은 연속 구간 분류이며 전사 완전성이나 페이지 동시성을 보장하지 않는다."
+      },
+      "speakerIdentification": "input-bookmark-order-only; no-distinct-speaker-introduction-in-supplied-SRT",
+      "titleEvidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "method": "OCR-program-title-preserved; speaker-association-by-bookmark-order"
+      },
+      "sourceRowsByStart": 2,
+      "boundaryStraddlingSources": [
+        "plaud-1#2141"
+      ],
+      "coarseSourcesOver30Seconds": [
+        "plaud-1#2141"
+      ]
+    },
+    {
+      "id": "07",
+      "kind": "lecture",
+      "title": "\"기업분석\" 잘하려고 하지 말고 일단써보세요",
+      "speaker": "루틴",
+      "t0": 9420,
+      "t1": 10868.02,
+      "clockStart": "15:10:00",
+      "clockEnd": "15:34:08.02",
+      "scheduled": {
+        "t0": 9420,
+        "t1": 10920,
+        "clockStart": "15:10:00",
+        "clockEnd": "15:35:00",
+        "status": "printed-page1-ocr-schedule",
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "text": "15:10~15:35"
+      },
+      "boundaryEvidence": {
+        "start": {
+          "boundaryIndex": 7,
+          "t": 9420,
+          "status": "scheduled-only",
+          "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+          "scheduleText": "15:10~15:35",
+          "scheduledClock": "15:10:00",
+          "context": [
+            {
+              "source": "plaud-1#2141",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "02:23:09,600",
+              "originalT1": "02:37:36,080",
+              "t0": 8589.6,
+              "t1": 9456.08,
+              "text": " 알겠습니다."
+            },
+            {
+              "source": "plaud-1#2142",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "02:37:36,080",
+              "originalT1": "02:37:37,040",
+              "t0": 9456.08,
+              "t1": 9457.04,
+              "text": " 고객센터"
+            },
+            {
+              "source": "plaud-1#2149",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "02:37:43,270",
+              "originalT1": "02:37:45,280",
+              "t0": 9463.27,
+              "t1": 9465.28,
+              "text": " 위험 분석을"
+            },
+            {
+              "source": "plaud-1#2153",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "02:37:52,740",
+              "originalT1": "02:37:56,750",
+              "t0": 9472.74,
+              "t1": 9476.75,
+              "text": " 리포트 작성의 이유"
+            },
+            {
+              "source": "plaud-1#2183",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "02:39:15,180",
+              "originalT1": "02:39:38,990",
+              "t0": 9555.18,
+              "t1": 9578.99,
+              "text": " 여러분의 동기루트입니다."
+            },
+            {
+              "source": "plaud-1#3195",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:00:29,460",
+              "originalT1": "03:00:30,460",
+              "t0": 10829.46,
+              "t1": 10830.46,
+              "text": " 지금까지 루틴이었습니다"
+            }
+          ],
+          "policy": "루틴의 종료 자기소개는 존재하지만 시작 소개는 확인되지 않는다. 8589.60..9456.08의 한 행이 경계를 가로지르므로 일정표 15:10을 잠정 경계로만 쓴다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        },
+        "end": {
+          "boundaryIndex": 8,
+          "t": 10868.02,
+          "status": "transcript-anchored",
+          "source": "plaud-1#3223",
+          "anchor": {
+            "source": "plaud-1#3223",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "03:01:08,020",
+            "originalT1": "03:01:10,110",
+            "t0": 10868.02,
+            "t1": 10870.11,
+            "text": " 다음 강의입니다"
+          },
+          "context": [
+            {
+              "source": "plaud-1#3195",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:00:29,460",
+              "originalT1": "03:00:30,460",
+              "t0": 10829.46,
+              "t1": 10830.46,
+              "text": " 지금까지 루틴이었습니다"
+            },
+            {
+              "source": "plaud-1#3196",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:00:30,460",
+              "originalT1": "03:00:31,460",
+              "t0": 10830.46,
+              "t1": 10831.46,
+              "text": " 감사합니다"
+            },
+            {
+              "source": "plaud-1#3197",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:00:35,020",
+              "originalT1": "03:00:36,020",
+              "t0": 10835.02,
+              "t1": 10836.02,
+              "text": " 루틴 멘토님 강의까지"
+            },
+            {
+              "source": "plaud-1#3229",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:01:19,250",
+              "originalT1": "03:01:20,240",
+              "t0": 10879.25,
+              "t1": 10880.24,
+              "text": " 테마"
+            },
+            {
+              "source": "plaud-1#3230",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:01:20,240",
+              "originalT1": "03:01:22,240",
+              "t0": 10880.24,
+              "t1": 10882.24,
+              "text": " 누구나 할 수 있는가"
+            },
+            {
+              "source": "plaud-1#3231",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:01:22,240",
+              "originalT1": "03:01:24,270",
+              "t0": 10882.24,
+              "t1": 10884.27,
+              "text": " 그리고 어떻게 공부해야 하는가"
+            },
+            {
+              "source": "plaud-1#3233",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:01:26,360",
+              "originalT1": "03:01:27,360",
+              "t0": 10886.36,
+              "t1": 10887.36,
+              "text": " 다마고치 멘토"
+            },
+            {
+              "source": "plaud-1#3234",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:01:27,360",
+              "originalT1": "03:01:28,360",
+              "t0": 10887.36,
+              "t1": 10888.36,
+              "text": " 각종으로 모시겠습니다"
+            },
+            {
+              "source": "plaud-1#3239",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:01:48,400",
+              "originalT1": "03:01:49,400",
+              "t0": 10908.4,
+              "t1": 10909.4,
+              "text": " 다마고치입니다"
+            }
+          ],
+          "policy": "진행자의 다음 강연 소개가 시작되는 원본 SRT 행의 t0를 강연 블록 경계로 채택한다. 발표자 첫 발화나 슬라이드 등장 시각을 뜻하지 않는다. SRT 텍스트만 대조했으며 오디오 검증은 하지 않았다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        }
+      },
+      "confidence": "provisional-scheduled-boundary",
+      "verification": {
+        "audio": "not-performed-source-audio-unavailable",
+        "slideTiming": "not-verified",
+        "scope": "SRT 문맥·입력 일정표·추출된 책갈피만 대조. 강연 블록은 연속 구간 분류이며 전사 완전성이나 페이지 동시성을 보장하지 않는다."
+      },
+      "speakerIdentification": "closing-self-identification-plaud-1#3195; start-not-transcript-anchored",
+      "titleEvidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "method": "OCR-program-title-preserved; speaker-association-by-bookmark-order"
+      },
+      "sourceRowsByStart": 1081,
+      "boundaryStraddlingSources": [],
+      "coarseSourcesOver30Seconds": []
+    },
+    {
+      "id": "08",
+      "kind": "lecture",
+      "title": "테마, 누구나 할 수 있는가? 그리고 어떻게 공부해야하는가?",
+      "speaker": "다마고치",
+      "t0": 10868.02,
+      "t1": 12104.01,
+      "clockStart": "15:34:08.02",
+      "clockEnd": "15:54:44.01",
+      "scheduled": {
+        "t0": 10920,
+        "t1": 12120,
+        "clockStart": "15:35:00",
+        "clockEnd": "15:55:00",
+        "status": "printed-page1-ocr-schedule",
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "text": "15:35~15:55"
+      },
+      "boundaryEvidence": {
+        "start": {
+          "boundaryIndex": 8,
+          "t": 10868.02,
+          "status": "transcript-anchored",
+          "source": "plaud-1#3223",
+          "anchor": {
+            "source": "plaud-1#3223",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "03:01:08,020",
+            "originalT1": "03:01:10,110",
+            "t0": 10868.02,
+            "t1": 10870.11,
+            "text": " 다음 강의입니다"
+          },
+          "context": [
+            {
+              "source": "plaud-1#3195",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:00:29,460",
+              "originalT1": "03:00:30,460",
+              "t0": 10829.46,
+              "t1": 10830.46,
+              "text": " 지금까지 루틴이었습니다"
+            },
+            {
+              "source": "plaud-1#3196",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:00:30,460",
+              "originalT1": "03:00:31,460",
+              "t0": 10830.46,
+              "t1": 10831.46,
+              "text": " 감사합니다"
+            },
+            {
+              "source": "plaud-1#3197",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:00:35,020",
+              "originalT1": "03:00:36,020",
+              "t0": 10835.02,
+              "t1": 10836.02,
+              "text": " 루틴 멘토님 강의까지"
+            },
+            {
+              "source": "plaud-1#3229",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:01:19,250",
+              "originalT1": "03:01:20,240",
+              "t0": 10879.25,
+              "t1": 10880.24,
+              "text": " 테마"
+            },
+            {
+              "source": "plaud-1#3230",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:01:20,240",
+              "originalT1": "03:01:22,240",
+              "t0": 10880.24,
+              "t1": 10882.24,
+              "text": " 누구나 할 수 있는가"
+            },
+            {
+              "source": "plaud-1#3231",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:01:22,240",
+              "originalT1": "03:01:24,270",
+              "t0": 10882.24,
+              "t1": 10884.27,
+              "text": " 그리고 어떻게 공부해야 하는가"
+            },
+            {
+              "source": "plaud-1#3233",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:01:26,360",
+              "originalT1": "03:01:27,360",
+              "t0": 10886.36,
+              "t1": 10887.36,
+              "text": " 다마고치 멘토"
+            },
+            {
+              "source": "plaud-1#3234",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:01:27,360",
+              "originalT1": "03:01:28,360",
+              "t0": 10887.36,
+              "t1": 10888.36,
+              "text": " 각종으로 모시겠습니다"
+            },
+            {
+              "source": "plaud-1#3239",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:01:48,400",
+              "originalT1": "03:01:49,400",
+              "t0": 10908.4,
+              "t1": 10909.4,
+              "text": " 다마고치입니다"
+            }
+          ],
+          "policy": "진행자의 다음 강연 소개가 시작되는 원본 SRT 행의 t0를 강연 블록 경계로 채택한다. 발표자 첫 발화나 슬라이드 등장 시각을 뜻하지 않는다. SRT 텍스트만 대조했으며 오디오 검증은 하지 않았다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        },
+        "end": {
+          "boundaryIndex": 9,
+          "t": 12104.01,
+          "status": "transcript-anchored",
+          "source": "plaud-1#4282",
+          "anchor": {
+            "source": "plaud-1#4282",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "03:21:44,010",
+            "originalT1": "03:21:45,010",
+            "t0": 12104.01,
+            "t1": 12105.01,
+            "text": " 저희 이제"
+          },
+          "context": [
+            {
+              "source": "plaud-1#4277",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:21:36,120",
+              "originalT1": "03:21:37,120",
+              "t0": 12096.12,
+              "t1": 12097.12,
+              "text": " 감사합니다"
+            },
+            {
+              "source": "plaud-1#4278",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:21:37,120",
+              "originalT1": "03:21:39,120",
+              "t0": 12097.12,
+              "t1": 12099.12,
+              "text": " 감사합니다"
+            },
+            {
+              "source": "plaud-1#4279",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:21:39,120",
+              "originalT1": "03:21:42,010",
+              "t0": 12099.12,
+              "t1": 12102.01,
+              "text": " 가마고씨 멤버님"
+            },
+            {
+              "source": "plaud-1#4281",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:21:43,010",
+              "originalT1": "03:21:44,010",
+              "t0": 12103.01,
+              "t1": 12104.01,
+              "text": " 잘 들었습니다"
+            },
+            {
+              "source": "plaud-1#4283",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:21:45,010",
+              "originalT1": "03:21:46,010",
+              "t0": 12105.01,
+              "t1": 12106.01,
+              "text": " 휴식 시간을"
+            },
+            {
+              "source": "plaud-1#4284",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:21:46,010",
+              "originalT1": "03:21:47,010",
+              "t0": 12106.01,
+              "t1": 12107.01,
+              "text": " 갖도록 하겠습니다"
+            },
+            {
+              "source": "plaud-1#4285",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:21:47,010",
+              "originalT1": "03:21:48,010",
+              "t0": 12107.01,
+              "t1": 12108.01,
+              "text": " 두 번째 휴식은"
+            },
+            {
+              "source": "plaud-1#4286",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:21:48,010",
+              "originalT1": "03:21:49,010",
+              "t0": 12108.01,
+              "t1": 12109.01,
+              "text": " 15분"
+            }
+          ],
+          "policy": "두 번째 휴식 15분을 안내하는 문장의 시작을 휴식 블록 경계로 채택한다. 발표 종료의 감사 발화와 진행자 평가를 앞 강연 블록에 둔다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        }
+      },
+      "confidence": "transcript-boundary-evidence-only",
+      "verification": {
+        "audio": "not-performed-source-audio-unavailable",
+        "slideTiming": "not-verified",
+        "scope": "SRT 문맥·입력 일정표·추출된 책갈피만 대조. 강연 블록은 연속 구간 분류이며 전사 완전성이나 페이지 동시성을 보장하지 않는다."
+      },
+      "titleEvidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "method": "OCR-program-title-preserved; speaker-association-by-bookmark-order"
+      },
+      "sourceRowsByStart": 1059,
+      "boundaryStraddlingSources": [],
+      "coarseSourcesOver30Seconds": []
+    },
+    {
+      "id": "09",
+      "kind": "break",
+      "title": "두 번째 휴식",
+      "speaker": null,
+      "t0": 12104.01,
+      "t1": 12936.63,
+      "clockStart": "15:54:44.01",
+      "clockEnd": "16:08:36.63",
+      "scheduled": {
+        "t0": 12120,
+        "t1": 13020,
+        "clockStart": "15:55:00",
+        "clockEnd": "16:10:00",
+        "status": "printed-page1-ocr-schedule",
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "text": "15:55~16:10"
+      },
+      "boundaryEvidence": {
+        "start": {
+          "boundaryIndex": 9,
+          "t": 12104.01,
+          "status": "transcript-anchored",
+          "source": "plaud-1#4282",
+          "anchor": {
+            "source": "plaud-1#4282",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "03:21:44,010",
+            "originalT1": "03:21:45,010",
+            "t0": 12104.01,
+            "t1": 12105.01,
+            "text": " 저희 이제"
+          },
+          "context": [
+            {
+              "source": "plaud-1#4277",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:21:36,120",
+              "originalT1": "03:21:37,120",
+              "t0": 12096.12,
+              "t1": 12097.12,
+              "text": " 감사합니다"
+            },
+            {
+              "source": "plaud-1#4278",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:21:37,120",
+              "originalT1": "03:21:39,120",
+              "t0": 12097.12,
+              "t1": 12099.12,
+              "text": " 감사합니다"
+            },
+            {
+              "source": "plaud-1#4279",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:21:39,120",
+              "originalT1": "03:21:42,010",
+              "t0": 12099.12,
+              "t1": 12102.01,
+              "text": " 가마고씨 멤버님"
+            },
+            {
+              "source": "plaud-1#4281",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:21:43,010",
+              "originalT1": "03:21:44,010",
+              "t0": 12103.01,
+              "t1": 12104.01,
+              "text": " 잘 들었습니다"
+            },
+            {
+              "source": "plaud-1#4283",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:21:45,010",
+              "originalT1": "03:21:46,010",
+              "t0": 12105.01,
+              "t1": 12106.01,
+              "text": " 휴식 시간을"
+            },
+            {
+              "source": "plaud-1#4284",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:21:46,010",
+              "originalT1": "03:21:47,010",
+              "t0": 12106.01,
+              "t1": 12107.01,
+              "text": " 갖도록 하겠습니다"
+            },
+            {
+              "source": "plaud-1#4285",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:21:47,010",
+              "originalT1": "03:21:48,010",
+              "t0": 12107.01,
+              "t1": 12108.01,
+              "text": " 두 번째 휴식은"
+            },
+            {
+              "source": "plaud-1#4286",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:21:48,010",
+              "originalT1": "03:21:49,010",
+              "t0": 12108.01,
+              "t1": 12109.01,
+              "text": " 15분"
+            }
+          ],
+          "policy": "두 번째 휴식 15분을 안내하는 문장의 시작을 휴식 블록 경계로 채택한다. 발표 종료의 감사 발화와 진행자 평가를 앞 강연 블록에 둔다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        },
+        "end": {
+          "boundaryIndex": 10,
+          "t": 12936.63,
+          "status": "transcript-anchored",
+          "source": "plaud-1#4311",
+          "anchor": {
+            "source": "plaud-1#4311",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "03:35:36,630",
+            "originalT1": "03:35:38,630",
+            "t0": 12936.63,
+            "t1": 12938.63,
+            "text": " 강연 바로 진행하도록 하겠습니다"
+          },
+          "context": [
+            {
+              "source": "plaud-1#4306",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:22:27,900",
+              "originalT1": "03:34:11,790",
+              "t0": 12147.9,
+              "t1": 12851.79,
+              "text": " 다음 강연이 곧 시작될 예정입니다"
+            },
+            {
+              "source": "plaud-1#4307",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:34:11,790",
+              "originalT1": "03:34:13,790",
+              "t0": 12851.79,
+              "t1": 12853.79,
+              "text": " 외부에 계신 분들은"
+            },
+            {
+              "source": "plaud-1#4308",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:34:13,790",
+              "originalT1": "03:34:15,790",
+              "t0": 12853.79,
+              "t1": 12855.79,
+              "text": " 내부로 입장하셔서"
+            },
+            {
+              "source": "plaud-1#4310",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:34:16,700",
+              "originalT1": "03:35:36,630",
+              "t0": 12856.7,
+              "t1": 12936.63,
+              "text": " 세 번째 섹션"
+            },
+            {
+              "source": "plaud-1#4312",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:35:38,630",
+              "originalT1": "03:35:46,380",
+              "t0": 12938.63,
+              "t1": 12946.38,
+              "text": " 어떻게 시작될까"
+            },
+            {
+              "source": "plaud-1#4315",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:35:48,740",
+              "originalT1": "03:35:50,910",
+              "t0": 12948.74,
+              "t1": 12950.91,
+              "text": " 스토멘토 모시겠습니다"
+            },
+            {
+              "source": "plaud-1#4317",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:35:51,910",
+              "originalT1": "03:38:09,140",
+              "t0": 12951.91,
+              "t1": 13089.14,
+              "text": " 사이클에 와있는데"
+            },
+            {
+              "source": "plaud-1#4321",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:38:15,320",
+              "originalT1": "03:38:16,320",
+              "t0": 13095.32,
+              "t1": 13096.32,
+              "text": " 비트코인의"
+            },
+            {
+              "source": "plaud-1#4322",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:38:16,320",
+              "originalT1": "03:38:17,320",
+              "t0": 13096.32,
+              "t1": 13097.32,
+              "text": " 신규 발행에"
+            },
+            {
+              "source": "plaud-1#4323",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:38:17,320",
+              "originalT1": "03:38:18,320",
+              "t0": 13097.32,
+              "t1": 13098.32,
+              "text": " 감소가 되는 걸"
+            }
+          ],
+          "policy": "진행자의 다음 강연 소개가 시작되는 원본 SRT 행의 t0를 강연 블록 경계로 채택한다. 발표자 첫 발화나 슬라이드 등장 시각을 뜻하지 않는다. SRT 텍스트만 대조했으며 오디오 검증은 하지 않았다. 크립토라는 정확한 이름은 이 소개 ASR에서 확인되지 않는다. 강연 순서와 이어지는 비트코인 신규 발행 내용이 크립토 블록 식별의 근거이며, 137.23초인 #4317은 페이지 매핑에서 제외한다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        }
+      },
+      "confidence": "transcript-boundary-evidence-only",
+      "verification": {
+        "audio": "not-performed-source-audio-unavailable",
+        "slideTiming": "not-verified",
+        "scope": "SRT 문맥·입력 일정표·추출된 책갈피만 대조. 강연 블록은 연속 구간 분류이며 전사 완전성이나 페이지 동시성을 보장하지 않는다."
+      },
+      "sourceRowsByStart": 29,
+      "boundaryStraddlingSources": [],
+      "coarseSourcesOver30Seconds": [
+        "plaud-1#4306",
+        "plaud-1#4310"
+      ]
+    },
+    {
+      "id": "10",
+      "kind": "lecture",
+      "title": "비트코인의 싸이클, 언제 시작될까?",
+      "speaker": "크립토",
+      "t0": 12936.63,
+      "t1": 14385.72,
+      "clockStart": "16:08:36.63",
+      "clockEnd": "16:32:45.72",
+      "scheduled": {
+        "t0": 13020,
+        "t1": 14220,
+        "clockStart": "16:10:00",
+        "clockEnd": "16:30:00",
+        "status": "printed-page1-ocr-schedule",
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "text": "16:10~16:30"
+      },
+      "boundaryEvidence": {
+        "start": {
+          "boundaryIndex": 10,
+          "t": 12936.63,
+          "status": "transcript-anchored",
+          "source": "plaud-1#4311",
+          "anchor": {
+            "source": "plaud-1#4311",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "03:35:36,630",
+            "originalT1": "03:35:38,630",
+            "t0": 12936.63,
+            "t1": 12938.63,
+            "text": " 강연 바로 진행하도록 하겠습니다"
+          },
+          "context": [
+            {
+              "source": "plaud-1#4306",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:22:27,900",
+              "originalT1": "03:34:11,790",
+              "t0": 12147.9,
+              "t1": 12851.79,
+              "text": " 다음 강연이 곧 시작될 예정입니다"
+            },
+            {
+              "source": "plaud-1#4307",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:34:11,790",
+              "originalT1": "03:34:13,790",
+              "t0": 12851.79,
+              "t1": 12853.79,
+              "text": " 외부에 계신 분들은"
+            },
+            {
+              "source": "plaud-1#4308",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:34:13,790",
+              "originalT1": "03:34:15,790",
+              "t0": 12853.79,
+              "t1": 12855.79,
+              "text": " 내부로 입장하셔서"
+            },
+            {
+              "source": "plaud-1#4310",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:34:16,700",
+              "originalT1": "03:35:36,630",
+              "t0": 12856.7,
+              "t1": 12936.63,
+              "text": " 세 번째 섹션"
+            },
+            {
+              "source": "plaud-1#4312",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:35:38,630",
+              "originalT1": "03:35:46,380",
+              "t0": 12938.63,
+              "t1": 12946.38,
+              "text": " 어떻게 시작될까"
+            },
+            {
+              "source": "plaud-1#4315",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:35:48,740",
+              "originalT1": "03:35:50,910",
+              "t0": 12948.74,
+              "t1": 12950.91,
+              "text": " 스토멘토 모시겠습니다"
+            },
+            {
+              "source": "plaud-1#4317",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:35:51,910",
+              "originalT1": "03:38:09,140",
+              "t0": 12951.91,
+              "t1": 13089.14,
+              "text": " 사이클에 와있는데"
+            },
+            {
+              "source": "plaud-1#4321",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:38:15,320",
+              "originalT1": "03:38:16,320",
+              "t0": 13095.32,
+              "t1": 13096.32,
+              "text": " 비트코인의"
+            },
+            {
+              "source": "plaud-1#4322",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:38:16,320",
+              "originalT1": "03:38:17,320",
+              "t0": 13096.32,
+              "t1": 13097.32,
+              "text": " 신규 발행에"
+            },
+            {
+              "source": "plaud-1#4323",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:38:17,320",
+              "originalT1": "03:38:18,320",
+              "t0": 13097.32,
+              "t1": 13098.32,
+              "text": " 감소가 되는 걸"
+            }
+          ],
+          "policy": "진행자의 다음 강연 소개가 시작되는 원본 SRT 행의 t0를 강연 블록 경계로 채택한다. 발표자 첫 발화나 슬라이드 등장 시각을 뜻하지 않는다. SRT 텍스트만 대조했으며 오디오 검증은 하지 않았다. 크립토라는 정확한 이름은 이 소개 ASR에서 확인되지 않는다. 강연 순서와 이어지는 비트코인 신규 발행 내용이 크립토 블록 식별의 근거이며, 137.23초인 #4317은 페이지 매핑에서 제외한다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        },
+        "end": {
+          "boundaryIndex": 11,
+          "t": 14385.72,
+          "status": "transcript-anchored",
+          "source": "plaud-1#5394",
+          "anchor": {
+            "source": "plaud-1#5394",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "03:59:45,720",
+            "originalT1": "03:59:46,710",
+            "t0": 14385.72,
+            "t1": 14386.71,
+            "text": " 그래서 아홉 번째"
+          },
+          "context": [
+            {
+              "source": "plaud-1#5395",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:59:46,710",
+              "originalT1": "03:59:47,710",
+              "t0": 14386.71,
+              "t1": 14387.71,
+              "text": " 강연입니다"
+            },
+            {
+              "source": "plaud-1#5397",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:59:47,710",
+              "originalT1": "03:59:48,710",
+              "t0": 14387.71,
+              "t1": 14388.71,
+              "text": " 직장인 공모주 청약"
+            },
+            {
+              "source": "plaud-1#5399",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:59:50,710",
+              "originalT1": "03:59:52,710",
+              "t0": 14390.71,
+              "t1": 14392.71,
+              "text": " 더하기를 만드는 방법"
+            },
+            {
+              "source": "plaud-1#5401",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:59:54,710",
+              "originalT1": "03:59:56,840",
+              "t0": 14394.71,
+              "t1": 14396.84,
+              "text": " 저희 청약 노트 멘토 모시겠습니다"
+            },
+            {
+              "source": "plaud-1#5403",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:59:58,840",
+              "originalT1": "04:00:09,240",
+              "t0": 14398.84,
+              "t1": 14409.24,
+              "text": " 안녕하십니까"
+            },
+            {
+              "source": "plaud-1#5406",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:00:13,300",
+              "originalT1": "04:00:14,300",
+              "t0": 14413.3,
+              "t1": 14414.3,
+              "text": " 청약 노트입니다"
+            }
+          ],
+          "policy": "진행자의 다음 강연 소개가 시작되는 원본 SRT 행의 t0를 강연 블록 경계로 채택한다. 발표자 첫 발화나 슬라이드 등장 시각을 뜻하지 않는다. SRT 텍스트만 대조했으며 오디오 검증은 하지 않았다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        }
+      },
+      "confidence": "transcript-boundary-evidence-only",
+      "verification": {
+        "audio": "not-performed-source-audio-unavailable",
+        "slideTiming": "not-verified",
+        "scope": "SRT 문맥·입력 일정표·추출된 책갈피만 대조. 강연 블록은 연속 구간 분류이며 전사 완전성이나 페이지 동시성을 보장하지 않는다."
+      },
+      "speakerIdentification": "input-bookmark-order-and-bitcoin-content; introduction-name-ASR-garbled",
+      "titleEvidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "method": "OCR-program-title-preserved; speaker-association-by-bookmark-order"
+      },
+      "sourceRowsByStart": 1083,
+      "boundaryStraddlingSources": [],
+      "coarseSourcesOver30Seconds": [
+        "plaud-1#4317"
+      ]
+    },
+    {
+      "id": "11",
+      "kind": "lecture",
+      "title": "직장인 공모주 청약, 월급에 '더하기'를 만드는 방법",
+      "speaker": "청약노트",
+      "t0": 14385.72,
+      "t1": 15519.39,
+      "clockStart": "16:32:45.72",
+      "clockEnd": "16:51:39.39",
+      "scheduled": {
+        "t0": 14220,
+        "t1": 15420,
+        "clockStart": "16:30:00",
+        "clockEnd": "16:50:00",
+        "status": "printed-page1-ocr-schedule",
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "text": "16:30~16:50"
+      },
+      "boundaryEvidence": {
+        "start": {
+          "boundaryIndex": 11,
+          "t": 14385.72,
+          "status": "transcript-anchored",
+          "source": "plaud-1#5394",
+          "anchor": {
+            "source": "plaud-1#5394",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "03:59:45,720",
+            "originalT1": "03:59:46,710",
+            "t0": 14385.72,
+            "t1": 14386.71,
+            "text": " 그래서 아홉 번째"
+          },
+          "context": [
+            {
+              "source": "plaud-1#5395",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:59:46,710",
+              "originalT1": "03:59:47,710",
+              "t0": 14386.71,
+              "t1": 14387.71,
+              "text": " 강연입니다"
+            },
+            {
+              "source": "plaud-1#5397",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:59:47,710",
+              "originalT1": "03:59:48,710",
+              "t0": 14387.71,
+              "t1": 14388.71,
+              "text": " 직장인 공모주 청약"
+            },
+            {
+              "source": "plaud-1#5399",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:59:50,710",
+              "originalT1": "03:59:52,710",
+              "t0": 14390.71,
+              "t1": 14392.71,
+              "text": " 더하기를 만드는 방법"
+            },
+            {
+              "source": "plaud-1#5401",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:59:54,710",
+              "originalT1": "03:59:56,840",
+              "t0": 14394.71,
+              "t1": 14396.84,
+              "text": " 저희 청약 노트 멘토 모시겠습니다"
+            },
+            {
+              "source": "plaud-1#5403",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "03:59:58,840",
+              "originalT1": "04:00:09,240",
+              "t0": 14398.84,
+              "t1": 14409.24,
+              "text": " 안녕하십니까"
+            },
+            {
+              "source": "plaud-1#5406",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:00:13,300",
+              "originalT1": "04:00:14,300",
+              "t0": 14413.3,
+              "t1": 14414.3,
+              "text": " 청약 노트입니다"
+            }
+          ],
+          "policy": "진행자의 다음 강연 소개가 시작되는 원본 SRT 행의 t0를 강연 블록 경계로 채택한다. 발표자 첫 발화나 슬라이드 등장 시각을 뜻하지 않는다. SRT 텍스트만 대조했으며 오디오 검증은 하지 않았다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        },
+        "end": {
+          "boundaryIndex": 12,
+          "t": 15519.39,
+          "status": "transcript-anchored",
+          "source": "plaud-1#6247",
+          "anchor": {
+            "source": "plaud-1#6247",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "04:18:39,390",
+            "originalT1": "04:18:40,390",
+            "t0": 15519.39,
+            "t1": 15520.39,
+            "text": " 다음 강의"
+          },
+          "context": [
+            {
+              "source": "plaud-1#6205",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:17:50,260",
+              "originalT1": "04:17:50,360",
+              "t0": 15470.26,
+              "t1": 15470.36,
+              "text": " 감사합니다"
+            },
+            {
+              "source": "plaud-1#6207",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:17:51,260",
+              "originalT1": "04:17:52,260",
+              "t0": 15471.26,
+              "t1": 15472.26,
+              "text": " 신현노스였습니다"
+            },
+            {
+              "source": "plaud-1#6209",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:17:55,120",
+              "originalT1": "04:17:57,120",
+              "t0": 15475.12,
+              "t1": 15477.12,
+              "text": " 청약노트 멘토님의"
+            },
+            {
+              "source": "plaud-1#6248",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:18:40,390",
+              "originalT1": "04:18:41,390",
+              "t0": 15520.39,
+              "t1": 15521.39,
+              "text": " 진행하겠습니다"
+            },
+            {
+              "source": "plaud-1#6249",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:18:41,390",
+              "originalT1": "04:18:43,390",
+              "t0": 15521.39,
+              "t1": 15523.39,
+              "text": " 벌써 열 번째"
+            },
+            {
+              "source": "plaud-1#6251",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:18:44,390",
+              "originalT1": "04:18:46,350",
+              "t0": 15524.39,
+              "t1": 15526.35,
+              "text": " 미국 증시를 읽는"
+            },
+            {
+              "source": "plaud-1#6256",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:18:50,310",
+              "originalT1": "04:18:51,310",
+              "t0": 15530.31,
+              "t1": 15531.31,
+              "text": " AI 투자 핵심 키워드"
+            },
+            {
+              "source": "plaud-1#6259",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:18:53,310",
+              "originalT1": "04:18:54,310",
+              "t0": 15533.31,
+              "t1": 15534.31,
+              "text": " 액박 멘토"
+            },
+            {
+              "source": "plaud-1#6263",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:19:08,220",
+              "originalT1": "04:19:09,150",
+              "t0": 15548.22,
+              "t1": 15549.15,
+              "text": " 액박입니다"
+            }
+          ],
+          "policy": "진행자의 다음 강연 소개가 시작되는 원본 SRT 행의 t0를 강연 블록 경계로 채택한다. 발표자 첫 발화나 슬라이드 등장 시각을 뜻하지 않는다. SRT 텍스트만 대조했으며 오디오 검증은 하지 않았다. ASR의 액박 표기는 덱 책갈피의 엑박과 구분해 원문 그대로 보존한다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        }
+      },
+      "confidence": "transcript-boundary-evidence-only",
+      "verification": {
+        "audio": "not-performed-source-audio-unavailable",
+        "slideTiming": "not-verified",
+        "scope": "SRT 문맥·입력 일정표·추출된 책갈피만 대조. 강연 블록은 연속 구간 분류이며 전사 완전성이나 페이지 동시성을 보장하지 않는다."
+      },
+      "titleEvidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "method": "OCR-program-title-preserved; speaker-association-by-bookmark-order"
+      },
+      "sourceRowsByStart": 853,
+      "boundaryStraddlingSources": [],
+      "coarseSourcesOver30Seconds": []
+    },
+    {
+      "id": "12",
+      "kind": "lecture",
+      "title": "미국 증시를 읽는 세 개의 축 그리고 2027 AI 투자 핵심 키워드",
+      "speaker": "엑박",
+      "t0": 15519.39,
+      "t1": 17956.51,
+      "clockStart": "16:51:39.39",
+      "clockEnd": "17:32:16.51",
+      "scheduled": {
+        "t0": 15420,
+        "t1": 17820,
+        "clockStart": "16:50:00",
+        "clockEnd": "17:30:00",
+        "status": "printed-page1-ocr-schedule",
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "text": "16:50~17:30"
+      },
+      "boundaryEvidence": {
+        "start": {
+          "boundaryIndex": 12,
+          "t": 15519.39,
+          "status": "transcript-anchored",
+          "source": "plaud-1#6247",
+          "anchor": {
+            "source": "plaud-1#6247",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "04:18:39,390",
+            "originalT1": "04:18:40,390",
+            "t0": 15519.39,
+            "t1": 15520.39,
+            "text": " 다음 강의"
+          },
+          "context": [
+            {
+              "source": "plaud-1#6205",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:17:50,260",
+              "originalT1": "04:17:50,360",
+              "t0": 15470.26,
+              "t1": 15470.36,
+              "text": " 감사합니다"
+            },
+            {
+              "source": "plaud-1#6207",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:17:51,260",
+              "originalT1": "04:17:52,260",
+              "t0": 15471.26,
+              "t1": 15472.26,
+              "text": " 신현노스였습니다"
+            },
+            {
+              "source": "plaud-1#6209",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:17:55,120",
+              "originalT1": "04:17:57,120",
+              "t0": 15475.12,
+              "t1": 15477.12,
+              "text": " 청약노트 멘토님의"
+            },
+            {
+              "source": "plaud-1#6248",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:18:40,390",
+              "originalT1": "04:18:41,390",
+              "t0": 15520.39,
+              "t1": 15521.39,
+              "text": " 진행하겠습니다"
+            },
+            {
+              "source": "plaud-1#6249",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:18:41,390",
+              "originalT1": "04:18:43,390",
+              "t0": 15521.39,
+              "t1": 15523.39,
+              "text": " 벌써 열 번째"
+            },
+            {
+              "source": "plaud-1#6251",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:18:44,390",
+              "originalT1": "04:18:46,350",
+              "t0": 15524.39,
+              "t1": 15526.35,
+              "text": " 미국 증시를 읽는"
+            },
+            {
+              "source": "plaud-1#6256",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:18:50,310",
+              "originalT1": "04:18:51,310",
+              "t0": 15530.31,
+              "t1": 15531.31,
+              "text": " AI 투자 핵심 키워드"
+            },
+            {
+              "source": "plaud-1#6259",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:18:53,310",
+              "originalT1": "04:18:54,310",
+              "t0": 15533.31,
+              "t1": 15534.31,
+              "text": " 액박 멘토"
+            },
+            {
+              "source": "plaud-1#6263",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:19:08,220",
+              "originalT1": "04:19:09,150",
+              "t0": 15548.22,
+              "t1": 15549.15,
+              "text": " 액박입니다"
+            }
+          ],
+          "policy": "진행자의 다음 강연 소개가 시작되는 원본 SRT 행의 t0를 강연 블록 경계로 채택한다. 발표자 첫 발화나 슬라이드 등장 시각을 뜻하지 않는다. SRT 텍스트만 대조했으며 오디오 검증은 하지 않았다. ASR의 액박 표기는 덱 책갈피의 엑박과 구분해 원문 그대로 보존한다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        },
+        "end": {
+          "boundaryIndex": 13,
+          "t": 17956.51,
+          "status": "transcript-anchored",
+          "source": "plaud-1#7982",
+          "anchor": {
+            "source": "plaud-1#7982",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "04:59:16,510",
+            "originalT1": "04:59:17,830",
+            "t0": 17956.51,
+            "t1": 17957.83,
+            "text": " 마지막 강연입니다"
+          },
+          "context": [
+            {
+              "source": "plaud-1#7969",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:58:57,930",
+              "originalT1": "04:58:58,930",
+              "t0": 17937.93,
+              "t1": 17938.93,
+              "text": " 네 감사합니다"
+            },
+            {
+              "source": "plaud-1#7984",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:59:19,830",
+              "originalT1": "04:59:20,830",
+              "t0": 17959.83,
+              "t1": 17960.83,
+              "text": " 저희 풀스포 대표님의"
+            },
+            {
+              "source": "plaud-1#7986",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:59:21,830",
+              "originalT1": "04:59:22,830",
+              "t0": 17961.83,
+              "t1": 17962.83,
+              "text": " 메타인지와"
+            },
+            {
+              "source": "plaud-1#7987",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:59:22,830",
+              "originalT1": "04:59:23,830",
+              "t0": 17962.83,
+              "t1": 17963.83,
+              "text": " 일치 않는 매매"
+            },
+            {
+              "source": "plaud-1#7989",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:59:24,830",
+              "originalT1": "04:59:25,830",
+              "t0": 17964.83,
+              "t1": 17965.83,
+              "text": " 삼플레"
+            },
+            {
+              "source": "plaud-1#7993",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:59:27,830",
+              "originalT1": "04:59:29,830",
+              "t0": 17967.83,
+              "t1": 17969.83,
+              "text": " 무대 위로 모시겠습니다"
+            },
+            {
+              "source": "plaud-1#7994",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:59:29,830",
+              "originalT1": "04:59:30,830",
+              "t0": 17969.83,
+              "t1": 17970.83,
+              "text": " 큰 박수 부탁드리겠습니다"
+            },
+            {
+              "source": "plaud-2#1",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:00:25,630",
+              "originalT1": "00:00:58,760",
+              "t0": 18025.63,
+              "t1": 18058.76,
+              "text": " 지금 버전으로 갈께. 안녕, 니들아 형이야."
+            }
+          ],
+          "policy": "진행자의 다음 강연 소개가 시작되는 원본 SRT 행의 t0를 강연 블록 경계로 채택한다. 발표자 첫 발화나 슬라이드 등장 시각을 뜻하지 않는다. SRT 텍스트만 대조했으며 오디오 검증은 하지 않았다. 17970.83..18025.63에는 SRT 행이 없다. 다음 파일의 t0/t1에는 18000초를 더하며, 공백을 인위적 자막으로 채우지 않는다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        }
+      },
+      "confidence": "transcript-boundary-evidence-only",
+      "verification": {
+        "audio": "not-performed-source-audio-unavailable",
+        "slideTiming": "not-verified",
+        "scope": "SRT 문맥·입력 일정표·추출된 책갈피만 대조. 강연 블록은 연속 구간 분류이며 전사 완전성이나 페이지 동시성을 보장하지 않는다."
+      },
+      "titleEvidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "method": "OCR-program-title-preserved; speaker-association-by-bookmark-order"
+      },
+      "sourceRowsByStart": 1735,
+      "boundaryStraddlingSources": [],
+      "coarseSourcesOver30Seconds": []
+    },
+    {
+      "id": "13",
+      "kind": "lecture",
+      "title": "메타인지와 잃지 않는 매매 - 삼플레",
+      "speaker": "플스포",
+      "t0": 17956.51,
+      "t1": 20042.82,
+      "clockStart": "17:32:16.51",
+      "clockEnd": "18:07:02.82",
+      "scheduled": {
+        "t0": 17820,
+        "t1": 19020,
+        "clockStart": "17:30:00",
+        "clockEnd": "17:50:00",
+        "status": "printed-page1-ocr-schedule",
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "text": "17:30~17:50"
+      },
+      "boundaryEvidence": {
+        "start": {
+          "boundaryIndex": 13,
+          "t": 17956.51,
+          "status": "transcript-anchored",
+          "source": "plaud-1#7982",
+          "anchor": {
+            "source": "plaud-1#7982",
+            "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+            "offsetSeconds": 0,
+            "originalT0": "04:59:16,510",
+            "originalT1": "04:59:17,830",
+            "t0": 17956.51,
+            "t1": 17957.83,
+            "text": " 마지막 강연입니다"
+          },
+          "context": [
+            {
+              "source": "plaud-1#7969",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:58:57,930",
+              "originalT1": "04:58:58,930",
+              "t0": 17937.93,
+              "t1": 17938.93,
+              "text": " 네 감사합니다"
+            },
+            {
+              "source": "plaud-1#7984",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:59:19,830",
+              "originalT1": "04:59:20,830",
+              "t0": 17959.83,
+              "t1": 17960.83,
+              "text": " 저희 풀스포 대표님의"
+            },
+            {
+              "source": "plaud-1#7986",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:59:21,830",
+              "originalT1": "04:59:22,830",
+              "t0": 17961.83,
+              "t1": 17962.83,
+              "text": " 메타인지와"
+            },
+            {
+              "source": "plaud-1#7987",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:59:22,830",
+              "originalT1": "04:59:23,830",
+              "t0": 17962.83,
+              "t1": 17963.83,
+              "text": " 일치 않는 매매"
+            },
+            {
+              "source": "plaud-1#7989",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:59:24,830",
+              "originalT1": "04:59:25,830",
+              "t0": 17964.83,
+              "t1": 17965.83,
+              "text": " 삼플레"
+            },
+            {
+              "source": "plaud-1#7993",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:59:27,830",
+              "originalT1": "04:59:29,830",
+              "t0": 17967.83,
+              "t1": 17969.83,
+              "text": " 무대 위로 모시겠습니다"
+            },
+            {
+              "source": "plaud-1#7994",
+              "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+              "offsetSeconds": 0,
+              "originalT0": "04:59:29,830",
+              "originalT1": "04:59:30,830",
+              "t0": 17969.83,
+              "t1": 17970.83,
+              "text": " 큰 박수 부탁드리겠습니다"
+            },
+            {
+              "source": "plaud-2#1",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:00:25,630",
+              "originalT1": "00:00:58,760",
+              "t0": 18025.63,
+              "t1": 18058.76,
+              "text": " 지금 버전으로 갈께. 안녕, 니들아 형이야."
+            }
+          ],
+          "policy": "진행자의 다음 강연 소개가 시작되는 원본 SRT 행의 t0를 강연 블록 경계로 채택한다. 발표자 첫 발화나 슬라이드 등장 시각을 뜻하지 않는다. SRT 텍스트만 대조했으며 오디오 검증은 하지 않았다. 17970.83..18025.63에는 SRT 행이 없다. 다음 파일의 t0/t1에는 18000초를 더하며, 공백을 인위적 자막으로 채우지 않는다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        },
+        "end": {
+          "boundaryIndex": 14,
+          "t": 20042.82,
+          "status": "transcript-anchored",
+          "source": "plaud-2#946",
+          "anchor": {
+            "source": "plaud-2#946",
+            "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+            "offsetSeconds": 18000,
+            "originalT0": "00:34:02,820",
+            "originalT1": "00:34:05,260",
+            "t0": 20042.82,
+            "t1": 20045.26,
+            "text": " 자 이거 기준이 어떻게 되냐면"
+          },
+          "context": [
+            {
+              "source": "plaud-2#940",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:33:51,680",
+              "originalT1": "00:33:55,040",
+              "t0": 20031.68,
+              "t1": 20035.04,
+              "text": " 마지막으로 다시 형 버전으로 돌아와서"
+            },
+            {
+              "source": "plaud-2#944",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:33:59,680",
+              "originalT1": "00:34:00,780",
+              "t0": 20039.68,
+              "t1": 20040.78,
+              "text": " 박수 한 번 앉히나?"
+            },
+            {
+              "source": "plaud-2#945",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:34:00,780",
+              "originalT1": "00:34:02,820",
+              "t0": 20040.78,
+              "t1": 20042.82,
+              "text": " 감사합니다."
+            },
+            {
+              "source": "plaud-2#947",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:34:05,260",
+              "originalT1": "00:34:06,500",
+              "t0": 20045.26,
+              "t1": 20046.5,
+              "text": " 여자 지갑이야"
+            },
+            {
+              "source": "plaud-2#951",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:34:13,510",
+              "originalT1": "00:34:19,330",
+              "t0": 20053.51,
+              "t1": 20059.33,
+              "text": " 오늘 제일 멀리서 온 여성도 손 들어와서 얘기해주세요."
+            },
+            {
+              "source": "plaud-2#1028",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:36:50,460",
+              "originalT1": "00:36:52,550",
+              "t0": 20210.46,
+              "t1": 20212.55,
+              "text": " 선물 주는 건 끝났고"
+            },
+            {
+              "source": "plaud-2#1031",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:36:53,980",
+              "originalT1": "00:36:55,760",
+              "t0": 20213.98,
+              "t1": 20215.76,
+              "text": " 네, 저희 마지막으로"
+            },
+            {
+              "source": "plaud-2#1033",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:36:56,960",
+              "originalT1": "00:36:58,200",
+              "t0": 20216.96,
+              "t1": 20218.2,
+              "text": " 기념차는 같이 하고"
+            },
+            {
+              "source": "plaud-2#1034",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:36:58,200",
+              "originalT1": "00:36:59,660",
+              "t0": 20218.2,
+              "t1": 20219.66,
+              "text": " 마무리하면 어떨까 싶습니다"
+            },
+            {
+              "source": "plaud-2#1159",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:39:40,110",
+              "originalT1": "00:39:41,700",
+              "t0": 20380.11,
+              "t1": 20381.7,
+              "text": " 네, 이것으로"
+            },
+            {
+              "source": "plaud-2#1160",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:39:41,700",
+              "originalT1": "00:39:42,440",
+              "t0": 20381.7,
+              "t1": 20382.44,
+              "text": " 오늘 컨퍼런스를"
+            },
+            {
+              "source": "plaud-2#1161",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:39:42,440",
+              "originalT1": "00:39:43,460",
+              "t0": 20382.44,
+              "t1": 20383.46,
+              "text": " 마치도록 하겠습니다"
+            }
+          ],
+          "policy": "강연 감사 인사 뒤 선물 전달로 전환하는 문장의 시작을 폐회 블록의 운영상 경계로 채택한다. 이 블록은 선물·기념 촬영·최종 폐회 인사를 포함한다. 공식 폐회 선언은 20380.11초 이후이며 20042.82초가 그 선언의 시작이라는 주장이 아니다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        }
+      },
+      "confidence": "transcript-boundary-evidence-only",
+      "verification": {
+        "audio": "not-performed-source-audio-unavailable",
+        "slideTiming": "not-verified",
+        "scope": "SRT 문맥·입력 일정표·추출된 책갈피만 대조. 강연 블록은 연속 구간 분류이며 전사 완전성이나 페이지 동시성을 보장하지 않는다."
+      },
+      "titleEvidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "method": "OCR-program-title-preserved; speaker-association-by-bookmark-order"
+      },
+      "sourceRowsByStart": 958,
+      "boundaryStraddlingSources": [],
+      "coarseSourcesOver30Seconds": [
+        "plaud-2#1",
+        "plaud-2#2"
+      ]
+    },
+    {
+      "id": "14",
+      "kind": "closing",
+      "title": "폐회·선물·기념 촬영",
+      "speaker": null,
+      "t0": 20042.82,
+      "t1": 20400,
+      "clockStart": "18:07:02.82",
+      "clockEnd": "18:13:00",
+      "scheduled": {
+        "t0": 19020,
+        "t1": 20400,
+        "clockStart": "17:50:00",
+        "clockEnd": "18:13:00",
+        "status": "complementary-recording-interval-not-printed-program-slot",
+        "source": "docs/conference/inputs/deck-pages-final-290.json#page=1",
+        "text": null
+      },
+      "boundaryEvidence": {
+        "start": {
+          "boundaryIndex": 14,
+          "t": 20042.82,
+          "status": "transcript-anchored",
+          "source": "plaud-2#946",
+          "anchor": {
+            "source": "plaud-2#946",
+            "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+            "offsetSeconds": 18000,
+            "originalT0": "00:34:02,820",
+            "originalT1": "00:34:05,260",
+            "t0": 20042.82,
+            "t1": 20045.26,
+            "text": " 자 이거 기준이 어떻게 되냐면"
+          },
+          "context": [
+            {
+              "source": "plaud-2#940",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:33:51,680",
+              "originalT1": "00:33:55,040",
+              "t0": 20031.68,
+              "t1": 20035.04,
+              "text": " 마지막으로 다시 형 버전으로 돌아와서"
+            },
+            {
+              "source": "plaud-2#944",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:33:59,680",
+              "originalT1": "00:34:00,780",
+              "t0": 20039.68,
+              "t1": 20040.78,
+              "text": " 박수 한 번 앉히나?"
+            },
+            {
+              "source": "plaud-2#945",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:34:00,780",
+              "originalT1": "00:34:02,820",
+              "t0": 20040.78,
+              "t1": 20042.82,
+              "text": " 감사합니다."
+            },
+            {
+              "source": "plaud-2#947",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:34:05,260",
+              "originalT1": "00:34:06,500",
+              "t0": 20045.26,
+              "t1": 20046.5,
+              "text": " 여자 지갑이야"
+            },
+            {
+              "source": "plaud-2#951",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:34:13,510",
+              "originalT1": "00:34:19,330",
+              "t0": 20053.51,
+              "t1": 20059.33,
+              "text": " 오늘 제일 멀리서 온 여성도 손 들어와서 얘기해주세요."
+            },
+            {
+              "source": "plaud-2#1028",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:36:50,460",
+              "originalT1": "00:36:52,550",
+              "t0": 20210.46,
+              "t1": 20212.55,
+              "text": " 선물 주는 건 끝났고"
+            },
+            {
+              "source": "plaud-2#1031",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:36:53,980",
+              "originalT1": "00:36:55,760",
+              "t0": 20213.98,
+              "t1": 20215.76,
+              "text": " 네, 저희 마지막으로"
+            },
+            {
+              "source": "plaud-2#1033",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:36:56,960",
+              "originalT1": "00:36:58,200",
+              "t0": 20216.96,
+              "t1": 20218.2,
+              "text": " 기념차는 같이 하고"
+            },
+            {
+              "source": "plaud-2#1034",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:36:58,200",
+              "originalT1": "00:36:59,660",
+              "t0": 20218.2,
+              "t1": 20219.66,
+              "text": " 마무리하면 어떨까 싶습니다"
+            },
+            {
+              "source": "plaud-2#1159",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:39:40,110",
+              "originalT1": "00:39:41,700",
+              "t0": 20380.11,
+              "t1": 20381.7,
+              "text": " 네, 이것으로"
+            },
+            {
+              "source": "plaud-2#1160",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:39:41,700",
+              "originalT1": "00:39:42,440",
+              "t0": 20381.7,
+              "t1": 20382.44,
+              "text": " 오늘 컨퍼런스를"
+            },
+            {
+              "source": "plaud-2#1161",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:39:42,440",
+              "originalT1": "00:39:43,460",
+              "t0": 20382.44,
+              "t1": 20383.46,
+              "text": " 마치도록 하겠습니다"
+            }
+          ],
+          "policy": "강연 감사 인사 뒤 선물 전달로 전환하는 문장의 시작을 폐회 블록의 운영상 경계로 채택한다. 이 블록은 선물·기념 촬영·최종 폐회 인사를 포함한다. 공식 폐회 선언은 20380.11초 이후이며 20042.82초가 그 선언의 시작이라는 주장이 아니다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        },
+        "end": {
+          "boundaryIndex": 15,
+          "t": 20400,
+          "status": "recording-bound",
+          "source": "docs/conference/inputs/deck-inputs.json#srt.plaud-2",
+          "context": [
+            {
+              "source": "plaud-2#1174",
+              "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+              "offsetSeconds": 18000,
+              "originalT0": "00:39:56,020",
+              "originalT1": "00:39:56,700",
+              "t0": 20396.02,
+              "t1": 20396.7,
+              "text": " 감사합니다"
+            }
+          ],
+          "policy": "두 녹음의 선언된 길이 18000+2400초를 이벤트 끝으로 삼는다. 마지막 SRT 행은 20396.70초에 끝난다. 뒤 3.30초를 합성 전사로 채우지 않는다.",
+          "audioVerified": false,
+          "slideAppearanceVerified": false
+        }
+      },
+      "confidence": "recording-bound-and-transcript-context",
+      "verification": {
+        "audio": "not-performed-source-audio-unavailable",
+        "slideTiming": "not-verified",
+        "scope": "SRT 문맥·입력 일정표·추출된 책갈피만 대조. 강연 블록은 연속 구간 분류이며 전사 완전성이나 페이지 동시성을 보장하지 않는다."
+      },
+      "sourceRowsByStart": 229,
+      "boundaryStraddlingSources": [],
+      "coarseSourcesOver30Seconds": []
+    }
+  ],
+  "coverage": {
+    "programCount": 15,
+    "lectureCount": 11,
+    "breakCount": 2,
+    "sourceRows": 9168,
+    "sourceRowsByRecording": {
+      "plaud-1": 7994,
+      "plaud-2": 1174
+    },
+    "firstSourceT0": 484.8,
+    "lastSourceT1": 20396.7,
+    "adjacentSourceOverlapPairs": 352,
+    "coarseSegmentsOver30Seconds": 13,
+    "boundaryStraddlingSources": [
+      "plaud-1#2138",
+      "plaud-1#2139",
+      "plaud-1#2141"
+    ],
+    "scheduledOnlyBoundarySeconds": [
+      7020,
+      8220,
+      9420
+    ],
+    "reviewedAudioSamples": 0,
+    "requiredAudioSamples": 10,
+    "recordingSeamWithoutSrt": {
+      "t0": 17970.83,
+      "t1": 18025.63,
+      "durationSeconds": 54.8
+    }
+  },
+  "coarseSegments": [
+    {
+      "source": "plaud-1#1",
+      "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+      "offsetSeconds": 0,
+      "originalT0": "00:08:04,800",
+      "originalT1": "00:11:44,260",
+      "t0": 484.8,
+      "t1": 704.26,
+      "text": " 다시 한번 안내 말씀드리겠습니다. 오늘 전체 객석이 다 채워질 예정이기 때문에 앞쪽으로 그리고 가운데로 모여서 앉아주시면 감사하겠습니다.",
+      "durationSeconds": 219.46,
+      "crossesBoundaries": [],
+      "excludedFromAutomaticMapping": true
+    },
+    {
+      "source": "plaud-1#17",
+      "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+      "offsetSeconds": 0,
+      "originalT0": "00:21:50,120",
+      "originalT1": "00:24:56,690",
+      "t0": 1310.12,
+      "t1": 1496.69,
+      "text": " 네 잠시 또 안내 말씀드리겠습니다.",
+      "durationSeconds": 186.57,
+      "crossesBoundaries": [],
+      "excludedFromAutomaticMapping": true
+    },
+    {
+      "source": "plaud-1#19",
+      "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+      "offsetSeconds": 0,
+      "originalT0": "00:24:59,770",
+      "originalT1": "00:27:29,930",
+      "t0": 1499.77,
+      "t1": 1649.93,
+      "text": " 강연이 곧 시작될 예정입니다.",
+      "durationSeconds": 150.16,
+      "crossesBoundaries": [],
+      "excludedFromAutomaticMapping": true
+    },
+    {
+      "source": "plaud-1#2122",
+      "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+      "offsetSeconds": 0,
+      "originalT0": "01:39:17,600",
+      "originalT1": "01:50:49,670",
+      "t0": 5957.6,
+      "t1": 6649.67,
+      "text": " 약 5분 정도",
+      "durationSeconds": 692.07,
+      "crossesBoundaries": [],
+      "excludedFromAutomaticMapping": true
+    },
+    {
+      "source": "plaud-1#2131",
+      "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+      "offsetSeconds": 0,
+      "originalT0": "01:50:57,200",
+      "originalT1": "01:56:44,310",
+      "t0": 6657.2,
+      "t1": 7004.31,
+      "text": " 화면이 좀",
+      "durationSeconds": 347.11,
+      "crossesBoundaries": [],
+      "excludedFromAutomaticMapping": true
+    },
+    {
+      "source": "plaud-1#2138",
+      "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+      "offsetSeconds": 0,
+      "originalT0": "01:56:51,450",
+      "originalT1": "02:13:18,030",
+      "t0": 7011.45,
+      "t1": 7998.03,
+      "text": " 하려고 합니다.",
+      "durationSeconds": 986.58,
+      "crossesBoundaries": [
+        {
+          "boundaryIndex": 5,
+          "t": 7020,
+          "status": "scheduled-only"
+        }
+      ],
+      "excludedFromAutomaticMapping": true
+    },
+    {
+      "source": "plaud-1#2139",
+      "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+      "offsetSeconds": 0,
+      "originalT0": "02:13:18,030",
+      "originalT1": "02:23:09,600",
+      "t0": 7998.03,
+      "t1": 8589.6,
+      "text": " 와",
+      "durationSeconds": 591.57,
+      "crossesBoundaries": [
+        {
+          "boundaryIndex": 6,
+          "t": 8220,
+          "status": "scheduled-only"
+        }
+      ],
+      "excludedFromAutomaticMapping": true
+    },
+    {
+      "source": "plaud-1#2141",
+      "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+      "offsetSeconds": 0,
+      "originalT0": "02:23:09,600",
+      "originalT1": "02:37:36,080",
+      "t0": 8589.6,
+      "t1": 9456.08,
+      "text": " 알겠습니다.",
+      "durationSeconds": 866.48,
+      "crossesBoundaries": [
+        {
+          "boundaryIndex": 7,
+          "t": 9420,
+          "status": "scheduled-only"
+        }
+      ],
+      "excludedFromAutomaticMapping": true
+    },
+    {
+      "source": "plaud-1#4306",
+      "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+      "offsetSeconds": 0,
+      "originalT0": "03:22:27,900",
+      "originalT1": "03:34:11,790",
+      "t0": 12147.9,
+      "t1": 12851.79,
+      "text": " 다음 강연이 곧 시작될 예정입니다",
+      "durationSeconds": 703.89,
+      "crossesBoundaries": [],
+      "excludedFromAutomaticMapping": true
+    },
+    {
+      "source": "plaud-1#4310",
+      "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+      "offsetSeconds": 0,
+      "originalT0": "03:34:16,700",
+      "originalT1": "03:35:36,630",
+      "t0": 12856.7,
+      "t1": 12936.63,
+      "text": " 세 번째 섹션",
+      "durationSeconds": 79.93,
+      "crossesBoundaries": [],
+      "excludedFromAutomaticMapping": true
+    },
+    {
+      "source": "plaud-1#4317",
+      "path": "docs/conference/inputs/srt/plaud1_1233-1733_5h.srt",
+      "offsetSeconds": 0,
+      "originalT0": "03:35:51,910",
+      "originalT1": "03:38:09,140",
+      "t0": 12951.91,
+      "t1": 13089.14,
+      "text": " 사이클에 와있는데",
+      "durationSeconds": 137.23,
+      "crossesBoundaries": [],
+      "excludedFromAutomaticMapping": true
+    },
+    {
+      "source": "plaud-2#1",
+      "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+      "offsetSeconds": 18000,
+      "originalT0": "00:00:25,630",
+      "originalT1": "00:00:58,760",
+      "t0": 18025.63,
+      "t1": 18058.76,
+      "text": " 지금 버전으로 갈께. 안녕, 니들아 형이야.",
+      "durationSeconds": 33.13,
+      "crossesBoundaries": [],
+      "excludedFromAutomaticMapping": true
+    },
+    {
+      "source": "plaud-2#2",
+      "path": "docs/conference/inputs/srt/plaud2_1733-1813_40m.srt",
+      "offsetSeconds": 18000,
+      "originalT0": "00:00:58,760",
+      "originalT1": "00:01:31,380",
+      "t0": 18058.76,
+      "t1": 18091.38,
+      "text": " 그러고 보면 최적으로는 알려준 게 있어요.",
+      "durationSeconds": 32.62,
+      "crossesBoundaries": [],
+      "excludedFromAutomaticMapping": true
+    }
+  ],
+  "pageOwnershipConflicts": [
+    {
+      "deck": "final-290",
+      "page": 23,
+      "bookmarkSpeaker": "셀프",
+      "inferredContentSpeaker": "드림캐스트",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "이전 강연 결론의 세 항목이 R17 드림캐스트 마지막 페이지와 대응한다. final24에는 셀프 소개가 있다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 23,
+        "textExact": "오늘의 결론입니다 세 가지만 기억해도 충분합니다 01 02 03 70%의 확신이면, 등기를 칩시다 정도를 걷는 부동산투자, 실거주 1채로 차근차근 갈아탑시다 타인의 지도를 베끼지 말고, \"나만의 강남\"을 구축합시다 M 플스포컬퍼니",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 22,
+        "comparisonTextExact": "오늘의 결론입니다\n세 가지만 기억해도 충분합니다\n01\n70%의 확신이면, 등기를 칩시다\n02\n정도를 걷는 부동산투자, 실거주 1채로 차근차근 갈아탑시다\n03\n타인의 지도를 베끼지 말고, “나만의 강남”을 구축합시다"
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 40,
+      "bookmarkSpeaker": "겜보이",
+      "inferredContentSpeaker": "셀프",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "경매 낙찰 주택 매도 요령이 R17 셀프 마지막 페이지와 대응한다. final41에는 겜보이 소개가 있다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 40,
+        "textExact": "낙찰받은 집, 빠르게 매도하는 꿀팁 1. 첫인상이 중요하듯, 문부터 깨끗하게 2. 실내화를 배치한다. 3. 입구와 화장실에 디퓨저를 놓아둔다. 4. 부동산 50곳이상 매물을 내놓는다 5. 다른 매물 대비 가격이 저렴해야한다. M 플스포범퍼니",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 39,
+        "comparisonTextExact": "낙찰받은 집, 빠르게 매도하는 꿀팁\n1. 첫인상이 중요하듯, 문부터 깨끗하게\n\n2. 실내화를 배치한다.\n\n3. 입구와 화장실에 디퓨저를 놓아둔다.\n\n4. 부동산 50곳이상 매물을 내놓는다\n\n5. 다른 매물 대비 가격이 저렴해야한다."
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 122,
+      "bookmarkSpeaker": "다마고치",
+      "inferredContentSpeaker": "크립토",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "OCR에 크립토 발표자 소개가 명시되어 있다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 122,
+        "textExact": "[크립토] [깡통 여러본 차본 7년차 투자자] 계좌1: 22년~ 800% 수익2 계좌2 : 평균 월 2천 수익 원2 TSLA.NVDA 5년 이상 장기투자 경험 RGTI 2000% 수익률 경험 M 쫄스포컴퍼니",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 121,
+        "comparisonTextExact": "[크립토]\n[깡통 여러번 차본 7년차 투자자]\n계좌1 : 22년~ 800% 수익\n계좌2 : 평균 월 2천 수익\nTSLA, NVDA 5년 이상 장기투자 경험\nRGTI 2000% 수익률 경험\n발표자의 소개·수익 사례"
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 123,
+      "bookmarkSpeaker": "다마고치",
+      "inferredContentSpeaker": "크립토",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "반감기와 BTC/USD 내용이 R17 크립토 구간의 반감기 페이지와 대응한다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 123,
+        "textExact": "반감기 BTC/USD 반감기 가격 차트 절기 가주 보기에서는 반강기와 확전 지장고정, 5시만 청정 저정 주보를 직태하고 자이운 비리 ColinGecko 일본 통가를 반경기 닭일에 맛춰 겹지 봅니다 보기에서는 코료터 7시은의 지한 보기 참기 기격 시이를 제고 피시 간격 10 1W 약 4년마다 신규 공급(채굴)이 절반으로 감소 반감기 이후 약 12개월~ 18개월 후 고정 갱신 [출처 colngecko/ 26.09. 26] M 플스포컴퍼니",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 122,
+        "comparisonTextExact": "반감기\n약 4년마다\n신규 공급(채굴)이 절반으로 감소\n반감기 이후\n약 12개월~ 18개월 후 고정 갱신"
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 124,
+      "bookmarkSpeaker": "다마고치",
+      "inferredContentSpeaker": "크립토",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "비트코인 신규 발행 반감기 내용이 R17 크립토 구간과 대응한다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 124,
+        "textExact": "반감기 : 신규 발행량의 감소 약 4년마다, 210,000블록마다 반감기 이전 보상 2012 50 BTC 2016 25 BTC 2020 12.5 BTC 2024 6.25 BTC [출처] bitcoin.org 이후 보상 25 BTC 12.5 BTC 6.25 BTC 3.125 BTC 124",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 123,
+        "comparisonTextExact": "반감기 : 신규 발행량의 감소\n약 4년마다, 210,000블록마다"
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 125,
+      "bookmarkSpeaker": "다마고치",
+      "inferredContentSpeaker": "크립토",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "비트코인 반감기 사이클 비교가 R17 크립토 구간과 대응한다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 125,
+        "textExact": "반감기 싸이클 세 번의 싸이클 비교 싸이클 2013 고점 2017 고점 2021 고점 상승 기간 747일 1067일 1059일 [출처] Coin Metrics 하락 기간 406일 364일 366일 낙폭 -84.5% -83.8% -76.7% 125",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 124,
+        "comparisonTextExact": "반감기 싸이클\n세 번의 싸이클 비교\n[출처 Coin Metrics]"
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 138,
+      "bookmarkSpeaker": "크립토",
+      "inferredContentSpeaker": "청약노트",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "OCR에 청약노트 발표자 소개가 명시되어 있다. 다음 final139는 다시 BTC 인간지표 내용이다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 138,
+        "textExact": "SPEAKER INTRO IPO M 플스포컴퍼니 청약노트 직장인의 현실에서 시작한 공모주 투자 플스포 메타인지방 공모주 멘토",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 137,
+        "comparisonTextExact": "SPEAKER INTRO\n청약노트\n직장인의 현실에서 시작한 공모주 투자\n플스포 메타인지방 공모주 멘토"
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 140,
+      "bookmarkSpeaker": "크립토",
+      "inferredContentSpeaker": "청약노트",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "공모주 기관 경쟁률 페이지가 R17 청약노트 구간과 대응한다. 숫자·기업명은 두 덱이 다르므로 동일 페이지 내용으로 단정하지 않는다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 140,
+        "textExact": "기관경쟁률 1,187.74:1 내기준 1,000 : 1 M 쫄스포썸퍼니 aRILS 브릴스 코스닥 468670 로봇 자동화 솜루선 전문 기업 1약시지 9일 17일 최소용거금 07500원 87 긍정적인 신호 포착 수요예줄 참이기킨수 2,181 꽃모가 상단이상 강머기관수 2173 의무보유 화약 기존수 456 시가추액 0.22조 원 ^ *가* ***맛 파자가자 가*가가 19",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 139,
+        "comparisonTextExact": "기관경쟁률\n1,187.74 : 1\n내 기준 1,000 : 1\n넥스트\n468670 · 반도체 솔루션 전문 기업\n청약일 9월 17일\n최소증거금 97,500원\n확인 신호 포착\n수요예측 참여기관수\n2,181\n★★★★\n공모가 상단이상 참여기관수\n2,173\n★★★★\n의무보유 확약 기관수\n458\n★★★★\n시가총액\n0.22조 원\n★☆☆☆\n종합점수\n87"
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 141,
+      "bookmarkSpeaker": "크립토",
+      "inferredContentSpeaker": "청약노트",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "균등·비례 공모주 배정 설명이 R17 청약노트 구간과 대응한다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 141,
+        "textExact": "균등과 비례 균등 최소 수량이면 같은 기회 N 플스포컴퍼니 비례 더 넣을수록 배정 가능성 증가",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 140,
+        "comparisonTextExact": "균등과 비례\n균등\n비례\nA\nB\nC\nD\nA\nB\nC\nD\n최소 수량이면 같은 기회\n더 넣을수록 배정 가능성 증가\n분배 방식의 상징적 개념도입니다. 실제 배정 주식수·확률을 나타내지 않습니다."
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 142,
+      "bookmarkSpeaker": "크립토",
+      "inferredContentSpeaker": "청약노트",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "비례 청약 레버리지 설명이 R17 청약노트 구간과 대응한다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 142,
+        "textExact": "비례 신청 내 자금 M 플스포컴퍼니 레버리지 내 자금에 대출금을 더해 청약 규모를 키우는 방법 + 대출금 . 청약 규모",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 141,
+        "comparisonTextExact": "비례 신청\n레버리지\n내 자금에 대출금을 더해 청약 규모를 키우는 방법\n내 자금\n+\n대출금\n청약 규모"
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 154,
+      "bookmarkSpeaker": "청약노트",
+      "inferredContentSpeaker": "엑박",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "OCR에 엑박 강연 제목과 발표자 이름이 명시되어 있다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 154,
+        "textExact": "2028 플스포 투자 컨떠컨스• 202G.10:31 플스포 투자 컨퍼런스 미국 증시를 읽는 세 개의 축 그리고 2027 AI 투자 핵심 키워드 엑박 M 쓸스포컴퍼니",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 153,
+        "comparisonTextExact": "플스포\n투자 컨퍼런스\n미국 증시를 읽는 세 개의 축\n그리고 2027 AI 투자 핵심 키워드\n엑박\n엑박\n2026 플스포 투자 컨퍼런스 · 2026. 10.31"
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 155,
+      "bookmarkSpeaker": "청약노트",
+      "inferredContentSpeaker": "엑박",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "OCR에 엑박 발표자 소개가 명시되어 있다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 155,
+        "textExact": "SPEAKER INTRO 엑박 M 플스포컴퍼니 엑박 제도권에서 구르며 다양한 경험을 쌓은 미국주식 투자자 • 미국 테크주 투자 & 리서치 • 글로벌 매크로 기반 시장 진단 . 데일리 미국증시 리뷰 및 기업분석 진행",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 154,
+        "comparisonTextExact": "SPEAKER INTRO\n엑박\n제도권에서 구르며\n다양한 경험을 쌓은 미국주식 투자자\n• 미국 테크주 투자 & 리서치\n• 글로벌 매크로 기반 시장 진단\n• 데일리 미국증시 리뷰 및 기업분석 진행"
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 156,
+      "bookmarkSpeaker": "청약노트",
+      "inferredContentSpeaker": "엑박",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "미국증시 세 축과 2027 AI 핵심어가 R17 엑박 본론 안내와 대응한다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 156,
+        "textExact": "MAIN THEME SEMINAR TOPIC 01 미국증시를 읽는 세 개의 축 성장과 유동성, 그리고 심리 02 2027 AI 투자 키워드 누적, 증명, 그리고 돈을 버는 자산 M 출스포컴퍼니",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 155,
+        "comparisonTextExact": "MAIN THEME\nSEMINAR TOPIC\n미국증시를 읽는 세 개의 축\n성장과 유동성, 그리고 심리\n누적, 증명, 그리고 돈을 버는 자산\n02\n2027 AI 투자 키워드"
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 157,
+      "bookmarkSpeaker": "청약노트",
+      "inferredContentSpeaker": "엑박",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "OCR에 저 엑박이 사용하는 미국증시 읽는 방법이라는 문장이 명시되어 있다. 다음 final158은 다시 공모주 내용이다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 157,
+        "textExact": "QUESTION 66 하루에도 수없이 뿜어져 나오는 너무나 많은 이슈들과 호재/악재들 미국증시를 조금 더 쉽게 읽을 수는 없나요? 오늘은 이 질문에 대한 답을 드립니다 저 엑박이 사용하는, 미국증시를 쉽게' 읽는 방법을 소개합니다 M 플스포컴퍼니",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 156,
+        "comparisonTextExact": "QUESTION\n하루에도 수없이 뿜어져 나오는\n너무나 많은 이슈들과 호재/악재들\n미국증시를 조금 더 쉽게 읽을 수는 없나요?\n오늘은 이 질문에 대한 답을 드립니다\n저 엑박이 사용하는, 미국증시를 '쉽게' 읽는 방법을 소개합니다"
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 233,
+      "bookmarkSpeaker": "엑박",
+      "inferredContentSpeaker": "플스포",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "삼플레 절 제목과 본성·본질 문구가 R17 플스포 구간과 대응한다. final234는 다시 엑박 Physical AI 내용이다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 233,
+        "textExact": "02 잃지 않는 매매 - 삼플레 주식 본질을 향한 매매 본성을 극복 하기 위한 태도 MJ 플스포정퍼니",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 230,
+        "comparisonTextExact": "잃지 않는 매매 - 삼플레\n주식 본질을 향한 매매\n본성을 극복 하기 위한 태도\n02"
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 235,
+      "bookmarkSpeaker": "엑박",
+      "inferredContentSpeaker": "플스포",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "플코레와 주식 본질을 향한 매매 문구가 R17 플스포 구간과 대응한다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 235,
+        "textExact": "주식 본질을 향한 매매 미장 플코레 반도체 플코레",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 231,
+        "comparisonTextExact": "주식 본질을 향한 매매\n국장 플코레\n미장 플코레\n반도체 플코레"
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 236,
+      "bookmarkSpeaker": "엑박",
+      "inferredContentSpeaker": "플스포",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "플코레·본성을 거스르는 태도 문구가 R17 플스포 구간과 대응한다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 236,
+        "textExact": "주식 본질을 향한 매매 미장 플코레 반도체 플코레 본성을 거스르는 태도",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 232,
+        "comparisonTextExact": "주식 본질을 향한 매매\n국장 플코레\n미장 플코레\n반도체 플코레\n본성을 거스르는 태도"
+      }
+    },
+    {
+      "deck": "final-290",
+      "page": 237,
+      "bookmarkSpeaker": "엑박",
+      "inferredContentSpeaker": "플스포",
+      "excludedFromAutomaticMapping": true,
+      "status": "supplied-OCR-versus-bookmark-conflict; original-PDF-not-inspected",
+      "reason": "플코레 및 플스포 메타인지 투자법 문구가 R17 플스포 구간과 대응한다. final238은 다시 엑박 AI 결론이다.",
+      "evidence": {
+        "source": "docs/conference/inputs/deck-pages-final-290.json",
+        "page": 237,
+        "textExact": "주식 본질을 향한 매매 국장 플코레 플스포의 메타인지 투자법 미장 플코레 TOQQ 입지 않는 모든 것 10한 활로위가 섭낙한 골스포의 절대수의 재출회 M 플스포컴퍼니 반도체 플코레 반도서 플코레 KMAI 0m8M O 관점의 방",
+        "comparisonSource": "docs/conference/inputs/deck-pages-r17-clean-257.json",
+        "comparisonPage": 233,
+        "comparisonTextExact": "주식 본질을 향한 매매\n국장 플코레\n미장 플코레\n반도체 플코레\nTQQQ"
+      }
+    }
+  ],
+  "excludedFromAutomaticMapping": {
+    "final-290": [
+      23,
+      40,
+      122,
+      123,
+      124,
+      125,
+      138,
+      140,
+      141,
+      142,
+      154,
+      155,
+      156,
+      157,
+      233,
+      235,
+      236,
+      237
+    ],
+    "r17-clean-257": []
+  },
+  "discrepancies": [
+    {
+      "id": "srt-row-count",
+      "source": "docs/conference/inputs/README.md",
+      "documented": {
+        "plaud-1": 7995,
+        "plaud-2": 1174,
+        "total": 9169
+      },
+      "observed": {
+        "plaud-1": 7994,
+        "plaud-2": 1174,
+        "total": 9168
+      },
+      "resolution": "Preserve all actual rows. Plaud-1 IDs are contiguous 1..7994; do not fabricate a nonexistent #7995. Both supplied SRT SHA-256 hashes match deck-inputs.json."
+    },
+    {
+      "id": "program-count",
+      "source": "docs/conference/inputs/README.md",
+      "documented": 14,
+      "observed": 15,
+      "resolution": "Opening + 11 lectures + 2 breaks + closing = 15, satisfying program IDs 00..14. Page1 has 13 timed lecture/break rows; opening/closing use the complementary recording intervals."
+    },
+    {
+      "id": "r17-damagotchi-end",
+      "source": "docs/conference/inputs/README.md",
+      "documentedRange": [
+        89,
+        125
+      ],
+      "bookmarkRange": [
+        89,
+        120
+      ],
+      "nextBookmarkRange": [
+        121,
+        136
+      ],
+      "resolution": "Use the actual deck-inputs R17 bookmark end120; README end125 would overlap the following crypto block121..136. Do not edit original input or apply final-290 page numbers to R17."
+    },
+    {
+      "id": "coarse-transcript-coverage",
+      "sourceIds": [
+        "plaud-1#2138",
+        "plaud-1#2139",
+        "plaud-1#2141"
+      ],
+      "durationsSeconds": [
+        986.58,
+        591.57,
+        866.48
+      ],
+      "resolution": "Keep source rows intact but unmapped. Each crosses one scheduled-only lecture boundary. Source-row preservation and recording-duration coverage do not establish that all speech was transcribed."
+    },
+    {
+      "id": "source-overlap",
+      "observedAdjacentOverlapPairs": 352,
+      "resolution": "Keep original overlaps and duplicate utterances. The timeline validator prohibits overlapping program intervals but permits overlapping source rows when their start times are nondecreasing and source IDs are unique."
+    },
+    {
+      "id": "final-bookmark-page-content-conflict",
+      "deck": "final-290",
+      "excludedPages": [
+        23,
+        40,
+        122,
+        123,
+        124,
+        125,
+        138,
+        140,
+        141,
+        142,
+        154,
+        155,
+        156,
+        157,
+        233,
+        235,
+        236,
+        237
+      ],
+      "resolution": "Quarantine the exact listed pages from automatic mapping; retain bookmark ranges and all original input text. Supporting OCR versus PPTX text is recorded above; no original PDF rendering was available to determine whether source export or deck structure caused the contradiction."
+    },
+    {
+      "id": "r11-asr38-absent",
+      "status": "absent-from-supplied-inputs",
+      "referencedBy": "docs/requirements/REQ_WP_ABC_20261110.md A-7",
+      "externalReference": "정밀원근_녹음대조_R11_20261103/",
+      "anchorsLoaded": 0,
+      "resolution": "Do not claim the requested 38 R11 ASR anchors were imported or verified. Only the supplied SRT and deck-text bundle is available."
+    }
+  ]
+}

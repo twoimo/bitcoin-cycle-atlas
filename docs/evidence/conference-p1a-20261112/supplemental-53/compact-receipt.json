@@ -1,0 +1,832 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-eth-candidate-browser-compact-receipt",
+  "recordedAt": "2026-11-11T19:44:31.467375Z",
+  "scope": "Actual supplemental local Linux/Chrome run on the stated source commit; this is not a final-source or Safari/physical-device claim.",
+  "status": "failed",
+  "observedExitCode": 1,
+  "sourceCommit": "180c55df48242ae8afe83f8b80ada457d552d2a7",
+  "sourceTree": "2b42ccece90d7a4be639c40f892be4aa8a9b79ef",
+  "startedAt": "2026-11-11T19:15:28.787Z",
+  "finishedAt": "2026-11-11T19:36:17.203Z",
+  "browserVersion": {
+    "protocolVersion": "1.3",
+    "product": "HeadlessChrome/157.0.8103.38",
+    "revision": "@a733b5afbb3ba618844ff8876b89ad1a774b2f18",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.8103.38 Safari/537.36",
+    "jsVersion": "15.7.112.23"
+  },
+  "caseScope": "all",
+  "declaredCaseCount": 53,
+  "expectedCaseCount": 53,
+  "counts": {
+    "executed": 53,
+    "passed": 52,
+    "failed": 1,
+    "skipped": 0
+  },
+  "sourceIntegrity": {
+    "checkedFiles": 158,
+    "changedSources": [],
+    "unchangedDuringRun": true
+  },
+  "recordedRuntimeErrors": 0,
+  "cleanupError": null,
+  "rawReport": {
+    "file": "report.json",
+    "bytes": 7535639,
+    "sha256": "a83b286642880864f7f2fd581424e6fea26d2b261795af535ef28ab2784d9747"
+  },
+  "rawLog": {
+    "file": "../p1a-eth-browser.log",
+    "bytes": 14207175,
+    "sha256": "7911d8247da3756ea8ebcb966b3bf271abbf0bcc533d26ed0c5ae0630c94444e"
+  },
+  "screenshotValidation": {
+    "file": "screenshot-validation.json",
+    "bytes": 113430,
+    "sha256": "6f981d3ed6c06b0353699e645a088f8821869f226a733498a45e58d0eba3b9f4",
+    "valid": true,
+    "references": 449,
+    "uniqueFiles": 449,
+    "validatedReferences": 449,
+    "failures": 0
+  },
+  "cases": [
+    {
+      "case": 1,
+      "caseSpec": {
+        "page": "data",
+        "width": 320,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed"
+    },
+    {
+      "case": 2,
+      "caseSpec": {
+        "page": "eth",
+        "width": 320,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed"
+    },
+    {
+      "case": 3,
+      "caseSpec": {
+        "page": "bmnr",
+        "width": 320,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed"
+    },
+    {
+      "case": 4,
+      "caseSpec": {
+        "page": "mstr",
+        "width": 320,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed"
+    },
+    {
+      "case": 5,
+      "caseSpec": {
+        "page": "zero-fixture",
+        "width": 320,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed"
+    },
+    {
+      "case": 6,
+      "caseSpec": {
+        "page": "data",
+        "width": 390,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed"
+    },
+    {
+      "case": 7,
+      "caseSpec": {
+        "page": "eth",
+        "width": 390,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed"
+    },
+    {
+      "case": 8,
+      "caseSpec": {
+        "page": "bmnr",
+        "width": 390,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed"
+    },
+    {
+      "case": 9,
+      "caseSpec": {
+        "page": "mstr",
+        "width": 390,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed"
+    },
+    {
+      "case": 10,
+      "caseSpec": {
+        "page": "data",
+        "width": 768,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed"
+    },
+    {
+      "case": 11,
+      "caseSpec": {
+        "page": "eth",
+        "width": 768,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed"
+    },
+    {
+      "case": 12,
+      "caseSpec": {
+        "page": "bmnr",
+        "width": 768,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed"
+    },
+    {
+      "case": 13,
+      "caseSpec": {
+        "page": "mstr",
+        "width": 768,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed"
+    },
+    {
+      "case": 14,
+      "caseSpec": {
+        "page": "data",
+        "width": 1024,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed"
+    },
+    {
+      "case": 15,
+      "caseSpec": {
+        "page": "eth",
+        "width": 1024,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed"
+    },
+    {
+      "case": 16,
+      "caseSpec": {
+        "page": "bmnr",
+        "width": 1024,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed"
+    },
+    {
+      "case": 17,
+      "caseSpec": {
+        "page": "mstr",
+        "width": 1024,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed"
+    },
+    {
+      "case": 18,
+      "caseSpec": {
+        "page": "data",
+        "width": 1440,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed"
+    },
+    {
+      "case": 19,
+      "caseSpec": {
+        "page": "eth",
+        "width": 1440,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed"
+    },
+    {
+      "case": 20,
+      "caseSpec": {
+        "page": "bmnr",
+        "width": 1440,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed"
+    },
+    {
+      "case": 21,
+      "caseSpec": {
+        "page": "mstr",
+        "width": 1440,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed"
+    },
+    {
+      "case": 22,
+      "caseSpec": {
+        "page": "data",
+        "width": 1620,
+        "height": 1008,
+        "touch": false,
+        "responsive": true,
+        "fill": false,
+        "horizontalScroll": false
+      },
+      "status": "passed"
+    },
+    {
+      "case": 23,
+      "caseSpec": {
+        "page": "data",
+        "width": 1620,
+        "height": 1100,
+        "touch": false,
+        "responsive": true,
+        "fill": true,
+        "resize": true
+      },
+      "status": "passed"
+    },
+    {
+      "case": 24,
+      "caseSpec": {
+        "page": "data",
+        "width": 1920,
+        "height": 1440,
+        "touch": false,
+        "responsive": true,
+        "fill": true
+      },
+      "status": "passed"
+    },
+    {
+      "case": 25,
+      "caseSpec": {
+        "page": "data",
+        "width": 900,
+        "height": 430,
+        "touch": true,
+        "responsive": true,
+        "fill": false
+      },
+      "status": "passed"
+    },
+    {
+      "case": 26,
+      "caseSpec": {
+        "page": "data",
+        "width": 320,
+        "height": 568,
+        "touch": true,
+        "responsive": true,
+        "fill": false
+      },
+      "status": "passed"
+    },
+    {
+      "case": 27,
+      "caseSpec": {
+        "page": "workspace-btc",
+        "surface": "btc",
+        "width": 320,
+        "height": 900,
+        "touch": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 28,
+      "caseSpec": {
+        "page": "workspace-evidence",
+        "surface": "evidence",
+        "width": 320,
+        "height": 900,
+        "touch": true,
+        "route": "/?page=evidence"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 29,
+      "caseSpec": {
+        "page": "workspace-legacy",
+        "surface": "legacy",
+        "width": 320,
+        "height": 900,
+        "touch": true,
+        "route": "/?page=compare&legacy=1"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 30,
+      "caseSpec": {
+        "page": "workspace-preview",
+        "surface": "preview",
+        "width": 320,
+        "height": 900,
+        "touch": true,
+        "route": "/mobile-preview.html"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 31,
+      "caseSpec": {
+        "page": "workspace-btc",
+        "surface": "btc",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 32,
+      "caseSpec": {
+        "page": "workspace-evidence",
+        "surface": "evidence",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "route": "/?page=evidence"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 33,
+      "caseSpec": {
+        "page": "workspace-legacy",
+        "surface": "legacy",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "route": "/?page=compare&legacy=1"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 34,
+      "caseSpec": {
+        "page": "workspace-preview",
+        "surface": "preview",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "route": "/mobile-preview.html"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 35,
+      "caseSpec": {
+        "page": "workspace-btc-short",
+        "surface": "btc",
+        "width": 900,
+        "height": 430,
+        "touch": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 36,
+      "caseSpec": {
+        "page": "workspace-legacy",
+        "surface": "legacy",
+        "width": 375,
+        "height": 900,
+        "touch": true,
+        "route": "/?page=compare&legacy=1"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 37,
+      "caseSpec": {
+        "page": "workspace-center-data",
+        "surface": "center-data",
+        "width": 320,
+        "height": 900,
+        "touch": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 38,
+      "caseSpec": {
+        "page": "workspace-center-data",
+        "surface": "center-data",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 39,
+      "caseSpec": {
+        "page": "workspace-center-data",
+        "surface": "center-data",
+        "width": 900,
+        "height": 430,
+        "touch": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 40,
+      "caseSpec": {
+        "symbol": "BTCUSD",
+        "surface": "btc",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "page": "replay-btc",
+        "replay": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 41,
+      "caseSpec": {
+        "symbol": "BTCUSD",
+        "surface": "btc",
+        "width": 900,
+        "height": 430,
+        "touch": true,
+        "page": "replay-btc",
+        "replay": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 42,
+      "caseSpec": {
+        "symbol": "ETHUSD",
+        "surface": "eth",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "page": "replay-eth",
+        "replay": true,
+        "route": "/?symbol=ETHUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 43,
+      "caseSpec": {
+        "symbol": "ETHUSD",
+        "surface": "eth",
+        "width": 320,
+        "height": 568,
+        "touch": true,
+        "page": "replay-eth",
+        "replay": true,
+        "route": "/?symbol=ETHUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 44,
+      "caseSpec": {
+        "symbol": "BTCUSD",
+        "surface": "btc",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "page": "chart-replay-btc",
+        "chartReplay": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "failed"
+    },
+    {
+      "case": 45,
+      "caseSpec": {
+        "symbol": "BTCUSD",
+        "surface": "btc",
+        "width": 320,
+        "height": 568,
+        "touch": true,
+        "page": "chart-replay-btc",
+        "chartReplay": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 46,
+      "caseSpec": {
+        "symbol": "BTCUSD",
+        "surface": "btc",
+        "width": 900,
+        "height": 430,
+        "touch": true,
+        "page": "chart-replay-btc",
+        "chartReplay": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 47,
+      "caseSpec": {
+        "symbol": "ETHUSD",
+        "surface": "eth",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "page": "chart-replay-eth",
+        "chartReplay": true,
+        "route": "/?symbol=ETHUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 48,
+      "caseSpec": {
+        "symbol": "ETHUSD",
+        "surface": "eth",
+        "width": 320,
+        "height": 568,
+        "touch": true,
+        "page": "chart-replay-eth",
+        "chartReplay": true,
+        "route": "/?symbol=ETHUSD&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 49,
+      "caseSpec": {
+        "symbol": "MSTR",
+        "surface": "mstr",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "page": "chart-replay-mstr",
+        "chartReplay": true,
+        "route": "/?symbol=MSTR&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 50,
+      "caseSpec": {
+        "symbol": "BMNR",
+        "surface": "bmnr",
+        "width": 390,
+        "height": 844,
+        "touch": true,
+        "page": "chart-replay-bmnr",
+        "chartReplay": true,
+        "route": "/?symbol=BMNR&granularity=daily&type=line"
+      },
+      "status": "passed"
+    },
+    {
+      "case": 51,
+      "caseSpec": {
+        "page": "workspace-consolidated",
+        "width": 320,
+        "height": 900,
+        "touch": true,
+        "route": "/bitcoin-cycle-atlas/market-lab/us/",
+        "consolidated": true
+      },
+      "status": "passed"
+    },
+    {
+      "case": 52,
+      "caseSpec": {
+        "page": "workspace-consolidated",
+        "width": 390,
+        "height": 844,
+        "touch": true,
+        "route": "/bitcoin-cycle-atlas/market-lab/us/",
+        "consolidated": true
+      },
+      "status": "passed"
+    },
+    {
+      "case": 53,
+      "caseSpec": {
+        "page": "workspace-consolidated",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "route": "/bitcoin-cycle-atlas/market-lab/us/",
+        "consolidated": true
+      },
+      "status": "passed"
+    }
+  ],
+  "failures": [
+    {
+      "case": 44,
+      "caseSpec": {
+        "symbol": "BTCUSD",
+        "surface": "btc",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "page": "chart-replay-btc",
+        "chartReplay": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "error": "AssertionError [ERR_ASSERTION]: Observed 10× cadence does not match the requested update interval: {\"speed\":10,\"expectedMilliseconds\":100,\"observations\":[{\"cursor\":\"2026-10-21\",\"at\":21996.699999999255},{\"cursor\":\"2026-10-22\",\"at\":22246.199999999255},{\"cursor\":\"2026-10-23\",\"at\":22347.599999997765},{\"cursor\":\"2026-10-24\",\"at\":22470.099999997765},{\"cursor\":\"2026-10-25\",\"at\":22596.599999997765},{\"cursor\":\"2026-10-26\",\"at\":22746.5},{\"cursor\":\"2026-10-27\",\"at\":22921.79999999702},{\"cursor\":\"2026-10-28\",\"at\":23055.199999999255},{\"cursor\":\"2026-10-29\",\"at\":23192.199999999255},{\"cursor\":\"2026-10-30\",\"at\":23273.79999999702},{\"cursor\":\"2026-10-31\",\"at\":23374.79999999702},{\"cursor\":\"2026-11-01\",\"at\":23503.5},{\"cursor\":\"2026-11-02\",\"at\":23678.79999999702},{\"cursor\":\"2026-11-03\",\"at\":23830.199999999255},{\"cursor\":\"2026-11-04\",\"at\":23953.699999999255},{\"cursor\":\"2026-11-05\",\"at\":24063.599999997765},{\"cursor\":\"2026-11-06\",\"at\":24251.699999999255}],\"intervals\":[249.5,101.39999999850988,122.5,126.5,149.90000000223517,175.29999999701977,133.40000000223517,137,81.59999999776483,101,128.70000000298023,175.29999999701977,151.40000000223517,123.5,109.89999999850988,188.10000000149012],\"meanMilliseconds\":140.9375,\"averageUpdatesPerSecond\":7.095343680709535,\"allowedMeanRatio\":[0.85,1.3],\"completionTimeoutMilliseconds\":7210,\"setupAllowanceMilliseconds\":5000}\n    at measureCadence (file:///workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/scripts/verify-chart-replay-browser.mjs:1528:14)\n    at async verifyEarlyChartReplayCadence (file:///workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/scripts/verify-chart-replay-browser.mjs:261:22)\n    at async verifyChartReplaySurface (file:///workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/scripts/verify-chart-replay-browser.mjs:2022:12)\n    at async main (file:///workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:1211:32)\n    at async file:///workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:1256:5",
+      "cadence": [
+        {
+          "measurement": {
+            "speed": 10,
+            "expectedMilliseconds": 100,
+            "observations": [
+              {
+                "cursor": "2026-10-21",
+                "at": 21996.699999999255
+              },
+              {
+                "cursor": "2026-10-22",
+                "at": 22246.199999999255
+              },
+              {
+                "cursor": "2026-10-23",
+                "at": 22347.599999997765
+              },
+              {
+                "cursor": "2026-10-24",
+                "at": 22470.099999997765
+              },
+              {
+                "cursor": "2026-10-25",
+                "at": 22596.599999997765
+              },
+              {
+                "cursor": "2026-10-26",
+                "at": 22746.5
+              },
+              {
+                "cursor": "2026-10-27",
+                "at": 22921.79999999702
+              },
+              {
+                "cursor": "2026-10-28",
+                "at": 23055.199999999255
+              },
+              {
+                "cursor": "2026-10-29",
+                "at": 23192.199999999255
+              },
+              {
+                "cursor": "2026-10-30",
+                "at": 23273.79999999702
+              },
+              {
+                "cursor": "2026-10-31",
+                "at": 23374.79999999702
+              },
+              {
+                "cursor": "2026-11-01",
+                "at": 23503.5
+              },
+              {
+                "cursor": "2026-11-02",
+                "at": 23678.79999999702
+              },
+              {
+                "cursor": "2026-11-03",
+                "at": 23830.199999999255
+              },
+              {
+                "cursor": "2026-11-04",
+                "at": 23953.699999999255
+              },
+              {
+                "cursor": "2026-11-05",
+                "at": 24063.599999997765
+              },
+              {
+                "cursor": "2026-11-06",
+                "at": 24251.699999999255
+              }
+            ],
+            "intervals": [
+              249.5,
+              101.39999999850988,
+              122.5,
+              126.5,
+              149.90000000223517,
+              175.29999999701977,
+              133.40000000223517,
+              137,
+              81.59999999776483,
+              101,
+              128.70000000298023,
+              175.29999999701977,
+              151.40000000223517,
+              123.5,
+              109.89999999850988,
+              188.10000000149012
+            ],
+            "meanMilliseconds": 140.9375,
+            "averageUpdatesPerSecond": 7.095343680709535,
+            "allowedMeanRatio": [
+              0.85,
+              1.3
+            ],
+            "completionTimeoutMilliseconds": 7210,
+            "setupAllowanceMilliseconds": 5000
+          },
+          "documentTimeOriginMilliseconds": 1794425197177.8,
+          "documentTimeOriginUTC": "2026-11-11T19:26:37.177800Z",
+          "firstObservationUTC": "2026-11-11T19:26:59.174500Z",
+          "lastObservationUTC": "2026-11-11T19:27:01.429500Z"
+        }
+      ],
+      "screenshots": [
+        {
+          "file": "chart-replay-btc-1440x900-current-chart-before-replay.png",
+          "bytes": 263279,
+          "sha256": "3a7a939d344e2cdcf99bfdf29e0104f00fb8d934957b0b9755bd305bb5136b0c"
+        },
+        {
+          "file": "chart-replay-btc-1440x900-floating-bar.png",
+          "bytes": 208530,
+          "sha256": "746232b071f511a030e506a69aa0a3a382f0aafccbf7d8401ac0ef862508ea3e"
+        },
+        {
+          "file": "chart-replay-btc-1440x900-first-entry-unconfirmed.png",
+          "bytes": 208530,
+          "sha256": "746232b071f511a030e506a69aa0a3a382f0aafccbf7d8401ac0ef862508ea3e"
+        },
+        {
+          "file": "chart-replay-btc-1440x900-first-entry-left-hover.png",
+          "bytes": 216348,
+          "sha256": "d9de2e8ba07b27614740a9f9ff96539897bfaf15f751d87e0ca24cd309454930"
+        },
+        {
+          "file": "chart-replay-btc-1440x900-first-entry-hover-is-still-unconfirmed.png",
+          "bytes": 216900,
+          "sha256": "6f21c5f1189c3005449b1e21d31a96002f8ba1e2ea28249a3a2e8fa5a554374e"
+        },
+        {
+          "file": "chart-replay-btc-1440-failure.png",
+          "bytes": 196139,
+          "sha256": "b7a1c438bede6034e27350dd5fc2dc08a60cbea63f0b4ed3885e90bcdb23f459"
+        }
+      ]
+    }
+  ],
+  "interpretation": "The 53-case run failed its BTC 1440px 10x cadence condition. Any later replay retry must have its own source-bound receipt and does not change these actual counts. CPU contention is not established by this receipt."
+}

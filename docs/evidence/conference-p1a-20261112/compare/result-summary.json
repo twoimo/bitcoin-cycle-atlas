@@ -1,0 +1,741 @@
+{
+  "chrome": "HeadlessChrome/157.0.8103.38",
+  "inventory": [
+    {
+      "route": "outlook",
+      "boot": "ready",
+      "h1": [
+        {
+          "id": "atlas-page-heading",
+          "text": "가격 차트",
+          "parent": "atlas-page-intro"
+        }
+      ],
+      "overflow": 0,
+      "errors": 0,
+      "expectedMissingData": [],
+      "conference": {
+        "state": null
+      }
+    },
+    {
+      "route": "market-us",
+      "boot": "ready",
+      "h1": [
+        {
+          "id": "atlas-page-heading",
+          "text": "시장 분석",
+          "parent": "atlas-page-intro"
+        }
+      ],
+      "overflow": 0,
+      "errors": 0,
+      "expectedMissingData": [],
+      "conference": {
+        "state": null
+      }
+    },
+    {
+      "route": "market-kr",
+      "boot": "ready",
+      "h1": [
+        {
+          "id": "atlas-page-heading",
+          "text": "시장 분석",
+          "parent": "atlas-page-intro"
+        }
+      ],
+      "overflow": 0,
+      "errors": 0,
+      "expectedMissingData": [],
+      "conference": {
+        "state": null
+      }
+    },
+    {
+      "route": "scenario",
+      "boot": "ready",
+      "h1": [
+        {
+          "id": "atlas-page-heading",
+          "text": "시장 분석",
+          "parent": "atlas-page-intro"
+        }
+      ],
+      "overflow": 0,
+      "errors": 0,
+      "expectedMissingData": [],
+      "conference": {
+        "state": null
+      }
+    },
+    {
+      "route": "cashflow",
+      "boot": "ready",
+      "h1": [
+        {
+          "id": "atlas-page-heading",
+          "text": "시장 분석",
+          "parent": "atlas-page-intro"
+        }
+      ],
+      "overflow": 0,
+      "errors": 0,
+      "expectedMissingData": [],
+      "conference": {
+        "state": null
+      }
+    },
+    {
+      "route": "rsi",
+      "boot": "ready",
+      "h1": [
+        {
+          "id": "atlas-page-heading",
+          "text": "시장 분석",
+          "parent": "atlas-page-intro"
+        }
+      ],
+      "overflow": 0,
+      "errors": 0,
+      "expectedMissingData": [],
+      "conference": {
+        "state": null
+      }
+    },
+    {
+      "route": "housing",
+      "boot": "ready",
+      "h1": [
+        {
+          "id": "atlas-page-heading",
+          "text": "시장 분석",
+          "parent": "atlas-page-intro"
+        }
+      ],
+      "overflow": 0,
+      "errors": 0,
+      "expectedMissingData": [],
+      "conference": {
+        "state": null
+      }
+    },
+    {
+      "route": "themes",
+      "boot": "ready",
+      "h1": [
+        {
+          "id": "atlas-page-heading",
+          "text": "시장 분석",
+          "parent": "atlas-page-intro"
+        }
+      ],
+      "overflow": 0,
+      "errors": 0,
+      "expectedMissingData": [],
+      "conference": {
+        "state": null
+      }
+    },
+    {
+      "route": "evidence",
+      "boot": "ready",
+      "h1": [
+        {
+          "id": "atlas-page-heading",
+          "text": "리서치",
+          "parent": "atlas-shell-copy"
+        }
+      ],
+      "overflow": 0,
+      "errors": 0,
+      "expectedMissingData": [],
+      "conference": {
+        "state": null
+      }
+    },
+    {
+      "route": "data",
+      "boot": "ready",
+      "h1": [
+        {
+          "id": "atlas-page-heading",
+          "text": "자산 비교",
+          "parent": "atlas-shell-copy"
+        }
+      ],
+      "overflow": 0,
+      "errors": 0,
+      "expectedMissingData": [],
+      "conference": {
+        "state": null
+      }
+    },
+    {
+      "route": "ipo",
+      "boot": "ready",
+      "h1": [
+        {
+          "id": "atlas-page-heading",
+          "text": "공모주",
+          "parent": "atlas-shell-copy"
+        }
+      ],
+      "overflow": 0,
+      "errors": 0,
+      "expectedMissingData": [],
+      "conference": {
+        "state": null
+      }
+    },
+    {
+      "route": "relay",
+      "boot": "ready",
+      "h1": [
+        {
+          "id": "atlas-page-heading",
+          "text": "릴레이 콘텐츠",
+          "parent": "atlas-shell-copy"
+        }
+      ],
+      "overflow": 0,
+      "errors": 0,
+      "expectedMissingData": [],
+      "conference": {
+        "state": null
+      }
+    },
+    {
+      "route": "conference",
+      "boot": "ready",
+      "h1": [
+        {
+          "id": "atlas-page-heading",
+          "text": "컨퍼런스 복습",
+          "parent": "atlas-shell-copy"
+        }
+      ],
+      "overflow": 0,
+      "errors": 0,
+      "expectedMissingData": [
+        {
+          "url": "http://127.0.0.1:34571/bitcoin-cycle-atlas/conference/timeline.json",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "reason": "conference timeline absent"
+        }
+      ],
+      "conference": {
+        "state": "empty"
+      }
+    },
+    {
+      "route": "compare+legacy",
+      "boot": "ready",
+      "h1": [
+        {
+          "id": "atlas-page-heading",
+          "text": "사이클 비교",
+          "parent": "atlas-page-intro"
+        }
+      ],
+      "overflow": 0,
+      "errors": 0,
+      "expectedMissingData": [],
+      "conference": {
+        "state": null
+      }
+    },
+    {
+      "route": "compare+bare",
+      "boot": "ready",
+      "h1": [
+        {
+          "id": "atlas-page-heading",
+          "text": "사이클 비교",
+          "parent": "atlas-page-intro"
+        }
+      ],
+      "overflow": 0,
+      "errors": 0,
+      "expectedMissingData": [],
+      "conference": {
+        "state": null
+      }
+    },
+    {
+      "route": "compare+legacy-unit-alias",
+      "boot": "ready",
+      "h1": [
+        {
+          "id": "atlas-page-heading",
+          "text": "사이클 비교",
+          "parent": "atlas-page-intro"
+        }
+      ],
+      "overflow": 0,
+      "errors": 0,
+      "expectedMissingData": [],
+      "conference": {
+        "state": null
+      }
+    }
+  ],
+  "compareViewports": [
+    {
+      "viewport": "320x740",
+      "overflow": 0
+    },
+    {
+      "viewport": "390x844",
+      "overflow": 0
+    },
+    {
+      "viewport": "456x900",
+      "overflow": 0
+    },
+    {
+      "viewport": "620x900",
+      "overflow": 0
+    },
+    {
+      "viewport": "768x1024",
+      "overflow": 0
+    },
+    {
+      "viewport": "1024x768",
+      "overflow": 0
+    },
+    {
+      "viewport": "1280x800",
+      "overflow": 0
+    },
+    {
+      "viewport": "1440x900",
+      "overflow": 0
+    },
+    {
+      "viewport": "1920x1080",
+      "overflow": 0
+    }
+  ],
+  "contentViewports": [
+    {
+      "route": "evidence",
+      "viewport": "320x740",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "evidence",
+      "viewport": "390x844",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "evidence",
+      "viewport": "768x1024",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "evidence",
+      "viewport": "1024x768",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "evidence",
+      "viewport": "1440x900",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "evidence",
+      "viewport": "1920x1080",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "data",
+      "viewport": "320x740",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "data",
+      "viewport": "390x844",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "data",
+      "viewport": "768x1024",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "data",
+      "viewport": "1024x768",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "data",
+      "viewport": "1440x900",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "data",
+      "viewport": "1920x1080",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "ipo",
+      "viewport": "320x740",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "ipo",
+      "viewport": "390x844",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "ipo",
+      "viewport": "768x1024",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "ipo",
+      "viewport": "1024x768",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "ipo",
+      "viewport": "1440x900",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "ipo",
+      "viewport": "1920x1080",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "relay",
+      "viewport": "320x740",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "relay",
+      "viewport": "390x844",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "relay",
+      "viewport": "768x1024",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "relay",
+      "viewport": "1024x768",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "relay",
+      "viewport": "1440x900",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "relay",
+      "viewport": "1920x1080",
+      "overflow": 0,
+      "conference": {
+        "state": null
+      },
+      "expectedMissingData": []
+    },
+    {
+      "route": "conference",
+      "viewport": "320x740",
+      "overflow": 0,
+      "conference": {
+        "state": "empty"
+      },
+      "expectedMissingData": [
+        {
+          "url": "http://127.0.0.1:34571/bitcoin-cycle-atlas/conference/timeline.json",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "reason": "conference timeline absent"
+        }
+      ]
+    },
+    {
+      "route": "conference",
+      "viewport": "390x844",
+      "overflow": 0,
+      "conference": {
+        "state": "empty"
+      },
+      "expectedMissingData": [
+        {
+          "url": "http://127.0.0.1:34571/bitcoin-cycle-atlas/conference/timeline.json",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "reason": "conference timeline absent"
+        }
+      ]
+    },
+    {
+      "route": "conference",
+      "viewport": "768x1024",
+      "overflow": 0,
+      "conference": {
+        "state": "empty"
+      },
+      "expectedMissingData": [
+        {
+          "url": "http://127.0.0.1:34571/bitcoin-cycle-atlas/conference/timeline.json",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "reason": "conference timeline absent"
+        }
+      ]
+    },
+    {
+      "route": "conference",
+      "viewport": "1024x768",
+      "overflow": 0,
+      "conference": {
+        "state": "empty"
+      },
+      "expectedMissingData": [
+        {
+          "url": "http://127.0.0.1:34571/bitcoin-cycle-atlas/conference/timeline.json",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "reason": "conference timeline absent"
+        }
+      ]
+    },
+    {
+      "route": "conference",
+      "viewport": "1440x900",
+      "overflow": 0,
+      "conference": {
+        "state": "empty"
+      },
+      "expectedMissingData": [
+        {
+          "url": "http://127.0.0.1:34571/bitcoin-cycle-atlas/conference/timeline.json",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "reason": "conference timeline absent"
+        }
+      ]
+    },
+    {
+      "route": "conference",
+      "viewport": "1920x1080",
+      "overflow": 0,
+      "conference": {
+        "state": "empty"
+      },
+      "expectedMissingData": [
+        {
+          "url": "http://127.0.0.1:34571/bitcoin-cycle-atlas/conference/timeline.json",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "reason": "conference timeline absent"
+        }
+      ]
+    }
+  ],
+  "interactionGroups": [
+    "390x844",
+    "456x900",
+    "620x900",
+    "1440x900"
+  ],
+  "structureToolbar": [
+    "320x844",
+    "390x844"
+  ],
+  "contentTrips": [
+    {
+      "route": "evidence",
+      "viewport": "1440x900"
+    },
+    {
+      "route": "evidence",
+      "viewport": "390x844"
+    },
+    {
+      "route": "relay",
+      "viewport": "1440x900"
+    },
+    {
+      "route": "relay",
+      "viewport": "390x844"
+    }
+  ],
+  "assertions": {
+    "explicit1920": {
+      "viewport": "1920x1080",
+      "overflow": 0,
+      "regions": {
+        "top": "visible",
+        "left": "visible",
+        "right": "visible",
+        "bottom": "visible"
+      },
+      "resultRows": 97,
+      "structureRows": 8,
+      "dock": null,
+      "headingHeight": 38,
+      "tiny": 30,
+      "units": [
+        "rebased"
+      ]
+    },
+    "widthsCovered": [
+      "320x740",
+      "390x844",
+      "456x900",
+      "620x900",
+      "768x1024",
+      "1024x768",
+      "1280x800",
+      "1440x900",
+      "1920x1080"
+    ],
+    "widthsWithOverflow": [],
+    "routesWithAllRegions": [
+      "outlook",
+      "market-us",
+      "market-kr",
+      "scenario",
+      "cashflow",
+      "rsi",
+      "housing",
+      "themes",
+      "evidence",
+      "data",
+      "ipo",
+      "relay",
+      "conference",
+      "compare+legacy",
+      "compare+bare",
+      "compare+legacy-unit-alias"
+    ],
+    "contentWidthsCovered": [
+      "evidence 320x740",
+      "evidence 390x844",
+      "evidence 768x1024",
+      "evidence 1024x768",
+      "evidence 1440x900",
+      "evidence 1920x1080",
+      "data 320x740",
+      "data 390x844",
+      "data 768x1024",
+      "data 1024x768",
+      "data 1440x900",
+      "data 1920x1080",
+      "ipo 320x740",
+      "ipo 390x844",
+      "ipo 768x1024",
+      "ipo 1024x768",
+      "ipo 1440x900",
+      "ipo 1920x1080",
+      "relay 320x740",
+      "relay 390x844",
+      "relay 768x1024",
+      "relay 1024x768",
+      "relay 1440x900",
+      "relay 1920x1080",
+      "conference 320x740",
+      "conference 390x844",
+      "conference 768x1024",
+      "conference 1024x768",
+      "conference 1440x900",
+      "conference 1920x1080"
+    ],
+    "contentWidthsWithOverflow": [],
+    "failureCount": 0
+  }
+}

@@ -1,5 +1,15 @@
 # Atlas app design system
 
+## Full redesign and engine replacement — 2026-11-13
+
+The latest user request explicitly selects UI/UX Pro Max plus Unslop for all-page deep QA and improvement and requires actual Funnest implementation for all coin/stock/housing charts. It supersedes the prior UIUX/clone-only tool choice and hybrid-only renderer scope. Preserve chart-first entry, real data, source/forecast distinctions and all lifecycle/accessibility/release contracts. See [current scope](docs/requirements/REQ_FULL_FUNNEST_UNSLOP_20261113.md).
+
+
+## Latest home correction — 2026-11-13
+
+Keep the deployed chart-first home: root navigation opens the real price chart directly, with its existing four perimeter regions and compact toolbar. Do not introduce a landing or card dashboard before the chart. Use the existing dark theme as the new-visitor default, while preserving an explicitly saved light/dark preference. Bloomberg is a density/function reference, not a request to copy its branding or invent a new multi-panel product. This supersedes the Funnest renewal's light-by-default interpretation for initial entry; it does not discard readability, accessibility, data contracts or R22. Scope and tests: [home contract](docs/requirements/REQ_HOME_CHART_FIRST_20261113.md).
+
+
 ## Current direction — 2026-11-08 (Asia/Seoul)
 
 The approved follow-up also covers the chart's zoom behavior. Use the observed
@@ -15,10 +25,11 @@ The latest follow-up unifies 가격 차트 and 종목 차트 as 가격 차트. A
 supported instruments use the BTC workbench's four perimeter regions and one
 outer toolbar, with their own real data, units, intervals and source clocks.
 The price destination returns to the most recently selected instrument after
-other workspaces. The current main adds 릴레이 콘텐츠 at `/?page=relay` after
-the five existing destinations: 가격 차트, 시장 분석, 리서치, 자산 비교 and 공모주.
-Keep all six in that order and preserve every legacy URL. This supersedes the
-earlier separate chart destinations recorded below.
+other workspaces. The current main adds 릴레이 콘텐츠 at `/?page=relay` and
+컨퍼런스 복습 at `/?page=conference` after the five existing destinations:
+가격 차트, 시장 분석, 리서치, 자산 비교 and 공모주. Keep all seven in that order
+and preserve every legacy URL. This supersedes the earlier separate chart
+destinations recorded below.
 
 The latest user direction replaces the previous editorial styling and 64px labelled right rail with a faithful TradingView reference study and a narrow icon rail. Use only the requested UI/UX Pro Max and `clone-website` skills for visual design. Read the actual reference, measure geometry and computed styles, and compare source and implementation at matching viewport and interaction states. Keep Korean accessible names, visible focus, real actions, the four perimeter regions and the single outer toolbar. The current decisions and selected skill revisions live in `design-system/bitcoin-cycle-atlas/MASTER.md`; earlier dated visual directions below are historical where they conflict with this section. Price observations, model calculations, immutable records, replay and ztd-charts remain authoritative.
 

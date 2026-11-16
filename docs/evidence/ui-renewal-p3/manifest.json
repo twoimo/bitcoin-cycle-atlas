@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 1,
+  "productCommit": "042b04a4de56ece2bf5a6bd898b750ec5170e9f0",
+  "testedProductCommit": "a4f127f2552db288bba1483510cc57ce9be13784",
+  "recordedAt": "2026-11-12T21:04:33.165460+00:00",
+  "excludes": "manifest.json itself",
+  "files": [
+    {
+      "file": "README.md",
+      "bytes": 11163,
+      "sha256": "feb48f35e004d01e33a81c50883022a8e36b140dd2d9b7ebc488d861c1b081b4"
+    },
+    {
+      "file": "checks.json",
+      "bytes": 1911,
+      "sha256": "9544e93d3dfa1c6498c377b3aa0de116781301f29320d22863c7f714d36cd249"
+    },
+    {
+      "file": "npm-failures.json",
+      "bytes": 7981,
+      "sha256": "09ca23fab5e6666e1c1fd4e7454319ceef6f72af7e4215857f50917493c5d1ca"
+    },
+    {
+      "file": "npm-test-exit.json",
+      "bytes": 15,
+      "sha256": "ca4b50a6aabd8c09a9998c501233e663a1a779dee115f77beed1cc4e481ab5c3"
+    },
+    {
+      "file": "publication.json",
+      "bytes": 1132,
+      "sha256": "4f3c96c02728f48a5d9f8db59e441b18c86c8d7e9579ada1bda3e161672e788a"
+    },
+    {
+      "file": "raw/baseline-p1/report.json.gz",
+      "bytes": 109336,
+      "sha256": "ad487f5a25597509229a74f1555bd3758d61210febd8a14c74ac8116da73cbb3"
+    },
+    {
+      "file": "raw/build-pages.log.gz",
+      "bytes": 2655,
+      "sha256": "5c725fcd20bc55616b841985b08c7303d8989aaeb97751e378d737f88e84c965"
+    },
+    {
+      "file": "raw/build-web.log.gz",
+      "bytes": 2587,
+      "sha256": "85d06d5df55005522b5480517046fc173bcd349a56149709ec630f4f6e26036e"
+    },
+    {
+      "file": "raw/css.log.gz",
+      "bytes": 224,
+      "sha256": "7584ba8d2e54fef036e37e1fce992df276a75523c3c3c92755ef15dc2929dc59"
+    },
+    {
+      "file": "raw/focused.log.gz",
+      "bytes": 11702,
+      "sha256": "c848f739cc46f895eff7a7220a7231b3e6e71d3710f7c9e827c20aae9093eff4"
+    },
+    {
+      "file": "raw/native/a9/chrome.stderr.log.gz",
+      "bytes": 336,
+      "sha256": "6067d6a2eb001446d72dc23248a05548d703dcb7ccc924c244ac55150a1f1201"
+    },
+    {
+      "file": "raw/native/a9/report.json.gz",
+      "bytes": 54790,
+      "sha256": "8d84b931d3efae87694d218144a57eb4460d4e2f4d46c22f2699024b4a456a6d"
+    },
+    {
+      "file": "raw/native/a9.log.gz",
+      "bytes": 147,
+      "sha256": "0bcd852141668e263b01cb469a9fa16b70eea4e572a7edd851ff779997454ed9"
+    },
+    {
+      "file": "raw/native/axis16/report.json.gz",
+      "bytes": 2477,
+      "sha256": "dd61fdade99ac8090e07837de7a8aa4ddaa8810b898bf3ff9a588f100705b8a0"
+    },
+    {
+      "file": "raw/native/axis16.log.gz",
+      "bytes": 614,
+      "sha256": "346b871217ae6f41facd5a46389d68e3fc5572215f6f2bf84e8ef7ad77d14051"
+    },
+    {
+      "file": "raw/native/eth53/report.json.gz",
+      "bytes": 14014,
+      "sha256": "c597a93c0b0a4972cc57c9135276219e7ecc45755a78f23adee743f2094632df"
+    },
+    {
+      "file": "raw/native/eth53.log.gz",
+      "bytes": 32771,
+      "sha256": "8696f86bba361622203398b0c06820876d752a15dd032b9086ff1182faf831cd"
+    },
+    {
+      "file": "raw/native/execution.json.gz",
+      "bytes": 136807,
+      "sha256": "9445f0d4088dd6a6897c82ed76024165bc871b6af4a6fd2fa34aa0b29f7cbea7"
+    },
+    {
+      "file": "raw/native/p1/report.json.gz",
+      "bytes": 109476,
+      "sha256": "925c2842527140cbe73b2176759fd9296b2fa3fa7caaf27af59c70906ab3625d"
+    },
+    {
+      "file": "raw/native/p1.log.gz",
+      "bytes": 257,
+      "sha256": "384d51b2f5657ca5a00f5cbcc9aae05ee222ce454918e3ea164ea52e73b0f792"
+    },
+    {
+      "file": "raw/native/responsive-BMNR/report.json.gz",
+      "bytes": 714,
+      "sha256": "d9344c133a3e36fde5b673ac1230ace7ec48c5e15bb131a59702bc6856bd643c"
+    },
+    {
+      "file": "raw/native/responsive-BMNR.log.gz",
+      "bytes": 351,
+      "sha256": "cc76f360556837afee50252c498483b12ed410e6330946897b888d59416b72f1"
+    },
+    {
+      "file": "raw/native/responsive-BTCUSD/report.json.gz",
+      "bytes": 716,
+      "sha256": "e9c80c00d64f36bd483cee7ca6282386ddd3ca5b27a861cf6f9ab6a6edd4174e"
+    },
+    {
+      "file": "raw/native/responsive-BTCUSD.log.gz",
+      "bytes": 353,
+      "sha256": "dbc925bc7bef3ec5474e65c5cf2570d16f17f57628df175c5897652cff81d774"
+    },
+    {
+      "file": "raw/native/responsive-ETHUSD/report.json.gz",
+      "bytes": 715,
+      "sha256": "fe9f5163a933aa43493e5a0928e5ce3b0911ca41fc536a41623b84de1379c061"
+    },
+    {
+      "file": "raw/native/responsive-ETHUSD.log.gz",
+      "bytes": 353,
+      "sha256": "0a616ab0526ea4878a5398bce29f5b8ef326dbd54f975f7130ca6504fc50254c"
+    },
+    {
+      "file": "raw/native/responsive-MSTR/report.json.gz",
+      "bytes": 713,
+      "sha256": "db464d889b91131c214ffd4cbe7487c6f6faed2afbb9c7ff26a28acb114deadd"
+    },
+    {
+      "file": "raw/native/responsive-MSTR.log.gz",
+      "bytes": 351,
+      "sha256": "5360a451bda6a418ddfd4d78089f7df288e581de622933006374537d6514a74b"
+    },
+    {
+      "file": "raw/native-responsive-local/BMNR/report.json.gz",
+      "bytes": 1089,
+      "sha256": "df7c20dc75cd6a34021b6058cd6e6aaab03f276035cbb4e064ec1a21a8746790"
+    },
+    {
+      "file": "raw/native-responsive-local/BMNR.log.gz",
+      "bytes": 343,
+      "sha256": "22311c6a7255ddc181660e5f7b1654bfef66d83625cd932ca551adf9ee25b5a7"
+    },
+    {
+      "file": "raw/native-responsive-local/BTCUSD/report.json.gz",
+      "bytes": 1090,
+      "sha256": "156cea39e5579e05a18973953125ec59c0eea42873f21498347b7461e7faeddc"
+    },
+    {
+      "file": "raw/native-responsive-local/BTCUSD.log.gz",
+      "bytes": 345,
+      "sha256": "b46307d533568669178d69b5556ca5718bcfa87bcddae84e7ad156488eac40fe"
+    },
+    {
+      "file": "raw/native-responsive-local/ETHUSD/report.json.gz",
+      "bytes": 1092,
+      "sha256": "8084028c51088969531c49fa304cedc67012d0f9f8ed3f8c829c6812702eb8a2"
+    },
+    {
+      "file": "raw/native-responsive-local/ETHUSD.log.gz",
+      "bytes": 346,
+      "sha256": "c1c5537b85e85e4c3daf645d6729d9e3c572b8e04fc6ee1dc89f0d8fb741322a"
+    },
+    {
+      "file": "raw/native-responsive-local/MSTR/report.json.gz",
+      "bytes": 1088,
+      "sha256": "60adba6a44b01103fa494def6524d394d0a85279aadbd221e5af866634e57fcb"
+    },
+    {
+      "file": "raw/native-responsive-local/MSTR.log.gz",
+      "bytes": 341,
+      "sha256": "0b0e67e40a43803378e69e509aee8eca59c9251041b9707070643d8910be6c94"
+    },
+    {
+      "file": "raw/native-responsive-local/execution.json.gz",
+      "bytes": 463,
+      "sha256": "3bbfa092dd05c608d91ab7f5df541757c2f975c06ab2c3a73ab88330447a39cc"
+    },
+    {
+      "file": "raw/npm-test.log.gz",
+      "bytes": 188657,
+      "sha256": "cf54c40f774192d6ba6c29865bf098a87d4bb2873c2286a9331f240976793288"
+    },
+    {
+      "file": "raw/pages.log.gz",
+      "bytes": 2656,
+      "sha256": "bbeee6a9efe2a56645b305a4beb2720bb36ca6060073dbcdf622958d1dcfedb4"
+    },
+    {
+      "file": "raw/preloads.log.gz",
+      "bytes": 356,
+      "sha256": "a6c058896960911eb3fc4588a071ed5dca57eac0191e9b09fb591f5c5d9d5ecb"
+    },
+    {
+      "file": "raw/static.log.gz",
+      "bytes": 236,
+      "sha256": "1cdda36215977fc986cd89441f160e808dcdeb6a2ab2414ccf6f670df6172a88"
+    },
+    {
+      "file": "raw/typecheck.log.gz",
+      "bytes": 146,
+      "sha256": "e4c7cf6354b07633ba121a872e20b61e21e147a0696f0b94d9f947729a77e23b"
+    },
+    {
+      "file": "raw-manifest.json",
+      "bytes": 12291,
+      "sha256": "74978c5c1a4f46f1447a3c30988e08db42ea72feb702f52b6cf0bc55a0b63bd5"
+    },
+    {
+      "file": "source-preservation.json.gz",
+      "bytes": 100754,
+      "sha256": "d401b3af9f561ef3cb6c59d479aab7155edfdfc81e523b62bf9f9f47a01e9479"
+    },
+    {
+      "file": "style-audit.json",
+      "bytes": 33460,
+      "sha256": "818c895ad146901992a4ced1943c9f3dfa64a77cdf6954339f8f393af5cf25e0"
+    },
+    {
+      "file": "summary.json",
+      "bytes": 10089,
+      "sha256": "d8375622f8d547d7f988fa68c907aa6b112a12fe5396eaae7a2098de82db8be6"
+    },
+    {
+      "file": "tested-product-commit.txt",
+      "bytes": 248,
+      "sha256": "ecaa8bd166da89a789f8d9ab2c2a50cb17d1d3aeaf9c502ef3a1f6d094b41086"
+    }
+  ]
+}

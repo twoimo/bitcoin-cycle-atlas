@@ -5,7 +5,7 @@ import {frozenMarketText} from './helpers/frozen-market-fixture.mjs';
 import {svgFixture} from './replay-svg-fixture.mjs';
 import {parseBitcoinReplayCandles} from '../dist/chart-replay-sources.js';
 import {buildReplayObservedCandles} from '../dist/forecast-replay.js';
-import {createAtlasReplayContext,drawAtlasChartReplay} from '../dist/chart-replay-atlas.js';
+import {createAtlasReplayContext,drawAtlasChartReplayLegacy as drawAtlasChartReplay} from '../dist/chart-replay-atlas.js';
 import {forecastValueSignature} from '../dist/atlas-price-chart.js';
 import {buildLongHorizonForecast} from '../dist/long-horizon-forecast.js';
 import {utcDay,dateFromDay} from '../dist/cycle-engine.js';

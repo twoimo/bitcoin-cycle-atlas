@@ -1,0 +1,135 @@
+{
+  "baseline": "6ffbdda618ad67df6aa47d62bf52f8ce7fc159ba",
+  "candidate": "b0cf9853728ade2b560721e8df9e193b909afb1e",
+  "protectedFiles": [
+    "dist/equity-view.js",
+    "dist/eth-view.js",
+    "dist/instrument-indicator-overlay.js",
+    "scripts/verify-eth-candidate-browser.mjs",
+    "dist/price-axis.js"
+  ],
+  "files": {
+    "dist/equity-view.js": {
+      "baselineSha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5",
+      "candidateSha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5",
+      "bytes": 51366,
+      "unchanged": true
+    },
+    "dist/eth-view.js": {
+      "baselineSha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4",
+      "candidateSha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4",
+      "bytes": 41723,
+      "unchanged": true
+    },
+    "dist/instrument-indicator-overlay.js": {
+      "baselineSha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a",
+      "candidateSha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a",
+      "bytes": 7068,
+      "unchanged": true
+    },
+    "scripts/verify-eth-candidate-browser.mjs": {
+      "baselineSha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e",
+      "candidateSha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e",
+      "bytes": 114296,
+      "unchanged": true
+    },
+    "dist/price-axis.js": {
+      "baselineSha256": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2",
+      "candidateSha256": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2",
+      "bytes": 16555,
+      "unchanged": true
+    },
+    "dist/styles.css": {
+      "baselineSha256": "f01eb99a89ceb1ed81ab9d58e96c12973d351f50dbeef31d05dee8f38c498aa5",
+      "candidateSha256": "f01eb99a89ceb1ed81ab9d58e96c12973d351f50dbeef31d05dee8f38c498aa5",
+      "bytes": 79180,
+      "unchanged": true
+    },
+    "scripts/verify-ui-renewal-p0-browser.mjs": {
+      "baselineSha256": "d31fda26f00111f8d3b949e64bad629395af009cb516ac46c2e0165ad90eea26",
+      "candidateSha256": "d31fda26f00111f8d3b949e64bad629395af009cb516ac46c2e0165ad90eea26",
+      "bytes": 40606,
+      "unchanged": true
+    },
+    "scripts/ui-renewal-p0-contract.mjs": {
+      "baselineSha256": "d34d2644e93f3a8805b0e4043f3c31bf4fcfee4eb3b5bb46bf3bca0f47324f39",
+      "candidateSha256": "d34d2644e93f3a8805b0e4043f3c31bf4fcfee4eb3b5bb46bf3bca0f47324f39",
+      "bytes": 25344,
+      "unchanged": true
+    },
+    "scripts/verify-ui-renewal-p1-browser.mjs": {
+      "baselineSha256": "198ebe69d8bacef484c3f1f026d5ebe7a3f598ea5367be221f955ba24215edd5",
+      "candidateSha256": "198ebe69d8bacef484c3f1f026d5ebe7a3f598ea5367be221f955ba24215edd5",
+      "bytes": 40820,
+      "unchanged": true
+    },
+    "scripts/verify-workspace-browser.mjs": {
+      "baselineSha256": "777ee15f4688a27cd42297435753c0a412b7df20c7f6b55bbffad77050ee4179",
+      "candidateSha256": "777ee15f4688a27cd42297435753c0a412b7df20c7f6b55bbffad77050ee4179",
+      "bytes": 108600,
+      "unchanged": true
+    },
+    "scripts/verify-conference-data-browser.mjs": {
+      "baselineSha256": "45fb940df434f5452e02d3fa611041c4ff40ef2aa7834ea8094f92d6b68a5b3a",
+      "candidateSha256": "45fb940df434f5452e02d3fa611041c4ff40ef2aa7834ea8094f92d6b68a5b3a",
+      "bytes": 25160,
+      "unchanged": true
+    },
+    "docs/evidence/qa-r19p1-20261112/mac-67125bd.json": {
+      "baselineSha256": "375b05774aec76cc423200c81a8c8c46476cb7361e253c0afac713ec81c88d93",
+      "candidateSha256": "375b05774aec76cc423200c81a8c8c46476cb7361e253c0afac713ec81c88d93",
+      "bytes": 2415,
+      "unchanged": true
+    },
+    "dist/atlas-price-chart.js": {
+      "baselineSha256": "36680e411160bfa320dd38c638ff8f40d5798f1a21ae122737e3abeb7851c953",
+      "candidateSha256": "36680e411160bfa320dd38c638ff8f40d5798f1a21ae122737e3abeb7851c953",
+      "bytes": 66728,
+      "unchanged": true
+    },
+    "dist/chart-replay-atlas.js": {
+      "baselineSha256": "1883829b3d3adbf883c761197265b7482678e0df168d17dd9d0580ad8405ce02",
+      "candidateSha256": "1883829b3d3adbf883c761197265b7482678e0df168d17dd9d0580ad8405ce02",
+      "bytes": 22689,
+      "unchanged": true
+    },
+    "dist/comparison-url-state.js": {
+      "baselineSha256": "5c8d26ca71fd5b145b946f6dbc26526732087e790f0739de24b4b95bcec82a4c",
+      "candidateSha256": "5c8d26ca71fd5b145b946f6dbc26526732087e790f0739de24b4b95bcec82a4c",
+      "bytes": 3489,
+      "unchanged": true
+    },
+    "dist/compare-shell-host.js": {
+      "baselineSha256": "017c029fe04ded93556e21ad71c6d42e54fa4b9014996a6f69048bcd7dd0f5d1",
+      "candidateSha256": "017c029fe04ded93556e21ad71c6d42e54fa4b9014996a6f69048bcd7dd0f5d1",
+      "bytes": 4570,
+      "unchanged": true
+    },
+    "dist/volume-data.js": {
+      "baselineSha256": "a788b2ba5381cd9405f468dcac902fb14a23b56696b49153745e2500fe25c88a",
+      "candidateSha256": "a788b2ba5381cd9405f468dcac902fb14a23b56696b49153745e2500fe25c88a",
+      "bytes": 16291,
+      "unchanged": true
+    },
+    "dist/data/btc-volume.json": {
+      "baselineSha256": "a602ba904b78284138684377ea559598173063ee435350ce281de430150a9993",
+      "candidateSha256": "a602ba904b78284138684377ea559598173063ee435350ce281de430150a9993",
+      "bytes": 864273,
+      "unchanged": true
+    }
+  },
+  "minRight": 64,
+  "productionScopes": [
+    "dist",
+    "apps",
+    "packages",
+    "package.json",
+    "package-lock.json",
+    "scripts/build-site-preloads.mjs",
+    "scripts/build-site-styles.mjs",
+    "scripts/build-pages.mjs"
+  ],
+  "productionChangedFiles": [],
+  "existingEngineRetained": true,
+  "existingP0P1A9GatesUnchanged": true
+}

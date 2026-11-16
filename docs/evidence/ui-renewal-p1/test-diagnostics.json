@@ -1,0 +1,55 @@
+{
+  "baselineCommit": "595c365230f19d064b1af41b65a3ec6a02d3f7b5",
+  "fullRunPhase": "intermediate working tree before inventory expectation updates",
+  "fullRunCounts": {
+    "tests": 3786,
+    "passed": 3763,
+    "failed": 23,
+    "skipped": 0,
+    "complete": false
+  },
+  "baselineSelectedCounts": {
+    "tests": 73,
+    "passed": 52,
+    "failed": 21
+  },
+  "baselineReproducedFailures": [
+    "page navigation preserves the current atlas viewport, primary indicator, and unit",
+    "a stale comparison preference cannot resurrect indexed units after the atlas switches to USD",
+    "legacy comparison links remain readable and comparison units never overwrite atlas units",
+    "owned comparison defaults are removed while unrelated chart parameters survive",
+    "narrow-range price tick labels stay distinct instead of rounding every tick to the same thousands",
+    "tests/comparison-history-render.test.mjs",
+    "the owned key list cannot drift from what persistUrl writes",
+    "declared ETH review inventory includes every top-level browser source and root stylesheet",
+    "ETH routing loads and awaits only the ETH workspace, while BTC and unsupported symbols retain the BTC entry",
+    "a failed ETH import or initialization reports the boot error and never falls back to a mislabeled BTC chart",
+    "MSTR / enters its own native chart before any ETF frame can mount",
+    "MSTR /market-lab/charts/ enters its own native chart before any ETF frame can mount",
+    "BMNR / enters its own native chart before any ETF frame can mount",
+    "BMNR /market-lab/charts/ enters its own native chart before any ETF frame can mount",
+    "BTCUSD root deep link dispatches to the instrument's own chart family",
+    "ETHUSD root deep link dispatches to the instrument's own chart family",
+    "MSTR root deep link dispatches to the instrument's own chart family",
+    "TQQQ root deep link dispatches to the instrument's own chart family",
+    "SOXL root deep link dispatches to the instrument's own chart family",
+    "233740 root deep link dispatches to the instrument's own chart family",
+    "workspace root routing preserves explicit non-chart owners and existing fallback boundaries"
+  ],
+  "p1InventoryFailuresCorrected": [
+    "the real standalone is deterministic, preserves every module and snapshot, and passes the runtime parser/linker",
+    "current authored CSS and pinned local font bytes satisfy the source contract without claiming a browser pass"
+  ],
+  "finalInventoryRerun": {
+    "tests": 42,
+    "passed": 42,
+    "failed": 0,
+    "skipped": 0
+  },
+  "pinnedRuntimeBlocker": "spawn docker ENOENT",
+  "runtime": {
+    "actualNode": "v24.22.1",
+    "declaredReplayNode": "v24.22.2",
+    "platform": "linux/x64"
+  }
+}

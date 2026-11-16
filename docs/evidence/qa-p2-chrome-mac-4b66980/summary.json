@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-p2-chrome-mac-receipt",
+  "request": "P2-CHROME-b16a7c6",
+  "sourceCommit": "4b66980bd4b7c4bb781440af2bd502087a0ed5e0",
+  "productCommit": "0cf36d814c0b21f7a0d7249df50eec63433e1bc0",
+  "branch": "fix/tradingview-responsive-20261110",
+  "startedAt": "2026-11-13T02:58:03+09:00",
+  "finishedAt": "2026-11-13T03:16:29+09:00",
+  "browser": "Chrome/157.0.8103.79",
+  "nativePlatform": "darwin",
+  "sourceStable": true,
+  "complete": true,
+  "qualifies": false,
+  "localOut": "build/qa-p2-chrome-mac-4b66980",
+  "gates": [
+    {
+      "id": "eth53",
+      "required": 53,
+      "attempted": 53,
+      "passed": 17,
+      "failed": 36,
+      "qualified": false,
+      "exit": 1
+    },
+    {
+      "id": "responsive-BTCUSD",
+      "required": 11,
+      "attempted": 11,
+      "passed": 11,
+      "failed": 0,
+      "qualified": true,
+      "exit": 0
+    },
+    {
+      "id": "responsive-ETHUSD",
+      "required": 11,
+      "attempted": 11,
+      "passed": 11,
+      "failed": 0,
+      "qualified": true,
+      "exit": 0
+    },
+    {
+      "id": "responsive-MSTR",
+      "required": 11,
+      "attempted": 11,
+      "passed": 11,
+      "failed": 0,
+      "qualified": true,
+      "exit": 0
+    },
+    {
+      "id": "responsive-BMNR",
+      "required": 11,
+      "attempted": 11,
+      "passed": 11,
+      "failed": 0,
+      "qualified": true,
+      "exit": 0
+    },
+    {
+      "id": "axis16",
+      "required": 16,
+      "attempted": 16,
+      "passed": 16,
+      "failed": 0,
+      "qualified": true,
+      "qualifiesPriceAxisVerification": true,
+      "exit": 0
+    },
+    {
+      "id": "a9",
+      "required": 6,
+      "attempted": 6,
+      "passed": 6,
+      "failed": 0,
+      "qualified": true,
+      "initialPaintedMs": [
+        2171.3,
+        2207.7
+      ],
+      "exit": 0
+    }
+  ],
+  "failureSignatures": [
+    {
+      "count": 10,
+      "signature": "dataCase expected page, actual undefined"
+    },
+    {
+      "count": 5,
+      "signature": "Dark opaque background required: ETH plot rgb(255, 255, 255)"
+    },
+    {
+      "count": 5,
+      "signature": "Dark opaque background required: BMNR plot rgb(255, 255, 255)"
+    },
+    {
+      "count": 5,
+      "signature": "Dark opaque background required: MSTR plot rgb(255, 255, 255)"
+    },
+    {
+      "count": 3,
+      "signature": "Dark opaque background required: refresh-failed rgb(242, 244, 246)"
+    },
+    {
+      "count": 3,
+      "signature": "Dark opaque background required: legacy-scroll-owner"
+    },
+    {
+      "count": 3,
+      "signature": "Embedded data entry moved .atlas-canvas-heading"
+    },
+    {
+      "count": 1,
+      "signature": "Dark opaque background required: research-reader rgb(255, 255, 255)"
+    },
+    {
+      "count": 1,
+      "signature": "Research viewport must retain useful list density"
+    }
+  ],
+  "notes": [
+    "Runner finished. qualifies false because ETH failed 36.",
+    "Responsive sum is 44/44. Axis 16/16 with qualifiesPriceAxisVerification true.",
+    "A-9 painted 2171.3-2207.7ms under 2500. No paired baseline, so 0ms impact is not claimed.",
+    "dark() still requires each RGB channel below 90 and alpha at least 0.9. The harness was not changed.",
+    "P2 remains open. P1 and P2a-0 stay closed."
+  ]
+}

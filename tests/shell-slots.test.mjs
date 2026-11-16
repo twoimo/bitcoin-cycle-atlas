@@ -11,7 +11,7 @@ function fixture() {
     <div class="atlas-plot"><svg id="source-chart" aria-label="source chart"><path d="M0 0L10 10"/></svg></div>
     <footer class="workbench-bottom-bar"><div class="workbench-range-controls"><button data-chart-span="focus">4년</button></div><button id="workbench-go-date">date</button><div class="workbench-event-slot"><button id="history-journal-toggle">records</button></div><span id="workbench-range-label">range</span><div class="workbench-axis"><button id="workbench-scale">scale</button><button id="workbench-auto-scale">auto</button><button id="workbench-fit">fit</button></div><div class="workbench-status">source clock</div><button id="workbench-bottom-more">more</button></footer>
     </main><nav class="workbench-tools"><button data-chart-tool="crosshair">crosshair</button><button data-chart-tool="pan">pan</button><button data-chart-tool="measure">measure</button><button id="workbench-magnet">magnet</button><button id="workbench-clear" disabled>clear</button><div id="workbench-navigation"><div class="chart-navigation">${['left','out','in','right','reset'].map(action => `<button data-chart-navigation="${action}">${action}</button>`).join('')}</div></div><button id="workbench-annotations">annotations</button></nav>
-    <aside class="workbench-rail"><nav class="atlas-nav">${['outlook','market-us','evidence','data','ipo','relay'].map(page => `<a data-atlas-page="${page}" href="/?page=${page}">${page}</a>`).join('')}</nav><nav class="workbench-detail-tools">${['selection','layers','math','events'].map(kind => `<button data-reader="${kind}">${kind}</button>`).join('')}</nav><button class="workbench-help">help</button></aside></body></html>`);
+    <aside class="workbench-rail"><nav class="atlas-nav">${['outlook','market-us','evidence','data','ipo','relay','conference'].map(page => `<a data-atlas-page="${page}" href="/?page=${page}">${page}</a>`).join('')}</nav><nav class="workbench-detail-tools">${['selection','layers','math','events'].map(kind => `<button data-reader="${kind}">${kind}</button>`).join('')}</nav><button class="workbench-help">help</button></aside></body></html>`);
   return {document, window};
 }
 
@@ -147,4 +147,78 @@ test('mobile BTC, native and hosted feature groups leave horizontal gestures to 
     assert.equal(control['min-width'], '44px');
     assert.equal(control['min-height'], '44px');
   }
+});
+
+test('shell ARIA context follows research and restores symbol-specific chart labels', async t => {
+  const {document, window} = fixture();
+  const heading = document.querySelector('.atlas-canvas-heading');
+  const symbolSelector = heading.querySelector('.workbench-symbol');
+  const sourceNodes = [...heading.querySelectorAll('button,select')];
+  const controller = mountShellSlots(document);
+  t.after(() => controller.destroy());
+  await settle(); await settle();
+
+  assert.equal(heading.getAttribute('aria-label'), 'BTCUSD 차트 조작 도구');
+  assert.equal(document.querySelector('.atlas-workbench').getAttribute('aria-label'), 'BTCUSD 가격 차트');
+  assert.equal(document.querySelector('.workbench-bottom-bar').getAttribute('aria-label'), 'BTCUSD 차트 하단 조작부');
+  assert.equal(document.querySelector('.workbench-tools').getAttribute('aria-label'), 'BTCUSD 차트 조작 도구');
+  assert.equal(document.querySelector('.workbench-rail').getAttribute('aria-label'), 'BTCUSD 차트 정보와 자료');
+
+  // center-workbench.context writes the actual page title before dispatching
+  // atlas:active-symbol; shell-slots refreshes from that same transition.
+  heading.dataset.centerPage = '리서치';
+  document.body.dataset.centerTool = 'evidence';
+  delete document.body.dataset.chartControls;
+  const hostedToolbar = document.createElement('div');
+  hostedToolbar.className = 'center-workspace-toolbar';
+  hostedToolbar.setAttribute('aria-label', '리서치 도구');
+  const hostedAction = document.createElement('button');
+  hostedAction.textContent = '자료 읽는 법';
+  hostedToolbar.append(hostedAction);
+  heading.append(hostedToolbar);
+  document.dispatchEvent(new window.CustomEvent('atlas:active-symbol', {detail:{symbol:'BTCUSD'}}));
+  await settle(); await settle();
+
+  assert.equal(heading.getAttribute('aria-label'), '리서치 도구');
+  assert.equal(document.querySelector('.atlas-workbench').getAttribute('aria-label'), '리서치');
+  assert.equal(document.querySelector('.workbench-bottom-bar').getAttribute('aria-label'), '리서치 하단 영역');
+  assert.equal(document.querySelector('.workbench-tools').getAttribute('aria-label'), '리서치 도구');
+  assert.equal(document.querySelector('.workbench-rail').getAttribute('aria-label'), '리서치 정보와 자료');
+  assert.equal(hostedToolbar.parentElement, heading);
+  assert.equal(hostedToolbar.firstElementChild, hostedAction);
+  assert.equal(heading.querySelector('.workbench-symbol'), symbolSelector, 'the active symbol selector node is retained');
+  assert.equal(symbolSelector.textContent, 'BTCUSD', 'the active symbol selector remains symbol-specific');
+  assert.ok(sourceNodes.every(node => node.isConnected), 'context relabeling never replaces chart controls');
+
+  // A hosted real chart has chartControls set during loading/ready. It must
+  // keep symbol-specific labels even though centerTool remains populated.
+  heading.dataset.centerPage = '삼플레·RSI';
+  document.body.dataset.centerTool = 'rsi';
+  document.body.dataset.chartControls = 'loading';
+  document.dispatchEvent(new window.CustomEvent('atlas:active-symbol', {detail:{symbol:'TQQQ'}}));
+  await settle(); await settle();
+  assert.equal(heading.getAttribute('aria-label'), 'TQQQ 차트 조작 도구');
+  assert.equal(document.querySelector('.atlas-workbench').getAttribute('aria-label'), 'TQQQ 가격 차트');
+  assert.equal(document.querySelector('.workbench-rail').getAttribute('aria-label'), 'TQQQ 차트 정보와 자료');
+  assert.equal(heading.querySelector('.workbench-symbol'), symbolSelector);
+  assert.equal(hostedToolbar.firstElementChild, hostedAction);
+  document.body.dataset.chartControls = 'ready';
+  controller.refresh({symbol:'TQQQ'});
+  assert.equal(heading.getAttribute('aria-label'), 'TQQQ 차트 조작 도구');
+  assert.equal(document.querySelector('.atlas-workbench').getAttribute('aria-label'), 'TQQQ 가격 차트');
+
+  // Returning to the native chart removes the workspace override and restores
+  // its original symbol context without replacing the selector or handlers.
+  delete document.body.dataset.centerTool;
+  delete document.body.dataset.chartControls;
+  delete heading.dataset.centerPage;
+  document.dispatchEvent(new window.CustomEvent('atlas:active-symbol', {detail:{symbol:'ETHUSD'}}));
+  await settle(); await settle();
+  assert.equal(heading.getAttribute('aria-label'), 'ETHUSD 차트 조작 도구');
+  assert.equal(document.querySelector('.atlas-workbench').getAttribute('aria-label'), 'ETHUSD 가격 차트');
+  assert.equal(document.querySelector('.workbench-bottom-bar').getAttribute('aria-label'), 'ETHUSD 차트 하단 조작부');
+  assert.equal(document.querySelector('.workbench-tools').getAttribute('aria-label'), 'ETHUSD 차트 조작 도구');
+  assert.equal(document.querySelector('.workbench-rail').getAttribute('aria-label'), 'ETHUSD 차트 정보와 자료');
+  assert.equal(heading.querySelector('.workbench-symbol'), symbolSelector);
+  assert.ok(sourceNodes.every(node => node.isConnected));
 });

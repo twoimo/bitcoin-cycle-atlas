@@ -1,5 +1,123 @@
 # MSTR·BMNR 로딩과 화면 준비 상태 검증
 
+## 2026-11-16 두 수정의 확인
+
+동기화 커밋은 `1722f1fc7aa29edb4f9a9246b15f885bb9e14320`이고, 그 뒤 `c3bcb58f`가 런타임을, `e8873b88`이 `dist/equity-view.js`를 바꿨다. 직전 동기화 `856e7742` 이후 검증 대상에서 바뀐 파일은 셋이다. 아래 해시는 `31ba800f`의 바이트다.
+
+| 파일 | SHA-256 |
+| --- | --- |
+| `dist/equity-view.js` | `56b2f561617c5eedf75f663e8d3b77b3f87b732ff095d4b35c70ebad2bd555cf` (`e8873b88`) |
+| `src/charts/funnest-chart-runtime.js` | `f44846672c8c0435e5c4fb8b8ab70c2e6b7952e460b06c43b082063ba17fc958` (`c3bcb58f`) |
+| `dist/funnest-chart-runtime.bundle.js` | `3625ac79992191f80089ecb1d178012715f8427422baf2a43e0ad09ff233b286` (`c3bcb58f`) |
+
+아래 절이 기록한 두 발견은 고쳐졌다.
+
+- `UserRangePreserved`는 `c35f75cf`에서 고쳐졌다. 런타임은 포인터·휠·키 입력에서 구간을 사용자에게 넘기고 `setRange`에서 되찾는다. `onViewport`는 `userOwnsRange()`가 참일 때만 `state.rangeTouched`를 쓴다.
+- `UsableRenderReleasesBoot`는 `1722f1fc`에서 고쳐졌다. `pageshow`는 마운트가 있고 `state.funnestReady`가 거짓이면 `watchFunnestPaint`를 다시 부른다. `ready()`는 `setData` 전까지 같은 promise를 돌려주므로 정지 중에 버린 결과를 다시 읽는다.
+
+### 모델과 대조군
+
+상수 `MarkGesture`와 `RereadPaint`를 추가했다. `NativePan`은 `customRange`를 쓴다. `Show`는 버려진 확인을 같은 작업 안에서 실행한다. 대조군 `unmarked-gesture`는 `UserRangePreserved`를, `dropped-confirmation`은 `UsableRenderReleasesBoot`를 깨야 한다. 성질, 경계, 기존 대조군은 그대로다. 모델의 줄 번호는 `1722f1fc` 기준이다.
+
+정지 중에 도착한 페인트 실패도 `pageshow`에서 다시 읽힌다. 모델에는 이것을 강제하는 단계가 없다. `Show` 뒤의 `PaintFails`가 같은 상태를 만든다.
+
+### 재생
+
+마운트 fixture를 런타임에 맞췄다. `ready()`는 `setData`가 버리기 전까지 한 promise를 돌려준다. `userOwnsRange()`는 `gesture()` 뒤에 참이고 유효한 `setRange`나 `setAtlasRange` 뒤에 거짓이다. fixture는 `setData` 뒤에 스스로 구간을 보고하지 않는다.
+
+새 사례는 둘이다. 전망을 기다리는 동안 차트에서 한 확대·이동이 전망 완료 뒤에도 남는다. 정지 중에 확인된 페인트가 `pageshow` 뒤에 부팅 화면을 푼다. 정지 중 페인트 실패 사례는 `pageshow`가 그 실패를 게시하는 것까지 확인하도록 바꿨다.
+
+| 검사 | `28bf58de`의 뷰 | `1722f1fc`의 뷰 |
+| --- | --- | --- |
+| 새 사례 둘과 바꾼 사례 하나, 두 종목 | 6개 모두 실패 | 6개 모두 통과 |
+| 재생 전체 | 40개 중 34개 통과 | 40개 통과 |
+
+| 검사 | 결과 |
+| --- | --- |
+| 현재 모델, 전체 성질 | 810,560개 구별 상태, 대기 0, 통과 |
+| 잘못된 모델 구성 11종 | 각각 지정한 반례 검출 |
+| 실제 UI 실행 재생 | MSTR·BMNR 각각 20개, 총 40개 통과. 간격 전환 2개 통과 |
+| 임시 제품 코드 변이 | 14종 모두 지정 assertion 실패 |
+
+`node scripts/verify-equity-state.mjs`는 종료 코드 0으로 끝난다.
+
+### `c3bcb58f`와 `e8873b88`에서 고친 문제
+
+`e8873b88`은 197행 `onViewport`가 `state.range`가 `null`인 동안 보고를 버리게 했다. 기본 구간은 다음 렌더가 다시 만든다. 사례 "ignores a chart window report on a cleared range"가 두 종목에서 이를 확인하고, 변이 `partial-viewport-range`가 그 검사를 지우면 실패한다. 재생은 42건, 변이는 15종이 되었다.
+
+`c3bcb58f`가 런타임에서 둘 다 고쳤다. 이제 휠·드래그·탐색 키 뒤의 보고만 `userOwnsRange()`를 참으로 만들고, 클릭은 그러지 않는다. `setData`는 중간 구간도 복원도 보고하지 않으며, 복원 전에 부른 `setRange`가 이긴다. `tests/funnest-chart-runtime.test.mjs`에 각각의 사례가 있고 둘 다 `c35f75cf`에서 실패한다. 마운트 fixture는 원래 `setData` 뒤에 보고하지 않으므로 재생과 모델은 바꾸지 않았다. 아래는 고치기 전의 기록이다.
+
+어느 성질도 이 둘을 말하지 않아서 검증은 통과했다. 둘 다 `tests/helpers/funnest-native-fixture.mjs` 위의 실제 런타임에서 측정했고, fixture로 실제 `dist/equity-view.js`에서 재생했다. 브라우저에서 관찰한 것은 아니다.
+
+1. 클릭도 사용자 구간으로 센다. `releaseInitialRange`는 플롯 안의 모든 `pointerdown`에서 실행된다. 구간을 움직이지 않은 클릭 뒤에도 `userOwnsRange()`가 참이다. 그 상태에서 `setData`는 밀린 구간과 이전 구간을 차례로 보고하고, `onViewport`는 `state.rangeTouched`를 쓴다. 클릭한 뒤 다시 조회하면 전망이 끝나도 관측 구간이 그대로 남는다. `28bf58de`에서는 같은 순서에서 구간이 전망까지 넓어졌다. `c35f75cf`에서 생겼다.
+2. 보고가 비워진 구간에 도착할 수 있다. 244행은 `state.range`를 `null`로 만들고 렌더를 예약한다. 코인 자료가 주가와 함께 준비되어 있으면 `setData` 뒤의 두 번째 보고가 그 렌더보다 먼저 온다. `onViewport`는 `{start,end}`만 적고, 194행은 `null`일 때만 구간을 다시 만든다. 전망 구간이 적용되지 않고, 날짜 이동은 `null`을 돌려주고, `changeInterval`은 `RangeError: Invalid native viewport grid`를 던진다. `931ed189`에서 생겼다. 단일 파일 빌드는 두 자료를 모두 내장한다.
+
+## 2026-11-16 유지 점검
+
+이 절의 동기화 커밋은 `856e77422e0a43a77470aed2e3f64fa1e522880b`이고 당시 `dist/equity-view.js` SHA-256은 `a94854ab78b9c1005e5f88baa3cd9c999975e2cbd8e975457e89468f2f2d2c9f`이다. 직전 기록 `fe93a572`는 이 이력의 조상이 아니다. 검증 대상 파일이 `fe93a572`와 `c92c4871`에서 바이트 단위로 같아서 `c92c4871..856e7742`를 읽었다. 대상 변경은 `931ed189`에서 왔다. Funnest 마운트와 페인트 확인이 대상이다. 이 절 아래의 내용은 이전 판본의 기록이다.
+
+### 코드가 바뀐 모양
+
+- `render`는 Funnest 차트를 한 번 마운트하고 그 뒤에는 setter로 갱신한다. 마운트할 때와 다른 시리즈를 넘길 때마다 `watchFunnestPaint`가 `mount.ready()`를 기다린다.
+- 이 continuation은 `state.funnestMount!==mount||suspended`이면 돌아간다. 그렇지 않으면 `state.funnestReady`나 `state.chartError`를 쓰고 준비 상태를 알린다.
+- `render`는 `state.funnestReady`일 때만 `revealReady()`를 부른다. 관측 렌더만으로는 부팅 화면이 풀리지 않는다.
+- 차트 오류 뒤의 다시 조회는 마운트를 파괴한다. 파괴된 마운트의 `ready()`는 나중에 거부된다.
+- 확대와 이동은 Funnest가 처리한다. 뷰는 `onViewport`로 받은 시작과 끝을 `state.range`에 적고 `state.rangeTouched`는 쓰지 않는다. 마운트가 있는 동안 `getRange`가 `null`이므로 `dist/chart-navigation.js`는 범위를 발행하지 않는다.
+- `restoreArchiveReadout`는 readout DOM과 `state.readoutSelection`만 쓴다. `dist/index.html` 부팅 스크립트의 변경은 실패 진단만 더한다. 둘 다 모델이 다루는 상태를 쓰지 않는다.
+
+### 모델과 대조군
+
+`mounted`, `funnestReady`, `chartError`, `orphan`, `discarded`, `rangeLost`와 동작 `PaintConfirmed`, `PaintFails`, `OrphanSettles`, `RetryChart`, `NativePan`을 추가했다. 상수 `GuardPaint`는 페인트 continuation의 가드다. 대조군 `stale-paint-failure`는 `NoStalePublication`을, `hidden-paint-failure`는 `NoHiddenReadiness`를 깨야 한다.
+
+모델은 확인 횟수와 Funnest가 가진 시리즈를 세지 않는다. 마운트가 있으면 확인이나 실패가 언제든 도착할 수 있고, 마운트된 차트의 렌더는 새 감시를 시작할 수 있다. `FailureScope`는 차트 실패를 `issued < RequestLimit`인 동안만 탐색한다. 요청 세대 3개, 일·주 간격, 자동·지정 구간, URL 구간 유무의 기존 경계는 그대로다.
+
+### 성질
+
+`UsableRenderReleasesBoot`의 문장을 바꿨다. 코드가 약속을 의도적으로 바꿨기 때문이다. 식은 그대로다.
+
+- 이전: 관측 렌더 또는 조치 가능한 오류 렌더가 부팅 화면을 즉시 해제한다.
+- 이후: Funnest가 페인트를 확인한 차트의 렌더, 또는 조치 가능한 오류의 렌더가 부팅 화면을 즉시 해제한다.
+- 근거: `931ed189`는 `render`에서 `state.funnestReady`일 때만 `revealReady()`를 부른다. `tests/funnest-observed-price-adapter.test.mjs`는 뷰 소스의 `result?.painted===true`와 `state.funnestReady=false`를 고정한다.
+
+`painted`는 확인된 차트의 렌더를 기록한다. `errorPainted`는 다시 조회 패널이 보이는 렌더를 기록한다. 이 패널은 시리즈가 없는 가격 실패와 차트 실패에서 보인다.
+
+`UserRangePreserved`는 문장을 유지하고 `~rangeLost`를 더했다. 확대와 이동이 `state.rangeTouched`를 쓰지 않게 되어, `customRange`만 읽는 이전 식은 그 구간을 다루지 못한다.
+
+`NoStalePublication`은 식을 유지하고 파괴된 차트도 다룬다. 파괴된 차트의 늦은 페인트 실패는 차트 오류를 게시하면 안 된다.
+
+### `856e7742`가 깨던 두 성질
+
+둘 다 고쳐졌다. 1번은 `1722f1fc`, 2번은 `c35f75cf`에서 고쳐졌다. 위 절이 그 확인이다.
+
+두 경로 모두 fixture로 실제 `dist/equity-view.js`에서 재생했다. 둘 다 `931ed189`에서 생겼다. 이 점검은 제품 코드를 고치지 않았다.
+
+1. `UsableRenderReleasesBoot`. 열기, 주가 수신, `render`가 차트를 마운트, `pagehide`, Funnest가 페인트를 확인, `pageshow`, `render`. 166행의 continuation은 `suspended`이면 기록 없이 돌아간다. 그래서 211행은 그 차트에 대해 `revealReady()`를 부르지 않는다. 주가와 전망이 이미 있으면 `pageshow`는 프레임만 예약하고, 그려진 차트가 부팅 화면 뒤에 남는다. 정지 중 도착은 이 검증이 계속 허용해 온 늦은 callback 순서다. 특정 브라우저가 이 순서를 만든다고 확인한 것은 아니다.
+2. `UserRangePreserved`. 관측 차트가 준비된 뒤 사용자가 확대하거나 이동, 코인 자료 수신, 두 번의 yield, 전망 완료. 197행 `onViewport`는 `state.rangeTouched`를 쓰지 않는다. 그래서 244행이 구간을 비우고 다음 `render`가 Funnest에 기본 구간을 넘긴다.
+
+| 검사 | 결과 |
+| --- | --- |
+| 현재 모델, 전체 성질 | `UsableRenderReleasesBoot` 위반, 7단계 |
+| 현재 모델, `UserRangePreserved`만 | 위반, 9단계 |
+| 현재 모델, 나머지 네 성질 | 1,693,424개 구별 상태, 대기 0, 통과 |
+| 잘못된 모델 구성 9종 | 각각 지정한 반례 검출 |
+| 실제 UI 실행 재생 | MSTR·BMNR 각각 18개, 총 36개 통과. 간격 전환 2개 통과 |
+| 임시 제품 코드 변이 | 11종 모두 지정 assertion 실패 |
+| 두 수정을 가정한 임시 모델 | 804,240개 구별 상태, 통과 |
+
+`856e7742`에서 `node scripts/verify-equity-state.mjs`는 재생과 대조군을 먼저 실행하고 마지막에 현재 모델에서 종료 코드 1로 끝났다.
+
+### 재생 fixture
+
+Funnest 마운트는 fixture다. `manualPaint`는 `ready()`를 미결로 두어 테스트가 늦게, 정지 중에, 또는 파괴 뒤에 결과를 전달하게 한다. 렌더마다 같은 마운트 기록이 다시 쓰이므로 이전 화면과 비교할 때는 `snapshot()`으로 복사한다. 이 복사가 없어서 `interval-range-reset` 변이가 실패하지 않았다. 구간 소유권은 `changeInterval`에 그대로 있다.
+
+### 다루지 않는 것
+
+- 마운트의 `onError`. 고정된 런타임은 datafeed와 trading adapter를 설정하지 않아 이 callback에 도달하지 못한다.
+- 엔진이 스스로 보내는 viewport 보고. 구간 초기화와 그 렌더 사이에 도착하는 보고도 포함한다.
+- 준비 상태가 페인트 확인을 기다린다는 규칙. 모델에는 없고 `unconfirmed-readiness` 재생 대조군이 코드의 순서를 고정한다.
+- 정지 중 도착한 페인트 실패. `856e7742`에서는 확인과 같은 방식으로 버려지고 오류도 준비 상태도 나타나지 않았다. 생존성 문제이며 이 검증의 성질이 아니다.
+- 런타임의 5초 페인트 제한과 부팅 스크립트의 20초 제한.
+
 ## v1.29 integration correspondence
 
 The current committed source is `7261c1807028e1b69bf9cd9be0d269a64f88acc0`. The strict process-exit rerun, exact runtime hashes, maintained mutation selectors and limits of the new features are recorded in [the integration review](../evolution-2026-10-26/publication-independent-review.md) and the current project verification skill. Current machine-readable receipt: [verification result](../evolution-2026-10-26/equity-state-final.json). Earlier revisions and charts below remain historical evidence. New economic, scenario and capital-recalculation behavior is not implicitly included in these finite lifecycle models.

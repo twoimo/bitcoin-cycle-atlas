@@ -6,6 +6,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
+import { registerHooks } from 'node:module';
 import { standaloneModuleMap } from '../scripts/standalone-modules.mjs';
 import { verifyStandaloneArtifact } from '../scripts/standalone-verification.mjs';
 import { javascriptModuleReferences, javascriptModuleSpecifiers } from '../scripts/module-references.mjs';
@@ -124,11 +125,28 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   const html = await readFile(first, 'utf8');
   assert.equal(await readFile(second, 'utf8'), html);
   const verification = await verifyStandaloneArtifact(html, isolated.dist);
+  assert.doesNotMatch(html, /id=["']atlas-boot-preloads["']|<link\b[^>]*\brel=["'](?:modulepreload|preload)["']/i);
+  for (const preload of [
+    '<script id="atlas-boot-preloads">/* HTTP hint generation must be stripped */</script>',
+    '<link rel="modulepreload" href="https://atlas.invalid/site-entry.js">',
+    '<link rel="preload" as="fetch" crossorigin="anonymous" href="https://atlas.invalid/conference/timeline.json">',
+  ]) {
+    await assert.rejects(verifyStandaloneArtifact(html.replace('</head>', preload + '</head>'), isolated.dist), /Standalone must not retain HTTP preload/);
+  }
   t.diagnostic(JSON.stringify({standaloneBytes:Buffer.byteLength(html),buildMilliseconds:Math.round(buildMilliseconds),relayImages:verification.relayImages,relayImageBytes:verification.relayImageBytes}));
   const bundle = await standaloneModuleMap(isolated.dist);
   assert.equal(verification.modules, Object.keys(bundle.imports).length);
   assert.equal(verification.snapshots, 10); // Existing nine plus the exact relay source.
   assert.ok(verification.forecastRecords>=5,'all five initial economic scenarios have actual preserved outputs');
+  for (const file of ['conference/route.js', 'conference/player.js', 'conference/timeline.js']) {
+    assert.ok(Object.hasOwn(bundle.imports, '@atlas/' + file), file + ' remains in the offline module graph');
+  }
+  const conferenceStyle = `<style>\n${await readFile(resolve(isolated.dist, 'conference/player.css'), 'utf8')}\n</style>`;
+  assert.equal(html.split(conferenceStyle).length - 1, 1, 'conference player styles are preserved exactly once');
+  await assert.rejects(verifyStandaloneArtifact(html.replace(conferenceStyle, ''), isolated.dist), /Missing or changed stylesheet: conference\/player\.css/);
+  const p1ShellStyle = `<style>\n${await readFile(resolve(isolated.dist, 'ui/shell-layout.css'), 'utf8')}\n</style>`;
+  assert.equal(html.split(p1ShellStyle).length - 1, 1, 'P1 shell styles are preserved exactly once');
+  await assert.rejects(verifyStandaloneArtifact(html.replace(p1ShellStyle, ''), isolated.dist), /Missing or changed stylesheet: ui\/shell-layout\.css/);
   const monthlyStyle = `<style>\n${await readFile(resolve(root, 'dist/monthly-backtest.css'), 'utf8')}\n</style>`;
   assert.equal(html.split(monthlyStyle).length - 1, 1, 'monthly backtest styles are preserved exactly once');
   assert.match(html,/\.forecast-journal\s*\{/,'the archived forecast workspace retains its offline styles');
@@ -162,7 +180,16 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   await assert.rejects(verifyStandaloneArtifact(html.replace(relayAssetsMatch[0],()=>relayAssetsMatch[1]+JSON.stringify(changedRelayAssets)+relayAssetsMatch[3]),isolated.dist),/Changed embedded relay image bytes/);
   const mapMatch = html.match(/<script type="importmap">([\s\S]*?)<\/script>/);
   const map = JSON.parse(mapMatch[1]);
-  const {initRelayRoomView}=await import(map.imports['@atlas/relay-room.js']);
+  // Node's data-URL loader does not implement browser import maps. Resolve only
+  // exact embedded module IDs through the map while loading the unchanged bytes.
+  const importMapHook=registerHooks({resolve(specifier,context,nextResolve){
+    if(Object.hasOwn(map.imports,specifier))return {url:map.imports[specifier],shortCircuit:true};
+    return nextResolve(specifier,context);
+  }});
+  let relayModule;
+  try{relayModule=await import(map.imports['@atlas/relay-room.js']);}
+  finally{importMapHook.deregister();}
+  const {initRelayRoomView}=relayModule;
   const {document,window}=parseHTML('<section id="relay"></section>'),relayRoot=document.getElementById('relay');
   const previousFetch=globalThis.fetch,fetches=[];globalThis.fetch=async url=>{fetches.push(url);throw new Error('Standalone relay requested an external resource');};
   try{

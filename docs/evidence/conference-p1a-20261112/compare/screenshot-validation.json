@@ -1,0 +1,22 @@
+{
+  "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "count": 3,
+  "failures": 0,
+  "screenshots": [
+    {
+      "file": "compare-1280x800.png",
+      "bytes": 101000,
+      "sha256": "9ee74bc54e47590b27859694083369059ae3405dd74c9c0ea870cda17007b9ed"
+    },
+    {
+      "file": "compare-1920x1080.png",
+      "bytes": 134446,
+      "sha256": "e1ab598d0cbcef99ab2e20dca06f52cc0c3e1d91737ebff47b67dc400dd5a6dd"
+    },
+    {
+      "file": "compare-390x844.png",
+      "bytes": 58158,
+      "sha256": "8613a7841d22495d0801a9dbdcd010ef6e1cbae919171ee8163378061e890f5c"
+    }
+  ]
+}

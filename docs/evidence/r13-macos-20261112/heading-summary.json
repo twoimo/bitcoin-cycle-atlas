@@ -1,0 +1,118 @@
+{
+  "head": "7f2982d944e329f3f00ecd0a592d22117eac6032",
+  "platform": "macOS darwin arm64 · Google Chrome 157.0.8103.79 · headless=new",
+  "command": "node scripts/verify-page-heading-browser.mjs --out build/heading-r13-0912",
+  "status": "passed",
+  "summary": {
+    "cases": 15,
+    "passed": "15/15",
+    "failures": 0
+  },
+  "cases": [
+    {
+      "id": "BTCUSD-320",
+      "status": "passed",
+      "failures": [],
+      "before": 852,
+      "headingTop": 856.5
+    },
+    {
+      "id": "ETHUSD-320",
+      "status": "passed",
+      "failures": [],
+      "before": 852,
+      "headingTop": 856.5
+    },
+    {
+      "id": "MSTR-320",
+      "status": "passed",
+      "failures": [],
+      "before": 852,
+      "headingTop": 856.5
+    },
+    {
+      "id": "BMNR-320",
+      "status": "passed",
+      "failures": [],
+      "before": 852,
+      "headingTop": 856.5
+    },
+    {
+      "id": "compare-320",
+      "status": "passed",
+      "failures": [],
+      "before": 852,
+      "headingTop": 869.5
+    },
+    {
+      "id": "BTCUSD-768",
+      "status": "passed",
+      "failures": [],
+      "before": 0,
+      "headingTop": 4
+    },
+    {
+      "id": "ETHUSD-768",
+      "status": "passed",
+      "failures": [],
+      "before": 0,
+      "headingTop": 4
+    },
+    {
+      "id": "MSTR-768",
+      "status": "passed",
+      "failures": [],
+      "before": 0,
+      "headingTop": 4
+    },
+    {
+      "id": "BMNR-768",
+      "status": "passed",
+      "failures": [],
+      "before": 0,
+      "headingTop": 4
+    },
+    {
+      "id": "compare-768",
+      "status": "passed",
+      "failures": [],
+      "before": 0,
+      "headingTop": 17
+    },
+    {
+      "id": "BTCUSD-1440",
+      "status": "passed",
+      "failures": [],
+      "before": 0,
+      "headingTop": 3
+    },
+    {
+      "id": "ETHUSD-1440",
+      "status": "passed",
+      "failures": [],
+      "before": 0,
+      "headingTop": 3
+    },
+    {
+      "id": "MSTR-1440",
+      "status": "passed",
+      "failures": [],
+      "before": 0,
+      "headingTop": 3
+    },
+    {
+      "id": "BMNR-1440",
+      "status": "passed",
+      "failures": [],
+      "before": 0,
+      "headingTop": 3
+    },
+    {
+      "id": "compare-1440",
+      "status": "passed",
+      "failures": [],
+      "before": 0,
+      "headingTop": 12
+    }
+  ]
+}

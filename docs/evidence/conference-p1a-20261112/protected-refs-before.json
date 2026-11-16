@@ -1,0 +1,9 @@
+{
+  "recordedAt": "2026-11-11T19:51:01.063588+00:00",
+  "operation": "read-only protected ref snapshot before feature-branch push",
+  "refs": {
+    "refs/heads/main": "a02425d3283343e80f9a0ad39a0456c09350919b",
+    "refs/pull/98/head": "7064d25f3fc6eb1574375f1ce76373926a637d6b",
+    "refs/pull/98/merge": "14fccfbcf6b48361882b5a99978e831e9a2d4d03"
+  }
+}

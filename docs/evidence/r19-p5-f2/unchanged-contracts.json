@@ -1,0 +1,322 @@
+{
+  "baseline": "3356e68aca3e45ce82bbeca1e852ba220fa9c762",
+  "checked": 63,
+  "unchanged": 63,
+  "files": [
+    {
+      "path": "dist/equity-view.js",
+      "unchanged": true,
+      "sha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5"
+    },
+    {
+      "path": "dist/eth-view.js",
+      "unchanged": true,
+      "sha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4"
+    },
+    {
+      "path": "dist/instrument-indicator-overlay.js",
+      "unchanged": true,
+      "sha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a"
+    },
+    {
+      "path": "scripts/verify-eth-candidate-browser.mjs",
+      "unchanged": true,
+      "sha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e"
+    },
+    {
+      "path": "dist/price-axis.js",
+      "unchanged": true,
+      "sha256": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2"
+    },
+    {
+      "path": "dist/styles.css",
+      "unchanged": true,
+      "sha256": "190305d7b15c3a6b64ff3a8a06bf40b2c4594b395d2f32c112fe2f4b2f9da08c"
+    },
+    {
+      "path": "dist/conference/player.js",
+      "unchanged": true,
+      "sha256": "f854c1a23503ce3b7bea166d8e712fcbdaf1737fd822d607ccafcb1648346927"
+    },
+    {
+      "path": "scripts/verify-r19-p5-f1-browser.mjs",
+      "unchanged": true,
+      "sha256": "7112458c6481a7fc5474da6a42951ed5401c8827d59cdb157605bd7f873a4bc6"
+    },
+    {
+      "path": "scripts/diagnostics/verify-native-ui-cloudflare.mjs",
+      "unchanged": true,
+      "sha256": "872c2791a191309d61462d8e5eec73692a7a0a8d7d5a090d901c6ee8c987001a"
+    },
+    {
+      "path": "scripts/ui-renewal-p0-contract.mjs",
+      "unchanged": true,
+      "sha256": "d34d2644e93f3a8805b0e4043f3c31bf4fcfee4eb3b5bb46bf3bca0f47324f39"
+    },
+    {
+      "path": "scripts/verify-asset-comparison.mjs",
+      "unchanged": true,
+      "sha256": "13265cf06eda92d37c6bad731375f33dc3d103e418f89a965071905cde41176a"
+    },
+    {
+      "path": "scripts/verify-chart-performance.mjs",
+      "unchanged": true,
+      "sha256": "166e589fc0292b85df88f4bc7cee4db42edb70349767006bb9f08bdf3a629565"
+    },
+    {
+      "path": "scripts/verify-chart-qa-metrics.mjs",
+      "unchanged": true,
+      "sha256": "23627b9fcc4acfb6aba2a10b3501312d0d75ddb690d1885676f29522c7536174"
+    },
+    {
+      "path": "scripts/verify-chart-replay-browser.mjs",
+      "unchanged": true,
+      "sha256": "e00c1de8b6eb02139d365ff19eefe7604a4d81ce1e9bcf1d6d5d20f5391e51a1"
+    },
+    {
+      "path": "scripts/verify-chart-replay-diagnostic.mjs",
+      "unchanged": true,
+      "sha256": "4f911461c1b7ed935984e733ff1a4420523363fabe0038126efdbba427a063be"
+    },
+    {
+      "path": "scripts/verify-chart-zoom-browser.mjs",
+      "unchanged": true,
+      "sha256": "d4e2f97681c10d79c6ef0c026a504f0331fde564894e0c91f39b5945e450d8e9"
+    },
+    {
+      "path": "scripts/verify-cloudflare-archive.mjs",
+      "unchanged": true,
+      "sha256": "755b4cd419dd4392f0e732f3c0821f14d551ee5973e700c088709b3348c54bf1"
+    },
+    {
+      "path": "scripts/verify-cloudflare-build.mjs",
+      "unchanged": true,
+      "sha256": "f69b36e6708cb20a049152cec33f3f7cfe4ac28ddb36eccbe856de2dad95d4ae"
+    },
+    {
+      "path": "scripts/verify-cloudflare-stage.mjs",
+      "unchanged": true,
+      "sha256": "fc5db1d972bb36a54820503c464526db1e34d5f177a89298ff7f5f749f0875f1"
+    },
+    {
+      "path": "scripts/verify-compare-shell-browser.mjs",
+      "unchanged": true,
+      "sha256": "76ba98fee09c5035d2e2b6007f7eeda552d68e2f73accb8029bb646df8cfd521"
+    },
+    {
+      "path": "scripts/verify-conference-browser.mjs",
+      "unchanged": true,
+      "sha256": "2f07bb91d2dbd804bc6d1eee597491676363007ea1981591e75641bc7c32b3ed"
+    },
+    {
+      "path": "scripts/verify-conference-data-browser.mjs",
+      "unchanged": true,
+      "sha256": "45fb940df434f5452e02d3fa611041c4ff40ef2aa7834ea8094f92d6b68a5b3a"
+    },
+    {
+      "path": "scripts/verify-conference-media-browser.mjs",
+      "unchanged": true,
+      "sha256": "55806dbdb7d0d44a6eb56b005050617de970645c3295747295d13c600bafe082"
+    },
+    {
+      "path": "scripts/verify-conference-timeline.mjs",
+      "unchanged": true,
+      "sha256": "a0200062d464220c1cda5c5e2a86bc5fe540289f40336201e8993adcee124785"
+    },
+    {
+      "path": "scripts/verify-consolidated-workspace-browser.mjs",
+      "unchanged": true,
+      "sha256": "43d5532666c895e4dd0a45b6b0ffb56abc86bf70c9d4896b846b0c828653c827"
+    },
+    {
+      "path": "scripts/verify-cycle-clock-backtest.py",
+      "unchanged": true,
+      "sha256": "4f5df9a8505b5a56d4e5bab0bb30c5c58dcc0722ee237096d51c25dc1057460d"
+    },
+    {
+      "path": "scripts/verify-cycle-decision.mjs",
+      "unchanged": true,
+      "sha256": "a03afe26952c7cc51a4cc3afe30c7d797bceaf931bde80cd6c3ecf43501a66d1"
+    },
+    {
+      "path": "scripts/verify-cycle-table-integration.mjs",
+      "unchanged": true,
+      "sha256": "9c8ae0e1aabb2f540ef49a7c66fc8841216904e46410a442b722600b08f83f87"
+    },
+    {
+      "path": "scripts/verify-equity-prices.mjs",
+      "unchanged": true,
+      "sha256": "8fd959d50ed35a3b111823f3154835a1fad07b6172804a3e48cf26266869f1cc"
+    },
+    {
+      "path": "scripts/verify-equity-state.mjs",
+      "unchanged": true,
+      "sha256": "39e8a25e5a67b897d0581f51e8079c801cb0c677adc2b82a21e8e346d603f9d3"
+    },
+    {
+      "path": "scripts/verify-eth-state.mjs",
+      "unchanged": true,
+      "sha256": "0a42f276c8649787763381555a126328c6b2acf0832a573df51b1be873a290db"
+    },
+    {
+      "path": "scripts/verify-evolution-journal.mjs",
+      "unchanged": true,
+      "sha256": "a7a20bb1147a71a2a45b899cd5817464c496ece6d8bdfbf08d1d9e7bdfd0bed8"
+    },
+    {
+      "path": "scripts/verify-forecast-replay-browser.mjs",
+      "unchanged": true,
+      "sha256": "afa1e2d880281c5db539459221a1a0e907452685d34141532c4f34fb9d026e39"
+    },
+    {
+      "path": "scripts/verify-funnest-p2a0-browser.mjs",
+      "unchanged": true,
+      "sha256": "2e1037e0c0251acd7cb441bf005e7dab8b8f77f6893559b143bf7d5b88135fce"
+    },
+    {
+      "path": "scripts/verify-housing-independent.py",
+      "unchanged": true,
+      "sha256": "d0f9a31fe5aa0664f132b284a3b75fae2f4b11c0f922a67d27086864852d9d64"
+    },
+    {
+      "path": "scripts/verify-housing.mts",
+      "unchanged": true,
+      "sha256": "d33d46039dea3a8670fa6ce32f1759407ece1e2dc112e07049e1ecdb6eeb064e"
+    },
+    {
+      "path": "scripts/verify-loading-surfaces-browser.mjs",
+      "unchanged": true,
+      "sha256": "acd6f89423fbed2b32a274b9d35957b2c470226baba1d8e0a772258a89644a3c"
+    },
+    {
+      "path": "scripts/verify-market-state.mjs",
+      "unchanged": true,
+      "sha256": "6307b4600a7e463083fac2ab7025becbd1246e0f7ee200278f08b4f13db2f4fb"
+    },
+    {
+      "path": "scripts/verify-monthly-backtest.py",
+      "unchanged": true,
+      "sha256": "61a4fd7be5d4c02d73217166c431dacd0a45e69abcc242e39a71699b32348b30"
+    },
+    {
+      "path": "scripts/verify-native-browser-suite.mjs",
+      "unchanged": true,
+      "sha256": "a351972fedf8c4dc187440582e88c06713a3558fa88461f99f1d536c69ef2796"
+    },
+    {
+      "path": "scripts/verify-native-chart-workbench-browser.mjs",
+      "unchanged": true,
+      "sha256": "d062e8b5489dcb4a58352ee9bba8cede7a6103c4914860c7c7cba080f9224c47"
+    },
+    {
+      "path": "scripts/verify-page-heading-browser.mjs",
+      "unchanged": true,
+      "sha256": "80667a6d589cada3ecb308f250e21a953cba9a7f907e12b537d4268e8053bdef"
+    },
+    {
+      "path": "scripts/verify-price-axis-browser.mjs",
+      "unchanged": true,
+      "sha256": "55bf56030d7f7529a6fa9ebc4c0b5486392e812ffee1472ff86d578698f846b9"
+    },
+    {
+      "path": "scripts/verify-publication-state.mjs",
+      "unchanged": true,
+      "sha256": "9b823b9ce687bbf36fe541c2c9b6a1e3b709018bb92c2a4e74b9cca0d5dfb4fb"
+    },
+    {
+      "path": "scripts/verify-published-origin-browser.mjs",
+      "unchanged": true,
+      "sha256": "3fa0ce267bca4d3fb1b7812bd64835acf0743d880498b6d9c7c6706fc4d16d12"
+    },
+    {
+      "path": "scripts/verify-responsive-workbench-browser.mjs",
+      "unchanged": true,
+      "sha256": "63efc03c19f76bfdb40d665d117f21366375b46828bdb7c98973e0345165b4f5"
+    },
+    {
+      "path": "scripts/verify-snapshot-browser.mjs",
+      "unchanged": true,
+      "sha256": "9766c02ae2203e5b9d7941695acaa0d28ec20803335e9f18a0f6fc0673954581"
+    },
+    {
+      "path": "scripts/verify-static.mjs",
+      "unchanged": true,
+      "sha256": "14b339acd3986706f082c87c73a38fd36eb00fd4d76c9b66f0e20a8f41553c89"
+    },
+    {
+      "path": "scripts/verify-system-independent-review.mjs",
+      "unchanged": true,
+      "sha256": "7a2bbb9cbacc700d4260b8676c1b496fe4a67e3fdd4574be02ffd9fd20f83892"
+    },
+    {
+      "path": "scripts/verify-system-numerics.mjs",
+      "unchanged": true,
+      "sha256": "3d1febef383f870d7661a10d944179564fbc56ff24dd0194a63d508323b8c70f"
+    },
+    {
+      "path": "scripts/verify-themes-independent.py",
+      "unchanged": true,
+      "sha256": "3f5aec4582c5eec9da53c19a7bf32afa43152bf3b0cce5600d1997afbd5cbea1"
+    },
+    {
+      "path": "scripts/verify-themes.mts",
+      "unchanged": true,
+      "sha256": "c628e41b62dc178aba881b2d206843a2714052f36331af115feb8a2831fb8537"
+    },
+    {
+      "path": "scripts/verify-treasury-conservation.mjs",
+      "unchanged": true,
+      "sha256": "ced0746ab55657fa20b050c1effd8054d9ddf6276f89e91699cb49cb947e41c6"
+    },
+    {
+      "path": "scripts/verify-treasury-paths.mjs",
+      "unchanged": true,
+      "sha256": "49f1828cc90afcff1357ed79acfacbc6653aaa4e5252561335bad9b6c242953a"
+    },
+    {
+      "path": "scripts/verify-ui-cloudflare.mjs",
+      "unchanged": true,
+      "sha256": "c2b051b2cc376d4a035ce5d71908acc286cdd549729ad2b2f097aeab90ea7b33"
+    },
+    {
+      "path": "scripts/verify-ui-contract-browser.mjs",
+      "unchanged": true,
+      "sha256": "3a61933e83066ed81e9c5f2cc5c62c557863de23aa153e1c9438792f97aa9526"
+    },
+    {
+      "path": "scripts/verify-ui-renewal-p0-browser.mjs",
+      "unchanged": true,
+      "sha256": "d31fda26f00111f8d3b949e64bad629395af009cb516ac46c2e0165ad90eea26"
+    },
+    {
+      "path": "scripts/verify-ui-renewal-p1-browser.mjs",
+      "unchanged": true,
+      "sha256": "198ebe69d8bacef484c3f1f026d5ebe7a3f598ea5367be221f955ba24215edd5"
+    },
+    {
+      "path": "scripts/verify-volume-forecast.mjs",
+      "unchanged": true,
+      "sha256": "78239ea778391cef6e07338999c20bb67f82fc7fec06ce93920a80ea12eb14ea"
+    },
+    {
+      "path": "scripts/verify-workspace-browser.mjs",
+      "unchanged": true,
+      "sha256": "777ee15f4688a27cd42297435753c0a412b7df20c7f6b55bbffad77050ee4179"
+    },
+    {
+      "path": "scripts/verify-workspace-evolution.mjs",
+      "unchanged": true,
+      "sha256": "be46b31361202a80177ca42996d0eb8fe1aea713e3a0dd71bc4766db95fff92f"
+    },
+    {
+      "path": "scripts/verify-wp6-browser.mjs",
+      "unchanged": true,
+      "sha256": "0ce6b6a5b0c2122d8b6ad16dd768d41efddbbd8041c4f7ebee611b90d39471a2"
+    },
+    {
+      "path": "scripts/verify-wp6-cloudflare.mjs",
+      "unchanged": true,
+      "sha256": "6c15c7985928ec14a95628e4b56b7605bba70f96f1c5015dc1176381efc71be9"
+    }
+  ]
+}

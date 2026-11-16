@@ -41,11 +41,18 @@ export function createChartExportDataSnapshot(context={}) {
 
 /** Capture all geometry, text, source metadata and CSV rows before the first await. */
 export function captureChartExportSnapshot(context={}) {
+  const temporaryCanvas=context.canvas||context.imageOptions?.canvas;
+  try {
   const data=createChartExportDataSnapshot(context),panels=(context.panels||[]).filter(panel=>panel?.svg&&!panel.hidden&&!panel.minimized),options={...(context.imageOptions||{})},images={main:null,workspace:null},imageErrors={};
   const scopeNote='저장 범위: 현재 가격 화면. 날짜·가격축 범위와 표시 중인 연구 주석을 유지합니다.';
-  try{images.main=createChartSvgExport(context.svg,{...options,panels:[],note:[options.note,scopeNote].filter(Boolean).join(' · ')});}catch(error){imageErrors.main=error.message;}
-  try{images.workspace=createChartSvgExport(context.svg,{...options,panels,note:[options.note,'저장 범위: 현재 가격 화면 + 보이는 펼친 연구 창. 숨김·최소화 창은 제외하며 각 창의 고유 축과 범위를 유지합니다.'].filter(Boolean).join(' · ')});}catch(error){imageErrors.workspace=error.message;}
-  return deepFreeze({...data,images,imageErrors,panels:panels.map(panel=>({title:panel.title||'분석 창',readout:panel.readout||'',note:panel.note||''})),excludedPanels:(context.panels||[]).filter(panel=>panel?.hidden||panel?.minimized).map(panel=>panel.title||'분석 창')});
+  try{images.main=createChartSvgExport(context.svg,{...options,canvas:context.canvas||options.canvas,panels:[],note:[options.note,scopeNote].filter(Boolean).join(' · ')});}catch(error){imageErrors.main=error.message;}
+  try{images.workspace=createChartSvgExport(context.svg,{...options,canvas:context.canvas||options.canvas,panels,note:[options.note,'저장 범위: 현재 가격 화면 + 보이는 펼친 연구 창. 숨김·최소화 창은 제외하며 각 창의 고유 축과 범위를 유지합니다.'].filter(Boolean).join(' · ')});}catch(error){imageErrors.workspace=error.message;}
+  return deepFreeze({...data,canvasRaster:Boolean(context.canvas||options.canvas),images,imageErrors,panels:panels.map(panel=>({title:panel.title||'분석 창',readout:panel.readout||'',note:panel.note||''})),excludedPanels:(context.panels||[]).filter(panel=>panel?.hidden||panel?.minimized).map(panel=>panel.title||'분석 창')});
+  } finally {
+    // The explicitly owned BTC export snapshot is not a persistent renderer.
+    // Remove it after both captures, including invalid-data and image failures.
+    if(temporaryCanvas?.dataset?.funnestExportCanvas==='true'&&temporaryCanvas.atlasFunnestExportOwner)temporaryCanvas.remove?.();
+  }
 }
 
 export function supportsChartImageClipboard(view=globalThis){return Boolean(view.navigator?.clipboard?.write&&view.ClipboardItem&&(!view.ClipboardItem.supports||view.ClipboardItem.supports('image/png')));}
@@ -77,7 +84,7 @@ export function mountChartExportWorkbench({document:doc=globalThis.document,getC
       fact('자료',item?.label);fact('출처',item?.source);fact('자료 종류',item?.observedOnly?'실제 관측만':item?.kind==='conditional'?'조건부 가정 · 관측값 아님':'별도 분석 계산값');fact('CSV 간격 / 시간',`${item?.interval||'—'} · UTC`);fact('CSV 단위',item?.currency==='USD'?'원 USD · 화면의 지수/% 변환을 적용하지 않습니다.':item?.currency);fact('로드된 자료 범위',item?.rangeBasis==='analysis-pane'&&!item.loadedRange?'연구 창 고유 분석 축':rangeLabel(item?.loadedRange));fact('실제 저장 범위',item?.rangeBasis==='analysis-pane'?'현재 보이는 연구 창 원자료 전체 · 가격 날짜 필터 미적용':rangeLabel(item?.exportRange));fact('저장 행 수',String(item?.rowCount||0));fact('범위 설명',item?.note);
       const content=make('pre',{'aria-label':'CSV 첫 6행 미리보기'},item?.csv?.split('\r\n').slice(0,7).join('\n')||item?.error||'저장할 자료가 없습니다.');preview.append(content);download.disabled=busy||!item?.csv;announce(item?.error||'미리보기와 동일한 행을 저장합니다.');
     }else{
-      fact('이미지 범위',scopeValue==='workspace'?`현재 가격 + 펼친 연구 창 ${snapshot.panels.length}개`:'현재 가격 화면');if(scopeValue==='workspace'){fact('포함 연구 창',snapshot.panels.map(item=>item.title).join(' · ')||'없음');fact('제외 창',snapshot.excludedPanels.join(' · ')||'없음');}fact('자료 / 가정',snapshot.datasets.filter(item=>item.rowCount>0).map(item=>`${item.source} (${item.kind})`).join(' · '));fact('가격 / 날짜축','현재 화면의 각 축과 표시 범위를 유지합니다. 연구 창의 고유 축을 가격 날짜축으로 바꾸지 않습니다.');
+      fact('이미지 범위',scopeValue==='workspace'?`현재 가격 + 펼친 연구 창 ${snapshot.panels.length}개`:'현재 가격 화면');if(scopeValue==='workspace'){fact('포함 연구 창',snapshot.panels.map(item=>item.title).join(' · ')||'없음');fact('제외 창',snapshot.excludedPanels.join(' · ')||'없음');}fact('자료 / 가정',snapshot.datasets.filter(item=>item.rowCount>0).map(item=>`${item.source} (${item.kind})`).join(' · '));fact('가격 / 날짜축','현재 화면의 각 축과 표시 범위를 유지합니다. 연구 창의 고유 축을 가격 날짜축으로 바꾸지 않습니다.');if(snapshot.canvasRaster)fact('SVG 내보내기 구성','Funnest 캔버스는 PNG 픽셀, Atlas 오버레이·주석·범례·출처는 SVG 요소입니다.');
       const vector=snapshot.images[scopeValue];download.disabled=busy||!vector;if(vector&&doc.defaultView?.URL?.createObjectURL){previewURL=doc.defaultView.URL.createObjectURL(new Blob([vector],{type:'image/svg+xml;charset=utf-8'}));preview.append(make('img',{src:previewURL,alt:scopeValue==='workspace'?'현재 가격과 보이는 연구 창 내보내기 미리보기':'현재 가격 화면 내보내기 미리보기'}));}announce(snapshot.imageErrors[scopeValue]||'현재 화면을 고정한 이미지입니다. PNG는 메모리 한도에 맞춰 해상도를 조정합니다.');
     }
   }

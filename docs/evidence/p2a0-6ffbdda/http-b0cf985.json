@@ -1,0 +1,89 @@
+{
+  "kind": "atlas-funnest-p2a0-http",
+  "nativeEvidence": false,
+  "status": "passed",
+  "checks": [
+    {
+      "url": "/",
+      "status": 200,
+      "encoding": "gzip",
+      "decodedBytes": 1494,
+      "sha256": "bb9df8761249b141e42857641d8ef41ad0e3bed41ce6cef003f2b94a6cb436e3",
+      "matchesGeneratedSource": true
+    },
+    {
+      "url": "/spike.js",
+      "status": 200,
+      "encoding": "gzip",
+      "decodedBytes": 234611,
+      "sha256": "1266798b6412f78372f4a00a2b40ec9683dd78bafa3c56f559609906742af93d",
+      "matchesGeneratedSource": true
+    },
+    {
+      "url": "/favicon.svg",
+      "status": 200,
+      "encoding": "gzip",
+      "decodedBytes": 251,
+      "sha256": "27c6c6bafd62f10468037f5a42ed04b287a77e52ca67617aed773748bda6f161",
+      "matchesGeneratedSource": true
+    },
+    {
+      "url": "/data/btc-volume.json",
+      "status": 200,
+      "encoding": "gzip",
+      "decodedBytes": 864273,
+      "sha256": "a602ba904b78284138684377ea559598173063ee435350ce281de430150a9993",
+      "matchesGeneratedSource": true
+    },
+    {
+      "url": "/THIRD_PARTY_NOTICES.txt",
+      "status": 200,
+      "encoding": "gzip",
+      "decodedBytes": 17445,
+      "sha256": "e4841226e62afc521d1665ca76561ca4b413783bf565156c17694d4f38868898",
+      "matchesGeneratedSource": true
+    }
+  ],
+  "requests": [
+    {
+      "url": "/",
+      "method": "GET",
+      "status": 200,
+      "bytes": 841,
+      "encoding": "gzip",
+      "sourceSha256": "bb9df8761249b141e42857641d8ef41ad0e3bed41ce6cef003f2b94a6cb436e3"
+    },
+    {
+      "url": "/spike.js",
+      "method": "GET",
+      "status": 200,
+      "bytes": 73721,
+      "encoding": "gzip",
+      "sourceSha256": "1266798b6412f78372f4a00a2b40ec9683dd78bafa3c56f559609906742af93d"
+    },
+    {
+      "url": "/favicon.svg",
+      "method": "GET",
+      "status": 200,
+      "bytes": 211,
+      "encoding": "gzip",
+      "sourceSha256": "27c6c6bafd62f10468037f5a42ed04b287a77e52ca67617aed773748bda6f161"
+    },
+    {
+      "url": "/data/btc-volume.json",
+      "method": "GET",
+      "status": 200,
+      "bytes": 222328,
+      "encoding": "gzip",
+      "sourceSha256": "a602ba904b78284138684377ea559598173063ee435350ce281de430150a9993"
+    },
+    {
+      "url": "/THIRD_PARTY_NOTICES.txt",
+      "method": "GET",
+      "status": 200,
+      "bytes": 6100,
+      "encoding": "gzip",
+      "sourceSha256": "e4841226e62afc521d1665ca76561ca4b413783bf565156c17694d4f38868898"
+    }
+  ]
+}
