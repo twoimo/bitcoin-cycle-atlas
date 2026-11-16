@@ -3,6 +3,7 @@ import type { Point } from '@atlas/contracts/market-lab';
 import type { RsiRow } from '@atlas/domain/market-lab';
 import type { RsiBar } from '@atlas/domain/rsi-bars';
 import { BarPlot, CartesianChart, CandlePlot, Line, Point as ChartPoint, ReferenceLine, Scrubber, XAxis, YAxis, useCartesianChart } from '@funnest/charts-react';
+import { logTicks, ticks as niceTicks } from '@funnest/charts-viz';
 import type { InstrumentMarker } from './rsi-chart-canvas.js';
 import type { RsiChartView } from '../rsi-chart-model.js';
 import type { InstrumentSeries } from '../instrument-chart-model.js';
@@ -152,6 +153,26 @@ export function selectedPointLabelNeedsSuppression(
     return Math.abs(xAt(index) - selectedX) < (selectedWidth + signalWidth) / 2 + 12;
   });
 }
+/**
+ * Funnest 0.6.22 has no reversed value axis. A reflection that is affine in the axis's own space
+ * (price for linear, log price for log) draws as an exact mirror, so an inverted pane plots reflected
+ * prices and reflects every label back. Each reflection is its own inverse.
+ */
+export function priceAxisReflection(scale: RsiChartView['scale'], inverted: boolean): (value: number) => number {
+  if (!inverted) return value => value;
+  return scale === 'log' ? value => 1 / value : value => -value;
+}
+
+/** Ticks are chosen on the observed price range, then drawn where the reflected scale plots them. */
+function PriceAxis({ reflect }: { reflect: (value: number) => number }) {
+  const { plot, yScales } = useCartesianChart(), scale = yScales.price;
+  const [low, high] = scale.domain.map(reflect).sort((a: number, b: number) => a - b);
+  const count = Math.max(2, Math.floor(plot.height / 32));
+  const values = scale.kind === 'log' ? logTicks(low, high, count) : niceTicks(low, high, count);
+  return <YAxis axisId="price" width={68} ticks={values.map(reflect)} tickLabelFormatter={(value: number) => fmt(reflect(value))}/>;
+}
+PriceAxis.axisSpace = () => YAxis.axisSpace({ width: 68 });
+
 const statusColor = (state?: string) => state === 'above' ? 'var(--housing-above,var(--green))' : state === 'below' ? 'var(--housing-below,var(--red))' : 'var(--housing-neutral,var(--muted))';
 function boundedWindow(start: number, end: number, timeline: readonly string[]) {
   const min = Date.parse(`${timeline[0]}T00:00:00Z`), max = Date.parse(`${timeline.at(-1)}T00:00:00Z`);
@@ -178,6 +199,11 @@ export function FunnestInstrumentPlot(props: Props) {
     return bar ? { open: bar[1], high: bar[2], low: bar[3], close: bar[4], ...(bar[5] === null ? {} : { volume: bar[5] }) } : null;
   });
   const priceData = dates.map(stamp => { const value = priceByDate.get(stamp); return typeof value === 'number' && Number.isFinite(value) ? value : null; });
+  const reflect = priceAxisReflection(view.scale, view.inverted);
+  const plottedPrices = priceData.map(value => value === null ? null : reflect(value));
+  // A reflection reverses CandlePlot's close >= open test, so open and close trade places to keep the observed direction's colour.
+  const plottedCandles = view.inverted ? candleData.map(bar => bar && { ...bar, open: reflect(bar.close), close: reflect(bar.open), high: reflect(bar.high), low: reflect(bar.low) }) : candleData;
+  const scrubberValue = (value: number, seriesId: string) => fmt(seriesId === 'price' ? reflect(value) : value);
   const volumes = dates.map(stamp => { const value = volumeByDate.get(stamp)?.value ?? barByDate.get(stamp)?.[5] ?? null; return typeof value === 'number' && Number.isFinite(value) ? value : null; });
   const averages = dates.map(stamp => { const value = volumeByDate.get(stamp)?.average; return typeof value === 'number' && Number.isFinite(value) ? value : null; });
   const hasVolume = view.showVolume && volumes.some(value => value !== null);
@@ -196,6 +222,7 @@ export function FunnestInstrumentPlot(props: Props) {
     const value = priceData[at];
     return value == null ? [] : [{ ...marker, at, value }];
   });
+  const plottedMarkers = markersAt.map(marker => ({ ...marker, value: reflect(marker.value) }));
   const visibleCrossings = view.showCrossings ? crossings.filter(row => dates.includes(row.date)) : [];
   const crossingPlotLeft = nativePricePane?.left ?? 12 + (hasVolume ? volumeAxisWidth : 0);
   const crossingPlotRight = Math.max(0, chartWidth - (nativePricePane?.right ?? chartWidth - 68));
@@ -208,7 +235,8 @@ export function FunnestInstrumentPlot(props: Props) {
     crossingPlotLeft, crossingPlotRight, crossingBanded);
   const dateTickSpacing = chartWidth <= 500 ? 105 : 120;
   const plotHeight = Math.max(180, chartHeight - (view.showRsi ? 120 : 0));
-  const priceDomain = view.domain ? { min: view.inverted ? view.domain.max : view.domain.min, max: view.inverted ? view.domain.min : view.domain.max } : undefined;
+  const domainEnds = view.domain ? [reflect(view.domain.min), reflect(view.domain.max)] : null;
+  const priceDomain = domainEnds ? { min: Math.min(...domainEnds), max: Math.max(...domainEnds) } : undefined;
   const priceAxis = { id: 'price', includeZero: false, nice: view.autoScale, scaleType: view.scale, ...(priceDomain ? { domain: priceDomain } : {}) } as const;
   useEffect(() => {
     const node = host.current?.querySelector('svg') ?? null;
@@ -271,33 +299,33 @@ export function FunnestInstrumentPlot(props: Props) {
     onKeyDown={event => { if (isPlotControlTarget(event.target)) return; if (event.key === 'Escape' && menuOpen) { event.preventDefault(); setMenuOpen(false); } else if (event.key === 'Enter' && !(event.target as Element).closest('button,a,input,select,textarea,summary,[contenteditable="true"]')) { event.preventDefault(); choose(); } }}>
     <div className="atlas-funnest-axis-unit" aria-label={`가격 단위 ${unit}`}>{unit}</div>
     {bars.length > 0 && view.chartType === 'candles' ? <CartesianChart width={chartWidth} series={[
-      { id: 'price', label: '관측 OHLC', data: candleData.map(bar => bar ? [bar.low, bar.high] as const : null), yAxisId: 'price', color: 'var(--chart-candle-up)' },
+      { id: 'price', label: '관측 OHLC', data: candleData.map(bar => bar ? [reflect(bar.low), reflect(bar.high)] as const : null), yAxisId: 'price', color: 'var(--chart-candle-up)' },
       ...(hasVolume ? [{ id: 'volume', label: `거래량 (${volumeUnit || '단위 미제공'})`, data: volumes, yAxisId: 'volume', color: 'var(--muted)' }] : []),
     ]} xAxis={{ data: dates, scaleType: 'band', bandPadding: 0.2 }} yAxis={[priceAxis, ...(hasVolume ? [{ id: 'volume', domain: volumeScale.domain, nice: false }] : [])]} height={plotHeight} inset={{ left: 12, right: 0, top: 20, bottom: 30 }} enableScrubbing onScrubberPositionChange={updateIndex}
       getScrubberAccessibilityLabel={(i: number) => { const bar = candleData[i]; return bar ? `${dates[i]} · 시가 ${fmt(bar.open)} · 고가 ${fmt(bar.high)} · 저가 ${fmt(bar.low)} · 종가 ${fmt(bar.close)} ${unit} · 거래량 ${bar.volume == null ? '미공표' : `${fmt(bar.volume)} ${volumeUnit}`}` : `${dates[i]} · 관측값 없음`; }} aria-label={`${symbol} 실제 OHLC ${unit}`}>
-      <NativePricePaneLayout host={host} onLayout={onPlotGeometry}/><XAxis minTickSpacing={dateTickSpacing} tickLabelFormatter={dateLabel} showGrid/><YAxis axisId="price" width={68} tickLabelFormatter={fmt}/>
+      <NativePricePaneLayout host={host} onLayout={onPlotGeometry}/><XAxis minTickSpacing={dateTickSpacing} tickLabelFormatter={dateLabel} showGrid/><PriceAxis reflect={reflect}/>
       {hasVolume && <YAxis axisId="volume" position="left" width={volumeAxisWidth} ticks={volumeScale.ticks} tickLabelFormatter={fmt} showGrid={false}/>}
       {hasVolume && <BarPlot seriesIds={['volume']} radius={0} highlightScrubbed={false} getBarColor={(_value: number, i: number) => statusColor(volumeByDate.get(dates[i])?.state)}/>}
-      <CandlePlot data={candleData} yAxisId="price" upColor="var(--chart-candle-up)" downColor="var(--chart-candle-down)" tooltip={false} valueFormatter={fmt}/>
-      <FunnestInstrumentMarkers markers={markersAt} active={active} onMarker={onMarker}/>
-      {visibleCrossings.map(row => { const index = dates.indexOf(row.date), label = `${row.side} ${row.level}`, key = rsiCrossingMarkerKey(row); return <ChartPoint key={key} dataX={index} dataY={priceByDate.get(row.date) ?? undefined} color={row.side === 'Buy' ? 'var(--green)' : 'var(--red)'} label={crossingLabelKeys.has(key) ? label : undefined} labelPosition={edgeSafePointLabelPosition(index, label, chartWidth, dates.length, crossingPlotLeft, crossingPlotRight, hasVolume || bars.length > 0 && view.chartType === 'candles')}/>; }) }
-      {priceData[selectedIndex] != null && <ChartPoint dataX={selectedIndex} dataY={priceData[selectedIndex]!} color="var(--accent)" label={selectedLabelConflict ? undefined : `${dates[selectedIndex]} · 선택`} labelPosition={selectedLabelPosition} />}
-      <Scrubber dimFuture={false} showValues valueFormatter={fmt} label={dateLabel}/>
+      <CandlePlot data={plottedCandles} yAxisId="price" upColor="var(--chart-candle-up)" downColor="var(--chart-candle-down)" tooltip={false} valueFormatter={fmt}/>
+      <FunnestInstrumentMarkers markers={plottedMarkers} active={active} onMarker={onMarker}/>
+      {visibleCrossings.map(row => { const index = dates.indexOf(row.date), label = `${row.side} ${row.level}`, key = rsiCrossingMarkerKey(row); return <ChartPoint key={key} dataX={index} dataY={plottedPrices[index] ?? undefined} color={row.side === 'Buy' ? 'var(--green)' : 'var(--red)'} label={crossingLabelKeys.has(key) ? label : undefined} labelPosition={edgeSafePointLabelPosition(index, label, chartWidth, dates.length, crossingPlotLeft, crossingPlotRight, hasVolume || bars.length > 0 && view.chartType === 'candles')}/>; }) }
+      {priceData[selectedIndex] != null && <ChartPoint dataX={selectedIndex} dataY={plottedPrices[selectedIndex]!} color="var(--accent)" label={selectedLabelConflict ? undefined : `${dates[selectedIndex]} · 선택`} labelPosition={selectedLabelPosition} />}
+      <Scrubber dimFuture={false} showValues valueFormatter={scrubberValue} label={dateLabel}/>
     </CartesianChart> : <CartesianChart width={chartWidth} series={[
-      { id: 'price', label: series?.frequency === 'monthly' ? '월별 가격지수' : '관측 종가', data: priceData, color: 'var(--data-gold)' },
+      { id: 'price', label: series?.frequency === 'monthly' ? '월별 가격지수' : '관측 종가', data: plottedPrices, color: 'var(--data-gold)' },
       ...(hasVolume ? [{ id: 'volume', label: `거래량 (${volumeUnit || '단위 미제공'})`, data: volumes, yAxisId: 'volume', color: 'var(--muted)' }] : []),
       ...(hasAverage ? [{ id: 'volume-average', label: '과거 평균 거래량', data: averages, yAxisId: 'volume', color: 'var(--text)', lineStyle: 'dashed' as const }] : []),
     ]} xAxis={{ data: dates, scaleType: hasVolume ? 'band' : 'linear', bandPadding: 0.2 }} yAxis={[priceAxis, ...(hasVolume ? [{ id: 'volume', domain: volumeScale.domain, nice: false }] : [])]} height={plotHeight} inset={{ left: 12, right: 0, top: 20, bottom: 30 }} enableScrubbing onScrubberPositionChange={updateIndex}
       getScrubberAccessibilityLabel={(i: number) => `${dates[i] ?? ''} · ${priceData[i] == null ? '관측값 없음' : `${fmt(priceData[i]!)} ${unit}`} · 거래량 ${volumes[i] == null ? '미공표' : `${fmt(volumes[i]!)} ${volumeUnit}`}`} aria-label={`${symbol} 관측 종가 ${unit}`}>
-      <NativePricePaneLayout host={host} onLayout={onPlotGeometry}/><XAxis minTickSpacing={dateTickSpacing} tickLabelFormatter={dateLabel} showGrid/><YAxis axisId="price" width={68} tickLabelFormatter={fmt}/>
+      <NativePricePaneLayout host={host} onLayout={onPlotGeometry}/><XAxis minTickSpacing={dateTickSpacing} tickLabelFormatter={dateLabel} showGrid/><PriceAxis reflect={reflect}/>
       {hasVolume && <YAxis axisId="volume" position="left" width={volumeAxisWidth} ticks={volumeScale.ticks} tickLabelFormatter={fmt} showGrid={false}/>}
       {hasVolume && <BarPlot seriesIds={['volume']} radius={0} highlightScrubbed={false} getBarColor={(_value: number, i: number) => statusColor(volumeByDate.get(dates[i])?.state)}/>}
       <Line seriesId="price" curve="linear" strokeWidth={2}/>{hasAverage && <Line seriesId="volume-average" curve="linear" strokeWidth={1.2}/>}
-      <FunnestInstrumentMarkers markers={markersAt} active={active} onMarker={onMarker}/>
-      {visibleCrossings.map(row => { const index = dates.indexOf(row.date), label = `${row.side} ${row.level}`, key = rsiCrossingMarkerKey(row); return <ChartPoint key={key} dataX={index} dataY={priceByDate.get(row.date) ?? undefined} color={row.side === 'Buy' ? 'var(--green)' : 'var(--red)'} label={crossingLabelKeys.has(key) ? label : undefined} labelPosition={edgeSafePointLabelPosition(index, label, chartWidth, dates.length, crossingPlotLeft, crossingPlotRight, hasVolume || bars.length > 0 && view.chartType === 'candles')}/>; }) }
-      {priceData[selectedIndex] != null && <ChartPoint dataX={selectedIndex} dataY={priceData[selectedIndex]!} color="var(--accent)" label={selectedLabelConflict ? undefined : `${dates[selectedIndex]} · 선택`} labelPosition={selectedLabelPosition} />}
-      {view.measurement.filter(anchor => anchor.panel === 'price').map((anchor,i) => <ChartPoint key={`measure${i}`} dataX={dates.indexOf(anchor.date)} dataY={anchor.value} color="var(--text)" label={`측정 ${i+1}`}/>)}
-      <Scrubber dimFuture={false} showValues valueFormatter={fmt} label={dateLabel}/>
+      <FunnestInstrumentMarkers markers={plottedMarkers} active={active} onMarker={onMarker}/>
+      {visibleCrossings.map(row => { const index = dates.indexOf(row.date), label = `${row.side} ${row.level}`, key = rsiCrossingMarkerKey(row); return <ChartPoint key={key} dataX={index} dataY={plottedPrices[index] ?? undefined} color={row.side === 'Buy' ? 'var(--green)' : 'var(--red)'} label={crossingLabelKeys.has(key) ? label : undefined} labelPosition={edgeSafePointLabelPosition(index, label, chartWidth, dates.length, crossingPlotLeft, crossingPlotRight, hasVolume || bars.length > 0 && view.chartType === 'candles')}/>; }) }
+      {priceData[selectedIndex] != null && <ChartPoint dataX={selectedIndex} dataY={plottedPrices[selectedIndex]!} color="var(--accent)" label={selectedLabelConflict ? undefined : `${dates[selectedIndex]} · 선택`} labelPosition={selectedLabelPosition} />}
+      {view.measurement.filter(anchor => anchor.panel === 'price').map((anchor,i) => <ChartPoint key={`measure${i}`} dataX={dates.indexOf(anchor.date)} dataY={reflect(anchor.value)} color="var(--text)" label={`측정 ${i+1}`}/>)}
+      <Scrubber dimFuture={false} showValues valueFormatter={scrubberValue} label={dateLabel}/>
     </CartesianChart>}
     {view.showRsi && rows.length > 0 && <div className="atlas-funnest-rsi" data-panel="rsi"><CartesianChart width={chartWidth} series={[
       { id: 'rsi', label: 'RSI14', data: dates.map(stamp => rowByDate.get(stamp)?.rsi ?? null), color: 'var(--ml-beta)' },
