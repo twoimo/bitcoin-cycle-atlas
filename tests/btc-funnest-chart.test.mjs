@@ -212,3 +212,43 @@ test('BTC Funnest first paint uses only visible observed/forecast extrema and pr
     assert.equal(mounted.chart.mainScale.autoScale,false);assert.equal(mounted.chart.mainScale.min,60_000,'manual lower bound is exact');assert.equal(mounted.chart.mainScale.max,80_000,'manual upper bound is exact');
   }finally{mounted?.destroy();document.createElement=originalCreate;for(const[key,descriptor]of originals)descriptor?Object.defineProperty(globalThis,key,descriptor):delete globalThis[key];}
 });
+
+test('plain arrows, Home, End and _ on the focused BTC engine host select bars like the chart overlay and never move the window Atlas owns', async () => {
+  const { document, window } = parseHTML('<html><body><div id="stage"></div></body></html>');
+  window.devicePixelRatio = 1;
+  const stage=document.getElementById('stage');stage.style.position='relative';stage.getBoundingClientRect=()=>({left:0,top:0,width:900,height:520});
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');stage.append(svg);
+  const originals=new Map(['document','window','MutationObserver','ResizeObserver','matchMedia','getComputedStyle','requestAnimationFrame','cancelAnimationFrame'].map(key=>[key,Object.getOwnPropertyDescriptor(globalThis,key)]));
+  const originalCreate=document.createElement.bind(document);
+  const context=new Proxy({canvas:null,measureText:value=>({width:String(value).length*6}),createLinearGradient:()=>({addColorStop(){}}),getImageData:()=>({data:new Uint8ClampedArray([1,2,3,255,2,3,4,255])})},{get:(target,key)=>key in target?target[key]:()=>{},set:(target,key,value)=>(target[key]=value,true)});
+  document.createElement=(name,...args)=>{const node=originalCreate(name,...args);if(name==='div')node.getBoundingClientRect=()=>({left:0,top:0,width:900,height:520});if(name==='canvas')node.getContext=()=>{context.canvas=node;return context;};return node;};
+  Object.assign(globalThis,{document,window,MutationObserver:window.MutationObserver,ResizeObserver:class{observe(){}disconnect(){}},matchMedia:()=>({addEventListener(){},removeEventListener(){}}),getComputedStyle:()=>({color:'',getPropertyValue:()=>''}),requestAnimationFrame:callback=>setTimeout(callback,0),cancelAnimationFrame:clearTimeout});
+  const day=86_400_000,first=date('2024-01-01'),iso=time=>new Date(time).toISOString().slice(0,10);
+  const observedRows=Array.from({length:91},(_,index)=>({date:iso(first+index*day),price:100+index}));
+  const inspected=[],settle=()=>new Promise(resolve=>setTimeout(resolve,60));
+  let mounted;
+  try{
+    mounted=mountAtlasBtcFunnestChart({container:stage,svg,observedRows,frequency:'daily',chartType:'line',unit:'percent',start:'2024-02-01',end:'2024-02-29',selectedDate:'2024-02-10',onInspect:detail=>inspected.push(detail.date)});
+    await settle();
+    const host=stage.querySelector('[data-atlas-chart-engine="funnest"]');
+    const windowDates=()=>{const range=mounted.chart.getVisibleTimeRange();return [iso(range.from),iso(range.to)];};
+    const requested=windowDates();
+    assert.equal(mounted.getPriceScale().display.baseDate,'2024-02-01','표시 시작 대비 % measures from the first row of the requested window');
+    const press=async(target,key,shiftKey=false)=>{const event=new window.Event('keydown',{bubbles:true,cancelable:true});Object.defineProperty(event,'key',{value:key});Object.defineProperty(event,'shiftKey',{value:shiftKey});target.dispatchEvent(event);await settle();};
+    for(const [key,selected] of [['ArrowLeft','2024-02-09'],['ArrowRight','2024-02-10'],['ArrowRight','2024-02-11']]){
+      await press(host,key);
+      assert.deepEqual(windowDates(),requested,`${key} keeps the window Atlas requested`);
+      assert.equal(inspected.at(-1),selected,`${key} inspects the neighbouring bar, as ba74c0f0 did`);
+    }
+    for(const key of ['Home','End']){
+      await press(host,key);
+      assert.deepEqual(windowDates(),requested,`${key} keeps the window Atlas requested`);
+      const fromHost=inspected.at(-1);
+      await press(svg,key);
+      assert.equal(fromHost,inspected.at(-1),`${key} on the engine host selects the bar ${key} on the chart overlay selects`);
+    }
+    await press(host,'_',true);
+    assert.deepEqual(windowDates(),requested,'_ (Shift+-) does not zoom the window behind Atlas navigation');
+    assert.equal(mounted.getPriceScale().display.baseDate,'2024-02-01','the start-relative base still matches the visible window');
+  }finally{mounted?.destroy();document.createElement=originalCreate;for(const[key,descriptor]of originals)descriptor?Object.defineProperty(globalThis,key,descriptor):delete globalThis[key];}
+});
