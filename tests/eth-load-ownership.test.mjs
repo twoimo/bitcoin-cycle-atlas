@@ -228,6 +228,16 @@ test('ETH refresh preserves a date window chosen on the chart while its request 
     'a live refresh must not reset a window chosen on the chart while it was pending');
 });
 
+test('ETH ignores a chart window report on a cleared range, so the interval switch keeps working', async () => {
+  const f = await loaded(); f.refresh();
+  const state = f.workbench().state, range = f.latest().range, day = 86400;
+  f.replyLive(0, ethPayload(2)); await f.microtasks();
+  assert.equal(state.range, null, 'the refresh clears the range before its render');
+  f.nativeRange({ start: range.start + 10 * day, end: range.end - 10 * day }); await f.settle();
+  assert.ok(Number.isSafeInteger(state.range?.step), 'a report on a cleared range must not leave a range without its grid');
+  assert.doesNotThrow(() => f.interval('weekly'), 'the interval switch accepts the range');
+});
+
 test('ETH discarded document destroys its chart and a persisted hide keeps it', async () => {
   const f = await loaded();
   f.hide(); assert.notEqual(f.latest().destroyed, true, 'a persisted hide must keep the chart for restoration');

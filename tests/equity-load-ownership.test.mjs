@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { equityPayload, equityViewFixture } from './helpers/equity-view-fixture.mjs';
+import { nativeDateRange } from '../dist/native-chart-workbench.js';
 
 async function complete(fixture, symbol, offset, revision) {
   fixture.reply(offset, equityPayload(symbol, revision)); await fixture.microtasks();
@@ -8,6 +9,19 @@ async function complete(fixture, symbol, offset, revision) {
 }
 
 for (const symbol of ['MSTR', 'BMNR']) {
+  test(`${symbol} ignores a chart window report on a cleared range, so go-to and the interval switch keep working`, { timeout: 2000 }, async () => {
+    const f = await equityViewFixture(symbol);
+    f.reply(0, equityPayload(symbol, 1)); await f.microtasks(); await f.frame();
+    const state = f.workbench().state, chart = f.latest(), day = 86400;
+    f.reply(1, { revision: 1 }); await f.microtasks(); await f.frame(); await f.frame();
+    assert.equal(state.range, null, 'the finished projection clears the range before its render');
+    f.gesture({ start: chart.range.start + 2 * day, end: chart.range.start + 4 * day }); await f.settle(); await f.initialization;
+    assert.ok(Number.isSafeInteger(state.range?.step), 'a report on a cleared range must not leave a range without its grid');
+    const first = new Date(state.range.start * 1000).toISOString().slice(0, 10), next = new Date((state.range.start + day) * 1000).toISOString().slice(0, 10);
+    assert.ok(nativeDateRange(state.range, { ok: true, range: { start: first, end: next } }), 'go-to still resolves a date window');
+    assert.doesNotThrow(() => f.interval('weekly'), 'the interval switch accepts the range');
+  });
+
   test(`${symbol} releases the usable observed chart before the coin response or projection`, { timeout: 2000 }, async () => {
     const f = await equityViewFixture(symbol, { pathname: '/atlas-"quote&path' });
     assert.equal(f.document.documentElement.dataset.boot, 'loading');
