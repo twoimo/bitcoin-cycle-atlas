@@ -33,8 +33,6 @@ export function mountPageDescription(document, {header, heading} = {}) {
   const view = document.defaultView;
   const Resize = view?.ResizeObserver || globalThis.ResizeObserver;
   const resize = Resize ? new Resize(schedulePlace) : null;
-  // The H1 remains outside the toolbar's control tree. Price charts reserve a
-  // normal-flow label above the plot; compare keeps its existing chrome slot.
   function place() {
     if (destroyed || copy.className !== 'atlas-page-intro' || copy.dataset.headingPlacement !== 'compare' || !lastAnchor) return;
     const box = lastAnchor.getBoundingClientRect?.();
@@ -80,8 +78,6 @@ export function mountPageDescription(document, {header, heading} = {}) {
     if (comparison) { observeLayout(toolbar, anchor); place(); }
     else {
       observeLayout(null, null);
-      // Native flow owns the label, including a phone dock below the plot.
-      // Remove fixed coordinates and clipping left by a previous compare visit.
       copy.removeAttribute('style');
     }
   }

@@ -261,25 +261,15 @@ body[data-shell=chart] .shell-feature-panel[data-shell-measuring=true] .shell-fe
   body[data-shell=chart] .shell-feature-panel{left:4px;right:4px;width:auto}
 }
 
-/* Page context reuses one described heading across chart and content routes.
-   Price charts reserve a label outside the plot and the symbol's hit target;
-   compare retains its separate fixed title slot inside the toolbar. */
 .atlas-page-intro,.atlas-shell-copy{min-width:0;box-sizing:border-box}
 .atlas-page-intro{position:fixed;display:block;height:14px;margin:0;padding:0;border:0;background:transparent;color:var(--text);pointer-events:none;z-index:61}
 .atlas-page-intro>.atlas-shell-heading{margin:0;font-size:12px;font-weight:500;line-height:14px;letter-spacing:0;white-space:nowrap;text-align:center}
 .atlas-page-description{margin:0;color:var(--muted);font:12px/1.4 var(--font);white-space:normal;word-break:keep-all;overflow-wrap:break-word}
 .atlas-page-intro>.atlas-page-description{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-/* A hosted center's outer toolbar already names the active destination. Keep
-   its semantic page heading available without stacking a second visible row. */
-body[data-shell="chart"][data-center-tool] .atlas-page-intro>.atlas-shell-heading{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+body[data-shell=chart] .atlas-page-intro[data-heading-placement=label],body[data-shell=chart] .atlas-page-intro[data-heading-placement=label]>.atlas-shell-heading{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 /* Hosted outlook centers use one outer workbench frame. This more specific
    source rule keeps the later shell paint from rounding that evidence edge. */
 body[data-shell="chart"][data-page="outlook"][data-center-tool] .workspace.native-chart-workspace>#main.native-chart-workbench{border-radius:0}
-/* A full-width normal-flow row also fits the 320px dock without displacing
-   its original controls. The order keeps it above the plot when the dock is
-   ordered last on phones; it never overlays prices, legends or controls. */
-body[data-shell=chart] .atlas-page-intro[data-heading-placement=label]{position:static;order:-1;flex:none;width:100%;height:22px;padding:4px 8px;z-index:auto}
-body[data-shell=chart] .atlas-page-intro[data-heading-placement=label]>.atlas-shell-heading{text-align:left}
 /* Compare already scrolls its controls horizontally. Its title stays beside
    that scroll owner, after the original phone return button, in the same row. */
 body[data-page=compare] .atlas-canvas-heading:has(+ .atlas-page-intro[data-heading-placement=compare])>.lab-toolbar{margin-left:76px}
