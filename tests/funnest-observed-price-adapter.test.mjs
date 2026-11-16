@@ -348,7 +348,7 @@ test('ETH final visible-range callback refreshes the footer date after panel res
   chart.onViewport({ from: nativeRange.start * 1000, to: nativeRange.end * 1000 });
   assert.deepEqual({ start: chart.range.start, end: chart.range.end }, { start: nativeRange.start, end: nativeRange.end }, 'the final wide-layout callback leaves the restored native range untouched');
   const source = await readFile(new URL('../dist/eth-view.js', import.meta.url), 'utf8');
-  assert.match(source, /const start=Math\.round\(visible\.from\/1000\),end=Math\.round\(visible\.to\/1000\);if\(end>start&&\(state\.range\?\.start!==start\|\|state\.range\?\.end!==end\)\)\{\+\+navigationRevision;state\.range=\{\.\.\.state\.range,start,end\};state\.funnestRangeIdentity=rangeIdentity\(state\.range\);workbench\?\.update\?\.\(\);\}/,
+  assert.match(source, /const start=Math\.round\(visible\.from\/1000\),end=Math\.round\(visible\.to\/1000\);if\(end>start&&\(state\.range\?\.start!==start\|\|state\.range\?\.end!==end\)\)\{if\(state\.funnestMount\?\.userOwnsRange\?\.\(\)\)\+\+navigationRevision;state\.range=\{\.\.\.state\.range,start,end\};state\.funnestRangeIdentity=rangeIdentity\(state\.range\);workbench\?\.update\?\.\(\);\}/,
     'the final visible-range callback refreshes the native footer label after its state changes');
 });
 

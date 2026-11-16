@@ -180,8 +180,12 @@ async function implementation(work) {
       failure: /a report on a cleared range must not leave a range without its grid/,
     },
     {
-      id: 'untracked-native-navigation', from: '{++navigationRevision;state.range={...state.range,start,end};', to: '{state.range={...state.range,start,end};',
+      id: 'untracked-native-navigation', from: '{if(state.funnestMount?.userOwnsRange?.())++navigationRevision;state.range={...state.range,start,end};', to: '{state.range={...state.range,start,end};',
       failure: /a live refresh must not reset a window chosen on the chart while it was pending/,
+    },
+    {
+      id: 'every-report-navigation', from: '{if(state.funnestMount?.userOwnsRange?.())++navigationRevision;state.range={...state.range,start,end};', to: '{++navigationRevision;state.range={...state.range,start,end};',
+      failure: /a live refresh must reset a window that moved without the viewer navigating/,
     },
     {
       id: 'dropped-hidden-paint', from: '    suspended=false;\n    if(state.funnestMount&&!state.funnestReady)watchFunnestPaint(state.funnestMount);\n', to: '    suspended=false;\n',
