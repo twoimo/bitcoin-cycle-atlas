@@ -51,12 +51,22 @@ async function mount(content: React.ReactNode, publicUrl: string) {
   try { await act(async () => root.render(content)); } catch (error) { await cleanup(); throw error; }
   const svg = () => document.querySelector('.rsi-chart-canvas svg') as unknown as SVGSVGElement;
   async function wheel(deltaY: number, x: number, y = 180, target = '.atlas-funnest-instrument-plot') { const node=document.querySelector(target)!; const event=new dom.Event('wheel',{bubbles:true,cancelable:true}); for(const [key,value] of Object.entries({deltaY,deltaX:0,deltaMode:0,clientX:x,clientY:y})) Object.defineProperty(event,key,{value}); await act(async()=>node.dispatchEvent(event)); }
-  function pointer(type: string, x: number, y: number) {
+  function pointer(type: string, x: number, y: number, input: { pointerId?: number; pointerType?: string; isPrimary?: boolean } = {}) {
     const event = new dom.Event(type, { bubbles: true, cancelable: true });
-    for (const [key, value] of Object.entries({ clientX: x, clientY: y, pointerId: 1, pointerType: 'mouse', button: 0, buttons: type === 'pointerup' ? 0 : 1, isPrimary: true }))
+    for (const [key, value] of Object.entries({ clientX: x, clientY: y, pointerId: 1, pointerType: 'mouse', button: 0, buttons: type === 'pointerup' ? 0 : 1, isPrimary: true, ...input }))
       Object.defineProperty(event, key, { value });
     if (type === 'pointerdown') svg().dispatchEvent(event);
     else for (const listener of listeners.get(type) || []) listener(event);
+  }
+  async function hover(x: number, y: number) {
+    const event = new dom.Event('pointermove', { bubbles: true, cancelable: true });
+    for (const [key, value] of Object.entries({ clientX: x, clientY: y, pointerId: 1, pointerType: 'mouse', buttons: 0, isPrimary: true })) Object.defineProperty(event, key, { value });
+    await act(async () => svg().dispatchEvent(event));
+  }
+  async function press(key: string, modifiers: { shiftKey?: boolean; ctrlKey?: boolean; metaKey?: boolean; altKey?: boolean } = {}) {
+    const event = new dom.Event('keydown', { bubbles: true, cancelable: true });
+    for (const [name, value] of Object.entries({ key, code: '', shiftKey: false, ctrlKey: false, metaKey: false, altKey: false, ...modifiers })) Object.defineProperty(event, name, { value });
+    await act(async () => svg().dispatchEvent(event));
   }
   async function doubleClick(x: number, y: number) {
     for (const type of ['click', 'click', 'dblclick']) {
@@ -65,7 +75,7 @@ async function mount(content: React.ReactNode, publicUrl: string) {
       await act(async () => svg().dispatchEvent(event));
     }
   }
-  return { document, posts, urlWrites, location, cleanup, svg, pointer, wheel, doubleClick,
+  return { document, posts, urlWrites, location, cleanup, svg, pointer, hover, press, wheel, doubleClick,
     flushFrame() { const pending = [...frames.values()]; frames.clear(); for (const callback of pending) callback(0); },
     message: (message: unknown) => act(async () => { for (const listener of listeners.get('message') || []) listener({ data: message, origin: location.origin, source: parent }); }),
   };
@@ -184,19 +194,28 @@ const visibleSpan = (start: string, end: string) => {
   return Math.max(...values) - Math.min(...values);
 };
 
-async function observedChart(t: { after: (fn: () => Promise<void>) => void }, query: string) {
-  const fixture = await mount(<InstrumentWorkbench symbol="HYPE" unit="USDC" timezone="UTC" series={observed} epoch={7} active embedded volumeUnit="HYPE" description="Gesture fixture"/>,
-    `https://example.test/market-lab/charts/?symbol=HYPE&granularity=daily&type=line&axis=linear&view-start=2026-02-01&view-end=2026-03-15${query}`);
+async function hostedChart(t: { after: (fn: () => Promise<void>) => void }, query: string, symbol: 'HYPE' | 'TQQQ' = 'HYPE') {
+  const market = snapshot.markets.find((entry: { symbol: string }) => entry.symbol === 'TQQQ');
+  const fixture = symbol === 'HYPE'
+    ? await mount(<InstrumentWorkbench symbol="HYPE" unit="USDC" timezone="UTC" series={observed} epoch={7} active embedded volumeUnit="HYPE" description="Gesture fixture"/>,
+      `https://example.test/market-lab/charts/?symbol=HYPE&granularity=daily&type=line&axis=linear&view-start=2026-02-01&view-end=2026-03-15${query}`)
+    : await mount(<RsiWorkbench symbol="TQQQ" market={market} snapshot={snapshot} now={new Date(snapshot.generatedAt)} rows={[]} epoch={7} active embedded onDate={() => {}} comparison={null} references={null}/>,
+      `https://example.test/market-lab/charts/?symbol=TQQQ&granularity=daily&type=line&axis=linear&view-start=2022-01-03&view-end=2024-01-02${query}`);
   t.after(fixture.cleanup);
   const svg = fixture.svg(), box = (key: string) => Number(svg.dataset[key]);
   const width = Number(svg.getAttribute('width')), height = Number(svg.getAttribute('height'));
-  const state = () => fixture.posts.filter(message => message.kind === 'atlas:chart-state' && message.symbol === 'HYPE').at(-1);
+  const state = () => fixture.posts.filter(message => /^atlas:(chart|rsi)-state$/.test(message.kind) && message.symbol === symbol).at(-1);
   return { fixture, state, range: () => ({ start: fixture.svg().dataset.start!, end: fixture.svg().dataset.end! }),
+    full: () => ({ start: state().first, end: state().last }),
     priceAxis: { x: (box('plotRight') + width) / 2, y: (box('plotTop') + box('plotBottom')) / 2, height: box('plotBottom') - box('plotTop') },
     timeAxis: { x: (box('plotLeft') + box('plotRight')) / 2, y: (box('plotBottom') + height) / 2 },
-    plot: { x: (box('plotLeft') + box('plotRight')) / 2, y: (box('plotTop') + box('plotBottom')) / 2 } };
+    plot: { x: (box('plotLeft') + box('plotRight')) / 2, y: (box('plotTop') + box('plotBottom')) / 2, left: box('plotLeft'), width: box('plotRight') - box('plotLeft') } };
 }
-const command = (fixture: Awaited<ReturnType<typeof mount>>, action: string) => fixture.message({ kind: 'atlas:center-command', symbol: 'HYPE', epoch: 7, action });
+const observedChart = (t: { after: (fn: () => Promise<void>) => void }, query: string) => hostedChart(t, query);
+const command = (fixture: Awaited<ReturnType<typeof mount>>, action: string, symbol = 'HYPE') => fixture.message({ kind: 'atlas:center-command', symbol, epoch: 7, action });
+const utcDay = (date: string) => Date.parse(`${date}T00:00:00Z`) / 86400000;
+const daySpan = (range: { start: string; end: string }) => utcDay(range.end) - utcDay(range.start);
+const manualPrice = (symbol: 'HYPE' | 'TQQQ') => symbol === 'HYPE' ? '&price-min=105&price-max=180' : '&price-min=20&price-max=60';
 
 test('price-axis drag scales only the price domain as one undoable edit', async t => {
   const chart = await observedChart(t, '');
@@ -247,4 +266,97 @@ for (const surface of ['plot', 'timeAxis'] as const) test(`${surface === 'plot' 
   assert.deepEqual(chart.range(), { start: observedDays[0], end: observedDays.at(-1) }, 'the full observed range is shown');
   assert.equal(chart.fixture.svg().dataset.priceMode, 'auto');
   assert.equal(chart.state().userViewRevision, 1, 'the double-click is one user edit');
+});
+
+
+for (const symbol of ['TQQQ', 'HYPE'] as const) {
+  test(`${symbol} 0 restores the full range and the automatic price range`, async t => {
+    const chart = await hostedChart(t, manualPrice(symbol), symbol);
+    assert.equal(chart.fixture.svg().dataset.priceMode, 'manual');
+    await chart.fixture.press('0');
+    assert.deepEqual(chart.range(), chart.full(), '0 shows the full observed range');
+    assert.equal(chart.fixture.svg().dataset.priceMode, 'auto', '0 restores price Auto');
+    assert.equal(chart.state().userViewRevision, 1, 'the key is one user edit');
+  });
+
+  test(`${symbol} + and = zoom in about the last pointer position and - zooms out`, async t => {
+    const chart = await hostedChart(t, '', symbol);
+    const before = chart.range(), anchor = utcDay(before.start) + daySpan(before) * .25;
+    await chart.fixture.hover(chart.plot.left + chart.plot.width * .25, chart.plot.y);
+    await chart.fixture.press('+');
+    const zoomed = chart.range();
+    assert(Math.abs((daySpan(zoomed) + 1) - (daySpan(before) + 1) * .8) <= 1, `+ shows 80% of the days: ${JSON.stringify({ before, zoomed })}`);
+    assert(Math.abs(anchor - (utcDay(zoomed.start) + daySpan(zoomed) * .25)) <= 1, `the date under the pointer stays under it: ${JSON.stringify({ before, zoomed })}`);
+    await chart.fixture.press('=');
+    const again = chart.range();
+    assert(Math.abs((daySpan(again) + 1) - (daySpan(zoomed) + 1) * .8) <= 1, '= zooms in like +');
+    await chart.fixture.press('-');
+    assert(Math.abs((daySpan(chart.range()) + 1) - (daySpan(again) + 1) * 1.25) <= 1, '- shows 125% of the days');
+    assert.equal(chart.state().userViewRevision, 3, 'each key is one user edit');
+  });
+
+  test(`${symbol} Ctrl+Up and Ctrl+Down zoom, Ctrl+Left and Ctrl+Right pan a quarter window`, async t => {
+    const chart = await hostedChart(t, '', symbol);
+    const before = chart.range();
+    await chart.fixture.press('ArrowUp', { ctrlKey: true });
+    const zoomed = chart.range();
+    assert(Math.abs((daySpan(zoomed) + 1) - (daySpan(before) + 1) * .8) <= 1, `Ctrl+Up zooms in: ${JSON.stringify({ before, zoomed })}`);
+    await chart.fixture.press('ArrowDown', { metaKey: true });
+    const out = chart.range();
+    assert(daySpan(out) > daySpan(zoomed), 'Cmd+Down zooms out');
+    await chart.fixture.press('ArrowLeft', { ctrlKey: true });
+    const left = chart.range();
+    assert(Math.abs(utcDay(left.start) - (utcDay(out.start) - Math.round(daySpan(out) / 4))) <= 1, `Ctrl+Left pans a quarter window back: ${JSON.stringify({ out, left })}`);
+    assert.equal(daySpan(left), daySpan(out), 'panning keeps the span');
+    await chart.fixture.press('ArrowRight', { ctrlKey: true });
+    assert.deepEqual(chart.range(), out, 'Ctrl+Right pans the same quarter forward');
+  });
+
+  test(`${symbol} the context-menu key and Shift+F10 open the chart menu`, async t => {
+    const chart = await hostedChart(t, '', symbol);
+    assert.equal(chart.fixture.document.querySelector('.atlas-funnest-context-menu'), null);
+    await chart.fixture.press('ContextMenu');
+    assert(chart.fixture.document.querySelector('.atlas-funnest-context-menu'), 'the context-menu key opens the chart menu');
+    await chart.fixture.press('Escape');
+    assert.equal(chart.fixture.document.querySelector('.atlas-funnest-context-menu'), null);
+    await chart.fixture.press('F10', { shiftKey: true });
+    assert(chart.fixture.document.querySelector('.atlas-funnest-context-menu'), 'Shift+F10 opens the chart menu');
+  });
+}
+
+test('TQQQ Alt+R restores the full range and the automatic price range', async t => {
+  const chart = await hostedChart(t, manualPrice('TQQQ'), 'TQQQ');
+  await chart.fixture.press('r', { altKey: true });
+  assert.deepEqual(chart.range(), chart.full());
+  assert.equal(chart.fixture.svg().dataset.priceMode, 'auto');
+  assert.equal(chart.state().userViewRevision, 1);
+});
+
+test('TQQQ Shift+Left and Shift+Right pan a quarter window without moving the selection', async t => {
+  const chart = await hostedChart(t, '', 'TQQQ');
+  await chart.fixture.message({ kind: 'atlas:center-command', symbol: 'TQQQ', epoch: 7, action: 'date', value: '2023-01-03' });
+  const before = chart.range(), selected = chart.state().selected, revision = chart.state().userViewRevision;
+  assert.equal(selected, '2023-01-03');
+  await chart.fixture.press('ArrowLeft', { shiftKey: true });
+  const left = chart.range();
+  assert(Math.abs(utcDay(left.start) - (utcDay(before.start) - Math.round(daySpan(before) / 4))) <= 1, `Shift+Left pans a quarter window back: ${JSON.stringify({ before, left })}`);
+  assert.equal(daySpan(left), daySpan(before));
+  await chart.fixture.press('ArrowRight', { shiftKey: true });
+  assert.deepEqual(chart.range(), before, 'Shift+Right pans the same quarter forward');
+  assert.equal(chart.state().selected, selected, 'panning does not pick another date');
+  assert.equal(chart.state().userViewRevision, revision + 2, 'each key is one user edit');
+});
+
+test('Escape stops a price-axis drag where it is', async t => {
+  const chart = await hostedChart(t, '');
+  await act(async () => {
+    chart.fixture.pointer('pointerdown', chart.priceAxis.x, chart.priceAxis.y);
+    chart.fixture.pointer('pointermove', chart.priceAxis.x, chart.priceAxis.y - chart.priceAxis.height / 4);
+  });
+  await chart.fixture.press('Escape');
+  const stopped = chart.state().urlView.domain;
+  assert(stopped, 'the drag had scaled the price axis before Escape');
+  await act(async () => { chart.fixture.pointer('pointermove', chart.priceAxis.x, chart.priceAxis.y - chart.priceAxis.height / 2); chart.fixture.pointer('pointerup', chart.priceAxis.x, chart.priceAxis.y - chart.priceAxis.height / 2); });
+  assert.deepEqual(chart.state().urlView.domain, stopped, 'pointer movement after Escape changes nothing');
+  assert.equal(chart.state().userViewRevision, 1, 'the stopped drag is one user edit');
 });
