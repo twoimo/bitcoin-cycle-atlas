@@ -4675,7 +4675,8 @@ function mountAtlasFunnestChart(container, options = {}) {
     },
     onError = () => {
     },
-    volume = true
+    volume = true,
+    keyboardNavigation = true
   } = options;
   if (!["candles", "line", "area"].includes(chartType)) throw new RangeError(`Unsupported Funnest chart type: ${chartType}`);
   if (!["ohlc", "close-only"].includes(sourceMode) || sourceMode === "close-only" && chartType !== "line") throw new RangeError("Close-only market sources require line mode and cannot be presented as OHLC candles");
@@ -4945,7 +4946,7 @@ function mountAtlasFunnestChart(container, options = {}) {
       chart.scrollToRealtime();
     }
   };
-  host.addEventListener("keydown", onKeyDown);
+  if (keyboardNavigation) host.addEventListener("keydown", onKeyDown);
   const releaseInitialRange = () => {
     initialRangeOwned = false;
     pendingRange = null;

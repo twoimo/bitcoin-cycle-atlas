@@ -216,7 +216,7 @@ export function mountAtlasFunnestChart(container, options = {}) {
     precision = 2, tickSize = 0, chartType = 'candles', scale = 'normal', invertScale = false, theme = {}, range = null, source = {}, sourceMode = 'ohlc',
     volumeByTime = null, volumeSource = null,
     accessibleName = `${symbol} 실제 관측 가격 차트`, onCrosshair = () => {}, onViewport = () => {},
-    onError = () => {}, volume = true } = options;
+    onError = () => {}, volume = true, keyboardNavigation = true } = options;
   if (!['candles', 'line', 'area'].includes(chartType)) throw new RangeError(`Unsupported Funnest chart type: ${chartType}`);
   if (!['ohlc', 'close-only'].includes(sourceMode) || sourceMode === 'close-only' && chartType !== 'line') throw new RangeError('Close-only market sources require line mode and cannot be presented as OHLC candles');
   if (!['normal', 'log', 'percent'].includes(scale)) throw new RangeError(`Unsupported Funnest scale: ${scale}`);
@@ -421,7 +421,7 @@ export function mountAtlasFunnestChart(container, options = {}) {
     else if (event.key === 'Home') { event.preventDefault(); takeByInput(); chart.setVisibleTimeRange({ from: currentBars[0].time, to: currentBars.at(-1).time }); }
     else if (event.key === 'End') { event.preventDefault(); takeByInput(); chart.scrollToRealtime(); }
   };
-  host.addEventListener('keydown', onKeyDown);
+  if (keyboardNavigation) host.addEventListener('keydown', onKeyDown);
   const releaseInitialRange = () => { initialRangeOwned = false; pendingRange = null; };
   // userOwnsRange() turns true only at the report that follows a wheel, a drag or a navigation key. A click,
   // a relayout or a data refresh can also move the window, and none of those is the viewer's choice.

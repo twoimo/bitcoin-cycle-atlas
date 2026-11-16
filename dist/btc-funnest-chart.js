@@ -279,7 +279,7 @@ export function mountAtlasBtcFunnestChart({
   };
   const mounted = mountAtlasFunnestChart(container, {
     bars, sourceMode, chartType: sourceMode === 'close-only' ? 'line' : chartType, symbol: 'BTCUSD', currency: unit === 'usd' ? 'USD' : unit,
-    timezone: 'UTC', locale: 'ko', precision: unit === 'usd' ? 2 : 2, tickSize: unit === 'usd' ? 0.01 : 0.01,
+    timezone: 'UTC', locale: 'ko', precision: unit === 'usd' ? 2 : 2, tickSize: unit === 'usd' ? 0.01 : 0.01, keyboardNavigation: false,
     scale: effectiveScale, invertScale, range: initialRange, theme: chartTheme, volume: showVolume, volumeByTime, volumeSource: sourceMode === 'close-only' && showVolume ? volumeSource : actualSource,
     source: { name: actualSource, ...source, ...(lineRows.length ? { observedLineSource: lineSource, observedLineRows: lineRows.length } : {}), ...(sourceMode === 'close-only' && showVolume ? { volumeSource: { name: volumeSource, scope: 'BTC-USD 단일 거래소 거래량', rows: volumeByTime.length } } : {}) }, accessibleName: `비트코인 ${sourceMode === 'ohlc' ? '실제 OHLC 가격 차트' : `${actualSource} 실제 일말 종가 차트`}`,
     onCrosshair: detail => {
@@ -798,6 +798,7 @@ export function mountAtlasBtcFunnestChart({
   svg.addEventListener('pointerleave', onPointerLeave);
   svg.addEventListener('click', onClick);
   svg.addEventListener('keydown', onKeyDown);
+  host.addEventListener('keydown', onKeyDown);
 
   // Establish native scale settings before installing the manual forecast-aware domain.
   mounted.setScale(effectiveScale);
@@ -883,7 +884,7 @@ export function mountAtlasBtcFunnestChart({
       if (destroyed) return; destroyed = true;
       clearTimeout(redrawTimer); cleanupLayout?.(); cleanupReplayViewport?.(); cleanupCrosshair?.(); overlayHandle?.remove?.(); bandOverlayHandle?.remove?.();
       if (Object.getOwnPropertyDescriptor(host, 'getAtlasBtcRenderSnapshot')?.value === readRenderSnapshot) delete host.getAtlasBtcRenderSnapshot;
-      svg.removeEventListener('pointermove', onPointerMove); svg.removeEventListener('pointerleave', onPointerLeave); svg.removeEventListener('click', onClick); svg.removeEventListener('keydown', onKeyDown);
+      svg.removeEventListener('pointermove', onPointerMove); svg.removeEventListener('pointerleave', onPointerLeave); svg.removeEventListener('click', onClick); svg.removeEventListener('keydown', onKeyDown); host.removeEventListener('keydown', onKeyDown);
       hideFuturePreview({ clearPointer: true }); targetLayer.remove(); annotationLabelLayer.remove(); intervalLayer.remove(); replayBoundaryLayer.remove(); replayTimingLayer.remove(); retrospectiveLabelLayer.remove(); lineDateLayer.remove(); futurePreviewLayer.remove(); mounted.destroy();
     },
   };
