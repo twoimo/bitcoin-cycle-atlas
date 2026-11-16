@@ -343,7 +343,9 @@ Pan ==
 \* follows such a gesture makes userOwnsRange() true (line 399 there), and setRange
 \* takes it back (lines 477 and 521 there). A click, a relayout or setData does not.
 \* setData reports neither its interim window nor the restore (lines 509-518 there).
-\* The callback returns while the document is suspended. Otherwise it stores the
+\* The callback returns while the document is suspended, and while state.range is null
+\* before the render that rebuilds it (e8873b88). range "auto" covers that state too,
+\* so a dropped report is a NativePan that did not happen. Otherwise it stores the
 \* reported start and end in state.range, and sets state.rangeTouched while
 \* userOwnsRange() holds. It does not schedule. The boot script keeps the app inert
 \* until ready (dist/index.html, ready()).

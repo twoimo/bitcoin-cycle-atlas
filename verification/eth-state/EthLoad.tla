@@ -200,7 +200,9 @@ Pan ==
 \* A zoom or pan on the mounted chart moves the engine's own window, and the mount
 \* reports it through onViewport (line 310; src/charts/funnest-chart-runtime.js:391-401).
 \* When the window changes, that handler increments navigationRevision and writes
-\* state.range. It does not schedule a paint.
+\* state.range. It does not schedule a paint. It returns while state.range is null,
+\* before the render that rebuilds the default window (e8873b88). range "auto" covers
+\* that state too, so a dropped report is a NativePan that did not happen.
 NativePan ==
   /\ s.ready /\ s.attached /\ s.mounted \* lines 58, 310
   /\ s' = [s EXCEPT !.range = "custom",

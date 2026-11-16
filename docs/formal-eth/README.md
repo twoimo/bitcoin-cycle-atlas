@@ -102,11 +102,14 @@ verification.json and exited 0.
 - Each of the nine configurations that removes one guard breaks its named
   invariant. lost-native-navigation.cfg, which drops the new increment, breaks
   NativeNavigationSurvivesRefresh after 3,476 generated states.
-- All 25 replay cases pass.
-- All 16 mutations of a temporary copy of dist/eth-view.js fail an intended
+- All 26 replay cases pass. e8873b88 added "ETH ignores a chart window report on a
+  cleared range, so the interval switch keeps working".
+- All 17 mutations of a temporary copy of dist/eth-view.js fail an intended
   assertion in a case that the unmutated module passes. The new
   untracked-native-navigation mutation removes the increment and fails the case
   above. dropped-hidden-paint removes line 424 and fails the hidden-paint case.
+  partial-viewport-range removes the null check on line 310 and fails the
+  cleared-range case.
 
 ### Results at 856e7742, before the fix
 

@@ -13,7 +13,7 @@ const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const invariants = ['TypeOK', 'ReadyHasUsableView', 'NoHiddenPublication', 'NoStalePublication', 'NavigationSurvivesRefresh', 'NativeNavigationSurvivesRefresh', 'ReadinessOnce'];
 const invariantsBeforeChartMount = invariants.filter(name => name !== 'NativeNavigationSurvivesRefresh');
 const failuresBeforeFix = ['ReadyHasUsableView', 'NoHiddenPublication', 'NavigationSurvivesRefresh'];
-const cases = 25;
+const cases = 26;
 const TLC_FOUND_VIOLATION = 12, TESTS_FAILED = 1, PROCESS_TIMEOUT_MS = 180000;
 
 const failures = [];
@@ -172,8 +172,12 @@ async function implementation(work) {
       failure: /a destroyed chart must not mark its replacement failed/,
     },
     {
-      id: 'hidden-viewport', from: 'onViewport:visible=>{if(!visible||suspended)return;', to: 'onViewport:visible=>{if(!visible)return;',
+      id: 'hidden-viewport', from: 'onViewport:visible=>{if(!visible||suspended||!state.range)return;', to: 'onViewport:visible=>{if(!visible||!state.range)return;',
       failure: /a suspended chart window report must not refresh the workbench/,
+    },
+    {
+      id: 'partial-viewport-range', from: 'onViewport:visible=>{if(!visible||suspended||!state.range)return;', to: 'onViewport:visible=>{if(!visible||suspended)return;',
+      failure: /a report on a cleared range must not leave a range without its grid/,
     },
     {
       id: 'untracked-native-navigation', from: '{++navigationRevision;state.range={...state.range,start,end};', to: '{state.range={...state.range,start,end};',

@@ -86,7 +86,7 @@ async function models(work) {
 async function implementation(work) {
   const original = runVerification(process.execPath, ['tests/equity-load-ownership.test.mjs']);
   assert.equal(original.status, 0, original.output);
-  assert.match(original.output, /tests 40/);
+  assert.match(original.output, /tests 42/);
   console.log(original.output.trim());
   const copy = path.join(work, 'implementation');
   // Follow real module dependencies, including shared UI helpers added to the
@@ -94,7 +94,7 @@ async function implementation(work) {
   const fixtureModules = await copyEquityFixtureDependencies(copy);
   const pristine = runVerification(process.execPath, ['tests/equity-load-ownership.test.mjs'], { cwd: copy });
   assert.equal(pristine.status, 0, pristine.output);
-  assert.match(pristine.output, /tests 40/);
+  assert.match(pristine.output, /tests 42/);
   checkTap(runVerification(process.execPath, viewportArgs, { cwd: copy }), 2);
   const viewFile = path.join(copy, 'dist/equity-view.js'), source = await readFile(viewFile, 'utf8');
   const changes = [
@@ -121,6 +121,10 @@ async function implementation(work) {
     {
       id: 'unmarked-gesture', from: 'if(state.funnestMount?.userOwnsRange?.())state.rangeTouched=true;', to: '',
       failure: /a pan or zoom on the chart must survive the projection/,
+    },
+    {
+      id: 'partial-viewport-range', from: 'onViewport:visible=>{if(!visible||suspended||!state.range)return;', to: 'onViewport:visible=>{if(!visible||suspended)return;',
+      failure: /a report on a cleared range must not leave a range without its grid/,
     },
     {
       id: 'every-report-marked', from: 'if(state.funnestMount?.userOwnsRange?.())state.rangeTouched=true;', to: 'state.rangeTouched=true;',
@@ -172,7 +176,7 @@ async function implementation(work) {
   const restored = runVerification(process.execPath, ['tests/equity-load-ownership.test.mjs'], { cwd: copy });
   assert.equal(restored.status, 0, restored.output);
   checkTap(runVerification(process.execPath, viewportArgs, { cwd: copy }), 2);
-  return { tests: 40, viewportTests: 2, original: 'pass', isolated: 'pass', restored: 'pass', fixtureModules, sourceSha256: hash(source), mutations, mutationExitStatuses };
+  return { tests: 42, viewportTests: 2, original: 'pass', isolated: 'pass', restored: 'pass', fixtureModules, sourceSha256: hash(source), mutations, mutationExitStatuses };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

@@ -197,27 +197,27 @@
     }
   },
   "implementation": {
-    "tests": 25,
+    "tests": 26,
     "original": "pass",
     "restored": "pass",
     "originalCounts": {
-      "tests": 25,
-      "pass": 25,
+      "tests": 26,
+      "pass": 26,
       "fail": 0,
       "cancelled": 0,
       "skipped": 0,
       "todo": 0
     },
     "restoredCounts": {
-      "tests": 25,
-      "pass": 25,
+      "tests": 26,
+      "pass": 26,
       "fail": 0,
       "cancelled": 0,
       "skipped": 0,
       "todo": 0
     },
     "failedCases": [],
-    "sourceSha256": "67ec77dbed416369cc7f0bcc5898b18a1d60aac1bac8e220e84c07950670bcdf",
+    "sourceSha256": "d63debe208bef61e2ee14a615ae09c959618931c3c61b445c299bc4fb69ed1b1",
     "mutations": {
       "premature-ready": "expected assertion failure",
       "hidden-render": "expected assertion failure",
@@ -232,6 +232,7 @@
       "hidden-paint-failure": "expected assertion failure",
       "stale-mount-paint": "expected assertion failure",
       "hidden-viewport": "expected assertion failure",
+      "partial-viewport-range": "expected assertion failure",
       "untracked-native-navigation": "expected assertion failure",
       "dropped-hidden-paint": "expected assertion failure",
       "leaked-mount": "expected assertion failure"
@@ -250,6 +251,7 @@
       "hidden-paint-failure": 1,
       "stale-mount-paint": 1,
       "hidden-viewport": 1,
+      "partial-viewport-range": 1,
       "untracked-native-navigation": 1,
       "dropped-hidden-paint": 1,
       "leaked-mount": 1

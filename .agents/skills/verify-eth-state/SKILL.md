@@ -32,7 +32,8 @@ post-await focusHistoricalEvent writer whenever either changes: daily coverage
 and cached daily loading establish the current abstraction's focus boundary.
 
 Baseline commit: 64c8207cb044d8990289c5a7d39972e21b74c240.
-Last code/model synchronization commit: 1722f1fc (2026-11-16). It adds two fixes to
+Last code/model synchronization commit: e8873b88 (2026-11-16). It changed line 310 only:
+onViewport returns while state.range is null. Before it, 1722f1fc added two fixes to
 the review at 856e77422e0a43a77470aed2e3f64fa1e522880b (tree
 01720549f0a5f4e7fb05129b1c97f80389d993b6). d4f667d2 changed one statement on
 dist/eth-view.js:310. 1722f1fc added line 424, so later lines are one higher. The
@@ -44,7 +45,7 @@ not an ancestor of this history. Its covered files equal those of c92c4871, so
 the review read c92c4871..856e7742.
 Reviewed SHA-256:
 
-- dist/eth-view.js 67ec77dbed416369cc7f0bcc5898b18a1d60aac1bac8e220e84c07950670bcdf
+- dist/eth-view.js d63debe208bef61e2ee14a615ae09c959618931c3c61b445c299bc4fb69ed1b1
 - dist/index.html 5e0f6b3b72a2c5b7862b1560d90aa74af9ed7cfa8a5f80b5a28cd85455f47dcd
 - dist/native-chart-workbench.js 2e3c57fb39748c8ae30e42786d522789f2383c4b9623c5d55f1d70d2a4c5d246
 - dist/chart-replay.js de6f2f47d576af65cb6e7dab2c67b2de5b5d694740eb1c626b3f37f18248508d
@@ -130,10 +131,10 @@ A pass exits 0 and reports all of the following:
    named invariant: the response, error, suspension and navigation guards, then
    the paint wait, the paint suspension guard, the paint mount guard, the
    viewport suspension guard and the native navigation revision. Do not weaken a property to make a failure pass.
-3. All 25 complete-initializer replay cases pass, including intraday refresh
+3. All 26 complete-initializer replay cases pass, including intraday refresh
    integration, the information dialog's escaped data link and the chart mount
    cases.
-4. All 16 mutations of a temporary copy of the real production module fail
+4. All 17 mutations of a temporary copy of the real production module fail
    their intended assertions. The restored temporary module behaves like the
    working runtime. The working runtime is never mutated by the checker.
 
@@ -144,8 +145,8 @@ invariant, so every other invariant still gets a complete search.
 
 Read both the exit status and actual test counts. A runner reporting only test
 filenames, a Java/tool failure, a missing mutation selector, or a skipped replay
-is not a verification pass. The verifier requires an actual 25-case TAP plan
-with zero skips, cancellations and todos for every run, and 25 passes for the
+is not a verification pass. The verifier requires an actual 26-case TAP plan
+with zero skips, cancellations and todos for every run, and 26 passes for the
 original and restored runs. A mutation counts only when a case that the
 unmutated module passes fails with the intended assertion.
 

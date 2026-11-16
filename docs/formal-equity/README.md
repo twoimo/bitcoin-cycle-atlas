@@ -6,7 +6,7 @@
 
 | 파일 | SHA-256 |
 | --- | --- |
-| `dist/equity-view.js` | `ba9ffc619adcb2541898a285386cbd93a4fa1b744d1ce691fc25f73965f097ab` |
+| `dist/equity-view.js` | `56b2f561617c5eedf75f663e8d3b77b3f87b732ff095d4b35c70ebad2bd555cf` (`e8873b88`) |
 | `src/charts/funnest-chart-runtime.js` | `cad0f5e2c38a9c2c82dc248eade24b0aea92d3acff61d125f8ac72972471882d` |
 | `dist/funnest-chart-runtime.bundle.js` | `af7abb0e745b9b88fa93b1aa6e45c8a9d784feabad940d821aaeaf403814d1bc` |
 
@@ -41,7 +41,9 @@
 
 `node scripts/verify-equity-state.mjs`는 종료 코드 0으로 끝난다.
 
-### `c3bcb58f`에서 고친 문제
+### `c3bcb58f`와 `e8873b88`에서 고친 문제
+
+`e8873b88`은 197행 `onViewport`가 `state.range`가 `null`인 동안 보고를 버리게 했다. 기본 구간은 다음 렌더가 다시 만든다. 사례 "ignores a chart window report on a cleared range"가 두 종목에서 이를 확인하고, 변이 `partial-viewport-range`가 그 검사를 지우면 실패한다. 재생은 42건, 변이는 15종이 되었다.
 
 `c3bcb58f`가 런타임에서 둘 다 고쳤다. 이제 휠·드래그·탐색 키 뒤의 보고만 `userOwnsRange()`를 참으로 만들고, 클릭은 그러지 않는다. `setData`는 중간 구간도 복원도 보고하지 않으며, 복원 전에 부른 `setRange`가 이긴다. `tests/funnest-chart-runtime.test.mjs`에 각각의 사례가 있고 둘 다 `c35f75cf`에서 실패한다. 마운트 fixture는 원래 `setData` 뒤에 보고하지 않으므로 재생과 모델은 바꾸지 않았다. 아래는 고치기 전의 기록이다.
 
