@@ -360,3 +360,26 @@ test('Escape stops a price-axis drag where it is', async t => {
   assert.deepEqual(chart.state().urlView.domain, stopped, 'pointer movement after Escape changes nothing');
   assert.equal(chart.state().userViewRevision, 1, 'the stopped drag is one user edit');
 });
+
+for (const tool of ['crosshair', 'pan'] as const) test(`two-finger pinch with the ${tool} tool zooms the dates about the pinch centre as one undoable edit`, async t => {
+  const chart = await hostedChart(t, '');
+  if (tool === 'pan') await chart.fixture.message({ kind: 'atlas:center-command', symbol: 'HYPE', epoch: 7, action: 'tool', value: 'pan' });
+  const before = chart.range(), revision = chart.state().userViewRevision, y = chart.plot.y;
+  const x = (fraction: number) => chart.plot.left + chart.plot.width * fraction;
+  const touch = (pointerId: number) => ({ pointerId, pointerType: 'touch', isPrimary: pointerId === 1 });
+  await act(async () => {
+    chart.fixture.pointer('pointerdown', x(.4), y, touch(1));
+    chart.fixture.pointer('pointerdown', x(.6), y, touch(2));
+    chart.fixture.pointer('pointermove', x(.3), y, touch(1));
+    chart.fixture.pointer('pointermove', x(.7), y, touch(2));
+    chart.fixture.pointer('pointerup', x(.7), y, touch(2));
+  });
+  const zoomed = chart.range(), centre = utcDay(before.start) + daySpan(before) / 2;
+  assert(Math.abs((daySpan(zoomed) + 1) - (daySpan(before) + 1) / 2) <= 1, `spreading two fingers to twice their distance shows half the days: ${JSON.stringify({ before, zoomed })}`);
+  assert(Math.abs(centre - (utcDay(zoomed.start) + daySpan(zoomed) / 2)) <= 1, `the date under the pinch centre stays under it: ${JSON.stringify({ before, zoomed })}`);
+  await act(async () => { chart.fixture.pointer('pointermove', x(.1), y, touch(1)); chart.fixture.pointer('pointerup', x(.1), y, touch(1)); });
+  assert.deepEqual(chart.range(), zoomed, 'the finger left after a pinch does not pan');
+  assert.equal(chart.state().userViewRevision, revision + 1, 'the pinch is one user edit');
+  await command(chart.fixture, 'undo');
+  assert.deepEqual(chart.range(), before, 'one undo restores the range before the pinch');
+});
