@@ -349,6 +349,20 @@ test('a control inside the viewport but outside its reader scroll clip is not co
   const exposed = runInNewContext(expression,model);assert.equal(exposed.samples[0].visible,true);assert.equal(exposed.font.visibleInk,true);
 });
 
+test('canvas price-axis ticks are recorded with their drawn font in the deferred dense-text evidence', () => {
+  const model = collectorModel(), canvas = {};
+  const host = {getAtlasFunnestSnapshot:() => ({layout:{plotWidth:200,panesHeight:400}}),querySelectorAll:selector => selector === 'canvas' ? [canvas] : []};
+  const chart = {closest:selector => selector === '.atlas-plot' ? {querySelector:inner => inner === '.atlas-funnest-canvas' ? host : null} : null};
+  const original = model.document.querySelector;model.document.querySelector = selector => selector === '#lab-chart' ? chart : original(selector);
+  model.document.createElement = () => ({style:{set font(value) {const [size,...family] = value.split(' ');this.fontSize = size;this.fontFamily = family.join(' ');}}});
+  const text = (order,value,x,y) => ({order,text:value,x,y,font:'11px Pretendard'});
+  model.window = {__atlasCanvasDraws:surface => surface === canvas ? {texts:[text(1,'2026',40,420),text(2,'90,000.00',210,40),text(3,'80,000.00',210,120),text(5,'85,123.45',210,90)],rects:[{order:4,x:204,y:80,w:90,h:20}]} : null};
+  const state = runInNewContext(p0EvaluationExpression(inspectP0Page,[p0Cases[0],'chart',[],[]]),model);
+  const ticks = state.denseText.filter(item => item.selector === 'canvas.atlas-funnest-canvas price-axis tick');
+  assert.deepEqual(JSON.parse(JSON.stringify(ticks.map(item => [item.text,item.fontSize,item.fontFamily]))),[['90,000.00',11,'Pretendard'],['80,000.00',11,'Pretendard']],'time labels and the last-price tag text are not ticks');
+  assert.equal(validateP0Typography(state).deferredDensity.filter(item => item.selector.includes('price-axis tick')).length,2);
+});
+
 test('the restored price-axis explanation participates in the P0 prose floor', () => {
   const model = collectorModel(), paragraph = {...model.document.body.children[0],tagName:'P',id:'basis-model',textContent:'가격 자료의 범위를 기준으로 맞춥니다.'};
   const original = model.document.querySelectorAll;model.document.querySelectorAll = selector => selector.includes('.price-axis-options > .price-axis-basis') ? [paragraph] : original(selector);

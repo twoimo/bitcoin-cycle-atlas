@@ -44,6 +44,32 @@ export function readNativeFunnestEvidence(selector) {
   return {snapshot,overlay,hostBounds,mainBounds:paneBox(main),volumeBounds:paneBox(volume),ink};
 }
 
+/** Runs before the page's own scripts. Records, per canvas, the text and rounded-rectangle draws of the latest frame in
+ * draw order (a full-canvas fillRect starts a frame) and always calls through, so the paint is byte for byte the product's. */
+export function installCanvasDrawTap() {
+  const proto = CanvasRenderingContext2D.prototype, frames = new WeakMap();
+  const frameOf = canvas => {let frame = frames.get(canvas); if (!frame) frames.set(canvas,frame = {texts:[],rects:[],sequence:0,order:0}); return frame;};
+  const fillRect = proto.fillRect, fillText = proto.fillText, roundRect = proto.roundRect;
+  proto.fillRect = function(x,y,w,h) {
+    if (x === 0 && y === 0) {
+      const transform = this.getTransform(), canvas = this.canvas;
+      if (Math.round(w * transform.a) >= canvas.width && Math.round(h * transform.d) >= canvas.height) {const frame = frameOf(canvas); frame.texts = []; frame.rects = []; frame.order = 0; frame.sequence++;}
+    }
+    return fillRect.call(this,x,y,w,h);
+  };
+  proto.fillText = function(text,x,y,maxWidth) {
+    const frame = frameOf(this.canvas);
+    frame.texts.push({order:++frame.order,text:String(text),x,y,font:this.font,align:this.textAlign,baseline:this.textBaseline,fill:String(this.fillStyle),alpha:this.globalAlpha});
+    return fillText.call(this,text,x,y,maxWidth);
+  };
+  proto.roundRect = function(x,y,w,h,radii) {
+    const frame = frameOf(this.canvas);
+    frame.rects.push({order:++frame.order,x,y,w,h,fill:String(this.fillStyle),alpha:this.globalAlpha});
+    return roundRect.call(this,x,y,w,h,radii);
+  };
+  window.__atlasCanvasDraws = canvas => {const frame = frames.get(canvas); return frame ? {sequence:frame.sequence,texts:frame.texts.map(item => ({...item})),rects:frame.rects.map(item => ({...item}))} : null;};
+}
+
 /** Serialized into the runner-owned page. True once the chart behind `selector` is a painted Funnest canvas that holds observed bars. */
 export function isNativeFunnestPainted(selector) {
   const host=document.querySelector(selector)?.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas'),snapshot=host?.getAtlasFunnestSnapshot?.();

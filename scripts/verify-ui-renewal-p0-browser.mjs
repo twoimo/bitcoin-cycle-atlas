@@ -15,7 +15,7 @@ import {listWorktreeSourceFiles as listP0SourceFiles} from './browser-source-ide
 export {listP0SourceFiles};
 import {ensureOwnedVisibleForPaint} from './browser-paint-readiness.mjs';
 import {headlessWindowArgument,verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
-import {isNativeFunnestPainted} from './funnest-browser-evidence.mjs';
+import {installCanvasDrawTap,isNativeFunnestPainted} from './funnest-browser-evidence.mjs';
 import {
   inspectP0CssSources,inspectP0TokenPairs,p0Cases,p0FinalStatus,p0FontCss,p0FontFamily,p0PaintSamples,
   p0SampleCoverage,p0ThemeStorageKey,p0TokenPairs,validateP0FontEvidence,validateP0Paint,validateP0PaintRole,validateP0Typography,
@@ -167,6 +167,17 @@ export function inspectP0Page(spec,stage,sampleSpecs,tokenNames) {
   const proseSelectors = '#chart-reader-body > p,.atlas-settings-body > p,.price-axis-options > .price-axis-basis,.research-article p,.method-card p,.reading-card p,.editorial-panel > p';
   const prose = [...document.querySelectorAll(proseSelectors)].filter(visible).map(typography);
   const denseText = [...document.querySelectorAll('.atlas-canvas-heading button,.atlas-canvas-heading select,.workbench-bottom-bar button,.chart-readout,.atlas-page-intro h1')].filter(visible).map(typography);
+  // The engine paints the price-axis ticks as canvas text, before the last-price tag; the recorded draws give their font.
+  const axisHost = document.querySelector(spec.symbol === 'BTCUSD' ? '#lab-chart' : '#eth-chart')?.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas');
+  const axisLayout = axisHost?.getAtlasFunnestSnapshot?.()?.layout, axisDraws = axisHost && axisLayout && typeof window.__atlasCanvasDraws === 'function'
+    ? [...axisHost.querySelectorAll('canvas')].map(canvas => window.__atlasCanvasDraws(canvas)).find(draws => draws?.texts.length) : null;
+  if (axisDraws) {
+    const inGutter = item => item.x >= axisLayout.plotWidth && item.y < axisLayout.panesHeight, tagOrder = axisDraws.rects.filter(inGutter).at(0)?.order ?? Infinity;
+    for (const item of axisDraws.texts.filter(item => inGutter(item) && item.order < tagOrder)) {
+      const probe = document.createElement('span');probe.style.font = item.font;
+      denseText.push({selector:'canvas.atlas-funnest-canvas price-axis tick',visible:true,fontSize:Number.parseFloat(probe.style.fontSize),fontFamily:probe.style.fontFamily,text:item.text});
+    }
+  }
   const colours = new Map();
   for (const node of document.querySelectorAll('body *')) {
     if (!visible(node)) continue;const style = getComputedStyle(node);
@@ -332,6 +343,7 @@ export async function verifyUiRenewalP0Browser(argv=process.argv.slice(2)) {
         // clean profile and light cases emulate a saved preference before boot.
         // Never assign a product theme attribute or inject replacement styles.
         const seed = p0PreferenceSeed(spec,origin);if (seed) await cdp.send('Page.addScriptToEvaluateOnNewDocument',{source:seed});
+        await cdp.send('Page.addScriptToEvaluateOnNewDocument',{source:`(${installCanvasDrawTap})()`});
         await cdp.send('Emulation.setDeviceMetricsOverride',{width:spec.width,height:spec.height,deviceScaleFactor:1,mobile:spec.width<=620});
         result.requestedUrl = `${base}?symbol=${spec.symbol}`;await cdp.send('Page.navigate',{url:result.requestedUrl});await observedReady(cdp,spec.symbol);
         const initial = await evaluate(cdp,() => ({theme:document.documentElement.dataset.theme,stored:localStorage.getItem('atlas-ui-theme')}));result.initialPreference = initial;
