@@ -53,6 +53,15 @@ export function atlasBtcCandles(candles) {
   });
 }
 
+/** Observed closes on dates that no candle covers. A candle covers its open time through its endDate. Both lists ascend by date. */
+function closesWithoutCandle(closePoints, candles) {
+  let index = 0;
+  return closePoints.filter(row => {
+    while (index < candles.length && candles[index].endDate < row.date) index++;
+    return !(index < candles.length && candles[index].time <= row.time);
+  });
+}
+
 function rangeTime(value, end = false) {
   if (typeof value === 'number') return value * 1000 + (end ? DAY - 1 : 0);
   return utcMs(value) + (end ? DAY - 1 : 0);
@@ -188,11 +197,14 @@ export function mountAtlasBtcFunnestChart({
     observations = rawRows.map(row => ({ time: row.time, close: row.close, date: row.date })); actualSource = sourceName(closeSource);
   } else throw new RangeError(`Unsupported BTC source mode: ${sourceMode}`);
 
-  const bridgeRows = sourceMode === 'ohlc' && observedRows.length && !intraday
-    ? atlasBtcClosePoints(observedRows, frequency).filter(row => row.date >= (rawRows.at(-1)?.endDate ?? rawRows.at(-1)?.date ?? ''))
-    : [];
+  // An exchange candle exists only for the dates the exchange reported. Every other observed close stays a
+  // close-only line row, so the chart drops no date and gives none an OHLC value that nobody observed.
+  const closePoints = sourceMode === 'ohlc' && !intraday ? atlasBtcClosePoints(observedRows, frequency) : [];
+  const lineRows = closesWithoutCandle(closePoints, rawRows), lineSource = sourceName(closeSource);
+  const closeBefore = new Map(closePoints.map((row, index) => [row.time, closePoints[index - 1]]));
+  const observedTimeline = lineRows.length ? [...rawRows, ...lineRows].sort((a, b) => a.time - b.time) : rawRows;
   const volumeByDate = new Map(volumeBars.map(row => [row.endDate ?? row.date, row]));
-  const display = createPriceDisplay({ unit, rows: rawRows.concat(bridgeRows).map(row => ({ date: row.date, price: row.price ?? row.close })), denominator, denominatorDate, scale });
+  const display = createPriceDisplay({ unit, rows: observedTimeline.map(row => ({ date: row.date, price: row.price ?? row.close })), denominator, denominatorDate, scale });
   const volumeByTime = sourceMode === 'close-only' && showVolume ? rawRows.map(row => ({ time: row.time, volume: volumeByDate.get(row.date)?.volume })).filter(row => Number.isFinite(row.volume)) : null;
   const effectiveScale = display.effectiveScale === 'log' ? 'log' : 'normal';
   const toEngineBar = row => sourceMode === 'close-only'
@@ -210,12 +222,12 @@ export function mountAtlasBtcFunnestChart({
   const annotationRows = researchAnnotations.filter(row => row?.start?.date && row?.end?.date).map(row => ({ ...row, startTime: utcMs(row.start.date), endTime: utcMs(row.end.date) }));
   const selectedRows = [
     ...rawRows.map(row => ({ ...row, kind: 'observed', price: row.price ?? row.close })),
-    ...bridgeRows.map(row => ({ ...row, kind: 'observed-line', price: row.close })),
+    ...lineRows.map(row => ({ ...row, kind: 'observed-line', price: row.close })),
     ...forecastRows.map(row => ({ ...row, kind: 'simulated' })),
     ...retrospectiveRows.map(row => ({ ...row, kind: 'retrospective' })),
   ].sort((a, b) => a.time - b.time || (a.kind.startsWith('observed') ? -1 : 1));
   const uniqueRows = selectedRows.filter((row, index) => index === 0 || row.time !== selectedRows[index - 1].time || row.kind !== selectedRows[index - 1].kind);
-  const latestObservedTime = Math.max(rawRows.at(-1).time, bridgeRows.at(-1)?.time ?? -Infinity);
+  const latestObservedTime = observedTimeline.at(-1).time;
   const futureSelectionRows = uniqueRows.filter(row => row.kind === 'simulated' && row.time > latestObservedTime);
   const displayUnit = new Map(rawRows.map(row => [row.time, row]));
   const nativeBarsByDate = new Map(rawRows.map(row => [row.date, row]));
@@ -248,7 +260,7 @@ export function mountAtlasBtcFunnestChart({
     bars, sourceMode, chartType: sourceMode === 'close-only' ? 'line' : chartType, symbol: 'BTCUSD', currency: unit === 'usd' ? 'USD' : unit,
     timezone: 'UTC', locale: 'ko', precision: unit === 'usd' ? 2 : 2, tickSize: unit === 'usd' ? 0.01 : 0.01,
     scale: effectiveScale, invertScale, range: initialRange, theme: chartTheme, volume: showVolume, volumeByTime, volumeSource: sourceMode === 'close-only' && showVolume ? volumeSource : actualSource,
-    source: { name: actualSource, ...source, ...(bridgeRows.length ? { bridgeSource: 'Coin Metrics', bridgeCloseOnlyRows: bridgeRows.length } : {}), ...(sourceMode === 'close-only' && showVolume ? { volumeSource: { name: volumeSource, scope: 'BTC-USD 단일 거래소 거래량', rows: volumeByTime.length } } : {}) }, accessibleName: `비트코인 ${sourceMode === 'ohlc' ? '실제 OHLC 가격 차트' : `${actualSource} 실제 일말 종가 차트`}`,
+    source: { name: actualSource, ...source, ...(lineRows.length ? { observedLineSource: lineSource, observedLineRows: lineRows.length } : {}), ...(sourceMode === 'close-only' && showVolume ? { volumeSource: { name: volumeSource, scope: 'BTC-USD 단일 거래소 거래량', rows: volumeByTime.length } } : {}) }, accessibleName: `비트코인 ${sourceMode === 'ohlc' ? '실제 OHLC 가격 차트' : `${actualSource} 실제 일말 종가 차트`}`,
     onCrosshair: detail => {
       if (destroyed || selectionPreview) return;
       if (futurePointerActive) { if (detail?.bar) clearNativeCrosshair(); return; }
@@ -273,7 +285,7 @@ export function mountAtlasBtcFunnestChart({
   svg.setAttribute('viewBox', '0 0 1000 500');
   svg.dataset.chartEngine = 'funnest'; svg.dataset.observedMode = sourceMode; svg.dataset.source = actualSource; svg.dataset.replaySelectionPreview = String(Boolean(selectionPreview));
   svg.dataset.observedCandleCount = sourceMode === 'ohlc' ? String(rawRows.length) : '0';
-  svg.dataset.observedLineCount = sourceMode === 'close-only' ? String(rawRows.length) : String(bridgeRows.length);
+  svg.dataset.observedLineCount = sourceMode === 'close-only' ? String(rawRows.length) : String(lineRows.length);
   svg.dataset.chartType = sourceMode === 'close-only' ? 'line' : chartType;
   svg.dataset.scale = effectiveScale; svg.dataset.invertScale = String(Boolean(invertScale));
 
@@ -354,7 +366,7 @@ export function mountAtlasBtcFunnestChart({
       svg.dataset.replayBoundaryCount = String(boundaryRows.length);
       svg.dataset.replayCycleTimingCount = String(timingRows.reduce((sum, row) => sum + row.rows.length, 0));
       const ctx = painter.ctx;
-      const path = (rows, field, color, width, dash = [], key = 'bridge', contrast = false) => {
+      const path = (rows, field, color, width, dash, key, contrast = false) => {
         const subpaths = []; let current = null, previousTime = null;
         for (const row of rows) {
           const value = row[field];
@@ -373,7 +385,12 @@ export function mountAtlasBtcFunnestChart({
         }
         receipt.paths[key] = { subpaths, strokes, sourceCount: rows.length, coordinateBasis: 'actual CanvasRenderingContext2D path arguments' };
       };
-      if (bridgeRows.length) path(bridgeRows, 'close', lineColor, 1.9);
+      if (lineRows.length) {
+        const width = 1.9;
+        path(lineRows, 'close', lineColor, width, [], 'observedLine');
+        // A one-point path strokes nothing, so a close with no neighbor to join is a dot.
+        for (const [point, next] of receipt.paths.observedLine.subpaths) if (!next) painter.circle(point.x, point.y, width, lineColor);
+      }
       path(forecastRows, 'price', '#e2b66c', 1.8, [7, 5], 'forecast', true);
       path(retrospectiveRows, 'price', '#74a7ee', 1.7, [1, 5], 'retrospective', true);
       const retrospectiveAnchor = retrospectiveOrigin ? retrospectiveRows.find(row => row.date === retrospectiveOrigin) : null;
@@ -394,7 +411,7 @@ export function mountAtlasBtcFunnestChart({
         }
       }
       retrospectiveLabelLayer.replaceChildren(...retrospectiveLabels);
-      const actualRows = rawRows.filter(row => Number.isFinite(row.price ?? row.close) && (row.price ?? row.close) > 0);
+      const actualRows = observedTimeline.filter(row => Number.isFinite(row.price ?? row.close) && (row.price ?? row.close) > 0);
       const hasAnnotationDomain = typeof start === 'string' && typeof end === 'string';
       const historicalAnchors = historicalEvents.filter(event => hasAnnotationDomain && event?.date && event.date >= start && event.date <= end && actualRows.length)
         .map(event => {
@@ -540,7 +557,7 @@ export function mountAtlasBtcFunnestChart({
       }
       for (const item of fib) { if (!finitePositive(item.price)) continue; const y = coords.priceToY(scaleValue(item.price, display)), x = item.startDate ? coords.timeToX(utcMs(item.startDate)) : 0; if (Number.isFinite(y) && Number.isFinite(x)) { painter.hLine(y, Math.max(0, x), coords.plotWidth, '#95a3ba', [3, 5]); painter.text(`${Math.round(item.ratio * 100)}%`, Math.max(2, x + 4), Math.max(10, y - 3), '#aab8ce'); } }
       if (showDrawdown) {
-        let peak = 0; const ddRows = rawRows.concat(bridgeRows).map(row => { const price = row.price ?? row.close; peak = Math.max(peak, price); return { time: row.time, dd: (price / peak - 1) * 100 }; });
+        let peak = 0; const ddRows = observedTimeline.map(row => { const price = row.price ?? row.close; peak = Math.max(peak, price); return { time: row.time, dd: (price / peak - 1) * 100 }; });
         const projectDd = forecastRows.map(row => ({ time: row.time, dd: Number.isFinite(row.drawdownPct) ? row.drawdownPct : null }));
         const paintDd = (rows, color, dash = []) => { let previous = null; for (const row of rows) { if (!Number.isFinite(row.dd)) { previous = null; continue; } const x = coords.timeToX(row.time), y = coords.height - 10 - Math.max(0, Math.min(100, -row.dd)) * .14; if (previous && Number.isFinite(x) && Number.isFinite(y)) painter.line(previous.x, previous.y, x, y, color, 1, dash); previous = { x, y, time: row.time }; } };
         paintDd(ddRows, '#a7b8cd'); paintDd(projectDd, '#e2b66c', [4, 3]);
@@ -651,7 +668,7 @@ export function mountAtlasBtcFunnestChart({
       if (sourceMode === 'close-only' && showVolume) { const observedVolume = volumeByDate.get(displayRow.date); if (observedVolume) Object.assign(detail, { volume: observedVolume.volume, volumeSource, volumeUnit: 'BTC', volumeStartDate: observedVolume.startDate || observedVolume.date, volumeEndDate: observedVolume.endDate || observedVolume.date }); }
       return detail;
     }
-    if (row.kind === 'observed-line') { const index = bridgeRows.indexOf(row); return sourcePointDetail(row, bridgeRows[index - 1], display, { frequency, source: 'Coin Metrics' }); }
+    if (row.kind === 'observed-line') return sourcePointDetail(row, closeBefore.get(row.time), display, { frequency, source: lineSource });
     return { date: row.date, price: row.price, displayedPrice: display.toDisplay(row.price), display: display.metadata, kind: 'simulated', source: row.kind === 'retrospective' ? '현재 생성 회고 경로' : 'Atlas 조건부 모델', frequency };
   };
   let selectionIndex = uniqueRows.findIndex(row => row.date === activeSelection);
@@ -761,7 +778,7 @@ export function mountAtlasBtcFunnestChart({
   const values = [];
   const inRequestedWindow = row => !initialRange || (Number.isFinite(row.time) && row.time >= initialRange.from && row.time <= initialRange.to);
   if (!priceDomain) {
-    for (const row of rawRows.concat(bridgeRows).filter(inRequestedWindow)) for (const value of [row.price ?? row.close, row.low, row.high]) if (Number.isFinite(value) && value > 0) values.push(scaleValue(value, display));
+    for (const row of observedTimeline.filter(inRequestedWindow)) for (const value of [row.price ?? row.close, row.low, row.high]) if (Number.isFinite(value) && value > 0) values.push(scaleValue(value, display));
     for (const row of [...forecastRows, ...retrospectiveRows].filter(inRequestedWindow)) for (const value of [row.price, row.lower, row.upper]) if (Number.isFinite(value) && value > 0 && (!priceOnlyAuto || value === row.price)) values.push(scaleValue(value, display));
     for (const row of markerRows.filter(inRequestedWindow)) if (Number.isFinite(row.price) && row.price > 0 && !priceOnlyAuto) values.push(scaleValue(row.price, display));
   }
@@ -779,7 +796,7 @@ export function mountAtlasBtcFunnestChart({
     const x = (clientX - rect.left) / rect.width * viewWidth;
     if (x < 0 || x > coords.plotWidth) return null;
     let best = null, distance = Infinity;
-    for (const row of rawRows) {
+    for (const row of observedTimeline) {
       const candidate = coords.timeToX(row.time), delta = Math.abs(candidate - x);
       if (Number.isFinite(candidate) && delta < distance) { best = row; distance = delta; }
     }
@@ -795,7 +812,7 @@ export function mountAtlasBtcFunnestChart({
       priceScale: { min: display.fromDisplay(mounted.chart.mainScale.min), max: display.fromDisplay(mounted.chart.mainScale.max), displayMin: mounted.chart.mainScale.min, displayMax: mounted.chart.mainScale.max, scale: mounted.chart.settings.priceScale, inverted: Boolean(invertScale) },
       pane: coords ? { width: coords.plotWidth, height: coords.height } : null,
       observed: { coordinateBasis: 'projection through the real rendered Funnest PaneCoords; not intercepted core draw calls', rows: projected },
-      bridgeRows, volumeByTime, showVolume, forecastRows, retrospectiveRows,
+      observedLineRows: lineRows, volumeByTime, showVolume, forecastRows, retrospectiveRows,
       replay: { cursorDate: replayCursorDate, selectionPreview, boundaries: replayBoundaries },
       interaction: { selectedDate: activeSelection, measurementAnchor: pointerDetail?.measurementAnchor ?? null, pointer: pointerDetail ? { time: pointerDetail.time, value: pointerDetail.value, x: pointerDetail.x, y: pointerDetail.y } : null, pointerBasis: 'Funnest PaneCoords.pointAt; not an observed source bar' },
       paint: lastOverlay });
