@@ -1,0 +1,159 @@
+{
+  "kind": "r19-p5-f1-shared-shell-dom-model",
+  "nativeBrowser": false,
+  "baseline": "b2226d77ddf4ff4fe6e05953e02cbb753ea4f7f8",
+  "scope": "Real dist/index.html and real initAtlasShell in LinkeDOM with a file: location (no static workbench bridge); route body content modules are not booted. No layout, native accessibility tree, pointer target, focus paint, or screenshot claims.",
+  "range": "[\\u{1F300}-\\u{1FAFF}\\u{2600}-\\u{27BF}]",
+  "contentExclusions": [
+    "script",
+    "style",
+    "template",
+    "noscript",
+    ".conference-caption-text",
+    ".conference-transcript-text",
+    ".relay-room-name",
+    ".relay-room-sub",
+    ".relay-peer>h2",
+    ".relay-peer-sub",
+    ".relay-msg-text",
+    ".relay-msg-quote",
+    ".relay-reply-text",
+    ".relay-reply-name",
+    ".relay-msg-author",
+    ".relay-preview",
+    ".relay-article-title",
+    ".relay-article-excerpt",
+    ".relay-reader-head h2",
+    ".relay-body",
+    ".relay-reader-figure figcaption",
+    "#lab-chart-stage>svg"
+  ],
+  "includesHiddenUi": true,
+  "sourceHashes": {
+    "before": "2b27204e141a9b600011a589a16a08835954fa05a974ba133264ebbf89e4f75a",
+    "after": "e5cd5d67ae979ded8722f82a794655834883b7d2fa3115b7b4c5bb8a7b0b5181"
+  },
+  "rows": [
+    {
+      "version": "before",
+      "page": "conference",
+      "uiGlyphCount": 1,
+      "matches": [
+        {
+          "glyph": "☰",
+          "codePoint": "U+2630",
+          "parent": "BUTTON",
+          "className": "atlas-sidebar-toggle"
+        }
+      ],
+      "excludedMatches": 0,
+      "menu": {
+        "ariaLabel": "탐색 메뉴 접기",
+        "ariaExpanded": "true",
+        "svg": false,
+        "svgDecorative": null,
+        "svgFocusable": null,
+        "toggleRoundTrip": true
+      },
+      "h1Count": 1
+    },
+    {
+      "version": "before",
+      "page": "outlook",
+      "uiGlyphCount": 1,
+      "matches": [
+        {
+          "glyph": "☰",
+          "codePoint": "U+2630",
+          "parent": "BUTTON",
+          "className": "atlas-sidebar-toggle"
+        }
+      ],
+      "excludedMatches": 0,
+      "menu": {
+        "ariaLabel": "탐색 메뉴 접기",
+        "ariaExpanded": "true",
+        "svg": false,
+        "svgDecorative": null,
+        "svgFocusable": null,
+        "toggleRoundTrip": true
+      },
+      "h1Count": 1
+    },
+    {
+      "version": "before",
+      "page": "relay",
+      "uiGlyphCount": 1,
+      "matches": [
+        {
+          "glyph": "☰",
+          "codePoint": "U+2630",
+          "parent": "BUTTON",
+          "className": "atlas-sidebar-toggle"
+        }
+      ],
+      "excludedMatches": 0,
+      "menu": {
+        "ariaLabel": "탐색 메뉴 접기",
+        "ariaExpanded": "true",
+        "svg": false,
+        "svgDecorative": null,
+        "svgFocusable": null,
+        "toggleRoundTrip": true
+      },
+      "h1Count": 1
+    },
+    {
+      "version": "after",
+      "page": "conference",
+      "uiGlyphCount": 0,
+      "matches": [],
+      "excludedMatches": 0,
+      "menu": {
+        "ariaLabel": "탐색 메뉴 접기",
+        "ariaExpanded": "true",
+        "svg": true,
+        "svgDecorative": "true",
+        "svgFocusable": "false",
+        "toggleRoundTrip": true
+      },
+      "h1Count": 1
+    },
+    {
+      "version": "after",
+      "page": "outlook",
+      "uiGlyphCount": 0,
+      "matches": [],
+      "excludedMatches": 0,
+      "menu": {
+        "ariaLabel": "탐색 메뉴 접기",
+        "ariaExpanded": "true",
+        "svg": true,
+        "svgDecorative": "true",
+        "svgFocusable": "false",
+        "toggleRoundTrip": true
+      },
+      "h1Count": 1
+    },
+    {
+      "version": "after",
+      "page": "relay",
+      "uiGlyphCount": 0,
+      "matches": [],
+      "excludedMatches": 0,
+      "menu": {
+        "ariaLabel": "탐색 메뉴 접기",
+        "ariaExpanded": "true",
+        "svg": true,
+        "svgDecorative": "true",
+        "svgFocusable": "false",
+        "toggleRoundTrip": true
+      },
+      "h1Count": 1
+    }
+  ],
+  "beforeTotal": 3,
+  "afterTotal": 0,
+  "screenshots": [],
+  "qualifiesNativeF1Acceptance": false
+}

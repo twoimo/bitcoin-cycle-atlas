@@ -50,6 +50,9 @@ test('the relay channel list label is a section heading, not a second H1', () =>
 
 test('the page keeps exactly one shell heading owner and its visible titles', () => {
   assert.equal((pageDescription.match(/heading\.id = 'atlas-page-heading'/g) || []).length, 1, 'the shell owns exactly one page heading element');
+  assert.doesNotMatch(html, /<\/?h1[\s>]/, 'static content uses section headings and leaves the sole H1 to the shell');
+  assert.match(html, /<h2 id="outlook-heading">비트코인 통합 차트<\/h2>/);
+  assert.match(html, /<h2 id="chart-heading">[\s\S]*?<\/span><\/h2>/, 'the legacy chart section has a matching closing tag');
   assert.match(html, /공모주 캘린더/, 'the IPO title text is not hidden or deleted');
   assert.match(html, /aria-label="공모주 캘린더"/, 'the IPO region label is preserved');
 });
@@ -62,4 +65,30 @@ test('the phone chart toolbar gives the reset control a 44px touch floor', () =>
   assert.match(owner.body, /body\[data-shell=chart\] \.chart-toolbar \.chart-options \.icon-button\{[^}]*width:44px/, 'the touch floor also pins the width');
   const links = [...html.matchAll(/<link rel="stylesheet" href="\.\/([^"?]+)/g)].map(match => match[1]);
   assert.ok(links.indexOf('styles.css') < links.indexOf('atlas-shell.css'), 'the shell stylesheet must load after styles.css so the touch floor wins');
+});
+
+test('the price-chart h1 reserves a visible 22px normal-flow label row without symbol padding compensation', () => {
+  // Declaration checks protect the layout contract, not browser glyph geometry.
+  const rules = topLevelBlocks(shellCss.replace(/\/\*[\s\S]*?\*\//g, ''));
+  const normalized = text => text.replace(/["'\s]/g, '');
+  const labelSelector = '.atlas-page-intro[data-heading-placement=label]';
+  const label = rules.find(rule => normalized(rule.prelude).endsWith(labelSelector));
+  assert.ok(label, 'the normal-flow label owns an explicit CSS rule');
+  for (const declaration of ['position:static', 'order:-1', 'flex:none', 'width:100%', 'height:22px', 'padding:4px8px']) {
+    assert.ok(normalized(label.body).split(';').includes(declaration), 'the label keeps ' + declaration);
+  }
+  assert.doesNotMatch(label.body, /(?:^|;)\s*(?:left|top|right|bottom|inset|clip-path)\s*:/, 'the label has no fixed-symbol offsets or clipping');
+  assert.doesNotMatch(label.body, /display\s*:\s*none|visibility\s*:\s*hidden|opacity\s*:\s*0(?:[;\s]|$)/, 'the visible H1 cannot be hidden to pass collisions');
+  const heading = rules.find(rule => normalized(rule.prelude).endsWith(labelSelector + '>.atlas-shell-heading'));
+  assert.ok(heading, 'the label has its own heading typography');
+  assert.ok(normalized(heading.body).split(';').includes('text-align:left'));
+  const sharedHeading = rules.find(rule => normalized(rule.prelude) === '.atlas-page-intro>.atlas-shell-heading');
+  assert.ok(sharedHeading, 'the label retains shared H1 typography');
+  for (const declaration of ['font-size:12px', 'line-height:14px']) {
+    assert.ok(normalized(sharedHeading.body).split(';').includes(declaration), 'the heading keeps ' + declaration);
+  }
+  const sharedCopy = rules.find(rule => normalized(rule.prelude) === '.atlas-page-intro');
+  assert.ok(sharedCopy); assert.ok(normalized(sharedCopy.body).split(';').includes('display:block'));
+  assert.doesNotMatch(shellCss, /data-heading-placement\s*=\s*["']?symbol/, 'no selector may restore the old symbol-owned caption or padding hack');
+  assert.doesNotMatch(pageDescription, /box\.left\s*\+\s*4|box\.top\s*\+\s*2|box\.width\s*-\s*8/, 'symbol-internal placement formulas are removed');
 });

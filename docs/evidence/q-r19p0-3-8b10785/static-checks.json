@@ -1,0 +1,34 @@
+[
+  {
+    "command": "node scripts/build-site-styles.mjs",
+    "chunk_id": "997aa2",
+    "wall_time_seconds": 0.022278986,
+    "exit_code": 0,
+    "original_token_count": 78,
+    "output": "{\"status\":\"ok\",\"mode\":\"write\",\"sourceStylesheets\":41,\"files\":[{\"file\":\"site-before-shell.css\",\"bytes\":384477,\"sha256\":\"c6031ebb25d37b7a00a57ab119c262a69ba1443628aedd3a1d338efb349ce853\"},{\"file\":\"site-after-shell.css\",\"bytes\":163360,\"sha256\":\"66a311f602f6e9afd78bab6345d6aef1855007d7a37d5e12ba63b25a7a1d1f41\"}]}\n"
+  },
+  {
+    "command": "npm run verify:static",
+    "chunk_id": "9e81d5",
+    "wall_time_seconds": 5.287194214,
+    "exit_code": 0,
+    "original_token_count": 77,
+    "output": "npm warn Unknown env config \"http-proxy\". This will stop working in the next major version of npm.\n\n> bitcoin-cycle-atlas@1.36.1 verify:static\n> node scripts/verify-static.mjs\n\n{\"status\":\"ok\",\"files\":1064,\"checkedScripts\":220,\"checkedReferences\":1068,\"basePath\":\"/bitcoin-cycle-atlas/\",\"standalone\":null}\n"
+  },
+  {
+    "command": "node scripts/build-site-styles.mjs --check",
+    "chunk_id": "04ad73",
+    "wall_time_seconds": 0.083651998,
+    "exit_code": 0,
+    "original_token_count": 78,
+    "output": "{\"status\":\"ok\",\"mode\":\"check\",\"sourceStylesheets\":41,\"files\":[{\"file\":\"site-before-shell.css\",\"bytes\":384477,\"sha256\":\"c6031ebb25d37b7a00a57ab119c262a69ba1443628aedd3a1d338efb349ce853\"},{\"file\":\"site-after-shell.css\",\"bytes\":163360,\"sha256\":\"66a311f602f6e9afd78bab6345d6aef1855007d7a37d5e12ba63b25a7a1d1f41\"}]}\n"
+  },
+  {
+    "command": "node scripts/build-site-preloads.mjs --check",
+    "chunk_id": "54578d",
+    "wall_time_seconds": 0.34469199,
+    "exit_code": 0,
+    "original_token_count": 135,
+    "output": "{\"status\":\"ok\",\"mode\":\"check\",\"moduleUrls\":56,\"uniqueModuleFiles\":54,\"conferenceModulePreloads\":55,\"sharedModulePreloads\":1,\"staticImportEdges\":82,\"maxShortestImportDepth\":6,\"moduleBytesByUrl\":763144,\"timeline\":{\"url\":\"./conference/timeline.json\",\"file\":\"conference/timeline.json\",\"bytes\":1044921,\"sha256\":\"fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad\",\"rel\":\"preload\",\"as\":\"fetch\",\"crossorigin\":\"anonymous\",\"fetchpriority\":\"high\"},\"manifestSha256\":\"abdc153ba496dcbcab9c601d141ccdf69499511d1f02f69b1b93c149df243d28\"}\n"
+  }
+]

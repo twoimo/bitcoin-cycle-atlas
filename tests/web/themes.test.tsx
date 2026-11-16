@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {parseHTML} from 'linkedom';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {axes,evidenceAvailableAt,normalizeThemeDraft,themeComparison,themePerformance,themeStatus,validateThemeSnapshot,type ThemeJudgment} from '@atlas/domain/themes';
@@ -50,7 +51,11 @@ test('themes: uncertain writes survive reload with the same request ID, storage 
 test('themes: responsive chart renders factual bars and groups same-day sources without inventing prices',()=>{
   const s=validateThemeSnapshot(fixture),noop=()=>{};
   const html=renderToStaticMarkup(<ThemeChart bars={s.asset.bars} evidence={s.evidence} judgments={s.judgments} view={initialThemeView(s.asset.bars)} onView={noop} onEvidence={noop} onJudgment={noop} selectedEvidence="hip3-docs" selectedJudgment="initial-review" active/>);
-  assert.match(html,/HYPE 현물 가격/);assert.match(html,/근거 2건 2026-11-03/);assert.match(html,/84\.007/);assert.doesNotMatch(html,/NaN|Infinity/);
+  const document=parseHTML(`<html><body>${html}</body></html>`).document;
+  assert.match(html,/HYPE 현물 가격/);assert.equal(document.querySelectorAll('.atlas-funnest-marker-list li').length,11);
+  assert.equal([...document.querySelectorAll('.atlas-funnest-marker-list li')].filter(item=>item.textContent?.includes('2026-11-03 · 근거')).length,2);
+  assert.equal([...document.querySelectorAll('.atlas-funnest-marker-list li')].filter(item=>item.textContent?.includes('2026-11-03 · 판정')).length,1);
+  assert.match(html,/84\.007/);assert.doesNotMatch(html,/NaN|Infinity/);
 });
 test('themes: recovery cannot silently substitute a newer snapshot for the pending revision',async()=>{
   const abort=new AbortController();await assert.rejects(loadThemes(abort.signal,async url=>new Response(JSON.stringify(String(url).startsWith('/api')?{}:fixture),{status:String(url).startsWith('/api')?404:200}),'0'.repeat(64)),/revision mismatch/);

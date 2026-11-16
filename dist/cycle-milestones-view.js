@@ -62,7 +62,7 @@ function previewBox(point, bounds) {
 
 function markerLabel(point, box) {
   const edgeX = clamp(point.x, box.x + 5, box.x + box.width - 5), edgeY = box.y > point.y ? box.y : box.y + box.height;
-  return `<path d="M${fmt(point.x)},${fmt(point.y)}L${fmt(edgeX)},${fmt(edgeY)}" fill="none" stroke="${point.color}" stroke-width=".8" opacity=".65"/><rect class="cycle-marker-label-bg" x="${fmt(box.x)}" y="${fmt(box.y)}" width="${fmt(box.width)}" height="${box.height}" rx="4" fill="#132030" fill-opacity=".96" stroke="${point.color}" stroke-opacity=".45"/><text class="cycle-marker-label" x="${fmt(box.x + box.width / 2)}" y="${fmt(box.y + 12.5)}" text-anchor="middle" fill="${point.color}" font-size="10" font-weight="600">${esc(point.label)}</text>`;
+  return `<path d="M${fmt(point.x)},${fmt(point.y)}L${fmt(edgeX)},${fmt(edgeY)}" fill="none" stroke="${point.color}" stroke-width=".8" opacity=".65"/><rect class="cycle-marker-label-bg" x="${fmt(box.x)}" y="${fmt(box.y)}" width="${fmt(box.width)}" height="${box.height}" rx="4" fill="var(--surface-raised)" fill-opacity=".96" stroke="${point.color}" stroke-opacity=".45"/><text class="cycle-marker-label" x="${fmt(box.x + box.width / 2)}" y="${fmt(box.y + 12.5)}" text-anchor="middle" fill="${point.color}" font-size="10" font-weight="600">${esc(point.label)}</text>`;
 }
 
 /** x receives the original marker; y receives its USD price. right is the
@@ -197,8 +197,8 @@ export function cycleIntervalsMarkup({ intervals = [], start, end, width = 1000,
   for (const row of rows) {
     markup += `<g class="cycle-interval-row${row.active ? ' is-active' : ''}${row.related ? ' has-related' : ''}" data-cycle-relation="${esc(row.id)}">`;
     if (row.active || row.related) markup += `<rect class="cycle-interval-row-highlight" x="${left}" y="${row.top}" width="${plotWidth}" height="${row.height - 2}" fill="${row.color}" fill-opacity="${row.active ? '.065' : '.035'}" pointer-events="none" aria-hidden="true"/>`;
-    markup += `<line x1="${left}" x2="${plotRight}" y1="${row.top + row.height - 2}" y2="${row.top + row.height - 2}" stroke="#293747" stroke-opacity=".65"/><text class="cycle-interval-row-label" x="${left + 3}" y="${row.top + 10}" fill="${row.color}" font-size="10" font-weight="600">${esc(row.label)}</text>`;
-    if (!row.spans.length) markup += `<text class="cycle-interval-empty" x="${left + 6}" y="${row.top + 29}" fill="#94a6bc" font-size="10">현재 범위에 없음</text>`;
+    markup += `<line x1="${left}" x2="${plotRight}" y1="${row.top + row.height - 2}" y2="${row.top + row.height - 2}" stroke="var(--grid)" stroke-opacity=".65"/><text class="cycle-interval-row-label" x="${left + 3}" y="${row.top + 10}" fill="${row.color}" font-size="10" font-weight="600">${esc(row.label)}</text>`;
+    if (!row.spans.length) markup += `<text class="cycle-interval-empty" x="${left + 6}" y="${row.top + 29}" fill="var(--muted)" font-size="10">현재 범위에 없음</text>`;
     markup += `<g clip-path="url(#${esc(clipId)})">`;
     for (const item of row.spans) {
       const interval = item.interval, color = row.color, isDashed = dashed(interval), { active, related } = item;
@@ -214,7 +214,7 @@ export function cycleIntervalsMarkup({ intervals = [], start, end, width = 1000,
   }
   if (validDomain) {
     const splitDay = dayOf(split);
-    if (splitDay !== null && splitDay >= first && splitDay <= last) markup += `<line class="cycle-interval-observed-split" x1="${fmt(xx(splitDay))}" x2="${fmt(xx(splitDay))}" y1="0" y2="${cursor}" stroke="#b5c2d3" stroke-dasharray="2 5" opacity=".55" pointer-events="none"><title>관측 기준일 ${esc(split)} UTC</title></line>`;
+    if (splitDay !== null && splitDay >= first && splitDay <= last) markup += `<line class="cycle-interval-observed-split" x1="${fmt(xx(splitDay))}" x2="${fmt(xx(splitDay))}" y1="0" y2="${cursor}" stroke="var(--muted)" stroke-dasharray="2 5" opacity=".55" pointer-events="none"><title>관측 기준일 ${esc(split)} UTC</title></line>`;
     // Keep the exact calendar grid used by drawAtlasPriceChart. Equal pixel
     // fractions can land in arbitrary months and repeat coarse year labels.
     const small = width < 600;
@@ -223,7 +223,7 @@ export function cycleIntervalsMarkup({ intervals = [], start, end, width = 1000,
     while (dayOf(tick) < first) tick = shiftCalendarMonths(tick, months);
     while (dayOf(tick) <= last) {
       const tickX = xx(dayOf(tick)), dateLabel = months >= 12 ? tick.slice(0, 4) : tick.slice(2, 7).replace('-', '.');
-      markup += `<text class="cycle-interval-date" x="${fmt(tickX)}" y="${cursor + 18}" text-anchor="${tickX > width - 35 ? 'end' : 'middle'}" fill="#9badc2" font-size="10">${dateLabel}</text>`;
+      markup += `<text class="cycle-interval-date" x="${fmt(tickX)}" y="${cursor + 18}" text-anchor="${tickX > width - 35 ? 'end' : 'middle'}" fill="var(--chart-axis-ink)" font-size="10">${dateLabel}</text>`;
       tick = shiftCalendarMonths(tick, months);
     }
   }

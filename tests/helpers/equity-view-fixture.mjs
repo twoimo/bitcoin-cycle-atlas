@@ -83,19 +83,26 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
   document.createElement = () => new Node();
   document.fonts = { ready: Promise.resolve() };
   for (const type of ['atlas:ready', 'atlas:boot-error']) document.addEventListener(type, () => events.push(type));
-  let frameId = 0, navigation, replayOptions;
+  let frameId = 0, navigation, replayOptions, workbenchUpdates = 0, workbenchOptions = null;
+  const indicatorRect={left:12,top:18,right:112,bottom:48,width:100,height:30};
+  const indicatorElement={hidden:true,getClientRects(){return this.hidden?[]:[indicatorRect];},getBoundingClientRect(){return indicatorRect;}};
   const mount = () => ({ cancel() {}, cancelPending() {}, destroy() {} });
+  const barsToSeries = new WeakMap();
+  const atlasCandlesToFunnestBars = series => { const bars=series.candles.map(row=>({...row,time:row.time*1000}));barsToSeries.set(bars,series);return bars; };
+  const mountObservedPriceChart = (_plot,options) => {
+    const record={...options,setAtlasRangeCalls:0,nativeRange:options.range?{from:options.range.start*1000,to:options.range.end*1000}:null,nativeMagnet:false,atlasMagnet:options.magnet||'off',chart:{layout:{plotWidth:554},setMagnet(value){record.nativeMagnet=value;},getVisibleTimeRange(){return record.nativeRange;}}};draws.push(record);
+    return {chart:record.chart,ready:async()=>({painted:true,status:'ready',bars:record.series.candles.length}),setData(bars){record.series=barsToSeries.get(bars);},setRange(range){const start=range.from/1000,end=range.to/1000;if(record.range?.start!==start||record.range?.end!==end)record.range={...record.range,start,end};},setAtlasRange(range){record.setAtlasRangeCalls++;record.range=range;record.nativeRange={from:range.start*1000,to:range.end*1000};},setChartType(value){record.chartType=value;},setScale(value){record.scale=value;},setAtlasInteraction(value){record.interaction={...value};record.atlasMagnet=value.magnet;},setAtlasRows(rows){record.sourceRows=rows;},setPriceExtrema(value){record.priceDomain=value;},setAtlasOverlays(value){Object.assign(record,value);},addOverlay(){return {redraw(){},remove(){}};},destroy(){record.destroyed=true;}};
+  };
   const deps = {
-    withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,writeChartUrlState,nativeDateRange,
+    withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,writeChartUrlState,nativeDateRange,mountObservedPriceChart,atlasCandlesToFunnestBars,
     mountNativeChartApp: app => document.body.append(app),
     // Native shell/command behavior has a separate parsed-DOM integration test.
-    mountNativeChartWorkbench: () => ({update(){},inspect(){},measure(){},beginGesture(){},endGesture(){},destroy(){}}),
+    mountNativeChartWorkbench: options => (workbenchOptions = options, {update(){workbenchUpdates++;},inspect(){},measure(){},beginGesture(){},endGesture(){},destroy(){}}),
     setLoadingSurface:(element,busy)=>element?.setAttribute('data-skeleton',String(busy)),
     ...equityData,CAPITAL_POLICIES,
     // These tiny fixtures isolate request ownership, not sample sufficiency.
     // Gate integration tests explicitly enable the real completed-history gate.
     forecastAvailabilityForSeries: useActualSufficiency ? forecastAvailabilityForSeries : () => ({ allowed:true, tier:'T2', observations:5, reasons:[], sampleLabel:'test fixture' }),
-    drawIntradayChart: options => { draws.push(options); return {}; },
     bindChartNavigation: options => {
       navigation = options;
       return { cancelGesture() {}, destroy() {}, update() {} };
@@ -103,6 +110,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     mountChartTouchTracking: mount, clearChartHover() {}, mountSymbolSelector: mount,
     // Inline replay owns a separate lifecycle, exercised by chart-replay-ui.test.mjs.
     mountChartReplay: options => { replayOptions=options; return {isActive:()=>false,open(){},exit(){},destroy(){}}; },
+    mountInstrumentIndicatorOverlay: () => ({ update() {}, destroy() {}, reserveHeight: () => 0, element: indicatorElement }),
     bindPreservedArchiveDownload() {}, // DOM download behavior is verified separately.
     mountDialogViewport: mount, EQUITY_FORECAST_BAR_NOTE: 'simulated values',
     TREASURY_EVENTS: [], TREASURY_SOURCES: [], treasuryEventMarkup() {},
@@ -154,7 +162,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     app.dispatchEvent({ type: 'click', target });
   };
   return {
-    requests, frames, draws, calculations, errors, events, articles, initialization, document, app, location, urlWrites,
+    requests, frames, draws, calculations, errors, events, articles, initialization, document, app, location, urlWrites, indicator:indicatorElement,indicatorRect,workbenchUpdates:()=>workbenchUpdates,workbench:()=>workbenchOptions,
     microtasks, frame, settle,
     reply: (index, value) => requests[index].resolve({ ok: true, json: async () => value }),
     reject: (index, message = 'Archive failed') => requests[index].reject(new Error(message)),

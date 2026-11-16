@@ -1,0 +1,364 @@
+{
+  "kind": "r19-p5-f3-native-typography",
+  "startedAt": "2026-11-13T05:04:12.204Z",
+  "sourceCommit": "513d8183b14a73284d4ce1dacf89bd3ded431bdb",
+  "scope": "Rendered shell typography and Q-P1c-B-2 word wrapping on chart, relay, conference and market routes; 4 viewport widths x light/dark. This does not qualify model/data, full product accessibility, A-9 performance, publication, or P5 as a whole.",
+  "thresholds": {
+    "bodyCaptionMinPx": 12,
+    "metadataMinPx": 11,
+    "axisLabelMinPx": 10,
+    "proseLineHeight": 1.4,
+    "contrastText": 4.5,
+    "viewports": [
+      320,
+      390,
+      768,
+      1440
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ]
+  },
+  "cases": [
+    {
+      "id": "conference-light-320",
+      "surface": "conference",
+      "url": "/?page=conference",
+      "theme": "light",
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "failures": [
+        "Body/caption line-height below 1.4: 1",
+        "Q-P1c-B-2 badge typography/wrap contract failed"
+      ],
+      "nativeWindowEnvelope": {
+        "windowId": 354693321,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "width": 2048,
+          "height": 1600,
+          "windowState": "normal"
+        },
+        "client": {
+          "width": 2048,
+          "height": 1513
+        },
+        "requestedViewport": {
+          "width": 320,
+          "height": 900
+        },
+        "verifiedBeforeEmulation": true
+      },
+      "metrics": {
+        "page": "conference",
+        "theme": "light",
+        "boot": "ready",
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "h1": 1,
+        "overflow": 0,
+        "textCount": 21,
+        "below11": [],
+        "below12Prose": [],
+        "badLeading": [
+          {
+            "text": "오디오 없음",
+            "tag": "p",
+            "className": "conference-notice",
+            "fontSize": 13,
+            "lineHeight": 1.3846153846153846,
+            "axis": false,
+            "metadata": true,
+            "visible": true
+          }
+        ],
+        "lowest": [
+          {
+            "text": "Data ©",
+            "tag": "span",
+            "className": "",
+            "fontSize": 11,
+            "lineHeight": 1.6,
+            "axis": false,
+            "metadata": false,
+            "visible": true
+          },
+          {
+            "text": "Coin Metrics",
+            "tag": "a",
+            "className": "",
+            "fontSize": 11,
+            "lineHeight": 1.6,
+            "axis": false,
+            "metadata": false,
+            "visible": true
+          },
+          {
+            "text": "·",
+            "tag": "span",
+            "className": "footer-dot",
+            "fontSize": 11,
+            "lineHeight": 1.6,
+            "axis": false,
+            "metadata": false,
+            "visible": true
+          },
+          {
+            "text": "CC BY-NC 4.0",
+            "tag": "a",
+            "className": "",
+            "fontSize": 11,
+            "lineHeight": 1.6,
+            "axis": false,
+            "metadata": false,
+            "visible": true
+          },
+          {
+            "text": "가격 차트",
+            "tag": "span",
+            "className": "atlas-nav-label",
+            "fontSize": 12,
+            "lineHeight": 1.6666666666666667,
+            "axis": false,
+            "metadata": false,
+            "visible": true
+          },
+          {
+            "text": "시장 분석",
+            "tag": "span",
+            "className": "atlas-nav-label",
+            "fontSize": 12,
+            "lineHeight": 1.6666666666666667,
+            "axis": false,
+            "metadata": false,
+            "visible": true
+          },
+          {
+            "text": "리서치",
+            "tag": "span",
+            "className": "atlas-nav-label",
+            "fontSize": 12,
+            "lineHeight": 1.6666666666666667,
+            "axis": false,
+            "metadata": false,
+            "visible": true
+          },
+          {
+            "text": "플스포 투자 컨퍼런스 2026",
+            "tag": "span",
+            "className": "",
+            "fontSize": 13,
+            "lineHeight": 1.3846153846153846,
+            "axis": false,
+            "metadata": true,
+            "visible": true
+          },
+          {
+            "text": "이 덱에 해당 장표 없음",
+            "tag": "span",
+            "className": "conference-page-status",
+            "fontSize": 13,
+            "lineHeight": 1.2307692307692308,
+            "axis": false,
+            "metadata": true,
+            "visible": true
+          },
+          {
+            "text": "장표 페이지",
+            "tag": "span",
+            "className": "conference-sr-only",
+            "fontSize": 13,
+            "lineHeight": 1.6,
+            "axis": false,
+            "metadata": false,
+            "visible": true
+          },
+          {
+            "text": "/ 290",
+            "tag": "span",
+            "className": "",
+            "fontSize": 13,
+            "lineHeight": 1.6,
+            "axis": false,
+            "metadata": false,
+            "visible": true
+          },
+          {
+            "text": "이 덱에 해당 장표 없음",
+            "tag": "span",
+            "className": "",
+            "fontSize": 13,
+            "lineHeight": 1.2307692307692308,
+            "axis": false,
+            "metadata": false,
+            "visible": true
+          },
+          {
+            "text": "0:00",
+            "tag": "span",
+            "className": "",
+            "fontSize": 13,
+            "lineHeight": null,
+            "axis": false,
+            "metadata": true,
+            "visible": true
+          },
+          {
+            "text": "/",
+            "tag": "span",
+            "className": "",
+            "fontSize": 13,
+            "lineHeight": null,
+            "axis": false,
+            "metadata": true,
+            "visible": true
+          },
+          {
+            "text": "5:40:00",
+            "tag": "span",
+            "className": "",
+            "fontSize": 13,
+            "lineHeight": null,
+            "axis": false,
+            "metadata": true,
+            "visible": true
+          },
+          {
+            "text": "−10",
+            "tag": "span",
+            "className": "",
+            "fontSize": 13,
+            "lineHeight": 1.2,
+            "axis": false,
+            "metadata": false,
+            "visible": true
+          },
+          {
+            "text": "+10",
+            "tag": "span",
+            "className": "",
+            "fontSize": 13,
+            "lineHeight": 1.2,
+            "axis": false,
+            "metadata": false,
+            "visible": true
+          },
+          {
+            "text": "오디오 없음",
+            "tag": "p",
+            "className": "conference-notice",
+            "fontSize": 13,
+            "lineHeight": 1.3846153846153846,
+            "axis": false,
+            "metadata": true,
+            "visible": true
+          }
+        ],
+        "badge": {
+          "text": "이 덱에 해당 장표 없음",
+          "fontSize": 13,
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere",
+          "glyphs": [
+            {
+              "c": "이",
+              "y": 279.8
+            },
+            {
+              "c": " ",
+              "y": 279.8
+            },
+            {
+              "c": "덱",
+              "y": 279.8
+            },
+            {
+              "c": "에",
+              "y": 279.8
+            },
+            {
+              "c": " ",
+              "y": 279.8
+            },
+            {
+              "c": "해",
+              "y": 279.8
+            },
+            {
+              "c": "당",
+              "y": 279.8
+            },
+            {
+              "c": " ",
+              "y": 279.8
+            },
+            {
+              "c": "장",
+              "y": 279.8
+            },
+            {
+              "c": "표",
+              "y": 279.8
+            },
+            {
+              "c": " ",
+              "y": 279.8
+            },
+            {
+              "c": "없",
+              "y": 295.8
+            },
+            {
+              "c": "음",
+              "y": 295.8
+            }
+          ]
+        },
+        "focusTarget": {
+          "tag": "BUTTON",
+          "className": "atlas-nav-scroll",
+          "text": "이전 페이지 메뉴 보기"
+        }
+      },
+      "screenshot": {
+        "file": "conference-light-320.png",
+        "sha256": "635356ba919564a75b6aa4808a08c2e682208046713b8f4fc97cf1d564acfb74",
+        "bytes": 34513,
+        "width": 320,
+        "height": 900
+      },
+      "badgeAccepted": {
+        "splitWord": false,
+        "fontAtLeast12": true,
+        "keepAll": true,
+        "breakWord": false
+      }
+    }
+  ],
+  "failures": [
+    "conference-light-320: Body/caption line-height below 1.4: 1",
+    "conference-light-320: Q-P1c-B-2 badge typography/wrap contract failed"
+  ],
+  "performance": {
+    "status": "not-run",
+    "reason": "This typography sweep does not replace the existing A-9 controlled performance gate."
+  },
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/157.0.8103.79",
+    "revision": "@6dc9bc3bdaea5c35ed6d41fceab2f7a3a2227c4f",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+    "jsVersion": "15.7.112.43"
+  },
+  "completedCases": 1,
+  "complete": true,
+  "status": "failed",
+  "qualifiesF3Typography": false,
+  "finishedAt": "2026-11-13T05:04:13.058Z",
+  "chromeStderr": "\nDevTools listening on ws://127.0.0.1:56330/devtools/browser/889d51c7-f9a0-4811-81de-ba521cbca7a6\nTrying to load the allocator multiple times. This is *not* supported.\n[99432:148159683:1113/140412.613856:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[99432:148159683:1113/140412.614320:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[99432:148159683:1113/140412.614404:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[99432:148159683:1113/140412.676264:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[99432:148159683:1113/140412.676792:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[99432:148159683:1113/140412.678904:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n"
+}

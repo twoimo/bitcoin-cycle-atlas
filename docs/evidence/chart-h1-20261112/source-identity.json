@@ -1,0 +1,14 @@
+{
+  "implementationCommit": "15ff9e368a7ad450405446cf9d037c095d99766f",
+  "initialVerificationCommit": "f673f5d7b2440d0c8f40a7f03bef4751a33a97a2",
+  "tree": "fd3205b20516b622586634f968e546e4f196b5c8",
+  "distTree": "090bab046cf5b7b88aea1a10d1d77d4a0d25b48e",
+  "baselineCommit": "d36766ea7fbdf39d1c81cb9523462df471ee3834",
+  "parentCommit": "6a076a3a290df8990c7720e2c6dd2aa0ee942548",
+  "additionalDocumentationParent": "d3b0a38144f6d753fe933d420db881c21a7a5949",
+  "transport": "Authenticated GitHub connector; shell Git write authentication unavailable",
+  "wholeTreeIdentical": true,
+  "branch": "fix/tradingview-responsive-20261110",
+  "productionDeployment": false,
+  "mainUpdatedByThisTask": false
+}

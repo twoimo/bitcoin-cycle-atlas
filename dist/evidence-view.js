@@ -12,7 +12,8 @@ function focusAnchor(node){
 }
 function focusTarget(anchor){return anchor?[...document.querySelectorAll('#evidence-body [data-evidence-detail]')].find(button=>{const candidate=focusAnchor(button);return candidate.id===anchor.id&&candidate.action===anchor.action;})||null:null;}
 function canRestoreFocus(){const view=document.querySelector('#evidence-view');return visible&&view?.isConnected&&!view.closest('[hidden], [inert]')&&!document.querySelector('dialog[open]');}
-function restoreFocus(anchor){return canRestoreFocus()&&filtered().some(row=>row.id===anchor.id)?render({anchor}):null;}
+function revealFocus(target){target?.scrollIntoView?.({behavior:'instant',block:'nearest',inline:'nearest'});return target;}
+function restoreFocus(anchor){return canRestoreFocus()&&filtered().some(row=>row.id===anchor.id)?revealFocus(render({anchor})):null;}
 function render({anchor=null}={}){
  const view=document.querySelector('#evidence-view'),shell=view.querySelector('.evidence-table-shell'),table=shell.querySelector('table'),body=document.querySelector('#evidence-body'),list=filtered();
  start=list.length?Math.min(start,list.length-1):0;
@@ -22,6 +23,11 @@ function render({anchor=null}={}){
  // Hidden responsive columns do not participate in the rendered header. Match
  // its actual column count so an empty row cannot create extra table tracks.
  if(!shown){const headers=[...(table.tHead?.rows?.[0]?.cells||[])];body.firstElementChild.firstElementChild.colSpan=headers.filter(cell=>getComputedStyle(cell).display!=='none').length||6;}
+ // A short card must still allocate the real caption, header and one complete
+ // row. Its outer scroll owner reveals the restored action after modal resize;
+ // a zero-height, overflow-hidden table cannot reveal even a focused button.
+ const minimum=head+Math.max(rowHeight,body.firstElementChild?.getBoundingClientRect().height||0)+8;
+ view.style.setProperty('--evidence-table-min-height',`${Math.ceil(minimum)}px`);
  while(visible&&room>0&&shown>1&&table.getBoundingClientRect().height>room+1){body.lastElementChild.remove();shown--;}
  // Resize can replace the opener or move it beyond the smaller page. Keep the
  // current filter and return to the same article and action, with a way back.
@@ -36,7 +42,7 @@ function render({anchor=null}={}){
  if(visible)document.dispatchEvent(new CustomEvent('atlas:page-ready',{detail:{page:'evidence'}}));
  return focusTarget(anchor);
 }
-function schedule(){if(frame)cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{frame=0;if(visible){const anchor=canRestoreFocus()?focusAnchor(document.activeElement):null;render({anchor})?.focus({preventScroll:true});}});}
+function schedule(){if(frame)cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{frame=0;if(visible){const anchor=canRestoreFocus()?focusAnchor(document.activeElement):null;const target=render({anchor});target?.focus({preventScroll:true});revealFocus(target);}});}
 function persistFilters(){const url=new URL(location.href);for(const [key,value] of [['research-asset',asset==='all'?null:asset],['research-category',category==='all'?null:category],['research-q',query||null]]){if(value===null)url.searchParams.delete(key);else url.searchParams.set(key,value);}try{history.replaceState(null,'',url);}catch{}}
 function reset(){start=0;previous=[];persistFilters();render();schedule();}
 export function initEvidenceView(){

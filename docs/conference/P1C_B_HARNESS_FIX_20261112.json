@@ -1,0 +1,928 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-conference-p1c-b-harness-observation-followup",
+  "recordedAt": "2026-11-12T05:14:24.427723+00:00",
+  "sourceBaseCommit": "9a43cb9fc5c37800fd99885c0344f49528eae51e",
+  "branch": "fix/tradingview-responsive-20261110",
+  "runtime": {
+    "node": "v24.22.2",
+    "platform": "linux",
+    "arch": "x64",
+    "pathPrefix": "build/toolchain/node-v24.22.2-linux-x64/bin",
+    "dockerPathSuffix": "/Applications/Docker.app/Contents/Resources/bin",
+    "installedNewTools": false
+  },
+  "scope": {
+    "browserExecutions": 0,
+    "actualMediaRenderExecutions": 0,
+    "syntheticMediaSubstitution": false,
+    "productChanges": false,
+    "deployment": false,
+    "actualMacRecheck": "pending"
+  },
+  "contracts": {
+    "pageTransitionMs": 150,
+    "exactNativeSeekRequests": true,
+    "aacFrameSamples": 1024,
+    "audioSampleRate": 48000,
+    "readbackFrames": 3,
+    "readbackBudgetMs": 64,
+    "playerNativeClockBudgetMs": 1,
+    "frameBudgetIsBrowserGuarantee": false,
+    "timelineMappingChanged": false,
+    "unavailableExitCode": 2,
+    "rangeStatuses": [
+      206,
+      416
+    ]
+  },
+  "checks": [
+    {
+      "name": "focused",
+      "command": "node --test --test-reporter=tap tests/conference-media-browser-contract.test.mjs tests/conference-media-observation.test.mjs tests/conference-media-seek-observer.test.mjs tests/conference-media-slide-observer.test.mjs tests/conference-media-browser.test.mjs tests/conference-media-server.test.mjs",
+      "exitCode": 0,
+      "result": {
+        "tests": 96,
+        "pass": 96,
+        "fail": 0,
+        "skipped": 0,
+        "durationMs": 671.874333
+      },
+      "log": {
+        "file": "build/p1cb-followup-focused.log",
+        "bytes": 23235,
+        "sha256": "49ee08250151dc3ae9ed4adacc10566891a8e01bf398d6bf9b7bb76849a5ccfe"
+      }
+    },
+    {
+      "name": "npm-test",
+      "command": "npm test",
+      "exitCode": 0,
+      "result": {
+        "tests": 3617,
+        "pass": 3617,
+        "fail": 0,
+        "skipped": 0,
+        "durationMs": 196722.60396,
+        "complete": true,
+        "batches": 1
+      },
+      "log": {
+        "file": "build/p1cb-followup-npm-test.log",
+        "bytes": 869344,
+        "sha256": "408e7fbf5722b56c359da138dd3979a1093a66e498fcc371d1177ba08c109d99"
+      }
+    },
+    {
+      "name": "typecheck",
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "result": {
+        "errors": 0
+      },
+      "log": {
+        "file": "build/p1cb-followup-typecheck.log",
+        "bytes": 206,
+        "sha256": "d9185066952b9395d37541b6167aa9e7b4bb93fd4f5a9ec49f0afba63fa3697d"
+      }
+    },
+    {
+      "name": "static",
+      "command": "npm run verify:static",
+      "exitCode": 0,
+      "result": {
+        "status": "ok",
+        "files": 968,
+        "checkedScripts": 219,
+        "checkedReferences": 972,
+        "basePath": "/bitcoin-cycle-atlas/",
+        "standalone": null
+      },
+      "log": {
+        "file": "build/p1cb-followup-static.log",
+        "bytes": 354,
+        "sha256": "20bb18326d53d16da3dedefaf95bbcc89dcf5cadd6a752e203ed095a53fa296b"
+      }
+    },
+    {
+      "name": "timeline",
+      "command": "npm run verify:conference -- --timeline dist/conference/timeline.json --sources docs/conference/source-segments.json --out build/p1cb-followup-timeline.json",
+      "exitCode": 0,
+      "result": {
+        "schemaVersion": 1,
+        "kind": "atlas-conference-timeline-verification",
+        "recordedAt": "2026-11-12T05:10:24.857Z",
+        "status": "passed",
+        "valid": true,
+        "syntheticFixture": false,
+        "timeline": {
+          "file": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/dist/conference/timeline.json",
+          "bytes": 1044921,
+          "sha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad"
+        },
+        "sources": {
+          "file": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/docs/conference/source-segments.json",
+          "bytes": 985201,
+          "sha256": "894bbd9598e7766d0790f92ae74f9274ef891fcdda71abdc58dd2c04ed5a35a6"
+        },
+        "summary": {
+          "audioDurationSec": 20400,
+          "segmentCount": 9168,
+          "talkCount": 15,
+          "deckCount": 2,
+          "lastSegmentT1": 20396.7,
+          "coverage": {
+            "checked": true,
+            "expectedCount": 9168,
+            "missing": [],
+            "unexpected": [],
+            "duplicates": [],
+            "changed": []
+          }
+        },
+        "errors": []
+      },
+      "log": {
+        "file": "build/p1cb-followup-timeline.log",
+        "bytes": 1338,
+        "sha256": "96a7f848b5d51bd91ab3cbb46daadcbdb9ebf301e86c07e2dc825da50d8a3c26"
+      }
+    },
+    {
+      "name": "styles",
+      "command": "node scripts/build-site-styles.mjs --check",
+      "exitCode": 0,
+      "result": {
+        "status": "ok",
+        "mode": "check",
+        "sourceStylesheets": 41,
+        "files": [
+          {
+            "file": "site-before-shell.css",
+            "bytes": 383868,
+            "sha256": "b17ddf417afeedc6413fd5d6e47021e5b77fc3f97427839155f1bd0a656784b5"
+          },
+          {
+            "file": "site-after-shell.css",
+            "bytes": 165922,
+            "sha256": "634aca3d71a9435599547c72c93bddc6d1bec4c209301832b0538dde7dca6bf1"
+          }
+        ]
+      },
+      "log": {
+        "file": "build/p1cb-followup-styles.log",
+        "bytes": 311,
+        "sha256": "69ff4d89dd698aa12969fe6aac73a160692cad620b42cc604f3e19021b88723d"
+      }
+    },
+    {
+      "name": "preloads",
+      "command": "node scripts/build-site-preloads.mjs --check",
+      "exitCode": 0,
+      "result": {
+        "status": "ok",
+        "mode": "check",
+        "moduleUrls": 55,
+        "uniqueModuleFiles": 53,
+        "conferenceModulePreloads": 54,
+        "sharedModulePreloads": 1,
+        "staticImportEdges": 81,
+        "maxShortestImportDepth": 6,
+        "moduleBytesByUrl": 748307,
+        "timeline": {
+          "url": "./conference/timeline.json",
+          "file": "conference/timeline.json",
+          "bytes": 1044921,
+          "sha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad",
+          "rel": "preload",
+          "as": "fetch",
+          "crossorigin": "anonymous",
+          "fetchpriority": "high"
+        },
+        "manifestSha256": "d3424f224e9066bc0c38ba605c3faa5774aeba2fa90a34bd568574548db67d24"
+      },
+      "log": {
+        "file": "build/p1cb-followup-preloads.log",
+        "bytes": 537,
+        "sha256": "a529392f341946677be9b34006f722e7537da7e4492e8e80d6fd5bdf80e1f32f"
+      }
+    },
+    {
+      "name": "media-unavailable",
+      "command": "npm run verify:conference:media -- --dist dist --out build/p1cb-media-browser-linux-followup-20261112",
+      "exitCode": 2,
+      "result": {
+        "schemaVersion": 1,
+        "kind": "atlas-conference-p1c-b-media-browser",
+        "status": "skipped",
+        "startedAt": "2026-11-12T05:10:24.758Z",
+        "sourceCommit": "9a43cb9fc5c37800fd99885c0344f49528eae51e",
+        "workingChanges": "M scripts/conference-media-browser-contract.mjs\n M scripts/verify-conference-media-browser.mjs\n M tests/conference-media-browser-contract.test.mjs\n M tests/conference-media-browser.test.mjs\n?? scripts/conference-media-observation.mjs\n?? scripts/conference-media-seek-observer.mjs\n?? scripts/conference-media-slide-observer.mjs\n?? tests/conference-media-observation.test.mjs\n?? tests/conference-media-seek-observer.test.mjs\n?? tests/conference-media-slide-observer.test.mjs",
+        "dist": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/dist",
+        "syntheticFixture": false,
+        "productionDeployment": false,
+        "humanListening": "not-performed",
+        "browserLaunched": false,
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "mobile": false
+        },
+        "network": {
+          "local": true,
+          "cacheDisabled": true,
+          "encoding": "identity",
+          "cpuThrottling": 1,
+          "throttled": false
+        },
+        "budgets": {
+          "pageTransitionMs": 150,
+          "initialLoad": "not-measured; use unchanged A-9 fast4g harness",
+          "nativeSeekReadbackMs": 64,
+          "nativeSeekReadbackFrames": 3,
+          "exactSeekRequest": true,
+          "playerNativeClockRoundingMs": 1
+        },
+        "cases": [],
+        "failures": [],
+        "skipReason": "media manifest declares unavailable; real media checks were not run",
+        "harnessSources": {
+          "scripts/verify-conference-media-browser.mjs": "3773f598edb83e21e372106d47a672d1384f142631ecb8d7f9c80fa1275af8c6",
+          "scripts/conference-media-browser-contract.mjs": "3e0edbc57cf22f564478d27a1acc38f2fccc1828dc3a282790e0a0bc2c428fa2",
+          "scripts/conference-media-server.mjs": "0606548a5cf1f2739ce057ae184cbd37f55dbe9d2ad96d81be8b30abd38afdd9",
+          "scripts/headless-browser-window.mjs": "eeda1713107d631cb9766a3b487bc9e8e61c2ece4e67dff2fc081b8cba3ff812",
+          "scripts/conference-media-observation.mjs": "73e5cc2fdb9b4c5635d73d444817d21a045720103ec535419144a45010ebf9b4",
+          "scripts/conference-media-slide-observer.mjs": "923efbb87ac881a837ba9140b1ec200e2ff9921a6b771e77ffeb181ce3c01f64",
+          "scripts/conference-media-seek-observer.mjs": "803a7efc836ba2418f457d5c2bf1adf768bbfe512e69eed860c66d1567d90dea"
+        },
+        "preflight": {
+          "status": "skipped",
+          "passed": false,
+          "skipped": true,
+          "reason": "media manifest declares unavailable; real media checks were not run",
+          "errors": [],
+          "dist": "/workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/dist",
+          "identities": {
+            "manifest": {
+              "file": "conference/media-manifest.json",
+              "bytes": 167,
+              "sha256": "ff3e3f2b16f4435e71c5e9f07740a9a2af2b9e9fe46aaf013f70972a658d0088"
+            },
+            "timeline": {
+              "file": "conference/timeline.json",
+              "bytes": 1044921,
+              "sha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad"
+            }
+          },
+          "counts": {
+            "pageCount": 0,
+            "audioCount": 0,
+            "assetCount": 0,
+            "assetBytes": 0,
+            "fileCount": 0,
+            "siteFileCount": 0,
+            "verifiedAssetCount": 0
+          },
+          "assets": []
+        },
+        "unexecuted": [
+          "real image decoding/transitions",
+          "native audio playback/session seeks",
+          "session-13 source join continuity",
+          "installed-media HTTP Range/206",
+          "browser missing/unavailable fallback"
+        ],
+        "finishedAt": "2026-11-12T05:10:24.870Z",
+        "exitCode": 2,
+        "counts": {
+          "cases": 0,
+          "passed": 0,
+          "failed": 0,
+          "skipped": 1
+        }
+      },
+      "log": {
+        "file": "build/p1cb-followup-skip.log",
+        "bytes": 629,
+        "sha256": "3d903dbee9577c214e7195b6aa73e5e788852a07e0fdf4be9c9204110685adb9"
+      }
+    },
+    {
+      "name": "pages-known-failure",
+      "command": "npm run verify:pages",
+      "exitCode": 1,
+      "result": {
+        "error": "Pages artifact file coverage changed",
+        "committed": "market-lab/app/assets/index-ByyNTPeH.js",
+        "rebuilt": "market-lab/app/assets/index-C6TQnx3Q.js",
+        "fixed": false
+      },
+      "log": {
+        "file": "build/p1cb-followup-pages.log",
+        "bytes": 5116,
+        "sha256": "11ce1ab06f4bd4f365d94d3c77f816aa3635c0a1a288ab0bdd1b49d019c02405"
+      }
+    }
+  ],
+  "protected": {
+    "paths": [
+      "dist",
+      ".gitignore",
+      "scripts/conference-media-server.mjs",
+      "scripts/prepare-conference-media.mjs",
+      "scripts/conference",
+      "scripts/verify-conference-browser.mjs",
+      "scripts/verify-page-heading-browser.mjs",
+      "scripts/verify-compare-browser.mjs",
+      "scripts/verify-tradingview-responsive-browser.mjs",
+      "scripts/verify-wp6-browser.mjs",
+      "scripts/verify-chart-qa-browser.mjs",
+      "docs/conference/P1C_B_MACOS_HARNESS_20261112.md",
+      "docs/conference/P1C_B_MACOS_HARNESS_20261112.json"
+    ],
+    "changed": [],
+    "whitespaceCheckExit": 0
+  },
+  "sources": [
+    {
+      "file": "scripts/conference-media-browser-contract.mjs",
+      "bytes": 14048,
+      "sha256": "3e0edbc57cf22f564478d27a1acc38f2fccc1828dc3a282790e0a0bc2c428fa2"
+    },
+    {
+      "file": "scripts/verify-conference-media-browser.mjs",
+      "bytes": 36496,
+      "sha256": "3773f598edb83e21e372106d47a672d1384f142631ecb8d7f9c80fa1275af8c6"
+    },
+    {
+      "file": "scripts/conference-media-observation.mjs",
+      "bytes": 7764,
+      "sha256": "73e5cc2fdb9b4c5635d73d444817d21a045720103ec535419144a45010ebf9b4"
+    },
+    {
+      "file": "scripts/conference-media-seek-observer.mjs",
+      "bytes": 4951,
+      "sha256": "803a7efc836ba2418f457d5c2bf1adf768bbfe512e69eed860c66d1567d90dea"
+    },
+    {
+      "file": "scripts/conference-media-slide-observer.mjs",
+      "bytes": 7287,
+      "sha256": "923efbb87ac881a837ba9140b1ec200e2ff9921a6b771e77ffeb181ce3c01f64"
+    },
+    {
+      "file": "tests/conference-media-browser-contract.test.mjs",
+      "bytes": 26615,
+      "sha256": "a054b2187f67b77cd9a6084346d6bd7bdfc5251ffb0e8fe4f78c7430a6aa2e15"
+    },
+    {
+      "file": "tests/conference-media-browser.test.mjs",
+      "bytes": 11253,
+      "sha256": "0d4d481e60f2addd7999c093eb746933eb3315ede301c88e9d9322e8db8e112a"
+    },
+    {
+      "file": "tests/conference-media-observation.test.mjs",
+      "bytes": 11089,
+      "sha256": "8e592bd3c961e549b7ec64b44cf3fbf03411eded52cdf3f0b84e840ecc793bb4"
+    },
+    {
+      "file": "tests/conference-media-seek-observer.test.mjs",
+      "bytes": 10324,
+      "sha256": "fa2a3ae6f7172605781eb0523d4be71486a5bc783b12a1ab7a213e0b52f8095a"
+    },
+    {
+      "file": "tests/conference-media-slide-observer.test.mjs",
+      "bytes": 14029,
+      "sha256": "0c1e69a82f0c48cab866af2e3dc3203471e6fa40454480b2e5cab08de8dc314b"
+    }
+  ],
+  "macEvidence": {
+    "source": {
+      "file": "docs/conference/P1C_B_MACOS_HARNESS_20261112.json",
+      "bytes": 8813,
+      "sha256": "ce54047edb8dc0abeb5e877dae0ded8a810f9757c1cfece09c4ba88dca73fbe7"
+    },
+    "passedBrowserCases": 6,
+    "totalBrowserCases": 20,
+    "passedBoundaries": [
+      "boundary-04-05",
+      "boundary-05-06",
+      "boundary-06-07"
+    ],
+    "reportedProseBoundaryCount": 4,
+    "enumeratedPassedBoundaryCount": 3,
+    "originalReceiptsPreserved": true,
+    "failedReadbackComparison": [
+      {
+        "id": "boundary-00-01",
+        "targetEventTime": 2114.88,
+        "sessionT0": 0,
+        "observedLocalTime": 2114.9,
+        "observedEventTime": 2114.9,
+        "urlRoundedEventTime": 2114.9,
+        "deltaMicroseconds": 0.0
+      },
+      {
+        "id": "boundary-01-02",
+        "targetEventTime": 3280.84,
+        "sessionT0": 2116.38,
+        "observedLocalTime": 1164.42,
+        "observedEventTime": 3280.8,
+        "urlRoundedEventTime": 3280.8,
+        "deltaMicroseconds": 0.0
+      },
+      {
+        "id": "boundary-02-03",
+        "targetEventTime": 4657.54,
+        "sessionT0": 3282.34,
+        "observedLocalTime": 1375.159999,
+        "observedEventTime": 4657.499999,
+        "urlRoundedEventTime": 4657.5,
+        "deltaMicroseconds": -1.0000003385357559
+      },
+      {
+        "id": "boundary-03-04",
+        "targetEventTime": 5895.85,
+        "sessionT0": 4659.04,
+        "observedLocalTime": 1236.859999,
+        "observedEventTime": 5895.899999,
+        "urlRoundedEventTime": 5895.9,
+        "deltaMicroseconds": -0.9999994290410541
+      },
+      {
+        "id": "boundary-07-08",
+        "targetEventTime": 10866.52,
+        "sessionT0": 9420,
+        "observedLocalTime": 1446.5,
+        "observedEventTime": 10866.5,
+        "urlRoundedEventTime": 10866.5,
+        "deltaMicroseconds": 0.0
+      },
+      {
+        "id": "boundary-08-09",
+        "targetEventTime": 12102.51,
+        "sessionT0": 10868.02,
+        "observedLocalTime": 1234.479999,
+        "observedEventTime": 12102.499999,
+        "urlRoundedEventTime": 12102.5,
+        "deltaMicroseconds": -1.0000003385357559
+      },
+      {
+        "id": "boundary-09-10",
+        "targetEventTime": 12935.13,
+        "sessionT0": 12104.01,
+        "observedLocalTime": 831.09,
+        "observedEventTime": 12935.1,
+        "urlRoundedEventTime": 12935.1,
+        "deltaMicroseconds": 0.0
+      },
+      {
+        "id": "boundary-10-11",
+        "targetEventTime": 14384.22,
+        "sessionT0": 12936.63,
+        "observedLocalTime": 1447.57,
+        "observedEventTime": 14384.199999999999,
+        "urlRoundedEventTime": 14384.2,
+        "deltaMicroseconds": -1.8189894035458565e-06
+      },
+      {
+        "id": "boundary-11-12",
+        "targetEventTime": 15517.89,
+        "sessionT0": 14385.72,
+        "observedLocalTime": 1132.18,
+        "observedEventTime": 15517.9,
+        "urlRoundedEventTime": 15517.9,
+        "deltaMicroseconds": 0.0
+      },
+      {
+        "id": "boundary-12-13",
+        "targetEventTime": 17955.01,
+        "sessionT0": 15519.39,
+        "observedLocalTime": 2435.61,
+        "observedEventTime": 17955.0,
+        "urlRoundedEventTime": 17955.0,
+        "deltaMicroseconds": 0.0
+      },
+      {
+        "id": "boundary-13-14",
+        "targetEventTime": 20041.32,
+        "sessionT0": 17956.51,
+        "observedLocalTime": 2084.79,
+        "observedEventTime": 20041.3,
+        "urlRoundedEventTime": 20041.3,
+        "deltaMicroseconds": 0.0
+      }
+    ],
+    "maximumRoundtripDeltaMicroseconds": 1.0000003385357559,
+    "nativeSetterRequestsPresentInOriginal": false
+  },
+  "unitMechanismDiagnostic": {
+    "command": "node build/p1cb-url-roundtrip-diagnostic.mjs",
+    "exitCode": 0,
+    "script": {
+      "file": "build/p1cb-url-roundtrip-diagnostic.mjs",
+      "bytes": 9388,
+      "sha256": "ba903ebc236e91b5334b3d0b2dde0d78dca959fc8f079454eed8a6f1463d03fc"
+    },
+    "log": {
+      "file": "build/p1cb-url-roundtrip-diagnostic.json",
+      "bytes": 12528,
+      "sha256": "51696ef7da3cc758c52669381173f93a0d8a0d021b0c83619073ca627509d88a"
+    },
+    "result": {
+      "kind": "read-only-unit-mechanism-diagnostic",
+      "browserExecution": false,
+      "count": 11,
+      "cases": [
+        {
+          "id": "00",
+          "target": 2114.88,
+          "initial": {
+            "app": 2114.88,
+            "native": 2114.88,
+            "request": {
+              "value": 2114.88,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=2114.88&deck=final-290"
+            }
+          },
+          "afterTimeupdate": {
+            "app": 2114.88,
+            "native": 2114.88,
+            "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=2114.9&deck=final-290"
+          },
+          "afterPageshow": {
+            "app": 2114.9,
+            "native": 2114.9,
+            "request": {
+              "value": 2114.9,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=2114.9&deck=final-290"
+            }
+          },
+          "requests": [
+            {
+              "value": 2114.88,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=2114.88&deck=final-290"
+            },
+            {
+              "value": 2114.9,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=2114.9&deck=final-290"
+            }
+          ]
+        },
+        {
+          "id": "01",
+          "target": 3280.84,
+          "initial": {
+            "app": 3280.84,
+            "native": 1164.46,
+            "request": {
+              "value": 1164.46,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=3280.84&deck=final-290"
+            }
+          },
+          "afterTimeupdate": {
+            "app": 3280.84,
+            "native": 1164.46,
+            "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=3280.8&deck=final-290"
+          },
+          "afterPageshow": {
+            "app": 3280.8,
+            "native": 1164.42,
+            "request": {
+              "value": 1164.42,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=3280.8&deck=final-290"
+            }
+          },
+          "requests": [
+            {
+              "value": 1164.46,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=3280.84&deck=final-290"
+            },
+            {
+              "value": 1164.42,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=3280.8&deck=final-290"
+            }
+          ]
+        },
+        {
+          "id": "02",
+          "target": 4657.54,
+          "initial": {
+            "app": 4657.54,
+            "native": 1375.1999999999998,
+            "request": {
+              "value": 1375.1999999999998,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=4657.54&deck=final-290"
+            }
+          },
+          "afterTimeupdate": {
+            "app": 4657.54,
+            "native": 1375.1999999999998,
+            "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=4657.5&deck=final-290"
+          },
+          "afterPageshow": {
+            "app": 4657.5,
+            "native": 1375.1599999999999,
+            "request": {
+              "value": 1375.1599999999999,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=4657.5&deck=final-290"
+            }
+          },
+          "requests": [
+            {
+              "value": 1375.1999999999998,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=4657.54&deck=final-290"
+            },
+            {
+              "value": 1375.1599999999999,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=4657.5&deck=final-290"
+            }
+          ]
+        },
+        {
+          "id": "03",
+          "target": 5895.85,
+          "initial": {
+            "app": 5895.85,
+            "native": 1236.8100000000004,
+            "request": {
+              "value": 1236.8100000000004,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=5895.85&deck=final-290"
+            }
+          },
+          "afterTimeupdate": {
+            "app": 5895.85,
+            "native": 1236.8100000000004,
+            "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=5895.9&deck=final-290"
+          },
+          "afterPageshow": {
+            "app": 5895.9,
+            "native": 1236.8599999999997,
+            "request": {
+              "value": 1236.8599999999997,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=5895.9&deck=final-290"
+            }
+          },
+          "requests": [
+            {
+              "value": 1236.8100000000004,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=5895.85&deck=final-290"
+            },
+            {
+              "value": 1236.8599999999997,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=5895.9&deck=final-290"
+            }
+          ]
+        },
+        {
+          "id": "07",
+          "target": 10866.52,
+          "initial": {
+            "app": 10866.52,
+            "native": 1446.5200000000004,
+            "request": {
+              "value": 1446.5200000000004,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=10866.52&deck=final-290"
+            }
+          },
+          "afterTimeupdate": {
+            "app": 10866.52,
+            "native": 1446.5200000000004,
+            "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=10866.5&deck=final-290"
+          },
+          "afterPageshow": {
+            "app": 10866.5,
+            "native": 1446.5,
+            "request": {
+              "value": 1446.5,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=10866.5&deck=final-290"
+            }
+          },
+          "requests": [
+            {
+              "value": 1446.5200000000004,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=10866.52&deck=final-290"
+            },
+            {
+              "value": 1446.5,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=10866.5&deck=final-290"
+            }
+          ]
+        },
+        {
+          "id": "08",
+          "target": 12102.51,
+          "initial": {
+            "app": 12102.51,
+            "native": 1234.4899999999998,
+            "request": {
+              "value": 1234.4899999999998,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=12102.51&deck=final-290"
+            }
+          },
+          "afterTimeupdate": {
+            "app": 12102.51,
+            "native": 1234.4899999999998,
+            "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=12102.5&deck=final-290"
+          },
+          "afterPageshow": {
+            "app": 12102.5,
+            "native": 1234.4799999999996,
+            "request": {
+              "value": 1234.4799999999996,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=12102.5&deck=final-290"
+            }
+          },
+          "requests": [
+            {
+              "value": 1234.4899999999998,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=12102.51&deck=final-290"
+            },
+            {
+              "value": 1234.4799999999996,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=12102.5&deck=final-290"
+            }
+          ]
+        },
+        {
+          "id": "09",
+          "target": 12935.13,
+          "initial": {
+            "app": 12935.13,
+            "native": 831.119999999999,
+            "request": {
+              "value": 831.119999999999,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=12935.13&deck=final-290"
+            }
+          },
+          "afterTimeupdate": {
+            "app": 12935.13,
+            "native": 831.119999999999,
+            "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=12935.1&deck=final-290"
+          },
+          "afterPageshow": {
+            "app": 12935.1,
+            "native": 831.0900000000001,
+            "request": {
+              "value": 831.0900000000001,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=12935.1&deck=final-290"
+            }
+          },
+          "requests": [
+            {
+              "value": 831.119999999999,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=12935.13&deck=final-290"
+            },
+            {
+              "value": 831.0900000000001,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=12935.1&deck=final-290"
+            }
+          ]
+        },
+        {
+          "id": "10",
+          "target": 14384.22,
+          "initial": {
+            "app": 14384.22,
+            "native": 1447.5900000000001,
+            "request": {
+              "value": 1447.5900000000001,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=14384.22&deck=final-290"
+            }
+          },
+          "afterTimeupdate": {
+            "app": 14384.22,
+            "native": 1447.5900000000001,
+            "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=14384.2&deck=final-290"
+          },
+          "afterPageshow": {
+            "app": 14384.2,
+            "native": 1447.5700000000015,
+            "request": {
+              "value": 1447.5700000000015,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=14384.2&deck=final-290"
+            }
+          },
+          "requests": [
+            {
+              "value": 1447.5900000000001,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=14384.22&deck=final-290"
+            },
+            {
+              "value": 1447.5700000000015,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=14384.2&deck=final-290"
+            }
+          ]
+        },
+        {
+          "id": "11",
+          "target": 15517.89,
+          "initial": {
+            "app": 15517.89,
+            "native": 1132.17,
+            "request": {
+              "value": 1132.17,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=15517.89&deck=final-290"
+            }
+          },
+          "afterTimeupdate": {
+            "app": 15517.89,
+            "native": 1132.17,
+            "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=15517.9&deck=final-290"
+          },
+          "afterPageshow": {
+            "app": 15517.9,
+            "native": 1132.1800000000003,
+            "request": {
+              "value": 1132.1800000000003,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=15517.9&deck=final-290"
+            }
+          },
+          "requests": [
+            {
+              "value": 1132.17,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=15517.89&deck=final-290"
+            },
+            {
+              "value": 1132.1800000000003,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=15517.9&deck=final-290"
+            }
+          ]
+        },
+        {
+          "id": "12",
+          "target": 17955.01,
+          "initial": {
+            "app": 17955.01,
+            "native": 2435.619999999999,
+            "request": {
+              "value": 2435.619999999999,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=17955.01&deck=final-290"
+            }
+          },
+          "afterTimeupdate": {
+            "app": 17955.01,
+            "native": 2435.619999999999,
+            "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=17955&deck=final-290"
+          },
+          "afterPageshow": {
+            "app": 17955,
+            "native": 2435.6100000000006,
+            "request": {
+              "value": 2435.6100000000006,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=17955&deck=final-290"
+            }
+          },
+          "requests": [
+            {
+              "value": 2435.619999999999,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=17955.01&deck=final-290"
+            },
+            {
+              "value": 2435.6100000000006,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=17955&deck=final-290"
+            }
+          ]
+        },
+        {
+          "id": "13",
+          "target": 20041.32,
+          "initial": {
+            "app": 20041.32,
+            "native": 2084.8100000000013,
+            "request": {
+              "value": 2084.8100000000013,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=20041.32&deck=final-290"
+            }
+          },
+          "afterTimeupdate": {
+            "app": 20041.32,
+            "native": 2084.8100000000013,
+            "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=20041.3&deck=final-290"
+          },
+          "afterPageshow": {
+            "app": 20041.3,
+            "native": 2084.790000000001,
+            "request": {
+              "value": 2084.790000000001,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=20041.3&deck=final-290"
+            }
+          },
+          "requests": [
+            {
+              "value": 2084.8100000000013,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=20041.32&deck=final-290"
+            },
+            {
+              "value": 2084.790000000001,
+              "href": "https://atlas.test/bitcoin-cycle-atlas/?page=conference&t=20041.3&deck=final-290"
+            }
+          ]
+        }
+      ]
+    },
+    "interpretation": "A feasible existing timeupdate -> rounded URL -> pageshow -> native re-seek path, not evidence that this sequence occurred on macOS."
+  },
+  "remaining": [
+    "Run the same real-media 20-case harness on macOS and inspect exact native requests, baseline/decode identities and completed manifest responses."
+  ]
+}

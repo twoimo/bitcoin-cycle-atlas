@@ -1,8 +1,7 @@
 const finite=(value,fallback=0)=>Number.isFinite(Number(value))?Number(value):fallback;
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
 
-/** The axis gutter is outside this rectangle. A legend never owns another pane. */
-export function chartLegendSlot({width=0,height=0,left=0,right=width,top=0,bottom=height,viewportWidth=width,protectedAnchors=[]}={}){
+export function chartLegendSlot({width=0,height=0,left=0,right=width,top=18,bottom=height,viewportWidth=width,protectedAnchors=[]}={}){
   width=Math.max(0,finite(width));height=Math.max(0,finite(height));
   left=clamp(finite(left),0,width);right=clamp(finite(right,width),left,width);
   bottom=clamp(finite(bottom,height),0,height);top=clamp(finite(top),0,bottom);
@@ -46,7 +45,10 @@ export function overlayBoxesIntersect(a,b,gap=0){
     a.x<b.x+b.width+gap&&a.x+a.width+gap>b.x&&a.y<b.y+b.height+gap&&a.y+a.height+gap>b.y;
 }
 
-/** Move only annotation text, never its date/price anchor or any chart axis. */
+/** Move only annotation text, never its date/price anchor or any chart axis.
+ * @param {{x:number,y:number,width:number,height:number,left:number,right:number,top:number,bottom:number,obstacles?:Array<{x:number,y:number,width:number,height:number}>,gap?:number}} input
+ * @returns {{x:number,y:number,width:number,height:number}|null}
+ */
 export function placePlotLabel({x,y,width,height,left,right,top,bottom,obstacles=[],gap=4}={}){
   if(![x,y,width,height,left,right,top,bottom].every(Number.isFinite)||width>right-left||height>bottom-top)return null;
   const bounds={left,right:right-width,top,bottom:bottom-height};

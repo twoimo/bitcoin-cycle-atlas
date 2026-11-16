@@ -7,7 +7,7 @@ export function mountMobileWorkspace({workspace,stage,plot,reader,closeReader}) 
   const glyph=path=>`<svg width="21" height="21" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;
   const emit=(type,detail)=>doc.dispatchEvent(new win.CustomEvent(type,{detail}));
   const make=(id,label,path)=>{const b=doc.createElement('button');b.type='button';b.id=id;b.className='workbench-icon mobile-workbench-button';b.title=label;b.setAttribute('aria-label',label);b.innerHTML=glyph(path);return b;};
-  const tools=make('mobile-tools-toggle','차트 도구','<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="#11161f"/><circle cx="15" cy="12" r="2" fill="#11161f"/><circle cx="9" cy="18" r="2" fill="#11161f"/>');
+  const tools=make('mobile-tools-toggle','차트 도구','<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--sidebar)"/><circle cx="15" cy="12" r="2" fill="var(--sidebar)"/><circle cx="9" cy="18" r="2" fill="var(--sidebar)"/>');
   const details=make('mobile-details-toggle','정보와 설정','<circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>');
   const home=make('mobile-chart-home','통합 차트로 돌아가기','<path d="m14 6-6 6 6 6"/>');home.className='mobile-chart-home';home.append(doc.createTextNode('통합 차트'));home.onclick=()=>{close(false);doc.querySelector('.atlas-brand')?.click();};doc.body.append(home);
   for(const [button,node]of [[tools,sidebar],[details,rail]]){button.setAttribute('aria-controls',node.id);button.setAttribute('aria-expanded','false');heading.append(button);}

@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-local-gate-sweep",
+  "date": "2026-11-12",
+  "recordedAtKst": "2026-11-12T17:05:00+09:00",
+  "productCommit": "3863765",
+  "docsHeadAtRun": "d590982",
+  "machine": {
+    "node": "v26.5.0",
+    "chrome": "157.0.8103.79",
+    "platform": "macOS arm64 (Mac17,6)",
+    "loadAverage1mAtStart": 10.99,
+    "docker": "absent"
+  },
+  "hostUnitBatch": {
+    "command": "node --test --test-reporter=tap tests/*.test.mjs (331 files, 3 frozen replay files excluded)",
+    "tests": 3606,
+    "pass": 3600,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 6,
+    "exitCode": 0,
+    "skippedReasons": [
+      "5 process-priority/signal suites gated on an optional local capability",
+      "1 conference-media-build ffmpeg fixture (unskipped when /opt/homebrew/bin is on PATH)"
+    ],
+    "logSha256": "683830cdb1faddfc48693ddf8e639a134b602b983664e6c77df2d7cad10a00a4"
+  },
+  "mediaFixtureWithHomebrewPath": {
+    "command": "PATH=/opt/homebrew/bin:$PATH node --test tests/conference-media-build.test.mjs",
+    "tests": 18,
+    "pass": 18,
+    "fail": 0,
+    "skipped": 0
+  },
+  "responsive": {
+    "command": "ATLAS_RESPONSIVE_BASE_URL=http://127.0.0.1:8161/bitcoin-cycle-atlas/ node scripts/verify-responsive-workbench-browser.mjs",
+    "status": "passed",
+    "cases": 11,
+    "failures": 0,
+    "screenshots": 25,
+    "reportSha256": "60ad6f56217ce8b5ca6a75fa0ad367a44b39676a15d305ad40ced718d550403b",
+    "viewports": [
+      "phone-320x568",
+      "phone-390x844",
+      "phone-456x800",
+      "phone-620x900",
+      "tablet-768x1024",
+      "desktop-1024x768",
+      "desktop-1440x900",
+      "phone-320x430-short",
+      "phone-390x430-short",
+      "tablet-900x430-short",
+      "identity-phone-desktop-phone"
+    ]
+  },
+  "compareShell": {
+    "command": "node scripts/verify-compare-shell-browser.mjs --out build/qa-r16-3863765/compare",
+    "status": "PASSED",
+    "exitCode": 0
+  },
+  "notRun": {
+    "frozenLinuxReplay": {
+      "files": [
+        "ethereum-prospective-archive-issuer.test.mjs",
+        "ethereum-prospective-archive-summary.test.mjs",
+        "ethereum-warm-start-prospective.test.mjs"
+      ],
+      "reason": "npm test replays these in a Docker linux/x64 container; Docker is not installed on this Mac, so complete:true is unreachable locally. They are not product regressions on macOS."
+    },
+    "wp6LocalCandidate": {
+      "reason": "verify-wp6-browser needs a committed-dist candidate origin (__wp6-candidate-source.json + publication.json); local candidate runner is a separate Linux script. WP6 30/30 and chart-qa 12/12 remain recorded at e6c9a7a."
+    },
+    "fullNpmTestWrapper": {
+      "reason": "scripts/test.mjs exits through the Docker replay batch; only the host batch was executed."
+    }
+  },
+  "interpretation": "Host unit batch and both browser gates pass at product commit 3863765 (current docs HEAD d590982). No new Q- finding from this sweep."
+}

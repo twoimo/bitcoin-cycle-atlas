@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-conference-timeline-verification",
+  "recordedAt": "2026-11-11T19:40:50.738Z",
+  "status": "passed",
+  "valid": true,
+  "syntheticFixture": true,
+  "timeline": {
+    "file": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/tests/fixtures/conference/timeline.synthetic.json",
+    "bytes": 12327,
+    "sha256": "5ca439009207e212c67646d06903bd792dc4a234e70601b82ecc424b91a643be"
+  },
+  "sources": {
+    "file": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/tests/fixtures/conference/sources.synthetic.json",
+    "bytes": 5860,
+    "sha256": "462a86a2726d0f428d63534035ff6fa8452f140bbd6666b4b0c416b251bde4e5"
+  },
+  "summary": {
+    "audioDurationSec": 4000,
+    "segmentCount": 23,
+    "talkCount": 15,
+    "deckCount": 2,
+    "lastSegmentT1": 4000,
+    "coverage": {
+      "checked": true,
+      "expectedCount": 23,
+      "missing": [],
+      "unexpected": [],
+      "duplicates": [],
+      "changed": []
+    }
+  },
+  "errors": []
+}

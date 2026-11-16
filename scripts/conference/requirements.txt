@@ -1,0 +1,4 @@
+# Fixed Python renderer dependencies. Exact Python/MuPDF/libwebp and ffmpeg
+# build fingerprints are also recorded in each generated media manifest.
+PyMuPDF==1.26.6
+Pillow==13.0.0

@@ -26,6 +26,8 @@ import {spawn,execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {parseEthArchive} from '../dist/eth-market-data.js';
+import {parseEquityArchive} from '../dist/equity-market-data.js';
+import {readNativeFunnestEvidence,assertNativeObservedEvidence,assertNativeOverlayEvidence} from './funnest-browser-evidence.mjs';
 import {createAssetForecastRecord,assetForecastIndexEntry} from '../dist/asset-forecast-records.js';
 import {forecastHash} from '../dist/forecast-records.js';
 
@@ -230,7 +232,7 @@ async function dataCase(cdp,width,receipt){
       // same node to the phone icon rail, so either host may own it.
       activeData:(document.querySelector('.atlas-sidebar [data-atlas-page="data"]')
         ||document.querySelector('.content-rail [data-atlas-page="data"]'))?.getAttribute('aria-current'),
-      legacy:[read(document.querySelector('.daily-heading .daily-back')),read(document.querySelector('.daily-heading h1'))]};
+      legacy:[read(document.querySelector('.daily-heading .daily-back')),read(document.querySelector('.daily-heading-title > h2'))]};
     return {width:innerWidth,scrollWidth:document.documentElement.scrollWidth,
       symbols:rows.map(r=>r.dataset.assetSymbol),btcName:rows[0].querySelector('.asset-name-label').textContent,judgments:rows.map(r=>r.querySelector('.asset-judgment')?.textContent),controls,navigation,headingHeight:document.querySelector('.daily-heading').getBoundingClientRect().height,headingBackground:getComputedStyle(document.querySelector('.daily-heading')).backgroundColor,
       bodyBackground:getComputedStyle(rows[0].querySelector('.asset-name')).backgroundColor,
@@ -590,19 +592,22 @@ async function journalCase(cdp,width,receipt,symbol,archive){
 
 async function verifyNativeCommonLegend(cdp,width,receipt){
   const state=await evaluate(cdp,()=>{
-    const plot=document.querySelector('.atlas-plot'),svg=plot.querySelector(':scope > svg'),dock=plot.querySelector('.chart-legend-dock'),source=dock?.querySelector('.lab-legend');
+    const plot=document.querySelector('.atlas-plot'),host=plot.querySelector('.atlas-funnest-canvas'),native=host?.getAtlasFunnestSnapshot?.(),dock=plot.querySelector('.chart-legend-dock'),source=dock?.querySelector('.lab-legend');
+    if(!native?.painted||native.engine!=='funnest'||native.legacy?.priceNodes!==0||!(native.layout?.width>0&&native.layout.plotWidth>0))throw new Error('Legend verification requires the painted native Funnest pane');
     const box=node=>{const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
     const painted=node=>Boolean(node&&!node.hidden&&!node.closest('[hidden]')&&node.getClientRects().length);
     const observed=source?.querySelector('.price-legend-item .price-legend-swatch')?.closest('.price-legend-item');
     return {dock:dock?{...box(dock),painted:painted(dock),mode:dock.dataset.legendMode,scrollWidth:dock.scrollWidth,clientWidth:dock.clientWidth}:null,
-      priceWidth:Number(svg.dataset.plotRight)-Number(svg.dataset.plotLeft),
+      priceWidth:native.layout.plotWidth*host.getBoundingClientRect().width/native.layout.width,nativeLayout:{width:native.layout.width,plotWidth:native.layout.plotWidth},plotClientWidth:plot.clientWidth,
+      geometrySource:'painted Funnest layout scaled to the actual host CSS width',
       observedEntry:observed?{label:observed.textContent.trim(),title:observed.getAttribute('title')||''}:null,
       text:source?.textContent||'',entries:[...source?.querySelectorAll('.chart-legend-entry')||[]].filter(painted).map(box),
       disclosure:[...dock?.querySelectorAll('.chart-legend-open,.chart-legend-more')||[]].find(painted)?.className||null};
   });
   assert.ok(state.dock?.painted,'Native instrument needs the shared visible legend dock');
   assert.ok(state.dock.left>=0&&state.dock.right<=width+1);
-  assert.ok(state.dock.width<=state.priceWidth*.42+1,'Native legend exceeds 42% of its price pane');
+  assert.ok(Number.isFinite(state.priceWidth)&&state.priceWidth>0,'Native price-pane CSS width must be positive and finite');
+  assert.ok(state.dock.width<=state.priceWidth*.42+1,'Native legend exceeds 42% of its price pane '+JSON.stringify({dock:state.dock.width,priceWidth:state.priceWidth,nativeLayout:state.nativeLayout,plotClientWidth:state.plotClientWidth}));
   assert.ok(state.dock.scrollWidth<=state.dock.clientWidth+1,'Native legend content overflows');
   for(const entry of state.entries)assert.ok(entry.width>0&&entry.left>=state.dock.left-1&&entry.right<=state.dock.right+1);
   if(state.disclosure){
@@ -658,28 +663,97 @@ async function verifyCompactReadout(cdp,width,receipt,kind){
   receipt.readout={kind,...value,expanded};
 }
 
+
+async function verifyInstrumentIndicatorLegend(cdp,width,receipt,kind){
+  const value=await evaluate(cdp,k=>{
+    const plot=document.querySelector('.atlas-plot');
+    const manager=document.querySelector('#chart-indicator-manager');
+    const svg=plot.querySelector(':scope > svg');
+    const readout=document.querySelector('.eth-readout'),source=document.querySelector('.eth-readout-source');
+    const rect=node=>{const b=node.getBoundingClientRect();return{left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height};};
+    const painted=node=>Boolean(node&&node.getClientRects().length&&getComputedStyle(node).visibility!=='hidden');
+    const box=node=>node?rect(node):null;
+    const rows=manager?[...manager.querySelectorAll('[data-indicator-row]')].map(row=>{
+      const button=row.querySelector('[data-indicator-action="visibility"]'),name=row.querySelector('.indicator-name');
+      const hit=button?document.elementFromPoint(button.getBoundingClientRect().left+button.getBoundingClientRect().width/2,button.getBoundingClientRect().top+button.getBoundingClientRect().height/2):null;
+      return {id:row.dataset.indicatorRow,visible:row.dataset.visible,label:name?.querySelector('.indicator-label')?.textContent||'',
+        value:name?.querySelector('.indicator-value')?.textContent||'',button:box(button),pressed:button?.getAttribute('aria-pressed'),
+        painted:Boolean(row.getClientRects().length),
+        reachable:Boolean(hit&&(hit===button||button.contains(hit)))};
+    }):[];
+    const host=plot.querySelector('.atlas-funnest-canvas'),native=host?.getAtlasFunnestSnapshot?.(),main=native?.layout?.panes?.find(p=>p.kind==='main'||p.id==='main'),volume=native?.layout?.panes?.find(p=>p.kind==='volume'||p.id==='volume');
+    const plotTop=host&&main?host.getBoundingClientRect().top+main.top-plot.getBoundingClientRect().top:NaN;
+    const fold=manager?.querySelector('#indicator-legend-toggle');
+    return {page:document.body.dataset.page||'',kind:k,plot:box(plot),manager:box(manager),painted:painted(manager),
+      collapsed:manager?.dataset.collapsed,fold:box(fold),foldExpanded:fold?.getAttribute('aria-expanded'),
+      readout:box(readout),source:box(source),rows,
+      volumeEnabled:native?.settings?.volume,volumePane:volume?{top:volume.top,height:volume.height}:null,
+      visibleVolumeObservations:(native?.observations||[]).filter(row=>row.time>=native.range.from&&row.time<=native.range.to&&row.volume>0).length,
+      plotTop,plotTopY:box(plot).top+plotTop,plotBox:host?box(host):null,legendBackground:manager?getComputedStyle(manager).backgroundColor:null,scrollWidth:document.documentElement.scrollWidth,width:innerWidth};
+  },kind);
+  assert.ok(value.manager,'Missing instrument indicator legend: '+kind);
+  assert.ok(value.painted,'Instrument indicator legend is not painted: '+kind);
+  assert.ok(value.page==='outlook'||value.page==='', 'Indicator legend mounted on an unrelated route: '+value.page);
+  assert.ok(value.manager.left>=value.plot.left-1&&value.manager.right<=value.plot.right+1,'Legend escaped the plot horizontally: '+kind);
+  assert.ok(value.manager.top>=value.readout.top-1,'Legend overlaps the readout: '+kind);
+  // BTC keeps its legend transparent over the plot; the native charts follow the same contract.
+  assert.ok(value.manager.bottom<=value.plot.bottom+1,'Legend escaped the plot bottom: '+kind);
+  assert.equal(value.legendBackground,'rgba(0, 0, 0, 0)','Legend must keep a transparent overlay background: '+kind);
+  assert.ok(value.manager.width<=value.plot.width+1,'Legend is wider than the plot: '+kind);
+  assert.ok(value.scrollWidth<=value.width+1,'Indicator legend created horizontal overflow: '+kind);
+  assert.deepEqual(value.rows.map(row=>row.id),['volume','history','forecast'],'Legend lost one of the supported studies: '+kind);
+  if(value.collapsed==='true'){
+    // Narrow screens fold the legend so the price plot keeps its first rows.
+    assert.equal(value.foldExpanded,'false','Collapsed legend must announce aria-expanded=false: '+kind);
+    assert.ok(value.fold&&value.fold.width>=44&&value.fold.height>=44,'Folded legend toggle is below the 44px touch floor: '+kind+' '+JSON.stringify(value.fold));
+    for(const row of value.rows)assert.equal(row.painted,false,'Collapsed legend still paints its rows: '+kind+' '+row.id);
+    assert.ok(value.rows.every(row=>row.value&&row.label),'Collapsed legend lost its readouts: '+kind);
+  }else{
+    assert.equal(value.foldExpanded,'true','Expanded legend must announce aria-expanded=true: '+kind);
+    for(const row of value.rows){
+      assert.ok(row.label&&row.value,'Legend row has no readout: '+kind+' '+row.id);
+      const floor=width<=620?44:20;
+      assert.ok(row.button&&row.button.width>=floor&&row.button.height>=floor,'Legend visibility control is too small: '+kind+' '+row.id+' '+JSON.stringify(row.button));
+      assert.equal(row.pressed,row.visible,'Legend visibility state disagrees with aria-pressed: '+kind+' '+row.id);
+    }
+  }
+  assert.equal(value.rows[0].visible,'true','Volume must start visible: '+kind);
+  const native=await evaluate(cdp,readNativeFunnestEvidence,'.atlas-plot');
+  assert.equal(value.volumeEnabled,true,'Volume must be enabled in the actual engine: '+kind);
+  assert.ok(value.volumePane?.height>0&&value.visibleVolumeObservations>0,'Visible volume has no actual pane or observations: '+kind);
+  assert.ok(native?.ink.readable&&native.ink.volumePixels>0,'No actual volume-colored pixels in the volume pane: '+kind);
+  value.volumeInk=native.ink.volumePixels;
+  receipt.indicatorLegend=value;return value;
+}
+
 async function ethCase(cdp,width,receipt,expected,archive){
   await until(()=>evaluate(cdp,()=>{
-    const s=document.querySelector('#eth-chart');return s&&Number(s.dataset.observedCandleCount)>0&&Number(s.dataset.forecastPointCount)>0;
-  }),'ETH observed and future paths');
+    const plot=document.querySelector('.eth-plot'),native=plot?.querySelector('.atlas-funnest-canvas')?.getAtlasFunnestSnapshot?.();
+    return native?.painted&&native.observations.length>0&&plot.inspectAtlasOverlayRender?.().forecastSegments.count>0;
+  }),'ETH actual canvas and future painter segments');
   assert.equal(await evaluate(cdp,()=>document.querySelector('#btc-refresh-notice')),null,'BTC refresh state must not leak into the ETH root');
   await settled(cdp);
   receipt.chart=await evaluate(cdp,()=>{
     const chart=document.querySelector('#eth-chart');
-    const path=s=>{const el=document.querySelector(s);return el?{d:el.getAttribute('d'),length:el.getTotalLength(),dash:el.getAttribute('stroke-dasharray'),stroke:getComputedStyle(el).stroke}:null;};
+    const plot=document.querySelector('.eth-plot'),host=plot.querySelector('.atlas-funnest-canvas'),native=host.getAtlasFunnestSnapshot(),main=native.layout.panes.find(p=>p.kind==='main'||p.id==='main');
     const note=document.querySelector('#eth-forecast-note');
     return {width:innerWidth,scrollWidth:document.documentElement.scrollWidth,dataset:{...chart.dataset},
       price:document.querySelector('#eth-price').textContent,date:document.querySelector('#eth-bar-time').textContent,
-      kind:document.querySelector('#eth-kind').textContent,observed:path('#eth-chart .market-close-line'),future:path('#eth-chart .equity-forecast-line'),baseline:path('#eth-chart .eth-forecast-baseline'),
+      kind:document.querySelector('#eth-kind').textContent,
       note:{hidden:note.hidden,text:note.textContent,bottom:note.getBoundingClientRect().bottom-document.querySelector('.eth-plot').getBoundingClientRect().top,
-        plotTop:Number(chart.querySelector('defs clipPath rect').getAttribute('y')),keys:[...note.children].map(el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width,text:el.textContent};})},background:getComputedStyle(document.querySelector('.eth-plot')).backgroundColor};
+        plotTop:host.getBoundingClientRect().top+main.top-plot.getBoundingClientRect().top,keys:[...note.children].map(el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width,text:el.textContent};})},background:getComputedStyle(document.querySelector('.eth-plot')).backgroundColor};
   });
+  const nativeEvidence=await evaluate(cdp,readNativeFunnestEvidence,'.eth-plot');
+  const sourceSeries=parseEthArchive(JSON.parse(await readFile(resolve(dist,'data/eth-ohlc.json'),'utf8')),'daily');
+  receipt.chart.core=assertNativeObservedEvidence(nativeEvidence,sourceSeries,{symbol:'ETH-USD'});
+  receipt.chart.core.overlay=undefined;
+  receipt.chart.overlays=assertNativeOverlayEvidence(nativeEvidence.overlay,{forecast:true,baseline:true});
   const chart=receipt.chart;
   assert.equal(chart.width,width);assert.ok(chart.scrollWidth<=width+1,'ETH horizontal page overflow');
-  assert.equal(chart.dataset.product,'ETH-USD');assert.equal(chart.dataset.chartType,'line');
-  assert.ok(Number(chart.dataset.observedCandleCount)>0);assert.ok(Number(chart.dataset.forecastPointCount)>0);assert.equal(Number(chart.dataset.forecastCandleCount),0);
-  for(const key of ['observed','future','baseline']){assert.ok(chart[key]&&chart[key].length>0,'Missing real SVG '+key+' path');assert.ok(!/NaN|Infinity/.test(chart[key].d),'Invalid SVG coordinates');}
-  assert.equal(chart.future.dash,'7 5');assert.equal(chart.baseline.dash,'2 4');assert.equal(chart.price,expected.price);assert.equal(chart.date,expected.date);assert.equal(chart.kind,'관측 종가','The compact readout must label the observed bar');
+  assert.equal(chart.core.snapshot.source.product,'ETH-USD');assert.equal(chart.core.snapshot.chartType,'line');
+  assert.ok(chart.core.snapshot.observedCount>0&&chart.overlays.forecast.segments>0);
+  assert.ok(chart.note.bottom<=chart.note.plotTop+1,'Forecast semantic keys overlap the actual Funnest price pane');
+  assert.equal(chart.price,expected.price);assert.equal(chart.date,expected.date);assert.equal(chart.kind,'관측 종가','The compact readout must label the observed bar');
   assert.equal(chart.note.hidden,false);assert.equal(chart.dataset.forecastModel,'adaptive');assert.ok(chart.note.text.includes('적중률 미보정'));
   for(const text of ['실제 관측','모형 중앙값','모형 예시 1개','음영: 모의 10–90%'])assert.ok(chart.note.text.includes(text),'Missing forecast semantic label '+text);
   const legend=await verifyNativeCommonLegend(cdp,width,receipt);
@@ -719,13 +793,13 @@ async function ethCase(cdp,width,receipt,expected,archive){
       selected:document.querySelector('#eth-model').value,focus:document.activeElement.id,
       model:document.querySelector('#eth-chart').dataset.forecastModel,
       price:document.querySelector('#eth-price').textContent,
-      observed:document.querySelector('#eth-chart').dataset.observedCandleCount,
-      future:Number(document.querySelector('#eth-chart').dataset.forecastPointCount),
+      observed:document.querySelector('.eth-plot .atlas-funnest-canvas').getAtlasFunnestSnapshot().observations.length,
+      future:document.querySelector('.eth-plot').inspectAtlasOverlayRender().forecastSegments.count,
       query:location.search,text:document.querySelector('#eth-data-content').textContent,
     }));
     assert.equal(pooled.selected,'pooled');assert.equal(pooled.model,'pooled');
     assert.equal(pooled.focus,'eth-model');assert.equal(pooled.price,expected.price);
-    assert.equal(pooled.observed,chart.dataset.observedCandleCount);assert.ok(pooled.future>0);
+    assert.equal(pooled.observed,chart.core.snapshot.observedCount);assert.ok(pooled.future>0);
     assert.equal(new URLSearchParams(pooled.query).get('eth-model'),'pooled');
     assert.equal(new URLSearchParams(pooled.query).has('eth-scenario'),false);
     assert.ok(pooled.text.includes('연속 수익률')&&pooled.text.includes('명시적'));
@@ -743,6 +817,7 @@ async function ethCase(cdp,width,receipt,expected,archive){
   await journalCase(cdp,width,receipt,'ETHUSD',archive);
   assert.equal((await bounds(cdp,'#eth-data-dialog')).open,false);
   await verifyCompactReadout(cdp,width,receipt,'eth');
+  await verifyInstrumentIndicatorLegend(cdp,width,receipt,'eth');
 }
 
 async function verifyInfoDataLinks(cdp,symbol){
@@ -820,18 +895,15 @@ async function verifyInfoDataLinks(cdp,symbol){
 async function equityCase(cdp,width,receipt,symbol,archive){
   const label=symbol.toLowerCase();
   await until(()=>evaluate(cdp,()=>{
-    const s=document.querySelector('#equity-chart');
-    const gate=document.querySelector('.equity-plot'),notice=document.querySelector('#equity-forecast-unavailable');
-    return s&&Number(s.dataset.observedCandleCount)>0&&(Number(s.dataset.forecastPointCount)>0||gate?.dataset.forecastAllowed==='false'&&notice&&!notice.hidden);
+    const gate=document.querySelector('.equity-plot'),notice=document.querySelector('#equity-forecast-unavailable'),native=gate?.querySelector('.atlas-funnest-canvas')?.getAtlasFunnestSnapshot?.();
+    return native?.painted&&native.observations.length>0&&(gate.inspectAtlasOverlayRender?.().forecastSegments.count>0||gate.dataset.forecastAllowed==='false'&&notice&&!notice.hidden);
   }),symbol+' observed chart and resolved forecast availability');
   await settled(cdp);
   receipt.chart=await evaluate(cdp,()=>{
     const chart=document.querySelector('#equity-chart');
-    const path=chart.querySelector('.equity-forecast-line');
     return {width:innerWidth,scrollWidth:document.documentElement.scrollWidth,dataset:{...chart.dataset},
       symbol:document.querySelector('#equity-symbol .symbol-selector-label').textContent,price:document.querySelector('#equity-price').textContent,
-      date:document.querySelector('#equity-bar-time').textContent,pathLength:path?.getTotalLength()??0,
-      pathData:path?.getAttribute('d')??'',background:getComputedStyle(document.querySelector('.equity-plot')).backgroundColor,
+      date:document.querySelector('#equity-bar-time').textContent,background:getComputedStyle(document.querySelector('.equity-plot')).backgroundColor,
       forecastGate:{allowed:document.querySelector('.equity-plot').dataset.forecastAllowed,tier:document.querySelector('.equity-plot').dataset.forecastTier,
         observations:Number(document.querySelector('.equity-plot').dataset.forecastObservations),
         message:document.querySelector('#equity-forecast-unavailable [data-forecast-message]')?.textContent,
@@ -841,7 +913,10 @@ async function equityCase(cdp,width,receipt,symbol,archive){
         scenarioDisabled:document.querySelector('#equity-scenario').disabled}};
   });
   assert.equal(receipt.chart.symbol,symbol);assert.ok(receipt.chart.scrollWidth<=width+1,symbol+' horizontal page overflow');
-  const blocked=symbol==='BMNR';
+  const blocked=symbol==='BMNR',nativeEvidence=await evaluate(cdp,readNativeFunnestEvidence,'.equity-plot');
+  const sourceSeries=parseEquityArchive(JSON.parse(await readFile(resolve(dist,'data/'+label+'-ohlc.json'),'utf8')),{symbol});
+  receipt.chart.core=assertNativeObservedEvidence(nativeEvidence,sourceSeries,{symbol});receipt.chart.core.overlay=undefined;
+  receipt.chart.overlays=assertNativeOverlayEvidence(nativeEvidence.overlay,{forecast:!blocked,baseline:false});
   if(blocked){
     const actual=JSON.parse(await readFile(resolve(dist,'data/'+label+'-ohlc.json'),'utf8'));
     assert.equal(receipt.chart.forecastGate.allowed,'false');assert.equal(receipt.chart.forecastGate.tier,'T3');
@@ -849,8 +924,8 @@ async function equityCase(cdp,width,receipt,symbol,archive){
     assert.equal(receipt.chart.forecastGate.message,'표본 부족으로 미래 경로를 제공하지 않습니다');
     assert.ok(receipt.chart.forecastGate.sample.includes('관측 '+actual.candles.length+'거래일'));
     assert.equal(receipt.chart.forecastGate.visible,true);assert.equal(receipt.chart.forecastGate.scenarioDisabled,true);
-    assert.equal(Number(receipt.chart.dataset.forecastPointCount),0);assert.equal(receipt.chart.pathLength,0);assert.equal(receipt.chart.forecastGate.futureMarkers,0);
-  }else assert.ok(receipt.chart.pathLength>0&&!/NaN|Infinity/.test(receipt.chart.pathData));
+    assert.equal(receipt.chart.overlays.forecast.segments,0);assert.equal(receipt.chart.forecastGate.futureMarkers,0);
+  }else assert.ok(receipt.chart.overlays.forecast.length>0);
   dark(receipt.chart.background,symbol+' plot');
   await verifyNativeCommonLegend(cdp,width,receipt);
   await screenshot(cdp,label+'-'+width+'-loaded.png',receipt);
@@ -879,13 +954,14 @@ async function equityCase(cdp,width,receipt,symbol,archive){
   await journalCase(cdp,width,receipt,symbol,archive);
   assert.equal((await bounds(cdp,'#equity-detail-dialog')).open,false);
   await verifyCompactReadout(cdp,width,receipt,'equity');
+  await verifyInstrumentIndicatorLegend(cdp,width,receipt,'equity');
 }
 
 
 async function syntheticZeroCase(cdp,width,receipt){
   receipt.synthetic=true;
   receipt.scope='Synthetic zero-valued output with a real preserved input snapshot, explicitly reconstructed and excluded from issued forecasts or measured predictive performance.';
-  await until(()=>evaluate(cdp,()=>Number(document.querySelector('#equity-chart')?.dataset.observedCandleCount)>0),'fixture stock chart');
+  await until(()=>evaluate(cdp,()=>document.querySelector('.equity-plot .atlas-funnest-canvas')?.getAtlasFunnestSnapshot?.().painted),'fixture actual stock canvas');
   await settled(cdp);await nativeForecast(cdp,'[data-equity-action="forecast"]');
   await evaluate(cdp,()=>document.querySelector('[data-open-asset-forecast-journal="BMNR"]').scrollIntoView({block:'center'}));
   await settled(cdp);await click(cdp,'[data-open-asset-forecast-journal="BMNR"]');

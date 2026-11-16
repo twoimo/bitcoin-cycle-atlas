@@ -105,14 +105,14 @@ async function runEntry(search,{failImport=false,failInit=false}={}){
   const imports=[],events=[],errors=[],bootSymbol={textContent:'BTCUSD'},root={dataset:{}},initializations=[];
   const context={
     URLSearchParams,canonicalNativeChartEntry,canonicalWorkspaceChartEntry,location:{search,pathname:'/'},console:{error:(...values)=>errors.push(values)},
-    enhanceBootSkeleton:()=>{},mountJournalEntry:()=>{},initPerformanceDiagnostics:()=>{},initAtlasShell:()=>{},
+    initTheme:()=>{},enhanceBootSkeleton:()=>{},mountJournalEntry:()=>{},initPerformanceDiagnostics:()=>{},initAtlasShell:()=>{},
     CustomEvent:class{constructor(type){this.type=type;}},
     document:{documentElement:root,querySelector:()=>bootSymbol,dispatchEvent:event=>events.push(event.type)},
     __import:async path=>{imports.push(path);if(failImport)throw new Error('module unavailable');return {initEthView:async()=>{initializations.push('ETHUSD');await Promise.resolve();if(failInit)throw new Error('snapshot unavailable');initializations.push('ready');}};},
   };
   // These shared, data-free entry hooks do not determine which asset workspace
   // is loaded. Keep the production routing and dynamic-import errors intact.
-  const routing=source.replace(/^import \{ (?:enhanceBootSkeleton|mountJournalEntry|initPerformanceDiagnostics|initAtlasShell|canonicalNativeChartEntry|canonicalWorkspaceChartEntry) \} from ['"][^'"]+['"];\n/gm,'').replace(/\bimport\s*\(/g,'__import(');
+  const routing=source.replace(/^import\s+.*?from ['"][^'"]+['"];\s*$/gm,'').replace(/\bimport\s*\(/g,'__import(');
   await vm.runInNewContext(`(async()=>{${routing}\n})()`,context,{timeout:1000});
   return {imports,events,errors,bootSymbol,root,initializations};
 }
@@ -147,6 +147,6 @@ test('the complete ETH module graph excludes BTC workspaces, forecast engines an
     for(const match of source.matchAll(/^\s*(?:import|export)\s+(?:[^'"\n]*?\s+from\s*)?['"](\.[^'"]+)['"]|\bimport\s*\(\s*['"](\.[^'"]+)['"]\s*\)/gm))pending.push(new URL(match[1]||match[2],url));
   }
   const names=[...seen].map(value=>new URL(value).pathname.split('/').at(-1));
-  assert.ok(names.includes('market-data-controller.js'));assert.ok(names.includes('intraday-chart.js'));assert.ok(names.includes('eth-market-data.js'));assert.ok(names.includes('symbol-selector.js'));
+  assert.ok(names.includes('market-data-controller.js'));assert.ok(names.includes('funnest-observed-price-adapter.js'));assert.ok(names.includes('funnest-chart-runtime.bundle.js'));assert.ok(names.includes('eth-market-data.js'));assert.ok(names.includes('symbol-selector.js'));
   for(const name of names)assert.doesNotMatch(name,/^(?:app|lab-view|workbench-chrome|atlas-analysis|atlas-price-chart|bitcoin-events|cycle-calibration|cycle-timing|cycle-milestones|market-structure|forecast-engine|detailed-forecast|long-horizon-forecast|volume-forecast|outlook-engine)\.js$/);
 });

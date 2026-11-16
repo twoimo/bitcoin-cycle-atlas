@@ -13,7 +13,7 @@ export function instrumentChartLegendMarkup({symbol,unit,prices=[],bars=[],rows=
     const isCandles=view.chartType==='candles'&&bars.length>0;
     const meaning=monthly?`${symbol}에 실제 공표된 월별 가격지수입니다. 미공표월은 선을 연결하거나 값을 채우지 않습니다.`:isCandles?
       `${symbol}의 확보한 실제 OHLC입니다.${view.frequency==='weekly'?' 주봉은 실제 일봉의 합계이며 마지막 주는 진행 중일 수 있습니다.':''}`:`${symbol}의 실제 관측 종가를 이은 선입니다.`;
-    entries.push(sample(monthly?'실제 지수':isCandles?'관측 캔들':'실제 가격',`${meaning} 단위 ${unit}.`,isCandles?candles:line('var(--accent)'),'price'));
+    entries.push(sample(monthly?'실제 지수':isCandles?'관측 캔들':'실제 가격',`${meaning} 단위 ${unit}.`,isCandles?candles:line('var(--data-gold)'),'price'));
   }
   if(view.showRsi&&rows.some(row=>Number.isFinite(row.rsi))){
     entries.push(sample('RSI14','Wilder RSI14. 표시 주기의 관측 가격으로 계산합니다.',line('var(--ml-beta)')));
@@ -29,7 +29,7 @@ export function instrumentChartLegendMarkup({symbol,unit,prices=[],bars=[],rows=
       if(volumes.some(row=>row.value!==null&&row.state===state))entries.push(sample(label,`실제 월별 거래량의 평균 대비 상태: ${label}.` ,`<rect x="3" y="3" width="12" height="6" fill="${color}"${state==='warmup'?' opacity=".25"':''}/>`));
     }
   }
-  for(const[kind,label,meaning,color]of [['evidence','E · 근거','공개된 근거의 시점 표식입니다.','var(--border)'],['judgment','J · 판정','기록한 판정의 시점 표식입니다.','var(--accent)']])if(markers.some(marker=>marker.kind===kind)){
+  for(const[kind,label,meaning,color]of [['evidence','E · 근거','공개된 근거의 시점 표식입니다.','var(--border)'],['judgment','J · 판정','기록한 판정의 시점 표식입니다.','var(--data-gold)']])if(markers.some(marker=>marker.kind===kind)){
     entries.push(sample(label,meaning,'<rect x="3" y="2" width="12" height="8" fill="var(--surface-raised)" stroke="'+color+'"/>'));
   }
   return entries.join('');

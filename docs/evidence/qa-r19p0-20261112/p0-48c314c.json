@@ -1,0 +1,108 @@
+{
+  "id": "Q-R19P0-1",
+  "date": "2026-11-12",
+  "timeKst": "18:54",
+  "commit": "48c314cc2729b156dcf2450727387b6de75039bc",
+  "branch": "fix/tradingview-responsive-20261110",
+  "command": "node scripts/verify-ui-renewal-p0-browser.mjs --out build/qa-r19p0-20261112/p0-48c314c",
+  "chrome": "157.0.8103.79",
+  "status": "failed",
+  "qualifiesP0Verification": false,
+  "counts": {
+    "required": 10,
+    "attempted": 10,
+    "passed": 0,
+    "failed": 10,
+    "unattempted": 0
+  },
+  "soleFailure": "chart/page-heading: native sample centre is covered by another element",
+  "heading": {
+    "selector": "#atlas-page-heading",
+    "text": "가격 차트",
+    "fontSize": 12,
+    "visualTextCovered": false,
+    "note": "Visible glyphs sit at the left of a full-width box. The gate samples the box centre, which is not the text.",
+    "boxes": [
+      {
+        "id": "BTCUSD-320-light",
+        "rect": {
+          "left": 8,
+          "right": 312,
+          "top": 57,
+          "bottom": 71
+        },
+        "hit": "#lab-chart-stage"
+      },
+      {
+        "id": "BTCUSD-1440-light",
+        "rect": {
+          "left": 64,
+          "right": 1383,
+          "top": 91,
+          "bottom": 105
+        },
+        "hit": "#lab-chart-stage"
+      },
+      {
+        "id": "ETHUSD-320-light",
+        "rect": {
+          "left": 8,
+          "right": 312,
+          "top": 4,
+          "bottom": 18
+        },
+        "hit": "#main"
+      }
+    ]
+  },
+  "passedBesidesHeadingHit": {
+    "staticTokenPairs": "40/40",
+    "fontChecks": "10/10",
+    "pretendardCustomGlyphCases": 8,
+    "fallbackCases": 2,
+    "fallbackFamilies": [
+      ".SF NS",
+      "Apple SD Gothic Neo"
+    ],
+    "measuredContrastSamples": 106,
+    "measuredContrastFailed": 0,
+    "minimumMeasuredTextContrast": 5.144947999253779,
+    "textThreshold": 4.5,
+    "sampleCoverage": {
+      "required": 40,
+      "observed": 38,
+      "passed": 36,
+      "status": "unverified"
+    },
+    "horizontalOverflow": 0,
+    "bodyFontSize": {
+      "320": 15,
+      "1440": 17
+    },
+    "themeReload": "10/10 restored the requested theme",
+    "sourceStable": true,
+    "screenshots": 20,
+    "screenshotDir": "build/qa-r19p0-20261112/p0-48c314c"
+  },
+  "protectedUnchanged": [
+    {
+      "path": "dist/equity-view.js",
+      "sha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5"
+    },
+    {
+      "path": "dist/eth-view.js",
+      "sha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4"
+    },
+    {
+      "path": "dist/instrument-indicator-overlay.js",
+      "sha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a"
+    },
+    {
+      "path": "scripts/verify-eth-candidate-browser.mjs",
+      "sha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e"
+    }
+  ],
+  "priceAxisGeometry": "minRight=64 unchanged; paint tokens only",
+  "rawReport": "build/qa-r19p0-20261112/p0-48c314c/report.json",
+  "disposition": "Do not close P0. Do not start P1. Fix the sample so it hits visible heading glyphs, and keep the failure if those glyphs are covered. Do not drop the 10 cases or the contrast, font, or overflow thresholds."
+}

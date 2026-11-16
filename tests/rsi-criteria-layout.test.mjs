@@ -34,3 +34,23 @@ test('a displaced native legend remains the placement owner and a physically ins
   const tiny=rsiCriteriaSlot({width:120,height:90,left:12,right:56,top:56,bottom:80,viewportWidth:320});
   assert.equal(tiny.visible,false);assert.equal(tiny.areaRatio,0);
 });
+
+
+test('tablet criteria yields to measured signal labels without moving native price axes or discarding signals',()=>{
+  const input={width:917,height:628,left:84,right:781,top:20,bottom:498,viewportWidth:1024,
+    protectedAnchors:[{x:600,y:100,width:44,height:13},{x:700,y:200,width:44,height:13}]};
+  const original=structuredClone(input),box=rsiCriteriaSlot(input),legend=chartLegendSlot(input);
+  assert.equal(box.visible,true);assert(box.width>=44&&box.height>=44);
+  assert(box.x>=input.left&&box.x+box.width<=input.right);
+  assert(box.y>=56&&box.y+box.height<=input.bottom);
+  assert.equal(overlayBoxesIntersect(box,legend,8),false);
+  assert(input.protectedAnchors.every(anchor=>!overlayBoxesIntersect(box,anchor,8)));
+  assert(box.width*box.height/((input.right-input.left)*(input.bottom-input.top))<=RSI_CRITERIA_AREA_LIMIT);
+  assert.deepEqual(input,original,'overlay placement never moves axes or source signal boxes');
+});
+
+test('a fully obstructed pane does not paint a criteria card over protected source labels',()=>{
+  const input={width:917,height:628,left:84,right:781,top:20,bottom:498,viewportWidth:1024,
+    protectedAnchors:[{x:84,y:20,width:697,height:478}]};
+  assert.equal(rsiCriteriaSlot(input).visible,false,'the existing Backtest dialog retains the criteria when no overlay can fit');
+});

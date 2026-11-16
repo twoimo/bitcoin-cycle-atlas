@@ -14,6 +14,14 @@
 .cycle-interval.is-active .cycle-interval-duration{font-weight:700}
 .cycle-interval.is-related .cycle-interval-duration{text-decoration:underline;text-underline-offset:3px}
 .cycle-interval .cycle-interval-label,.cycle-interval .cycle-interval-duration{paint-order:stroke;stroke:var(--cycle-milestones-rule);stroke-width:3px;stroke-linejoin:round}
+/* Chart annotations are data, not decorative microcopy: keep their smallest
+   labels at the metadata floor while leaving true axis ticks on their own scale. */
+.cycle-interval-relation-label,.cycle-interval-duration,.cycle-interval-preview-label,
+.cycle-marker-label,.cycle-interval-row-label,.cycle-interval-empty{font-size:11px}
+svg .cycle-interval-overlay .cycle-interval-span.cycle-interval .cycle-interval-duration,
+.cycle-interval-duration tspan{font-size:11px!important}
+.forecast-evidence-label+text{font-size:11px}
+.cycle-timing-ribbon text{font-size:11px}
 
 /* One legend row inside the price plot, above its bottom edge. The measured
    axis gutter and the existing SVG own the geometry; no extra pane is added. */
@@ -122,7 +130,7 @@
 .cycle-comparison-scroll table{width:100%;min-width:560px;border-collapse:collapse;text-align:left;font-variant-numeric:tabular-nums}
 .cycle-comparison-scroll :is(th,td){padding:8px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap;font-size:11px}
 .cycle-comparison-scroll th button{padding:4px 0;border:0;background:transparent;color:var(--text);font:inherit;text-align:left}
-.cycle-comparison-scroll td small{display:block;color:var(--muted);font-size:10px}
+.cycle-comparison-scroll td small{display:block;color:var(--muted);font-size:11px}
 .cycle-history-distribution{display:block;width:120px;height:16px}
 .cycle-reference-comparison details{padding-block:8px}
 .cycle-reference-comparison details p{white-space:normal;line-height:1.6;color:var(--muted)}

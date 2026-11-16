@@ -10,7 +10,7 @@ import * as viewPolicyHelpers from '../dist/chart-view-policy.js';
 import * as priceAxisHelpers from '../dist/price-axis.js';
 import {PROJECT_REPLAY_ORIGIN} from '../dist/project-replay-baseline.js';
 import {SvgNode} from './replay-svg-fixture.mjs';
-import {createAtlasReplayContext,drawAtlasChartReplay} from '../dist/chart-replay-atlas.js';
+import {createAtlasReplayContext,drawAtlasChartReplayLegacy as drawAtlasChartReplay} from '../dist/chart-replay-atlas.js';
 import {forecastValueSignature} from '../dist/atlas-price-chart.js';
 const {version:releaseVersion}=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8'));
 export const flush=async()=>{for(let i=0;i<8;i++)await new Promise(setImmediate);};

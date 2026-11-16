@@ -1,0 +1,1369 @@
+{
+  "kind": "r19-p5-f1-native-capture",
+  "startedAt": "2026-11-13T05:54:55.337Z",
+  "scope": "D-1, header SVG/name, declared target size, and product screenshots only; not a P4/P5 full gate.",
+  "d1": {
+    "range": "[\\u{1F300}-\\u{1FAFF}\\u{2600}-\\u{27BF}]",
+    "includesHiddenUI": true,
+    "contentExclusions": [
+      ".conference-caption-text",
+      ".conference-transcript-text",
+      ".relay-room-name",
+      ".relay-room-sub",
+      ".relay-peer>h2",
+      ".relay-peer-sub",
+      ".relay-msg-text",
+      ".relay-msg-quote",
+      ".relay-reply-text",
+      ".relay-reply-name",
+      ".relay-msg-author",
+      ".relay-preview",
+      ".relay-article-title",
+      ".relay-article-excerpt",
+      ".relay-reader-head h2",
+      ".relay-body",
+      ".relay-reader-figure figcaption",
+      "#lab-chart-stage>svg"
+    ]
+  },
+  "harnessSha256": "7112458c6481a7fc5474da6a42951ed5401c8827d59cdb157605bd7f873a4bc6",
+  "sourceBefore": {
+    "commit": "7a04e3a9dc24a956e12d8c6d4c783fe41ed4e505",
+    "tree": "a2ef7491cd07e57c7d6ac468477a3d420866ed7d",
+    "trackedChanges": "M docs/LAUNCH_CHECKLIST_20261110.md\n M docs/requirements/REQ_ANTI_AI_DESIGN_20261112.md\n M docs/requirements/REQ_RELAY_RAG_20261109.md\n M docs/requirements/REQ_UI_RENEWAL_FUNNEST_20261112.md",
+    "hashes": {
+      "dist/index.html": "f2e1d089df730d7870ec627eac5e5f54a7bdea6798a245472469063b836bcf45",
+      "dist/atlas-shell.js": "e5cd5d67ae979ded8722f82a794655834883b7d2fa3115b7b4c5bb8a7b0b5181",
+      "dist/atlas-shell.css": "79b18aea15616b2ad905437c552d03e1abade7c884dfcd9f3a3fd60c98b56082",
+      "dist/styles.css": "190305d7b15c3a6b64ff3a8a06bf40b2c4594b395d2f32c112fe2f4b2f9da08c",
+      "dist/ui/shell-layout.css": "6c5f9f6ae914ae5f765e47733c59cbf7da324b92fe55a22ae73fbc962b2cf0f8",
+      "dist/site-before-shell.css": "a6f6787b69d552a7653f75c2ced5a4c1961b9cac839922d8cb483e6867af9da0",
+      "dist/site-after-shell.css": "a6d9c98db8b108449eb9036df295f066cd7859c5ec2414447fbc9cf828bd2c85"
+    }
+  },
+  "lanes": [
+    {
+      "name": "after",
+      "ref": null,
+      "cases": [
+        {
+          "id": "conference-320",
+          "page": "conference",
+          "width": 320,
+          "height": 900,
+          "status": "passed",
+          "failures": [],
+          "nativeWindowEnvelope": {
+            "windowId": 1395023785,
+            "bounds": {
+              "left": 0,
+              "top": 0,
+              "width": 2048,
+              "height": 1600,
+              "windowState": "normal"
+            },
+            "client": {
+              "width": 2048,
+              "height": 1513
+            },
+            "requestedViewport": {
+              "width": 320,
+              "height": 900
+            },
+            "verifiedBeforeEmulation": true
+          },
+          "state": {
+            "boot": "ready",
+            "page": "conference",
+            "conferenceState": "ready",
+            "relayRoomCount": 0,
+            "viewport": {
+              "width": 320,
+              "height": 900
+            },
+            "h1Count": 1,
+            "overflow": 0,
+            "d1": {
+              "count": 0,
+              "matches": [],
+              "excludedContentCount": 0,
+              "excluded": []
+            },
+            "menus": [
+              {
+                "name": "탐색 메뉴 접기",
+                "expanded": "true",
+                "text": "",
+                "svg": {
+                  "icon": "phosphor-list",
+                  "viewBox": "0 0 256 256",
+                  "hidden": "true",
+                  "focusable": "false",
+                  "pathCount": 1
+                },
+                "painted": false,
+                "box": {
+                  "width": 0,
+                  "height": 0
+                },
+                "css": {
+                  "width": "44px",
+                  "height": "44px",
+                  "minWidth": "44px",
+                  "minHeight": "44px"
+                },
+                "renderedTargetVerified": false,
+                "focusPaintVerified": false,
+                "focusNote": "Focus paint is not measured for the pre-existing hidden header toggle."
+              }
+            ],
+            "focusRules": [
+              {
+                "selector": ":where(button, a, input, select, textarea, summary, [tabindex]):focus-visible, .chart-stage > svg:focus-visible",
+                "outline": "2px solid var(--focus)",
+                "offset": "-2px"
+              }
+            ]
+          },
+          "screenshot": {
+            "file": "after/conference-320.png",
+            "sha256": "0f208046f31976ea525b917bb67eee13431a9a80dd59d387bc54ad8ce653f9e8",
+            "bytes": 34591
+          }
+        },
+        {
+          "id": "conference-1440",
+          "page": "conference",
+          "width": 1440,
+          "height": 900,
+          "status": "passed",
+          "failures": [],
+          "nativeWindowEnvelope": {
+            "windowId": 1395023787,
+            "bounds": {
+              "left": 0,
+              "top": 0,
+              "width": 2048,
+              "height": 1600,
+              "windowState": "normal"
+            },
+            "client": {
+              "width": 2048,
+              "height": 1513
+            },
+            "requestedViewport": {
+              "width": 1440,
+              "height": 900
+            },
+            "verifiedBeforeEmulation": true
+          },
+          "state": {
+            "boot": "ready",
+            "page": "conference",
+            "conferenceState": "ready",
+            "relayRoomCount": 0,
+            "viewport": {
+              "width": 1440,
+              "height": 900
+            },
+            "h1Count": 1,
+            "overflow": 0,
+            "d1": {
+              "count": 0,
+              "matches": [],
+              "excludedContentCount": 0,
+              "excluded": []
+            },
+            "menus": [
+              {
+                "name": "탐색 메뉴 접기",
+                "expanded": "true",
+                "text": "",
+                "svg": {
+                  "icon": "phosphor-list",
+                  "viewBox": "0 0 256 256",
+                  "hidden": "true",
+                  "focusable": "false",
+                  "pathCount": 1
+                },
+                "painted": false,
+                "box": {
+                  "width": 0,
+                  "height": 0
+                },
+                "css": {
+                  "width": "44px",
+                  "height": "44px",
+                  "minWidth": "44px",
+                  "minHeight": "44px"
+                },
+                "renderedTargetVerified": false,
+                "focusPaintVerified": false,
+                "focusNote": "Focus paint is not measured for the pre-existing hidden header toggle."
+              }
+            ],
+            "focusRules": [
+              {
+                "selector": ":where(button, a, input, select, textarea, summary, [tabindex]):focus-visible, .chart-stage > svg:focus-visible",
+                "outline": "2px solid var(--focus)",
+                "offset": "-2px"
+              }
+            ]
+          },
+          "screenshot": {
+            "file": "after/conference-1440.png",
+            "sha256": "1e2c87004cd2a536b8167af2127659062cc36dde69b880c6b852d89aa2ce3d69",
+            "bytes": 67996
+          }
+        },
+        {
+          "id": "outlook-320",
+          "page": "outlook",
+          "width": 320,
+          "height": 900,
+          "status": "passed",
+          "failures": [],
+          "nativeWindowEnvelope": {
+            "windowId": 1395023789,
+            "bounds": {
+              "left": 0,
+              "top": 0,
+              "width": 2048,
+              "height": 1600,
+              "windowState": "normal"
+            },
+            "client": {
+              "width": 2048,
+              "height": 1513
+            },
+            "requestedViewport": {
+              "width": 320,
+              "height": 900
+            },
+            "verifiedBeforeEmulation": true
+          },
+          "state": {
+            "boot": "ready",
+            "page": "outlook",
+            "conferenceState": null,
+            "relayRoomCount": 0,
+            "viewport": {
+              "width": 320,
+              "height": 900
+            },
+            "h1Count": 1,
+            "overflow": 0,
+            "d1": {
+              "count": 0,
+              "matches": [],
+              "excludedContentCount": 0,
+              "excluded": []
+            },
+            "menus": [
+              {
+                "name": "탐색 메뉴 접기",
+                "expanded": "true",
+                "text": "",
+                "svg": {
+                  "icon": "phosphor-list",
+                  "viewBox": "0 0 256 256",
+                  "hidden": "true",
+                  "focusable": "false",
+                  "pathCount": 1
+                },
+                "painted": false,
+                "box": {
+                  "width": 0,
+                  "height": 0
+                },
+                "css": {
+                  "width": "44px",
+                  "height": "44px",
+                  "minWidth": "44px",
+                  "minHeight": "44px"
+                },
+                "renderedTargetVerified": false,
+                "focusPaintVerified": false,
+                "focusNote": "Focus paint is not measured for the pre-existing hidden header toggle."
+              }
+            ],
+            "focusRules": [
+              {
+                "selector": ":where(button, a, input, select, textarea, summary, [tabindex]):focus-visible, .chart-stage > svg:focus-visible",
+                "outline": "2px solid var(--focus)",
+                "offset": "-2px"
+              }
+            ]
+          },
+          "screenshot": {
+            "file": "after/outlook-320.png",
+            "sha256": "333fa3bc0c7078f253ec2c91f64ee3775f40b1c04b78c233338286464fc1fce5",
+            "bytes": 94541
+          }
+        },
+        {
+          "id": "outlook-1440",
+          "page": "outlook",
+          "width": 1440,
+          "height": 900,
+          "status": "passed",
+          "failures": [],
+          "nativeWindowEnvelope": {
+            "windowId": 1395023791,
+            "bounds": {
+              "left": 0,
+              "top": 0,
+              "width": 2048,
+              "height": 1600,
+              "windowState": "normal"
+            },
+            "client": {
+              "width": 2048,
+              "height": 1513
+            },
+            "requestedViewport": {
+              "width": 1440,
+              "height": 900
+            },
+            "verifiedBeforeEmulation": true
+          },
+          "state": {
+            "boot": "ready",
+            "page": "outlook",
+            "conferenceState": null,
+            "relayRoomCount": 0,
+            "viewport": {
+              "width": 1440,
+              "height": 900
+            },
+            "h1Count": 1,
+            "overflow": 0,
+            "d1": {
+              "count": 0,
+              "matches": [],
+              "excludedContentCount": 0,
+              "excluded": []
+            },
+            "menus": [
+              {
+                "name": "탐색 메뉴 접기",
+                "expanded": "true",
+                "text": "",
+                "svg": {
+                  "icon": "phosphor-list",
+                  "viewBox": "0 0 256 256",
+                  "hidden": "true",
+                  "focusable": "false",
+                  "pathCount": 1
+                },
+                "painted": false,
+                "box": {
+                  "width": 0,
+                  "height": 0
+                },
+                "css": {
+                  "width": "44px",
+                  "height": "44px",
+                  "minWidth": "44px",
+                  "minHeight": "44px"
+                },
+                "renderedTargetVerified": false,
+                "focusPaintVerified": false,
+                "focusNote": "Focus paint is not measured for the pre-existing hidden header toggle."
+              }
+            ],
+            "focusRules": [
+              {
+                "selector": ":where(button, a, input, select, textarea, summary, [tabindex]):focus-visible, .chart-stage > svg:focus-visible",
+                "outline": "2px solid var(--focus)",
+                "offset": "-2px"
+              }
+            ]
+          },
+          "screenshot": {
+            "file": "after/outlook-1440.png",
+            "sha256": "446ab9162ba43e7f1aa02562aff11c0911291e0e906e80ff72b0ec1c49f40edd",
+            "bytes": 265457
+          }
+        },
+        {
+          "id": "relay-320",
+          "page": "relay",
+          "width": 320,
+          "height": 900,
+          "status": "passed",
+          "failures": [],
+          "nativeWindowEnvelope": {
+            "windowId": 1395023793,
+            "bounds": {
+              "left": 0,
+              "top": 0,
+              "width": 2048,
+              "height": 1600,
+              "windowState": "normal"
+            },
+            "client": {
+              "width": 2048,
+              "height": 1513
+            },
+            "requestedViewport": {
+              "width": 320,
+              "height": 900
+            },
+            "verifiedBeforeEmulation": true
+          },
+          "state": {
+            "boot": "ready",
+            "page": "relay",
+            "conferenceState": null,
+            "relayRoomCount": 3,
+            "viewport": {
+              "width": 320,
+              "height": 900
+            },
+            "h1Count": 1,
+            "overflow": 0,
+            "d1": {
+              "count": 0,
+              "matches": [],
+              "excludedContentCount": 51,
+              "excluded": [
+                {
+                  "glyph": "🗞",
+                  "codePoint": "U+1F5DE",
+                  "path": "body > div.workspace > main#main > section#relay-view > aside.relay-rooms > ul.relay-room-list > li > button.relay-room-item.active > span.relay-room-copy > span.relay-room-sub",
+                  "contentSelector": ".relay-room-sub"
+                },
+                {
+                  "glyph": "🎙",
+                  "codePoint": "U+1F399",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🎙",
+                  "codePoint": "U+1F399",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🎙",
+                  "codePoint": "U+1F399",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "💊",
+                  "codePoint": "U+1F48A",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "💊",
+                  "codePoint": "U+1F48A",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "👑",
+                  "codePoint": "U+1F451",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "👑",
+                  "codePoint": "U+1F451",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🙂",
+                  "codePoint": "U+1F642",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🙂",
+                  "codePoint": "U+1F642",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🗞",
+                  "codePoint": "U+1F5DE",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                }
+              ]
+            },
+            "menus": [
+              {
+                "name": "탐색 메뉴 접기",
+                "expanded": "true",
+                "text": "",
+                "svg": {
+                  "icon": "phosphor-list",
+                  "viewBox": "0 0 256 256",
+                  "hidden": "true",
+                  "focusable": "false",
+                  "pathCount": 1
+                },
+                "painted": false,
+                "box": {
+                  "width": 0,
+                  "height": 0
+                },
+                "css": {
+                  "width": "44px",
+                  "height": "44px",
+                  "minWidth": "44px",
+                  "minHeight": "44px"
+                },
+                "renderedTargetVerified": false,
+                "focusPaintVerified": false,
+                "focusNote": "Focus paint is not measured for the pre-existing hidden header toggle."
+              }
+            ],
+            "focusRules": [
+              {
+                "selector": ":where(button, a, input, select, textarea, summary, [tabindex]):focus-visible, .chart-stage > svg:focus-visible",
+                "outline": "2px solid var(--focus)",
+                "offset": "-2px"
+              }
+            ]
+          },
+          "screenshot": {
+            "file": "after/relay-320.png",
+            "sha256": "6cce153ce4dd654f513c12fcef5c58d91d5ee00dbb4c5ae029d040ac9d40942e",
+            "bytes": 62619
+          }
+        },
+        {
+          "id": "relay-1440",
+          "page": "relay",
+          "width": 1440,
+          "height": 900,
+          "status": "passed",
+          "failures": [],
+          "nativeWindowEnvelope": {
+            "windowId": 1395023795,
+            "bounds": {
+              "left": 0,
+              "top": 0,
+              "width": 2048,
+              "height": 1600,
+              "windowState": "normal"
+            },
+            "client": {
+              "width": 2048,
+              "height": 1513
+            },
+            "requestedViewport": {
+              "width": 1440,
+              "height": 900
+            },
+            "verifiedBeforeEmulation": true
+          },
+          "state": {
+            "boot": "ready",
+            "page": "relay",
+            "conferenceState": null,
+            "relayRoomCount": 3,
+            "viewport": {
+              "width": 1440,
+              "height": 900
+            },
+            "h1Count": 1,
+            "overflow": 0,
+            "d1": {
+              "count": 0,
+              "matches": [],
+              "excludedContentCount": 51,
+              "excluded": [
+                {
+                  "glyph": "🗞",
+                  "codePoint": "U+1F5DE",
+                  "path": "body > div.workspace > main#main > section#relay-view > aside.relay-rooms > ul.relay-room-list > li > button.relay-room-item.active > span.relay-room-copy > span.relay-room-sub",
+                  "contentSelector": ".relay-room-sub"
+                },
+                {
+                  "glyph": "🎙",
+                  "codePoint": "U+1F399",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🎙",
+                  "codePoint": "U+1F399",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🎙",
+                  "codePoint": "U+1F399",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "💊",
+                  "codePoint": "U+1F48A",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "💊",
+                  "codePoint": "U+1F48A",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "👑",
+                  "codePoint": "U+1F451",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "👑",
+                  "codePoint": "U+1F451",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "⚠",
+                  "codePoint": "U+26A0",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🙂",
+                  "codePoint": "U+1F642",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🙂",
+                  "codePoint": "U+1F642",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🔔",
+                  "codePoint": "U+1F514",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > details.relay-topic-evidence > ul > li > blockquote.relay-msg-quote.relay-topic-evidence-quote",
+                  "contentSelector": ".relay-msg-quote"
+                },
+                {
+                  "glyph": "🗞",
+                  "codePoint": "U+1F5DE",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                },
+                {
+                  "glyph": "🐒",
+                  "codePoint": "U+1F412",
+                  "path": "body > div.workspace > main#main > section#relay-view > section.relay-detail > div.relay-detail-body > ol.relay-chat > li.relay-msg > div.relay-bubble > p.relay-msg-text",
+                  "contentSelector": ".relay-msg-text"
+                }
+              ]
+            },
+            "menus": [
+              {
+                "name": "탐색 메뉴 접기",
+                "expanded": "true",
+                "text": "",
+                "svg": {
+                  "icon": "phosphor-list",
+                  "viewBox": "0 0 256 256",
+                  "hidden": "true",
+                  "focusable": "false",
+                  "pathCount": 1
+                },
+                "painted": false,
+                "box": {
+                  "width": 0,
+                  "height": 0
+                },
+                "css": {
+                  "width": "44px",
+                  "height": "44px",
+                  "minWidth": "44px",
+                  "minHeight": "44px"
+                },
+                "renderedTargetVerified": false,
+                "focusPaintVerified": false,
+                "focusNote": "Focus paint is not measured for the pre-existing hidden header toggle."
+              }
+            ],
+            "focusRules": [
+              {
+                "selector": ":where(button, a, input, select, textarea, summary, [tabindex]):focus-visible, .chart-stage > svg:focus-visible",
+                "outline": "2px solid var(--focus)",
+                "offset": "-2px"
+              }
+            ]
+          },
+          "screenshot": {
+            "file": "after/relay-1440.png",
+            "sha256": "904b9cc9b7445a230c3faec55ccad996df1fcf77e0f142aa24cdb5ef25fa0279",
+            "bytes": 122594
+          }
+        }
+      ],
+      "servedFiles": {
+        "index.html": "f2e1d089df730d7870ec627eac5e5f54a7bdea6798a245472469063b836bcf45",
+        "site-entry.js": "2a3d474c69079e742e4890bb0522633009c11e2c989a5315c88ed37e0ea0ce75",
+        "styles.css": "190305d7b15c3a6b64ff3a8a06bf40b2c4594b395d2f32c112fe2f4b2f9da08c",
+        "site-before-shell.css": "a6f6787b69d552a7653f75c2ced5a4c1961b9cac839922d8cb483e6867af9da0",
+        "atlas-shell.css": "79b18aea15616b2ad905437c552d03e1abade7c884dfcd9f3a3fd60c98b56082",
+        "site-after-shell.css": "a6d9c98db8b108449eb9036df295f066cd7859c5ec2414447fbc9cf828bd2c85",
+        "conference/timeline.js": "f5b17340ab5b3ac220045eba2d5d9f8b034e15de61c5bb87b3ca8bf222a50818",
+        "app.js": "7a9dd50b29487f155c31e9a04dfdf576b4f4fd2f33098246b459cf2747bc29a7",
+        "ui/theme.js": "59f678846f2c1ce322f2f37cb7c8c7378d7b3d67cae30b35677d3468bf79e810",
+        "conference/player.js": "f854c1a23503ce3b7bea166d8e712fcbdaf1737fd822d607ccafcb1648346927",
+        "loading-surfaces.js": "f62d142df3ee3ae00ae10f63373d0421d785c253e7fc71acb8231714340e07cb",
+        "conference/timeline.json": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad",
+        "atlas-shell.js": "e5cd5d67ae979ded8722f82a794655834883b7d2fa3115b7b4c5bb8a7b0b5181",
+        "atlas-navigation.js": "070b8ea1f27834ac53182065341b5ed208a0ebcb8cfa91725671f9b577dbc46b",
+        "journal-entry.js": "a758cf9b43c704f68d372664e54a49168aa13a33c9a8566a30781b1268fddbf0",
+        "cycle-engine.js": "f6b88a839f22b96c72306e87bd4760337d259a3190830325b570520472c84346",
+        "performance-diagnostics.js": "30a2a0cadcfda3f6f782b86ced0b2e1a6833d344ffc53f948ac3150b617419ac",
+        "site-paths.js": "98591cd5f4d2770a6b30abd5606ba68f4538bf82252db28bda13e88eb2cece86",
+        "data-source.js": "1cde9df18712feb1373d1cd77362437e7fc59e2dfee9165d461170f55953e60b",
+        "published-data.js": "48fb43d2b39b31ac755b41dffa2907620f1c622a0c7ca4cd3adf90ed15747010",
+        "compare-shell-host.js": "017c029fe04ded93556e21ad71c6d42e54fa4b9014996a6f69048bcd7dd0f5d1",
+        "btc-refresh-status.js": "90bf073c462c7c97a995ee15cd9157f1c908535fa27f8ae7785576a546100e70",
+        "comparison-url-state.js": "5c8d26ca71fd5b145b946f6dbc26526732087e790f0739de24b4b95bcec82a4c",
+        "cycle-timing.js": "fc5d26727e4f4dec162340aceca89274d42739f1c00889acbf7c8c8e0281d518",
+        "timing-view.js": "e47f6f69db210f7cc3086ab7717c1f4231faaca8ec4506467a8ae019677dadba",
+        "peak-zones.js": "20e17c4f54bf238b90657d3bf5f8c90bacd6b55a9929fed40bd88f1e1ca7fd99",
+        "forecast-engine.js": "e3b22730e99ca3a636b825fd84dff898cf20c784f546c483c0a77b6d30867d6f",
+        "peak-view.js": "9e12550a63b65097ee612b73e5afee488f7e75059cd5d41aa4feedc34a4c798c",
+        "forecast-view.js": "dbf2ce842de77d64fe65007a80c4c478df66678e64dfb04a82b643476a35bd3f",
+        "daily-data-view.js": "c20f197801abdcd5265c5e15f5a6d2ed08ef8c9d778145876029e40c69a6133e",
+        "relay-room.js": "aa387e9bb18b03584261b3f0cb5c042ea04789f9418bc1b8bb577e45f3446c5c",
+        "conference/route.js": "2211cfbaba16f187a51d0e8e7f2c8849a7f6e02185cc0f02345895173eef145d",
+        "asset-comparison-source.js": "4ec4ac85a0ce67687e2d39f3fb22a67319b6d45da31c2b9daa282b4cab3b34f6",
+        "market-lab-view.js": "df6ea7a5bf9be5fe490ad1e276eaf6cd054f121c775512748316d9c94d703432",
+        "ipo-view.js": "4f6c0041ddc7b767648cca030068badeccec1dc349603505ff46f23835ec6508",
+        "vendor/skullet/skullet.js": "159653b71266900bcff7df3403c1e04cf34d1822074431a131716eedda15e71c",
+        "rsi-chart-layout.js": "5ab7f81690f01803c232ba0755496d6ebf2379a522415c810d6a6c82abf29052",
+        "atlas-shell-state.js": "9c420fcb99ce1a344adb4fb38313339fd5c1f16f1a987e92e6aad56a85c8aa12",
+        "center-workbench.js": "2decc81ec9db604edb6dd95b6beb92a9582b25e76f60f8c65b2506a6ffaa8f6c",
+        "ui/shell-slots.js": "837decee5ee5356da35f54934c85c365fe4e21b87dbe4127236aa8c2820023ab",
+        "ui/page-description.js": "a3ea1350945329c98db494aa929255cce4b9ffd68a27c24af1ef31f6991dacd0",
+        "content-shell.js": "52fd98eac9c0039b2352ca642945a82d98a66db5078a18b5c78ca5d582eae3e6",
+        "workspace-instruments.js": "e0c63c6e4c0cc308c8aacf93220a3c4b5fc0d558fccdfdc79fa2d8e39fcddf2b",
+        "asset-comparison.js": "d0112fae4ff80de80dd3acce787f83159ddc3c1834ac8f3663e6427060b30c85",
+        "asset-judgment-history-view.js": "631f432ef93f363de2b156c9abc7822d310231d6af5921b25df509841573e0c8",
+        "relay-topics.js": "b210b01559ec8fc9bd15a99436040293e7b3929cc601f23804f4b5aa9d2d675e",
+        "market-lab-math.js": "fbf92300b64e3e5e320386c7ddacc9d533cff5d7447620b3d6a365d66cdc2579",
+        "ipo-month-calendar.js": "b660ac3f549d0d37c6d21e0658227a9c90d04aeb641b35c3089b9a06acab50f7",
+        "legacy-workspace-toolbar.js": "8ee5c721cef1714c3749e22e73486db710101ab28d4c7206e126fe6b3769a204",
+        "rsi-workbench-controls.js": "5cbb494715fa1fe9829d968b4bb5b1f0304c82b72834a06d3086d1a0407feee1",
+        "ui/center-loading.js": "2c6ae05d85ae27c1665da154d94640acce1e650eaad5e41d136dccf7a00abe54",
+        "ui/mobile-shell-heading.js": "06637574d2e7be2d1e28f3a180fe57653b39088fbfb3731976e760a5b4c37052",
+        "rsi-instruments.js": "019ea9bac6ff5ad792cc9ed070bd37c55290dae3e2374f5ea38ef25dad4cb6a2",
+        "asset-judgment-history.js": "190be9550616f51ad0ea64c449d6fa68fd7ce4804a39cb799e199927392745cf",
+        "ui/chart-url-state.js": "9446c9ebe6ec9f1acd7cc33a0ed7f1306019d72d54f00f2bb857cc4b59cfeabf",
+        "asset-judgment-records.js": "affba5194c81e2046bb0917c258123788136a64a038e9915b899521300c0ece1",
+        "price-axis.js": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2",
+        "ohlc-data.js": "b2a5104c22b0fced11d747cae9fd7797a876b0c7de4e30492376acae791e7f5d",
+        "price-display.js": "7558e6e6f56825f66c4268a6939808abe21b731bf0fbe3fa8c5766d1b8e87179",
+        "workspace-state.js": "797a61ef67ae093cc817d4e6c7b428033821228398c2590b3669d1fc137b6851",
+        "intraday-history.js": "7bec4f8c3f31571d4494801cfe22286fe9a87f0434c031eca1fd27f1f9e556f2",
+        "fonts/pretendard/pretendard-variable.css": "2973bcae80262dcb630cfb793fbf6af29bd986c769ee54953fb3e5b3e32323ca",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.91.woff2": "fc9fcd1bea9c8f43f97136a1e89bfa6e34db85f820f86538288647b4c24c5b06",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.89.woff2": "44634e793e0d50fcdf803a2ad513d8bf0482d9adccbbd4ef534325cae9b2ee01",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.90.woff2": "ed2d605d80cbe4f2c1df801852f7a1d8ad5e1a4972b26d8fee93427317f32f09",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.84.woff2": "d28ace2d199ca5c6304a6191f4233e28ddb225d341d6e0b41db040e9447c2cc9",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.88.woff2": "192abc4c6ad933f53d809d8a46ee6237ae71e766bf66199fdce4678841fe12d7",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.86.woff2": "3e680901e55f16848b58d16d25870596495a6a073d9e3127fe481583ac4439b6",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.87.woff2": "04ca8277cfe3d27235573956255b0211575504cb695cdeab644c583df774e257",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.85.woff2": "757b9fc85ad85a1024fcacc04a9b688ace2db7af393e9ddc3b5dd2ba605b5a9b",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.81.woff2": "f0ae631ec332bbaf686a493d126ff56a8ac0c6284bdbb7542cef8fedd946fa66",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.78.woff2": "67f065415552e8c66da5e60fc67a891ec1ba74bfb9370078261bbf9a718a182f",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.82.woff2": "493e29967aa59d0f5326ae95fe163ca6e0ce9d95610838cc07a1f543a4a2e289",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.80.woff2": "3802ad32c6c1bfa889c1019bd22d265c19392a6d52bbbd38e3a6fb99fdb0cf8f",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.79.woff2": "0bbdf492d859723843e118154b24573abdd62e781cb3827378e5dc65eeb8e0e9",
+        "favicon.svg": "27c6c6bafd62f10468037f5a42ed04b287a77e52ca67617aed773748bda6f161",
+        "conference/media-manifest.json": "ff3e3f2b16f4435e71c5e9f07740a9a2af2b9e9fe46aaf013f70972a658d0088",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.83.woff2": "f8f1fe652aaf3c759d78f37e48afe1c58c1d335e9261c5be2a2d90ff5bbfb9cc",
+        "viewport-workspace.js": "b12eddb9a62244e27f479d6bfa7ba88b11665a78edb0f2734aea8fe17935bf33",
+        "lab-view.js": "e80e21c9c5d1884ad0244795f5d82d50bcdcc7789f3247badcf348589336aaa4",
+        "data/btc-daily.json": "d04c7443eb4ccd17d93ddc2d61b75e844d86b6cf5f5d456aa986def86e97aca9",
+        "compact-chart-layout.js": "fc8d1f136c1ae5d8f24c4a378b349892d14d97f9c1fa74aed6b9d72613b56984",
+        "data-update.js": "74471f38deedacb094706e11b275b103955362ce2bef18316c9b1577d720dd05",
+        "workbench-chrome.js": "50f396975900fd596ace14f014a6d9ec4e60b3ab9946b3cd3a6f800f20739d36",
+        "research-workbench.js": "04411f6bf87c616e04ec04e6d3bc1b944b3790ba4825c599b90fcc1e7db7ae93",
+        "analysis-dock.js": "a8f4e1ac072c932465cf3858ab7c2fc865cd93519df971ef9aca356ef3753c08",
+        "indicator-workbench.js": "79dfbf2e43bfdea9e76278e1ec85d56df1f79a678da1df2edcc441876aa277ed",
+        "inspection-policy.js": "fb5953349307dd3025382df412414ba96777d0cf07403d49c548a941d47b79e3",
+        "ui/chart-legend.js": "53550bcd5aceab37b02ac10123fae4de0779193f0707fd083facd45d44b872e8",
+        "mobile-workspace.js": "b9b9aea5c20ace0f4d694429ae227fcb26b3e80f864d6a8b7d3220823da49e51",
+        "cycle-period-comparison.js": "5039d937694a18798a01c7e7c3d3778d8d7e596c20218c21a5f0853b88df7a7c",
+        "chart-replay.js": "4d689174ffa97b75aa02d383d2127506288d48a4fa1e1e5a258300942a45b6ca",
+        "forecast-computation.js": "8e4843c963a686027fb0b767c6f8969e38fcccd03abcc20c247740e90e006256",
+        "forecast-evidence.js": "1579b491f7fb1153197c5d28511eb5c75a85821b1b1cc19ae23c7176142b51f1",
+        "price-legend.js": "d26450151e454cbe80fb53d9431b051e6953e928c9f92b78a4b870136b1589b5",
+        "research-reader.js": "2e1cb92676692b0b904df5fabcaed924423a5e61fbeb51a87ef4eef1db0a2b42",
+        "cycle-milestones.js": "bed3032cd8efaec067f0aedfaf42e8c170e43d00ea7c979791eb7028cb6714da",
+        "cycle-milestones-view.js": "bdd585c796b7791f96262e3499e8914f6cfb68672c7c1806d0c59187a461a489",
+        "cycle-selection.js": "cb93d394dd247fd3a18e0d3b04318a861c19536309c2f93f9a1dce6f55441c39",
+        "atlas-price-chart.js": "24dc44e7150d5152e7fc94d5f98589bd1ce12caba0bd2ef6002bbf6afd3d5e90",
+        "chart-navigation.js": "f6a987a9fc14e72f8de01fe0e21d0d142b872939188f8328cf153b7b8f7a03c0",
+        "atlas-analysis.js": "515a9aaf23f2e9b5025e3f63f8cee673140047f935ca124caa80e2284769201d",
+        "indicator-state.js": "552ccc8d2bc3d0b1405789b67084533e8f37edc237c1f38e86250aba2c8d62f4",
+        "cryptocon-audit.js": "7fdf0bf02f6d30c1766642fb127178abaf99c677882e597fe03ca4ca4896b2fe",
+        "price-view-data.js": "54548b35600e976a31c60d5f2dae6539fee841cf0bd5520f6bd253c90c871634",
+        "long-horizon-forecast.js": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089",
+        "long-horizon-view.js": "fb92cf0e36ddc0996b14ab0e65df63b4c94ea460be67f2d38d1b3fa62c8db5ea",
+        "intraday-chart.js": "fc1e8bc7639757dacad8a77e415bb879efd6153427d393eef7db2d386e01afb8",
+        "market-data-controller.js": "978ad14a70fdb3011f0761ceb7c6f6ebc0d37bc0b25aa047ad2ef2014eff07d6",
+        "volume-forecast.js": "f742d858c1cdf10e4092fcdb923e70b1e40c75d098e03234e16396880cca5d60",
+        "volume-data.js": "a788b2ba5381cd9405f468dcac902fb14a23b56696b49153745e2500fe25c88a",
+        "bitcoin-events.js": "d42875bbbdba1892fa8ce21ae365cf7fbd8729af911ce40fe22abd31e3f72960",
+        "chart-overlays.js": "30a1d523000615a159cc3214b0b8239010fe7237bb675d5ad2755161f2b671ca",
+        "market-structure.js": "6cae886f34169913c0a9fa8623071dc2ecf4a8c5c0df3cfbe37e5a1d006bf0f7",
+        "chart-presets.js": "0635174122f5de55ebf0adeff12ba00a79b8364a2a9f57e982615e4e3c6ee0aa",
+        "chart-export.js": "97e651d4fc01b59e112755dd01b236258fd8bbcbecef5ba7e1526e6c707c89dc",
+        "chart-hover.js": "2babcf82e20c0a6aa3aafd8f660a9175b94b11192fe3e4670c645683b8093067",
+        "chart-view-policy.js": "7f4a1f7f13000797997dd60546ce50d2f286cd508c32b94b15141b8477264136",
+        "chart-touch-tracking.js": "6cb958b04b71cd7e03a3e6c86b551775b906c11abef86084448b7eff47dec754",
+        "workspace-history.js": "1e7f2c7a57c7d0d163e5b2ef482324f28732d4d37783f1aa7dd39429691a54c6",
+        "chart-export-workbench.js": "ec9433c4f842e89ad70232ffdad62199146da0570d0df1a2dc9a70c41c4608dd",
+        "research-annotations.js": "a13e1f713a63d90ccd697eb4f67853d13a4eb60b1cb51f54191f3cb7d3d39f14",
+        "research-annotations-workbench.js": "296c51cce5f994df1f08dab65d263f2e82d94ab4e81280d8170b88b0ab4a0d5f",
+        "chart-magnet.js": "21c6c0fae8c2057890dbc8d6d71048b21d04988fe2d30385749aa0b428701a34",
+        "chart-go-to.js": "3ff06f0b575a4b135b12b9ceb8dbf9158eec74ebf1a08e8d5106e34703f1ce91",
+        "symbol-selector.js": "a96f215bdce12657280e856ac20b8e1d7256927f8ed2aca6b6ac45f6dcd13b1c",
+        "chart-bottom-bar.js": "e7dcdfce8326d5d4cf83265d1bd3fb715d26490b489b43523bbd72befd273b06",
+        "workspace-tools.js": "0e94b855cd8cd30c0a4a9c80c90a19a7774a133bdc587704774a13d23b3ad7c1",
+        "ui/chart-colors.js": "ef105a33d5317362c011f6454ba084231e98096f3dadbe8f45de6f8b16c77048",
+        "history-journal.js": "4b4647725203e08ed8e000fdedfb24e9626a1a7b06985cb1ce226eed73b321d0",
+        "dialog-viewport.js": "36dceb75f26ab3c6fec9fa2c1d8ca8cf0a6ddbb19e2b4d7a5bc0f9d901bde28e",
+        "indicator-readouts.js": "2f67ceb650dfdb1d677e1e8dc45bdb90f1795095ef46c0d0c3c1f37e56b12f10",
+        "indicator-settings.js": "87c9ca6aa99a4d1627c44290bb1e9d234ab42156a953af9dff26bd045e242715",
+        "indicator-settings-dialog.js": "a8125d8186ab6adaf952843e9e3fc1b7067252e3922f9d68d6fd2b71ebadb7d6",
+        "indicator-preferences.js": "8d26161783236257a6901b3f644afddc7d3e8a7fb9e05b6078bfc1c82caf1b99",
+        "ui/chart-legend-layout.js": "b547ae2f89b3ecb890d37584d67023de02de887e5bf02fba61bdac9195bb2f6a",
+        "chart-replay-state.js": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908",
+        "chart-replay-snapshot.js": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6",
+        "research-library-data.js": "20d17df4b01fed0f5a72fe47dba57c68abe294c34eb6fa6a47a90d3ed7b95215",
+        "research-source-data.js": "eb0720b297fe8430cf954e05df782ef5a4edd186a6c3ab727d1cb0bd8b5086b6",
+        "research-format.js": "8d4b225cb3ee9f3042c72b12a2f4d3040123473c65bff8549c74bb55a5c0c37a",
+        "cycle-interval-overlay.js": "898b29ee0b09b8d37abff310540ee70b642d0a02504d29ba2eafba639091bd75",
+        "empty-price-chart.js": "1e37ce4f0cc822ff199dc296bd0203d24c919416ae4c4d1e7f2745bf9a5eebed",
+        "chart-math.js": "93db753cfbe24a88d68216267b08304c4149315912e7e60b0548d8ffa975d09a",
+        "ui/chart-annotation-layout.js": "2342908c83b91666a0ee12dbe8a0b7311bb933c2a0b6adad9c9436c792162bf9",
+        "chart-window.js": "ff1527876a0185e8f8a52211170c696bde98f0120c6f0ddde58cea987daaf7cd",
+        "detailed-forecast.js": "e81e46f4062d085510185752a6b95ca1aaa1ac857eb3de5991d06616890cb70e",
+        "cryptocon-audit-data.js": "8495fd0373bd81331c05d784c9ffbee2ab26ef5fc9267d6bc127f98332be0088",
+        "cycle-calibration.js": "f1193814419c589801b839d64607dd80b89f5c6978d863418cb88b22db62c780",
+        "long-horizon-evidence.js": "7b5f9fc162e0c621b6a7df9f0f3d77e76c274040e83b88b0a8301638cb29f2f8",
+        "equity-forecast-chart.js": "c5a62cdbca6ab9d7a1e20c9cb59e7840ad00002d58d448b0ed35d57a6f803e7b",
+        "forecast-worker.js": "f874720791a430368708deb85cf58b6d50742a3953f466bdbb34c52346a076c0",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.70.woff2": "8bccc361d2d7ad5c3891a7914505ffd0ed89cf0bd9a5f1f6c320f85af54cb041",
+        "data/btc-volume.json": "a602ba904b78284138684377ea559598173063ee435350ce281de430150a9993",
+        "cycle-period-worker.js": "9ecaae94018aad35359b5534f11b43c3f6ea9aef2a899ad358030b3ea83761cc",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.75.woff2": "07f0ddae65c844dfe5d294087749e19b05e95cfd904b20df3501b040f1a5f61e",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.77.woff2": "9ab92ab7b4e3770a6f3a17ed34b0a26df5a0faf2c4f8e2d2685b36cf248ff751",
+        "data/relay/index.json": "be11c563ac9fa76160118649a4577d5ea8f2e4d6b83b1384a9486642710abd33",
+        "fonts/pretendard/woff2-dynamic-subset/PretendardVariable.subset.73.woff2": "fe4874885e6450739e9067af520b94cc5f60e56c36538b6db3df3aa7a37baf42"
+      },
+      "sourceStable": true
+    }
+  ],
+  "failures": [],
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/157.0.8103.79",
+    "revision": "@6dc9bc3bdaea5c35ed6d41fceab2f7a3a2227c4f",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+    "jsVersion": "15.7.112.43"
+  },
+  "sourceAfter": {
+    "commit": "7a04e3a9dc24a956e12d8c6d4c783fe41ed4e505",
+    "tree": "a2ef7491cd07e57c7d6ac468477a3d420866ed7d",
+    "trackedChanges": "M docs/LAUNCH_CHECKLIST_20261110.md\n M docs/requirements/REQ_ANTI_AI_DESIGN_20261112.md\n M docs/requirements/REQ_RELAY_RAG_20261109.md\n M docs/requirements/REQ_UI_RENEWAL_FUNNEST_20261112.md",
+    "hashes": {
+      "dist/index.html": "f2e1d089df730d7870ec627eac5e5f54a7bdea6798a245472469063b836bcf45",
+      "dist/atlas-shell.js": "e5cd5d67ae979ded8722f82a794655834883b7d2fa3115b7b4c5bb8a7b0b5181",
+      "dist/atlas-shell.css": "79b18aea15616b2ad905437c552d03e1abade7c884dfcd9f3a3fd60c98b56082",
+      "dist/styles.css": "190305d7b15c3a6b64ff3a8a06bf40b2c4594b395d2f32c112fe2f4b2f9da08c",
+      "dist/ui/shell-layout.css": "6c5f9f6ae914ae5f765e47733c59cbf7da324b92fe55a22ae73fbc962b2cf0f8",
+      "dist/site-before-shell.css": "a6f6787b69d552a7653f75c2ced5a4c1961b9cac839922d8cb483e6867af9da0",
+      "dist/site-after-shell.css": "a6d9c98db8b108449eb9036df295f066cd7859c5ec2414447fbc9cf828bd2c85"
+    }
+  },
+  "workingTreeStable": true,
+  "sourceStable": true,
+  "completedCases": 6,
+  "complete": true,
+  "d1After": 0,
+  "d1Before": null,
+  "status": "passed",
+  "finishedAt": "2026-11-13T05:55:00.179Z",
+  "chromeStderr": "\nDevTools listening on ws://127.0.0.1:64388/devtools/browser/64e5c070-f185-4f19-a819-9cc387bc85bc\nTrying to load the allocator multiple times. This is *not* supported.\n[42228:150143421:1113/145456.178463:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145456.178968:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145456.179044:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145456.274800:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145456.275119:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145456.279124:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145456.896029:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145456.896367:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145456.898171:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145457.406292:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145457.406629:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145457.406736:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145458.256567:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145458.256922:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145458.258613:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145459.199920:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145459.203608:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145459.203713:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145459.760703:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145459.761089:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[42228:150143421:1113/145459.763073:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n"
+}

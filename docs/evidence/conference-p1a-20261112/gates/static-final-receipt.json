@@ -1,0 +1,17 @@
+{
+  "name": "static-final",
+  "command": [
+    "npm",
+    "run",
+    "verify:static"
+  ],
+  "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "sourceTree": "7ce03ecfccd2b953c50d4f0efd10afa45b97a790",
+  "startedAt": "2026-11-11T19:40:50.445344+00:00",
+  "exitCode": 0,
+  "durationSec": 9.443,
+  "finishedAt": "2026-11-11T19:40:59.881919+00:00",
+  "headAfter": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "trackedDiffAfter": "",
+  "logSha256": "4ee077551bb899ebeb523001498864168a287c753b59b69c8de22f58fd7c4917"
+}

@@ -43,3 +43,47 @@ body[data-page="market"] #root #market-header-slot .ml-tabs { overflow: visible;
   /* The full-width market selector needs its own row beside the flexible title. */
   .ml-ztd-card > header > div:first-child { flex-wrap: wrap; row-gap: 8px; }
 }
+
+/* Market-analysis surfaces: keep data colour in the plots and use square, quiet chrome. */
+.atlas-service-workspace .market-lab .ml-card,
+.atlas-service-workspace .market-lab .ml-table-wrap,
+.atlas-service-workspace .market-lab .ml-original,
+.atlas-service-workspace .market-lab .ml-sources,
+.atlas-service-workspace .market-lab .ml-risk,
+.atlas-service-workspace .market-lab .ml-empty,
+.atlas-service-workspace .market-lab .ml-error {
+  border-radius: 0;
+  box-shadow: none;
+}
+.atlas-service-workspace .market-lab .ml-card { padding: 16px; }
+.atlas-service-workspace .market-lab .ml-pill,
+.atlas-service-workspace .market-lab .ml-tag { border-radius: 0; }
+.atlas-service-workspace .market-lab .ml-warn { background: transparent; }
+.atlas-service-workspace .market-lab .ml-callout { background: transparent; border-left: 1px solid var(--border-strong); }
+.atlas-service-workspace .market-lab .ml-index { padding: 16px 0; margin-bottom: 12px; }
+.atlas-service-workspace .market-lab .ml-section-heading { margin: 16px 0 12px; }
+.atlas-service-workspace .market-lab .ml-card-head { align-items: baseline; margin-bottom: 8px; }
+.atlas-service-workspace .market-lab .ml-card > h3 { margin-bottom: 8px; }
+.atlas-service-workspace .market-lab .ml-results { margin: 12px 0; }
+.atlas-service-workspace .market-lab .ml-results > div { gap: 12px; padding: 8px 0; }
+.atlas-service-workspace .market-lab .ml-table-wrap { margin: 12px 0; }
+.atlas-service-workspace .market-lab :is(.ml-field, .ml-shock-row) { margin-block: 12px; }
+.atlas-service-workspace .market-lab :is(button, input:not([type=range]), select) { border-radius: 0; }
+@media (max-width: 800px) {
+  .atlas-service-workspace .market-lab .ml-diagnosis-grid,
+  .atlas-service-workspace .market-lab .ml-two-col { grid-template-columns: minmax(0, 1fr); }
+  .atlas-service-workspace .market-lab .ml-axes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .atlas-service-workspace .market-lab .ml-scroll { padding-inline: 8px; }
+  .atlas-service-workspace .market-lab .ml-card { padding: 12px; }
+  .atlas-service-workspace .market-lab :is(input:not([type=range]), select, textarea) { font-size: 16px; }
+  .atlas-service-workspace .market-lab .ml-axes { grid-template-columns: minmax(0, 1fr); }
+  .atlas-service-workspace .market-lab .ml-summary-strip { gap: 12px; padding: 12px; }
+}
+
+/* The market page's authored dashboard selectors are intentionally more specific than shared tokens. */
+body main[data-workspace="market"] #market-view.market-lab .ml-card { border-radius: 0; box-shadow: none; }
+body main[data-workspace="market"] #market-view.market-lab :is(.ml-pill, .ml-tag, .ml-table-wrap, .ml-empty, .ml-error) { border-radius: 0; }
+body main[data-workspace="market"] #market-view.market-lab :is(button, input:not([type=range]), select) { border-radius: 0; }
+body[data-shell="dashboard"] main.atlas-service-workspace[data-workspace="market"] #market-view.market-lab .ml-two-col > .ml-card { border-radius: 0; }

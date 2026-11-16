@@ -1,0 +1,94 @@
+{
+  "recordedAt": "2026-11-12T22:08:00+09:00",
+  "testedHead": "b78793531e9a7e4fe4b852b9df92d1f84204aa98",
+  "chrome": "Chrome/157.0.8103.79",
+  "p0": {
+    "status": "passed",
+    "qualifiesP0Verification": true,
+    "counts": {
+      "required": 10,
+      "attempted": 10,
+      "passed": 10,
+      "failed": 0,
+      "unattempted": 0
+    },
+    "sampleCoverage": {
+      "required": 40,
+      "observed": 40,
+      "passed": 40,
+      "status": "passed"
+    },
+    "settingsIcon": [
+      {
+        "theme": "light",
+        "status": "passed",
+        "threshold": 3,
+        "observations": [
+          {
+            "caseId": "BTCUSD-320-light",
+            "ratio": 6.450342460121478
+          },
+          {
+            "caseId": "ETHUSD-320-light",
+            "ratio": 15.02125034783696
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "status": "passed",
+        "threshold": 3,
+        "observations": [
+          {
+            "caseId": "BTCUSD-320-dark",
+            "ratio": 8.832865192921577
+          },
+          {
+            "caseId": "ETHUSD-320-dark",
+            "ratio": 16.98937498761537
+          }
+        ]
+      }
+    ],
+    "sourceStable": true,
+    "workingTree": [],
+    "harnessDiffVs595c365": "empty",
+    "out": "build/qa-r19p1-20261112/p0"
+  },
+  "p1": {
+    "status": "stopped-after-root-404-and-768-pill-failure",
+    "qualifiesP1Verification": false,
+    "curl": {
+      "/bitcoin-cycle-atlas/": 404,
+      "body": "not found",
+      "/bitcoin-cycle-atlas/index.html": 200,
+      "/bitcoin-cycle-atlas/market-lab/": 200
+    },
+    "cause": "verify-ui-renewal-p1-browser.mjs checks resolve(site,'./').startsWith(site+'/') before rewriting a directory to index.html",
+    "officialCases": {
+      "320": {
+        "market-us": "passed",
+        "directRoutes": "6/6 timeout on not found"
+      },
+      "390": {
+        "market-us": "passed",
+        "directRoutes": "6/6 timeout on not found"
+      },
+      "768": {
+        "outlook": "timeout",
+        "market-us": "failed: all 7 nav items not pill shaped"
+      }
+    },
+    "notRun": [
+      "768 remaining direct routes",
+      "1440",
+      "journeys"
+    ],
+    "screenshots": [
+      "build/qa-r19p1-20261112/p1/market-us-320.png",
+      "build/qa-r19p1-20261112/p1/market-us-390.png",
+      "build/qa-r19p1-20261112/p1/market-us-768.png"
+    ],
+    "independentProbe": "When the root serves index.html, outlook and evidence are ready in 6-8s with external requests blocked."
+  }
+}

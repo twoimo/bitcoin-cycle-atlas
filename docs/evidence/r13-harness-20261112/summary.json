@@ -1,0 +1,671 @@
+{
+  "schemaVersion": 1,
+  "kind": "r13-linux-harness-evidence",
+  "sourceCommit": "4f934b3e3ec2050f6b9b3dff50e2b35db3d4a24d",
+  "sourceTree": "591ef9972e330982bcb3c70ff1df1beae04286b7",
+  "capturedAt": "2026-11-11T23:43:45.632Z",
+  "productionDeployment": false,
+  "environment": {
+    "platform": "linux",
+    "arch": "x64",
+    "node": "v24.22.2",
+    "browser": "/workspace/scratch/55a6bfaf803b/conference-tools/chrome-with-proxy",
+    "browserLauncherSha256": "a80450b5fb18bb3de07cda1f3041237577d1634b6fe5520bbff95e205f45293a",
+    "xdgDataHome": "/workspace/scratch/a7a56e32088b/browser-r13-runtime/xdg-data",
+    "dockerPathAdded": "/Applications/Docker.app/Contents/Resources/bin",
+    "frozenRuntime": "native canonical Node 24.22.2 linux/x64"
+  },
+  "acceptance": {
+    "status": "passed",
+    "scope": "Requested Linux harness gates only. Conference navigation is measured AFTER document complete, fonts loaded, and media/image readiness; it does not prove early-load playback survives pageshow.",
+    "counts": {
+      "conference": {
+        "total": 14,
+        "passed": 14,
+        "failed": 0,
+        "expected": 14
+      },
+      "heading": {
+        "contract": {
+          "total": 15,
+          "passed": 15,
+          "failed": 0,
+          "expected": 15
+        },
+        "supplemental": {
+          "total": 9,
+          "passed": 9,
+          "failed": 0,
+          "expected": 9
+        },
+        "layoutShift": {
+          "total": 2,
+          "passed": 2,
+          "failed": 0,
+          "expected": 2
+        }
+      },
+      "native": {
+        "total": 53,
+        "passed": 53,
+        "failed": 0,
+        "expected": 53
+      },
+      "responsiveBySymbol": {
+        "BTCUSD": {
+          "total": 11,
+          "passed": 11,
+          "failed": 0,
+          "expected": 11
+        },
+        "ETHUSD": {
+          "total": 11,
+          "passed": 11,
+          "failed": 0,
+          "expected": 11
+        },
+        "MSTR": {
+          "total": 11,
+          "passed": 11,
+          "failed": 0,
+          "expected": 11
+        },
+        "BMNR": {
+          "total": 11,
+          "passed": 11,
+          "failed": 0,
+          "expected": 11
+        }
+      },
+      "responsive": {
+        "total": 44,
+        "passed": 44,
+        "failed": 0,
+        "expected": 44
+      },
+      "wp6": {
+        "total": 30,
+        "passed": 30,
+        "failed": 0,
+        "expected": 30
+      },
+      "chartQa": {
+        "total": 12,
+        "passed": 12,
+        "failed": 0,
+        "expected": 12
+      }
+    },
+    "npm": {
+      "complete": true,
+      "tests": 3428,
+      "pass": 3428,
+      "fail": 0,
+      "skipped": 0,
+      "batches": 1
+    },
+    "issues": [],
+    "executions": [
+      {
+        "id": "conference",
+        "exitCode": 0,
+        "durationMs": 183544,
+        "logSha256": "7af06e0a4e0d74ae990d75a49cb8ff55e81dba94ba22941981c1b5a7232ba5f6",
+        "sourceUnchanged": true
+      },
+      {
+        "id": "heading",
+        "exitCode": 0,
+        "durationMs": 46637,
+        "logSha256": "056e55d383f1b216b32c6a4735c6f9524b949fd39b7ea7bfc3ffa14fa0ef47e6",
+        "sourceUnchanged": true
+      },
+      {
+        "id": "native-53",
+        "exitCode": 0,
+        "durationMs": 873452,
+        "logSha256": "d6008ebbd27c712db22d8baa4e7abe51ec504dd71d4aee393d11feea4099b4c4",
+        "sourceUnchanged": true
+      },
+      {
+        "id": "r10-regressions",
+        "exitCode": 0,
+        "durationMs": 591244,
+        "logSha256": "0510bbdfcaa3ae911d9507040245db15e5a9647f297f3039f6c1da5a1bd0a688",
+        "sourceUnchanged": true
+      },
+      {
+        "id": "npm-test",
+        "exitCode": 0,
+        "durationMs": 510331,
+        "logSha256": "b498ae07fba370927a2d46c0807ec9c07b12f38280c539a9d1980d09c6ce7c1d",
+        "sourceUnchanged": true
+      }
+    ]
+  },
+  "nativeSelect": {
+    "calls": 89,
+    "noOps": 2,
+    "changedSelections": 87,
+    "trustedEvents": 420,
+    "untrustedEvents": 0,
+    "eventCounts": {
+      "keydown": 105,
+      "keyup": 105,
+      "input": 105,
+      "change": 105
+    },
+    "requestedKeys": 105,
+    "platforms": [
+      "linux"
+    ],
+    "caseCalls": [
+      {
+        "id": "fixture-390x844",
+        "calls": 8
+      },
+      {
+        "id": "fixture-320x740",
+        "calls": 8
+      },
+      {
+        "id": "fixture-768x1024",
+        "calls": 8
+      },
+      {
+        "id": "fixture-1024x768",
+        "calls": 8
+      },
+      {
+        "id": "fixture-1440x900",
+        "calls": 25
+      },
+      {
+        "id": "fixture-1920x1080",
+        "calls": 8
+      },
+      {
+        "id": "fixture-1280x900",
+        "calls": 8
+      },
+      {
+        "id": "fixture-1023x900",
+        "calls": 8
+      },
+      {
+        "id": "fixture-767x900",
+        "calls": 8
+      }
+    ],
+    "allViewportsUseActualDesktopMetrics": true
+  },
+  "headingMotion": [
+    {
+      "id": "compare-320-ancestor-resize",
+      "status": "passed",
+      "expectedTopDelta": -72,
+      "tolerancePx": 0.01,
+      "beforeNotice": {
+        "state": "idle",
+        "hidden": true,
+        "busy": false,
+        "rect": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "compareReservedHeight": "0px"
+      },
+      "toolbar": {
+        "beforeTop": 852,
+        "shiftedTop": 780,
+        "topDelta": -72,
+        "widthDelta": 0,
+        "heightDelta": 0
+      },
+      "anchor": {
+        "beforeTop": 855,
+        "shiftedTop": 783,
+        "topDelta": -72,
+        "widthDelta": 0,
+        "heightDelta": 0
+      },
+      "maxRestoredGeometryDelta": 0,
+      "restoredGeometryDifferences": [
+        {
+          "field": "toolbar.left",
+          "delta": 0
+        },
+        {
+          "field": "toolbar.top",
+          "delta": 0
+        },
+        {
+          "field": "toolbar.width",
+          "delta": 0
+        },
+        {
+          "field": "toolbar.height",
+          "delta": 0
+        },
+        {
+          "field": "plot.left",
+          "delta": 0
+        },
+        {
+          "field": "plot.top",
+          "delta": 0
+        },
+        {
+          "field": "plot.width",
+          "delta": 0
+        },
+        {
+          "field": "plot.height",
+          "delta": 0
+        },
+        {
+          "field": "bottom.left",
+          "delta": 0
+        },
+        {
+          "field": "bottom.top",
+          "delta": 0
+        },
+        {
+          "field": "bottom.width",
+          "delta": 0
+        },
+        {
+          "field": "bottom.height",
+          "delta": 0
+        }
+      ],
+      "heading": {
+        "before": {
+          "left": 48,
+          "top": 869.5,
+          "right": 116,
+          "bottom": 883.5,
+          "width": 68,
+          "height": 14
+        },
+        "shifted": {
+          "left": 48,
+          "top": 797.5,
+          "right": 116,
+          "bottom": 811.5,
+          "width": 68,
+          "height": 14
+        },
+        "restored": {
+          "left": 48,
+          "top": 869.5,
+          "right": 116,
+          "bottom": 883.5,
+          "width": 68,
+          "height": 14
+        }
+      },
+      "plotTop": {
+        "before": 0,
+        "shifted": 0,
+        "restored": 0
+      }
+    },
+    {
+      "id": "compare-390-ancestor-resize",
+      "status": "passed",
+      "expectedTopDelta": -72,
+      "tolerancePx": 0.01,
+      "beforeNotice": {
+        "state": "idle",
+        "hidden": true,
+        "busy": false,
+        "rect": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "compareReservedHeight": "0px"
+      },
+      "toolbar": {
+        "beforeTop": 852,
+        "shiftedTop": 780,
+        "topDelta": -72,
+        "widthDelta": 0,
+        "heightDelta": 0
+      },
+      "anchor": {
+        "beforeTop": 855,
+        "shiftedTop": 783,
+        "topDelta": -72,
+        "widthDelta": 0,
+        "heightDelta": 0
+      },
+      "maxRestoredGeometryDelta": 0,
+      "restoredGeometryDifferences": [
+        {
+          "field": "toolbar.left",
+          "delta": 0
+        },
+        {
+          "field": "toolbar.top",
+          "delta": 0
+        },
+        {
+          "field": "toolbar.width",
+          "delta": 0
+        },
+        {
+          "field": "toolbar.height",
+          "delta": 0
+        },
+        {
+          "field": "plot.left",
+          "delta": 0
+        },
+        {
+          "field": "plot.top",
+          "delta": 0
+        },
+        {
+          "field": "plot.width",
+          "delta": 0
+        },
+        {
+          "field": "plot.height",
+          "delta": 0
+        },
+        {
+          "field": "bottom.left",
+          "delta": 0
+        },
+        {
+          "field": "bottom.top",
+          "delta": 0
+        },
+        {
+          "field": "bottom.width",
+          "delta": 0
+        },
+        {
+          "field": "bottom.height",
+          "delta": 0
+        }
+      ],
+      "heading": {
+        "before": {
+          "left": 48,
+          "top": 869.5,
+          "right": 116,
+          "bottom": 883.5,
+          "width": 68,
+          "height": 14
+        },
+        "shifted": {
+          "left": 48,
+          "top": 797.5,
+          "right": 116,
+          "bottom": 811.5,
+          "width": 68,
+          "height": 14
+        },
+        "restored": {
+          "left": 48,
+          "top": 869.5,
+          "right": 116,
+          "bottom": 883.5,
+          "width": 68,
+          "height": 14
+        }
+      },
+      "plotTop": {
+        "before": 0,
+        "shifted": 0,
+        "restored": 0
+      }
+    }
+  ],
+  "postLoadNavigation": [
+    {
+      "id": "navigation-BTCUSD",
+      "status": "passed",
+      "readiness": {
+        "documentState": "complete",
+        "fonts": "loaded",
+        "imageReady": true,
+        "audioReadyState": 4,
+        "play": {
+          "left": 778,
+          "top": 740,
+          "width": 56,
+          "height": 56
+        },
+        "playHit": true,
+        "stableSamples": 3
+      },
+      "playClick": {
+        "isTrusted": true,
+        "targetMatches": true,
+        "documentState": "complete",
+        "fonts": "loaded"
+      },
+      "playing": {
+        "playing": "true",
+        "audioPaused": false,
+        "audioTime": 0.006631
+      }
+    },
+    {
+      "id": "navigation-ETHUSD",
+      "status": "passed",
+      "readiness": {
+        "documentState": "complete",
+        "fonts": "loaded",
+        "imageReady": true,
+        "audioReadyState": 4,
+        "play": {
+          "left": 778,
+          "top": 740,
+          "width": 56,
+          "height": 56
+        },
+        "playHit": true,
+        "stableSamples": 3
+      },
+      "playClick": {
+        "isTrusted": true,
+        "targetMatches": true,
+        "documentState": "complete",
+        "fonts": "loaded"
+      },
+      "playing": {
+        "playing": "true",
+        "audioPaused": false,
+        "audioTime": 0.013432
+      }
+    }
+  ],
+  "knownUnresolvedProductDiagnostic": {
+    "status": "failed",
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "excludedFromAcceptance": true,
+    "report": "diagnostics/navigation-font-response-race-3/report.json.gz",
+    "finding": "A trusted play click during initial document loading is subsequently paused by the genuine initial pageshow. Product code is unchanged; normal post-load conference success does not close this defect."
+  },
+  "pngVerification": {
+    "uniqueFiles": 739,
+    "receiptReferences": 1335,
+    "retainedFiles": 6,
+    "rule": "All referenced original PNG sizes, SHA-256 digests and signatures verified on disk; only the listed representative PNGs are committed."
+  },
+  "replayDownloadVerification": {
+    "uniqueFiles": 48,
+    "receiptReferences": 96,
+    "retainedFiles": 0,
+    "rule": "All generated model/replay JSON downloads were verified against original report sizes and SHA-256 digests. Their verified inventory is committed; the large generated payloads are not duplicated in Git."
+  },
+  "diagnostics": {
+    "reports": 8,
+    "summary": "diagnostics/summary.json",
+    "productSourceIntegrity": [
+      {
+        "report": "desktop-click-after/report.json",
+        "checkedFiles": 963,
+        "changedSources": []
+      },
+      {
+        "report": "desktop-click-before/report.json",
+        "checkedFiles": 963,
+        "changedSources": []
+      },
+      {
+        "report": "desktop-click-native-scroll/report.json",
+        "checkedFiles": 963,
+        "changedSources": []
+      },
+      {
+        "report": "navigation-baseline-1/report.json",
+        "checkedFiles": 963,
+        "changedSources": []
+      },
+      {
+        "report": "navigation-baseline-2/report.json",
+        "checkedFiles": 963,
+        "changedSources": []
+      },
+      {
+        "report": "navigation-font-response-race/report.json",
+        "checkedFiles": 963,
+        "changedSources": []
+      },
+      {
+        "report": "navigation-font-response-race-2/report.json",
+        "checkedFiles": 963,
+        "changedSources": []
+      },
+      {
+        "report": "navigation-font-response-race-3/report.json",
+        "checkedFiles": 963,
+        "changedSources": []
+      }
+    ]
+  },
+  "interruptedAttempts": [
+    {
+      "id": "attempt-1",
+      "scope": "Interrupted integration attempt only; excluded from final acceptance totals",
+      "status": "interrupted",
+      "exitCode": 130,
+      "sourceCommit": "30f0b665d615bc6f24f0510485c887688517ae1d",
+      "counts": {
+        "total": 12,
+        "passed": 8,
+        "failed": 4
+      },
+      "originalRunnerStatus": "running",
+      "startedGates": [
+        "conference"
+      ],
+      "report": "interrupted-attempt-1/conference/report.json.gz",
+      "reason": "Stopped after desktop transcript close click/focus failures; full requested gates have not run. Original report and logs unchanged.",
+      "failures": [
+        {
+          "id": "fixture-1024x768",
+          "error": "AssertionError [ERR_ASSERTION]: Transcript restores opener focus\n\nfalse !== true\n\n    at coreInteractions (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:222:60)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:610\n    at async runCase (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:308:45)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:35"
+        },
+        {
+          "id": "fixture-1440x900",
+          "error": "AssertionError [ERR_ASSERTION]: Transcript restores opener focus\n\nfalse !== true\n\n    at coreInteractions (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:222:60)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:610\n    at async runCase (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:308:45)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:35"
+        },
+        {
+          "id": "fixture-1920x1080",
+          "error": "AssertionError [ERR_ASSERTION]: Transcript restores opener focus\n\nfalse !== true\n\n    at coreInteractions (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:222:60)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:610\n    at async runCase (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:308:45)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:35"
+        },
+        {
+          "id": "fixture-1280x900",
+          "error": "AssertionError [ERR_ASSERTION]: Transcript restores opener focus\n\nfalse !== true\n\n    at coreInteractions (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:222:60)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:610\n    at async runCase (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:308:45)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:35"
+        }
+      ],
+      "cases": [
+        {
+          "id": "fixture-390x844",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "id": "fixture-320x740",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "id": "fixture-768x1024",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "id": "fixture-1024x768",
+          "status": "failed",
+          "failures": [
+            "AssertionError [ERR_ASSERTION]: Transcript restores opener focus\n\nfalse !== true\n\n    at coreInteractions (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:222:60)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:610\n    at async runCase (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:308:45)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:35"
+          ]
+        },
+        {
+          "id": "fixture-1440x900",
+          "status": "failed",
+          "failures": [
+            "AssertionError [ERR_ASSERTION]: Transcript restores opener focus\n\nfalse !== true\n\n    at coreInteractions (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:222:60)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:610\n    at async runCase (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:308:45)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:35"
+          ]
+        },
+        {
+          "id": "fixture-1920x1080",
+          "status": "failed",
+          "failures": [
+            "AssertionError [ERR_ASSERTION]: Transcript restores opener focus\n\nfalse !== true\n\n    at coreInteractions (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:222:60)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:610\n    at async runCase (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:308:45)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:35"
+          ]
+        },
+        {
+          "id": "fixture-1280x900",
+          "status": "failed",
+          "failures": [
+            "AssertionError [ERR_ASSERTION]: Transcript restores opener focus\n\nfalse !== true\n\n    at coreInteractions (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:222:60)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:610\n    at async runCase (file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:308:45)\n    at async file:///workspace/scratch/a7a56e32088b/bitcoin-cycle-atlas/scripts/verify-conference-browser.mjs:327:35"
+          ]
+        },
+        {
+          "id": "fixture-1023x900",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "id": "fixture-767x900",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "id": "missing-timeline",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "id": "invalid-timeline",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "id": "navigation-lifecycle",
+          "status": "passed",
+          "failures": []
+        }
+      ]
+    }
+  ]
+}

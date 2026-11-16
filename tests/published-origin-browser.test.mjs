@@ -24,7 +24,7 @@ function fixture(symbol='ETHUSD',width=390,height=430,noticeHeight=0){
       box:allocation,allocation,renderAllocation:allocation,viewBox:`0 0 ${allocation.width} ${allocation.height}`,
       observedCount:50,pathCount:3,invalidPath:false,candleCount:0,invalidCandle:false},
     ownerCounts:{'.atlas-canvas-heading':1,'.workbench-tools':1,'.workbench-rail':1,'.workbench-bottom-bar':1},
-    nav:['outlook','market-us','evidence','data','ipo','relay'],top:box(left,0,width-left-right,top),headingLayout:width<=390?'two-row':null,
+    nav:['outlook','market-us','evidence','data','ipo','relay','conference'],top:box(left,0,width-left-right,top),headingLayout:width<=390?'two-row':null,
     headingScroll:{width:width-left-right,client:width-left-right},bottom:box(left,height-bottom,width-left-right,bottom),
     refreshNotice:noticeHeight?box(left,top,width-left-right,noticeHeight):null,
     left:box(0,0,left,height,desktop),right:box(width-right,0,right,height,desktop),cspViolations:[]};
@@ -37,12 +37,14 @@ test('receipt validation accepts native controllers and committed child charts i
   }
 });
 
-test('receipt validation retains every original destination and requires relay last without duplicates',()=>{
+test('receipt validation retains every original destination and requires conference after relay without duplicates',()=>{
   for(const nav of [
     ['outlook','market-us','evidence','data','ipo'],
     ['outlook','market-us','evidence','data','relay'],
     ['outlook','market-us','evidence','relay','data','ipo'],
     ['outlook','market-us','evidence','data','ipo','relay','relay'],
+    ['outlook','market-us','evidence','data','ipo','relay'],
+    ['outlook','market-us','evidence','data','ipo','relay','conference','conference'],
   ]){const {state,spec}=fixture();state.nav=nav;assert.throws(()=>validatePage(state,spec),assert.AssertionError);}
 });
 

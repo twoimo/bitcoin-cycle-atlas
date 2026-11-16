@@ -1,0 +1,530 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-conference-p1b-observed-verification-summary",
+  "status": "incomplete-acceptance",
+  "fullyAccepted": false,
+  "provenance": "Transcribed summary of tool outputs observed before the execution environment became unavailable. This is not the original browser report, TAP log, or execution receipt.",
+  "baseCommit": "339d5b592147363246f0c51d1747cb14a99c422e",
+  "sourceCommit": "5d6419e055f90dba9fa0fe9c861cc4d3e6964d37",
+  "sourceTree": "c116842691a11d87bd864bdd83364fd68a5ecf78",
+  "executionEnvironment": {
+    "platform": "linux",
+    "arch": "x64",
+    "node": "v24.22.2",
+    "browser": "HeadlessChrome/157.0.8103.38",
+    "finalAvailability": "unavailable",
+    "recovery": "Native execution recovery failed; no usable execution environment remained."
+  },
+  "sourceCoverage": {
+    "command": "node scripts/verify-conference-timeline.mjs --timeline dist/conference/timeline.json --sources docs/conference/source-segments.json --out build/p1b-probes/timeline-coverage.json",
+    "exitCode": 0,
+    "actualRows": 9168,
+    "bySource": {
+      "plaud-1": 7994,
+      "plaud-2": 1174
+    },
+    "missing": 0,
+    "unexpected": 0,
+    "duplicate": 0,
+    "textOrTimeChanges": 0,
+    "eventOffsetPlaud2Seconds": 18000,
+    "lastT1": 20396.7,
+    "totalAudioSeconds": 20400,
+    "programs": 15,
+    "programIds": "00..14",
+    "decks": 2
+  },
+  "reproduction": {
+    "command": "node scripts/build-conference-timeline.mjs --check",
+    "status": "passed",
+    "exitCode": 0
+  },
+  "typecheck": {
+    "command": "npm run typecheck",
+    "status": "passed",
+    "exitCode": 0
+  },
+  "static": {
+    "command": "npm run verify:static",
+    "status": "passed",
+    "exitCode": 0,
+    "files": 964,
+    "checkedScripts": 218,
+    "checkedReferences": 1007
+  },
+  "pages": {
+    "command": "npm run verify:pages",
+    "status": "failed-preexisting-generated-artifact-drift",
+    "exitCode": 1,
+    "baselineCommit": "339d5b592147363246f0c51d1747cb14a99c422e",
+    "baselineExitCode": 1,
+    "baselineDurationSeconds": 2.87,
+    "reason": "Committed dist/market-lab/app assets predate existing shared CSS changes. Same generated output and failure on the baseline commit.",
+    "existingCssChangeCommit": "a6bf961b3e62af45e57b6b74662158626cfa7fa2",
+    "previousGeneratedBundleCommit": "180c55df48242ae8afe83f8b80ada457d552d2a7",
+    "cssBytesBefore": 263070,
+    "cssBytesExpected": 263224,
+    "cssDifferenceBytes": 154,
+    "jsBytes": 653793,
+    "jsContentUnchanged": true,
+    "cssDifferences": [
+      "Desktop symbol heading padding-top 16px -> 19px",
+      "BTC notice compare height rule added in shared CSS but missing from generated bundle"
+    ],
+    "sharedCssSha256": "0c8f41d4dc9cfef5b8f770a5407dfd7b4111148d0de890fb32d63a8765fa82b8",
+    "repairApplied": false,
+    "reasonNotApplied": "The user explicitly prohibited changes to other pages."
+  },
+  "conferenceBrowser": {
+    "command": "node scripts/verify-conference-browser.mjs --out build/p1b-probes/conference-14",
+    "sourceCommit": "5d6419e055f90dba9fa0fe9c861cc4d3e6964d37",
+    "workingChanges": "",
+    "cases": 14,
+    "passed": 14,
+    "failed": 0,
+    "exitCode": 0,
+    "durationSeconds": 241.12,
+    "sourceFilesChecked": 971,
+    "changedSourceFiles": 0
+  },
+  "realDataBrowser": {
+    "command": "node scripts/verify-conference-data-browser.mjs --profile fast4g --encoding gzip --out build/p1b-probes/data-fast4g-final",
+    "exitCode": 1,
+    "viewports": 6,
+    "functionalPassed": 6,
+    "initialLoadBudgetPassed": 0,
+    "initialLoadBudgetMs": 2500,
+    "pageTransitionChecks": 10,
+    "pageTransitionBudgetMs": 150,
+    "pageTransitionMinMs": 21.7,
+    "pageTransitionMaxMs": 31,
+    "network": {
+      "profile": "Chromium DevTools Fast 4G",
+      "downloadBytesPerSecond": 1012500,
+      "uploadBytesPerSecond": 168750,
+      "latencyMs": 165,
+      "serverEncoding": "gzip",
+      "cacheDisabled": true,
+      "cpuThrottle": 1
+    },
+    "profileSource": "https://chromium.googlesource.com/devtools/devtools-frontend/+/b2cbf557e71b23f634a169ca7bc782efeb29b6a5/front_end/core/sdk/NetworkManager.ts",
+    "cases": [
+      {
+        "viewport": "390x844",
+        "readyMs": 4620.1,
+        "timelineStartMs": 4175.6,
+        "timelineDurationMs": 355.8,
+        "appStartMs": 2670.9,
+        "functional": "passed",
+        "h1Count": 1,
+        "horizontalOverflowPx": 0,
+        "initialLoadBudget": "failed"
+      },
+      {
+        "viewport": "320x740",
+        "readyMs": 4695,
+        "timelineStartMs": 4235.2,
+        "timelineDurationMs": 359.9,
+        "appStartMs": 2697.6,
+        "transitionsMs": [
+          21.7,
+          23.1,
+          30.5,
+          27.3,
+          31
+        ],
+        "transcriptFirstOpenMs": 3219.1,
+        "functional": "passed",
+        "h1Count": 1,
+        "horizontalOverflowPx": 0,
+        "initialLoadBudget": "failed"
+      },
+      {
+        "viewport": "768x1024",
+        "readyMs": 4845.2,
+        "timelineStartMs": 4403.5,
+        "timelineDurationMs": 363.9,
+        "appStartMs": 2768.8,
+        "functional": "passed",
+        "h1Count": 1,
+        "horizontalOverflowPx": 0,
+        "initialLoadBudget": "failed"
+      },
+      {
+        "viewport": "1024x768",
+        "readyMs": 4703.3,
+        "timelineStartMs": 4280.4,
+        "timelineDurationMs": 355.4,
+        "appStartMs": 2739.9,
+        "functional": "passed",
+        "h1Count": 1,
+        "horizontalOverflowPx": 0,
+        "initialLoadBudget": "failed"
+      },
+      {
+        "viewport": "1440x900",
+        "readyMs": 4893,
+        "timelineStartMs": 4215,
+        "timelineDurationMs": 507.4,
+        "appStartMs": 2659.5,
+        "transitionsMs": [
+          23.9,
+          26.7,
+          27.6,
+          28.7,
+          27.3
+        ],
+        "transcriptFirstOpenMs": 2648.5,
+        "functional": "passed",
+        "h1Count": 1,
+        "horizontalOverflowPx": 0,
+        "initialLoadBudget": "failed"
+      },
+      {
+        "viewport": "1920x1080",
+        "readyMs": 4542.6,
+        "timelineStartMs": 4127.1,
+        "timelineDurationMs": 354,
+        "appStartMs": 2663.7,
+        "functional": "passed",
+        "h1Count": 1,
+        "horizontalOverflowPx": 0,
+        "initialLoadBudget": "failed"
+      }
+    ],
+    "originalMediaRequests": 0,
+    "httpErrors": 0,
+    "runtimeErrors": 0,
+    "networkErrors": 0,
+    "transcriptDOMSourceRowsCheckedPerInteractionViewport": 9168,
+    "transcriptTextDifferences": 0,
+    "lastSourceReached": "plaud-2#1174",
+    "lastSourceTime": 20396.02,
+    "measurementHead": "339d5b592147363246f0c51d1747cb14a99c422e",
+    "sourceIdentityCheck": {
+      "verifiedCommit": "5d6419e055f90dba9fa0fe9c861cc4d3e6964d37",
+      "files": 968,
+      "mismatches": 0
+    },
+    "scope": "Real transcript data and missing-media placeholders. No audio synchronization or actual rendered-slide transition verification.",
+    "preliminaryAttempts": "Earlier probe failures from fixed-header/phone-settings occlusion were preserved separately in scratch; they are not final product failures and their original artifacts could not be uploaded after the environment became unavailable."
+  },
+  "npmTest": {
+    "command": "npm test -- --test-concurrency=4",
+    "sourceCommit": "5d6419e055f90dba9fa0fe9c861cc4d3e6964d37",
+    "status": "incomplete-environment-unavailable",
+    "complete": false,
+    "exitCode": null,
+    "finalCounts": null,
+    "lastObservedCompletedTestNumber": 1728,
+    "lastExplicitProgressCount": {
+      "passed": 1723,
+      "failed": 0
+    },
+    "note": "The last observed TAP item was ok 1728. No ATLAS_TEST_TOTAL completion or final exit status was received; 0-failure completion is not claimed. Canonical Node v24.22.2 linux/x64 was used."
+  },
+  "focusedUnitTests": {
+    "generator": {
+      "tests": 13,
+      "passed": 13,
+      "failed": 0
+    },
+    "playerAndRoute": {
+      "tests": 32,
+      "passed": 32,
+      "failed": 0
+    },
+    "newTests": 19,
+    "provenance": "Observed delegated local test outputs before source freeze; no claim that these replace npm test."
+  },
+  "mapping": {
+    "programs": [
+      {
+        "id": "01",
+        "speaker": "규동산",
+        "segments": 373,
+        "final290": {
+          "mapped": 21,
+          "percent": 5.63
+        },
+        "r17": {
+          "mapped": 27,
+          "percent": 7.24
+        }
+      },
+      {
+        "id": "02",
+        "speaker": "드림캐스트",
+        "segments": 792,
+        "final290": {
+          "mapped": 16,
+          "percent": 2.02
+        },
+        "r17": {
+          "mapped": 23,
+          "percent": 2.9
+        }
+      },
+      {
+        "id": "03",
+        "speaker": "셀프",
+        "segments": 712,
+        "final290": {
+          "mapped": 67,
+          "percent": 9.41
+        },
+        "r17": {
+          "mapped": 68,
+          "percent": 9.55
+        }
+      },
+      {
+        "id": "05",
+        "speaker": "겜보이",
+        "segments": 1,
+        "final290": {
+          "mapped": 0,
+          "percent": 0
+        },
+        "r17": {
+          "mapped": 0,
+          "percent": 0
+        }
+      },
+      {
+        "id": "06",
+        "speaker": "관점킹",
+        "segments": 2,
+        "final290": {
+          "mapped": 0,
+          "percent": 0
+        },
+        "r17": {
+          "mapped": 0,
+          "percent": 0
+        }
+      },
+      {
+        "id": "07",
+        "speaker": "루틴",
+        "segments": 1081,
+        "final290": {
+          "mapped": 73,
+          "percent": 6.75
+        },
+        "r17": {
+          "mapped": 91,
+          "percent": 8.42
+        }
+      },
+      {
+        "id": "08",
+        "speaker": "다마고치",
+        "segments": 1059,
+        "final290": {
+          "mapped": 77,
+          "percent": 7.27
+        },
+        "r17": {
+          "mapped": 77,
+          "percent": 7.27
+        }
+      },
+      {
+        "id": "10",
+        "speaker": "크립토",
+        "segments": 1083,
+        "final290": {
+          "mapped": 9,
+          "percent": 0.83
+        },
+        "r17": {
+          "mapped": 10,
+          "percent": 0.92
+        }
+      },
+      {
+        "id": "11",
+        "speaker": "청약노트",
+        "segments": 853,
+        "final290": {
+          "mapped": 25,
+          "percent": 2.93
+        },
+        "r17": {
+          "mapped": 25,
+          "percent": 2.93
+        }
+      },
+      {
+        "id": "12",
+        "speaker": "엑박",
+        "segments": 1735,
+        "final290": {
+          "mapped": 109,
+          "percent": 6.28
+        },
+        "r17": {
+          "mapped": 187,
+          "percent": 10.78
+        }
+      },
+      {
+        "id": "13",
+        "speaker": "플스포",
+        "segments": 958,
+        "final290": {
+          "mapped": 16,
+          "percent": 1.67
+        },
+        "r17": {
+          "mapped": 37,
+          "percent": 3.86
+        }
+      }
+    ],
+    "allRows": 9168,
+    "lectureRows": 8649,
+    "nonLectureRows": 519,
+    "final290Mapped": 413,
+    "r17Mapped": 545,
+    "eitherDeckMapped": 649,
+    "bothDecksMapped": 309,
+    "bothUnmapped": 8519,
+    "nullGroups": 676,
+    "automaticPageAnchors": 200,
+    "acceptedEvidenceRecords": 958,
+    "excludedFinalPages": [
+      23,
+      40,
+      122,
+      123,
+      124,
+      125,
+      138,
+      140,
+      141,
+      142,
+      154,
+      155,
+      156,
+      157,
+      233,
+      235,
+      236,
+      237
+    ],
+    "outOfRange": 0,
+    "backwardPages": 0,
+    "excludedPageUse": 0,
+    "longOrBoundaryCrossingMapped": 0,
+    "futureContextEvidence": 0,
+    "humanListeningChecked": 0,
+    "humanListeningRequired": 10,
+    "draftOnly": true
+  },
+  "payload": {
+    "timelineBytes": 1044921,
+    "timelineGzipBytes": 187031,
+    "timelineBrotliBytes": 135408,
+    "sourceInventoryBytes": 985201,
+    "timelineSha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad"
+  },
+  "sourceBlobManifest": [
+    {
+      "path": "dist/conference/player.js",
+      "mode": "100644",
+      "sha": "03a4d0043f187c38ca55067327d73a12d141f095",
+      "bytes": 41138,
+      "sha256": "5c57643f1ae8463a66f6acee712e8a9f218c88d180f88f1ab44ece528ba8b837"
+    },
+    {
+      "path": "dist/conference/timeline.json",
+      "mode": "100644",
+      "sha": "3024bb7beb994ae71b491591e1da780dfff4f6d6",
+      "bytes": 1044921,
+      "sha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad"
+    },
+    {
+      "path": "docs/conference/mapping-quality-20261112.json",
+      "mode": "100644",
+      "sha": "d0431330f56cf7c65a58798381867ad69db94ef7",
+      "bytes": 1537624,
+      "sha256": "b92f5ea827a6cd640a41465b20b24d7a15aac97167cd8eda632fa9226576a331"
+    },
+    {
+      "path": "docs/conference/mapping-quality-20261112.md",
+      "mode": "100644",
+      "sha": "c613da39f6fb205bd97d58a560d6edad019aada4",
+      "bytes": 116079,
+      "sha256": "d82cac4d781d9c2b87cb0b19f48cd039a3e0c33cc8a6f1c8e8a29ba73e312245"
+    },
+    {
+      "path": "docs/conference/program-boundaries-20261112.json",
+      "mode": "100644",
+      "sha": "b34e25a92676eea7b0e9f76e2ccdd41a0f579a77",
+      "bytes": 158398,
+      "sha256": "63a351e7e9dc85006b6ae61a203bc084b05f35b69e11f2043ebbaaaa09cefb93"
+    },
+    {
+      "path": "docs/conference/source-segments.json",
+      "mode": "100644",
+      "sha": "9eb989da23e951874b2252f032987447411ff6bb",
+      "bytes": 985201,
+      "sha256": "894bbd9598e7766d0790f92ae74f9274ef891fcdda71abdc58dd2c04ed5a35a6"
+    },
+    {
+      "path": "scripts/build-conference-timeline.mjs",
+      "mode": "100644",
+      "sha": "155e0640836df29cb648282bca934dee8a915fee",
+      "bytes": 39000,
+      "sha256": "9bd7e65985771cedba97f18a7d57752873066a47bb57839798c8aaeacad321f4"
+    },
+    {
+      "path": "scripts/verify-conference-data-browser.mjs",
+      "mode": "100644",
+      "sha": "bad073e005c41ff92bc8a46a1d3ea148bca453e2",
+      "bytes": 25160,
+      "sha256": "45fb940df434f5452e02d3fa611041c4ff40ef2aa7834ea8094f92d6b68a5b3a"
+    },
+    {
+      "path": "tests/conference-player.test.mjs",
+      "mode": "100644",
+      "sha": "f2ebc22a903982ca4c01bf3d775413ea30fe7ff5",
+      "bytes": 30932,
+      "sha256": "7b3f767c8d7631f346e2c48b02807fc13e217c3964dcb734ee96f762cbe39dd7"
+    },
+    {
+      "path": "tests/conference-timeline-build.test.mjs",
+      "mode": "100644",
+      "sha": "4b7e3034c19ec1a406c1b8cb86af64d0d6cf0041",
+      "bytes": 11942,
+      "sha256": "75b1976b76e04e7c7ebc9eee365fcccb462449175c433bde58d0c1c8c4ab44b6"
+    }
+  ],
+  "artifactAvailability": {
+    "originalLogsAndScreenshotsUploaded": false,
+    "originalLocalArtifacts": "Execution environment unavailable before publication; do not treat this summary as original evidence.",
+    "codeAndData": "Persisted in GitHub source commit before environment loss"
+  },
+  "unchangedScope": {
+    "r13Harness": true,
+    "headingHarness": true,
+    "heading72PxContract": true,
+    "headingPoint01PxTolerance": true,
+    "conferenceCss": true,
+    "originalInputBundle": true,
+    "deckOriginals": true,
+    "otherPages": true
+  },
+  "notPerformed": [
+    "Full npm test completion",
+    "Human 10-point audio/slide check",
+    "Original PDF verification",
+    "Use of unavailable R11 ASR38 anchor file",
+    "547 page renders and audio splitting",
+    "macOS/Safari/physical devices",
+    "One-hour replay/memory",
+    "Deployment and production transfer-header verification"
+  ]
+}

@@ -1,0 +1,299 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-p3-mac-overflow-gate",
+  "recordedAt": "2026-11-13T06:40:00+09:00",
+  "chrome": "157.0.8103.79",
+  "productCommit": "042b04a4de56ece2bf5a6bd898b750ec5170e9f0",
+  "productTree": "869e8da4088aab544fed54262778287093fe4dfa",
+  "docsHeadAtRun": "88791bacdfb420fc18e6387f46aa2c3a0e42fe3e",
+  "testedHead": "88791bacdfb420fc18e6387f46aa2c3a0e42fe3e",
+  "command": "node scripts/verify-ui-renewal-p1-browser.mjs --browser /Applications/Google Chrome.app/Contents/MacOS/Google Chrome --out build/qa-q-p3dash-1-mac-042b04a",
+  "counts": {
+    "requiredLayouts": 28,
+    "attemptedLayouts": 28,
+    "passedLayouts": 25,
+    "requiredNavigationActivations": 56,
+    "attemptedNavigationActivations": 56,
+    "passedNavigationActivations": 56,
+    "requiredChartReturns": 8,
+    "attemptedChartReturns": 8,
+    "passedChartReturns": 8
+  },
+  "status": "failed",
+  "qualifiesP1Verification": false,
+  "sourceStable": true,
+  "complete": true,
+  "p3OverflowNonZero": [],
+  "p3Cases": [
+    {
+      "caseId": "market-us-320",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": 0,
+      "failures": [],
+      "screenshot": {
+        "file": "market-us-320.png",
+        "bytes": 42922,
+        "sha256": "e42f5e4bb4061fbc23edd54480415ce0365498bb9a91b77c3e9b74022e3cc4a5"
+      }
+    },
+    {
+      "caseId": "evidence-320",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": null,
+      "failures": [],
+      "screenshot": {
+        "file": "evidence-320.png",
+        "bytes": 65849,
+        "sha256": "fc1eb657d473054e867e54a42ca717e0b172876564a04a896883520bf5b1820f"
+      }
+    },
+    {
+      "caseId": "data-320",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": null,
+      "failures": [],
+      "screenshot": {
+        "file": "data-320.png",
+        "bytes": 58381,
+        "sha256": "88cb97f0582eac547bdef85c5c32e2ed3f43198288c2a98c61c604bb2cbee49e"
+      }
+    },
+    {
+      "caseId": "ipo-320",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": null,
+      "failures": [],
+      "screenshot": {
+        "file": "ipo-320.png",
+        "bytes": 57245,
+        "sha256": "49063be003582d7221bcc15e974f4ac65c233074a19060762a4f76125861efff"
+      }
+    },
+    {
+      "caseId": "relay-320",
+      "status": "failed",
+      "overflow": 0,
+      "childOverflow": null,
+      "failures": [
+        "h1 native text paint is unverified: #relay-view > section:nth-child(2) > div:nth-child(2): unsupported overflow clip rectangle; html:nth-child(0) > body:nth-child(2): unsupported overflow clip rectangle; html:nth-child(0): unsupported overflow clip rectangle"
+      ],
+      "screenshot": {
+        "file": "relay-320.png",
+        "bytes": 112284,
+        "sha256": "a5b3fbdb8d3fd41b8fd664a5bf2068c5816d30ec6c9e4f9bc604c02fb73d8b1f"
+      }
+    },
+    {
+      "caseId": "market-us-390",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": 0,
+      "failures": [],
+      "screenshot": {
+        "file": "market-us-390.png",
+        "bytes": 46679,
+        "sha256": "7a0a1e36f99acf49462c52e198a2599faf3c602597d005d82882d4bbc598505b"
+      }
+    },
+    {
+      "caseId": "evidence-390",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": null,
+      "failures": [],
+      "screenshot": {
+        "file": "evidence-390.png",
+        "bytes": 73036,
+        "sha256": "621173d2dce8b86fb35a76109cf0305a440efa913fc810104a42e332817da22a"
+      }
+    },
+    {
+      "caseId": "data-390",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": null,
+      "failures": [],
+      "screenshot": {
+        "file": "data-390.png",
+        "bytes": 70825,
+        "sha256": "8f3c5abe3825179a32af23c81bcdf7da6af5d915563688bac8387cf19f26b3e2"
+      }
+    },
+    {
+      "caseId": "ipo-390",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": null,
+      "failures": [],
+      "screenshot": {
+        "file": "ipo-390.png",
+        "bytes": 77869,
+        "sha256": "bcaadd638512289cc693a3ce53cfe447dfcd25e151bd1745a7b189a94d2c65d1"
+      }
+    },
+    {
+      "caseId": "relay-390",
+      "status": "failed",
+      "overflow": 0,
+      "childOverflow": null,
+      "failures": [
+        "h1 native text paint is unverified: #relay-view > section:nth-child(2) > div:nth-child(2): unsupported overflow clip rectangle; html:nth-child(0) > body:nth-child(2): unsupported overflow clip rectangle; html:nth-child(0): unsupported overflow clip rectangle"
+      ],
+      "screenshot": {
+        "file": "relay-390.png",
+        "bytes": 154908,
+        "sha256": "8957b8ffac48a76487bb38e6e6d5e128c6d65e015187c7cd276672333d33f814"
+      }
+    },
+    {
+      "caseId": "market-us-768",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": 0,
+      "failures": [],
+      "screenshot": {
+        "file": "market-us-768.png",
+        "bytes": 66189,
+        "sha256": "7d795086704bb02ca3c50bdc359fc38272b32dcdfdfb49010ee0189450d9e77a"
+      }
+    },
+    {
+      "caseId": "evidence-768",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": null,
+      "failures": [],
+      "screenshot": {
+        "file": "evidence-768.png",
+        "bytes": 105179,
+        "sha256": "a2115b55e7fb22d6ba4afb8055e2a2ea97252c3fe7ccd822eefff7fd105972b8"
+      }
+    },
+    {
+      "caseId": "data-768",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": null,
+      "failures": [],
+      "screenshot": {
+        "file": "data-768.png",
+        "bytes": 122745,
+        "sha256": "945d531621048b7ce82edd67dfcbfa21d08960a6255585fde32f742e499ec3fc"
+      }
+    },
+    {
+      "caseId": "ipo-768",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": null,
+      "failures": [],
+      "screenshot": {
+        "file": "ipo-768.png",
+        "bytes": 125984,
+        "sha256": "c8f232dcb1be0794c4c6b7f66c63be4171a97de32e43b741e254126b6e3cc802"
+      }
+    },
+    {
+      "caseId": "relay-768",
+      "status": "failed",
+      "overflow": 0,
+      "childOverflow": null,
+      "failures": [
+        "h1 native text paint is unverified: #relay-view > section:nth-child(2) > div:nth-child(2): unsupported overflow clip rectangle; html:nth-child(0) > body:nth-child(2): unsupported overflow clip rectangle; html:nth-child(0): unsupported overflow clip rectangle"
+      ],
+      "screenshot": {
+        "file": "relay-768.png",
+        "bytes": 226879,
+        "sha256": "0f24bac535f89495d8eff75f6a186b83f67c98ea28c3627dd28bff7d9393c7e5"
+      }
+    },
+    {
+      "caseId": "market-us-1440",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": 0,
+      "failures": [],
+      "screenshot": {
+        "file": "market-us-1440.png",
+        "bytes": 91416,
+        "sha256": "66ad6bec02d64487114e43a0c6c7b8a82eb767a8102e6163bb1261d7cb91d7c0"
+      }
+    },
+    {
+      "caseId": "evidence-1440",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": null,
+      "failures": [],
+      "screenshot": {
+        "file": "evidence-1440.png",
+        "bytes": 132436,
+        "sha256": "fc5b9101f140a25a19c94036aae128d6b8acc0af124e3e80df3a772d972e1010"
+      }
+    },
+    {
+      "caseId": "data-1440",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": null,
+      "failures": [],
+      "screenshot": {
+        "file": "data-1440.png",
+        "bytes": 212805,
+        "sha256": "a64736f47715af6e8e379829fb821c3bedc329cc9faa1a3d6773e170eb9f0006"
+      }
+    },
+    {
+      "caseId": "ipo-1440",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": null,
+      "failures": [],
+      "screenshot": {
+        "file": "ipo-1440.png",
+        "bytes": 159644,
+        "sha256": "a9ff8426ebc7d3a206c1c9474ea3085cd99262b07361d47df088d20a5d653ddc"
+      }
+    },
+    {
+      "caseId": "relay-1440",
+      "status": "passed",
+      "overflow": 0,
+      "childOverflow": null,
+      "failures": [],
+      "screenshot": {
+        "file": "relay-1440.png",
+        "bytes": 242462,
+        "sha256": "cbbfef3f211ee76e9d0be4c4ff28cd5e0a330fe6eff2b86fea36c544ab1bf97b"
+      }
+    }
+  ],
+  "failures": [
+    "relay-320: h1 native text paint is unverified: #relay-view > section:nth-child(2) > div:nth-child(2): unsupported overflow clip rectangle; html:nth-child(0) > body:nth-child(2): unsupported overflow clip rectangle; html:nth-child(0): unsupported overflow clip rectangle",
+    "relay-390: h1 native text paint is unverified: #relay-view > section:nth-child(2) > div:nth-child(2): unsupported overflow clip rectangle; html:nth-child(0) > body:nth-child(2): unsupported overflow clip rectangle; html:nth-child(0): unsupported overflow clip rectangle",
+    "relay-768: h1 native text paint is unverified: #relay-view > section:nth-child(2) > div:nth-child(2): unsupported overflow clip rectangle; html:nth-child(0) > body:nth-child(2): unsupported overflow clip rectangle; html:nth-child(0): unsupported overflow clip rectangle"
+  ],
+  "evidenceTableComputed": {
+    "note": "Candidate only. Visible #evidence-view .evidence-table after boot ready. Baseline computed comparison did not boot and is not used.",
+    "320": {
+      "body": "15px",
+      "th": "11px",
+      "td": "13px",
+      "tdPadding": "4px/4px",
+      "rowHeight": 64,
+      "rows": 6
+    },
+    "1440": {
+      "body": "17px",
+      "th": "11px",
+      "td": "13px",
+      "tdPadding": "4px/4px",
+      "rowHeight": 48,
+      "rows": 9
+    }
+  }
+}

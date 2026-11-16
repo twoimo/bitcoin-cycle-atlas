@@ -1,0 +1,139 @@
+{
+  "schema": "atlas.evidence.conference-r13-macos/1",
+  "capturedAt": "2026-11-12T09:42-09:43+09:00",
+  "capturedBy": "driver routine s3YAL919SDJ183nn (macOS, node script run locally)",
+  "sourceCommit": "86111f976994612e3a2214e1c650dd043bf5fec3",
+  "workingChanges": "",
+  "command": "node scripts/verify-conference-browser.mjs --out build/conference-r13-0942",
+  "scope": "p1a-fixture",
+  "fixture": {
+    "file": "tests/fixtures/conference/timeline.synthetic.json",
+    "sha256": "5ca439009207e212c67646d06903bd792dc4a234e70601b82ecc424b91a643be",
+    "synthetic": true,
+    "audio": "Generated silent 8-bit PCM/8000 Hz WAV, exact declared durations; no clock stubs"
+  },
+  "status": "passed",
+  "cases": 14,
+  "passed": 14,
+  "failures": [],
+  "browser": {
+    "product": "Chrome/157.0.8103.79",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36"
+  },
+  "sourceIntegrity": {
+    "checkedFiles": 970,
+    "changedSources": [],
+    "unchangedDuringRun": true
+  },
+  "physicalDeviceVerification": false,
+  "realDeckMapping": false,
+  "productionDeployment": false,
+  "startedAt": "2026-11-12T00:42:32.702Z",
+  "finishedAt": "2026-11-12T00:43:34.647Z",
+  "durationSeconds": 212.6,
+  "nativeTextInputs": {
+    "total": 19,
+    "searchCount": 18,
+    "searchAllMatch": true,
+    "searchSecondPassBefore": [
+      "3725초",
+      "3725초",
+      "3725초",
+      "3725초",
+      "3725초",
+      "3725초",
+      "3725초",
+      "3725초",
+      "3725초"
+    ],
+    "pageCount": 1,
+    "pageAllMatch": true
+  },
+  "perCase": [
+    {
+      "id": "fixture-390x844",
+      "status": "passed",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "id": "fixture-320x740",
+      "status": "passed",
+      "width": 320,
+      "height": 740
+    },
+    {
+      "id": "fixture-768x1024",
+      "status": "passed",
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "id": "fixture-1024x768",
+      "status": "passed",
+      "width": 1024,
+      "height": 768
+    },
+    {
+      "id": "fixture-1440x900",
+      "status": "passed",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "id": "fixture-1920x1080",
+      "status": "passed",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "id": "fixture-1280x900",
+      "status": "passed",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "id": "fixture-1023x900",
+      "status": "passed",
+      "width": 1023,
+      "height": 900
+    },
+    {
+      "id": "fixture-767x900",
+      "status": "passed",
+      "width": 767,
+      "height": 900
+    },
+    {
+      "id": "missing-timeline",
+      "status": "passed",
+      "width": 320,
+      "height": 740
+    },
+    {
+      "id": "invalid-timeline",
+      "status": "passed",
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "id": "navigation-lifecycle",
+      "status": "passed",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "id": "navigation-BTCUSD",
+      "status": "passed",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "id": "navigation-ETHUSD",
+      "status": "passed",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "note": "원본 report.json(약 500KB)·PNG는 build/에만 있고 커밋하지 않는다. 이 파일은 요약이다."
+}

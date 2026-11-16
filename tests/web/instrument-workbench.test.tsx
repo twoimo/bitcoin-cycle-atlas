@@ -8,7 +8,9 @@ import { analyzeHousing, type HousingRow } from '@atlas/domain/housing';
 import { calculateRsiSeries } from '@atlas/domain/market-lab';
 import { weeklyRsiPrices } from '@atlas/domain/rsi-bars';
 import { InstrumentWorkbench } from '../../apps/web/src/components/instrument-workbench.js';
-import { RsiChartCanvas, type ChartQuote, type InstrumentMarker } from '../../apps/web/src/components/rsi-chart-canvas.js';
+import { RsiChartCanvas, readRsiSignalLabelBounds, type ChartQuote, type InstrumentMarker } from '../../apps/web/src/components/rsi-chart-canvas.js';
+import { instrumentVolumeScale, compactLegendLabelRange, edgeSafePointLabelPosition, pointLabelWidth, rsiCrossingMarkerKey, selectedPointLabelNeedsSuppression, sparseRsiCrossingLabelKeys, volumeAxisLabelWidth } from '../../apps/web/src/components/funnest-instrument-plot.js';
+import { rsiCrossings } from '../../apps/web/src/rsi-crossings.js';
 import { RsiWorkbench } from '../../apps/web/src/panels/rsi-workbench.js';
 import { HousingChart, housingChartSeries } from '../../apps/web/src/panels/housing-chart.js';
 import { HousingPanel, type HousingCache } from '../../apps/web/src/panels/housing-panel.js';
@@ -17,6 +19,7 @@ import { applyInstrumentCommand, displayInstrumentSeries, initialInstrumentView,
   type InstrumentChartCache, type InstrumentSeries } from '../../apps/web/src/instrument-chart-model.js';
 import { day } from '../../apps/web/src/rsi-chart-model.js';
 
+const plotSource = await readFile(new URL('../../apps/web/src/components/funnest-instrument-plot.tsx', import.meta.url), 'utf8');
 const housing = JSON.parse(await readFile(new URL('../../dist/data/housing.json', import.meta.url), 'utf8'));
 const themes = JSON.parse(await readFile(new URL('../../dist/data/themes.json', import.meta.url), 'utf8'));
 const marketSnapshot = JSON.parse(await readFile(new URL('../../dist/data/market-lab.json', import.meta.url), 'utf8'));
@@ -25,6 +28,76 @@ const monthlyRows: HousingRow[] = Array.from({ length: 9 }, (_, index) => ({
   month: `2025-${String(index + 1).padStart(2, '0')}`, price: index === 3 || index === 8 ? null : 100 + index,
   volume: index === 5 ? null : index * 10, average: index < 2 ? null : 40, deviation: null, state: 'neutral', priceChange: null, volumeChange: null,
 }));
+
+test('Funnest crossing labels move inward at both mobile and desktop plot widths', () => {
+  const label = 'Buy 33.5 / 29.5';
+  assert.equal(edgeSafePointLabelPosition(64, label, 1333, 4206, 12, 136), 'right', 'the observed early signal no longer begins outside the plot');
+  assert.equal(edgeSafePointLabelPosition(64, label, 390, 4206, 12, 136), 'right', 'the same annotation remains inside a mobile plot');
+  assert.equal(edgeSafePointLabelPosition(4205, label, 1333, 4206, 12, 136), 'top', 'interior and late labels keep their usual placement');
+});
+
+test('Funnest RSI signal labels stay sparse around the selected date without removing crossing identities', () => {
+  const dates = Array.from({ length: 121 }, (_, index) => new Date(Date.UTC(2026, 0, index + 1)).toISOString().slice(0, 10));
+  const crossings = [0, 4, 11, 20, 30, 48, 70, 85, 120].map((index, order) => ({
+    date: dates[index], side: order % 2 ? 'Sell' as const : 'Buy' as const,
+    level: order % 2 ? '40 / 43' : '33.5 / 29.5', rsi: 30 + order,
+  }));
+  const original = structuredClone(crossings);
+  const mobile = sparseRsiCrossingLabelKeys(crossings, dates, dates[50], 390, 64, 68);
+  assert(mobile.has(rsiCrossingMarkerKey(crossings.find(row => row.date === dates[48])!)), 'the nearest observed crossing anchors the mobile labels');
+  assert.ok(mobile.size >= 1 && mobile.size <= 2, 'the narrow plot keeps only unobstructed labels that can clear the 136px spacing guard');
+  const mobileXs = crossings.filter(row => mobile.has(rsiCrossingMarkerKey(row))).map(row => dates.indexOf(row.date) / (dates.length - 1) * (390 - 64 - 68));
+  if (mobileXs.length > 1) assert.ok(Math.abs(mobileXs[0] - mobileXs[1]) >= 136, 'mobile labels cannot collide horizontally');
+  const desktop = sparseRsiCrossingLabelKeys(crossings, dates, dates[70], 1333, 64, 68);
+  assert(desktop.has(rsiCrossingMarkerKey(crossings.find(row => row.date === dates[70])!)), 'an exact selected-date crossing wins label priority');
+  assert(selectedPointLabelNeedsSuppression(crossings, desktop, dates, dates[70], 1333, 64, 68), 'the selected-point annotation yields to a crossing label at the same x position');
+  assert.ok(desktop.size > mobile.size && desktop.size <= crossings.length, 'a wider plot admits more, but still only a sparse subset');
+  assert.equal(new Set(crossings.map(rsiCrossingMarkerKey)).size, crossings.length, 'crossing keys preserve date, side and threshold identity');
+  assert.deepEqual(crossings, original, 'label selection never mutates source crossing data');
+});
+
+test('saved TQQQ crossings stay complete while the label set scales with the viewport', () => {
+  const market = marketSnapshot.markets.find((item: { id: string }) => item.id === 'tqqq')!;
+  const rows = calculateRsiSeries(market.prices, 14, 9), crossings = rsiCrossings(rows), dates: string[] = market.prices.map((point: [string, number]) => point[0]);
+  const original = structuredClone(crossings), selectedDate = dates.at(-1)!, selectedIndex = dates.length - 1;
+  const mobile = sparseRsiCrossingLabelKeys(crossings, dates, selectedDate, 390, 64, 68);
+  const mobileNarrow = sparseRsiCrossingLabelKeys(crossings, dates, selectedDate, 388, 64, 68);
+  const desktop = sparseRsiCrossingLabelKeys(crossings, dates, selectedDate, 1333, 64, 68);
+  const observedDesktop = sparseRsiCrossingLabelKeys(crossings, dates, selectedDate, 1226, 64, 68);
+  assert.equal(crossings.length, 331, 'the saved TQQQ series has 331 observed RSI crossing rows');
+  assert.ok(mobile.size >= 1 && mobile.size <= 2, 'mobile displays only the labels that fit its 258px plot');
+  assert.ok(desktop.size > mobile.size && desktop.size <= 9, 'desktop admits more sparse labels without adding a marker cap');
+  assert(selectedPointLabelNeedsSuppression(crossings, observedDesktop, dates, selectedDate, 1226, 64, 68), 'the measured TQQQ desktop label set reserves the overlapping selected-date text');
+  const compactRange = compactLegendLabelRange(388)!;
+  assert.ok(mobileNarrow.size >= 1 && mobileNarrow.size <= 2, 'mobile still keeps a small visible label subset around the selected date');
+  const unobstructed = crossings.filter(row => {
+    const index = dates.indexOf(row.date), label = `${row.side} ${row.level}`, pointX = 64 + index / (dates.length - 1) * (388 - 64 - 68);
+    const position = edgeSafePointLabelPosition(index, label, 388, dates.length, 64, 136), width = pointLabelWidth(label);
+    const left = position === 'right' ? pointX + 10 : pointX - width / 2, right = position === 'right' ? left + width : pointX + width / 2;
+    return right <= compactRange[0] || left >= compactRange[1];
+  });
+  const nearestUnobstructed = unobstructed.reduce((best, row) => {
+    const index = dates.indexOf(row.date), bestIndex = dates.indexOf(best.date);
+    return Math.abs(index - selectedIndex) < Math.abs(bestIndex - selectedIndex) ||
+      Math.abs(index - selectedIndex) === Math.abs(bestIndex - selectedIndex) && index > bestIndex ? row : best;
+  });
+  assert(mobileNarrow.has(rsiCrossingMarkerKey(nearestUnobstructed)), 'mobile anchors to the nearest crossing whose text is not covered by the compact legend');
+  assert(selectedPointLabelNeedsSuppression(crossings, mobileNarrow, dates, selectedDate, 388, 64, 68), 'the selected-date annotation yields to the compact legend control on mobile');
+  for (const row of crossings.filter(candidate => mobileNarrow.has(rsiCrossingMarkerKey(candidate)))) {
+    const index = dates.indexOf(row.date), label = `${row.side} ${row.level}`, pointX = 64 + index / (dates.length - 1) * (388 - 64 - 68);
+    const position = edgeSafePointLabelPosition(index, label, 388, dates.length, 64, 136), width = pointLabelWidth(label);
+    const left = position === 'right' ? pointX + 10 : pointX - width / 2, right = position === 'right' ? left + width : pointX + width / 2;
+    assert.ok(right <= compactRange[0] || left >= compactRange[1], `${label} avoids the compact legend overlay`);
+  }
+  assert.equal(new Set(crossings.map(rsiCrossingMarkerKey)).size, crossings.length, 'all crossing rows retain distinct marker keys');
+  assert.deepEqual(crossings, original, 'viewport label selection leaves every saved crossing unchanged');
+});
+
+test('Funnest volume axis reserves full-width grouped numeric ticks', () => {
+  assert.equal(volumeAxisLabelWidth([null, 0]), 72, 'zero and missing volume retain the minimum legible axis gutter');
+  assert.equal(volumeAxisLabelWidth([null, 0, 1_000_000]), 74, 'million-scale labels reserve enough width without reducing their font');
+  assert.ok(volumeAxisLabelWidth([1_000_000_000_000]) > volumeAxisLabelWidth([1_000_000]), 'large volume units grow the gutter with the actual labels');
+});
 
 test('instrument toolbar preserves full-history spacing allowance across a narrow zoom round trip',()=>{
   const series:InstrumentSeries={frequency:'daily',prices:[['2020-01-01',100],['2026-11-07',200]],bars:[],timeline:['2020-01-01','2026-11-07'],volumes:[]};
@@ -57,21 +130,21 @@ test('all four housing chart calendars retain original values, volume-only tail 
   assert.deepEqual(housing, source, 'display commands leave the source snapshot and analytical inputs untouched');
 });
 
-test('housing canvas breaks missing index segments and distinguishes real zero volume from absence', () => {
+test('housing Funnest plot retains missing price months, zero versus absent volume, and the index unit', () => {
   const series = housingChartSeries(monthlyRows), view = initialInstrumentView(series);
-  const path = observedPricePath(series.prices, series.timeline, stamp => day(stamp), value => value);
-  assert.equal((path.match(/M/g) || []).length, 2, 'the unpublished April index interrupts the price path');
-  assert.equal((path.match(/L/g) || []).length, 5);
   const html = renderToStaticMarkup(<HousingChart rows={monthlyRows} start={0} end={8} selected="2025-09" onSelect={() => {}} onRange={() => {}}/>);
   const document = parseHTML(`<html><body>${html}</body></html>`).document;
-  const svg = document.querySelector('.housing-chart > svg')!;
-  assert.equal(svg.getAttribute('data-end'), view.end);
-  assert.equal(document.querySelectorAll('[data-candle]').length, 0);
-  assert.equal(document.querySelector('[data-volume="2025-01-01"]')?.getAttribute('height'), '0', 'a reported zero remains a zero-height observation');
-  assert.equal(document.querySelector('[data-volume="2025-06-01"]'), null, 'a missing transaction count produces no bar');
-  assert.equal(document.querySelectorAll('[data-volume-average]').length, 1);
-  assert.equal(document.querySelector('.rsi-price-badge'), null, 'the volume-only September selection has no invented price badge');
-  assert.equal(document.querySelector('.rsi-price-unit')?.textContent, '지수', 'the monthly index unit is visible on the price axis');
+  const plot = document.querySelector('.housing-chart .atlas-funnest-instrument-plot')!;
+  assert.equal(plot.getAttribute('data-chart-engine'), 'funnest');
+  assert.equal(plot.getAttribute('data-range-end'), view.end);
+  assert.equal(document.querySelectorAll('[data-candle]').length, 0, 'monthly close-only data is never turned into candles');
+  assert.equal(document.querySelector('.atlas-funnest-axis-unit')?.textContent, '지수');
+  const table = document.querySelector('.housing-chart .atlas-funnest-source-table table')!;
+  const zero = [...table.querySelectorAll('tbody tr')].find(row => row.textContent?.includes('2025-01-01'))!;
+  const missing = [...table.querySelectorAll('tbody tr')].find(row => row.textContent?.includes('2025-06-01'))!;
+  assert.match(zero.textContent!, /0(?:\.00)?/,'a reported zero remains a real observation');
+  assert.match(missing.textContent!, /미공표/,'an absent transaction count stays distinct from zero');
+  assert.match(table.textContent!, /과거 평균/);
   assert.match(document.body.textContent!, /미공표/); assert.doesNotMatch(html, /NaN|Infinity/);
 });
 
@@ -119,6 +192,8 @@ async function mount(content: React.ReactNode, fetchSource?: typeof fetch, publi
     render: (content: React.ReactNode) => act(async () => root.render(content)),
     message: (message: unknown, origin = 'https://example.test', source: unknown = parent) => act(async () => { for (const listener of listeners.get('message') || []) listener({ data: message, origin, source }); }),
     key: (selector: string, key: string) => act(async () => { const event = new dom.Event('keydown', { bubbles: true, cancelable: true }); Object.defineProperty(event, 'key', { value: key }); document.querySelector(selector)!.dispatchEvent(event); }),
+    dispatch: (selector: string, kind: string, values: Record<string, unknown> = {}) => { let prevented = false; act(() => { const event = new dom.Event(kind, { bubbles: true, cancelable: true }); for (const [key,value] of Object.entries(values)) Object.defineProperty(event,key,{value}); document.querySelector(selector)!.dispatchEvent(event); prevented=event.defaultPrevented; }); return prevented; },
+    dispatchWindow: (kind: string, values: Record<string, unknown> = {}) => act(() => { const event = new dom.Event(kind,{bubbles:true,cancelable:true}); for (const [key,value] of Object.entries(values)) Object.defineProperty(event,key,{value}); dom.dispatchEvent(event); }),
     click: (selector: string) => act(async () => { const target = document.querySelector(selector); assert(target, selector); target.dispatchEvent(new dom.Event('click', { bubbles: true, cancelable: true })); }),
   };
 }
@@ -147,7 +222,7 @@ test('the React quote HUD keeps the shared field nodes across updates and reserv
     onView:()=>{},onStart:()=>{},onEnd:()=>{},onHover:()=>{},onPick:()=>{}};
   const fixture=await mount(<RsiChartCanvas {...props}/>,undefined,undefined,{width:390,height:600});
   try{
-    const hud=fixture.document.querySelector('.rsi-chart-canvas > .atlas-quote-hud')!;
+    const hud=fixture.document.querySelector('.atlas-quote-hud')!;
     const fields=[...hud.querySelectorAll('[data-quote-field]')],price=hud.querySelector('[data-quote-field=price]')!;
     assert.equal(hud.querySelectorAll('.quote-hud-row').length,2);
     assert.equal(price.textContent,'—','a direct canvas without a source quote cannot invent its own close');
@@ -160,9 +235,10 @@ test('the React quote HUD keeps the shared field nodes across updates and reserv
     assert.equal(price.textContent,'20 USDC','an oscillator cursor value is never a price quote');
     assert.equal(hud.querySelector('[data-quote-rsi-value]')?.textContent,'62.4');
     assert.match(hud.getAttribute('aria-label')||'',/Hyperliquid HYPE\/USDC/);
-    const svg=fixture.document.querySelector('.rsi-chart-canvas > svg')!;
-    assert.equal(Number(svg.getAttribute('data-plot-top')),56);
-    assert.equal(390-Number(svg.getAttribute('data-plot-right')),64,'R2 right gutter stays unchanged');
+    const svg=fixture.document.querySelector('.rsi-chart-canvas svg')!;
+    assert.equal(Number(svg.getAttribute('data-plot-top')),20);
+    assert.equal(Number(svg.getAttribute('width')),390,'the fixture supplies its measured width to the actual Funnest context');
+    assert.equal(390-Number(svg.getAttribute('data-plot-right')),68,'the real Funnest right axis reserves 68px once, without a duplicate inset');
     await fixture.render(<RsiChartCanvas {...props} symbol="HOUSING-SEOUL" unit="지수" quote={{symbol:'HOUSING-SEOUL',name:'서울',fullName:'서울 아파트 실거래가격지수',interval:'1M',kind:'unavailable'}}/>);
     assert.equal(fixture.document.querySelectorAll('.atlas-quote-hud').length,1);
     assert.equal(fixture.document.querySelector('.atlas-quote-hud'),hud);
@@ -219,6 +295,9 @@ test('standalone RSI criteria summaries own keyboard input while the chart short
     Object.defineProperty(dialog,'open',{configurable:true,get:()=>dialog.hasAttribute('open')});
     Object.assign(dialog,{showModal(){dialog.setAttribute('open','');},close(){if(dialog.hasAttribute('open')){dialog.removeAttribute('open');dialog.dispatchEvent(new dom.Event('close'));}}});
     const quoteDate=()=>fixture.document.querySelector('[data-quote-field=time]')?.getAttribute('datetime'),before=quoteDate();
+    const sourceTable=fixture.document.querySelector('.atlas-funnest-source-table table')!;
+    assert.equal(sourceTable.querySelectorAll('tbody tr').length,market.prices.length,'the complete daily table is still rendered for keyboard/readout users');
+    assert.match(sourceTable.textContent||'',/RSI14/);
     await fixture.click('[data-rsi-criteria]');assert(dialog.hasAttribute('open'));
     for(const key of ['ArrowLeft','ArrowRight','c','h','m']){
       await fixture.key('.rsi-criteria-details summary',key);
@@ -234,7 +313,7 @@ test('standalone RSI criteria summaries own keyboard input while the chart short
     assert.equal(dialog.getAttribute('data-rsi-dialog'),'backtest','the open dialog switches to the requested tab');
     assert.equal(scrollBody.scrollTop,0,'a dialog that changes tab restarts at its own top');
     await fixture.click('[data-rsi-dialog-close]');assert.equal(dialog.hasAttribute('open'),false);
-    await fixture.key('.rsi-chart-canvas>svg','ArrowLeft');assert.notEqual(quoteDate(),before,'normal chart navigation resumes');
+    await fixture.key('.rsi-chart-canvas svg','ArrowLeft');assert.notEqual(quoteDate(),before,'normal chart navigation resumes');
   }finally{await fixture.cleanup();}
 });
 
@@ -278,49 +357,25 @@ test('every housing HUD preserves an unpublished selected month with missing pri
   }
 });
 
-test('edge evidence groups stay inside the price plot while their guides and selection retain the original dates', async () => {
+test('Funnest annotation list retains all dated evidence and judgment actions across viewport sizes', async () => {
   const series:InstrumentSeries={frequency:'daily',prices:[['2025-01-01',10],['2025-12-31',20]],bars:[],timeline:['2025-01-01','2025-12-31'],volumes:[]};
-  for(const [width,height]of [[320,808],[390,338],[1335,820]]){
-    const selected:string[]=[],picked:string[]=[],opened:string[]=[];
+  for(const [width,height] of [[320,808],[390,338],[1335,820]]){
+    const selected:string[]=[],opened:string[]=[];
     const marker=(id:string,date:string,kind:'evidence'|'judgment',chosen=false):InstrumentMarker=>({id,date,kind,label:kind==='evidence'?'E':'J',title:id,selected:chosen,onSelect:()=>selected.push(id)});
-    const markers=[marker('left-selected','2025-01-01','evidence',true),marker('left-other','2025-01-01','evidence'),
-      marker('left-judgment','2025-01-01','judgment'),marker('near-left','2025-01-02','evidence'),
-      marker('near-right','2025-12-30','evidence'),marker('right-selected','2025-12-31','evidence',true),
-      marker('right-other','2025-12-31','evidence'),marker('right-judgment','2025-12-31','judgment')];
+    const markers=[marker('left-selected','2025-01-01','evidence',true),marker('left-other','2025-01-01','evidence'),marker('left-judgment','2025-01-01','judgment'),marker('near-left','2025-01-02','evidence'),
+      marker('near-right','2025-12-30','evidence'),marker('right-selected','2025-12-31','evidence',true),marker('right-other','2025-12-31','evidence'),marker('right-judgment','2025-12-31','judgment')];
     const fixture=await mount(<RsiChartCanvas symbol="HYPE" unit="USDC" series={series} prices={series.prices} bars={[]} rows={[]}
       view={initialInstrumentView(series)} active menuPulse={0} hover={null} svgRef={{current:null}} markers={markers}
-      onView={()=>{}} onStart={()=>{}} onEnd={()=>{}} onHover={()=>{}} onPick={pick=>picked.push(pick.date)} onMarker={()=>opened.push('details')}/>,undefined,undefined,{width,height});
+      onView={()=>{}} onStart={()=>{}} onEnd={()=>{}} onHover={()=>{}} onPick={()=>{}} onMarker={()=>opened.push('details')}/>,undefined,undefined,{width,height});
     try{
-      const svg=fixture.document.querySelector('.rsi-chart-canvas > svg')!,left=Number(svg.getAttribute('data-plot-left')),right=Number(svg.getAttribute('data-plot-right'));
-      assert.equal(svg.getAttribute('viewBox'),`0 0 ${width} ${height}`);
-      const groups=[...fixture.document.querySelectorAll('.theme-event-mark')];assert.equal(groups.length,6);
-      const bounds=groups.map(group=>{const rect=group.querySelector('rect')!;return {left:Number(rect.getAttribute('x'))-1,right:Number(rect.getAttribute('x'))+Number(rect.getAttribute('width'))+1,
-        top:Number(rect.getAttribute('y'))-1,bottom:Number(rect.getAttribute('y'))+Number(rect.getAttribute('height'))+1};});
-      for(const b of bounds)assert(b.left>=left&&b.right<=right,`${width}px: the badge including its selected stroke must not enter either gutter`);
-      for(let i=0;i<bounds.length;i++)for(let j=i+1;j<bounds.length;j++){
-        const a=bounds[i],b=bounds[j];assert(a.right<=b.left||b.right<=a.left||a.bottom<=b.top||b.bottom<=a.top,'Clamped badge centers must determine the collision lanes');
-      }
-      for(const group of groups){
-        const stamp=group.getAttribute('data-date')!,kind=group.classList.contains('evidence')?'evidence':'judgment';
-        const expected=left+(day(stamp)-day('2025-01-01'))/(day('2025-12-31')-day('2025-01-01'))*(right-left);
-        const guide=fixture.document.querySelector(`.theme-event-guide.${kind}[data-date="${stamp}"]`)!;
-        assert(guide,'The badge must retain its dated guide');
-        assert.equal(Number(group.getAttribute('data-anchor-x')),expected);
-        assert.equal(Number(guide.getAttribute('x1')),expected);assert.equal(guide.getAttribute('x1'),guide.getAttribute('x2'));
-        assert.equal(guide.getAttribute('pointer-events'),'none');assert.equal(guide.getAttribute('aria-hidden'),'true');
-        assert.equal(group.querySelector('line'),null,'The date guide is outside the button hit area');
-        assert.equal(group.getAttribute('role'),'button');assert.equal(group.getAttribute('tabindex'),'0');
-        assert(group.getAttribute('aria-label')!.includes(stamp));
-      }
-      const first=groups.find(group=>group.classList.contains('evidence')&&group.getAttribute('data-date')==='2025-01-01')!;
-      const last=groups.find(group=>group.classList.contains('evidence')&&group.getAttribute('data-date')==='2025-12-31')!;
-      assert.equal(first.querySelector('text')!.textContent,'E2');assert.equal(last.querySelector('text')!.textContent,'E2');
-      assert(Number(first.querySelector('text')!.getAttribute('x'))>Number(first.getAttribute('data-anchor-x')));
-      assert(Number(last.querySelector('text')!.getAttribute('x'))<Number(last.getAttribute('data-anchor-x')));
-      await fixture.click('.theme-event-mark.evidence[data-date="2025-12-31"]');
-      await fixture.key('.theme-event-mark.evidence[data-date="2025-01-01"]','Enter');
-      await fixture.key('.theme-event-mark.judgment[data-date="2025-12-31"]',' ');
-      assert.deepEqual(selected,['right-selected','left-selected','right-judgment']);assert.deepEqual(picked,[]);assert.equal(opened.length,3);
+      const list=fixture.document.querySelector('[aria-label="차트 근거·판정 표식"]')!;
+      const buttons=[...list.querySelectorAll('button')];
+      assert.equal(buttons.length,8,`${width}px: all annotations, including dates without an exact plotted slot, remain available`);
+      assert(buttons.some(button=>button.textContent?.includes('2025-01-02 · 근거 · near-left')));
+      assert(buttons.some(button=>button.textContent?.includes('2025-12-30 · 근거 · near-right')));
+      assert.equal(buttons.filter(button=>button.getAttribute('aria-pressed')==='true').length,2);
+      await fixture.click('[aria-label="차트 근거·판정 표식"] button');
+      assert.deepEqual(selected,['left-selected']);assert.deepEqual(opened,['details']);
     }finally{await fixture.cleanup();}
   }
 });
@@ -330,10 +385,8 @@ test('ETF price axes expose the original snapshot USD and KRW units above the pl
     const market=marketSnapshot.markets.find((item:{id:string})=>item.id===id);assert.equal(market.unit,unit);
     const html=renderToStaticMarkup(<RsiWorkbench symbol={symbol} market={market} snapshot={marketSnapshot} now={new Date(marketSnapshot.generatedAt)}
       rows={[]} epoch={1} active embedded={false} onDate={()=>{}} comparison={null} references={null}/>);
-    const document=parseHTML(`<html><body>${html}</body></html>`).document,svg=document.querySelector('.rsi-chart-canvas > svg')!,label=svg.querySelector('.rsi-price-unit')!;
+    const document=parseHTML(`<html><body>${html}</body></html>`).document,label=document.querySelector('.atlas-funnest-axis-unit');
     assert(label,`${symbol}: a unit is required without opening a disclosure`);assert.equal(label.textContent,unit);
-    assert(Number(label.getAttribute('x'))>Number(svg.getAttribute('data-plot-right')));
-    assert(Number(label.getAttribute('y'))<Number(svg.getAttribute('data-plot-top')));
   }
 });
 
@@ -438,17 +491,103 @@ test('housing parent initializes each newly selected region independently and re
 test('HYPE parent shares chart settings and retains evidence selection without a permanent inspector', async t => {
   const cache: ThemeCache = {}, fixture = await mount(<ThemePanel cache={cache} embedded epoch={9}/>, savedSource); t.after(fixture.cleanup);
   await fixture.ready('.theme-price-chart');
-  assert.equal(fixture.document.querySelector('.theme-price-chart .rsi-price-unit')?.textContent,'USDC');
+  assert.equal(fixture.document.querySelector('.theme-price-chart .atlas-funnest-axis-unit')?.textContent,'USDC');
   const message = (action: string, value?: unknown) => fixture.message({ kind: 'atlas:center-command', symbol: 'HYPE', epoch: 9, action, value });
   assert(fixture.document.querySelector('.theme-price-chart')); assert.equal(fixture.document.querySelector('.theme-inspector'), null);
+  const sourceDisclosure = fixture.document.querySelector('.atlas-funnest-source-table')!;
+  assert.equal(sourceDisclosure.firstElementChild?.tagName.toLowerCase(), 'summary', 'native disclosure summary remains its first semantic child');
+  assert(sourceDisclosure.querySelector('.atlas-funnest-source-body .atlas-funnest-marker-list'), 'evidence and judgment markers live in the same bounded disclosure as source data');
+  assert(sourceDisclosure.querySelector('.atlas-funnest-source-body .atlas-funnest-table-scroll table tbody tr'), 'complete source rows remain in the disclosure body');
+  assert.equal(fixture.document.querySelectorAll(':scope > .atlas-funnest-marker-list').length, 0, 'the unbounded standalone marker list is removed');
   await message('zoom', .6); assert.equal(cache.view?.start, cache.chart?.view?.start, 'theme event navigation and the shared range have one retained value');
   await message('frequency', 'weekly'); assert.equal(cache.chart?.view?.frequency, 'weekly');
   await message('tab', 'records'); assert(fixture.document.querySelector('[aria-label="연기신 판정 기록 표"]'));
   await message('pane', 'data'); assert(fixture.document.querySelector('[aria-label="선택 근거와 판정"]'));
   await message('fit');
-  await fixture.click('.theme-event-mark.evidence'); const selected = cache.evidence;
+  const disclosure = fixture.document.querySelector('.atlas-funnest-source-table')!; disclosure.setAttribute('open','');
+  const rangeBeforePanelInput = [cache.chart?.view?.start,cache.chart?.view?.end];
+  assert.equal(fixture.dispatch('.atlas-funnest-source-body','wheel',{deltaY:-120,clientX:240}),false,'drawer wheel remains available for native scrolling');
+  for (const key of ['ArrowUp','ArrowDown','Home','End',' ']) await fixture.key('.atlas-funnest-source-body',key);
+  assert.deepEqual([cache.chart?.view?.start,cache.chart?.view?.end],rangeBeforePanelInput,'wheel and keyboard navigation inside the disclosure do not alter the chart range');
+  await message('tool','pan');
+  const panRange=[cache.chart?.view?.start,cache.chart?.view?.end];
+  fixture.dispatch('.atlas-funnest-table-scroll','pointerdown',{button:0,clientX:20});
+  await fixture.dispatchWindow('pointermove',{clientX:220}); await fixture.dispatchWindow('pointerup');
+  assert.deepEqual([cache.chart?.view?.start,cache.chart?.view?.end],panRange,'horizontal table-drag input cannot start chart panning');
+  await fixture.click('.atlas-funnest-marker-list button'); const selected = cache.evidence;
   assert(selected, 'the evidence marker keeps its real source owner'); assert(fixture.document.querySelector('.rsi-workbench-panel'), 'another marker does not close the inspector');
   await fixture.key('.rsi-workbench-panel header button', 'Escape'); assert.equal(fixture.document.querySelector('.theme-inspector'), null);
   await message('pane', 'method'); assert.match(fixture.document.querySelector('.rsi-workbench-panel')!.textContent!, /HYPE\/USDC 현물/);
   assert.match(fixture.document.querySelector('.rsi-workbench-panel')!.textContent!, /마지막 주는 제공된 일봉까지/);
+});
+
+
+test('selected-point label is suppressed at a real marker while selected index/date remain intact',()=>{
+  assert.match(plotSource, /markersAt\.some\(marker => marker\.at === selectedIndex\)/);
+  assert.match(plotSource, /labelPosition=\{selectedLabelPosition\}/);
+  assert.match(plotSource, /const selectedLabelPosition = edgeSafePointLabelPosition\(selectedIndex/);
+  assert.match(plotSource, /const dateTickSpacing = chartWidth <= 500 \? 105 : 120/);
+  assert.match(plotSource, /<YAxis axisId="price" width=\{68\}/);
+});
+
+test('source disclosure is a bounded independently scrollable overlay with a reachable 44px summary and marker targets', async () => {
+  const css = await readFile(new URL('../../apps/web/src/instrument-workbench.css', import.meta.url), 'utf8');
+  assert.match(css, /(?:^|\n)\.atlas-funnest-instrument-plot\s*\{[^}]*position:\s*relative/);
+  assert.doesNotMatch(css, /\.instrument-workbench\s+\.atlas-funnest-instrument-plot\s*\{/);
+  assert.match(css, /\.atlas-funnest-instrument-plot\s+\.atlas-funnest-source-table\s*\{[^}]*position:\s*absolute[^}]*inset:\s*auto 0 0[^}]*max-height:\s*100%/);
+  assert.match(css, /\.atlas-funnest-instrument-plot\s+\.atlas-funnest-source-table\[open\]\s*\{\s*height:\s*min\(420px, 100%\)/);
+  assert.match(css, /\.atlas-funnest-instrument-plot\s+\.atlas-funnest-source-table\s*>\s*summary\s*\{[^}]*position:\s*absolute[^}]*inset:\s*auto 0 0[^}]*height:\s*44px/);
+  assert.match(css, /\.atlas-funnest-instrument-plot\s+\.atlas-funnest-source-body\s*\{[^}]*position:\s*absolute[^}]*inset:\s*0 0 44px[^}]*overflow:\s*auto/);
+  const panelHeight = Number(css.match(/\.atlas-funnest-instrument-plot\s+\.atlas-funnest-source-table\[open\]\s*\{\s*height:\s*min\((\d+)px, 100%\)/)?.[1]);
+  const closeHeight = Number(css.match(/\.atlas-funnest-instrument-plot\s+\.atlas-funnest-source-table\s*>\s*summary\s*\{[^}]*height:\s*(\d+)px/)?.[1]);
+  assert.equal(panelHeight - closeHeight, 376, 'the 420px panel reserves the close bar, leaving a finite 376px body');
+  assert.match(css, /\.atlas-funnest-instrument-plot\s+\.atlas-funnest-table-scroll\s*\{[^}]*overflow:\s*auto/);
+  assert.match(css, /\.atlas-funnest-instrument-plot\s+\.atlas-funnest-marker-list button\s*\{[^}]*min-height:\s*44px/);
+  assert.match(css, /\.atlas-funnest-instrument-plot\s+\.atlas-funnest-source-table\s*>\s*summary:focus-visible[^}]*outline:/);
+  assert.doesNotMatch(css, /(?:^|\n)\.atlas-funnest-source-table\s*\{/);
+  assert.match(css, /\.atlas-funnest-instrument-plot\s*\{[^}]*position:\s*relative/);
+  assert.match(plotSource, /const isPlotControlTarget = \(target: EventTarget \| null\)/);
+  assert.match(plotSource, /onWheel=\{event => \{ if \(isPlotControlTarget\(event\.target\)\) return; event\.preventDefault\(\)/);
+  assert.match(plotSource, /onPointerDown=\{event => \{ if \(isPlotControlTarget\(event\.target\) \|\| !active/);
+  assert.match(plotSource, /onClick=\{event => \{ if \(isPlotControlTarget\(event\.target\)\) return;/);
+  assert.match(plotSource, /onContextMenu=\{event => \{ if \(isPlotControlTarget\(event\.target\)\) return;/);
+  assert.match(plotSource, /onKeyDown=\{event => \{ if \(isPlotControlTarget\(event\.target\)\) return;/);
+});
+
+test('native volume scaling preserves the original lower strip without changing observations or filling gaps',()=>{
+  const values=[null,0,9_000_000],averages=[null,4_000_000,10_000_000],original=structuredClone({values,averages});
+  for(const height of [180,478,900])for(const instrument of [false,true]){
+    const result=instrumentVolumeScale(values,averages,height,instrument);
+    const expected=Math.min(height,instrument?Math.min(96,Math.max(24,height*.17)):48);
+    assert.equal(result.maximum,10_000_000);assert.equal(result.stripHeight,expected);
+    assert.ok(Math.abs(result.maximum/result.domain.max*height-expected)<1e-9,'Funnest maps the actual maximum into the preserved volume-strip height');
+    assert(result.ticks.every(value=>value>=0&&value<=result.maximum));
+  }
+  assert.deepEqual({values,averages},original);
+  assert.deepEqual(instrumentVolumeScale([null,0],[],478,true).ticks,[0],'no nonzero observation or label is invented');
+});
+
+test('RSI HUD obstacles come from actual signal-label DOMRects in the plot owner coordinate space',()=>{
+  const {document}=parseHTML('<div id="plot"><div class="atlas-funnest-instrument-plot"><svg><text>Buy 33.5</text><text>Sell 43</text><text>9,000,000</text><text>Buy 29.5</text></svg></div></div>');
+  const root=document.querySelector('#plot')!,labels=[...root.querySelectorAll('text')];
+  Object.defineProperty(root,'getBoundingClientRect',{value:()=>({left:100,top:60,width:917,height:600})});
+  for(const [index,node]of labels.entries())Object.defineProperty(node,'getBoundingClientRect',{value:()=>({left:600+index*80,top:100+index*15,width:index===3?0:44,height:13})});
+  assert.deepEqual(readRsiSignalLabelBounds(root),[{x:500,y:40,width:44,height:13},{x:580,y:55,width:44,height:13}]);
+});
+
+
+test('Funnest axis units align to the price gutter without requiring a housing/theme-only ancestor', async () => {
+  const css = await readFile(new URL('../../apps/web/src/instrument-workbench.css', import.meta.url), 'utf8');
+  const rule = css.match(/(?:^|\n)\.atlas-funnest-instrument-plot\s*>\s*\.atlas-funnest-axis-unit\s*\{([^}]+)\}/);
+  assert.ok(rule, 'RSI mounts share the plot class, but not the instrument-workbench ancestor');
+  assert.match(rule[1], /text-align:\s*right/);
+  assert.match(rule[1], /width:\s*100%/);
+  assert.match(rule[1], /box-sizing:\s*border-box/);
+});
+
+
+test('full-date axes reserve edge-anchor spacing while retaining narrow-chart ticks', async () => {
+  const source = await readFile(new URL('../../apps/web/src/components/funnest-instrument-plot.tsx', import.meta.url), 'utf8');
+  assert.match(plotSource, /const dateTickSpacing = chartWidth <= 500 \? 105 : 120/);
+  assert.equal([...source.matchAll(/<XAxis minTickSpacing=\{dateTickSpacing\}/g)].length, 3, 'price candles, price line, and RSI share date-label spacing');
 });

@@ -1,11 +1,10 @@
-// The dashboard composition (evidence, data, ipo, relay, market) keeps the
-// sidebar, header and inset content of the authored dashboard layout. Only the
-// page footer moves, into a bottom region, so its source links and info-sheet
-// opener stay reachable; on phone widths, where the sidebar is not rendered,
-// the service navigation moves into a right icon rail instead of disappearing.
+// Dashboard pages reuse the original service navigation in the header's
+// scrolling pill row. The content rail is that same live navigation owner,
+// rather than an empty hidden sibling. Documents without the dashboard header
+// retain the sidebar/vertical-rail fallback. The footer keeps its bottom owner.
 // Nothing is cloned, so ids, listeners, dialogs and data owners stay with their
 // original element, and the chart frame keeps its own regions.
-export const CONTENT_SHELL_PAGES = Object.freeze(['evidence', 'data', 'ipo', 'relay', 'market']);
+export const CONTENT_SHELL_PAGES = Object.freeze(['evidence', 'data', 'ipo', 'relay', 'market', 'conference']);
 
 // The source sheet is rendered from the price dataset, which these routes do
 // not load. The control keeps its node and its listener; while the price owner
@@ -20,6 +19,7 @@ export const SOURCE_READY_EVENT = 'atlas:comparison';
 
 export function createContentShell({ document }) {
   let rail = null, bottom = null, nav = null, footer = null;
+  let navHost = null, previousNav = null, nextNav = null, navResize = null;
   let navHome = null, navNext = null, footerHome = null, footerNext = null;
   let active = false, media = null, sourceListener = null;
   const lockedSources = new Map();
@@ -40,7 +40,75 @@ export function createContentShell({ document }) {
     bottom.dataset.shellRegion = 'bottom';
     bottom.setAttribute('role', 'contentinfo');
     bottom.setAttribute('aria-label', '자료 출처와 이용 조건');
+    const header = document.querySelector('.atlas-dashboard-header');
+    if (header) {
+      // Keep the service-navigation identity on the actual rendered owner.
+      // Its placement is the header row, not the chart's vertical workbench
+      // rail; the one original nav and its controls still move into this node.
+      navHost = rail;
+      navHost.className = 'atlas-dashboard-nav content-rail';
+      navHost.dataset.shellRegion = 'top';
+      for (const [direction, label, path] of [
+        ['previous', '이전 페이지 메뉴 보기', 'm14 6-6 6 6 6'],
+        ['next', '다음 페이지 메뉴 보기', 'm10 6 6 6-6 6'],
+      ]) {
+        const button = document.createElement('button');
+        button.type = 'button'; button.className = 'atlas-nav-scroll';
+        button.dataset.shellNavScroll = direction;
+        button.setAttribute('aria-label', label); button.title = label;
+        button.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="${path}"/></svg>`;
+        button.addEventListener('click', () => {
+          nav?.scrollBy?.({left: (direction === 'previous' ? -1 : 1) * Math.max(132, nav.clientWidth * .75), behavior: 'instant'});
+          updateNavigationScroll();
+        });
+        navHost.append(button);
+        if (direction === 'previous') previousNav = button; else nextNav = button;
+      }
+      const Resize = document.defaultView?.ResizeObserver;
+      navResize = Resize ? new Resize(() => {
+        updateNavigationScroll();
+        revealNavigationTarget(document.activeElement);
+      }) : null;
+    }
     return true;
+  }
+
+  function updateNavigationScroll() {
+    if (!navHost || !nav || nav.parentElement !== navHost) return;
+    const maximum = Math.max(0, nav.scrollWidth - nav.clientWidth);
+    previousNav.hidden = nextNav.hidden = maximum === 0;
+    previousNav.disabled = nav.scrollLeft <= 0;
+    nextNav.disabled = nav.scrollLeft >= maximum - 1;
+  }
+
+  // Native Tab may keep only the center of a wide pill in view. Reveal the
+  // whole original target inside this scroll owner, including its edge space;
+  // do not move focus or scroll the page, content cards, or chart rails.
+  function revealNavigationTarget(target) {
+    if (!navHost || !nav || nav.parentElement !== navHost ||
+        target?.parentElement !== nav || !target.matches?.('[data-atlas-page]') ||
+        typeof nav.getBoundingClientRect !== 'function' || typeof target.getBoundingClientRect !== 'function') return;
+    const owner = nav.getBoundingClientRect(), item = target.getBoundingClientRect();
+    if (!(owner.width > 0 && nav.clientWidth > 0 && item.width > 0)) return;
+    const style = document.defaultView?.getComputedStyle?.(nav);
+    const padding = side => Math.max(0, Number.parseFloat(style?.[side]) || 0);
+    const left = owner.left + nav.clientLeft + padding('paddingLeft');
+    const right = owner.left + nav.clientLeft + nav.clientWidth - padding('paddingRight');
+    if (!(right > left)) return;
+    const delta = item.left < left ? Math.floor(item.left - left)
+      : item.right > right ? Math.ceil(item.right - right) : 0;
+    if (delta) nav.scrollBy?.({left: delta, behavior: 'instant'});
+    updateNavigationScroll();
+  }
+
+  function focusNavigation(event) {
+    const target = event.target;
+    revealNavigationTarget(target);
+    // A platform may finish its default focus scroll after focusin. Recheck
+    // that same focus once the event finishes; stale targets cannot scroll.
+    queueMicrotask(() => {
+      if (document.activeElement === target) revealNavigationTarget(target);
+    });
   }
 
   // The regions exist only while a dashboard route owns them, so the price
@@ -49,7 +117,11 @@ export function createContentShell({ document }) {
   function mount() {
     const workspace = document.querySelector('.workspace');
     if (!workspace) return;
-    if (rail.parentElement !== workspace) workspace.append(rail, bottom);
+    if (navHost) {
+      const header = document.querySelector('.atlas-dashboard-header');
+      if (header && navHost.parentElement !== header) header.append(navHost);
+    } else if (rail.parentElement !== workspace) workspace.append(rail);
+    if (bottom.parentElement !== workspace) workspace.append(bottom);
     // Visibility belongs to place() alone. Writing `hidden` here as well made
     // the two functions alternate the value, and the shell's mutation observer
     // re-entered sync() on every write.
@@ -57,6 +129,9 @@ export function createContentShell({ document }) {
 
   function unmount() {
     rail.remove(); bottom.remove();
+    navHost?.remove(); navResize?.disconnect();
+    nav?.removeEventListener('scroll', updateNavigationScroll);
+    nav?.removeEventListener('focusin', focusNavigation);
   }
 
   // These routes render the site footer, whose source control belongs to the
@@ -97,9 +172,8 @@ export function createContentShell({ document }) {
     lockedSources.clear();
   }
 
-  // The authored dashboard keeps its navigation in the sidebar. The right icon
-  // rail exists only for widths where that sidebar is not rendered, so the
-  // navigation is never duplicated and never leaves a dead column behind.
+  // Compatibility owner for documents without the shared dashboard header.
+  // Its rail is used only while that document's sidebar is not rendered.
   function sidebarOwnsNav() {
     const sidebar = document.querySelector('.atlas-sidebar');
     if (!sidebar) return false;
@@ -116,12 +190,24 @@ export function createContentShell({ document }) {
     nav = nav || document.querySelector('.atlas-nav');
     if (nav) {
       if (navHome === null) { navHome = nav.parentElement; navNext = nav.nextElementSibling; }
-      // The dashboard host is the authored sidebar itself. navHome only records
-      // where the node came from so the chart frame can take it back; using it
-      // here would keep the navigation inside the chart rail the shell hides.
-      const host = sidebarOwnsNav() ? document.querySelector('.atlas-sidebar') : rail;
+      // navHome records the chart's prior owner. A dashboard uses its header,
+      // never that hidden chart rail; older documents keep their fallback host.
+      const host = navHost || (sidebarOwnsNav() ? document.querySelector('.atlas-sidebar') : rail);
       if (host && nav.parentElement !== host) {
-        if (host === rail) rail.prepend(nav); else host.append(nav);
+        const focused = nav.contains(document.activeElement) ? document.activeElement : null;
+        if (host === navHost) host.insertBefore(nav, nextNav);
+        else if (host === rail) rail.prepend(nav); else host.append(nav);
+        focused?.focus?.({preventScroll: true});
+      }
+      if (navHost) {
+        if (!nav.id) nav.id = 'atlas-primary-navigation';
+        previousNav.setAttribute('aria-controls', nav.id);
+        nextNav.setAttribute('aria-controls', nav.id);
+        nav.addEventListener('scroll', updateNavigationScroll, {passive: true});
+        nav.addEventListener('focusin', focusNavigation);
+        navResize?.observe(nav); navResize?.observe(navHost);
+        updateNavigationScroll();
+        revealNavigationTarget(document.activeElement);
       }
     }
     const hideRail = !nav || nav.parentElement !== rail;

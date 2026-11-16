@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {readFile} from 'node:fs/promises';
-import {createAtlasReplayContext,drawAtlasChartReplay} from '../dist/chart-replay-atlas.js';
+import {createAtlasReplayContext,drawAtlasChartReplayLegacy as drawAtlasChartReplay} from '../dist/chart-replay-atlas.js';
 import {drawAtlasPriceChart,forecastValueSignature} from '../dist/atlas-price-chart.js';
 import {buildLongHorizonForecast} from '../dist/long-horizon-forecast.js';
 import {utcDay,dateFromDay} from '../dist/cycle-engine.js';

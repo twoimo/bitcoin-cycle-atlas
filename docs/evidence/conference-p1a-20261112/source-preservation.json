@@ -1,0 +1,49 @@
+{
+  "kind": "conference-source-preservation",
+  "recordedAt": "2026-11-11T19:42:55.055701+00:00",
+  "baselineCommit": "38554a4b076ebfc5b7e519ec048e34b63a13bfb8",
+  "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "sourceTree": "7ce03ecfccd2b953c50d4f0efd10afa45b97a790",
+  "unchangedFiles": [
+    {
+      "path": "scripts/verify-responsive-workbench-browser.mjs",
+      "unchanged": true,
+      "sha256": "63efc03c19f76bfdb40d665d117f21366375b46828bdb7c98973e0345165b4f5"
+    },
+    {
+      "path": "scripts/verify-wp6-browser.mjs",
+      "unchanged": true,
+      "sha256": "0ce6b6a5b0c2122d8b6ad16dd768d41efddbbd8041c4f7ebee611b90d39471a2"
+    },
+    {
+      "path": "scripts/verify-chart-replay-browser.mjs",
+      "unchanged": true,
+      "sha256": "e00c1de8b6eb02139d365ff19eefe7604a4d81ce1e9bcf1d6d5d20f5391e51a1"
+    },
+    {
+      "path": "scripts/verify-eth-candidate-browser.mjs",
+      "unchanged": true,
+      "sha256": "57e24f86746422908ea01f4357105d90966d8bd9fc4e8521a397410357ddb62f"
+    },
+    {
+      "path": "docs/conference/deck-lock-20261112.json",
+      "unchanged": true,
+      "sha256": "3602c9f07fdd44ae761e3e2c5c8d0a4124a9b4f2d31994809b0b07b9a7ed4272"
+    },
+    {
+      "path": "dist/forecast-replay.js",
+      "unchanged": true,
+      "sha256": "1263ac5f16ea9e999346431c1c11ed24274b73617c1a531870b62c6d8e0e5793"
+    }
+  ],
+  "supplementalBrowserSource": "180c55df48242ae8afe83f8b80ada457d552d2a7",
+  "changedSinceSupplementalBrowser": [
+    "dist/conference/player.js",
+    "research-data/eth-review-scope.json",
+    "scripts/build-standalone.mjs",
+    "scripts/verify-conference-browser.mjs",
+    "tests/conference-player.test.mjs",
+    "tests/standalone-packaging.test.mjs"
+  ],
+  "meaning": "The full53 run remains identified with180c55d. Equality of selected files does not relabel that execution as the final source."
+}

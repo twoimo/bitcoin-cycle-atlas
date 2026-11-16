@@ -1,0 +1,2187 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-page-heading-browser",
+  "qualifiesFullVerification": false,
+  "recordedAt": "2026-11-11T17:17:41.610Z",
+  "testedHead": "d36766ea7fbdf39d1c81cb9523462df471ee3834",
+  "sourceFiles": {
+    "dist/atlas-shell.css": "ed60ac6d05820c07f6774662f5805a44dca200259c49625bac199c1462ce2e39",
+    "dist/ui/page-description.js": "c037667d3a52d27f96154d8b4df1e1dea1c5627de665404961937a39e68e1760",
+    "scripts/verify-page-heading-browser.mjs": "9de19016ff5fe3ca10bde0d9f6f73bc99db41d18725ef2759f92a89008e5d336"
+  },
+  "chrome": "Chrome/157.0.8103.38",
+  "baseline": null,
+  "cases": [
+    {
+      "id": "BTCUSD-320",
+      "instrument": "BTCUSD",
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "failures": [
+        "h1 total=3, painted=0",
+        "heading/glyphs outside visible toolbar",
+        "heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: lab-chart-stage; horizontal clipping: lab-panel atlas-workbench; horizontal clipping: js; horizontal clipping: HTML",
+        "text overlap: lab-metrics, workbench-market-info symbol=false"
+      ],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 3,
+        "paintedH1Count": 0,
+        "heading": {
+          "left": -1,
+          "top": -1,
+          "right": 0,
+          "bottom": 63,
+          "width": 1,
+          "height": 64
+        },
+        "glyphs": [
+          {
+            "left": -1,
+            "top": 0,
+            "right": 10.046875,
+            "bottom": 14,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": -1,
+            "top": 16,
+            "right": 10.046875,
+            "bottom": 30,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": -1,
+            "top": 32,
+            "right": 10.046875,
+            "bottom": 46,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": -1,
+            "top": 48,
+            "right": 10.046875,
+            "bottom": 62,
+            "width": 11.046875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": false,
+        "glyphsInViewport": false,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "painted": false,
+        "paintIssues": [
+          "clip-path: atlas-page-intro inset(50%)",
+          "horizontal clipping: atlas-page-intro",
+          "vertical clipping: atlas-page-intro",
+          "horizontal clipping: lab-chart-stage",
+          "horizontal clipping: lab-panel atlas-workbench",
+          "horizontal clipping: js",
+          "horizontal clipping: HTML"
+        ],
+        "color": "rgb(219, 219, 219)",
+        "fontSize": "12px",
+        "lineHeight": "16px",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [
+          "lab-metrics",
+          "workbench-market-info"
+        ],
+        "symbolGlyphs": [
+          {
+            "left": 15.515625,
+            "top": 869.90625,
+            "right": 65.46875,
+            "bottom": 882.90625,
+            "width": 49.953125,
+            "height": 13
+          }
+        ],
+        "symbolCollision": false,
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 852,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 48
+          },
+          "plot": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 852,
+            "width": 320,
+            "height": 852
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": {
+            "left": 10,
+            "top": 8,
+            "right": 166,
+            "bottom": 55,
+            "width": 156,
+            "height": 47
+          },
+          "source": {
+            "left": 10,
+            "top": 58,
+            "right": 166,
+            "bottom": 82,
+            "width": 156,
+            "height": 24
+          }
+        }
+      },
+      "screenshot": {
+        "file": "BTCUSD-320.png",
+        "sha256": "5e9585ded954bfcf13f095c517ee0c8008e7553e7f7715d6326054482f05a99a",
+        "bytes": 89155
+      }
+    },
+    {
+      "id": "ETHUSD-320",
+      "instrument": "ETHUSD",
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "failures": [
+        "h1 total=1, painted=0",
+        "heading/glyphs outside visible toolbar",
+        "heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main; horizontal clipping: js; horizontal clipping: HTML",
+        "text overlap: eth-readout, eth-readout-source symbol=false"
+      ],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 0,
+        "heading": {
+          "left": -1,
+          "top": -1,
+          "right": 0,
+          "bottom": 63,
+          "width": 1,
+          "height": 64
+        },
+        "glyphs": [
+          {
+            "left": -1,
+            "top": 0,
+            "right": 10.046875,
+            "bottom": 14,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": -1,
+            "top": 16,
+            "right": 10.046875,
+            "bottom": 30,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": -1,
+            "top": 32,
+            "right": 10.046875,
+            "bottom": 46,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": -1,
+            "top": 48,
+            "right": 10.046875,
+            "bottom": 62,
+            "width": 11.046875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": false,
+        "glyphsInViewport": false,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "painted": false,
+        "paintIssues": [
+          "clip-path: atlas-page-intro inset(50%)",
+          "horizontal clipping: atlas-page-intro",
+          "vertical clipping: atlas-page-intro",
+          "horizontal clipping: main",
+          "horizontal clipping: js",
+          "horizontal clipping: HTML"
+        ],
+        "color": "rgb(219, 219, 219)",
+        "fontSize": "12px",
+        "lineHeight": "16px",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [
+          "eth-readout",
+          "eth-readout-source"
+        ],
+        "symbolGlyphs": [
+          {
+            "left": 15.890625,
+            "top": 869.96875,
+            "right": 66.109375,
+            "bottom": 882.96875,
+            "width": 50.21875,
+            "height": 13
+          }
+        ],
+        "symbolCollision": false,
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 852,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 48
+          },
+          "plot": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 852,
+            "width": 320,
+            "height": 852
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": {
+            "left": 9,
+            "top": 7,
+            "right": 311,
+            "bottom": 47.59375,
+            "width": 302,
+            "height": 40.59375
+          },
+          "source": {
+            "left": 9,
+            "top": 48,
+            "right": 127.5625,
+            "bottom": 63.390625,
+            "width": 118.5625,
+            "height": 15.390625
+          }
+        }
+      },
+      "screenshot": {
+        "file": "ETHUSD-320.png",
+        "sha256": "c3b4933070ed157141786e2b3451b596e3e231e5b81fdbf8c5d87a9734ce9a6e",
+        "bytes": 65775
+      }
+    },
+    {
+      "id": "MSTR-320",
+      "instrument": "MSTR",
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "failures": [
+        "h1 total=1, painted=0",
+        "heading/glyphs outside visible toolbar",
+        "heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main; horizontal clipping: js; horizontal clipping: HTML",
+        "text overlap: equity-readout, eth-readout-source symbol=false"
+      ],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 0,
+        "heading": {
+          "left": -1,
+          "top": -1,
+          "right": 0,
+          "bottom": 63,
+          "width": 1,
+          "height": 64
+        },
+        "glyphs": [
+          {
+            "left": -1,
+            "top": 0,
+            "right": 10.046875,
+            "bottom": 14,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": -1,
+            "top": 16,
+            "right": 10.046875,
+            "bottom": 30,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": -1,
+            "top": 32,
+            "right": 10.046875,
+            "bottom": 46,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": -1,
+            "top": 48,
+            "right": 10.046875,
+            "bottom": 62,
+            "width": 11.046875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": false,
+        "glyphsInViewport": false,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "painted": false,
+        "paintIssues": [
+          "clip-path: atlas-page-intro inset(50%)",
+          "horizontal clipping: atlas-page-intro",
+          "vertical clipping: atlas-page-intro",
+          "horizontal clipping: main",
+          "horizontal clipping: js",
+          "horizontal clipping: HTML"
+        ],
+        "color": "rgb(219, 219, 219)",
+        "fontSize": "12px",
+        "lineHeight": "16px",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [
+          "equity-readout",
+          "eth-readout-source"
+        ],
+        "symbolGlyphs": [
+          {
+            "left": 23.578125,
+            "top": 869.96875,
+            "right": 58.421875,
+            "bottom": 882.96875,
+            "width": 34.84375,
+            "height": 13
+          }
+        ],
+        "symbolCollision": false,
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 852,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 48
+          },
+          "plot": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 852,
+            "width": 320,
+            "height": 852
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": {
+            "left": 9,
+            "top": 7,
+            "right": 233,
+            "bottom": 47.59375,
+            "width": 224,
+            "height": 40.59375
+          },
+          "source": {
+            "left": 9,
+            "top": 48,
+            "right": 83.71875,
+            "bottom": 63.390625,
+            "width": 74.71875,
+            "height": 15.390625
+          }
+        }
+      },
+      "screenshot": {
+        "file": "MSTR-320.png",
+        "sha256": "98cadd5bc88ab7dbb6acf6ba33a06c1e64d7e1bec4f3ee18b061296255203f06",
+        "bytes": 63715
+      }
+    },
+    {
+      "id": "BMNR-320",
+      "instrument": "BMNR",
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "failures": [
+        "h1 total=1, painted=0",
+        "heading/glyphs outside visible toolbar",
+        "heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main; horizontal clipping: js; horizontal clipping: HTML",
+        "text overlap: equity-readout, eth-readout-source symbol=false"
+      ],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 0,
+        "heading": {
+          "left": -1,
+          "top": -1,
+          "right": 0,
+          "bottom": 63,
+          "width": 1,
+          "height": 64
+        },
+        "glyphs": [
+          {
+            "left": -1,
+            "top": 0,
+            "right": 10.046875,
+            "bottom": 14,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": -1,
+            "top": 16,
+            "right": 10.046875,
+            "bottom": 30,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": -1,
+            "top": 32,
+            "right": 10.046875,
+            "bottom": 46,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": -1,
+            "top": 48,
+            "right": 10.046875,
+            "bottom": 62,
+            "width": 11.046875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": false,
+        "glyphsInViewport": false,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "painted": false,
+        "paintIssues": [
+          "clip-path: atlas-page-intro inset(50%)",
+          "horizontal clipping: atlas-page-intro",
+          "vertical clipping: atlas-page-intro",
+          "horizontal clipping: main",
+          "horizontal clipping: js",
+          "horizontal clipping: HTML"
+        ],
+        "color": "rgb(219, 219, 219)",
+        "fontSize": "12px",
+        "lineHeight": "16px",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [
+          "equity-readout",
+          "eth-readout-source"
+        ],
+        "symbolGlyphs": [
+          {
+            "left": 22.484375,
+            "top": 869.96875,
+            "right": 59.5,
+            "bottom": 882.96875,
+            "width": 37.015625,
+            "height": 13
+          }
+        ],
+        "symbolCollision": false,
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 852,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 48
+          },
+          "plot": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 852,
+            "width": 320,
+            "height": 852
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": {
+            "left": 9,
+            "top": 7,
+            "right": 233,
+            "bottom": 47.59375,
+            "width": 224,
+            "height": 40.59375
+          },
+          "source": {
+            "left": 9,
+            "top": 48,
+            "right": 83.71875,
+            "bottom": 63.390625,
+            "width": 74.71875,
+            "height": 15.390625
+          }
+        }
+      },
+      "screenshot": {
+        "file": "BMNR-320.png",
+        "sha256": "8764c02a7d60a6c1dd53849607b4532da9f4a662fa0631f264ce75e288f6cc8f",
+        "bytes": 57599
+      }
+    },
+    {
+      "id": "compare-320",
+      "instrument": "compare",
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "failures": [
+        "h1 total=3, painted=0",
+        "heading/glyphs outside visible toolbar",
+        "heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: lab-chart-stage; horizontal clipping: lab-panel atlas-workbench; horizontal clipping: js; horizontal clipping: HTML"
+      ],
+      "state": {
+        "title": "사이클 비교",
+        "h1Count": 3,
+        "paintedH1Count": 0,
+        "heading": {
+          "left": -1,
+          "top": -1,
+          "right": 0,
+          "bottom": 79,
+          "width": 1,
+          "height": 80
+        },
+        "glyphs": [
+          {
+            "left": -1,
+            "top": 0,
+            "right": 10.046875,
+            "bottom": 14,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": -1,
+            "top": 16,
+            "right": 10.046875,
+            "bottom": 30,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": -1,
+            "top": 32,
+            "right": 10.046875,
+            "bottom": 46,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": -1,
+            "top": 48,
+            "right": 10.046875,
+            "bottom": 62,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": -1,
+            "top": 64,
+            "right": 10.046875,
+            "bottom": 78,
+            "width": 11.046875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": false,
+        "glyphsInViewport": false,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "painted": false,
+        "paintIssues": [
+          "clip-path: atlas-page-intro inset(50%)",
+          "horizontal clipping: atlas-page-intro",
+          "vertical clipping: atlas-page-intro",
+          "horizontal clipping: lab-chart-stage",
+          "horizontal clipping: lab-panel atlas-workbench",
+          "horizontal clipping: js",
+          "horizontal clipping: HTML"
+        ],
+        "color": "rgb(219, 219, 219)",
+        "fontSize": "12px",
+        "lineHeight": "16px",
+        "describedBy": "atlas-page-description",
+        "description": "반감일 이후 경과일을 기준으로 과거 사이클과 현재 사이클을 겹쳐 비교합니다. 기준: 일별 종가(UTC).",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolCollision": false,
+        "geometry": {
+          "toolbar": {
+            "left": 0,
+            "top": 852,
+            "right": 320,
+            "bottom": 900,
+            "width": 320,
+            "height": 48
+          },
+          "plot": {
+            "left": 0,
+            "top": 0,
+            "right": 320,
+            "bottom": 852,
+            "width": 320,
+            "height": 852
+          },
+          "bottom": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "readout": null,
+          "source": null
+        }
+      },
+      "screenshot": {
+        "file": "compare-320.png",
+        "sha256": "15e73f9b52cf305013015040ca519acf7c6193d9ff21a01816f612a82db82ad1",
+        "bytes": 56885
+      }
+    },
+    {
+      "id": "BTCUSD-768",
+      "instrument": "BTCUSD",
+      "width": 768,
+      "height": 900,
+      "status": "failed",
+      "failures": [
+        "h1 total=3, painted=0",
+        "heading/glyphs outside visible toolbar",
+        "heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: lab-chart-stage; horizontal clipping: lab-panel atlas-workbench",
+        "text overlap: lab-metrics, workbench-market-info, chart-indicator-manager symbol=false"
+      ],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 3,
+        "paintedH1Count": 0,
+        "heading": {
+          "left": 55,
+          "top": 51,
+          "right": 56,
+          "bottom": 115,
+          "width": 1,
+          "height": 64
+        },
+        "glyphs": [
+          {
+            "left": 55,
+            "top": 52,
+            "right": 66.046875,
+            "bottom": 66,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 68,
+            "right": 66.046875,
+            "bottom": 82,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 84,
+            "right": 66.046875,
+            "bottom": 98,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 100,
+            "right": 66.046875,
+            "bottom": 114,
+            "width": 11.046875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "painted": false,
+        "paintIssues": [
+          "clip-path: atlas-page-intro inset(50%)",
+          "horizontal clipping: atlas-page-intro",
+          "vertical clipping: atlas-page-intro",
+          "horizontal clipping: lab-chart-stage",
+          "horizontal clipping: lab-panel atlas-workbench"
+        ],
+        "color": "rgb(219, 219, 219)",
+        "fontSize": "12px",
+        "lineHeight": "16px",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [
+          "lab-metrics",
+          "workbench-market-info",
+          "chart-indicator-manager"
+        ],
+        "symbolGlyphs": [
+          {
+            "left": 68,
+            "top": 15.59375,
+            "right": 131.578125,
+            "bottom": 31.59375,
+            "width": 63.578125,
+            "height": 16
+          }
+        ],
+        "symbolCollision": false,
+        "geometry": {
+          "toolbar": {
+            "left": 52,
+            "top": 0,
+            "right": 768,
+            "bottom": 48,
+            "width": 716,
+            "height": 48
+          },
+          "plot": {
+            "left": 56,
+            "top": 52,
+            "right": 719,
+            "bottom": 852,
+            "width": 663,
+            "height": 800
+          },
+          "bottom": {
+            "left": 56,
+            "top": 852,
+            "right": 719,
+            "bottom": 900,
+            "width": 663,
+            "height": 48
+          },
+          "readout": {
+            "left": 66,
+            "top": 60,
+            "right": 386.453125,
+            "bottom": 81,
+            "width": 320.453125,
+            "height": 21
+          },
+          "source": {
+            "left": 66,
+            "top": 84,
+            "right": 295.328125,
+            "bottom": 103,
+            "width": 229.328125,
+            "height": 19
+          }
+        }
+      },
+      "screenshot": {
+        "file": "BTCUSD-768.png",
+        "sha256": "203f824ee90d11b887699d3b0a6dba8fb44515a2bd5319858b093f18efc94fe7",
+        "bytes": 180671
+      }
+    },
+    {
+      "id": "ETHUSD-768",
+      "instrument": "ETHUSD",
+      "width": 768,
+      "height": 900,
+      "status": "failed",
+      "failures": [
+        "h1 total=1, painted=0",
+        "heading/glyphs outside visible toolbar",
+        "heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main",
+        "text overlap: chart-indicator-manager symbol=false"
+      ],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 0,
+        "heading": {
+          "left": 55,
+          "top": 47,
+          "right": 56,
+          "bottom": 111,
+          "width": 1,
+          "height": 64
+        },
+        "glyphs": [
+          {
+            "left": 55,
+            "top": 48,
+            "right": 66.046875,
+            "bottom": 62,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 64,
+            "right": 66.046875,
+            "bottom": 78,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 80,
+            "right": 66.046875,
+            "bottom": 94,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 96,
+            "right": 66.046875,
+            "bottom": 110,
+            "width": 11.046875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "painted": false,
+        "paintIssues": [
+          "clip-path: atlas-page-intro inset(50%)",
+          "horizontal clipping: atlas-page-intro",
+          "vertical clipping: atlas-page-intro",
+          "horizontal clipping: main"
+        ],
+        "color": "rgb(219, 219, 219)",
+        "fontSize": "12px",
+        "lineHeight": "16px",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [
+          "chart-indicator-manager"
+        ],
+        "symbolGlyphs": [
+          {
+            "left": 68,
+            "top": 15.15625,
+            "right": 131.90625,
+            "bottom": 31.15625,
+            "width": 63.90625,
+            "height": 16
+          }
+        ],
+        "symbolCollision": false,
+        "geometry": {
+          "toolbar": {
+            "left": 52,
+            "top": 0,
+            "right": 768,
+            "bottom": 48,
+            "width": 716,
+            "height": 48
+          },
+          "plot": {
+            "left": 56,
+            "top": 48,
+            "right": 719,
+            "bottom": 852,
+            "width": 663,
+            "height": 804
+          },
+          "bottom": {
+            "left": 56,
+            "top": 852,
+            "right": 719,
+            "bottom": 900,
+            "width": 663,
+            "height": 48
+          },
+          "readout": {
+            "left": 68,
+            "top": 57,
+            "right": 401.34375,
+            "bottom": 79.9375,
+            "width": 333.34375,
+            "height": 22.9375
+          },
+          "source": {
+            "left": 68,
+            "top": 79,
+            "right": 186.5625,
+            "bottom": 94.390625,
+            "width": 118.5625,
+            "height": 15.390625
+          }
+        }
+      },
+      "screenshot": {
+        "file": "ETHUSD-768.png",
+        "sha256": "a57496ac9fb908a5dc9d6bf42af5dc58b72a4843d6bcefdcbe066a3c875763fe",
+        "bytes": 116956
+      }
+    },
+    {
+      "id": "MSTR-768",
+      "instrument": "MSTR",
+      "width": 768,
+      "height": 900,
+      "status": "failed",
+      "failures": [
+        "h1 total=1, painted=0",
+        "heading/glyphs outside visible toolbar",
+        "heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main",
+        "text overlap: chart-indicator-manager symbol=false"
+      ],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 0,
+        "heading": {
+          "left": 55,
+          "top": 47,
+          "right": 56,
+          "bottom": 111,
+          "width": 1,
+          "height": 64
+        },
+        "glyphs": [
+          {
+            "left": 55,
+            "top": 48,
+            "right": 66.046875,
+            "bottom": 62,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 64,
+            "right": 66.046875,
+            "bottom": 78,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 80,
+            "right": 66.046875,
+            "bottom": 94,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 96,
+            "right": 66.046875,
+            "bottom": 110,
+            "width": 11.046875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "painted": false,
+        "paintIssues": [
+          "clip-path: atlas-page-intro inset(50%)",
+          "horizontal clipping: atlas-page-intro",
+          "vertical clipping: atlas-page-intro",
+          "horizontal clipping: main"
+        ],
+        "color": "rgb(219, 219, 219)",
+        "fontSize": "12px",
+        "lineHeight": "16px",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [
+          "chart-indicator-manager"
+        ],
+        "symbolGlyphs": [
+          {
+            "left": 68,
+            "top": 15.15625,
+            "right": 112.359375,
+            "bottom": 31.15625,
+            "width": 44.359375,
+            "height": 16
+          }
+        ],
+        "symbolCollision": false,
+        "geometry": {
+          "toolbar": {
+            "left": 52,
+            "top": 0,
+            "right": 768,
+            "bottom": 48,
+            "width": 716,
+            "height": 48
+          },
+          "plot": {
+            "left": 56,
+            "top": 48,
+            "right": 719,
+            "bottom": 852,
+            "width": 663,
+            "height": 804
+          },
+          "bottom": {
+            "left": 56,
+            "top": 852,
+            "right": 719,
+            "bottom": 900,
+            "width": 663,
+            "height": 48
+          },
+          "readout": {
+            "left": 68,
+            "top": 57,
+            "right": 386.46875,
+            "bottom": 79.9375,
+            "width": 318.46875,
+            "height": 22.9375
+          },
+          "source": {
+            "left": 68,
+            "top": 79,
+            "right": 255.796875,
+            "bottom": 94.390625,
+            "width": 187.796875,
+            "height": 15.390625
+          }
+        }
+      },
+      "screenshot": {
+        "file": "MSTR-768.png",
+        "sha256": "54ce3bb5cc021717888dd2d07963ac6c7e8d47c83697eda016b801ce96b2ff53",
+        "bytes": 115598
+      }
+    },
+    {
+      "id": "BMNR-768",
+      "instrument": "BMNR",
+      "width": 768,
+      "height": 900,
+      "status": "failed",
+      "failures": [
+        "h1 total=1, painted=0",
+        "heading/glyphs outside visible toolbar",
+        "heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main"
+      ],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 0,
+        "heading": {
+          "left": 55,
+          "top": 47,
+          "right": 56,
+          "bottom": 111,
+          "width": 1,
+          "height": 64
+        },
+        "glyphs": [
+          {
+            "left": 55,
+            "top": 48,
+            "right": 66.046875,
+            "bottom": 62,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 64,
+            "right": 66.046875,
+            "bottom": 78,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 80,
+            "right": 66.046875,
+            "bottom": 94,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 96,
+            "right": 66.046875,
+            "bottom": 110,
+            "width": 11.046875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "painted": false,
+        "paintIssues": [
+          "clip-path: atlas-page-intro inset(50%)",
+          "horizontal clipping: atlas-page-intro",
+          "vertical clipping: atlas-page-intro",
+          "horizontal clipping: main"
+        ],
+        "color": "rgb(219, 219, 219)",
+        "fontSize": "12px",
+        "lineHeight": "16px",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 68,
+            "top": 15.15625,
+            "right": 115.109375,
+            "bottom": 31.15625,
+            "width": 47.109375,
+            "height": 16
+          }
+        ],
+        "symbolCollision": false,
+        "geometry": {
+          "toolbar": {
+            "left": 52,
+            "top": 0,
+            "right": 768,
+            "bottom": 48,
+            "width": 716,
+            "height": 48
+          },
+          "plot": {
+            "left": 56,
+            "top": 48,
+            "right": 719,
+            "bottom": 852,
+            "width": 663,
+            "height": 804
+          },
+          "bottom": {
+            "left": 56,
+            "top": 852,
+            "right": 719,
+            "bottom": 900,
+            "width": 663,
+            "height": 48
+          },
+          "readout": {
+            "left": 68,
+            "top": 57,
+            "right": 374.9375,
+            "bottom": 79.9375,
+            "width": 306.9375,
+            "height": 22.9375
+          },
+          "source": {
+            "left": 68,
+            "top": 79,
+            "right": 236.875,
+            "bottom": 94.390625,
+            "width": 168.875,
+            "height": 15.390625
+          }
+        }
+      },
+      "screenshot": {
+        "file": "BMNR-768.png",
+        "sha256": "1acdef2dc7b4f9a461a69d4672457d6aad94ee222f0c2897b348fbd94ddf75d1",
+        "bytes": 99728
+      }
+    },
+    {
+      "id": "compare-768",
+      "instrument": "compare",
+      "width": 768,
+      "height": 900,
+      "status": "failed",
+      "failures": [
+        "h1 total=3, painted=0",
+        "heading/glyphs outside visible toolbar",
+        "heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: lab-chart-stage; horizontal clipping: lab-panel atlas-workbench"
+      ],
+      "state": {
+        "title": "사이클 비교",
+        "h1Count": 3,
+        "paintedH1Count": 0,
+        "heading": {
+          "left": 55,
+          "top": 51,
+          "right": 56,
+          "bottom": 131,
+          "width": 1,
+          "height": 80
+        },
+        "glyphs": [
+          {
+            "left": 55,
+            "top": 52,
+            "right": 66.046875,
+            "bottom": 66,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 68,
+            "right": 66.046875,
+            "bottom": 82,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 84,
+            "right": 66.046875,
+            "bottom": 98,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 100,
+            "right": 66.046875,
+            "bottom": 114,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 116,
+            "right": 66.046875,
+            "bottom": 130,
+            "width": 11.046875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "painted": false,
+        "paintIssues": [
+          "clip-path: atlas-page-intro inset(50%)",
+          "horizontal clipping: atlas-page-intro",
+          "vertical clipping: atlas-page-intro",
+          "horizontal clipping: lab-chart-stage",
+          "horizontal clipping: lab-panel atlas-workbench"
+        ],
+        "color": "rgb(219, 219, 219)",
+        "fontSize": "12px",
+        "lineHeight": "16px",
+        "describedBy": "atlas-page-description",
+        "description": "반감일 이후 경과일을 기준으로 과거 사이클과 현재 사이클을 겹쳐 비교합니다. 기준: 일별 종가(UTC).",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolCollision": false,
+        "geometry": {
+          "toolbar": {
+            "left": 52,
+            "top": 0,
+            "right": 768,
+            "bottom": 48,
+            "width": 716,
+            "height": 48
+          },
+          "plot": {
+            "left": 56,
+            "top": 52,
+            "right": 719,
+            "bottom": 852,
+            "width": 663,
+            "height": 800
+          },
+          "bottom": {
+            "left": 56,
+            "top": 852,
+            "right": 719,
+            "bottom": 900,
+            "width": 663,
+            "height": 48
+          },
+          "readout": null,
+          "source": null
+        }
+      },
+      "screenshot": {
+        "file": "compare-768.png",
+        "sha256": "0a31bc58875b0c67a0c6b995e184c7db82419a7d074b9a8c171c70713ea84e29",
+        "bytes": 92778
+      }
+    },
+    {
+      "id": "BTCUSD-1440",
+      "instrument": "BTCUSD",
+      "width": 1440,
+      "height": 900,
+      "status": "failed",
+      "failures": [
+        "h1 total=3, painted=0",
+        "heading/glyphs outside visible toolbar",
+        "heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: lab-chart-stage; horizontal clipping: lab-panel atlas-workbench",
+        "text overlap: lab-metrics, workbench-market-info, chart-indicator-manager symbol=false"
+      ],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 3,
+        "paintedH1Count": 0,
+        "heading": {
+          "left": 55,
+          "top": 41,
+          "right": 56,
+          "bottom": 105,
+          "width": 1,
+          "height": 64
+        },
+        "glyphs": [
+          {
+            "left": 55,
+            "top": 42,
+            "right": 66.046875,
+            "bottom": 56,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 58,
+            "right": 66.046875,
+            "bottom": 72,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 74,
+            "right": 66.046875,
+            "bottom": 88,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 90,
+            "right": 66.046875,
+            "bottom": 104,
+            "width": 11.046875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "painted": false,
+        "paintIssues": [
+          "clip-path: atlas-page-intro inset(50%)",
+          "horizontal clipping: atlas-page-intro",
+          "vertical clipping: atlas-page-intro",
+          "horizontal clipping: lab-chart-stage",
+          "horizontal clipping: lab-panel atlas-workbench"
+        ],
+        "color": "rgb(219, 219, 219)",
+        "fontSize": "12px",
+        "lineHeight": "16px",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [
+          "lab-metrics",
+          "workbench-market-info",
+          "chart-indicator-manager"
+        ],
+        "symbolGlyphs": [
+          {
+            "left": 77.203125,
+            "top": 10.59375,
+            "right": 140.78125,
+            "bottom": 26.59375,
+            "width": 63.578125,
+            "height": 16
+          }
+        ],
+        "symbolCollision": false,
+        "geometry": {
+          "toolbar": {
+            "left": 52,
+            "top": 0,
+            "right": 1440,
+            "bottom": 38,
+            "width": 1388,
+            "height": 38
+          },
+          "plot": {
+            "left": 56,
+            "top": 42,
+            "right": 1391,
+            "bottom": 862,
+            "width": 1335,
+            "height": 820
+          },
+          "bottom": {
+            "left": 56,
+            "top": 862,
+            "right": 1391,
+            "bottom": 900,
+            "width": 1335,
+            "height": 38
+          },
+          "readout": {
+            "left": 66,
+            "top": 50,
+            "right": 417.21875,
+            "bottom": 71,
+            "width": 351.21875,
+            "height": 21
+          },
+          "source": {
+            "left": 66,
+            "top": 74,
+            "right": 295.328125,
+            "bottom": 93,
+            "width": 229.328125,
+            "height": 19
+          }
+        }
+      },
+      "screenshot": {
+        "file": "BTCUSD-1440.png",
+        "sha256": "35be8b6889520cabf1f1c18715081583315ad7418107fdc3806efb3510c30c15",
+        "bytes": 257750
+      }
+    },
+    {
+      "id": "ETHUSD-1440",
+      "instrument": "ETHUSD",
+      "width": 1440,
+      "height": 900,
+      "status": "failed",
+      "failures": [
+        "h1 total=1, painted=0",
+        "heading/glyphs outside visible toolbar",
+        "heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main",
+        "text overlap: chart-indicator-manager symbol=false"
+      ],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 0,
+        "heading": {
+          "left": 55,
+          "top": 41,
+          "right": 56,
+          "bottom": 105,
+          "width": 1,
+          "height": 64
+        },
+        "glyphs": [
+          {
+            "left": 55,
+            "top": 42,
+            "right": 66.046875,
+            "bottom": 56,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 58,
+            "right": 66.046875,
+            "bottom": 72,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 74,
+            "right": 66.046875,
+            "bottom": 88,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 90,
+            "right": 66.046875,
+            "bottom": 104,
+            "width": 11.046875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "painted": false,
+        "paintIssues": [
+          "clip-path: atlas-page-intro inset(50%)",
+          "horizontal clipping: atlas-page-intro",
+          "vertical clipping: atlas-page-intro",
+          "horizontal clipping: main"
+        ],
+        "color": "rgb(219, 219, 219)",
+        "fontSize": "12px",
+        "lineHeight": "16px",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [
+          "chart-indicator-manager"
+        ],
+        "symbolGlyphs": [
+          {
+            "left": 77.046875,
+            "top": 10.15625,
+            "right": 140.953125,
+            "bottom": 26.15625,
+            "width": 63.90625,
+            "height": 16
+          }
+        ],
+        "symbolCollision": false,
+        "geometry": {
+          "toolbar": {
+            "left": 52,
+            "top": 0,
+            "right": 1440,
+            "bottom": 38,
+            "width": 1388,
+            "height": 38
+          },
+          "plot": {
+            "left": 56,
+            "top": 42,
+            "right": 1391,
+            "bottom": 862,
+            "width": 1335,
+            "height": 820
+          },
+          "bottom": {
+            "left": 56,
+            "top": 862,
+            "right": 1391,
+            "bottom": 900,
+            "width": 1335,
+            "height": 38
+          },
+          "readout": {
+            "left": 68,
+            "top": 51,
+            "right": 401.34375,
+            "bottom": 73.9375,
+            "width": 333.34375,
+            "height": 22.9375
+          },
+          "source": {
+            "left": 68,
+            "top": 73,
+            "right": 186.5625,
+            "bottom": 88.390625,
+            "width": 118.5625,
+            "height": 15.390625
+          }
+        }
+      },
+      "screenshot": {
+        "file": "ETHUSD-1440.png",
+        "sha256": "edee92be5b978a00dfbd7fa0fa334e37cfa8706ba8725344d9ea5909e67b29c6",
+        "bytes": 162495
+      }
+    },
+    {
+      "id": "MSTR-1440",
+      "instrument": "MSTR",
+      "width": 1440,
+      "height": 900,
+      "status": "failed",
+      "failures": [
+        "h1 total=1, painted=0",
+        "heading/glyphs outside visible toolbar",
+        "heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main",
+        "text overlap: chart-indicator-manager symbol=false"
+      ],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 0,
+        "heading": {
+          "left": 55,
+          "top": 41,
+          "right": 56,
+          "bottom": 105,
+          "width": 1,
+          "height": 64
+        },
+        "glyphs": [
+          {
+            "left": 55,
+            "top": 42,
+            "right": 66.046875,
+            "bottom": 56,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 58,
+            "right": 66.046875,
+            "bottom": 72,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 74,
+            "right": 66.046875,
+            "bottom": 88,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 90,
+            "right": 66.046875,
+            "bottom": 104,
+            "width": 11.046875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "painted": false,
+        "paintIssues": [
+          "clip-path: atlas-page-intro inset(50%)",
+          "horizontal clipping: atlas-page-intro",
+          "vertical clipping: atlas-page-intro",
+          "horizontal clipping: main"
+        ],
+        "color": "rgb(219, 219, 219)",
+        "fontSize": "12px",
+        "lineHeight": "16px",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [
+          "chart-indicator-manager"
+        ],
+        "symbolGlyphs": [
+          {
+            "left": 86.8125,
+            "top": 10.15625,
+            "right": 131.171875,
+            "bottom": 26.15625,
+            "width": 44.359375,
+            "height": 16
+          }
+        ],
+        "symbolCollision": false,
+        "geometry": {
+          "toolbar": {
+            "left": 52,
+            "top": 0,
+            "right": 1440,
+            "bottom": 38,
+            "width": 1388,
+            "height": 38
+          },
+          "plot": {
+            "left": 56,
+            "top": 42,
+            "right": 1391,
+            "bottom": 862,
+            "width": 1335,
+            "height": 820
+          },
+          "bottom": {
+            "left": 56,
+            "top": 862,
+            "right": 1391,
+            "bottom": 900,
+            "width": 1335,
+            "height": 38
+          },
+          "readout": {
+            "left": 68,
+            "top": 51,
+            "right": 386.46875,
+            "bottom": 73.9375,
+            "width": 318.46875,
+            "height": 22.9375
+          },
+          "source": {
+            "left": 68,
+            "top": 73,
+            "right": 255.796875,
+            "bottom": 88.390625,
+            "width": 187.796875,
+            "height": 15.390625
+          }
+        }
+      },
+      "screenshot": {
+        "file": "MSTR-1440.png",
+        "sha256": "cb9456158f7e431eb813abd48b8e22d117fb03f3bd5039024a6f6e515480add0",
+        "bytes": 159698
+      }
+    },
+    {
+      "id": "BMNR-1440",
+      "instrument": "BMNR",
+      "width": 1440,
+      "height": 900,
+      "status": "failed",
+      "failures": [
+        "h1 total=1, painted=0",
+        "heading/glyphs outside visible toolbar",
+        "heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main"
+      ],
+      "state": {
+        "title": "가격 차트",
+        "h1Count": 1,
+        "paintedH1Count": 0,
+        "heading": {
+          "left": 55,
+          "top": 41,
+          "right": 56,
+          "bottom": 105,
+          "width": 1,
+          "height": 64
+        },
+        "glyphs": [
+          {
+            "left": 55,
+            "top": 42,
+            "right": 66.046875,
+            "bottom": 56,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 58,
+            "right": 66.046875,
+            "bottom": 72,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 74,
+            "right": 66.046875,
+            "bottom": 88,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 90,
+            "right": 66.046875,
+            "bottom": 104,
+            "width": 11.046875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "painted": false,
+        "paintIssues": [
+          "clip-path: atlas-page-intro inset(50%)",
+          "horizontal clipping: atlas-page-intro",
+          "vertical clipping: atlas-page-intro",
+          "horizontal clipping: main"
+        ],
+        "color": "rgb(219, 219, 219)",
+        "fontSize": "12px",
+        "lineHeight": "16px",
+        "describedBy": "atlas-page-description",
+        "description": "실제 일별 종가와 미래 가정을 구분해 보여줍니다. 기준: 거래소 완료 봉(UTC) · 종목별 표시.",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [
+          {
+            "left": 85.4375,
+            "top": 10.15625,
+            "right": 132.546875,
+            "bottom": 26.15625,
+            "width": 47.109375,
+            "height": 16
+          }
+        ],
+        "symbolCollision": false,
+        "geometry": {
+          "toolbar": {
+            "left": 52,
+            "top": 0,
+            "right": 1440,
+            "bottom": 38,
+            "width": 1388,
+            "height": 38
+          },
+          "plot": {
+            "left": 56,
+            "top": 42,
+            "right": 1391,
+            "bottom": 862,
+            "width": 1335,
+            "height": 820
+          },
+          "bottom": {
+            "left": 56,
+            "top": 862,
+            "right": 1391,
+            "bottom": 900,
+            "width": 1335,
+            "height": 38
+          },
+          "readout": {
+            "left": 68,
+            "top": 51,
+            "right": 374.9375,
+            "bottom": 73.9375,
+            "width": 306.9375,
+            "height": 22.9375
+          },
+          "source": {
+            "left": 68,
+            "top": 73,
+            "right": 236.875,
+            "bottom": 88.390625,
+            "width": 168.875,
+            "height": 15.390625
+          }
+        }
+      },
+      "screenshot": {
+        "file": "BMNR-1440.png",
+        "sha256": "20a4ee648b2d48a261f640df71cccf019f6425964865f2918a7b7c3f443fbc9d",
+        "bytes": 142629
+      }
+    },
+    {
+      "id": "compare-1440",
+      "instrument": "compare",
+      "width": 1440,
+      "height": 900,
+      "status": "failed",
+      "failures": [
+        "h1 total=3, painted=0",
+        "heading/glyphs outside visible toolbar",
+        "heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: lab-chart-stage; horizontal clipping: lab-panel atlas-workbench"
+      ],
+      "state": {
+        "title": "사이클 비교",
+        "h1Count": 3,
+        "paintedH1Count": 0,
+        "heading": {
+          "left": 55,
+          "top": 41,
+          "right": 56,
+          "bottom": 121,
+          "width": 1,
+          "height": 80
+        },
+        "glyphs": [
+          {
+            "left": 55,
+            "top": 42,
+            "right": 66.046875,
+            "bottom": 56,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 58,
+            "right": 66.046875,
+            "bottom": 72,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 74,
+            "right": 66.046875,
+            "bottom": 88,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 90,
+            "right": 66.046875,
+            "bottom": 104,
+            "width": 11.046875,
+            "height": 14
+          },
+          {
+            "left": 55,
+            "top": 106,
+            "right": 66.046875,
+            "bottom": 120,
+            "width": 11.046875,
+            "height": 14
+          }
+        ],
+        "headingInViewport": true,
+        "glyphsInViewport": true,
+        "headingInToolbar": false,
+        "glyphsInToolbar": false,
+        "painted": false,
+        "paintIssues": [
+          "clip-path: atlas-page-intro inset(50%)",
+          "horizontal clipping: atlas-page-intro",
+          "vertical clipping: atlas-page-intro",
+          "horizontal clipping: lab-chart-stage",
+          "horizontal clipping: lab-panel atlas-workbench"
+        ],
+        "color": "rgb(219, 219, 219)",
+        "fontSize": "12px",
+        "lineHeight": "16px",
+        "describedBy": "atlas-page-description",
+        "description": "반감일 이후 경과일을 기준으로 과거 사이클과 현재 사이클을 겹쳐 비교합니다. 기준: 일별 종가(UTC).",
+        "descriptionCount": 1,
+        "followsToolbar": true,
+        "outsidePlot": true,
+        "overflow": 0,
+        "duplicateTitles": [],
+        "overlayCollisions": [],
+        "symbolGlyphs": [],
+        "symbolCollision": false,
+        "geometry": {
+          "toolbar": {
+            "left": 52,
+            "top": 0,
+            "right": 1440,
+            "bottom": 38,
+            "width": 1388,
+            "height": 38
+          },
+          "plot": {
+            "left": 56,
+            "top": 42,
+            "right": 1391,
+            "bottom": 862,
+            "width": 1335,
+            "height": 820
+          },
+          "bottom": {
+            "left": 56,
+            "top": 862,
+            "right": 1391,
+            "bottom": 900,
+            "width": 1335,
+            "height": 38
+          },
+          "readout": null,
+          "source": null
+        }
+      },
+      "screenshot": {
+        "file": "compare-1440.png",
+        "sha256": "db9824cb91578798b1ac0324dce0e04def58f64cbea0f4cbc3afd1e431971387",
+        "bytes": 116043
+      }
+    }
+  ],
+  "failures": [
+    "BTCUSD-320: h1 total=3, painted=0",
+    "BTCUSD-320: heading/glyphs outside visible toolbar",
+    "BTCUSD-320: heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: lab-chart-stage; horizontal clipping: lab-panel atlas-workbench; horizontal clipping: js; horizontal clipping: HTML",
+    "BTCUSD-320: text overlap: lab-metrics, workbench-market-info symbol=false",
+    "ETHUSD-320: h1 total=1, painted=0",
+    "ETHUSD-320: heading/glyphs outside visible toolbar",
+    "ETHUSD-320: heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main; horizontal clipping: js; horizontal clipping: HTML",
+    "ETHUSD-320: text overlap: eth-readout, eth-readout-source symbol=false",
+    "MSTR-320: h1 total=1, painted=0",
+    "MSTR-320: heading/glyphs outside visible toolbar",
+    "MSTR-320: heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main; horizontal clipping: js; horizontal clipping: HTML",
+    "MSTR-320: text overlap: equity-readout, eth-readout-source symbol=false",
+    "BMNR-320: h1 total=1, painted=0",
+    "BMNR-320: heading/glyphs outside visible toolbar",
+    "BMNR-320: heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main; horizontal clipping: js; horizontal clipping: HTML",
+    "BMNR-320: text overlap: equity-readout, eth-readout-source symbol=false",
+    "compare-320: h1 total=3, painted=0",
+    "compare-320: heading/glyphs outside visible toolbar",
+    "compare-320: heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: lab-chart-stage; horizontal clipping: lab-panel atlas-workbench; horizontal clipping: js; horizontal clipping: HTML",
+    "BTCUSD-768: h1 total=3, painted=0",
+    "BTCUSD-768: heading/glyphs outside visible toolbar",
+    "BTCUSD-768: heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: lab-chart-stage; horizontal clipping: lab-panel atlas-workbench",
+    "BTCUSD-768: text overlap: lab-metrics, workbench-market-info, chart-indicator-manager symbol=false",
+    "ETHUSD-768: h1 total=1, painted=0",
+    "ETHUSD-768: heading/glyphs outside visible toolbar",
+    "ETHUSD-768: heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main",
+    "ETHUSD-768: text overlap: chart-indicator-manager symbol=false",
+    "MSTR-768: h1 total=1, painted=0",
+    "MSTR-768: heading/glyphs outside visible toolbar",
+    "MSTR-768: heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main",
+    "MSTR-768: text overlap: chart-indicator-manager symbol=false",
+    "BMNR-768: h1 total=1, painted=0",
+    "BMNR-768: heading/glyphs outside visible toolbar",
+    "BMNR-768: heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main",
+    "compare-768: h1 total=3, painted=0",
+    "compare-768: heading/glyphs outside visible toolbar",
+    "compare-768: heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: lab-chart-stage; horizontal clipping: lab-panel atlas-workbench",
+    "BTCUSD-1440: h1 total=3, painted=0",
+    "BTCUSD-1440: heading/glyphs outside visible toolbar",
+    "BTCUSD-1440: heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: lab-chart-stage; horizontal clipping: lab-panel atlas-workbench",
+    "BTCUSD-1440: text overlap: lab-metrics, workbench-market-info, chart-indicator-manager symbol=false",
+    "ETHUSD-1440: h1 total=1, painted=0",
+    "ETHUSD-1440: heading/glyphs outside visible toolbar",
+    "ETHUSD-1440: heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main",
+    "ETHUSD-1440: text overlap: chart-indicator-manager symbol=false",
+    "MSTR-1440: h1 total=1, painted=0",
+    "MSTR-1440: heading/glyphs outside visible toolbar",
+    "MSTR-1440: heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main",
+    "MSTR-1440: text overlap: chart-indicator-manager symbol=false",
+    "BMNR-1440: h1 total=1, painted=0",
+    "BMNR-1440: heading/glyphs outside visible toolbar",
+    "BMNR-1440: heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: main",
+    "compare-1440: h1 total=3, painted=0",
+    "compare-1440: heading/glyphs outside visible toolbar",
+    "compare-1440: heading paint: clip-path: atlas-page-intro inset(50%); horizontal clipping: atlas-page-intro; vertical clipping: atlas-page-intro; horizontal clipping: lab-chart-stage; horizontal clipping: lab-panel atlas-workbench"
+  ],
+  "nativeWindowEnvelope": {
+    "windowId": 1492104105,
+    "bounds": {
+      "left": 10,
+      "top": 10,
+      "width": 2048,
+      "height": 1600,
+      "windowState": "normal"
+    },
+    "client": {
+      "width": 2048,
+      "height": 1457
+    },
+    "requestedViewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "verifiedBeforeEmulation": true
+  },
+  "status": "failed"
+}

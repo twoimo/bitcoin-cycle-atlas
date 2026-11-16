@@ -1,0 +1,618 @@
+{
+  "kind": "r19-p5-f1-gear-dom-model",
+  "nativeBrowser": false,
+  "scope": "Real root HTML, initAtlasShell and mountAnalysisIndicators; analysis stage fixture; no complete app boot, CSS layout, painted target, focus paint, or screenshot measurement.",
+  "sameD1Range": "[\\u{1F300}-\\u{1FAFF}\\u{2600}-\\u{27BF}]",
+  "existingInspectorSha256": "7112458c6481a7fc5474da6a42951ed5401c8827d59cdb157605bd7f873a4bc6",
+  "contentExclusionsSource": "Unchanged contentExclusions in scripts/verify-r19-p5-f1-browser.mjs",
+  "includesHiddenUi": true,
+  "identity": {
+    "originalBaseline": {
+      "ref": "b2226d77ddf4ff4fe6e05953e02cbb753ea4f7f8",
+      "sourceHashes": {
+        "dist/atlas-shell.js": "2b27204e141a9b600011a589a16a08835954fa05a974ba133264ebbf89e4f75a",
+        "dist/analysis-dock.js": "4133f7cd4eea1fcbc29ccfc8e700e388b88f3ad271730e3c0b875830291ac496"
+      }
+    },
+    "previousProduct": {
+      "ref": "a14022225e5897f14bee16b139f8bd194bd0732c",
+      "sourceHashes": {
+        "dist/atlas-shell.js": "e5cd5d67ae979ded8722f82a794655834883b7d2fa3115b7b4c5bb8a7b0b5181",
+        "dist/analysis-dock.js": "4133f7cd4eea1fcbc29ccfc8e700e388b88f3ad271730e3c0b875830291ac496"
+      }
+    },
+    "candidate": {
+      "ref": null,
+      "sourceHashes": {
+        "dist/atlas-shell.js": "e5cd5d67ae979ded8722f82a794655834883b7d2fa3115b7b4c5bb8a7b0b5181",
+        "dist/analysis-dock.js": "a8f4e1ac072c932465cf3858ab7c2fc865cd93519df971ef9aca356ef3753c08"
+      }
+    }
+  },
+  "rows": [
+    {
+      "version": "originalBaseline",
+      "page": "conference",
+      "width": 320,
+      "uiGlyphCount": 1,
+      "matches": [
+        {
+          "glyph": "☰",
+          "codePoint": "U+2630",
+          "action": null,
+          "owner": null
+        }
+      ],
+      "settings": [],
+      "moveUpGlyphs": []
+    },
+    {
+      "version": "originalBaseline",
+      "page": "conference",
+      "width": 1440,
+      "uiGlyphCount": 1,
+      "matches": [
+        {
+          "glyph": "☰",
+          "codePoint": "U+2630",
+          "action": null,
+          "owner": null
+        }
+      ],
+      "settings": [],
+      "moveUpGlyphs": []
+    },
+    {
+      "version": "originalBaseline",
+      "page": "outlook",
+      "width": 320,
+      "uiGlyphCount": 6,
+      "matches": [
+        {
+          "glyph": "☰",
+          "codePoint": "U+2630",
+          "action": null,
+          "owner": null
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "cycles"
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "duration"
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "peaks"
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "periods"
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "cryptocon"
+        }
+      ],
+      "settings": [
+        {
+          "id": "cycles",
+          "name": "4년 비교 설정",
+          "svg": false,
+          "eventId": "cycles",
+          "openerPreserved": true
+        },
+        {
+          "id": "duration",
+          "name": "구간 길이 설정",
+          "svg": false,
+          "eventId": "duration",
+          "openerPreserved": true
+        },
+        {
+          "id": "peaks",
+          "name": "고점권 도달 설정",
+          "svg": false,
+          "eventId": "peaks",
+          "openerPreserved": true
+        },
+        {
+          "id": "periods",
+          "name": "월·분기 설정",
+          "svg": false,
+          "eventId": "periods",
+          "openerPreserved": true
+        },
+        {
+          "id": "cryptocon",
+          "name": "CryptoCon 검증 설정",
+          "svg": false,
+          "eventId": "cryptocon",
+          "openerPreserved": true
+        }
+      ],
+      "moveUpGlyphs": [
+        "↑",
+        "↑",
+        "↑",
+        "↑",
+        "↑"
+      ]
+    },
+    {
+      "version": "originalBaseline",
+      "page": "outlook",
+      "width": 1440,
+      "uiGlyphCount": 6,
+      "matches": [
+        {
+          "glyph": "☰",
+          "codePoint": "U+2630",
+          "action": null,
+          "owner": null
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "cycles"
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "duration"
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "peaks"
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "periods"
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "cryptocon"
+        }
+      ],
+      "settings": [
+        {
+          "id": "cycles",
+          "name": "4년 비교 설정",
+          "svg": false,
+          "eventId": "cycles",
+          "openerPreserved": true
+        },
+        {
+          "id": "duration",
+          "name": "구간 길이 설정",
+          "svg": false,
+          "eventId": "duration",
+          "openerPreserved": true
+        },
+        {
+          "id": "peaks",
+          "name": "고점권 도달 설정",
+          "svg": false,
+          "eventId": "peaks",
+          "openerPreserved": true
+        },
+        {
+          "id": "periods",
+          "name": "월·분기 설정",
+          "svg": false,
+          "eventId": "periods",
+          "openerPreserved": true
+        },
+        {
+          "id": "cryptocon",
+          "name": "CryptoCon 검증 설정",
+          "svg": false,
+          "eventId": "cryptocon",
+          "openerPreserved": true
+        }
+      ],
+      "moveUpGlyphs": [
+        "↑",
+        "↑",
+        "↑",
+        "↑",
+        "↑"
+      ]
+    },
+    {
+      "version": "originalBaseline",
+      "page": "relay",
+      "width": 320,
+      "uiGlyphCount": 1,
+      "matches": [
+        {
+          "glyph": "☰",
+          "codePoint": "U+2630",
+          "action": null,
+          "owner": null
+        }
+      ],
+      "settings": [],
+      "moveUpGlyphs": []
+    },
+    {
+      "version": "originalBaseline",
+      "page": "relay",
+      "width": 1440,
+      "uiGlyphCount": 1,
+      "matches": [
+        {
+          "glyph": "☰",
+          "codePoint": "U+2630",
+          "action": null,
+          "owner": null
+        }
+      ],
+      "settings": [],
+      "moveUpGlyphs": []
+    },
+    {
+      "version": "previousProduct",
+      "page": "conference",
+      "width": 320,
+      "uiGlyphCount": 0,
+      "matches": [],
+      "settings": [],
+      "moveUpGlyphs": []
+    },
+    {
+      "version": "previousProduct",
+      "page": "conference",
+      "width": 1440,
+      "uiGlyphCount": 0,
+      "matches": [],
+      "settings": [],
+      "moveUpGlyphs": []
+    },
+    {
+      "version": "previousProduct",
+      "page": "outlook",
+      "width": 320,
+      "uiGlyphCount": 5,
+      "matches": [
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "cycles"
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "duration"
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "peaks"
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "periods"
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "cryptocon"
+        }
+      ],
+      "settings": [
+        {
+          "id": "cycles",
+          "name": "4년 비교 설정",
+          "svg": false,
+          "eventId": "cycles",
+          "openerPreserved": true
+        },
+        {
+          "id": "duration",
+          "name": "구간 길이 설정",
+          "svg": false,
+          "eventId": "duration",
+          "openerPreserved": true
+        },
+        {
+          "id": "peaks",
+          "name": "고점권 도달 설정",
+          "svg": false,
+          "eventId": "peaks",
+          "openerPreserved": true
+        },
+        {
+          "id": "periods",
+          "name": "월·분기 설정",
+          "svg": false,
+          "eventId": "periods",
+          "openerPreserved": true
+        },
+        {
+          "id": "cryptocon",
+          "name": "CryptoCon 검증 설정",
+          "svg": false,
+          "eventId": "cryptocon",
+          "openerPreserved": true
+        }
+      ],
+      "moveUpGlyphs": [
+        "↑",
+        "↑",
+        "↑",
+        "↑",
+        "↑"
+      ]
+    },
+    {
+      "version": "previousProduct",
+      "page": "outlook",
+      "width": 1440,
+      "uiGlyphCount": 5,
+      "matches": [
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "cycles"
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "duration"
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "peaks"
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "periods"
+        },
+        {
+          "glyph": "⚙",
+          "codePoint": "U+2699",
+          "action": "settings",
+          "owner": "cryptocon"
+        }
+      ],
+      "settings": [
+        {
+          "id": "cycles",
+          "name": "4년 비교 설정",
+          "svg": false,
+          "eventId": "cycles",
+          "openerPreserved": true
+        },
+        {
+          "id": "duration",
+          "name": "구간 길이 설정",
+          "svg": false,
+          "eventId": "duration",
+          "openerPreserved": true
+        },
+        {
+          "id": "peaks",
+          "name": "고점권 도달 설정",
+          "svg": false,
+          "eventId": "peaks",
+          "openerPreserved": true
+        },
+        {
+          "id": "periods",
+          "name": "월·분기 설정",
+          "svg": false,
+          "eventId": "periods",
+          "openerPreserved": true
+        },
+        {
+          "id": "cryptocon",
+          "name": "CryptoCon 검증 설정",
+          "svg": false,
+          "eventId": "cryptocon",
+          "openerPreserved": true
+        }
+      ],
+      "moveUpGlyphs": [
+        "↑",
+        "↑",
+        "↑",
+        "↑",
+        "↑"
+      ]
+    },
+    {
+      "version": "previousProduct",
+      "page": "relay",
+      "width": 320,
+      "uiGlyphCount": 0,
+      "matches": [],
+      "settings": [],
+      "moveUpGlyphs": []
+    },
+    {
+      "version": "previousProduct",
+      "page": "relay",
+      "width": 1440,
+      "uiGlyphCount": 0,
+      "matches": [],
+      "settings": [],
+      "moveUpGlyphs": []
+    },
+    {
+      "version": "candidate",
+      "page": "conference",
+      "width": 320,
+      "uiGlyphCount": 0,
+      "matches": [],
+      "settings": [],
+      "moveUpGlyphs": []
+    },
+    {
+      "version": "candidate",
+      "page": "conference",
+      "width": 1440,
+      "uiGlyphCount": 0,
+      "matches": [],
+      "settings": [],
+      "moveUpGlyphs": []
+    },
+    {
+      "version": "candidate",
+      "page": "outlook",
+      "width": 320,
+      "uiGlyphCount": 0,
+      "matches": [],
+      "settings": [
+        {
+          "id": "cycles",
+          "name": "4년 비교 설정",
+          "svg": true,
+          "eventId": "cycles",
+          "openerPreserved": true
+        },
+        {
+          "id": "duration",
+          "name": "구간 길이 설정",
+          "svg": true,
+          "eventId": "duration",
+          "openerPreserved": true
+        },
+        {
+          "id": "peaks",
+          "name": "고점권 도달 설정",
+          "svg": true,
+          "eventId": "peaks",
+          "openerPreserved": true
+        },
+        {
+          "id": "periods",
+          "name": "월·분기 설정",
+          "svg": true,
+          "eventId": "periods",
+          "openerPreserved": true
+        },
+        {
+          "id": "cryptocon",
+          "name": "CryptoCon 검증 설정",
+          "svg": true,
+          "eventId": "cryptocon",
+          "openerPreserved": true
+        }
+      ],
+      "moveUpGlyphs": [
+        "↑",
+        "↑",
+        "↑",
+        "↑",
+        "↑"
+      ]
+    },
+    {
+      "version": "candidate",
+      "page": "outlook",
+      "width": 1440,
+      "uiGlyphCount": 0,
+      "matches": [],
+      "settings": [
+        {
+          "id": "cycles",
+          "name": "4년 비교 설정",
+          "svg": true,
+          "eventId": "cycles",
+          "openerPreserved": true
+        },
+        {
+          "id": "duration",
+          "name": "구간 길이 설정",
+          "svg": true,
+          "eventId": "duration",
+          "openerPreserved": true
+        },
+        {
+          "id": "peaks",
+          "name": "고점권 도달 설정",
+          "svg": true,
+          "eventId": "peaks",
+          "openerPreserved": true
+        },
+        {
+          "id": "periods",
+          "name": "월·분기 설정",
+          "svg": true,
+          "eventId": "periods",
+          "openerPreserved": true
+        },
+        {
+          "id": "cryptocon",
+          "name": "CryptoCon 검증 설정",
+          "svg": true,
+          "eventId": "cryptocon",
+          "openerPreserved": true
+        }
+      ],
+      "moveUpGlyphs": [
+        "↑",
+        "↑",
+        "↑",
+        "↑",
+        "↑"
+      ]
+    },
+    {
+      "version": "candidate",
+      "page": "relay",
+      "width": 320,
+      "uiGlyphCount": 0,
+      "matches": [],
+      "settings": [],
+      "moveUpGlyphs": []
+    },
+    {
+      "version": "candidate",
+      "page": "relay",
+      "width": 1440,
+      "uiGlyphCount": 0,
+      "matches": [],
+      "settings": [],
+      "moveUpGlyphs": []
+    }
+  ],
+  "totals": {
+    "originalBaseline": 16,
+    "previousProduct": 10,
+    "candidate": 0
+  },
+  "qualifiesNativeVerification": false
+}

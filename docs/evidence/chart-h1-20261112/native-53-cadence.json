@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-browser-fast-cadence-release",
+  "phase": "btc-10x-weekly-display-daily-observations",
+  "sourceCommit": "15ff9e368a7ad450405446cf9d037c095d99766f",
+  "sourceTree": "fd3205b20516b622586634f968e546e4f196b5c8",
+  "sourceInventorySha256": "0e5f5c4d146d932cb036fb861c873aaf4dd7cbe84c33f0097690ee8934e7dfe5",
+  "suiteRunId": "c7585074-0856-4256-838b-6e6c3c1aec2e",
+  "expectedObservationDates": [
+    "2026-10-21",
+    "2026-10-22",
+    "2026-10-23",
+    "2026-10-24",
+    "2026-10-25",
+    "2026-10-26",
+    "2026-10-27",
+    "2026-10-28",
+    "2026-10-29",
+    "2026-10-30",
+    "2026-10-31",
+    "2026-11-01",
+    "2026-11-02",
+    "2026-11-03",
+    "2026-11-04",
+    "2026-11-05",
+    "2026-11-06"
+  ],
+  "lane": "chart-replay",
+  "caseSpec": {
+    "symbol": "BTCUSD",
+    "surface": "btc",
+    "width": 1440,
+    "height": 900,
+    "touch": false,
+    "page": "chart-replay-btc",
+    "chartReplay": true,
+    "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+  },
+  "status": "passed",
+  "reason": "milestone",
+  "startedAt": "2026-11-11T17:54:42.389Z",
+  "releasedAt": "2026-11-11T17:55:11.971Z",
+  "durationMs": 29582,
+  "milestone": {
+    "schemaVersion": 1,
+    "kind": "atlas-browser-fast-cadence",
+    "phase": "btc-10x-weekly-display-daily-observations",
+    "status": "passed",
+    "sourceCommit": "15ff9e368a7ad450405446cf9d037c095d99766f",
+    "sourceTree": "fd3205b20516b622586634f968e546e4f196b5c8",
+    "sourceInventorySha256": "0e5f5c4d146d932cb036fb861c873aaf4dd7cbe84c33f0097690ee8934e7dfe5",
+    "suiteRunId": "c7585074-0856-4256-838b-6e6c3c1aec2e",
+    "lane": "chart-replay",
+    "caseSpec": {
+      "symbol": "BTCUSD",
+      "surface": "btc",
+      "width": 1440,
+      "height": 900,
+      "touch": false,
+      "page": "chart-replay-btc",
+      "chartReplay": true,
+      "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+    },
+    "startedAt": "2026-11-11T17:54:58.558Z",
+    "completedAt": "2026-11-11T17:55:11.965Z",
+    "fixture": {
+      "origin": "2026-10-20",
+      "displayFrequency": "weekly",
+      "updateInterval": "daily",
+      "viewStart": "2024-11-06",
+      "viewEnd": "2028-11-06"
+    },
+    "measurement": {
+      "speed": 10,
+      "expectedMilliseconds": 100,
+      "observations": [
+        {
+          "cursor": "2026-10-21",
+          "at": 19903.300000000047
+        },
+        {
+          "cursor": "2026-10-22",
+          "at": 20013.099999999977
+        },
+        {
+          "cursor": "2026-10-23",
+          "at": 20124.800000000047
+        },
+        {
+          "cursor": "2026-10-24",
+          "at": 20234.300000000047
+        },
+        {
+          "cursor": "2026-10-25",
+          "at": 20336
+        },
+        {
+          "cursor": "2026-10-26",
+          "at": 20486.599999999977
+        },
+        {
+          "cursor": "2026-10-27",
+          "at": 20639.900000000023
+        },
+        {
+          "cursor": "2026-10-28",
+          "at": 20750.199999999953
+        },
+        {
+          "cursor": "2026-10-29",
+          "at": 20854.300000000047
+        },
+        {
+          "cursor": "2026-10-30",
+          "at": 20962.800000000047
+        },
+        {
+          "cursor": "2026-10-31",
+          "at": 21076.400000000023
+        },
+        {
+          "cursor": "2026-11-01",
+          "at": 21228
+        },
+        {
+          "cursor": "2026-11-02",
+          "at": 21396.099999999977
+        },
+        {
+          "cursor": "2026-11-03",
+          "at": 21565.800000000047
+        },
+        {
+          "cursor": "2026-11-04",
+          "at": 21681
+        },
+        {
+          "cursor": "2026-11-05",
+          "at": 21792
+        },
+        {
+          "cursor": "2026-11-06",
+          "at": 21896.900000000023
+        }
+      ],
+      "intervals": [
+        109.79999999993015,
+        111.70000000006985,
+        109.5,
+        101.69999999995343,
+        150.59999999997672,
+        153.30000000004657,
+        110.29999999993015,
+        104.10000000009313,
+        108.5,
+        113.59999999997672,
+        151.59999999997672,
+        168.09999999997672,
+        169.70000000006985,
+        115.19999999995343,
+        111,
+        104.90000000002328
+      ],
+      "meanMilliseconds": 124.59999999999854,
+      "averageUpdatesPerSecond": 8.025682182985648,
+      "allowedMeanRatio": [
+        0.85,
+        1.3
+      ],
+      "completionTimeoutMilliseconds": 7210,
+      "setupAllowanceMilliseconds": 5000
+    },
+    "restored": true
+  }
+}

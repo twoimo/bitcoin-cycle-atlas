@@ -1,0 +1,105 @@
+{
+  "id": "Q-R19P0-3",
+  "date": "2026-11-12",
+  "timeKst": "20:28",
+  "commit": "f86ba0a787118e21f5f42724913419fd7df8ad64",
+  "parent": "df0e54f303fdcd1bab0db79c42446d2ad6a6e0a5",
+  "branch": "fix/tradingview-responsive-20261110",
+  "command": "CHROME_PATH=/Applications/Google Chrome.app/Contents/MacOS/Google Chrome node scripts/verify-ui-renewal-p0-browser.mjs --out build/qa-r19p0-20261112/p0-f86ba0a --browser /Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "chrome": "157.0.8103.79",
+  "caseStatus": "passed",
+  "harnessStatus": "unverified",
+  "qualifiesP0Verification": false,
+  "qualifiesReason": "sampleCoverage settings-icon light/dark was not observed (38/40). Same pre-existing hole as p0-8b10785. Not a case failure and not introduced by f86ba0a.",
+  "counts": {
+    "required": 10,
+    "attempted": 10,
+    "passed": 10,
+    "failed": 0,
+    "unattempted": 0
+  },
+  "headingProof": "10/10 passed; clip-path wholesale ignore did not occur",
+  "ink": {
+    "source": "getComputedStyle color or webkitTextFillColor, not a raster sample",
+    "ETHUSD-1440-light": {
+      "chart-scale": {
+        "selector": "#workbench-scale",
+        "foreground": "rgb(90, 59, 240)",
+        "roleCheck": "passed",
+        "matchedRoleTokens": [
+          "--accent-ink"
+        ]
+      },
+      "chart-auto-scale": {
+        "selector": "#workbench-auto-scale",
+        "foreground": "rgb(25, 31, 40)",
+        "roleCheck": "passed",
+        "matchedRoleTokens": [
+          "--text"
+        ]
+      }
+    },
+    "BTCUSD-1440-light": {
+      "chart-scale": "rgb(90, 59, 240)",
+      "chart-auto-scale": "rgb(25, 31, 40)",
+      "roleCheck": "passed"
+    }
+  },
+  "passedBesidesRole": {
+    "staticTokens": "40/40",
+    "fontChecks": "10/10",
+    "fontProvenance": "Pretendard Variable, 92 faces, 2957724 bytes",
+    "contrastPassedObservations": 94,
+    "contrastMinimum": 5.144947999253779,
+    "contrastThresholds": [
+      4.5,
+      3
+    ],
+    "sampleCoverage": {
+      "required": 40,
+      "observed": 38,
+      "passed": 38,
+      "status": "unverified",
+      "gap": "settings-icon light and dark"
+    },
+    "bodyFontPx": {
+      "320": 15,
+      "1440": 17
+    },
+    "horizontalOverflow": 0
+  },
+  "forbiddenChanges": {
+    "channelTolerance": false,
+    "newOffRoleToken": false,
+    "roleCheckDeleted": false,
+    "thresholdRelaxed": false,
+    "clipPathWholesaleIgnored": false,
+    "stylesCssSha256": "76323d40af41be9b820d0fddc50975318f4a73804e8df19d3a9d3c74af5e0825",
+    "harnessSha256": "d31fda26f00111f8d3b949e64bad629395af009cb516ac46c2e0165ad90eea26",
+    "textHitSha256": "ea481867cdf818d1cd41a1979467152c5a4a1230eed40e75bf1306a102078f64",
+    "contractSha256": "d34d2644e93f3a8805b0e4043f3c31bf4fcfee4eb3b5bb46bf3bca0f47324f39"
+  },
+  "protectedUnchanged": [
+    {
+      "path": "dist/equity-view.js",
+      "sha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5"
+    },
+    {
+      "path": "dist/eth-view.js",
+      "sha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4"
+    },
+    {
+      "path": "dist/instrument-indicator-overlay.js",
+      "sha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a"
+    },
+    {
+      "path": "scripts/verify-eth-candidate-browser.mjs",
+      "sha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e"
+    }
+  ],
+  "priceAxisGeometry": "dist/price-axis.js sha256 37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2 unchanged; minRight 64 not edited",
+  "productCss": "transition:none only on #workbench-scale and #workbench-auto-scale; bundle and cache key regenerated",
+  "screenshots": "build/qa-r19p0-20261112/p0-f86ba0a/ (20 PNG)",
+  "rawReport": "build/qa-r19p0-20261112/p0-f86ba0a/report.json",
+  "disposition": "Q-R19P0-3 closed. P0 10-case gate closed. Formal qualifiesP0Verification remains false only because settings-icon light/dark was unobserved, the same 38/40 hole as the prior Mac runs. That sample stays required. P1 shell is the next request. Do not start P2a."
+}

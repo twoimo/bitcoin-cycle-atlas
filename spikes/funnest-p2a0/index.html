@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <title>BTC 일봉 · Atlas 엔진 검토</title>
+  <link rel="stylesheet" href="./fonts/pretendard/pretendard-variable.css">
+  <link rel="stylesheet" href="./atlas-tokens.css">
+  <link rel="stylesheet" href="./spike.css">
+</head>
+<body>
+  <main>
+    <header class="spike-header">
+      <div><h1 id="spike-heading">BTC 일봉</h1><p>Atlas · 차트 엔진 검토</p></div>
+      <label>화면 테마
+        <select id="spike-color-scheme">
+          <option value="system">시스템</option>
+          <option value="light">라이트</option>
+          <option value="dark">다크</option>
+        </select>
+      </label>
+    </header>
+    <p id="spike-status" role="status" aria-live="polite">보관된 일봉 불러오는 중</p>
+    <section id="spike-chart" aria-labelledby="spike-heading" aria-busy="true"></section>
+    <footer>
+      <p id="spike-source">Bitstamp · BTC/USD · 완료 일봉 · 정적 보관 자료</p>
+      <p>거래량은 해당 거래소의 BTC 수량입니다. 실시간 가격과 전체 시장 거래량을 나타내지 않습니다.</p>
+      <a href="./THIRD_PARTY_NOTICES.txt">소프트웨어 출처와 라이선스</a>
+    </footer>
+  </main>
+  <script type="module" src="./spike.js"></script>
+</body>
+</html>

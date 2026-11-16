@@ -1,0 +1,54 @@
+{
+  "package": "@funnest/charts-ui@0.6.16",
+  "attestationUrl": "https://registry.npmjs.org/-/npm/v1/attestations/@funnest%2fcharts-ui@0.6.16",
+  "statement": {
+    "_type": "https://in-toto.io/Statement/v1",
+    "subject": [
+      {
+        "name": "pkg:npm/%40funnest/charts-ui@0.6.16",
+        "digest": {
+          "sha512": "fa8ee139569d2832b31dc280911bda7a72f67f72a6d0408ed3449632af6d3b3dfbab0e194faf0b1b11bafca05d90167e46177eafc012a8b7dfa6c16328dac656"
+        }
+      }
+    ],
+    "predicateType": "https://slsa.dev/provenance/v1",
+    "predicate": {
+      "buildDefinition": {
+        "buildType": "https://slsa-framework.github.io/github-actions-buildtypes/workflow/v1",
+        "externalParameters": {
+          "workflow": {
+            "ref": "refs/tags/v0.6.16",
+            "repository": "https://github.com/funnest-xyz/funnest-charts",
+            "path": ".github/workflows/release.yml"
+          }
+        },
+        "internalParameters": {
+          "github": {
+            "event_name": "push",
+            "repository_id": "1452721496",
+            "repository_owner_id": "354714247"
+          }
+        },
+        "resolvedDependencies": [
+          {
+            "uri": "git+https://github.com/funnest-xyz/funnest-charts@refs/tags/v0.6.16",
+            "digest": {
+              "gitCommit": "39cb29ae250448d520384c12de555b1c00727883"
+            }
+          }
+        ]
+      },
+      "runDetails": {
+        "builder": {
+          "id": "https://github.com/actions/runner/github-hosted"
+        },
+        "metadata": {
+          "invocationId": "https://github.com/funnest-xyz/funnest-charts/actions/runs/43160208727/attempts/1"
+        }
+      }
+    }
+  },
+  "downloadedTarballSha512": "fa8ee139569d2832b31dc280911bda7a72f67f72a6d0408ed3449632af6d3b3dfbab0e194faf0b1b11bafca05d90167e46177eafc012a8b7dfa6c16328dac656",
+  "subjectDigestMatchesDownloadedTarball": true,
+  "note": "Decoded npm registry SLSA payload and matched subject digest; not an independent cryptographic attestation verification."
+}

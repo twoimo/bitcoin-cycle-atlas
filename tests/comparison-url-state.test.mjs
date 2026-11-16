@@ -26,7 +26,7 @@ test('the parser reads every comparison-owned field exactly like the first load'
 });
 
 test('the owned key list cannot drift from what persistUrl writes', () => {
-  const persist = app.slice(app.indexOf('function persistUrl() {'), app.indexOf("document.documentElement.dataset.theme = 'dark';"));
+  const persist = app.slice(app.indexOf('function persistUrl() {'), app.indexOf('// The shared head/site entry owns the saved light/dark presentation preference.'));
   const written = [...persist.matchAll(/\['([a-z-]+)',/g)].map(match => match[1]);
   assert.deepEqual(written.sort(), [...COMPARISON_OWNED_KEYS].sort());
 });

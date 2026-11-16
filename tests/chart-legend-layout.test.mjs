@@ -67,3 +67,9 @@ test('model, macro and event label boxes avoid the same reserved corner without 
   assert.equal(JSON.stringify(args),snapshot);
   assert.equal(placePlotLabel({...args,obstacles:[{x:0,y:0,width:2000,height:2000}]}),null,'a blocked label collapses to its existing accessible anchor instead of covering information');
 });
+
+test('a renderer that reports only its horizontal plot bounds keeps the default 30px legend band',()=>{
+  const reported=chartLegendSlot({width:1333,height:800,left:0,right:1245,viewportWidth:1440});
+  assert.equal(reported.y,30);assert.equal(reported.width,1245*.42);assert.equal(reported.x+reported.width,1245-12);
+  assert.deepEqual(chartLegendSlot({width:1333,height:800,left:0,right:1245,top:18,bottom:800,viewportWidth:1440}),reported);
+});

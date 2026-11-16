@@ -1,5 +1,6 @@
 import { buildCryptoConAudit, CRYPTOCON_AUDIT_SOURCE } from './cryptocon-audit-data.js?v=1.29.0';
 import { utcDay } from './cycle-engine.js?v=1.29.0';
+import {linearScale as fLinear,bandScale as fBand} from './funnest-research-primitives.bundle.js?v=1.29.0';
 
 const selections=new WeakMap(),cache=new WeakMap();
 const INK='#e1e8f0',MUTED='#aab7c8',GRID='#2a3442',GOLD='#edb66b',BLUE='#82b9dc',PURPLE='#baace3';
@@ -35,8 +36,8 @@ export function renderCryptoConAudit({svg,dataset,onInspect=()=>{},view='timing'
   const audit=cache.get(dataset),g=geometry(svg),definition=VIEWS[view],rows=view==='timing'?audit.timing:view==='thresholds'?audit.thresholds:audit.targets;
   const saved=selections.get(svg),key=`cryptocon:${view}`;
   let selected=clamp(saved?.key===key?saved.index:view==='thresholds'?1:view==='timing'?1:0,0,rows.length-1),initialInspection;
-  const rowHeight=(g.B-g.T)/rows.length;
-  const yy=index=>g.T+(index+.5)*rowHeight;
+  const rowBands=fBand(rows.length,[g.T,g.B],0),rowHeight=rowBands.step;
+  const yy=index=>rowBands.center(index);
   svg.setAttribute('data-indicator-layer','cryptocon');
   const text=(x,y,value,{color=MUTED,size=g.small?10:12,anchor='start',weight=400,axis=false}={})=>`<text${axis?' data-indicator-axis-label':''} x="${x}" y="${y}" fill="${color}" font-size="${size}" text-anchor="${anchor}" font-weight="${weight}">${esc(value)}</text>`;
   function inspect(){
@@ -55,7 +56,7 @@ export function renderCryptoConAudit({svg,dataset,onInspect=()=>{},view='timing'
     return out;
   }
   function drawTiming(){
-    const min=utcDay('2025-01-01'),max=utcDay('2025-12-31'),x=value=>g.L+(utcDay(value)-min)/(max-min)*(g.W-g.L-g.R);
+    const min=utcDay('2025-01-01'),max=utcDay('2025-12-31'),timeScale=fLinear([min,max],[g.L,g.W-g.R]),x=value=>timeScale(utcDay(value));
     let out=background();
     const months=g.small?[1,4,7,10,12]:[1,3,5,7,9,11,12];
     for(const month of months){const value=`2025-${String(month).padStart(2,'0')}-01`,xx=x(value);out+=`<line x1="${xx}" x2="${xx}" y1="${g.T}" y2="${g.B}" stroke="${GRID}"/>`+text(xx,g.H-34,`${month}월`,{anchor:'middle',axis:true});}
@@ -70,7 +71,7 @@ export function renderCryptoConAudit({svg,dataset,onInspect=()=>{},view='timing'
     return out;
   }
   function drawThresholds(){
-    const left=g.small?47:82,right=g.small?36:55,max=100,x=value=>left+value/max*(g.W-left-right);
+    const left=g.small?47:82,right=g.small?36:55,max=100,leadScale=fLinear([0,max],[left,g.W-right]),x=value=>leadScale(value);
     let out=background();
     for(const n of [0,25,50,75,100]){const xx=x(n);out+=`<line x1="${xx}" x2="${xx}" y1="${g.T}" y2="${g.B}" stroke="${GRID}"/>`+text(xx,g.H-34,`${n}`,{anchor:'middle',size:10,axis:true});}
     out+=text(g.W-4,15,'선행일',{anchor:'end',size:10});
@@ -81,7 +82,7 @@ export function renderCryptoConAudit({svg,dataset,onInspect=()=>{},view='timing'
     });return out;
   }
   function drawTargets(){
-    const left=g.small?64:110,right=g.small?23:35,max=180000,x=value=>left+value/max*(g.W-left-right);
+    const left=g.small?64:110,right=g.small?23:35,max=180000,targetScale=fLinear([0,max],[left,g.W-right]),x=value=>targetScale(value);
     let out=background();
     for(const n of [0,50000,100000,150000]){const xx=x(n);out+=`<line x1="${xx}" x2="${xx}" y1="${g.T}" y2="${g.B}" stroke="${GRID}"/>`+text(xx,g.H-34,`${n/1000}k`,{anchor:'middle',size:10,axis:true});}
     out+=text(g.W-5,15,'USD',{anchor:'end',size:10});

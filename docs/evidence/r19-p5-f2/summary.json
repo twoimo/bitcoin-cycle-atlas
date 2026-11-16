@@ -1,0 +1,89 @@
+{
+  "scope": "R19 P5 F2 conference play button only",
+  "baseline": "3356e68aca3e45ce82bbeca1e852ba220fa9c762",
+  "productChange": {
+    "source": "dist/conference/player.css",
+    "rulesChanged": 2,
+    "normal": {
+      "background": "var(--surface)",
+      "color": "var(--text)",
+      "borderColor": "var(--accent-ink)",
+      "radius": "6px",
+      "size": "56px × 56px"
+    },
+    "hover": {
+      "background": "var(--surface-hover)"
+    },
+    "newColorLiterals": 0,
+    "globalAccentChanged": false,
+    "playerJavascriptChanged": false
+  },
+  "sourceCalculation": {
+    "nativeBrowser": false,
+    "legacyBlueBackgrounds": 0,
+    "newHue200To260TokenValues": 0,
+    "iconContrast": {
+      "light": {
+        "default": 16.56191305377113,
+        "hover": 13.465528929840518,
+        "disabled": 3.246483471788993
+      },
+      "dark": {
+        "default": 15.97491029671796,
+        "hover": 13.235084828362837,
+        "disabled": 4.824458495495653
+      }
+    },
+    "clockTextContrast": {
+      "light": 7.1119253402872324,
+      "dark": 8.30543967760935
+    },
+    "disabledBorderContrast": {
+      "light": 2.3496453166919586,
+      "dark": 3.0023905633212915
+    },
+    "artifact": "source-colours.json"
+  },
+  "validation": {
+    "playerAndRoute": {
+      "tests": 66,
+      "passed": 66,
+      "failed": 0,
+      "skipped": 0
+    },
+    "generatedStylesAndPreloads": {
+      "tests": 26,
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0
+    },
+    "pagesBuildCheck": {
+      "status": "verified",
+      "files": 104,
+      "routes": 9
+    },
+    "siteStylesCheck": "passed",
+    "sitePreloadsCheck": "passed",
+    "runnerSyntaxCheck": "passed",
+    "unchangedContractFiles": 63
+  },
+  "native": {
+    "status": "blocked",
+    "exitCode": 1,
+    "completedCases": 0,
+    "plannedCandidateCases": 4,
+    "screenshotCount": 0,
+    "computedLegacyBlueBackgrounds": null,
+    "computedNewHueBandBackgrounds": null,
+    "complete": false,
+    "qualifiesF2ObservedPaint": false,
+    "reason": "Chromium process_singleton socket EPERM before product navigation",
+    "artifact": "native-blocked.json",
+    "browserLaunchAttempts": 2,
+    "attemptNotes": "Initial and final harness revisions both stopped before navigation with socket EPERM. The preserved report identifies the final harness bytes."
+  },
+  "f2AcceptanceClosed": false,
+  "f1ClosurePreserved": true,
+  "realMediaGateRerun": false,
+  "screenshotPaths": []
+}

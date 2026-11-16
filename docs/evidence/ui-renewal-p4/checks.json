@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "productCommit": "fcb941dcf880491a8e0e1cb211381810bd320aa2",
+  "note": "Focused/build checks ran on the exact product bytes before commit creation; Git tree and blob identities were checked at publication. Native gates ran on the clean product commit.",
+  "focused": {
+    "command": [
+      "node",
+      "--test",
+      "tests/conference-player.test.mjs",
+      "tests/conference-route.test.mjs",
+      "tests/conference-media-browser-contract.test.mjs",
+      "tests/site-styles.test.mjs",
+      "tests/site-preloads.test.mjs"
+    ],
+    "tests": 103,
+    "passed": 103,
+    "failed": 0,
+    "skipped": 0,
+    "exitCode": 0
+  },
+  "timeline": {
+    "command": [
+      "node",
+      "scripts/verify-conference-timeline.mjs",
+      "--timeline",
+      "dist/conference/timeline.json",
+      "--sources",
+      "docs/conference/source-segments.json",
+      "--out",
+      "build/r19-p4/work/timeline.json"
+    ],
+    "valid": true,
+    "summary": {
+      "audioDurationSec": 20400,
+      "segmentCount": 9168,
+      "talkCount": 15,
+      "deckCount": 2,
+      "lastSegmentT1": 20396.7,
+      "coverage": {
+        "checked": true,
+        "expectedCount": 9168,
+        "missing": [],
+        "unexpected": [],
+        "duplicates": [],
+        "changed": []
+      }
+    },
+    "exitCode": 0
+  },
+  "styles": {
+    "command": [
+      "node",
+      "scripts/build-site-styles.mjs",
+      "--check"
+    ],
+    "sourceStylesheets": 43,
+    "bundles": 2,
+    "exitCode": 0
+  },
+  "preloads": {
+    "command": [
+      "node",
+      "scripts/build-site-preloads.mjs",
+      "--check"
+    ],
+    "exitCode": 0
+  },
+  "static": {
+    "command": [
+      "npm",
+      "run",
+      "verify:static"
+    ],
+    "files": 1159,
+    "checkedScripts": 221,
+    "checkedReferences": 847,
+    "exitCode": 0
+  },
+  "buildPages": {
+    "command": [
+      "npm",
+      "run",
+      "build:pages"
+    ],
+    "files": 104,
+    "routes": 9,
+    "exitCode": 0
+  },
+  "pages": {
+    "command": [
+      "npm",
+      "run",
+      "verify:pages"
+    ],
+    "files": 104,
+    "routes": 9,
+    "exitCode": 0
+  },
+  "firstFocusedBeforeBundle": {
+    "passed": 101,
+    "failed": 2,
+    "cause": "stale generated site-after-shell.css before the builder was run",
+    "finalRerunPassed": 103
+  },
+  "nativeInvocations": {
+    "native-media": {
+      "gate": "native-media",
+      "command": [
+        "node",
+        "scripts/verify-conference-media-browser.mjs",
+        "--dist",
+        "dist",
+        "--browser",
+        "/usr/bin/chromium",
+        "--out",
+        "build/r19-p4/native-media-fcb941d"
+      ],
+      "environmentOverrides": {},
+      "sourceCommit": "fcb941dcf880491a8e0e1cb211381810bd320aa2",
+      "workingChangesBefore": "",
+      "workingChangesAfter": "",
+      "startedAt": "2026-11-12T22:13:23.336705+00:00",
+      "endedAt": "2026-11-12T22:13:23.565604+00:00",
+      "exitCode": 2,
+      "log": "build/r19-p4/work/native-media.log"
+    },
+    "native-browser": {
+      "gate": "native-browser",
+      "command": [
+        "node",
+        "scripts/verify-conference-browser.mjs",
+        "--out",
+        "build/r19-p4/native-browser-fcb941d"
+      ],
+      "environmentOverrides": {
+        "ATLAS_BROWSER_PATH": "/usr/bin/chromium"
+      },
+      "sourceCommit": "fcb941dcf880491a8e0e1cb211381810bd320aa2",
+      "workingChangesBefore": "",
+      "workingChangesAfter": "",
+      "startedAt": "2026-11-12T22:13:23.321087+00:00",
+      "endedAt": "2026-11-12T22:13:53.840384+00:00",
+      "exitCode": 1,
+      "log": "build/r19-p4/work/native-browser.log"
+    },
+    "native-a9": {
+      "gate": "native-a9",
+      "command": [
+        "node",
+        "scripts/verify-conference-data-browser.mjs",
+        "--profile",
+        "fast4g",
+        "--encoding",
+        "gzip",
+        "--out",
+        "build/r19-p4/native-a9-fcb941d"
+      ],
+      "environmentOverrides": {
+        "ATLAS_BROWSER_PATH": "/usr/bin/chromium"
+      },
+      "sourceCommit": "fcb941dcf880491a8e0e1cb211381810bd320aa2",
+      "workingChangesBefore": "",
+      "workingChangesAfter": "",
+      "startedAt": "2026-11-12T22:14:04.858808+00:00",
+      "endedAt": "2026-11-12T22:16:06.695191+00:00",
+      "exitCode": 1,
+      "log": "build/r19-p4/work/native-a9.log"
+    }
+  },
+  "fullNpmTest": {
+    "rerun": false,
+    "existing17Failures": "held for pre-merge gate as instructed; not fixed in P4"
+  }
+}

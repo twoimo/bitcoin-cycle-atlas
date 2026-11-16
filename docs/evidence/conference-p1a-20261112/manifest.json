@@ -1,0 +1,628 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "sourceTree": "7ce03ecfccd2b953c50d4f0efd10afa45b97a790",
+  "files": [
+    {
+      "file": "gates/unit-receipt.json",
+      "bytes": 537,
+      "sha256": "13e7342ad030c3a8fe89e20c8a24606acf0413901b8d8a965090b99e5fdb8daf",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas-p1a-verify/build/conference-p1a/unit-receipt.json"
+    },
+    {
+      "file": "gates/unit.log.gz",
+      "bytes": 161809,
+      "sha256": "bb6f7c7011661f5b754b4b61d9fff87be598914d70b01e29a52c7a3f55001b1d",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas-p1a-verify/build/conference-p1a/unit.log",
+      "uncompressedBytes": 822752,
+      "uncompressedSha256": "a763dec3ddc094260be459ff814bf472605d5a2152c21ef67638cd9cdf20a25c"
+    },
+    {
+      "file": "gates/typecheck-final-receipt.json",
+      "bytes": 524,
+      "sha256": "b94607902cd0888564fd252a3bad20a12787e793e548de5dac19d1ebe458619a",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/typecheck-final-receipt.json"
+    },
+    {
+      "file": "gates/typecheck-final.log.gz",
+      "bytes": 178,
+      "sha256": "ae807e4619dd53ff8b2e280c4857c1897a5840736e27497969b482327b648c60",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/typecheck-final.log",
+      "uncompressedBytes": 206,
+      "uncompressedSha256": "d9185066952b9395d37541b6167aa9e7b4bb93fd4f5a9ec49f0afba63fa3697d"
+    },
+    {
+      "file": "gates/static-final-receipt.json",
+      "bytes": 525,
+      "sha256": "b66518df33882ffb522de79c3ba3814ea45c26d183cee2e7cc5a71a829b62357",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/static-final-receipt.json"
+    },
+    {
+      "file": "gates/static-final.log.gz",
+      "bytes": 261,
+      "sha256": "f0c6f5dc25c6166e8065628497c4fb1310a6f3991a2d2b9d1c3f78509e7d995b",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/static-final.log",
+      "uncompressedBytes": 355,
+      "uncompressedSha256": "4ee077551bb899ebeb523001498864168a287c753b59b69c8de22f58fd7c4917"
+    },
+    {
+      "file": "gates/build-pages-final-receipt.json",
+      "bytes": 528,
+      "sha256": "5f6031c5df8fdd2f07e3b78b86cd275539157fb5faf5fcd8702e930a5fb8b814",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/build-pages-final-receipt.json"
+    },
+    {
+      "file": "gates/build-pages-final.log.gz",
+      "bytes": 1312,
+      "sha256": "2b6660378f5eac445abc7767dc397b2a21de7005ee89351313dc6795ff783762",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/build-pages-final.log",
+      "uncompressedBytes": 3555,
+      "uncompressedSha256": "5a90b160b9a4b405ce2f937636f42bcbbae25c6468f9d57197894e8c12a29ea5"
+    },
+    {
+      "file": "gates/verify-pages-final-receipt.json",
+      "bytes": 530,
+      "sha256": "703f68b88b7b9c96f185a2b6956a1a82f6617c55c9f9dc88918c0ce74dbc4acd",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/verify-pages-final-receipt.json"
+    },
+    {
+      "file": "gates/verify-pages-final.log.gz",
+      "bytes": 1312,
+      "sha256": "3147dacd36d56129d926e771437f6f495a3ed9aa99827ca92c6241cb2f8e736b",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/verify-pages-final.log",
+      "uncompressedBytes": 3567,
+      "uncompressedSha256": "d949a57bda6ee9e09eb383fc90f68e64c9185867f6d9a76086f58bf0d1613c90"
+    },
+    {
+      "file": "gates/timeline-final-receipt.json",
+      "bytes": 763,
+      "sha256": "689d6b90fbd2c5b665da96509c0d0de2310558a1f67aa161d3799948b788d2f1",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/timeline-final-receipt.json"
+    },
+    {
+      "file": "gates/timeline-final.log.gz",
+      "bytes": 669,
+      "sha256": "ff0f441beec6b77d4ad15299b18635387fd600d4cc6a9b69e9fd57f00a665568",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/timeline-final.log",
+      "uncompressedBytes": 1409,
+      "uncompressedSha256": "031b72f8e91059d04825c0a5369ae44dc37a349d222281d206f410ee5d69c994"
+    },
+    {
+      "file": "gates/unit-initial-receipt.json",
+      "bytes": 616,
+      "sha256": "c620abb3795c40eaa4f2d4c0ad58de23103823fa0de163fadd05ebdc2fc2b57b",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/unit-initial-receipt.json"
+    },
+    {
+      "file": "gates/unit-initial.log.gz",
+      "bytes": 89724,
+      "sha256": "9b069205329f441dcaba70265c359da12e06426a0eecfbb0656e51ee077c3064",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/unit-initial.log",
+      "uncompressedBytes": 450951,
+      "uncompressedSha256": "ce229cfa7386c5be55223b1f4804a608a5f12cfa8059efb36e7522a5771c9e9c"
+    },
+    {
+      "file": "gates/panels-receipt.json",
+      "bytes": 517,
+      "sha256": "3009d45ec3e463c4cf59554a9b44e3f59962ac0cafa27c87eb0ad208ac14ba9e",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/panels-receipt.json"
+    },
+    {
+      "file": "gates/panels.log.gz",
+      "bytes": 545,
+      "sha256": "f00a8cbacc8b6441e19810b6a0f822e8b3bc7870db93e2440446f6ffb387cd9c",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/panels.log",
+      "uncompressedBytes": 1047,
+      "uncompressedSha256": "a7c8c3f9a623f4743adfae7812c699208ad35b6f72ff58874a2c4349ad445cc7"
+    },
+    {
+      "file": "gates/panels-direct-receipt.json",
+      "bytes": 1619,
+      "sha256": "5552a83518de8ef25ee2612c5ab9c2cf4fd692c29435dc0c8cdff29ac5d34794",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/panels-direct-receipt.json"
+    },
+    {
+      "file": "gates/panels-direct.log.gz",
+      "bytes": 5999,
+      "sha256": "f4c3654c32af6d6e725a0245b37b26f658fbcdcd9577f748aa3a0991664bca29",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/panels-direct.log",
+      "uncompressedBytes": 14806,
+      "uncompressedSha256": "b586a4974547d16f33a33f448c69c471c54ef791031a86057ce364c1c8cbb5c0"
+    },
+    {
+      "file": "gates/unit-packaging-failed-receipt.json",
+      "bytes": 537,
+      "sha256": "7178147849cf87d4617ad2e520b88a819ae0e890fefa11db597be4ea77a7f694",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas-p1a-verify/build/conference-p1a/unit-packaging-failed-receipt.json"
+    },
+    {
+      "file": "gates/unit-packaging-failed.log.gz",
+      "bytes": 162940,
+      "sha256": "3335a83f9441c279fcd902240585fac3f08d95c97fa2e4367e26d86cae9cad74",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas-p1a-verify/build/conference-p1a/unit-packaging-failed.log",
+      "uncompressedBytes": 829757,
+      "uncompressedSha256": "557c47d63511552db4c4bdc5236539efb24fb0986dc1b24d5b571cd805daa77a"
+    },
+    {
+      "file": "conference/report.json.gz",
+      "bytes": 65990,
+      "sha256": "db94e47acec6a2264bb1d987ae5b8e66add5731f5d5150d163eabccba72e2010",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/report.json",
+      "uncompressedBytes": 443657,
+      "uncompressedSha256": "ac458518e6a0ac481787fc0423543c3f88952852ab0bc4cc6d2d5f07d21471a2"
+    },
+    {
+      "file": "conference/summary.json",
+      "bytes": 2561,
+      "sha256": "0c66dc83b00cc22382f39284b3fe38ce823e05110bf0e2e510de8f92fb167b80",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/summary.json"
+    },
+    {
+      "file": "conference/run.log.gz",
+      "bytes": 269,
+      "sha256": "1136a39b869c34a635b51a30f7c7c91f8ee9e698928b0e6e268f79eb7b829479",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/p1a-conference-browser.log",
+      "uncompressedBytes": 964,
+      "uncompressedSha256": "9efd636273b02dc19f21d2f47dfff57b17d6ac98b60fb0b74b1e5ef905b42898"
+    },
+    {
+      "file": "screenshots/fixture-390x844.png",
+      "bytes": 26476,
+      "sha256": "7af8e503adc180e397bca8b48c200572f1984b1138478a954779a8ccb23af6a9",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-390x844.png"
+    },
+    {
+      "file": "screenshots/fixture-390x844-transcript.png",
+      "bytes": 17340,
+      "sha256": "df735052bb8332eef0adc5e884fe5e338d4c9ed4f9cb3e028e0b3d33ff610397",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-390x844-transcript.png"
+    },
+    {
+      "file": "screenshots/fixture-320x740.png",
+      "bytes": 24179,
+      "sha256": "11f1fd761ccfdf0686c5a81eea044855e7eb2212e16a5b9a470a57a243e8ba6e",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-320x740.png"
+    },
+    {
+      "file": "screenshots/fixture-320x740-transcript.png",
+      "bytes": 16420,
+      "sha256": "b4077213f66b2ee4660283e67f07a37aa9b7359104dbc1ac7030c5be0e01ace1",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-320x740-transcript.png"
+    },
+    {
+      "file": "screenshots/fixture-768x1024.png",
+      "bytes": 46940,
+      "sha256": "81eef7d1beea065c278900f37329a28803d7c2e93a4a5b083435c95a99f7ba31",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-768x1024.png"
+    },
+    {
+      "file": "screenshots/fixture-768x1024-transcript.png",
+      "bytes": 26668,
+      "sha256": "30052316fbd1f2f2ac490964e1bf72d26db1aa6576b5371cbe1972a9ea034833",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-768x1024-transcript.png"
+    },
+    {
+      "file": "screenshots/fixture-1024x768.png",
+      "bytes": 54540,
+      "sha256": "4a65dc992f397feac9772cc3be1c4e6b9f3a28cbaa1e60f280d28c24986ccaec",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-1024x768.png"
+    },
+    {
+      "file": "screenshots/fixture-1024x768-transcript.png",
+      "bytes": 62999,
+      "sha256": "3f962c86a8dc4da2629a3825748788d483237546c24018f1607388d53e4e9a5d",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-1024x768-transcript.png"
+    },
+    {
+      "file": "screenshots/fixture-1440x900.png",
+      "bytes": 61028,
+      "sha256": "384214d54a88a08943c5aa4b8041234b81d0203acc56acbd66f248ad53ecbf71",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-1440x900.png"
+    },
+    {
+      "file": "screenshots/fixture-1440x900-transcript.png",
+      "bytes": 71586,
+      "sha256": "4558298983b33fd2e5e30a2f7a5dccb3920751be7c27d52b966cd0f52be127c9",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-1440x900-transcript.png"
+    },
+    {
+      "file": "screenshots/fixture-1440x900-resized-focus.png",
+      "bytes": 24225,
+      "sha256": "333a9ebf3bd098420f0cb01f0b73ec818812159c7fba1f79f1c91d5c2f02cd13",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-1440x900-resized-focus.png"
+    },
+    {
+      "file": "screenshots/fixture-1920x1080.png",
+      "bytes": 67603,
+      "sha256": "49fcf5cfd5730c97748498ffd55dbe16cf20b8d9f3b6f1394a5050811c05e8f7",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-1920x1080.png"
+    },
+    {
+      "file": "screenshots/fixture-1920x1080-transcript.png",
+      "bytes": 80214,
+      "sha256": "82f4776bf0f2982db4cd6519880f38c47856e12d2ba23e7a79a02820d284a2c8",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-1920x1080-transcript.png"
+    },
+    {
+      "file": "screenshots/fixture-1280x900.png",
+      "bytes": 59324,
+      "sha256": "e5d886c691d86346ed641dd69b492e3377a1f4802ec4a738fda61e1d0f171948",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-1280x900.png"
+    },
+    {
+      "file": "screenshots/fixture-1280x900-transcript.png",
+      "bytes": 67221,
+      "sha256": "ae9dbe708c205c3a2deb5fe0fbc422f62e361895db5c221f1b1cde421b394ee4",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-1280x900-transcript.png"
+    },
+    {
+      "file": "screenshots/fixture-1023x900.png",
+      "bytes": 54980,
+      "sha256": "72d61293515bca52705bbe1190f82dcc8c091a64c7096ab1702bef4402ce2f91",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-1023x900.png"
+    },
+    {
+      "file": "screenshots/fixture-1023x900-transcript.png",
+      "bytes": 34886,
+      "sha256": "f5f9209d9f823b564d4d1cb6612ec0e72087ea691fed884f74b3803fc679f3de",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-1023x900-transcript.png"
+    },
+    {
+      "file": "screenshots/fixture-767x900.png",
+      "bytes": 39121,
+      "sha256": "02773e0b33bc2f139b7faa7b45ed7165bef1aa13b0e75c50ccd1e044d91c95d8",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-767x900.png"
+    },
+    {
+      "file": "screenshots/fixture-767x900-transcript.png",
+      "bytes": 23651,
+      "sha256": "377ef4468094c6c1e402ec25aabd827cb1223bca43f202aa1cbdc2480868faf8",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/fixture-767x900-transcript.png"
+    },
+    {
+      "file": "screenshots/missing-timeline.png",
+      "bytes": 22800,
+      "sha256": "54e27d0fbcb6dd59213c3b820554f4ca5080a400578b452ffa0540b2119fd150",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/missing-timeline.png"
+    },
+    {
+      "file": "screenshots/invalid-timeline.png",
+      "bytes": 37741,
+      "sha256": "2b0f5a01066c1973e8fdcd6e8f0dacfd75adfb06eab4b9e7f836bb9a2705408b",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/invalid-timeline.png"
+    },
+    {
+      "file": "screenshots/navigation-lifecycle.png",
+      "bytes": 62246,
+      "sha256": "2823e10d132aac42fb534b65517a94739e802df741fbefdf1358910a3e8479e6",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/navigation-lifecycle.png"
+    },
+    {
+      "file": "screenshots/navigation-BTCUSD.png",
+      "bytes": 132990,
+      "sha256": "ed87603ba873344b56a2aae3958b81ece6db253615b4c0d53fd3f7af10e5f972",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/navigation-BTCUSD.png"
+    },
+    {
+      "file": "screenshots/navigation-ETHUSD.png",
+      "bytes": 201969,
+      "sha256": "13dda4e091ccd801c822d785615fe822a85c9bee3aa8cc7f22833e5e5f51a684",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-conference-browser/navigation-ETHUSD.png"
+    },
+    {
+      "file": "timeline-verification.json",
+      "bytes": 984,
+      "sha256": "d69bb7dacca8aef8ca8f2e0e126fab58a49b1013e80fc1da17a5b10e4e5adfe3",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/timeline-verification-final.json"
+    },
+    {
+      "file": "source-preservation.json",
+      "bytes": 1864,
+      "sha256": "71a0a8d9c453afca273fc0ed7952f8c6c6af7439093b4b3d9aa11fe8d68c0ce8",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/source-preservation-final.json"
+    },
+    {
+      "file": "protected-refs-before.json",
+      "bytes": 355,
+      "sha256": "f8d1d1984265b3dc538c86bfd53e6b59a176900acc3219179f78dd5c22c1c993",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/protected-refs-before.json"
+    },
+    {
+      "file": "r10/summary.json",
+      "bytes": 4395,
+      "sha256": "56e9e87455c06327f4ce999715a0d10963d4e383b03c4667a6734ad576765f01",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/summary.json"
+    },
+    {
+      "file": "r10/run.log.gz",
+      "bytes": 1704,
+      "sha256": "67470019e58e5c37299847c1a6cc09aba7448327a353f4707f42e5c584f021c2",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/p1a-r10-browser-gates.log",
+      "uncompressedBytes": 15111,
+      "uncompressedSha256": "b27d617528dea2ac49b9db2222cd9eddd6c306456163f2dd003a7e9c01b0868c"
+    },
+    {
+      "file": "r10/responsive-BTCUSD-report.json.gz",
+      "bytes": 14347,
+      "sha256": "705cf2c53170a9351f1ff692a158b1b0d3dbadd714f6a253c6bac91ffd92fe5b",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/responsive-BTCUSD/report.json",
+      "uncompressedBytes": 259115,
+      "uncompressedSha256": "9e11031772da61be0b708301d238e5b42b5442fb3d5217796c07fe9a58ff69f2"
+    },
+    {
+      "file": "r10/responsive-BTCUSD-run.log.gz",
+      "bytes": 497,
+      "sha256": "b6a70a2c859b6f3bd075fd36481898d7434c79aed6569efd1da86855cda6770b",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/responsive-BTCUSD/run.log",
+      "uncompressedBytes": 2259,
+      "uncompressedSha256": "89b89ddb81f54afe051e5e92b71bb0031345c5d359741938f787b0e9de360acc"
+    },
+    {
+      "file": "screenshots/r10-responsive-BTCUSD.png",
+      "bytes": 52265,
+      "sha256": "b2a994705d4b5307a4d6047185be652eff362156572eddea2a6db1b3d7529db9",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/responsive-BTCUSD/phone-320x568-feature-panel-open.png"
+    },
+    {
+      "file": "r10/responsive-ETHUSD-report.json.gz",
+      "bytes": 12122,
+      "sha256": "705a0e99349d16a5c68bcf22fb902376031bf0c4d9ff21cf97ad81bf35c501b3",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/responsive-ETHUSD/report.json",
+      "uncompressedBytes": 223260,
+      "uncompressedSha256": "e79d8a890bbc3b5690765c65fd2ed84afca139b8183232813c4dbf8da054bc09"
+    },
+    {
+      "file": "r10/responsive-ETHUSD-run.log.gz",
+      "bytes": 497,
+      "sha256": "0b99e9bd28af0c6d30bdd1ee7b5612efecea2ea04f7a6bc09d9f28b10ee73026",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/responsive-ETHUSD/run.log",
+      "uncompressedBytes": 2259,
+      "uncompressedSha256": "a08368c1a64f3f4ecf701798a65727c08d5b5f2c19d8d5944651b3f7994b9bf3"
+    },
+    {
+      "file": "screenshots/r10-responsive-ETHUSD.png",
+      "bytes": 38683,
+      "sha256": "bd49799ae7c748e79649304d8308432bb2c4cf4965dc3bc40567ace1dbbad464",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/responsive-ETHUSD/phone-320x568-feature-panel-open.png"
+    },
+    {
+      "file": "r10/responsive-MSTR-report.json.gz",
+      "bytes": 11850,
+      "sha256": "3104ec302eaf34f94b4a7498096922a06c4278ab1ccd3571ef922d3ff126dfd5",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/responsive-MSTR/report.json",
+      "uncompressedBytes": 204629,
+      "uncompressedSha256": "6de14a70ca8458db56e58a964c17ad2972fb3c8fa39906594802d49ec99f701a"
+    },
+    {
+      "file": "r10/responsive-MSTR-run.log.gz",
+      "bytes": 497,
+      "sha256": "569b3391e5ed95ec504121a7ae8ed24e42589a13b4022ab4b51868da02003dfc",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/responsive-MSTR/run.log",
+      "uncompressedBytes": 2255,
+      "uncompressedSha256": "5fa049417d79a6b4c0b10b1557fce5d0569516bc29cbb4055fc52c2c066d56c0"
+    },
+    {
+      "file": "screenshots/r10-responsive-MSTR.png",
+      "bytes": 28874,
+      "sha256": "b9701606a8160af25869552f2b165119380116f0d478a4ad3696f0f8d5f650ca",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/responsive-MSTR/phone-320x568-feature-panel-open.png"
+    },
+    {
+      "file": "r10/responsive-BMNR-report.json.gz",
+      "bytes": 11864,
+      "sha256": "6c6c7bc07ae063414dfac03dd1fc21f7bb6b28a3d4abe988ee8e28b84e37261f",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/responsive-BMNR/report.json",
+      "uncompressedBytes": 204891,
+      "uncompressedSha256": "2028cee779c9aee8c1665a876c8273fa83b5730cfb38c46d266494068a7691f6"
+    },
+    {
+      "file": "r10/responsive-BMNR-run.log.gz",
+      "bytes": 496,
+      "sha256": "e87b60149647c0efb7de34c3a3066553a0564085f7ba85734f0aedb95874f35a",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/responsive-BMNR/run.log",
+      "uncompressedBytes": 2255,
+      "uncompressedSha256": "1f79823f835678e246106d7cdcedcb30932e4732c984305f36b91de286510a66"
+    },
+    {
+      "file": "screenshots/r10-responsive-BMNR.png",
+      "bytes": 32234,
+      "sha256": "d2cc6d7b24dbad3178b7ac8a23a3e00a9585b5802b8c8810009e318319ec6b58",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/responsive-BMNR/phone-320x568-feature-panel-open.png"
+    },
+    {
+      "file": "r10/wp6-report.json.gz",
+      "bytes": 105379,
+      "sha256": "3171fae88168d40904fd5047279df2137248be58d21de3e42e65d97f03109a7b",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/wp6/report.json",
+      "uncompressedBytes": 1611841,
+      "uncompressedSha256": "35fe6d349533416345999f960507ba8858ca4ebc964af9e5655b62375eee51c8"
+    },
+    {
+      "file": "r10/wp6-run.log.gz",
+      "bytes": 355,
+      "sha256": "ed506d1f883d05d9f40d5e810327d175bc709d0fc5fd4b1ef2dff620b7f50b06",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/wp6/run.log",
+      "uncompressedBytes": 1869,
+      "uncompressedSha256": "57e3fdab1ffb4b14bcabb6f6985cb9b2676be1545f7bda9bbd6999d8f7903916"
+    },
+    {
+      "file": "screenshots/r10-wp6.png",
+      "bytes": 101904,
+      "sha256": "6eea5f9dbb2996c066478d63c9c4f21713cbe223223feb2e1bd8eed4ba948364",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/wp6/btcusd-390x844-chart.png"
+    },
+    {
+      "file": "r10/chart-qa-report.json.gz",
+      "bytes": 73121,
+      "sha256": "b7f97ad9c116ee18f74bfffef480da5533f402e4ab05f1b464d78412705a6117",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/chart-qa/report.json",
+      "uncompressedBytes": 729919,
+      "uncompressedSha256": "02f242e9cf342a440d92d1efb5b570d6d23925df122ac5c4e02204d56a4bfc11"
+    },
+    {
+      "file": "r10/chart-qa-run.log.gz",
+      "bytes": 291,
+      "sha256": "d784c66fe9c89773fac30f0121be9caada92ea74ae638a0b938059feeab3cba8",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/chart-qa/run.log",
+      "uncompressedBytes": 893,
+      "uncompressedSha256": "e557e8347a910267900d2c3c0a9bd23ca6dd26d9f3acf2aabb1e796b2e22b153"
+    },
+    {
+      "file": "screenshots/r10-chart-qa.png",
+      "bytes": 101904,
+      "sha256": "6eea5f9dbb2996c066478d63c9c4f21713cbe223223feb2e1bd8eed4ba948364",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/r10/chart-qa/btcusd-390x844-chart.png"
+    },
+    {
+      "file": "r10/screenshot-validation.json",
+      "bytes": 36572,
+      "sha256": "08e5492c51b54ae50d04dca40db6e08956aa4d7a4f89e8b4aef6960e5b86550c"
+    },
+    {
+      "file": "compare/report.json.gz",
+      "bytes": 7664,
+      "sha256": "8b751cdb5a7463a073ee4c200776e67cb9c666ee42671a13c49168c8c233bf1e",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/compare/compare-shell-verify.json",
+      "uncompressedBytes": 129073,
+      "uncompressedSha256": "d4d48e72332078cc0fcce41f03c014f95a095acbd77471ecf672540320e3d214"
+    },
+    {
+      "file": "compare/cleanup-receipt.json",
+      "bytes": 245,
+      "sha256": "1237c2ac325809218dd846755b81637d26240bfc0c81bfdacbb822099f5e0df3",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/compare/cleanup-receipt.json"
+    },
+    {
+      "file": "compare/execution-receipt.json",
+      "bytes": 1752,
+      "sha256": "586a839d4005fae8d385eec383549485606dfc0f10f65d992987d269c5e9c908",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/compare/execution-receipt.json"
+    },
+    {
+      "file": "compare/png-validation.json",
+      "bytes": 856,
+      "sha256": "0f62f3c29a530e6c8f89a31cbe035ca00988f3cebfb6051a7459b863d145391a",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/compare/png-validation.json"
+    },
+    {
+      "file": "compare/result-summary.json",
+      "bytes": 15514,
+      "sha256": "bb6f842af7654237626f2689860f5cb76082d382b0fc5ee0b17e097fc13cd648",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/compare/result-summary.json"
+    },
+    {
+      "file": "compare/run.log.gz",
+      "bytes": 2018,
+      "sha256": "3cc15feb72e4d0359d820402707eb9e6740fd6f6ff173b28ad2c99a49a961ef8",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/compare/run.log",
+      "uncompressedBytes": 21832,
+      "uncompressedSha256": "3fd502362af90b0911ebfc3d9baf076edb4cabd499c91a95c9a7277b873f84e7"
+    },
+    {
+      "file": "screenshots/compare-1280x800.png",
+      "bytes": 101000,
+      "sha256": "9ee74bc54e47590b27859694083369059ae3405dd74c9c0ea870cda17007b9ed",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/compare/compare-1280x800.png"
+    },
+    {
+      "file": "screenshots/compare-1920x1080.png",
+      "bytes": 134446,
+      "sha256": "e1ab598d0cbcef99ab2e20dca06f52cc0c3e1d91737ebff47b67dc400dd5a6dd",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/compare/compare-1920x1080.png"
+    },
+    {
+      "file": "screenshots/compare-390x844.png",
+      "bytes": 58158,
+      "sha256": "8613a7841d22495d0801a9dbdcd010ef6e1cbae919171ee8163378061e890f5c",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/conference-p1a/compare/compare-390x844.png"
+    },
+    {
+      "file": "compare/screenshot-validation.json",
+      "bytes": 589,
+      "sha256": "296be27935b8921e1f615833c64e987e4fa0a8dd624cc65401a675be706488ad"
+    },
+    {
+      "file": "supplemental-53/report.json.gz",
+      "bytes": 588177,
+      "sha256": "ec54f3711bdc8d0ade0e000fa31a73c73728c76e46fc3edea52b46009c74456a",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-eth-browser/report.json",
+      "uncompressedBytes": 7535639,
+      "uncompressedSha256": "a83b286642880864f7f2fd581424e6fea26d2b261795af535ef28ab2784d9747"
+    },
+    {
+      "file": "supplemental-53/compact-receipt.json",
+      "bytes": 21919,
+      "sha256": "54e8fdffcab53afdfdeb4d8acdf9ebf6508942c5a6f689d34a3508755fb21873",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-eth-browser/compact-receipt.json"
+    },
+    {
+      "file": "supplemental-53/screenshot-validation.json.gz",
+      "bytes": 22423,
+      "sha256": "76843bb5bbef782a7f94232ab95e63e1e3dcc90be3d75eb6a752b876d0a6db9a",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-eth-browser/screenshot-validation.json",
+      "uncompressedBytes": 113430,
+      "uncompressedSha256": "6f981d3ed6c06b0353699e645a088f8821869f226a733498a45e58d0eba3b9f4"
+    },
+    {
+      "file": "supplemental-53/run.log.gz",
+      "bytes": 1770110,
+      "sha256": "b5232d0d14f74c79849199ee5dc42af207c0d7b666f9f3657517a1b7a9802756",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-eth-browser.log",
+      "uncompressedBytes": 14207175,
+      "uncompressedSha256": "7911d8247da3756ea8ebcb966b3bf271abbf0bcc533d26ed0c5ae0630c94444e"
+    },
+    {
+      "file": "supplemental-53/final-input-equivalence.json",
+      "bytes": 38054,
+      "sha256": "0eeb7c9adbe1cd70661f91f18bfcdfb83f92fb67c7f9c2367ee9b1b601cdda36"
+    },
+    {
+      "file": "screenshots/supplemental-53-failure.png",
+      "bytes": 196139,
+      "sha256": "b7a1c438bede6034e27350dd5fc2dc08a60cbea63f0b4ed3885e90bcdb23f459",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-eth-browser/chart-replay-btc-1440-failure.png"
+    },
+    {
+      "file": "quiet-replay-7/report.json.gz",
+      "bytes": 157704,
+      "sha256": "6203bc810efd5987b96f6839ea60b05136eb8c0166e14396531537a7543a7a08",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-chart-replay-quiet/report.json",
+      "uncompressedBytes": 3739169,
+      "uncompressedSha256": "1add8bedfd19cddd2fb480c8af8620002d07241735b3063953bdf24bfae09490"
+    },
+    {
+      "file": "quiet-replay-7/compact-receipt.json",
+      "bytes": 19401,
+      "sha256": "af0ea5ce3e68babc45f48a58abd3e5300634c853c4fcb3fe866067803d0f5a16",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-chart-replay-quiet/compact-receipt.json"
+    },
+    {
+      "file": "quiet-replay-7/screenshot-validation.json.gz",
+      "bytes": 6223,
+      "sha256": "50eeb112953d77b4334c7a4431d125396c9803a1e908db6e98c7025f33220c91",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-chart-replay-quiet/screenshot-validation.json",
+      "uncompressedBytes": 30215,
+      "uncompressedSha256": "7f969c31c41feb62ddbb85f44bf2e415406c32f07a13f98a1814b650692ebf35"
+    },
+    {
+      "file": "quiet-replay-7/run.log.gz",
+      "bytes": 827543,
+      "sha256": "3f8c53bce9381df2c2986d3ff4dfca4591be7a5f49d91fac85304bfdea5036df",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/bitcoin-cycle-atlas/build/p1a-chart-replay-quiet.log",
+      "uncompressedBytes": 7270777,
+      "uncompressedSha256": "bfcd2551177ed5b35d22c072412aca7c9bb8c1e6779834163c2d9f7786becf2a"
+    },
+    {
+      "file": "runtime.json",
+      "bytes": 4469,
+      "sha256": "9be6b6da738cba275ef653ffaee23bdea96caebc6bb5f1b7a36fd04205fdc001",
+      "sourceFile": "/workspace/scratch/55a6bfaf803b/conference-final-runtime-summary.json"
+    },
+    {
+      "file": "summary.json",
+      "bytes": 12377,
+      "sha256": "a288adb9b58d37a52b35a6412136f500ed8b2e6628debf34d5ac545dc047c2c2"
+    }
+  ],
+  "note": "Hashes cover every packaged file except this manifest. Gzip payloads also preserve hashes of the uncompressed original receipts/logs. No report is relabelled to another source SHA."
+}

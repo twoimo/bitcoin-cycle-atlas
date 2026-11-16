@@ -1,0 +1,17 @@
+{
+  "name": "panels",
+  "command": [
+    "npm",
+    "run",
+    "test:panels"
+  ],
+  "sourceCommit": "180c55df48242ae8afe83f8b80ada457d552d2a7",
+  "sourceTree": "2b42ccece90d7a4be639c40f892be4aa8a9b79ef",
+  "startedAt": "2026-11-11T19:16:20.915761+00:00",
+  "exitCode": 1,
+  "durationSec": 0.388,
+  "finishedAt": "2026-11-11T19:16:21.300156+00:00",
+  "headAfter": "180c55df48242ae8afe83f8b80ada457d552d2a7",
+  "trackedDiffAfter": "",
+  "logSha256": "a7c8c3f9a623f4743adfae7812c699208ad35b6f72ff58874a2c4349ad445cc7"
+}

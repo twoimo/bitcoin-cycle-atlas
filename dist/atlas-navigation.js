@@ -15,6 +15,7 @@ export const atlasPages = Object.freeze([
   {id:'data', label:'자산 비교', title:'자산 비교', view:'data', href:'/?page=data', icon:'M3 4h18v16H3zM3 10h18M3 15h18M9 4v16'},
   {id:'ipo', label:'공모주', title:'공모주', view:'ipo', href:'/?page=ipo', icon:'M3 6h18v15H3zM3 11h18M8 3v5M16 3v5'},
   {id:'relay', label:'릴레이 콘텐츠', title:'릴레이 콘텐츠', view:'relay', href:'/?page=relay', icon:'M4 5h16v11H7l-3 3V5Zm4 4h8M8 12h5'},
+  {id:'conference', label:'컨퍼런스 복습', title:'컨퍼런스 복습', view:'conference', href:'/?page=conference', icon:'M3 4h18v13H3zM8 21l4-4 4 4M10 7l5 3-5 3V7Z'},
 ]);
 export function isWorkspaceChart(page) {
   const id=typeof page==='string'?page:page?.id;

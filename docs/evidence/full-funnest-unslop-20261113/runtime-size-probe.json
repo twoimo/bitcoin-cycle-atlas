@@ -1,0 +1,11 @@
+{
+  "kind": "artifact-size-only-not-runtime-performance",
+  "current": {
+    "bytes": 186771,
+    "gzip": 49747
+  },
+  "minified": {
+    "bytes": 105944,
+    "gzip": 34968
+  }
+}

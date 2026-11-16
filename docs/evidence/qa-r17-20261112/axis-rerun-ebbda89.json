@@ -1,0 +1,290 @@
+{
+ "schemaVersion": 1,
+ "kind": "atlas-r17-price-axis-harness-rerun",
+ "recordedAt": "2026-11-12T08:28:45.519Z",
+ "testedHead": "ebbda8935f3a69f302003f96f3cd2c3def10955b",
+ "harnessCommit": "ebbda89",
+ "productChangeCommit": "91cf41c",
+ "command": "node scripts/verify-price-axis-browser.mjs --out build/qa-r17-20261112/axis2",
+ "browser": {
+  "protocolVersion": "1.3",
+  "product": "Chrome/157.0.8103.79",
+  "revision": "@6dc9bc3bdaea5c35ed6d41fceab2f7a3a2227c4f",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+  "jsVersion": "15.7.112.43"
+ },
+ "counts": {
+  "required": 16,
+  "attempted": 16,
+  "unattempted": 0,
+  "passed": 14,
+  "failed": 2,
+  "default": 7,
+  "candles": 7,
+  "alignmentPairs": 8,
+  "alignmentPassed": 8
+ },
+ "coverageStatus": "passed",
+ "status": "failed",
+ "reason": [
+  "ETHUSD-320-default: frame-axis-0: hud hud-7:time#eth-bar-time:text-0 occludes 13 square CSS pixels",
+  "ETHUSD-320-candles: frame-axis-0: hud hud-7:time#eth-bar-time:text-0 occludes 13 square CSS pixels"
+ ],
+ "cases": [
+  {
+   "id": "BTCUSD-320-default",
+   "symbol": "BTCUSD",
+   "width": 320,
+   "mode": "default",
+   "status": "passed",
+   "failures": [],
+   "boot": "ready",
+   "overflow": 0,
+   "screenshot": {
+    "file": "BTCUSD-320-default.png",
+    "sha256": "da4aae1e0730479c1f8bbc87ab90d32e69cf1c09fbe866736c3320ddd8f97044",
+    "bytes": 89159
+   }
+  },
+  {
+   "id": "ETHUSD-320-default",
+   "symbol": "ETHUSD",
+   "width": 320,
+   "mode": "default",
+   "status": "failed",
+   "failures": [
+    "frame-axis-0: hud hud-7:time#eth-bar-time:text-0 occludes 13 square CSS pixels"
+   ],
+   "boot": "ready",
+   "overflow": 0,
+   "screenshot": {
+    "file": "ETHUSD-320-default.png",
+    "sha256": "3414571cb2379e198a92f8ef679b5ea15a219e736ff5c7ebc5d06ac426d07e2f",
+    "bytes": 64685
+   }
+  },
+  {
+   "id": "BTCUSD-390-default",
+   "symbol": "BTCUSD",
+   "width": 390,
+   "mode": "default",
+   "status": "passed",
+   "failures": [],
+   "boot": "ready",
+   "overflow": 0,
+   "screenshot": {
+    "file": "BTCUSD-390-default.png",
+    "sha256": "6adf7f048e28d7c504498598474d32e941ea6921448665c7722bc4446d5b21b2",
+    "bytes": 105066
+   }
+  },
+  {
+   "id": "ETHUSD-390-default",
+   "symbol": "ETHUSD",
+   "width": 390,
+   "mode": "default",
+   "status": "passed",
+   "failures": [],
+   "boot": "ready",
+   "overflow": 0,
+   "screenshot": {
+    "file": "ETHUSD-390-default.png",
+    "sha256": "bd472a2c02c7424614eb0b39801327d15d6ac01cec3ac38a1a97855ea9f45f4a",
+    "bytes": 69659
+   }
+  },
+  {
+   "id": "BTCUSD-768-default",
+   "symbol": "BTCUSD",
+   "width": 768,
+   "mode": "default",
+   "status": "passed",
+   "failures": [],
+   "boot": "ready",
+   "overflow": 0,
+   "screenshot": {
+    "file": "BTCUSD-768-default.png",
+    "sha256": "012cae1438d53adcace326c8a1d1c34255379bd0d6088f8fd9a1b18366f27510",
+    "bytes": 177871
+   }
+  },
+  {
+   "id": "ETHUSD-768-default",
+   "symbol": "ETHUSD",
+   "width": 768,
+   "mode": "default",
+   "status": "passed",
+   "failures": [],
+   "boot": "ready",
+   "overflow": 0,
+   "screenshot": {
+    "file": "ETHUSD-768-default.png",
+    "sha256": "5703cc11711a7e9d5a42c91f09a5f3236756bb04902464f066304922cd7353d1",
+    "bytes": 117640
+   }
+  },
+  {
+   "id": "BTCUSD-1440-default",
+   "symbol": "BTCUSD",
+   "width": 1440,
+   "mode": "default",
+   "status": "passed",
+   "failures": [],
+   "boot": "ready",
+   "overflow": 0,
+   "screenshot": {
+    "file": "BTCUSD-1440-default.png",
+    "sha256": "ef5b19cfc7e3586f117ccbeeba5828a71743e5ff91d5b476cfb1d87f12897718",
+    "bytes": 251307
+   }
+  },
+  {
+   "id": "ETHUSD-1440-default",
+   "symbol": "ETHUSD",
+   "width": 1440,
+   "mode": "default",
+   "status": "passed",
+   "failures": [],
+   "boot": "ready",
+   "overflow": 0,
+   "screenshot": {
+    "file": "ETHUSD-1440-default.png",
+    "sha256": "ebc3367714ee4d2494aebe225f2110104d19f497230bdfb6f16c5e9b48cfbf39",
+    "bytes": 165624
+   }
+  },
+  {
+   "id": "BTCUSD-320-candles",
+   "symbol": "BTCUSD",
+   "width": 320,
+   "mode": "candles",
+   "status": "passed",
+   "failures": [],
+   "boot": "ready",
+   "overflow": 0,
+   "screenshot": {
+    "file": "BTCUSD-320-candles.png",
+    "sha256": "33480d0996d20ce2980fed90a066c7a30033efa360b78ebb08c02bc9b1d469a4",
+    "bytes": 96706
+   }
+  },
+  {
+   "id": "ETHUSD-320-candles",
+   "symbol": "ETHUSD",
+   "width": 320,
+   "mode": "candles",
+   "status": "failed",
+   "failures": [
+    "frame-axis-0: hud hud-7:time#eth-bar-time:text-0 occludes 13 square CSS pixels"
+   ],
+   "boot": "ready",
+   "overflow": 0,
+   "screenshot": {
+    "file": "ETHUSD-320-candles.png",
+    "sha256": "94cd85a160bbbd9d00bf7db63abdba0ab8b54cec81d727c2028cc9bae9a8a772",
+    "bytes": 65943
+   }
+  },
+  {
+   "id": "BTCUSD-390-candles",
+   "symbol": "BTCUSD",
+   "width": 390,
+   "mode": "candles",
+   "status": "passed",
+   "failures": [],
+   "boot": "ready",
+   "overflow": 0,
+   "screenshot": {
+    "file": "BTCUSD-390-candles.png",
+    "sha256": "7f9cbf74a50c8640d1c421b64d2684dd5d52024ab16e6aece8dde62f4c21cf8e",
+    "bytes": 112546
+   }
+  },
+  {
+   "id": "ETHUSD-390-candles",
+   "symbol": "ETHUSD",
+   "width": 390,
+   "mode": "candles",
+   "status": "passed",
+   "failures": [],
+   "boot": "ready",
+   "overflow": 0,
+   "screenshot": {
+    "file": "ETHUSD-390-candles.png",
+    "sha256": "6bcec4d67d208a58ae0b0514323950919a2236a734ff65401f32e852acf98bc7",
+    "bytes": 71462
+   }
+  },
+  {
+   "id": "BTCUSD-768-candles",
+   "symbol": "BTCUSD",
+   "width": 768,
+   "mode": "candles",
+   "status": "passed",
+   "failures": [],
+   "boot": "ready",
+   "overflow": 0,
+   "screenshot": {
+    "file": "BTCUSD-768-candles.png",
+    "sha256": "065e1f282634d3ce4d60257528503d03263455638715bbdd263d46ac1f942644",
+    "bytes": 185004
+   }
+  },
+  {
+   "id": "ETHUSD-768-candles",
+   "symbol": "ETHUSD",
+   "width": 768,
+   "mode": "candles",
+   "status": "passed",
+   "failures": [],
+   "boot": "ready",
+   "overflow": 0,
+   "screenshot": {
+    "file": "ETHUSD-768-candles.png",
+    "sha256": "dd1e4614d5f258db6ea6896cc5e5e51e3d6c96420dc58374fc9d5f4eeb983b23",
+    "bytes": 119735
+   }
+  },
+  {
+   "id": "BTCUSD-1440-candles",
+   "symbol": "BTCUSD",
+   "width": 1440,
+   "mode": "candles",
+   "status": "passed",
+   "failures": [],
+   "boot": "ready",
+   "overflow": 0,
+   "screenshot": {
+    "file": "BTCUSD-1440-candles.png",
+    "sha256": "d2ea905652a237fe00d705687a2c60daaccf83c57dc22068cb7c0b88a8fa2185",
+    "bytes": 253456
+   }
+  },
+  {
+   "id": "ETHUSD-1440-candles",
+   "symbol": "ETHUSD",
+   "width": 1440,
+   "mode": "candles",
+   "status": "passed",
+   "failures": [],
+   "boot": "ready",
+   "overflow": 0,
+   "screenshot": {
+    "file": "ETHUSD-1440-candles.png",
+    "sha256": "96b389e4a56013e36d6c2453c8a7a7e7eb12de6cdfeac6a489744ccebbeecdc5",
+    "bytes": 166485
+   }
+  }
+ ],
+ "previousRun": {
+  "status": "failed",
+  "counts": {
+   "required": 16,
+   "passed": 4,
+   "failed": 12
+  },
+  "reason": "12 cases failed at geometry: unsupported clip geometry on p#indicator-readout-date (clip-path: inset(50%), 1x1 sr-only)"
+ },
+ "conclusion": "Q-R17-1(sr-only clip) resolved: 12 previously failing cases now pass. Remaining 2 failures are a product-side collision: ETHUSD at 320px, #eth-bar-time (readout date) extends into the 64px price-axis gutter and the axis boundary line crosses the text (13 square CSS px occlusion). Tracked as Q-R17-2.",
+ "screenshots": "build/qa-r17-20261112/axis2/*.png"
+}

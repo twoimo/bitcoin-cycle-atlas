@@ -1,0 +1,427 @@
+{
+  "request": "Q-R19P1-2-f958db5",
+  "recordedAt": "2026-11-12T13:21:12.437Z",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "branch": "fix/tradingview-responsive-20261110",
+  "baselineCommit": "f958db5464ae64327365a86154fe454e8dd9ca1d",
+  "commits": {
+    "server": "e2aaa936140a1a2ec44ee2e63f00880d3496c1a5",
+    "servedShell": "fbe74b8f03393595f504c46c94bd2425c1154741"
+  },
+  "testedHead": "fbe74b8f03393595f504c46c94bd2425c1154741",
+  "testedTree": "9cd3d7bd818206b8058f69541e121c03609c5f54",
+  "workingTreeAtRun": [],
+  "status": "two-causes-fixed-mac-native-rerun-pending",
+  "rootHttp": {
+    "path": "/bitcoin-cycle-atlas/",
+    "file": "index.html",
+    "status": 200,
+    "redirected": false,
+    "contentType": "text/html;charset=utf-8",
+    "cacheControl": "no-store",
+    "bytes": 57006,
+    "sha256": "f0f94d3e68e6cbcfbfa0fbfb8b34c76f08b95548d8a7b52cd9d9059540ff0769",
+    "matchesFileBytes": true,
+    "startsWithDoctype": true
+  },
+  "httpChecks": {
+    "passedHtml": 10,
+    "passedStylesheets": 8,
+    "receipt": "http-fbe74b8.json",
+    "receiptSha256": "cadfa10bfff3994a9379209ede8ce091c0ba071c1711fede78fdbd9b7a17ea97",
+    "browserUsed": false
+  },
+  "pill768": {
+    "cause": "stale generated market entry omitted site-after-shell.css containing the existing P1 rule",
+    "cssSourceChanged": false,
+    "entries": [
+      "market-lab/",
+      "market-lab/us/"
+    ],
+    "rows": [
+      {
+        "id": "outlook",
+        "widthPx": 44,
+        "heightPx": 44,
+        "minHeightPx": 44,
+        "cornerRadiusPx": [
+          999,
+          999,
+          999,
+          999
+        ],
+        "requiredRadiusPx": 22,
+        "method": "source-cascade-regression-not-native-computed-style"
+      },
+      {
+        "id": "market-us",
+        "widthPx": 44,
+        "heightPx": 44,
+        "minHeightPx": 44,
+        "cornerRadiusPx": [
+          999,
+          999,
+          999,
+          999
+        ],
+        "requiredRadiusPx": 22,
+        "method": "source-cascade-regression-not-native-computed-style"
+      },
+      {
+        "id": "evidence",
+        "widthPx": 44,
+        "heightPx": 44,
+        "minHeightPx": 44,
+        "cornerRadiusPx": [
+          999,
+          999,
+          999,
+          999
+        ],
+        "requiredRadiusPx": 22,
+        "method": "source-cascade-regression-not-native-computed-style"
+      },
+      {
+        "id": "data",
+        "widthPx": 44,
+        "heightPx": 44,
+        "minHeightPx": 44,
+        "cornerRadiusPx": [
+          999,
+          999,
+          999,
+          999
+        ],
+        "requiredRadiusPx": 22,
+        "method": "source-cascade-regression-not-native-computed-style"
+      },
+      {
+        "id": "ipo",
+        "widthPx": 44,
+        "heightPx": 44,
+        "minHeightPx": 44,
+        "cornerRadiusPx": [
+          999,
+          999,
+          999,
+          999
+        ],
+        "requiredRadiusPx": 22,
+        "method": "source-cascade-regression-not-native-computed-style"
+      },
+      {
+        "id": "relay",
+        "widthPx": 44,
+        "heightPx": 44,
+        "minHeightPx": 44,
+        "cornerRadiusPx": [
+          999,
+          999,
+          999,
+          999
+        ],
+        "requiredRadiusPx": 22,
+        "method": "source-cascade-regression-not-native-computed-style"
+      },
+      {
+        "id": "conference",
+        "widthPx": 44,
+        "heightPx": 44,
+        "minHeightPx": 44,
+        "cornerRadiusPx": [
+          999,
+          999,
+          999,
+          999
+        ],
+        "requiredRadiusPx": 22,
+        "method": "source-cascade-regression-not-native-computed-style"
+      }
+    ],
+    "nativeComputedStyle": null,
+    "nativeMeasurements": 0,
+    "beforeSourceCascade": {
+      "heightPx": 44,
+      "cornerRadiusPx": 4
+    }
+  },
+  "p1Native": {
+    "status": "unverified",
+    "qualifiesP1Verification": false,
+    "counts": {
+      "requiredLayouts": 28,
+      "attemptedLayouts": 0,
+      "passedLayouts": 0,
+      "requiredNavigationActivations": 56,
+      "attemptedNavigationActivations": 0,
+      "passedNavigationActivations": 0,
+      "requiredChartReturns": 8,
+      "attemptedChartReturns": 0,
+      "passedChartReturns": 0
+    },
+    "sourceStable": true,
+    "blockedAt": "Chromium launch",
+    "exitCode": 1,
+    "blocker": "/usr/bin/chromium: 9: [: 5225713664: unexpected operator\n[29:29:1112/222038.591719:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)\n[1112/222038.591911:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)\n[1:1:0100/000000.672275:ERROR:content/zygote/zygote_main_linux.cc:197] Failed sending zygote boot message: Broken pipe (32)\n[51:51:0100/000000.672416:ERROR:content/zygote/zygote_linux.cc:662] write: Broken pipe (32)\n",
+    "screenshots": 0,
+    "viewports": [
+      {
+        "width": 320,
+        "height": 900,
+        "horizontalOverflowPx": null,
+        "nativeComputedStyle": null,
+        "status": "unmeasured"
+      },
+      {
+        "width": 390,
+        "height": 900,
+        "horizontalOverflowPx": null,
+        "nativeComputedStyle": null,
+        "status": "unmeasured"
+      },
+      {
+        "width": 768,
+        "height": 900,
+        "horizontalOverflowPx": null,
+        "nativeComputedStyle": null,
+        "status": "unmeasured"
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "horizontalOverflowPx": null,
+        "nativeComputedStyle": null,
+        "status": "unmeasured"
+      }
+    ]
+  },
+  "acceptedMacP0": {
+    "sourceCommit": "b78793531e9a7e4fe4b852b9df92d1f84204aa98",
+    "receipt": "../qa-r19p1-20261112/mac-b787935.json",
+    "counts": {
+      "required": 10,
+      "attempted": 10,
+      "passed": 10,
+      "failed": 0,
+      "unattempted": 0
+    },
+    "qualifiesP0Verification": true,
+    "sampleCoverage": {
+      "required": 40,
+      "observed": 40,
+      "passed": 40,
+      "status": "passed"
+    },
+    "settingsIcon": [
+      {
+        "theme": "light",
+        "observations": 2,
+        "threshold": 3,
+        "status": "passed"
+      },
+      {
+        "theme": "dark",
+        "observations": 2,
+        "threshold": 3,
+        "status": "passed"
+      }
+    ],
+    "rerunThisTask": false,
+    "preserved": true
+  },
+  "checks": {
+    "focused": {
+      "tests": 45,
+      "passed": 45,
+      "failed": 0,
+      "skipped": 0
+    },
+    "focusedBreakdown": {
+      "servedShell": 8,
+      "httpServer": 5,
+      "existingP1Contracts": 19,
+      "siteStyles": 5,
+      "sitePreloads": 8
+    },
+    "rootRegressionBeforeFix": {
+      "tests": 5,
+      "passed": 3,
+      "failed": 2,
+      "failuresWereRoot404": true
+    },
+    "static": {
+      "exitCode": 0,
+      "files": 1065,
+      "checkedScripts": 220,
+      "checkedReferences": 753
+    },
+    "styleBundleCheck": "passed",
+    "preloadGraphCheck": "passed",
+    "gateOutsideServerExact": true,
+    "broadSuiteRerun": false
+  },
+  "scope": {
+    "generatedOuterEntries": 9,
+    "embeddedReactAppChanged": false,
+    "builderChanged": false,
+    "productCssChanged": false,
+    "routesChanged": false,
+    "timeoutsChanged": false,
+    "checkVisibilityChanged": false,
+    "requiredMatrix": [
+      28,
+      56,
+      8
+    ],
+    "contrastThresholds": {
+      "text": 4.5,
+      "icon": 3.0
+    },
+    "priceAxisMinRight": 64,
+    "p2a0Started": false,
+    "mainPushed": false,
+    "forcePushed": false
+  },
+  "unchangedFiles": [
+    {
+      "path": "dist/equity-view.js",
+      "baselineSha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5",
+      "testedSha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5",
+      "unchanged": true
+    },
+    {
+      "path": "dist/eth-view.js",
+      "baselineSha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4",
+      "testedSha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4",
+      "unchanged": true
+    },
+    {
+      "path": "dist/instrument-indicator-overlay.js",
+      "baselineSha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a",
+      "testedSha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/verify-eth-candidate-browser.mjs",
+      "baselineSha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e",
+      "testedSha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e",
+      "unchanged": true
+    },
+    {
+      "path": "dist/price-axis.js",
+      "baselineSha256": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2",
+      "testedSha256": "37761b80fd29082e3f5c4487d648a6ea5250bf5c69959829a87ac4b21aae4ab2",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/verify-ui-renewal-p0-browser.mjs",
+      "baselineSha256": "d31fda26f00111f8d3b949e64bad629395af009cb516ac46c2e0165ad90eea26",
+      "testedSha256": "d31fda26f00111f8d3b949e64bad629395af009cb516ac46c2e0165ad90eea26",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/ui-renewal-p0-contract.mjs",
+      "baselineSha256": "d34d2644e93f3a8805b0e4043f3c31bf4fcfee4eb3b5bb46bf3bca0f47324f39",
+      "testedSha256": "d34d2644e93f3a8805b0e4043f3c31bf4fcfee4eb3b5bb46bf3bca0f47324f39",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/ui-renewal-p0-text-hit.mjs",
+      "baselineSha256": "ea481867cdf818d1cd41a1979467152c5a4a1230eed40e75bf1306a102078f64",
+      "testedSha256": "ea481867cdf818d1cd41a1979467152c5a4a1230eed40e75bf1306a102078f64",
+      "unchanged": true
+    },
+    {
+      "path": "dist/atlas-navigation.js",
+      "baselineSha256": "070b8ea1f27834ac53182065341b5ed208a0ebcb8cfa91725671f9b577dbc46b",
+      "testedSha256": "070b8ea1f27834ac53182065341b5ed208a0ebcb8cfa91725671f9b577dbc46b",
+      "unchanged": true
+    },
+    {
+      "path": "dist/index.html",
+      "baselineSha256": "f0f94d3e68e6cbcfbfa0fbfb8b34c76f08b95548d8a7b52cd9d9059540ff0769",
+      "testedSha256": "f0f94d3e68e6cbcfbfa0fbfb8b34c76f08b95548d8a7b52cd9d9059540ff0769",
+      "unchanged": true
+    },
+    {
+      "path": "dist/styles.css",
+      "baselineSha256": "f01eb99a89ceb1ed81ab9d58e96c12973d351f50dbeef31d05dee8f38c498aa5",
+      "testedSha256": "f01eb99a89ceb1ed81ab9d58e96c12973d351f50dbeef31d05dee8f38c498aa5",
+      "unchanged": true
+    },
+    {
+      "path": "dist/ui/shell-layout.css",
+      "baselineSha256": "ac7fdce828317cbc493c49e3e8c8f1d04feb387e13a1202ef79f9bf55bf78584",
+      "testedSha256": "ac7fdce828317cbc493c49e3e8c8f1d04feb387e13a1202ef79f9bf55bf78584",
+      "unchanged": true
+    },
+    {
+      "path": "dist/site-after-shell.css",
+      "baselineSha256": "8910918e453aca6262f1fd8edfbed940f0614c33965e461b18e1e2e227727b08",
+      "testedSha256": "8910918e453aca6262f1fd8edfbed940f0614c33965e461b18e1e2e227727b08",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/qa-r19p1-20261112/mac-b787935.json",
+      "baselineSha256": "e906a90abab488a5beb27021da536651f86279971a1b2eb4ff29cf3c7d27492a",
+      "testedSha256": "e906a90abab488a5beb27021da536651f86279971a1b2eb4ff29cf3c7d27492a",
+      "unchanged": true
+    }
+  ],
+  "nativeReceipt": {
+    "file": "p1-fbe74b8.report.json.gz",
+    "rawBytes": 254497,
+    "rawSha256": "8c5151409ace3f4b658fd9632c6fcdaff31c4d8ea392ee8e9e8fac31581fb452",
+    "archiveSha256": "7a60c7aabacf822e297c23357bbedaa119c24985893d97af2a74a6438161d51c"
+  },
+  "checkLogArchive": {
+    "file": "checks.log.tar.gz",
+    "sha256": "bcd1b6c031ce4a80b7deda1289d41789cc02aa7117fe489a391bd04d6bcda783",
+    "files": [
+      {
+        "file": "qr19p1-2-http-before.tap",
+        "bytes": 2116,
+        "sha256": "8eff53405ef79a749f9e72e5bab782d02fa3dfb2e91c1faed082e4487b1e3a48"
+      },
+      {
+        "file": "qr19p1-2-server-tests.tap",
+        "bytes": 3754,
+        "sha256": "c9f2bf7d41a7e6d8ce0a015008f8b10ca05bda3f20abb893b8358af5225663eb"
+      },
+      {
+        "file": "qr19p1-2-focused.tap",
+        "bytes": 5993,
+        "sha256": "8ef6ccac629a18d40737d31fc933d665b3dca9687cc55ce0a8065b2df09e780f"
+      },
+      {
+        "file": "qr19p1-2-static.log",
+        "bytes": 304,
+        "sha256": "f59549507c79346e3f4de0a98d3948df0f300045b02d8f843ede3aac1cee1be8"
+      },
+      {
+        "file": "qr19p1-2-build-pages.log",
+        "bytes": 9493,
+        "sha256": "0f09b83619c2ae4f66ff0eba5b1aeaa92588c9182f4a0c4056b8d4befc83e5ad"
+      },
+      {
+        "file": "qr19p1-2-native.log",
+        "bytes": 444,
+        "sha256": "8f78395e0f5593972ee1b9b2f33d11d3e9c6c85a11a3cc4880615e105a27285b"
+      }
+    ]
+  },
+  "changedImplementationFiles": [
+    "dist/market-lab/cashflow/index.html",
+    "dist/market-lab/charts/index.html",
+    "dist/market-lab/housing/index.html",
+    "dist/market-lab/index.html",
+    "dist/market-lab/kr/index.html",
+    "dist/market-lab/rsi/index.html",
+    "dist/market-lab/scenario/index.html",
+    "dist/market-lab/themes/index.html",
+    "dist/market-lab/us/index.html",
+    "scripts/verify-ui-renewal-p1-browser.mjs",
+    "tests/r19p1-served-shell.test.mjs",
+    "tests/ui-renewal-p1-server.test.mjs"
+  ]
+}

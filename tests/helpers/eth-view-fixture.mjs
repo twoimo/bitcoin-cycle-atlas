@@ -98,30 +98,38 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     ? [...document.body.nodes.values()].filter(node => 'bootContent' in node.dataset) : [];
   document.createElement = () => new Node(); document.fonts = { ready: Promise.resolve() };
   document.addEventListener('atlas:ready', () => emitted.push('atlas:ready'));
-  let frameId = 0, timerId = 0, navigation, historyOptions, resize;
+  let frameId = 0, timerId = 0, navigation, historyOptions, resize, workbenchUpdates = 0, workbenchOptions = null;
+  const indicatorRect={left:12,top:18,right:112,bottom:48,width:100,height:30};
+  const indicatorElement={hidden:true,getClientRects(){return this.hidden?[]:[indicatorRect];},getBoundingClientRect(){return indicatorRect;}};
   const mount = () => ({ cancel() {}, cancelPending() {}, destroy() {} });
   const fetchImpl = (url, options) => {
     const pending = deferred(); requests.push({ url, options, ...pending }); return pending.promise;
   };
+  const barsToSeries = new WeakMap();
+  const atlasCandlesToFunnestBars = series => { const bars=series.candles.map(row=>({...row,time:row.time*1000}));barsToSeries.set(bars,series);return bars; };
+  const mountObservedPriceChart = (_plot,options) => {
+    const record={...options,setAtlasRangeCalls:0,nativeRange:options.range?{from:options.range.start*1000,to:options.range.end*1000}:null,nativeMagnet:false,atlasMagnet:options.magnet||'off',chart:{layout:{plotWidth:554},setMagnet(value){record.nativeMagnet=value;},getVisibleTimeRange(){return record.nativeRange;}}};draws.push(record);
+    return {chart:record.chart,ready:async()=>({painted:true,status:'ready',bars:record.series.candles.length}),setData(bars){record.series=barsToSeries.get(bars);},setRange(range){const start=range.from/1000,end=range.to/1000;if(record.range?.start!==start||record.range?.end!==end)record.range={...record.range,start,end};},setAtlasRange(range){record.setAtlasRangeCalls++;record.range=range;record.nativeRange={from:range.start*1000,to:range.end*1000};},setChartType(value){record.chartType=value;},setScale(value){record.scale=value;},setAtlasInteraction(value){record.interaction={...value};record.atlasMagnet=value.magnet;},setAtlasRows(rows){record.sourceRows=rows;},setPriceExtrema(value){record.priceDomain=value;},setAtlasOverlays(value){Object.assign(record,value);},addOverlay(){return {redraw(){},remove(){}};},destroy(){record.destroyed=true;}};
+  };
   const deps = {
-    withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,nativeDateRange,
+    withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,nativeDateRange,mountObservedPriceChart,atlasCandlesToFunnestBars,
     mountNativeChartApp: app => document.body.append(app),
     // The real shell adapter is exercised separately with a parsed DOM. This
     // fixture owns network/loader races and keeps its DOM boundary explicit.
-    mountNativeChartWorkbench: () => ({update(){},inspect(){},measure(){},beginGesture(){},endGesture(){},destroy(){}}),
+    mountNativeChartWorkbench: options => (workbenchOptions = options, {update(){workbenchUpdates++;},inspect(){},measure(){},beginGesture(){},endGesture(){},destroy(){}}),
     setLoadingSurface:(element,busy)=>element?.setAttribute('data-skeleton',String(busy)),
     ...ohlc, ...ethData, ...ethState, ...events, ...eventHistory, marketStatusText,buildEthereumForecasts,buildEthereumAdaptiveForecast,buildEthereumPooledForecast,ethereumResearchPanel,
     createMarketDataController: options => createMarketDataController({ ...options, fetchImpl }),
     fetchMarketCandles: options => {
       const pending = deferred(); liveRequests.push({ options, ...pending }); return pending.promise;
     },
-    drawIntradayChart: options => { draws.push(options); return {}; },
     bindChartNavigation: options => { navigation = options; return { cancelGesture() {}, destroy() {}, update() {} }; },
     mountChartTouchTracking: mount, clearChartHover() {}, mountSymbolSelector: mount,
     // Inline replay owns a separate lifecycle, exercised by chart-replay-ui.test.mjs.
     mountChartReplay: () => ({isActive:()=>false,open(){},exit(){},destroy(){}}),
     bindPreservedArchiveDownload() {}, // DOM download behavior is verified separately.
     mountEthereumHistory: options => { historyOptions = options; return { update() {}, setSettings() {}, open() {}, destroy() {} }; },
+    mountInstrumentIndicatorOverlay: () => ({ update() {}, destroy() {}, reserveHeight: () => 0, element: indicatorElement }),
   };
   const source = await readFile(process.env.ETH_VIEW_SOURCE || new URL('../../dist/eth-view.js', import.meta.url), 'utf8');
   const transformed = source.replace(/^import\s*\{([^}]+)\}\s*from\s*['"][^'"]+['"];?\s*$/gm, (_, names) => `const {${names}} = __deps;`)
@@ -156,7 +164,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     app.dispatchEvent({ type: 'click', target });
   };
   return {
-    requests, liveRequests, frames, timers, draws, events: emitted, initialization, document, app, location, urlWrites,
+    requests, liveRequests, frames, timers, draws, events: emitted, initialization, document, app, location, urlWrites, indicator:indicatorElement,indicatorRect,workbenchUpdates:()=>workbenchUpdates,workbench:()=>workbenchOptions,
     microtasks, frame, settle,
     reply: (index, payload) => requests[index].resolve({ ok: true, json: async () => payload }),
     reject: (index, message = 'Archive failed') => requests[index].reject(new Error(message)),

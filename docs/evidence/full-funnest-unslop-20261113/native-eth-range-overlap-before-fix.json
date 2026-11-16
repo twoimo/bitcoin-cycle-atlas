@@ -1,0 +1,42 @@
+{
+  "recordedAt": "2026-11-13T10:41:23.389Z",
+  "url": "http://127.0.0.1:8197/?symbol=ETHUSD",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "plot": {
+    "x": 57,
+    "y": 61,
+    "width": 1333,
+    "height": 800,
+    "right": 1390,
+    "bottom": 861
+  },
+  "canvasHost": {
+    "x": 57,
+    "y": 161,
+    "width": 1333,
+    "height": 700,
+    "right": 1390,
+    "bottom": 861
+  },
+  "indicatorHud": {
+    "x": 67,
+    "y": 113,
+    "width": 225.96875,
+    "height": 111,
+    "right": 292.96875,
+    "bottom": 224
+  },
+  "range": {
+    "from": 1715039999735.388,
+    "to": 1841270400000
+  },
+  "price": "$2,235.37",
+  "date": "2026-11-06",
+  "rangeBeforePanel": {
+    "from": 1715040000000,
+    "to": 1841270400000
+  }
+}

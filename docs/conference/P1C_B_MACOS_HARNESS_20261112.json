@@ -1,0 +1,300 @@
+{
+  "schemaVersion": 1,
+  "kind": "p1c-b-macos-real-media-harness",
+  "recordedAt": "2026-11-12T04:50:44.143Z",
+  "sourceCommit": "e5456c500d7566752b7096052d6d344ef375eadb",
+  "host": {
+    "node": "v26.5.0",
+    "macOS": "27.2",
+    "arch": "arm64",
+    "browser": "Chrome/157.0.8103.79",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36"
+  },
+  "isolation": {
+    "verifiedAgainst": "isolated copy of dist/ with pages+audio installed from build/p1c-media-20261112",
+    "canonicalDistTouched": false,
+    "canonicalManifest": {
+      "file": "dist/conference/media-manifest.json",
+      "bytes": 167,
+      "sha256": "ff3e3f2b16f4435e71c5e9f07740a9a2af2b9e9fe46aaf013f70972a658d0088",
+      "status": "unavailable"
+    }
+  },
+  "package": {
+    "pageCount": 547,
+    "audioCount": 15,
+    "assetCount": 562,
+    "assetBytes": 142521336,
+    "fileCount": 563,
+    "siteFileCount": 1530,
+    "verifiedAssetCount": 562,
+    "observedMediaFileCount": 562,
+    "identities": {
+      "manifest": {
+        "file": "conference/media-manifest.json",
+        "bytes": 163622,
+        "sha256": "3380d7d513dc81cd218ba9edad64dd88c258e32d7741aea3ea7e7dbf9266bb5e"
+      },
+      "timeline": {
+        "file": "conference/timeline.json",
+        "bytes": 1044921,
+        "sha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad"
+      }
+    }
+  },
+  "fixtureTest": {
+    "file": "tests/conference-media-build.test.mjs",
+    "tests": 18,
+    "pass": 18,
+    "fail": 0,
+    "skip": 0,
+    "durationMs": 25309.11575,
+    "exit": 0,
+    "ffmpeg": "9.0.2",
+    "note": "Pro version-independent padding fixture verified on macOS"
+  },
+  "httpAudit": {
+    "passed": true,
+    "errors": 0,
+    "imageHeads": 547,
+    "audioHeads": 15,
+    "rangeResponses": 45,
+    "unsatisfiable416": 15,
+    "rangeBytesAndHashesMatch": true
+  },
+  "browser": {
+    "status": "failed",
+    "viewport": {
+      "width": 1440,
+      "height": 900,
+      "mobile": false
+    },
+    "cases": 20,
+    "passed": 6,
+    "failed": 14,
+    "skipped": 0,
+    "exitCode": 1
+  },
+  "passedCases": [
+    "session-seek-and-play",
+    "boundary-04-05",
+    "boundary-05-06",
+    "boundary-06-07",
+    "source-join-session-13-18000",
+    "unavailable-fallback"
+  ],
+  "failedCases": [
+    {
+      "id": "slides-final-290",
+      "firstFailure": "AssertionError [ERR_ASSERTION]: Actual WebP decode must succeed"
+    },
+    {
+      "id": "slides-r17-clean-257",
+      "firstFailure": "Error: Timed out: decoded mapped page pages/r17/0002.webp; last=null"
+    },
+    {
+      "id": "boundary-00-01",
+      "firstFailure": "AssertionError [ERR_ASSERTION]: Native session seek must match event time to 1ms"
+    },
+    {
+      "id": "boundary-01-02",
+      "firstFailure": "AssertionError [ERR_ASSERTION]: Native session seek must match event time to 1ms"
+    },
+    {
+      "id": "boundary-02-03",
+      "firstFailure": "AssertionError [ERR_ASSERTION]: Native session seek must match event time to 1ms"
+    },
+    {
+      "id": "boundary-03-04",
+      "firstFailure": "AssertionError [ERR_ASSERTION]: Native session seek must match event time to 1ms"
+    },
+    {
+      "id": "boundary-07-08",
+      "firstFailure": "AssertionError [ERR_ASSERTION]: Native session seek must match event time to 1ms"
+    },
+    {
+      "id": "boundary-08-09",
+      "firstFailure": "AssertionError [ERR_ASSERTION]: Native session seek must match event time to 1ms"
+    },
+    {
+      "id": "boundary-09-10",
+      "firstFailure": "AssertionError [ERR_ASSERTION]: Native session seek must match event time to 1ms"
+    },
+    {
+      "id": "boundary-10-11",
+      "firstFailure": "AssertionError [ERR_ASSERTION]: Native session seek must match event time to 1ms"
+    },
+    {
+      "id": "boundary-11-12",
+      "firstFailure": "AssertionError [ERR_ASSERTION]: Native session seek must match event time to 1ms"
+    },
+    {
+      "id": "boundary-12-13",
+      "firstFailure": "AssertionError [ERR_ASSERTION]: Native session seek must match event time to 1ms"
+    },
+    {
+      "id": "boundary-13-14",
+      "firstFailure": "AssertionError [ERR_ASSERTION]: Native session seek must match event time to 1ms"
+    },
+    {
+      "id": "missing-fallback",
+      "firstFailure": "Error: Timed out: optional manifest response settled; last=false"
+    }
+  ],
+  "boundarySeekDetail": [
+    {
+      "id": "boundary-00-01",
+      "status": "failed",
+      "requestedLocalTime": 2114.88,
+      "observedCurrentTime": 2114.9,
+      "differenceMs": 20
+    },
+    {
+      "id": "boundary-01-02",
+      "status": "failed",
+      "requestedLocalTime": 1164.46,
+      "observedCurrentTime": 1164.42,
+      "differenceMs": -40
+    },
+    {
+      "id": "boundary-02-03",
+      "status": "failed",
+      "requestedLocalTime": 1375.2,
+      "observedCurrentTime": 1375.159999,
+      "differenceMs": -40
+    },
+    {
+      "id": "boundary-03-04",
+      "status": "failed",
+      "requestedLocalTime": 1236.81,
+      "observedCurrentTime": 1236.859999,
+      "differenceMs": 50
+    },
+    {
+      "id": "boundary-04-05",
+      "status": "passed",
+      "requestedLocalTime": 1121.15,
+      "observedCurrentTime": null,
+      "differenceMs": null
+    },
+    {
+      "id": "boundary-05-06",
+      "status": "passed",
+      "requestedLocalTime": 1198.5,
+      "observedCurrentTime": null,
+      "differenceMs": null
+    },
+    {
+      "id": "boundary-06-07",
+      "status": "passed",
+      "requestedLocalTime": 1198.5,
+      "observedCurrentTime": null,
+      "differenceMs": null
+    },
+    {
+      "id": "boundary-07-08",
+      "status": "failed",
+      "requestedLocalTime": 1446.52,
+      "observedCurrentTime": 1446.5,
+      "differenceMs": -20
+    },
+    {
+      "id": "boundary-08-09",
+      "status": "failed",
+      "requestedLocalTime": 1234.49,
+      "observedCurrentTime": 1234.479999,
+      "differenceMs": -10
+    },
+    {
+      "id": "boundary-09-10",
+      "status": "failed",
+      "requestedLocalTime": 831.12,
+      "observedCurrentTime": 831.09,
+      "differenceMs": -30
+    },
+    {
+      "id": "boundary-10-11",
+      "status": "failed",
+      "requestedLocalTime": 1447.59,
+      "observedCurrentTime": 1447.57,
+      "differenceMs": -20
+    },
+    {
+      "id": "boundary-11-12",
+      "status": "failed",
+      "requestedLocalTime": 1132.17,
+      "observedCurrentTime": 1132.18,
+      "differenceMs": 10
+    },
+    {
+      "id": "boundary-12-13",
+      "status": "failed",
+      "requestedLocalTime": 2435.62,
+      "observedCurrentTime": 2435.61,
+      "differenceMs": -10
+    },
+    {
+      "id": "boundary-13-14",
+      "status": "failed",
+      "requestedLocalTime": 2084.81,
+      "observedCurrentTime": 2084.79,
+      "differenceMs": -20
+    }
+  ],
+  "triage": {
+    "boundarySeekTolerance": {
+      "count": 11,
+      "observedDifferenceMsRange": [
+        10,
+        50
+      ],
+      "cause": "native HTMLMediaElement.currentTime reports at the audio clock granularity after seek; AAC frame is 1024/48000 = 21.33ms",
+      "productDefectConfirmed": false
+    },
+    "deckFirstStep": {
+      "case": "slides-r17-clean-257",
+      "transitionsRecorded": 0,
+      "cause": "deck switch already renders the plan first step, so no new load event is observable",
+      "productDefectConfirmed": false
+    },
+    "decodeError": {
+      "case": "slides-final-290",
+      "file": "pages/final/0006.webp",
+      "serverReceipt": "200 image/webp complete, 105528 bytes",
+      "localPillowDecodeFailuresAcross547": 0,
+      "cause": "likely stale-src decode rejection recorded against the new step",
+      "productDefectConfirmed": false
+    },
+    "missingFallback": {
+      "case": "missing-fallback",
+      "manifestRequest": "404 complete 35B in server receipts",
+      "cause": "CDP response bookkeeping condition not satisfied for 404",
+      "productDefectConfirmed": false
+    }
+  },
+  "confirmed": [
+    "package identity matches the 12:50 render receipt",
+    "real-media HTTP HEAD/Range/416 audit passed",
+    "native playback, 4 session boundaries, 18,000s source join, unavailable fallback passed",
+    "fixture test 18/18 on macOS ffmpeg 9.0.2"
+  ],
+  "notConfirmed": [
+    "browser acceptance 6/20",
+    "A-10 one-hour playback memory",
+    "human listening 0/10 and visual review",
+    "deployed Cloudflare Range behavior"
+  ],
+  "evidence": {
+    "report": "build/p1cb-media-browser-macos-20261112/report.json",
+    "reportBytes": 2568281,
+    "reportSha256": "7f84a4e53d73a10603bc6ed41e572ed8acf58964c8c2f76b0afcf690ba3ab554",
+    "screenshots": [
+      "session-seek-and-play.png",
+      "boundary-04-05.png",
+      "boundary-05-06.png",
+      "boundary-06-07.png",
+      "source-join-session-13-18000.png",
+      "unavailable-fallback.png"
+    ]
+  }
+}

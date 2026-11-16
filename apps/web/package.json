@@ -5,6 +5,9 @@
   "dependencies": {
     "@atlas/contracts": "*",
     "@atlas/domain": "*",
+    "@funnest/charts": "0.6.22",
+    "@funnest/charts-react": "0.6.22",
+    "@funnest/charts-viz": "0.6.22",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "skullet": "0.0.3",

@@ -92,14 +92,19 @@ test('React diagnosis preserves selected market/date and source-error chart with
   }
 });
 
-test('React RSI preserves both exact SVG series, reference tables, selected dates and manual values', async () => {
+test('React RSI preserves source slots, accessible selection controls, reference tables, and manual values', async () => {
   const cases: RsiState[] = [initialRsi(), { ...initialRsi(), manualRsi: '33.5' }, { ...initialRsi(), manualRsi: '101' },
     { ...initialRsi(), rsiIndex: 4204, rsiOscIndex: 4190 },
     { ...initialRsi(), rsiIndex: 0, rsiUnmatchedDate: '2010-02-11', manualRsi: '40' }];
   for (const state of cases) {
     const before = await legacy('rsi', snapshot, state);
     const after = renderToStaticMarkup(<RsiPanel initialRangeDays={0} snapshot={snapshot} now={now} state={state} onChange={noChange} />);
-    assert.deepEqual(calculations(after), calculations(before));
+    const original=parseHTML(`<html><body>${before}</body></html>`).document,reactDoc=parseHTML(`<html><body>${after}</body></html>`).document;
+    for(const svg of original.querySelectorAll('svg'))svg.remove();for(const svg of reactDoc.querySelectorAll('svg'))svg.remove();
+    assert.deepEqual(calculations(reactDoc.body.innerHTML), calculations(original.body.innerHTML));
+    const charts=[...reactDoc.querySelectorAll('.atlas-funnest-observed-chart[data-chart-engine="funnest"]')];
+    assert(charts.length>=2,'both observed-price and reference-RSI series use Funnest');
+    for(const chart of charts){const count=Number(chart.getAttribute('data-source-count'));assert.equal(chart.querySelectorAll('.atlas-funnest-source-table tbody tr').length,count,'each Funnest table retains every source slot');assert(chart.querySelector('input[type="range"]'),'each chart keeps an accessible source-date selector');}
   }
 });
 test('React RSI never substitutes missing, errored or future observations for a valid computed value', async () => {
@@ -227,7 +232,7 @@ test('React app keeps calculation controls usable while loading and preserves re
   assert.equal(fixture.document.querySelectorAll('.atlas-nav [data-atlas-page="rsi"],.atlas-nav [data-atlas-page="scenario"],.atlas-nav [data-atlas-page="cashflow"],.atlas-nav [data-atlas-page="housing"],.atlas-nav [data-atlas-page="themes"]').length, 0, 'the single price-chart destination owns every instrument');
   assert.equal(fixture.document.querySelector('.atlas-nav [aria-current="page"]')?.getAttribute('data-atlas-page'), 'outlook');
   assert(fixture.document.querySelector('[role=combobox][aria-label="종목·지역 검색"]'), 'chart selection is available in the same workspace');
-  assert.match(fixture.document.querySelector('[data-chart="rsi"] .rsi-axis')!.textContent!, /33\.95/);
+  assert([...fixture.document.querySelectorAll('.atlas-funnest-source-table table')].some(table=>/33\.95/.test(table.textContent||'')),'the exact observed RSI remains in the accessible Funnest source table');
 });
 test('React app renders empty and error states distinctly and retries without discarding scenario input', async t => {
   let attempts = 0;

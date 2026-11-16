@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {assertConsolidatedObservationGeometry} from '../scripts/verify-consolidated-workspace-browser.mjs';
+import {assertConsolidatedObservationGeometry,assertConsolidatedDiagnosisChart} from '../scripts/verify-consolidated-workspace-browser.mjs';
 
 // Pure boundary counterexamples; only the native Chrome cases supply real DOM
 // ranges, font measurements, and the original observed prices and units.
@@ -33,6 +33,23 @@ test('KRW and housing units use the same local bounds while clipped numeric text
     result.buttons[0].summary.glyphs[1]={text:'123,456.789',box:box(178,62,120,15)};
     assert.throws(()=>assertConsolidatedObservationGeometry(result,symbol,unit),/observation text glyphs/);
   }
+});
+
+test('the consolidated diagnosis chart is ready only when its real Funnest SVG, complete source rows, units and selected index agree',()=>{
+  const result={ready:true,engine:'funnest',id:'price',sourceCount:3,
+    renderer:{engine:'funnest',svgPaths:[{visible:true,dLength:120,stroke:'var(--data-gold)'}]},
+    svg:{role:'img',tabindex:'0',label:'미국 관측 종가 · 1개 관측',visible:true,box:{width:320,height:240}},
+    input:{min:0,max:2,index:2,valueText:'2026-01-03, 관측값 없음 USD'},
+    tableCaption:'미국 관측 종가 (USD), 날짜별 원자료',caption:'미국 관측 종가 · 2026-01-03 · 관측값 없음 USD',
+    rows:[{date:'2026-01-01',value:'10.00'},{date:'2026-01-02',value:'관측값 없음'},{date:'2026-01-03',value:'관측값 없음'}]};
+  assert.deepEqual(assertConsolidatedDiagnosisChart(result,'US'),result.rows[2]);
+  assert.throws(()=>assertConsolidatedDiagnosisChart({...result,rows:result.rows.slice(1)},'US'),/every original row/);
+  assert.throws(()=>assertConsolidatedDiagnosisChart({...result,input:{...result.input,index:0,valueText:'2026-01-03, 관측값 없음 USD'}},'US'),/exact source row/);
+  assert.throws(()=>assertConsolidatedDiagnosisChart({...result,engine:'ztd'},'US'),/actual Funnest/);
+  assert.throws(()=>assertConsolidatedDiagnosisChart({...result,renderer:{...result.renderer,svgPaths:[]}},'US'),/real Funnest SVG path geometry/);
+  assert.throws(()=>assertConsolidatedDiagnosisChart({...result,renderer:{...result.renderer,svgPaths:[{visible:true,dLength:120,stroke:'var(--muted)'}]}},'US'),/real Funnest SVG path geometry/);
+  assert.throws(()=>assertConsolidatedDiagnosisChart({...result,svg:{...result.svg,visible:false}},'US'),/visibly painted/);
+  assert.throws(()=>assertConsolidatedDiagnosisChart({...result,svg:{...result.svg,label:'미국 관측 종가 · 2개 관측'}},'US'),/finite values/);
 });
 
 test('a missing or substituted unit cannot qualify as a fully readable observation',()=>{

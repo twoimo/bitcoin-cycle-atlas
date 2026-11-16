@@ -71,7 +71,10 @@ test('daily and weekly venue candles compare their previous venue close, includi
     assert.equal(selected.close,110);assert.equal(selected.previousClose,100);assert.equal(selected.changePrice,10);assert.equal(selected.changePct,10);
     assert.equal(selected.fromOpenChangePrice,-10);assert.ok(selected.fromOpenChangePct<0);
     assert.equal(selected.previousCloseDate,candles[0].endDate);
-    assert.match(chart.svg.innerHTML,/data-close="110"[^>]*>[\s\S]*?fill="#dd7e8d"/,'body color remains close versus open');
+    const downCandle=chart.svg.innerHTML.match(/<g class="observed-candle"[^>]*data-close="110"[^>]*>([\s\S]*?)<\/g>/)?.[1];
+    assert.ok(downCandle,'the selected source candle is rendered');
+    assert.match(downCandle,/fill="var\(--chart-candle-down\)"/,'body direction remains close versus open under either selected palette');
+    assert.doesNotMatch(downCandle,/var\(--chart-candle-up\)/,'a positive previous-close return must not recolor a down candle');
     const first=daily(rows,{frequency,chartType:'candles',observedCandles:candles,start:rows[0].date,end:candles[0].endDate,selectedDate:candles[0].endDate});
     assert.equal(first.readouts.at(-1).previousClose,null);assert.equal(first.readouts.at(-1).changePct,null);
   }
@@ -135,6 +138,6 @@ test('manual intraday price axis does not move an offscreen last close onto an a
 
 test('narrow-range price tick labels stay distinct instead of rounding every tick to the same thousands',()=>{
   const rows=source(3);rows[0].price=99000;rows[1].price=100000;rows[2].price=101000;
-  const chart=daily(rows),labels=[...chart.svg.innerHTML.matchAll(/fill="#b0bbca" font-size="[^"]*">([^<]*)<\/text>/g)].map(match=>match[1]);
+  const chart=daily(rows),labels=[...chart.svg.innerHTML.matchAll(/<text[^>]*data-price-axis-label="tick"[^>]*>([^<]*)<\/text>/g)].map(match=>match[1]);
   assert.ok(labels.length>=3);assert.equal(new Set(labels).size,labels.length);
 });

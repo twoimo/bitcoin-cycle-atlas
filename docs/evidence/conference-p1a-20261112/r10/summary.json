@@ -1,0 +1,139 @@
+{
+  "kind": "r10-local-candidate-ui-gates",
+  "productionDeployment": false,
+  "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+  "startedAt": "2026-11-11T19:44:48.138Z",
+  "status": "passed",
+  "gates": [
+    {
+      "id": "responsive-BTCUSD",
+      "expectedCases": 11,
+      "startedAt": "2026-11-11T19:44:48.795Z",
+      "status": "passed",
+      "exit": {
+        "code": 0,
+        "signal": null
+      },
+      "timedOut": false,
+      "actualCases": 11,
+      "nativeStatus": "passed",
+      "failures": [],
+      "verifiedScreenshots": 25,
+      "finishedAt": "2026-11-11T19:45:34.146Z"
+    },
+    {
+      "id": "responsive-ETHUSD",
+      "expectedCases": 11,
+      "startedAt": "2026-11-11T19:45:34.152Z",
+      "status": "passed",
+      "exit": {
+        "code": 0,
+        "signal": null
+      },
+      "timedOut": false,
+      "actualCases": 11,
+      "nativeStatus": "passed",
+      "failures": [],
+      "verifiedScreenshots": 25,
+      "finishedAt": "2026-11-11T19:46:08.884Z"
+    },
+    {
+      "id": "responsive-MSTR",
+      "expectedCases": 11,
+      "startedAt": "2026-11-11T19:46:08.885Z",
+      "status": "passed",
+      "exit": {
+        "code": 0,
+        "signal": null
+      },
+      "timedOut": false,
+      "actualCases": 11,
+      "nativeStatus": "passed",
+      "failures": [],
+      "verifiedScreenshots": 25,
+      "finishedAt": "2026-11-11T19:46:51.052Z"
+    },
+    {
+      "id": "responsive-BMNR",
+      "expectedCases": 11,
+      "startedAt": "2026-11-11T19:46:51.053Z",
+      "status": "passed",
+      "exit": {
+        "code": 0,
+        "signal": null
+      },
+      "timedOut": false,
+      "actualCases": 11,
+      "nativeStatus": "passed",
+      "failures": [],
+      "verifiedScreenshots": 25,
+      "finishedAt": "2026-11-11T19:47:27.493Z"
+    },
+    {
+      "id": "wp6",
+      "expectedCases": 30,
+      "startedAt": "2026-11-11T19:47:27.494Z",
+      "status": "passed",
+      "exit": {
+        "code": 0,
+        "signal": null
+      },
+      "timedOut": false,
+      "actualCases": 30,
+      "nativeStatus": "PASS",
+      "failures": [],
+      "verifiedScreenshots": 45,
+      "finishedAt": "2026-11-11T19:53:33.571Z"
+    },
+    {
+      "id": "chart-qa",
+      "expectedCases": 12,
+      "startedAt": "2026-11-11T19:53:33.573Z",
+      "status": "passed",
+      "exit": {
+        "code": 0,
+        "signal": null
+      },
+      "timedOut": false,
+      "actualCases": 12,
+      "nativeStatus": "PASS",
+      "failures": [],
+      "verifiedScreenshots": 18,
+      "finishedAt": "2026-11-11T19:55:59.189Z"
+    }
+  ],
+  "harnessBefore": {
+    "scripts/verify-responsive-workbench-browser.mjs": "63efc03c19f76bfdb40d665d117f21366375b46828bdb7c98973e0345165b4f5",
+    "scripts/verify-wp6-browser.mjs": "0ce6b6a5b0c2122d8b6ad16dd768d41efddbbd8041c4f7ebee611b90d39471a2",
+    "scripts/verify-wp6-cloudflare.mjs": "6c15c7985928ec14a95628e4b56b7605bba70f96f1c5015dc1176381efc71be9",
+    "scripts/verify-chart-qa-metrics.mjs": "23627b9fcc4acfb6aba2a10b3501312d0d75ddb690d1885676f29522c7536174"
+  },
+  "sourceBefore": {
+    "schemaVersion": 1,
+    "kind": "atlas-wp6-candidate-source",
+    "productionDeployment": false,
+    "verifiedTrackedDistClean": true,
+    "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+    "sourceTree": "7ce03ecfccd2b953c50d4f0efd10afa45b97a790",
+    "distTreeSha256": "7e90916484a36bc648b1c9c3f13d300be3e0feb18291ef9cca7ca1b24da7d3e0"
+  },
+  "origin": "http://127.0.0.1:33927",
+  "pid": 5,
+  "sourceAfter": {
+    "schemaVersion": 1,
+    "kind": "atlas-wp6-candidate-source",
+    "productionDeployment": false,
+    "verifiedTrackedDistClean": true,
+    "sourceCommit": "8e37aede4ea75fd3a40fac793e961dd28439279d",
+    "sourceTree": "7ce03ecfccd2b953c50d4f0efd10afa45b97a790",
+    "distTreeSha256": "7e90916484a36bc648b1c9c3f13d300be3e0feb18291ef9cca7ca1b24da7d3e0"
+  },
+  "harnessAfter": {
+    "scripts/verify-responsive-workbench-browser.mjs": "63efc03c19f76bfdb40d665d117f21366375b46828bdb7c98973e0345165b4f5",
+    "scripts/verify-wp6-browser.mjs": "0ce6b6a5b0c2122d8b6ad16dd768d41efddbbd8041c4f7ebee611b90d39471a2",
+    "scripts/verify-wp6-cloudflare.mjs": "6c15c7985928ec14a95628e4b56b7605bba70f96f1c5015dc1176381efc71be9",
+    "scripts/verify-chart-qa-metrics.mjs": "23627b9fcc4acfb6aba2a10b3501312d0d75ddb690d1885676f29522c7536174"
+  },
+  "finishedAt": "2026-11-11T19:55:59.587Z",
+  "durationMs": 671449
+}

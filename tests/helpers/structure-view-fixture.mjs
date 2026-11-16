@@ -46,7 +46,7 @@ export async function structureViewFixture({ root = fileURLToPath(new URL('../..
     bindChartNavigation: () => ({ ...mounts(), cancelGesture() {}, resumeTouchGesture() {} }),
     createMarketDataController: () => ({ cancel() {}, get() { return { status: 'idle' }; } }),
   });
-  const calls = { rolling: 0, directional: 0, analysis: 0, chart: 0 }, draws = [], errors = [], frames = [];
+  const calls = { rolling: 0, directional: 0, analysis: 0, chart: 0 }, draws = [], errors = [], frames = new Map(); let nextFrame = 0;
   for (const [name, key] of [['computeRollingStates', 'rolling'], ['detectDirectionalChanges', 'directional'], ['analyzeMarketStructure', 'analysis'], ['drawChart', 'chart']]) {
     const original = deps[name]; deps[name] = (...args) => {
       calls[key]++; if (key === 'chart') draws.push(args[0]); return original(...args);
@@ -63,14 +63,15 @@ export async function structureViewFixture({ root = fileURLToPath(new URL('../..
     // Layout observers are inert at this controller/math boundary; native
     // browser cases verify their actual scrolling, focus and resize effects.
     ResizeObserver: class { observe() {} }, MutationObserver: class { observe() {} disconnect() {} },
-    requestAnimationFrame: fn => frames.push(fn),
+    requestAnimationFrame: fn => { const id = ++nextFrame; frames.set(id, fn); return id; },
+    cancelAnimationFrame: id => frames.delete(id),
   });
   vm.runInContext(`${transformed}\nglobalThis.start=initLabView;`, context);
   const view = context.start(), node = id => document.querySelector(`#${id}`);
   const flush = () => {
-    for (let iteration = 0; frames.length; iteration++) {
+    for (let iteration = 0; frames.size; iteration++) {
       assert.ok(iteration < 10, 'The controller must settle without a render loop');
-      for (const callback of frames.splice(0)) callback();
+      for (const [id, callback] of [...frames]) { if (!frames.has(id)) continue; frames.delete(id); callback(); }
     }
     assert.deepEqual(errors, [], 'A fast failed render is not a successful measurement');
   };

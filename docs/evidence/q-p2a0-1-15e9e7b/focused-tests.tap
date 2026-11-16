@@ -1,0 +1,220 @@
+TAP version 13
+# Subtest: Enter without a character event activates the existing symbol callback once and owns dialog focus
+ok 1 - Enter without a character event activates the existing symbol callback once and owns dialog focus
+  ---
+  duration_ms: 14.882255
+  type: 'test'
+  ...
+# Subtest: Space activates on release and never on repeat, lone keyup, moved focus or a lost window
+ok 2 - Space activates on release and never on repeat, lone keyup, moved focus or a lost window
+  ---
+  duration_ms: 4.561593
+  type: 'test'
+  ...
+# Subtest: modified, composing, already cancelled, disabled, unfocused and unrelated keys do not activate search
+ok 3 - modified, composing, already cancelled, disabled, unfocused and unrelated keys do not activate search
+  ---
+  duration_ms: 2.086176
+  type: 'test'
+  ...
+# Subtest: pointer opening uses the same package callback and Escape returns focus after actual unmount
+ok 4 - pointer opening uses the same package callback and Escape returns focus after actual unmount
+  ---
+  duration_ms: 2.673136
+  type: 'test'
+  ...
+# Subtest: Tab wraps current visible enabled controls in both directions and leaves middle steps native
+ok 5 - Tab wraps current visible enabled controls in both directions and leaves middle steps native
+  ---
+  duration_ms: 6.082722
+  type: 'test'
+  ...
+# Subtest: focus escaping an open modal is redirected inside, without taking focus when no modal exists
+ok 6 - focus escaping an open modal is redirected inside, without taking focus when no modal exists
+  ---
+  duration_ms: 4.851061
+  type: 'test'
+  ...
+# Subtest: focused close/category buttons receive their own activation instead of the parent Enter selection
+ok 7 - focused close/category buttons receive their own activation instead of the parent Enter selection
+  ---
+  duration_ms: 2.085524
+  type: 'test'
+  ...
+# Subtest: combobox Enter keeps the package result-selection path and returns to the opener
+ok 8 - combobox Enter keeps the package result-selection path and returns to the opener
+  ---
+  duration_ms: 4.72485
+  type: 'test'
+  ...
+# Subtest: backdrop dismissal returns to a replacement symbol button when the original opener was removed
+ok 9 - backdrop dismissal returns to a replacement symbol button when the original opener was removed
+  ---
+  duration_ms: 2.469077
+  type: 'test'
+  ...
+# Subtest: a temporarily empty modal remains a focus boundary and its fallback tabindex is removed on cleanup
+ok 10 - a temporarily empty modal remains a focus boundary and its fallback tabindex is removed on cleanup
+  ---
+  duration_ms: 1.473356
+  type: 'test'
+  ...
+# Subtest: destroy is idempotent, removes handlers and observers, and never restores focus after teardown
+ok 11 - destroy is idempotent, removes handlers and observers, and never restores focus after teardown
+  ---
+  duration_ms: 1.162825
+  type: 'test'
+  ...
+# Subtest: P2a0 requires a fresh evidence destination without configurable acceptance thresholds
+ok 12 - P2a0 requires a fresh evidence destination without configurable acceptance thresholds
+  ---
+  duration_ms: 2.678425
+  type: 'test'
+  ...
+# Subtest: fixed six-case Fast4G contract retains 2500/150ms, 44px, 2px, 4.5/3.0
+ok 13 - fixed six-case Fast4G contract retains 2500/150ms, 44px, 2px, 4.5/3.0
+  ---
+  duration_ms: 0.314777
+  type: 'test'
+  ...
+# Subtest: zero native attempts remain unverified with exact required counts
+ok 14 - zero native attempts remain unverified with exact required counts
+  ---
+  duration_ms: 0.508622
+  type: 'test'
+  ...
+# Subtest: protocol model requires every unique native case and every attempted flag
+ok 15 - protocol model requires every unique native case and every attempted flag
+  ---
+  duration_ms: 1.654
+  type: 'test'
+  ...
+# Subtest: actual case failure, unsupported/unverified observation, source drift and harness errors disqualify
+ok 16 - actual case failure, unsupported/unverified observation, source drift and harness errors disqualify
+  ---
+  duration_ms: 1.505534
+  type: 'test'
+  ...
+# Subtest: startup accepts the exact budget boundary but rejects slow or unmeasured paint
+ok 17 - startup accepts the exact budget boundary but rejects slow or unmeasured paint
+  ---
+  duration_ms: 0.517035
+  type: 'test'
+  ...
+# Subtest: constructor readiness, blank positive-size canvas and stale source metadata are insufficient
+ok 18 - constructor readiness, blank positive-size canvas and stale source metadata are insufficient
+  ---
+  duration_ms: 0.372966
+  type: 'test'
+  ...
+# Subtest: actual candle identity, UTC data boundaries and contiguous count are required
+ok 19 - actual candle identity, UTC data boundaries and contiguous count are required
+  ---
+  duration_ms: 0.282209
+  type: 'test'
+  ...
+# Subtest: native observer must preserve exact first/last OHLCV values, not only counts
+ok 20 - native observer must preserve exact first/last OHLCV values, not only counts
+  ---
+  duration_ms: 0.829779
+  type: 'test'
+  ...
+# Subtest: native target evidence rejects covering, clipping, disabled state and invalid geometry
+ok 21 - native target evidence rejects covering, clipping, disabled state and invalid geometry
+  ---
+  duration_ms: 0.590005
+  type: 'test'
+  ...
+# Subtest: small upstream controls may be measured functionally but do not pass accessibility
+ok 22 - small upstream controls may be measured functionally but do not pass accessibility
+  ---
+  duration_ms: 0.320987
+  type: 'test'
+  ...
+# Subtest: the actual spike server serves root index before bounds checks and gzip preserves source bytes
+ok 23 - the actual spike server serves root index before bounds checks and gzip preserves source bytes
+  ---
+  duration_ms: 40.39979
+  type: 'test'
+  ...
+# Subtest: server refuses malformed, encoded sibling traversal, missing files and mutation methods
+ok 24 - server refuses malformed, encoded sibling traversal, missing files and mutation methods
+  ---
+  duration_ms: 8.114253
+  type: 'test'
+  ...
+# Subtest: in-scope symlinks cannot expose an outside file, directory or rewritten root index
+ok 25 - in-scope symlinks cannot expose an outside file, directory or rewritten root index
+  ---
+  duration_ms: 6.674429
+  type: 'test'
+  ...
+# Subtest: the shipped native daily archive retains every OHLCV value and converts seconds to UTC milliseconds exactly
+ok 26 - the shipped native daily archive retains every OHLCV value and converts seconds to UTC milliseconds exactly
+  ---
+  duration_ms: 70.974519
+  type: 'test'
+  ...
+# Subtest: concurrent first requests share one lazy snapshot load and expose copied inspection metadata
+ok 27 - concurrent first requests share one lazy snapshot load and expose copied inspection metadata
+  ---
+  duration_ms: 21.097036
+  type: 'test'
+  ...
+# Subtest: countBack precedes from while the inclusive to boundary and older-history flag follow actual rows
+ok 28 - countBack precedes from while the inclusive to boundary and older-history flag follow actual rows
+  ---
+  duration_ms: 11.773067
+  type: 'test'
+  ...
+# Subtest: range-only requests do not extrapolate outside saved dates or fill missing days
+ok 29 - range-only requests do not extrapolate outside saved dates or fill missing days
+  ---
+  duration_ms: 1.00134
+  type: 'test'
+  ...
+# Subtest: symbol search is real BTC metadata in Korean or English with no invented assets or live quote
+ok 30 - symbol search is real BTC metadata in Korean or English with no invented assets or live quote
+  ---
+  duration_ms: 0.409171
+  type: 'test'
+  ...
+# Subtest: unsupported symbols and resolutions fail before fetching data
+ok 31 - unsupported symbols and resolutions fail before fetching data
+  ---
+  duration_ms: 0.948019
+  type: 'test'
+  ...
+# Subtest: invalid request bounds and countBack are rejected rather than coerced
+ok 32 - invalid request bounds and countBack are rejected rather than coerced
+  ---
+  duration_ms: 0.459668
+  type: 'test'
+  ...
+# Subtest: static subscription returns idempotent cleanup and never fabricates a bar, reset, or live connection
+ok 33 - static subscription returns idempotent cleanup and never fabricates a bar, reset, or live connection
+  ---
+  duration_ms: 0.310101
+  type: 'test'
+  ...
+# Subtest: malformed snapshot metadata and OHLC fail through the unchanged Atlas parser
+ok 34 - malformed snapshot metadata and OHLC fail through the unchanged Atlas parser
+  ---
+  duration_ms: 75.764197
+  type: 'test'
+  ...
+# Subtest: failed snapshot loading stays an explicit error and never returns a passing empty series
+ok 35 - failed snapshot loading stays an explicit error and never returns a passing empty series
+  ---
+  duration_ms: 0.624108
+  type: 'test'
+  ...
+1..35
+# tests 35
+# suites 0
+# pass 35
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 384.875573

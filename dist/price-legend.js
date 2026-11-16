@@ -1,8 +1,8 @@
 /** A legend identifies geometry and provenance; it is never a live-price quote. */
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const samples={
-  line:'<path d="M1 6h16" stroke="#e2eaf3" stroke-width="2"/>',
-  candles:'<path d="M5 1v10" stroke="#62bca5"/><rect x="3" y="3" width="4" height="5" fill="#62bca5"/><path d="M13 2v9" stroke="#cf7f89"/><rect x="11" y="5" width="4" height="4" fill="#cf7f89"/>',
+  line:'<path d="M1 6h16" stroke="var(--observed-close-ink)" stroke-width="2"/>',
+  candles:'<path d="M5 1v10" stroke="var(--chart-candle-up)"/><rect x="3" y="3" width="4" height="5" fill="var(--chart-candle-up)"/><path d="M13 2v9" stroke="var(--chart-candle-down)"/><rect x="11" y="5" width="4" height="4" fill="var(--chart-candle-down)"/>',
   future:'<path d="M1 6h16" stroke="#f2b960" stroke-width="2" stroke-dasharray="4 3"/>',
   band:'<rect x="1" y="2" width="16" height="8" fill="#f2aa4c25" stroke="#b58748"/>',
   cutoffFuture:'<path d="M1 6h16" stroke="var(--replay-cutoff-ink,#74a7ee)" stroke-width="2" stroke-dasharray="5 3"/>',

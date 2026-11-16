@@ -6,7 +6,7 @@ import {svgFixture} from './replay-svg-fixture.mjs';
 import {parseProjectReplayBaseline} from '../dist/project-replay-baseline.js';
 import {parseBitcoinReplayCandles} from '../dist/chart-replay-sources.js';
 import {createCurrentChartReplaySession,buildReplayChartData,buildReplayObservedCandles} from '../dist/forecast-replay.js';
-import {createAtlasReplayContext,drawAtlasChartReplay} from '../dist/chart-replay-atlas.js';
+import {createAtlasReplayContext,drawAtlasChartReplayLegacy as drawAtlasChartReplay} from '../dist/chart-replay-atlas.js';
 const {drawAtlasPriceChart,forecastValueSignature}=await import('../dist/atlas-price-chart.js');
 const {captureAtlasReplaySnapshot}=await import('../dist/chart-replay.js');
 const at='2026-10-31T02:00:00.000Z';

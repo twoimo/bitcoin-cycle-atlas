@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "request": "Q-P2CHROME-1-6fd74fe",
+  "branch": "fix/tradingview-responsive-20261110",
+  "baseCommit": "6fd74feb5cfad5c4234308431187400c406a5fa0",
+  "productCommits": [
+    "1335bae2c86e7126cca2ad1d368bb4936711d7db",
+    "b230fa87291176cf81a687cab1158c5800405597"
+  ],
+  "productCommit": "b230fa87291176cf81a687cab1158c5800405597",
+  "productTree": "056bf9d2250f12c74f93db9610e385fd67a52e5a",
+  "status": "product-fixes-awaiting-native-Mac-verification",
+  "p2Closed": false,
+  "p1ClosedPreserved": true,
+  "p2a0ClosedPreserved": true,
+  "productionDeployment": false,
+  "previousMacReceipt": {
+    "file": "../qa-p2-chrome-mac-4b66980/summary.json",
+    "sourceCommit": "4b66980bd4b7c4bb781440af2bd502087a0ed5e0",
+    "productCommit": "0cf36d814c0b21f7a0d7249df50eec63433e1bc0",
+    "eth": {
+      "attempted": 53,
+      "passed": 17,
+      "failed": 36
+    },
+    "responsivePassed": 44,
+    "axisPassed": 16,
+    "a9Passed": 6,
+    "a9PaintedMsRange": [
+      2171.3,
+      2207.7
+    ],
+    "qualifies": false,
+    "usedAsCurrentCandidateVerification": false
+  },
+  "native": {
+    "platform": "linux",
+    "browser": "/usr/bin/chromium",
+    "startedAt": "2026-11-12T18:43:59.587Z",
+    "finishedAt": "2026-11-12T18:48:05.556Z",
+    "sourceStable": true,
+    "sourceFilesBefore": 1454,
+    "sourceFilesAfter": 1454,
+    "complete": false,
+    "qualifies": false,
+    "suites": {
+      "eth53": {
+        "required": 53,
+        "attempted": 0,
+        "passed": 0,
+        "failedCases": 0,
+        "unattempted": 53,
+        "launchBlockedRuns": 1,
+        "qualified": false,
+        "status": "unverified-browser-launch-blocked",
+        "gateIds": [
+          "eth53"
+        ]
+      },
+      "responsive44": {
+        "required": 44,
+        "attempted": 0,
+        "passed": 0,
+        "failedCases": 0,
+        "unattempted": 44,
+        "launchBlockedRuns": 4,
+        "qualified": false,
+        "status": "unverified-browser-launch-blocked",
+        "gateIds": [
+          "responsive-BTCUSD",
+          "responsive-ETHUSD",
+          "responsive-MSTR",
+          "responsive-BMNR"
+        ]
+      },
+      "axis16": {
+        "required": 16,
+        "attempted": 0,
+        "passed": 0,
+        "failedCases": 0,
+        "unattempted": 16,
+        "launchBlockedRuns": 1,
+        "qualified": false,
+        "status": "unverified-browser-launch-blocked",
+        "gateIds": [
+          "axis16"
+        ]
+      },
+      "a9": {
+        "required": 6,
+        "attempted": 0,
+        "passed": 0,
+        "failedCases": 0,
+        "unattempted": 6,
+        "launchBlockedRuns": 1,
+        "qualified": false,
+        "status": "unverified-browser-launch-blocked",
+        "gateIds": [
+          "a9"
+        ]
+      }
+    },
+    "gateLaunchFailures": 7,
+    "allGateExitCodes": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "browserLaunchError": "Chromium process_singleton_posix.cc:297 socket() failed: Operation not permitted (1); native CDP never became ready",
+    "overflowPx": null,
+    "axisDeltaPx": null,
+    "screenshots": 0,
+    "a9PaintedMs": null,
+    "a9ImpactDeltaMs": null,
+    "responsiveServer": {
+      "base": "http://127.0.0.1:38931/bitcoin-cycle-atlas/",
+      "status": 200,
+      "indexSha256": "0d1b4f6a39cc4215f6014c75c26ba239069fb26465696cd05cdfc16707ebc4a7"
+    },
+    "receipt": "native-linux/summary.json.gz",
+    "unchangedRunner": "docs/evidence/ui-renewal-p2/run-gates.mjs",
+    "runnerSha256": "f7d8ef511bfe932dde1a2356c56a861d306eedcb235189b57547235e43aced3c"
+  },
+  "checks": {
+    "focused": {
+      "tests": 335,
+      "passed": 335,
+      "failed": 0,
+      "skipped": 0,
+      "command": "checks/focused-command.json",
+      "log": "checks/focused-final.log.gz"
+    },
+    "typecheck": "passed",
+    "pagesBuild": "passed",
+    "pagesVerify": {
+      "status": "passed",
+      "files": 104,
+      "routes": 9
+    },
+    "static": {
+      "status": "passed",
+      "files": 1159,
+      "scripts": 221,
+      "references": 847
+    },
+    "sourcePreservation": {
+      "checked": 232,
+      "unchanged": 232,
+      "allScripts": 217
+    },
+    "cssSourceAudit": {
+      "nativeMeasurement": false,
+      "status": "passed",
+      "rootPairsRequired": 40,
+      "rootPairsPassed": 40,
+      "literalViolations": 0,
+      "globalTokenViolations": 0,
+      "auditFileHashesMatchProduct": true,
+      "themeCardLightMinimum": 4.825266537959948,
+      "themeCardDarkMinimum": 5.312717624131279
+    }
+  },
+  "preserved": {
+    "protectedFourFilesUnchanged": true,
+    "priceAxisUnchanged": true,
+    "minRight": 64,
+    "nativeGatesUnchanged": true,
+    "themeDefault": "light",
+    "existingEnginesRetained": true,
+    "thresholdsLowered": false,
+    "samplesRemoved": false
+  },
+  "limitations": [
+    "ETH 53/53 is not yet confirmed for this candidate.",
+    "All native cases were unattempted due to browser launch failure; zero failed cases is not a pass.",
+    "Research height arithmetic is a conditional source estimate, not observed geometry.",
+    "No paired baseline A-9 timing comparison; time impact is unknown."
+  ]
+}

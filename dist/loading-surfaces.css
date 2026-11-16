@@ -1,5 +1,5 @@
 /* Shared loading geometry. Price paths and invented numeric samples have no place here. */
-:root{--loading-surface:var(--bg,#0b0e14);--loading-border:var(--border-soft,#20252e);--skullet-base:var(--surface-hover,#202a39);--skullet-highlight:#52617433;--skullet-animation:pulse;--skullet-speed:slow;--skullet-radius:3px}
+:root{--skullet-animation:pulse;--skullet-speed:slow;--skullet-radius:3px}
 .atlas-loading-label{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .atlas-skeleton{position:relative;min-width:0;width:100%;height:100%;min-height:220px;overflow:hidden;pointer-events:none;user-select:none}
 .atlas-skeleton-paint,.atlas-skeleton-paint>[skullet-pane],.atlas-skeleton-paint [skullet-loading],.atlas-skeleton-paint [skullet-ghost]{width:100%;height:100%;min-height:inherit}

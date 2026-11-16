@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-conference-macos-media-user-report",
+  "reportedOn": "2026-11-12",
+  "provenance": {
+    "source": "user-provided local measurement",
+    "sourceCommit": "97154333e039b97c8eadd1864edba743b58323a2",
+    "independentlyRerunInLinux": false,
+    "originalMediaAccessedInLinux": false,
+    "additionalSourceDocument": {
+      "file": "docs/conference/P1C_A_LOCAL_RENDER_20261112.md",
+      "sourceCommit": "29f1646",
+      "gateDocumentationCommit": "9cc24f1"
+    }
+  },
+  "commands": {
+    "build": {
+      "exit": 0
+    },
+    "check": {
+      "exit": 0
+    }
+  },
+  "toolchain": {
+    "platform": "darwin",
+    "python": "3.13.12",
+    "pymupdf": "2.1",
+    "pillow": "13.0.0",
+    "libwebp": "1.6.0",
+    "ffmpeg": "9.0.2",
+    "ffprobe": "9.0.2",
+    "node": "v26.13.0",
+    "architecture": "arm64",
+    "mupdf": "1.28.6",
+    "pythonExecutable": "/Users/twoimo/.aside/runtime/bin/python3",
+    "ffmpegExecutable": "/opt/homebrew/bin/ffmpeg",
+    "ffprobeExecutable": "/opt/homebrew/bin/ffprobe"
+  },
+  "output": {
+    "directory": "build/p1c-media-20261112",
+    "pageCount": 547,
+    "audioCount": 15,
+    "assetCount": 562,
+    "fileCount": 563,
+    "assetBytes": 142521336,
+    "audioBytes": 106916580,
+    "maxAssetBytes": 12775085,
+    "existingSiteFileCount": 967,
+    "siteFileCount": 1530,
+    "durationSec": 20400,
+    "manifest": {
+      "file": "media-manifest.json",
+      "bytes": 163622,
+      "sha256": "3380d7d513dc81cd218ba9edad64dd88c258e32d7741aea3ea7e7dbf9266bb5e"
+    },
+    "pages": {
+      "format": "WebP",
+      "width": 1800,
+      "height": 1012
+    },
+    "session13": {
+      "file": "audio/session-13.m4a",
+      "durationSec": 2086.31,
+      "bitRate": 41918,
+      "sampleRate": 48000,
+      "channels": 1,
+      "codec": "AAC",
+      "crossesEvent18000InSameFile": true
+    }
+  },
+  "oldPaddingFixture": {
+    "exit": 1,
+    "error": "Audio probe duration does not cover the declared source interval: plaud-2",
+    "expectedFailureStage": "decoded PCM source sample shortage",
+    "actualFailureStage": "earlier source duration probe",
+    "test": "MP3 container padding cannot substitute for missing decoded source samples"
+  },
+  "notVerifiedByThisReport": [
+    "real-media browser playback and seeking",
+    "Range/206 delivery",
+    "deployed Cloudflare media",
+    "human listening and 10-point synchronization",
+    "A-10 one-hour playback memory",
+    "cross-platform byte identity"
+  ]
+}

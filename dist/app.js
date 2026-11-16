@@ -1,4 +1,5 @@
 import { atlasResourcePath } from './site-paths.js';
+import { linearScale, logScale, ticks, logTicks, linePath as funnestLinePath, areaPath, segments } from './funnest-research-primitives.bundle.js?v=1.29.0';
 import { buildComparison, getAnchors, getPointAtDay, comparisonToCsv, validateDataset, utcDay } from './cycle-engine.js?v=1.29.0';
 import { fetchLatestDataset } from "./data-source.js?v=1.29.0";
 import { inspectPublishedDataset, shouldCheckPublishedSnapshot } from "./published-data.js?v=1.29.0";
@@ -15,6 +16,7 @@ import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29
 // leave a new long-horizon page running the old three-year workbench.
 import { initDailyDataView } from './daily-data-view.js?v=1.32.1';
 import { initRelayRoomView } from './relay-room.js?v=1.37.8';
+import { createConferenceRoute } from './conference/route.js?v=1.0.0';
 import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.32.1';
 import { initIpoView } from './ipo-view.js?v=1.32.1';
 import { initMarketLabView } from './market-lab-view.js?v=1.31.3';
@@ -108,10 +110,10 @@ function persistUrl() {
     else history.replaceState(null, '', next);
   } catch { try { history.replaceState(null, '', next); } catch {} }
 }
-document.documentElement.dataset.theme = 'dark';
+// The shared head/site entry owns the saved light/dark presentation preference.
 let initialPageRendered = false;
 function finishInitialPage() {
-  if (document.documentElement.dataset.boot !== 'loading' || (!state.dataset && !['data','ipo','market','relay'].includes(state.view)) || !initialPageRendered) return;
+  if (document.documentElement.dataset.boot !== 'loading' || (!state.dataset && !['data','ipo','market','relay','conference'].includes(state.view)) || !initialPageRendered) return;
   document.removeEventListener('atlas:page-ready', onInitialPageReady);
   document.dispatchEvent(new CustomEvent('atlas:ready'));
 }
@@ -122,10 +124,22 @@ function onInitialPageReady(event) {
 }
 document.addEventListener('atlas:page-ready', onInitialPageReady);
 let outlookController = null, workspacePromise = null, evidencePromise = null, evidenceModule = null;
+// A dashboard document has already completed its one-shot boot when the chart
+// is first requested. Its static chart section is not ready until the lazy
+// frame (including mobile navigation) has mounted and its renderer has drawn.
+document.addEventListener('atlas:page-ready', event => {
+  const page = event.detail?.page;
+  if (!outlookController || !['outlook','compare'].includes(page) ||
+      page !== state.view || document.body.dataset.page !== page) return;
+  for (const view of ['outlook','compare']) document.getElementById(`${view}-view`).removeAttribute('aria-busy');
+});
 function ensureWorkspace() {
   if (!workspacePromise) workspacePromise = Promise.all([
     import('./viewport-workspace.js?v=1.36.1'), import('./lab-view.js?v=1.36.1'),
   ]).then(([workspace, lab]) => {
+    // Imports may finish after a second navigation. Leave that dashboard's
+    // original navigation owner intact; cached modules can mount next visit.
+    if (!['outlook','compare'].includes(state.view)) { workspacePromise = null; return null; }
     workspace.initViewportWorkspace(icon);
     outlookController = lab.initLabView();
     if (state.dataset) outlookController.setDataset(state.dataset);
@@ -143,6 +157,11 @@ function ensureEvidence() {
   }).catch(error => { evidencePromise = null; console.error('Evidence initialization failed', error); if (state.view === 'evidence') document.dispatchEvent(new CustomEvent('atlas:boot-error')); });
   return evidencePromise;
 }
+const conferenceController = createConferenceRoute({
+  host: $('#conference-view'), timelineUrl: atlasResourcePath('conference/timeline.json'),
+  onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', {detail:{page:'conference'}})),
+  onError: error => { console.error('Conference initialization failed', error); document.dispatchEvent(new CustomEvent('atlas:boot-error')); },
+});
 const ipoController = initIpoView({
   root: $('#ipo-view'),
   now: () => new Date(),
@@ -179,11 +198,16 @@ const dailyDataController = initDailyDataView({
 const compareShell = createCompareShellHost({ document });
 function hostCompareCenter(active) { compareShell.setActive(active); }
 function syncPage() {
+  if (['outlook','compare'].includes(state.view)) {
+    // Compare is hosted inside the Outlook frame, so both outer sections share
+    // this pending boundary. Publish it before exposing either chart route.
+    for (const view of ['outlook','compare']) document.getElementById(`${view}-view`).setAttribute('aria-busy', 'true');
+  }
   document.body.dataset.page=state.view; if(state.view!=='market'){const slot=document.getElementById('market-header-slot'); if(slot){slot.hidden=true; slot.replaceChildren();}}
-  btcRefreshStatus.update({page:['ipo','market'].includes(state.view)?'data':state.view});
-  document.title = state.view === 'compare' ? '사이클 비교 · Bitcoin Cycle Atlas' : state.view === 'market' ? '세 축 연구실 · Bitcoin Cycle Atlas' : state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : state.view === 'ipo' ? '공모주 캘린더 · Bitcoin Cycle Atlas' : state.view === 'relay' ? '릴레이 콘텐츠 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
+  btcRefreshStatus.update({page:['ipo','market','conference'].includes(state.view)?'data':state.view});
+  document.title = state.view === 'compare' ? '사이클 비교 · Bitcoin Cycle Atlas' : state.view === 'market' ? '세 축 연구실 · Bitcoin Cycle Atlas' : state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : state.view === 'ipo' ? '공모주 캘린더 · Bitcoin Cycle Atlas' : state.view === 'relay' ? '릴레이 콘텐츠 · Bitcoin Cycle Atlas' : state.view === 'conference' ? '컨퍼런스 복습 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
   const compareFrame = state.view === 'compare' && document.body.dataset.embedded !== 'true';
-  for (const view of ['outlook','compare','evidence','data','ipo','market','relay']) document.querySelector(`#${view}-view`).hidden = view === 'outlook' ? state.view !== 'outlook' && !compareFrame : state.view !== view;
+  for (const view of ['outlook','compare','evidence','data','ipo','market','relay','conference']) document.querySelector(`#${view}-view`).hidden = view === 'outlook' ? state.view !== 'outlook' && !compareFrame : state.view !== view;
   hostCompareCenter(compareFrame);
   $$('[data-view]').forEach(n=>{const active=n.dataset.view===state.view;n.classList.toggle('active',active);if(active)n.setAttribute('aria-current','page');else n.removeAttribute('aria-current');});
   evidenceModule?.showEvidenceView(state.view==='evidence');
@@ -194,6 +218,7 @@ function syncPage() {
   if (state.view === 'ipo') void ipoController.render();
   if (state.view === 'market') void marketController.render();
   if (state.view === 'relay') relayController?.show(true);
+  void conferenceController.setActive(state.view === 'conference');
 }
 syncPage();
 if (state.view === 'data') renderData();
@@ -223,7 +248,7 @@ window.addEventListener('popstate', () => {
   state.peakThreshold = next.peakThreshold;
   state.forecastView = next.forecastView;
   state.forecastScenario = next.forecastScenario;
-  if (!['data','ipo','market','relay'].includes(state.view)) void ensureDataset();
+  if (!['data','ipo','market','relay','conference'].includes(state.view)) void ensureDataset();
   syncPage();
   if (state.view === 'compare') requestAnimationFrame(() => render());
   else if (state.view === 'data') renderData();
@@ -358,13 +383,12 @@ function renderLegend() {
   }));
   $('#mode-explainer').textContent = modeExplanation();
 }
-function niceStep(span, target = 6) {
-  const raw = Math.max(span / target, 1e-9), p = 10 ** Math.floor(Math.log10(raw));
-  return ([1,2,2.5,5,10].find(n => n * p >= raw) || 10) * p;
-}
 function linePath(points, x, y) {
-  let previous = -2;
-  return points.map(p => { const command = p.day === previous + 1 ? 'L' : 'M'; previous = p.day; return `${command}${x(p.day).toFixed(2)},${y(p[state.unit]).toFixed(2)}`; }).join(' ');
+  const samples = points.flatMap((point, index) => [
+    ...(index && point.day !== points[index - 1].day + 1 ? [null] : []),
+    { x: x(point.day), y: y(point[state.unit]) },
+  ]);
+  return segments(samples).map(run => funnestLinePath(run.values)).join(' ');
 }
 function renderChart() {
   if (!state.comparison || state.view !== 'compare') return;
@@ -379,20 +403,20 @@ function renderChart() {
   const logSpan = Math.max(Math.log10(high) - Math.log10(low), .15);
   const lo = log ? Math.log10(low) - logSpan * .08 : 0;
   const hi = log ? Math.log10(high) + logSpan * .1 : high * 1.09;
-  const x = day => left + day / horizon * plotWidth;
-  const y = value => bottom - ((log ? Math.log10(value) : value) - lo) / (hi - lo) * plotHeight;
+  const xScale = linearScale([0, horizon], [left, left + plotWidth]);
+  const yScale = log
+    ? logScale([10 ** lo, 10 ** hi], [bottom, top])
+    : linearScale([0, high * 1.09], [bottom, top]);
+  const x = day => xScale(day), y = value => yScale(value);
   const css = getComputedStyle(document.documentElement), bg = css.getPropertyValue('--surface').trim(), grid = css.getPropertyValue('--grid').trim(), muted = css.getPropertyValue('--subtle').trim(), text = css.getPropertyValue('--muted').trim();
   state.chart = { x,y,left,right,top,bottom,width,height,plotWidth,horizon,visible,bg };
-  const yTicks = [];
-  if (log) {
-    for (let e = Math.floor(lo); e <= Math.ceil(hi); e++) for (const m of [1,2,5]) { const v = m * 10 ** e; if (Math.log10(v) >= lo && Math.log10(v) <= hi) yTicks.push(v); }
-    if (yTicks.length < 2) yTicks.push(low, high);
-  } else { const step = niceStep(high * 1.09, mobile ? 4 : 5); for (let v = 0; v <= high * 1.09; v += step) yTicks.push(v); }
-  const font = 9, xStep = niceStep(horizon, mobile ? 4 : 7);
+  let yTicks = log ? logTicks(yScale.domain[0], yScale.domain[1], mobile ? 4 : 6) : ticks(0, high * 1.09, mobile ? 4 : 5);
+  if (log && yTicks.length < 2) yTicks = [low, high];
+  const font = 9, xTicks = ticks(0, horizon, mobile ? 4 : 7);
   let html = `<title id="svg-chart-title">${modeNames[state.mode]} 기준 비트코인 사이클 비교</title><desc id="svg-chart-desc">${visible.length}개 사이클. ${c.latest.date} UTC까지의 실제 관측. ${state.unit === 'indexed' ? '시작을 100으로 정규화' : '현재 기준 가격에 환산'}. ${log ? '로그' : '선형'} 눈금.</desc><defs><linearGradient id="current-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f2aa4c" stop-opacity=".10"/><stop offset="100%" stop-color="#f2aa4c" stop-opacity="0"/></linearGradient><clipPath id="plot-clip"><rect x="${left}" y="${top}" width="${plotWidth}" height="${plotHeight}"/></clipPath></defs>`;
   if (c.currentDays < horizon) html += `<rect x="${x(c.currentDays)}" y="${top}" width="${x(horizon)-x(c.currentDays)}" height="${plotHeight}" fill="${muted}" opacity=".035"/>`;
   yTicks.forEach(v => html += `<line x1="${left}" x2="${width - right}" y1="${y(v)}" y2="${y(v)}" stroke="${grid}" stroke-width=".7"/><text x="${left - 10}" y="${y(v) + 3}" text-anchor="end" fill="${muted}" font-size="${font}">${compact(v,state.unit==='rebased')}</text>`);
-  for (let day = 0; day <= horizon; day += xStep) html += `<line x1="${x(day)}" x2="${x(day)}" y1="${top}" y2="${bottom}" stroke="${grid}" stroke-width=".6" stroke-dasharray="2 4"/><text x="${x(day)}" y="${bottom + 19}" text-anchor="middle" fill="${muted}" font-size="${font}">${nfmt(day)}</text>`;
+  for (const day of xTicks) html += `<line x1="${x(day)}" x2="${x(day)}" y1="${top}" y2="${bottom}" stroke="${grid}" stroke-width=".6" stroke-dasharray="2 4"/><text x="${x(day)}" y="${bottom + 19}" text-anchor="middle" fill="${muted}" font-size="${font}">${nfmt(day)}</text>`;
   html += `<line x1="${left}" x2="${width-right}" y1="${bottom}" y2="${bottom}" stroke="${grid}"/>`;
   const base = state.unit === 'indexed' ? 100 : c.referencePrice;
   if (base > 0 && y(base) <= bottom && y(base) >= top) html += `<line x1="${left}" x2="${width-right}" y1="${y(base)}" y2="${y(base)}" stroke="${muted}" stroke-opacity=".3" stroke-width=".7" stroke-dasharray="3 5"/>`;
@@ -400,7 +424,10 @@ function renderChart() {
   visible.forEach(s => {
     if (!s.points.length) return;
     const path = linePath(s.points,x,y);
-    if (s.current && s.points.every((p,i) => !i || p.day === s.points[i-1].day + 1)) html += `<path d="${path} L${x(s.points.at(-1).day)},${bottom} L${x(s.points[0].day)},${bottom} Z" fill="url(#current-fill)"/>`;
+    if (s.current && s.points.every((p,i) => !i || p.day === s.points[i-1].day + 1)) {
+      const fillPoints = s.points.map(p => ({ x: x(p.day), y: y(p[state.unit]) }));
+      html += `<path d="${areaPath(fillPoints, bottom)}" fill="url(#current-fill)"/>`;
+    }
     html += `<path data-chart-series="${s.id}" d="${path}" fill="none" stroke="${s.color}" stroke-width="${s.current ? mobile ? 2 : 2.3 : mobile ? 1.1 : 1.35}" opacity="${s.current ? 1 : .87}" stroke-linejoin="round" stroke-linecap="round"/>`;
   });
   html += '</g>';
@@ -478,7 +505,7 @@ function renderData() {
 }
 $$('[data-view]').forEach(b => b.addEventListener('click', () => {
   state.view = b.dataset.view;
-  if (!['data','ipo','market','relay'].includes(state.view)) void ensureDataset();
+  if (!['data','ipo','market','relay','conference'].includes(state.view)) void ensureDataset();
   syncPage();
   closeExport();
   if(state.view==='compare') requestAnimationFrame(()=>render()); else if(state.view==='data') renderData();
@@ -601,4 +628,4 @@ async function init() {
 // Relay is ready without the price dataset (see finishInitialPage). Requesting
   // it here made a failed dataset fetch a fatal boot error on a page that never
   // shows prices; the history path already skips Relay for the same reason.
-  if (!['data','ipo','market','relay'].includes(state.view)) void ensureDataset();
+  if (!['data','ipo','market','relay','conference'].includes(state.view)) void ensureDataset();

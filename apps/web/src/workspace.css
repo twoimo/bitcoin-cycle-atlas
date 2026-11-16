@@ -8,7 +8,7 @@
 .workspace-toolbar{position:relative;display:flex;align-items:center;flex:none;min-width:0;min-height:44px;gap:16px;padding:4px 12px;border-bottom:1px solid var(--border);background:var(--surface);color:var(--text);z-index:10}
 .workspace-toolbar-title{flex:none;font-size:12px;font-weight:600;white-space:nowrap}
 .workspace-view-tabs{display:flex;gap:4px;min-width:0;overflow-x:auto;scrollbar-width:thin}
-.workspace-view-tabs button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:32px;flex:none;padding:4px 12px;border:1px solid transparent;border-radius:4px;background:transparent;color:var(--muted);font:12px var(--font);white-space:nowrap;cursor:pointer}
+.workspace-view-tabs button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:32px;flex:none;padding:4px 12px;border:1px solid transparent;border-radius:0;background:transparent;color:var(--muted);font:12px var(--font);white-space:nowrap;cursor:pointer}
 .workspace-view-tabs button:hover{background:var(--surface-hover);color:var(--text)}
 .workspace-view-tabs button[aria-selected=true]{border-color:var(--border);background:var(--surface-raised);color:var(--text);box-shadow:inset 0 -2px var(--accent)}
 .workspace-region-code{font:10px var(--font-mono);color:var(--subtle)}
@@ -19,11 +19,11 @@
 .workspace-current-instrument>span{color:var(--muted);overflow:hidden;text-overflow:ellipsis}
 .workspace-instrument-search{position:relative;flex:0 1 300px;min-width:150px}
 .workspace-instrument-search>svg{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted);pointer-events:none}
-.workspace-instrument-search input{display:block;width:100%;min-width:0;min-height:32px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text);padding:4px 12px 4px 32px;font:12px var(--font)}
+.workspace-instrument-search input{display:block;width:100%;min-width:0;min-height:32px;border:1px solid var(--border);border-radius:0;background:var(--bg);color:var(--text);padding:4px 12px 4px 32px;font:12px var(--font)}
 .workspace-instrument-search input::placeholder{color:var(--muted)}
-.workspace-search-popover{position:fixed;z-index:100;display:flex;flex-direction:column;border:1px solid var(--border);border-radius:0 0 8px 8px;background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
+.workspace-search-popover{position:fixed;z-index:100;display:flex;flex-direction:column;border:1px solid var(--border);border-radius:0;background:var(--surface);box-shadow:none;overflow:hidden}
 .workspace-search-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 12px;border-bottom:1px solid var(--border);font-size:12px;flex:none}
-.workspace-search-heading button,.workspace-search-groups button{min-height:32px;padding:4px 8px;border:1px solid transparent;border-radius:4px;background:transparent;color:var(--muted);font:12px var(--font);cursor:pointer;white-space:nowrap}
+.workspace-search-heading button,.workspace-search-groups button{min-height:32px;padding:4px 8px;border:1px solid transparent;border-radius:0;background:transparent;color:var(--muted);font:12px var(--font);cursor:pointer;white-space:nowrap}
 .workspace-search-heading button:hover,.workspace-search-groups button:hover{color:var(--text);background:var(--surface-hover)}
 .workspace-search-groups{display:flex;gap:4px;flex:none;padding:4px 8px;border-bottom:1px solid var(--border-soft);overflow-x:auto}
 .workspace-search-groups button[aria-pressed=true]{color:var(--text);background:var(--surface-raised);border-color:var(--border)}
@@ -47,12 +47,12 @@
   .workspace-current-instrument{font-size:11px}
   .workspace-current-instrument>span{display:none}
   .workspace-instrument-search{flex-basis:200px;min-width:140px}
-  .workspace-instrument-search input{min-height:44px;font-size:12px}
+  .workspace-instrument-search input{min-height:44px;font-size:16px}
   .workspace-search-popover{right:0;width:100%;max-height:calc(100dvh - 56px);border-radius:0}
   .workspace-search-heading button,.workspace-search-groups button{min-height:44px}
   .workspace-search-results>button{grid-template-columns:52px minmax(0,1fr) 52px;gap:8px;min-height:64px;padding:8px}
   .workspace-result-source{display:none}
   .workspace-result-symbol{font-size:11px}
   .workspace-result-name>strong{font-size:11px}
-  .workspace-search-footer{font-size:10px;gap:8px}
+  .workspace-search-footer{font-size:11px;gap:8px}
 }

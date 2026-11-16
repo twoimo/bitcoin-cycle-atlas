@@ -1,0 +1,272 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-conference-product-fix-verification",
+  "recordedAt": "2026-11-12T05:57:16.346184+00:00",
+  "status": "local-verification-passed-macos-rerun-pending",
+  "sourceBaseCommit": "efd0109d0953677c030701fa259ea1b88aa1060a",
+  "sourceBaseTree": "d8019830da99114a17dc8016b64e7852d10080ba",
+  "runtime": {
+    "platform": "Linux",
+    "node": "v24.22.1",
+    "newToolsInstalled": false
+  },
+  "files": {
+    "dist/conference/player.js": {
+      "bytes": 46197,
+      "sha256": "08c020a97575727ac871572e7385f606c7a365145f643f2f0b8adba31cd91e5c"
+    },
+    "dist/index.html": {
+      "bytes": 57317,
+      "sha256": "7e7bb6ee224e15c69039e049ef7ff5e3a0c54df08d334f8696da7b76c62435fe"
+    },
+    "docs/conference/boot-preload-graph.json": {
+      "bytes": 25708,
+      "sha256": "c00524a3631dad23745330cd5c2653bc57441613f174ea600298903ac94c45ba"
+    },
+    "scripts/verify-conference-media-browser.mjs": {
+      "bytes": 36747,
+      "sha256": "55806dbdb7d0d44a6eb56b005050617de970645c3295747295d13c600bafe082"
+    },
+    "tests/conference-player.test.mjs": {
+      "bytes": 65819,
+      "sha256": "f9e6a39ee3672e6d8a0868551455a5d49d753b46899630e7652d0aed87d5e4cf"
+    },
+    "tests/conference-media-browser.test.mjs": {
+      "bytes": 13518,
+      "sha256": "196e14d41bd61ff2ea29a9c5daa0781cf83d30c0852ce553abe71d870056b986"
+    }
+  },
+  "preservedFiles": {
+    "dist/conference/timeline.json": {
+      "bytes": 1044921,
+      "sha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad"
+    },
+    "dist/conference/media-manifest.json": {
+      "bytes": 167,
+      "sha256": "ff3e3f2b16f4435e71c5e9f07740a9a2af2b9e9fe46aaf013f70972a658d0088"
+    },
+    "dist/equity-view.js": {
+      "bytes": 51366,
+      "sha256": "3f66b17547c3ce9a6b36c659648eda3ac26787a18c03a48a84888c720e865ae5"
+    },
+    "dist/eth-view.js": {
+      "bytes": 41723,
+      "sha256": "7655a35d88bc03ec7ce25b0216bdc90c2db2ee6461e13ac0fdab17e52ea7c4d4"
+    },
+    "dist/instrument-indicator-overlay.js": {
+      "bytes": 7068,
+      "sha256": "9ccd7d48a07106f5076f5f7cf352a2f20443982b18380f827de44d5eb4622e9a"
+    },
+    "scripts/verify-eth-candidate-browser.mjs": {
+      "bytes": 114296,
+      "sha256": "c5ff3e7bcbfaf2ac6c0d86652b2614f871db40b6b8e12d7b6cc0e91f4346319e"
+    },
+    "scripts/conference-media-browser-contract.mjs": {
+      "bytes": 14048,
+      "sha256": "3e0edbc57cf22f564478d27a1acc38f2fccc1828dc3a282790e0a0bc2c428fa2"
+    },
+    "scripts/conference-media-seek-observer.mjs": {
+      "bytes": 4951,
+      "sha256": "803a7efc836ba2418f457d5c2bf1adf768bbfe512e69eed860c66d1567d90dea"
+    },
+    "scripts/conference-media-slide-observer.mjs": {
+      "bytes": 7287,
+      "sha256": "923efbb87ac881a837ba9140b1ec200e2ff9921a6b771e77ffeb181ce3c01f64"
+    },
+    "scripts/conference-media-server.mjs": {
+      "bytes": 17530,
+      "sha256": "0606548a5cf1f2739ce057ae184cbd37f55dbe9d2ad96d81be8b30abd38afdd9"
+    },
+    "docs/conference/A9_MACOS_VERIFICATION_20261112.md": {
+      "bytes": 9354,
+      "sha256": "6104c186990188c26c2bfde1157586c522e7d470acdb8916a225f8188082c5ec"
+    },
+    "docs/conference/P1C_A_MACOS_RENDER_20261112.json": {
+      "bytes": 2472,
+      "sha256": "7a6c1c6e3065bc09feb0354435146e705fc2f9ac6c153fc72ea516614d715859"
+    },
+    "docs/conference/P1C_B_DEEPLINK_PROBE_20261112.md": {
+      "bytes": 3302,
+      "sha256": "0b7b5bfa1d150899f302e52a2f4cbdab5f622641c8e46ca8d0c6ebcc06502805"
+    },
+    "docs/conference/P1C_B_MACOS_HARNESS_20261112.json": {
+      "bytes": 8813,
+      "sha256": "ce54047edb8dc0abeb5e877dae0ded8a810f9757c1cfece09c4ba88dca73fbe7"
+    },
+    "docs/conference/P1C_B_MACOS_HARNESS_20261112.md": {
+      "bytes": 9104,
+      "sha256": "5572bc781fe6b933a0eca490ba3eeb78f1fab4e7dfea0701ffcca9fec2f0fd65"
+    },
+    "docs/conference/P1C_B_MACOS_RERUN_20261112.json": {
+      "bytes": 13110,
+      "sha256": "8ac6ee500f678d725823006a4832253e99d4acc8602f1ce4c34b3ffa5259f691"
+    },
+    "docs/conference/P1C_B_MACOS_RERUN_20261112.md": {
+      "bytes": 5832,
+      "sha256": "42c81bd5e37173d7ebeb95a3728f31aaa36ec253bae80ae81c7c560ab3ecc524"
+    }
+  },
+  "unitAndContract": {
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "tests/conference-media-browser-contract.test.mjs",
+      "tests/conference-media-browser.test.mjs",
+      "tests/conference-media-build.test.mjs",
+      "tests/conference-media-observation.test.mjs",
+      "tests/conference-media-seek-observer.test.mjs",
+      "tests/conference-media-server.test.mjs",
+      "tests/conference-media-slide-observer.test.mjs",
+      "tests/conference-media.test.mjs",
+      "tests/conference-player.test.mjs",
+      "tests/conference-route.test.mjs",
+      "tests/conference-timeline-build.test.mjs",
+      "tests/conference-timeline.test.mjs",
+      "tests/static-module-references.test.mjs",
+      "tests/boot-preloads.test.mjs",
+      "tests/site-preloads.test.mjs",
+      "tests/boot-shell.test.mjs"
+    ],
+    "exitCode": 0,
+    "durationSeconds": 15.777,
+    "tests": 254,
+    "pass": 254,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "timeline": {
+    "command": "node scripts/verify-conference-timeline.mjs --timeline dist/conference/timeline.json --sources docs/conference/source-segments.json --out build/p1cb-product-fix/timeline-verification.json",
+    "exitCode": 0,
+    "status": "passed",
+    "summary": {
+      "audioDurationSec": 20400,
+      "segmentCount": 9168,
+      "talkCount": 15,
+      "deckCount": 2,
+      "lastSegmentT1": 20396.7,
+      "coverage": {
+        "checked": true,
+        "expectedCount": 9168,
+        "missing": [],
+        "unexpected": [],
+        "duplicates": [],
+        "changed": []
+      }
+    },
+    "timelineSha256": "fd15b3ef18213b9adc3bff87d523cc1c2ca907ca59163b646d55308c5d1666ad",
+    "sourceSha256": "894bbd9598e7766d0790f92ae74f9274ef891fcdda71abdc58dd2c04ed5a35a6"
+  },
+  "checks": [
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run verify:static",
+      "exitCode": 0,
+      "files": 968,
+      "scripts": 219,
+      "references": 972
+    },
+    {
+      "command": "node scripts/build-site-preloads.mjs",
+      "exitCode": 0
+    },
+    {
+      "command": "node scripts/build-site-preloads.mjs --check",
+      "exitCode": 0
+    },
+    {
+      "command": "node --check (player, harness, player tests, harness tests)",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "resolvedDiagnosticAttempts": [
+    {
+      "command": "npm run verify:conference",
+      "exitCode": 1,
+      "reason": "Package alias has no required --timeline/--sources; explicit command subsequently passed."
+    },
+    {
+      "command": "node scripts/build-site-preloads.mjs --check (before generation)",
+      "exitCode": 1,
+      "reason": "Player source hash changed; existing generator refreshed index.html and boot-preload-graph.json, check then passed."
+    }
+  ],
+  "absentMediaCli": {
+    "command": "node scripts/verify-conference-media-browser.mjs --out build/p1cb-product-fix/absent-media/new-parent/receipt",
+    "exitCode": 2,
+    "status": "skipped",
+    "reason": "media manifest declares unavailable; real media checks were not run",
+    "browserLaunched": false,
+    "counts": {
+      "cases": 0,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 1
+    },
+    "missingParentsCreated": true,
+    "reportWritten": true
+  },
+  "regressions": {
+    "realPageFirstMappings": {
+      "final-290": 73,
+      "r17-clean-257": 127
+    },
+    "sessionBoundaryApproaches": 14,
+    "paths": [
+      "deep-link",
+      "current-slide",
+      "next-slide keyboard",
+      "previous-slide keyboard",
+      "pageshow",
+      "external A-B-A",
+      "same-URL reload",
+      "deck switch",
+      "playback before/after target",
+      "image completion before/after readback"
+    ],
+    "nativeReadbackModels": [
+      "one 48kHz sample early",
+      "20ms early",
+      "20ms late"
+    ],
+    "globalBoundarySnapping": false
+  },
+  "contractsUnchanged": {
+    "pageTransitionMs": 150,
+    "httpRangeStatuses": [
+      206,
+      416
+    ],
+    "exactNativeSeekRequest": true,
+    "nativeReadbackMs": 64,
+    "playerNativeClockRoundingMs": 1,
+    "h1Count": 1,
+    "unavailableExitCode": 2
+  },
+  "unexecuted": [
+    "Actual Mac 547-WebP/15-session 20-case browser run",
+    "Native browser image decode and audio playback",
+    "A-9 browser boot timings",
+    "A-10 one-hour memory",
+    "Human listening 0/10 and visual review",
+    "Full repository npm test"
+  ],
+  "logs": {
+    "build/p1cb-product-fix/unit-contract-final.log": {
+      "bytes": 61586,
+      "sha256": "8932bcad678a3d39ffd45760d7a40a2ffe9fa63a726ee0a9b8d4eb01edfbf681"
+    },
+    "build/p1cb-product-fix/absent-media-cli.log": {
+      "bytes": 312,
+      "sha256": "a540a362eebebe35d78211249fc956fe3b8a665dc918845d091f396533ad98dc"
+    }
+  }
+}

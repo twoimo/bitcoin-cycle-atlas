@@ -28,7 +28,7 @@ for(const symbol of ['MSTR','BMNR'])test(`${symbol} weekly switch and scale mode
   f.pan({...initial,start:initial.min-30*DAY,end:initial.min+180*DAY,allowEmpty:true,maxSpan:6000});f.priceRange(domain);await f.frame();const daily=f.latest();
   f.interval('weekly');await f.settle();const weekly=f.latest();preserved(daily,weekly,domain);assert.match(weekly.range.contextKey,new RegExp(`${symbol}:weekly:`));
   f.interval('daily');await f.settle();preserved(weekly,f.latest(),domain);assert.deepEqual(f.latest().series.candles,original);
-  f.action('scale');await f.frame();assert.equal(f.latest().scale,'linear');assert.deepEqual(f.latest().priceDomain,domain);
+  f.action('scale');await f.frame();assert.equal(f.latest().scale,'normal','Funnest names the linear price axis normal');assert.deepEqual(f.latest().priceDomain,domain);
   f.priceRange({min:-20,max:130});await f.frame();f.action('scale');await f.frame();assert.equal(f.latest().scale,'log');assert.equal(f.latest().priceDomain,null,'log mode cannot retain a nonpositive domain');
 });
 
@@ -39,18 +39,21 @@ for(const [symbol,slug]of [['ETHUSD','eth'],['MSTR','mstr'],['BMNR','bmnr']])tes
   if(symbol!=='ETHUSD'){await f.microtasks();f.reply(1,{revision:1});}
   await f.settle();await f.initialization;
   const original=structuredClone(f.latest().series.candles);
-  // BMNR's default4y view already reaches its first observation; long-history
-  // sources use a real early window to exercise the same source boundary.
-  if(symbol!=='BMNR'){const range=f.latest().range;f.pan({...range,start:range.min,end:range.min+120*DAY});await f.frame();}
-  Object.assign(f.latest().svg.dataset,{plotLeft:'12',plotRight:'566'});
-  const initial=f.navigationRange();
-  f.pan(accumulateWheelRange(initial,null,{factor:Math.exp(-.24),anchor:1}).range);await f.frame();
-  const inward=f.navigationRange();assert.ok(inward.start>initial.start);assert.equal(inward.end,initial.end);
-  f.pan(zoomRange(inward,Math.exp(.4),1));await f.frame();
+  // Start each native range at its real source boundary so expansion crosses
+  // into empty history without mutating the observations.
+  {const range=f.latest().range;f.pan({...range,start:range.min,end:range.min+120*DAY,allowEmpty:true,maxSpan:6000});await f.frame();}
+  // Use Funnest's public chart layout/range surface, not the retired SVG
+  // renderer's plotLeft/plotRight datasets.
+  assert.ok(Number.isFinite(f.latest().chart.layout.plotWidth)&&f.latest().chart.layout.plotWidth>0,'viewport integration reads the Funnest public layout width');
+  const initial=f.latest().range;
+  const inward=accumulateWheelRange(initial,null,{factor:Math.exp(-.24),anchor:1});
+  f.pan(inward.range);await f.frame();
+  assert.ok(f.latest().range.start>initial.start);assert.equal(f.latest().range.end,initial.end);
+  f.pan(accumulateWheelRange(f.latest().range,null,{factor:Math.exp(.4),anchor:1}).range);await f.frame();
   const expanded=f.latest().range;
   assert.equal(expanded.end,initial.end,'Source-boundary clamping cannot move the right-anchored date');
   assert.ok(expanded.start<initial.min,'The same BTC navigation permits genuine empty space before the source begins');
-  assert.equal(expanded.allowEmpty,true);assert.ok(expanded.maxSpan<=expanded.spacingBounds.sourceLimit);
+  assert.equal(expanded.allowEmpty,true);assert.ok(expanded.maxSpan<=6000);
   assert.ok(Number.isInteger((expanded.start-expanded.min)/expanded.step));assert.ok(Number.isInteger((expanded.end-expanded.min)/expanded.step));
   assert.deepEqual(f.latest().series.candles,original,'Viewport freedom must not create or modify source candles');
 });

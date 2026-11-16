@@ -1,0 +1,73 @@
+{
+  "kind": "r19-p4-size-and-scope",
+  "base": "88f11024f122cb50c002e63672c1f9523a6fe12c",
+  "productCommit": "fcb941dcf880491a8e0e1cb211381810bd320aa2",
+  "productTree": "c379fa6cb4b50a267e98a813988782b820e82fad",
+  "changes": [
+    "dist/conference/player.css",
+    "dist/index.html",
+    "dist/market-lab/cashflow/index.html",
+    "dist/market-lab/charts/index.html",
+    "dist/market-lab/housing/index.html",
+    "dist/market-lab/index.html",
+    "dist/market-lab/kr/index.html",
+    "dist/market-lab/rsi/index.html",
+    "dist/market-lab/scenario/index.html",
+    "dist/market-lab/themes/index.html",
+    "dist/market-lab/us/index.html",
+    "dist/site-after-shell.css"
+  ],
+  "cacheOnlyHtmlFiles": 10,
+  "rows": [
+    {
+      "path": "dist/conference/player.css",
+      "before": {
+        "bytes": 14448,
+        "gzipBytes": 3074,
+        "brotliBytes": 2637
+      },
+      "after": {
+        "bytes": 15024,
+        "gzipBytes": 3161,
+        "brotliBytes": 2716
+      },
+      "delta": {
+        "bytes": 576,
+        "gzipBytes": 87,
+        "brotliBytes": 79
+      }
+    },
+    {
+      "path": "dist/site-after-shell.css",
+      "before": {
+        "bytes": 197632,
+        "gzipBytes": 36495,
+        "brotliBytes": 30360
+      },
+      "after": {
+        "bytes": 198208,
+        "gzipBytes": 36536,
+        "brotliBytes": 30336
+      },
+      "delta": {
+        "bytes": 576,
+        "gzipBytes": 41,
+        "brotliBytes": -24
+      }
+    }
+  ],
+  "initialLoadTimeMs": null,
+  "timeImpactMs": null,
+  "nativeMeasurement": false,
+  "unchangedPaths": [
+    "scripts",
+    "tests",
+    "dist/price-axis.js",
+    "dist/conference/player.js",
+    "dist/conference/route.js",
+    "dist/conference/media.js",
+    "dist/conference/timeline.js",
+    "dist/conference/timeline.json",
+    "dist/conference/media-manifest.json"
+  ]
+}

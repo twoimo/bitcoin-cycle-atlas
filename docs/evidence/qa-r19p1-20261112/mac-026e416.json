@@ -1,0 +1,66 @@
+{
+  "kind": "atlas-ui-renewal-p1-mac",
+  "recordedAt": "2026-11-12T13:58:00+09:00",
+  "head": "026e416ca38df16003013c783133ba7f22a82f23",
+  "browser": "Chrome/157.0.8103.79",
+  "out": "build/qa-r19p1-2-mac-026e416",
+  "qualifiesP1Verification": false,
+  "sourceStable": true,
+  "counts": {
+    "requiredLayouts": 28,
+    "attemptedLayouts": 28,
+    "passedLayouts": 8,
+    "requiredNavigationActivations": 56,
+    "attemptedNavigationActivations": 56,
+    "passedNavigationActivations": 48,
+    "requiredChartReturns": 8,
+    "attemptedChartReturns": 8,
+    "passedChartReturns": 8
+  },
+  "horizontalOverflow": "0 on all 28 layouts",
+  "reproduced": {
+    "root404": false,
+    "marketUs768NotPillShaped": false
+  },
+  "marketUs768Nav": {
+    "count": 7,
+    "heightPx": 44,
+    "cornerRadius": "999px"
+  },
+  "passedLayouts": [
+    "outlook",
+    "market-us"
+  ],
+  "failedLayouts": [
+    "evidence",
+    "data",
+    "ipo",
+    "relay",
+    "conference"
+  ],
+  "failedLayoutCause": "h1 native text paint unverified: body overflow clips ink, unsupported overflow clip rectangle, unsupported box-shadow paint on #data-view #ipo-view #relay-view #conference-view",
+  "headingSample": {
+    "evidence-320": {
+      "title": "리서치",
+      "paintedCount": 1,
+      "glyphTop": 20,
+      "glyphBottom": 40,
+      "inHeader": true
+    }
+  },
+  "navigationFailures": [
+    "keyboard-320 data clipped (box.right 303.39, clip.right 260, viewport 320)",
+    "keyboard-320 relay covered and clipped (box.right 323.67, clip.right 260)",
+    "keyboard-390 evidence/ipo/conference clipped (clip.right 330)",
+    "pointer-768 conference has no exposed native scroll owner (box.right 696.31, clip.right 696, viewport 768)",
+    "keyboard-768 conference clipped; relay covered and clipped (box.right 785.86, clip.right 696)"
+  ],
+  "passedJourneys": [
+    "pointer-320",
+    "pointer-390",
+    "pointer-1440",
+    "keyboard-1440"
+  ],
+  "noise": "failures array also contains network interception Invalid InterceptionId and CDP closed. Those lines are not part of the 8 navigation misses.",
+  "thresholdsUnchanged": true
+}
