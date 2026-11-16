@@ -13,7 +13,7 @@ import {
   p0Thresholds, p0TokenPairs, readP0RootTokens, resolveP0Token, validateP0FontEvidence,
   validateP0Paint, validateP0PaintRole, validateP0Typography,
 } from '../scripts/ui-renewal-p0-contract.mjs';
-import {collectP0Settings,inspectP0Page,p0EvaluationExpression,p0PreferenceSeed,parseP0Arguments,readP0ReaderScroll,readP0Sources} from '../scripts/verify-ui-renewal-p0-browser.mjs';
+import {collectP0Settings,inspectP0Page,p0EvaluationExpression,findInertPoint,p0PreferenceSeed,parseP0Arguments,readP0ReaderScroll,readP0Sources} from '../scripts/verify-ui-renewal-p0-browser.mjs';
 import {drawAtlasPriceChart} from '../dist/atlas-price-chart.js';
 import {drawIntradayChart} from '../dist/intraday-chart.js';
 
@@ -432,4 +432,16 @@ test('dark cases keep a clean profile and light cases save the only non-default 
   run({origin:'https://example.invalid'});assert.equal(storage.size,0,'another origin is never seeded');
   run({origin});assert.deepEqual([...storage],[['atlas-ui-theme','light']]);
   storage.set('atlas-ui-theme','dark');run({origin});assert.equal(storage.get('atlas-ui-theme'),'dark','a reload keeps the viewer choice');
+});
+
+test('the parked pointer lands on the first point with no control under it', () => {
+  const tried = [], viewport = {innerWidth:1000,innerHeight:500};
+  const control = {closest:selector => selector.includes('button') ? control : null}, inert = {closest:() => null};
+  const point = under => JSON.parse(JSON.stringify(runInNewContext(`(${findInertPoint})()`,{...viewport,document:{elementFromPoint:(x,y) => {tried.push([x,y]);return under(x,y);}}})));
+  assert.deepEqual(point(() => inert),{x:970,y:485});
+  assert.deepEqual(point((x,y) => y === 485 ? control : inert),{x:970,y:450},'the bottom row is covered, so the next row is used');
+  tried.length = 0;
+  assert.equal(point(() => control),null,'a page covered by controls has no inert point');
+  assert.equal(tried.length,42,'every grid point is tried once before giving up');
+  assert.equal(point(() => null),null,'a point outside the document is not inert');
 });

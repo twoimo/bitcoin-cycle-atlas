@@ -223,10 +223,28 @@ export async function collectP0Settings({spec,readSnapshot,readScroll,wheel,sett
   return {snapshots,screenshots,scrolls,missingIds:required.filter(id => !observed.has(id)),stopReason};
 }
 
+/** Serialized into the page. A viewport point with no control under it, so a parked pointer cannot tint a paint
+ * sample through :hover. Layout changes move controls under the last click, so the point is found on every call. */
+export function findInertPoint() {
+  const interactive = 'a,button,select,input,textarea,label,summary,[role="button"],[role="menuitem"]';
+  for (const fy of [.97,.9,.75,.5,.25,.1]) for (const fx of [.97,.5,.03,.75,.25,.9,.1]) {
+    const x = Math.round(innerWidth*fx), y = Math.round(innerHeight*fy), node = document.elementFromPoint(x,y);
+    if (node && !node.closest(interactive)) return {x,y};
+  }
+  return null;
+}
 async function settle(cdp) {
   await ensureOwnedVisibleForPaint(cdp,evaluate,until);
   await until(() => evaluate(cdp,() => document.querySelector('#atlas-optional-fonts')?.media === 'all'),'local optional font stylesheet activation');
-  await evaluate(cdp,async () => {await document.fonts.ready;await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));});
+  const point = await evaluate(cdp,findInertPoint);
+  if (!point) throw new Error('No inert viewport point exists to park the pointer on');
+  await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',...point});
+  // Hover tints end in a transition; sample only after every finite animation has finished.
+  await evaluate(cdp,async () => {
+    await document.fonts.ready;
+    await Promise.race([Promise.allSettled(document.getAnimations().filter(animation => animation.effect?.getTiming().iterations !== Infinity).map(animation => animation.finished)),new Promise(resolve => setTimeout(resolve,1500))]);
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  });
 }
 async function click(cdp,selector) {
   const target = await evaluate(cdp,selector => {
