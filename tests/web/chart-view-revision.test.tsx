@@ -384,6 +384,70 @@ for (const tool of ['crosshair', 'pan'] as const) test(`two-finger pinch with th
   assert.deepEqual(chart.range(), before, 'one undo restores the range before the pinch');
 });
 
+type Hosted = Awaited<ReturnType<typeof hostedChart>>;
+const centreCommand = (chart: Hosted, symbol: string, action: string, value?: unknown) => chart.fixture.message({ kind: 'atlas:center-command', symbol, epoch: 7, action, value });
+const repeat = async (times: number, step: () => Promise<unknown>) => { for (let i = 0; i < times; i++) await step(); };
+async function pinch(chart: Hosted, from: [number, number], to: [number, number]) {
+  const x = (fraction: number) => chart.plot.left + chart.plot.width * fraction, y = chart.plot.y;
+  const touch = (pointerId: number) => ({ pointerId, pointerType: 'touch', isPrimary: pointerId === 1 });
+  await act(async () => {
+    chart.fixture.pointer('pointerdown', x(from[0]), y, touch(1)); chart.fixture.pointer('pointerdown', x(from[1]), y, touch(2));
+    chart.fixture.pointer('pointermove', x(to[0]), y, touch(1)); chart.fixture.pointer('pointermove', x(to[1]), y, touch(2));
+    chart.fixture.pointer('pointerup', x(to[1]), y, touch(2)); chart.fixture.pointer('pointerup', x(to[0]), y, touch(1));
+  });
+}
+async function drag(chart: Hosted, x: number, y: number, dx: number) {
+  await act(async () => { chart.fixture.pointer('pointerdown', x, y); chart.fixture.pointer('pointermove', x + dx / 2, y); chart.fixture.pointer('pointermove', x + dx, y); chart.fixture.pointer('pointerup', x + dx, y); });
+}
+const usePanTool = (chart: Hosted, symbol: string) => centreCommand(chart, symbol, 'tool', 'pan');
+const pathsPastTheData: Record<string, { left?: (chart: Hosted, symbol: string) => Promise<unknown>; right?: (chart: Hosted, symbol: string) => Promise<unknown>; out?: (chart: Hosted, symbol: string) => Promise<unknown> }> = {
+  'Ctrl+arrow and - keys': {
+    left: chart => repeat(40, () => chart.fixture.press('ArrowLeft', { ctrlKey: true })),
+    right: chart => repeat(40, () => chart.fixture.press('ArrowRight', { ctrlKey: true })),
+    out: chart => repeat(40, () => chart.fixture.press('-')),
+  },
+  'workbench pan and zoom commands': {
+    left: (chart, symbol) => repeat(40, () => centreCommand(chart, symbol, 'pan', -.3)),
+    right: (chart, symbol) => repeat(40, () => centreCommand(chart, symbol, 'pan', .3)),
+    out: (chart, symbol) => repeat(40, () => centreCommand(chart, symbol, 'zoom', 1.25)),
+  },
+  'two-finger pinch': {
+    left: chart => repeat(16, () => pinch(chart, [.1, .3], [.6, .8])),
+    right: chart => repeat(16, () => pinch(chart, [.6, .8], [.1, .3])),
+    out: chart => repeat(8, () => pinch(chart, [.1, .9], [.8, .9])),
+  },
+  'time-axis drag': { out: chart => repeat(4, () => drag(chart, chart.plot.left + chart.plot.width * .9, chart.timeAxis.y, chart.plot.width / 2)) },
+  'plot wheel': { out: chart => repeat(40, () => chart.fixture.wheel(120, chart.plot.left + chart.plot.width * .9, chart.plot.y, '.rsi-chart-canvas svg')) },
+  'pan-tool drag': {
+    left: async (chart, symbol) => { await usePanTool(chart, symbol); await repeat(8, () => drag(chart, chart.plot.x, chart.plot.y, chart.plot.width)); },
+    right: async (chart, symbol) => { await usePanTool(chart, symbol); await repeat(8, () => drag(chart, chart.plot.x, chart.plot.y, -chart.plot.width)); },
+  },
+};
+const drawnDates = (chart: Hosted) => [...chart.fixture.document.querySelectorAll('.atlas-funnest-source-table tbody th')].map(cell => cell.textContent);
+
+for (const symbol of ['TQQQ', 'HYPE'] as const) for (const [path, moves] of Object.entries(pathsPastTheData)) {
+  if (moves.left) test(`${symbol} ${path} stop at the first observation`, async t => {
+    const chart = await hostedChart(t, '', symbol), before = chart.range();
+    await moves.left!(chart, symbol);
+    assert.equal(chart.range().start, chart.full().start, `the window stops at the first observation: ${JSON.stringify({ before, after: chart.range() })}`);
+    assert.equal(daySpan(chart.range()), daySpan(before), 'panning keeps the span');
+    assert.equal(drawnDates(chart)[0], chart.range().start, 'the first drawn date is the labelled start');
+  });
+  if (moves.right) test(`${symbol} ${path} stop at the last observation`, async t => {
+    const chart = await hostedChart(t, '', symbol), before = chart.range();
+    await moves.right!(chart, symbol);
+    assert.equal(chart.range().end, chart.full().end, `the window stops at the last observation: ${JSON.stringify({ before, after: chart.range() })}`);
+    assert.equal(drawnDates(chart).at(-1), chart.range().end, 'the last drawn date is the labelled end');
+  });
+  if (moves.out) test(`${symbol} ${path} zoom out no further than the observed dates`, async t => {
+    const chart = await hostedChart(t, '', symbol), before = chart.range();
+    await moves.out!(chart, symbol);
+    const after = chart.range(), full = chart.full();
+    assert(daySpan(after) > daySpan(before), `the window widens: ${JSON.stringify({ before, after })}`);
+    assert(full.start <= after.start && after.end <= full.end, `the window stays inside ${full.start}..${full.end}: ${JSON.stringify(after)}`);
+  });
+}
+
 for (const symbol of ['TQQQ', 'HYPE'] as const) for (const ctrlKey of [false, true]) test(`${symbol} ${ctrlKey ? 'Ctrl+wheel' : 'wheel'} zoom keeps the date under the pointer`, async t => {
   const chart = await hostedChart(t, '', symbol);
   const before = chart.range(), fraction = .9, pointed = utcDay(before.start) + daySpan(before) * fraction;
