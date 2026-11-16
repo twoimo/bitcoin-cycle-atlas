@@ -50,7 +50,7 @@ async function mount(content: React.ReactNode, publicUrl: string) {
   };
   try { await act(async () => root.render(content)); } catch (error) { await cleanup(); throw error; }
   const svg = () => document.querySelector('.rsi-chart-canvas svg') as unknown as SVGSVGElement;
-  async function wheel(deltaY: number, x: number, y = 180, target = '.atlas-funnest-instrument-plot') { const node=document.querySelector(target)!; const event=new dom.Event('wheel',{bubbles:true,cancelable:true}); for(const [key,value] of Object.entries({deltaY,deltaX:0,deltaMode:0,clientX:x,clientY:y})) Object.defineProperty(event,key,{value}); await act(async()=>node.dispatchEvent(event)); }
+  async function wheel(deltaY: number, x: number, y = 180, target = '.atlas-funnest-instrument-plot', modifiers: { ctrlKey?: boolean } = {}) { const node=document.querySelector(target)!; const event=new dom.Event('wheel',{bubbles:true,cancelable:true}); for(const [key,value] of Object.entries({deltaY,deltaX:0,deltaMode:0,clientX:x,clientY:y,ctrlKey:false,shiftKey:false,...modifiers})) Object.defineProperty(event,key,{value}); await act(async()=>node.dispatchEvent(event)); }
   function pointer(type: string, x: number, y: number, input: { pointerId?: number; pointerType?: string; isPrimary?: boolean } = {}) {
     const event = new dom.Event(type, { bubbles: true, cancelable: true });
     for (const [key, value] of Object.entries({ clientX: x, clientY: y, pointerId: 1, pointerType: 'mouse', button: 0, buttons: type === 'pointerup' ? 0 : 1, isPrimary: true, ...input }))
@@ -382,4 +382,13 @@ for (const tool of ['crosshair', 'pan'] as const) test(`two-finger pinch with th
   assert.equal(chart.state().userViewRevision, revision + 1, 'the pinch is one user edit');
   await command(chart.fixture, 'undo');
   assert.deepEqual(chart.range(), before, 'one undo restores the range before the pinch');
+});
+
+for (const symbol of ['TQQQ', 'HYPE'] as const) for (const ctrlKey of [false, true]) test(`${symbol} ${ctrlKey ? 'Ctrl+wheel' : 'wheel'} zoom keeps the date under the pointer`, async t => {
+  const chart = await hostedChart(t, '', symbol);
+  const before = chart.range(), fraction = .9, pointed = utcDay(before.start) + daySpan(before) * fraction;
+  await chart.fixture.wheel(-120, chart.plot.left + chart.plot.width * fraction, chart.plot.y, '.rsi-chart-canvas svg', { ctrlKey });
+  const zoomed = chart.range();
+  assert(daySpan(zoomed) < daySpan(before), `the wheel zooms in: ${JSON.stringify({ before, zoomed })}`);
+  assert(Math.abs(pointed - (utcDay(zoomed.start) + daySpan(zoomed) * fraction)) <= 1, `the date under the pointer stays under it: ${JSON.stringify({ before, zoomed })}`);
 });
