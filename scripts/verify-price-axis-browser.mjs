@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 // R17: native Chromium paint/hit evidence against preserved market sources.
+// The Funnest canvas paints the price-axis labels, so the gutter geometry comes
+// from the engine's own layout snapshot and the label rows from canvas pixels.
 // Own local server/profile; no install, deployed origin, synthetic prices, or
 // style overrides. Every geometry value below is an unrounded CSS coordinate.
 import {spawn, execFileSync} from 'node:child_process';
@@ -11,20 +13,28 @@ import {tmpdir} from 'node:os';
 import {dirname, extname, resolve} from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 import {headlessWindowArgument, verifyHeadlessWindowEnvelope} from './headless-browser-window.mjs';
+import {isNativeFunnestPainted} from './funnest-browser-evidence.mjs';
 import {
-  activePriceAxisBadge, comparePriceAxisStates, priceAxisAlignment, priceAxisOverlapEvidence, priceAxisOverlayCoverage,
-  priceAxisObservationForState, priceAxisHasEmptyInsetClip, priceAxisPaintStyleState, priceAxisSourceExpectations, priceAxisSymbols, priceAxisWidths, validatePriceAxisState,
+  priceAxisObservationForState, priceAxisHasEmptyInsetClip, priceAxisOverlapEvidence, priceAxisOverlayCoverage, priceAxisPaintStyleState,
+  priceAxisSourceExpectations, priceAxisSymbols, priceAxisWidths, validatePriceAxisState,
 } from './price-axis-browser-contract.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url)), site = resolve(root,'dist'), prefix = '/bitcoin-cycle-atlas';
 const delay = ms => new Promise(resolve => setTimeout(resolve,ms));
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+export function firstDifference(a,b,path = '$') {
+  if (a === b) return null;
+  if (!a || !b || typeof a !== 'object' || typeof b !== 'object') return `${path}: ${JSON.stringify(a)} -> ${JSON.stringify(b)}`;
+  for (const key of new Set([...Object.keys(a),...Object.keys(b)])) {const found = firstDifference(a[key],b[key],`${path}.${key}`); if (found) return found;}
+  return null;
+}
 const specs = ['default','candles'].flatMap(mode => priceAxisWidths.flatMap(width => priceAxisSymbols.map(symbol => ({id:`${symbol}-${width}-${mode}`, symbol, width, height:900, mode}))));
 const sourcePaths = [
   'dist/index.html','dist/styles.css','dist/atlas-shell.css','dist/chart-workspace-controls.css','dist/site-before-shell.css','dist/price-axis.js','dist/atlas-price-chart.js',
   'dist/intraday-chart.js','dist/empty-price-chart.js','dist/chart-hover.js','dist/chart-overlays.js','dist/lab-view.js','dist/eth-view.js',
-  'dist/equity-forecast-chart.js','dist/data/btc-daily.json','dist/data/btc-volume.json','dist/data/eth-ohlc.json',
-  'scripts/verify-price-axis-browser.mjs','scripts/price-axis-browser-contract.mjs','scripts/headless-browser-window.mjs',
+  'dist/equity-forecast-chart.js','dist/funnest-chart-runtime.bundle.js','dist/btc-funnest-chart.js','dist/funnest-observed-price-adapter.js',
+  'dist/data/btc-daily.json','dist/data/btc-volume.json','dist/data/eth-ohlc.json',
+  'scripts/verify-price-axis-browser.mjs','scripts/price-axis-browser-contract.mjs','scripts/funnest-browser-evidence.mjs','scripts/headless-browser-window.mjs',
 ];
 
 class Cdp {
@@ -80,8 +90,8 @@ async function until(fn, label) {
 }
 
 /** This function is serialized into the real browser. It reads existing DOM,
- * native hit results, font boxes, clipping, source/readout state, and actual
- * line endpoints; it never writes product DOM or presentation state. */
+ * the engine's detached layout snapshot, canvas pixels, native hit results,
+ * clipping and source/readout state; it never writes product DOM or state. */
 export function inspectPriceAxis(symbol) {
   const svg = document.querySelector(symbol === 'BTCUSD' ? '#lab-chart' : '#eth-chart'), geometryIssues = [];
   const box = node => {if (!node) return null; const r = node.getBoundingClientRect(); return {left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height};};
@@ -144,47 +154,60 @@ export function inspectPriceAxis(symbol) {
     }
     return result;
   };
-  const owners = [...(svg?.querySelectorAll('[data-price-axis-paint-layer]') || [])];
-  const ownerKey = node => {const owner = node?.closest?.('[data-price-axis-paint-layer]'); return owner && owner.ownerSVGElement === svg ? `${svg.id}:price-axis-paint-layer:${owners.indexOf(owner)}` : null;};
-  const hitAt = (target,r) => {
-    if (!nonempty(r)) return null;
-    const x = (r.left+r.right)/2, y = (r.top+r.bottom)/2, hit = document.elementFromPoint(x,y), owner = target.closest('[data-price-axis-paint-layer]');
-    return {x,y,target:describe(hit),targetId:hit?.id || null,ownerKey:ownerKey(hit),chartId:hit?.closest?.('svg')?.id || null,
-      relationship:hit && (hit === target || target.contains(hit)) ? 'self' : owner && hit && owner.contains(hit) ? 'paint-layer' : 'other',
-      stack:document.elementsFromPoint(x,y).slice(0,10).map(describe)};
+  const host = svg?.closest('.atlas-plot')?.querySelector('.atlas-funnest-canvas') || null, snapshot = host?.getAtlasFunnestSnapshot?.() || null;
+  const hitAt = (x,y) => {const node = document.elementFromPoint(x,y); return {x,y,target:describe(node),insideHost:Boolean(node && host.contains(node))};};
+  // The engine reserves layout.width - layout.plotWidth for the price axis and
+  // paints its labels there as canvas text. Row bands are the ink outside the
+  // gutter's background and its single full-height boundary rule.
+  const readSurface = (canvas,layout,main,hostRect,scale) => {
+    const kx = canvas.width / layout.width, ky = canvas.height / layout.height;
+    const x0 = Math.round(layout.plotWidth * kx), y0 = Math.round(main.top * ky), width = canvas.width - x0, height = Math.min(canvas.height,Math.round((main.top + main.height) * ky)) - y0;
+    let data;
+    try {data = width > 0 && height > 0 ? canvas.getContext('2d').getImageData(x0,y0,width,height).data : null;} catch {data = null;}
+    if (!data) return {readable:false,width:Math.max(0,width),height:Math.max(0,height),modal:null,ruleColumns:[],bands:[]};
+    const key = index => `${data[index]},${data[index+1]},${data[index+2]},${data[index+3]}`, counts = new Map();
+    for (let index = 0; index < data.length; index += 4) counts.set(key(index),(counts.get(key(index)) || 0) + 1);
+    const modal = [...counts].sort((a,b) => b[1] - a[1])[0][0], ruleColumns = [];
+    for (let x = 0; x < width; x++) {
+      const first = key(x*4); if (first === modal) continue;
+      let uniform = true;
+      for (let y = 1; y < height && uniform; y++) if (key((y*width + x)*4) !== first) uniform = false;
+      if (uniform) ruleColumns.push(x);
+    }
+    const bands = [];
+    let current = null;
+    for (let y = 0; y < height; y++) {
+      let left = Infinity, right = -Infinity, pixels = 0;
+      for (let x = 0; x < width; x++) if (!ruleColumns.includes(x) && key((y*width + x)*4) !== modal) {left = Math.min(left,x);right = Math.max(right,x);pixels++;}
+      if (!pixels) {current = null;continue;}
+      if (!current) {current = {top:y,bottom:y,left,right,pixels};bands.push(current);}
+      else Object.assign(current,{bottom:y,left:Math.min(current.left,left),right:Math.max(current.right,right),pixels:current.pixels + pixels});
+    }
+    return {readable:true,width,height,modal,ruleColumns,bands:bands.map(band => {
+      const cssRect = rect(hostRect.left + (x0 + band.left)/kx*scale.x,hostRect.top + (y0 + band.top)/ky*scale.y,hostRect.left + (x0 + band.right + 1)/kx*scale.x,hostRect.top + (y0 + band.bottom + 1)/ky*scale.y);
+      return {...band,rect:cssRect,hit:hitAt((cssRect.left+cssRect.right)/2,(cssRect.top+cssRect.bottom)/2)};
+    })};
   };
-  const textAnchor = text => text ? transformed(text,Number(text.getAttribute('x')),Number(text.getAttribute('y'))) : null;
-  const entry = (node,key,tag = false) => {
-    if (!node) return null;
-    const r = box(node), text = tag ? node.querySelector('text') : node, paintIssues = [], paintRect = clipped(node,r,paintIssues), textStyles = stylePath(text);
-    const displayed = visible(node) || tag && priceAxisPaintStyleState(textStyles,{content:true}).ink;
-    return {key,text:text?.textContent.trim() || '',textStyles,rect:r,paintRect,painted:Boolean(displayed && nonempty(r) && nonempty(paintRect)),visibility:getComputedStyle(node).visibility,explicitVisibility:node.getAttribute('visibility'),
-      ownerKey:ownerKey(node),anchor:tag ? undefined : textAnchor(text),textAnchor:tag ? textAnchor(text) : undefined,textRect:tag ? box(text) : undefined,
-      hit:displayed ? hitAt(node,r) : null,paintIssues};
-  };
-  const ticks = [...(svg?.querySelectorAll('[data-price-axis-label="tick"]') || [])].map((node,index) => entry(node,`tick-${index}`));
-  const latest = entry(svg?.querySelector('.chart-latest-price-tag'),'latest',true);
-  const cursor = entry(svg?.querySelector('.cross-price-tag,.market-price-tag'),'cursor',true);
-  const boundaries = Object.fromEntries(['axis','top','bottom'].map(kind => [kind,[...(svg?.querySelectorAll(`[data-price-axis-boundary="${kind}"]`) || [])].map((node,index) => {
-    const css = getComputedStyle(node), raw = box(node), matrix = node.getScreenCTM(), half = Number.parseFloat(css.strokeWidth)/2, fixed = css.vectorEffect === 'non-scaling-stroke';
-    const dx = fixed ? half : half * Math.hypot(matrix.a,matrix.c), dy = fixed ? half : half * Math.hypot(matrix.b,matrix.d);
-    const paintRect = clipped(node,rect(raw.left-dx,raw.top-dy,raw.right+dx,raw.bottom+dy));
-    return {key:`${kind}-${index}`,element:describe(node),ownerKey:ownerKey(node),start:transformed(node,Number(node.getAttribute('x1')),Number(node.getAttribute('y1'))),end:transformed(node,Number(node.getAttribute('x2')),Number(node.getAttribute('y2'))),
-      paintRect,painted:visible(node) && colorPaints(css.stroke) && Number(css.strokeOpacity) > 0 && nonempty(paintRect),stroke:css.stroke,strokeWidth:Number.parseFloat(css.strokeWidth),dash:css.strokeDasharray};
-  })]));
+  let canvas = null;
+  if (host && snapshot) {
+    const hostRect = box(host), layout = snapshot.layout, main = layout?.panes?.find(pane => pane.kind === 'main' || pane.id === 'main'), bars = snapshot.engineBars || [];
+    const scale = {x:hostRect.width / layout?.width, y:hostRect.height / layout?.height}, last = bars.at(-1), previous = bars.at(-2);
+    const cssX = value => hostRect.left + value * scale.x, cssY = value => hostRect.top + value * scale.y;
+    const plotRect = main ? rect(hostRect.left,cssY(main.top),cssX(layout.plotWidth),cssY(main.top + main.height)) : null;
+    const axisRect = main ? rect(cssX(layout.plotWidth),cssY(main.top),hostRect.right,cssY(main.top + main.height)) : null;
+    canvas = {engine:snapshot.engine,state:snapshot.state,painted:snapshot.painted,legacyPriceNodes:snapshot.legacy?.priceNodes,chartType:snapshot.chartType,sourceMode:snapshot.sourceMode,
+      currency:snapshot.currency,timeUnit:snapshot.timeUnit,source:snapshot.source,barCount:bars.length,
+      lastBar:last ? {time:last.time,open:last.open,high:last.high,low:last.low,close:last.close} : null,lastIntervalMs:last && previous ? last.time - previous.time : null,
+      layout:layout ? {width:layout.width,height:layout.height,plotWidth:layout.plotWidth,panesHeight:layout.panesHeight,timeAxisHeight:layout.timeAxisHeight,main:main ? {top:main.top,height:main.height} : null} : null,
+      hostRect,scale,plotRect,axisRect,paintRect:axisRect ? clipped(host,axisRect) : null,
+      ink:{surfaces:main && layout ? [...host.querySelectorAll('canvas')].map(surface => readSurface(surface,layout,main,hostRect,scale)) : []}};
+  }
   const obstacles = [], overlayRoots = new Set(document.querySelectorAll('.instrument-indicator-manager,#chart-indicator-manager,#atlas-chart-legend,.chart-legend-dock,#eth-forecast-note,.eth-forecast-note,.workbench-market-info,.atlas-readout,.atlas-quote-hud,.eth-readout,.eth-readout-source,.lab-chart-foot'));
   const seen = new Set();
   const addObstacle = (node,category,r,key) => {
     if (!visible(node) || !nonempty(r)) return;
     const paintRect = clipped(node,r);
-    const sameSvg = node.ownerSVGElement === svg, relation = sameSvg && owners[0] ? owners[0].compareDocumentPosition(node) : 0;
-    const paintOrder = sameSvg ? relation & Node.DOCUMENT_POSITION_PRECEDING ? 'before-axis' : relation & Node.DOCUMENT_POSITION_FOLLOWING ? 'after-axis' : 'unknown' : 'html-overlay';
-    const stacking = [];
-    if (!sameSvg) for (let current=node;current && current !== svg?.parentElement;current=current.parentElement) {
-      const css = getComputedStyle(current);
-      if (css.position !== 'static' || css.zIndex !== 'auto') stacking.push({element:describe(current),position:css.position,zIndex:css.zIndex,pointerEvents:css.pointerEvents});
-    }
-    if (nonempty(paintRect)) obstacles.push({key,category,element:describe(node),rawRect:r,paintRect,surface:sameSvg ? 'svg' : 'html',chartId:sameSvg ? svg.id : null,paintOrder,stacking,pointerEvents:getComputedStyle(node).pointerEvents});
+    if (nonempty(paintRect)) obstacles.push({key,category,element:describe(node),rawRect:r,paintRect,surface:node.ownerSVGElement === svg && svg ? 'svg' : 'html',pointerEvents:getComputedStyle(node).pointerEvents});
   };
   for (const root of overlayRoots) {
     for (const node of [root,...root.querySelectorAll('*')]) {
@@ -206,11 +229,10 @@ export function inspectPriceAxis(symbol) {
       }
     }
   }
+  // Painted marks of the SVG overlay stacked above the base canvas. Transparent
+  // hit targets paint nothing and cannot cover a label.
   for (const [index,node] of [...(svg?.querySelectorAll('text,rect,path,line,circle,ellipse,polygon,polyline,image,use') || [])].entries()) {
-    if (ownerKey(node) || node.closest('defs') || !visible(node,{content:true})) continue;
-    const event = node.closest('[data-history-event],[data-cycle-marker],[data-cycle-interval],[data-cycle-clock],[data-next-turn],.history-event-preview,.cycle-interval-overlay-layer');
-    const forecast = node.closest('[data-forecast-evidence],.equity-forecast-layer,.forecast-event-guide,[data-indicator-layer="range"]') || node.closest('.price-series-layer') && !node.closest('.observed-candle,.observed-candles-batched') && !node.matches('.observed-close-line,.observed-close-point');
-    const category = event ? 'event' : forecast ? 'forecast' : null; if (!category) continue;
+    if (node.closest('defs') || !visible(node,{content:true})) continue;
     const css = getComputedStyle(node), fill = colorPaints(css.fill) && Number(css.fillOpacity) > 0, stroke = colorPaints(css.stroke) && Number(css.strokeOpacity) > 0 && Number.parseFloat(css.strokeWidth) > 0;
     if (!fill && !stroke) continue;
     let r = box(node);
@@ -219,39 +241,34 @@ export function inspectPriceAxis(symbol) {
       const dx = fixed ? half : half * Math.hypot(matrix.a,matrix.c), dy = fixed ? half : half * Math.hypot(matrix.b,matrix.d);
       r = rect(r.left-dx,r.top-dy,r.right+dx,r.bottom+dy);
     }
-    addObstacle(node,category,r,`${category}-${index}:${describe(node)}`);
+    addObstacle(node,'annotation',r,`annotation-${index}:${describe(node)}`);
   }
-  const view = svg?.viewBox.baseVal, frame = view ? localBox(svg,view.x,view.y,view.width,view.height) : null;
-  const plotStart = svg && transformed(svg,Number(svg.dataset.plotLeft),Number(svg.dataset.plotTop));
-  const plotEnd = svg && transformed(svg,Number(svg.dataset.plotRight),Number(svg.dataset.priceBottom));
   const raw = symbol === 'BTCUSD' ? window.__atlasPriceAxisReadout || null : null;
   const readout = symbol === 'BTCUSD'
     ? {priceText:document.querySelector('#lab-metrics .readout-main strong')?.textContent.trim() || '',date:raw?.date?.slice(0,10) || null,kind:document.querySelector('#lab-metrics')?.dataset.kind || null,raw,title:document.querySelector('#lab-metrics')?.title || '',sourceText:document.querySelector('.workbench-market-info')?.textContent.trim() || ''}
     : {priceText:document.querySelector('#eth-price')?.textContent.trim() || '',date:document.querySelector('#eth-bar-time')?.getAttribute('datetime')?.slice(0,10) || null,kind:document.querySelector('#eth-kind')?.textContent.trim() === '관측 종가' ? 'observed' : document.querySelector('#eth-kind')?.textContent.trim(),raw:null,sourceText:document.querySelector('.eth-readout-source,.workbench-market-info')?.textContent.trim() || ''};
-  const counts = Object.fromEntries(['legend','event','forecast','hud'].map(kind => [kind,obstacles.filter(item => item.category === kind).length]));
-  const eventControl = document.querySelector(symbol === 'BTCUSD' ? '#atlas-history-events' : '#eth-history-visible');
-  const enabled = {event:eventControl ? eventControl.checked : null,forecast:new URLSearchParams(location.search).get('forecast') === 'off' ? false : null,legend:null};
-  const observations = Object.fromEntries(['legend','event','forecast'].map(category => [category,{paintObjectCount:counts[category],enabled:enabled[category],
-    reason:counts[category] > 0 ? 'paint observed' : enabled[category] === false ? 'disabled by product control' : document.documentElement.dataset.boot !== 'ready' ? 'product not ready' : 'no painted objects in current rendered state',
-    renderedCount:category === 'event' ? svg?.dataset.historyEventCount ?? null : category === 'forecast' ? svg?.dataset.forecastPointCount ?? null : null}]));
+  const counts = Object.fromEntries(['legend','hud','annotation'].map(kind => [kind,obstacles.filter(item => item.category === kind).length]));
+  const observations = Object.fromEntries(['legend','hud','annotation'].map(category => [category,{paintObjectCount:counts[category],
+    reason:counts[category] > 0 ? 'paint observed' : document.documentElement.dataset.boot !== 'ready' ? 'product not ready' : 'no painted objects in current rendered state'}]));
   return {symbol,width:innerWidth,height:innerHeight,url:location.href,boot:document.documentElement.dataset.boot,page:document.body.dataset.page,
-    interval:svg?.dataset.interval || document.querySelector('[data-lab-frequency][aria-pressed="true"]')?.dataset.labFrequency || null,
-    chartType:svg?.dataset.chartType || null,unit:svg?.dataset.unit || null,overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth,document.body.scrollWidth-innerWidth),
-    chart:svg ? {id:svg.id,rect:box(svg),frame,painted:visible(svg),viewBox:svg.getAttribute('viewBox'),plot:plotStart && plotEnd ? {left:plotStart.x,top:plotStart.y,right:plotEnd.x,bottom:plotEnd.y} : null,dataset:{...svg.dataset}} : null,
-    ownerCount:owners.length,owner:owners[0] ? {key:ownerKey(owners[0]),chartId:owners[0].ownerSVGElement?.id,element:describe(owners[0]),lastSvgChild:owners[0] === svg.lastElementChild} : null,
-    ticks,latest,cursor,readout,boundaries,obstacles,geometryIssues:[...new Set(geometryIssues)],
-    overlays:{paintObjectCounts:counts,observations,unobservedCategories:['legend','event','forecast'].filter(kind => counts[kind] === 0),
+    chartType:snapshot?.chartType || null,overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth,document.body.scrollWidth-innerWidth),
+    canvas,readout,obstacles,geometryIssues:[...new Set(geometryIssues)],
+    overlays:{paintObjectCounts:counts,observations,unobservedCategories:['legend','hud','annotation'].filter(kind => counts[kind] === 0),
       controls:[...document.querySelectorAll('#atlas-history-events,#eth-history-visible,#lab-band,[data-native-setting],#eth-forecast-note')].map(node => ({id:node.id,setting:node.dataset.nativeSetting || null,checked:'checked' in node ? node.checked : null,hidden:node.hidden,painted:visible(node)}))},
     fonts:{status:document.fonts.status,family:svg ? getComputedStyle(svg).fontFamily : null}};
 }
 
+// The BTC overlay keeps relaying out labels for about three seconds after the
+// first painted read, so a state counts as settled only after it has stayed
+// identical for a quiet window, not after a few equal reads.
+const quietMs = 1500;
 async function settled(cdp,spec) {
-  let previous = null, count = 0;
+  let previous = null, since = 0;
   return until(async () => {
     await evaluate(cdp,async () => {await document.fonts.ready; await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));});
-    const state = await evaluate(cdp,inspectPriceAxis,spec.symbol), key = JSON.stringify(state);
-    count = previous === key ? count+1 : 0; previous = key;
-    return count >= 2 ? state : null;
+    const state = await evaluate(cdp,inspectPriceAxis,spec.symbol), key = JSON.stringify(state), now = Date.now();
+    if (key !== previous) {previous = key; since = now; return null;}
+    return now - since >= quietMs ? state : null;
   },`${spec.id} stable paint/hit state`);
 }
 
@@ -271,8 +288,8 @@ function options(argv) {
 
 export async function verifyPriceAxisBrowser(argv = process.argv.slice(2)) {
   const report = {schemaVersion:1,kind:'atlas-price-axis-browser',recordedAt:new Date().toISOString(),qualifiesFullVerification:false,qualifiesPriceAxisVerification:false,
-    methodology:{geometry:'unrounded native CSS coordinates',occlusion:'strict zero foreground intersection of clip-aware painted bounds; same-SVG paint behind the axis is separately recorded as underlap; pseudo paint uses conservative native owner bounds; native center elementFromPoint',frame:'complete SVG 0..height axis and left-frame top/bottom grid; visible centerline endpoints, allowing normal outer half-stroke clipping',sources:'preserved local JSON, independent of DOM labels',network:'own static origin only; external requests aborted',matrix:'8 default routes + 8 explicit candle routes; all required'},
-    requiredCases:specs.length,cases:[],comparisons:[],failures:[],sourceFiles:{},testedHead:null};
+    methodology:{geometry:'unrounded native CSS coordinates; the price-axis gutter is the engine layout width minus plotWidth over the main pane, scaled to the host rectangle',labels:'canvas pixels in the gutter: background mode, one full-height boundary rule, then row bands of label ink; label text is not readable, so rows are checked for containment and pointer reach only',occlusion:'strict zero intersection between the gutter and clip-aware painted bounds of HTML overlays and SVG overlay marks; pseudo paint uses conservative native owner bounds; native center elementFromPoint must reach the chart',sources:'preserved local JSON compared with the last engine bar and the DOM readout, independent of canvas pixels',network:'own static origin only; external requests aborted',matrix:'8 default routes + 8 explicit candle routes; all required',retired:'BTC/ETH gutter alignment within 2 CSS pixels: the engine sizes the gutter from the widest label, so unequal symbols legitimately differ; tick text, tick collisions and the SVG frame lines no longer exist as DOM'},
+    requiredCases:specs.length,cases:[],failures:[],sourceFiles:{},testedHead:null};
   let settings, ownsOut = false, server, chrome, profile, browser, stage = 'arguments', browserStderr = '';
   try {
     settings = options(argv);
@@ -335,37 +352,34 @@ export async function verifyPriceAxisBrowser(argv = process.argv.slice(2)) {
         await cdp.send('Emulation.setDeviceMetricsOverride',{width:spec.width,height:spec.height,deviceScaleFactor:1,mobile:spec.width<=620});
         result.requestedUrl = `${base}?symbol=${spec.symbol}${spec.mode === 'candles' ? '&type=candles' : ''}`;
         await cdp.send('Page.navigate',{url:result.requestedUrl});
-        await until(() => evaluate(cdp,symbol => {
-          const boot = document.documentElement?.dataset.boot;
-          if (boot === 'error') throw new Error('product boot error');
-          const svg = document.querySelector(symbol === 'BTCUSD' ? '#lab-chart' : '#eth-chart');
-          return boot === 'ready' && document.documentElement.dataset.symbol === symbol && document.body.dataset.page === 'outlook' && svg?.querySelector('[data-price-axis-label="tick"]') && Number(svg.dataset.visiblePointCount)>0 && (svg.dataset.chartType !== 'candles' || Number(svg.dataset.observedCandleCount)>0);
-        },spec.symbol),`${spec.id} observed data ready`);
+        const chartSelector = spec.symbol === 'BTCUSD' ? '#lab-chart' : '#eth-chart';
+        await until(async () => {
+          const routed = await evaluate(cdp,symbol => {
+            const boot = document.documentElement?.dataset.boot;
+            if (boot === 'error') throw new Error('product boot error');
+            return boot === 'ready' && document.documentElement.dataset.symbol === symbol && document.body.dataset.page === 'outlook';
+          },spec.symbol);
+          return routed && await evaluate(cdp,isNativeFunnestPainted,chartSelector);
+        },`${spec.id} observed data ready`);
         await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',x:0,y:0});
         result.state = await settled(cdp,spec);
         const expected = report.expectedSources[spec.symbol];
         result.expectedObservation = priceAxisObservationForState(result.state,expected);
         if (spec.mode === 'candles' && result.state.chartType !== 'candles') result.failures.push('explicit candle route did not render candles');
-        result.badge = {role:activePriceAxisBadge(result.state,expected).role,sameValueCursor:activePriceAxisBadge(result.state,expected).sameValueCursor};
-        result.alignment = priceAxisAlignment(result.state,expected); result.overlap = priceAxisOverlapEvidence(result.state,expected);
+        result.overlap = priceAxisOverlapEvidence(result.state);
         result.failures.push(...validatePriceAxisState(result.state,expected,spec));
         const shot = await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false}), bytes = Buffer.from(shot.data,'base64');
         result.screenshot = {file:`${spec.id}.png`,sha256:sha256(bytes),bytes:bytes.length}; await writeFile(resolve(settings.out,result.screenshot.file),bytes);
         const after = await evaluate(cdp,inspectPriceAxis,spec.symbol);
-        if (JSON.stringify(after) !== JSON.stringify(result.state)) result.failures.push('paint/hit state changed during screenshot capture');
+        const drift = JSON.stringify(after) === JSON.stringify(result.state) ? null : firstDifference(result.state,after);
+        if (drift) result.failures.push(`paint/hit state changed during screenshot capture at ${drift}`);
         result.failures.push(...runtimeErrors.map(error => `runtime: ${error}`),...cdp.eventErrors.map(error => `CDP event: ${error}`));
         result.status = result.failures.length ? 'failed' : 'passed';
       } catch (error) {result.failures.push(error.stack || String(error));}
       finally {cdp?.close();if (context) await browser.send('Target.disposeBrowserContext',{browserContextId:context}).catch(error => result.failures.push(`context cleanup: ${error.message}`));}
       if (result.failures.length) result.status = 'failed';
       report.failures.push(...result.failures.map(reason => `${spec.id}: ${reason}`));
-      console.log(JSON.stringify({id:result.id,status:result.status,failures:result.failures,screenshot:result.screenshot?.file || null,unobservedOverlays:result.state?.overlays.unobservedCategories || null}));
-    }
-    for (const mode of ['default','candles']) for (const width of priceAxisWidths) {
-      const btc = report.cases.find(item => item.symbol === 'BTCUSD' && item.width === width && item.mode === mode), eth = report.cases.find(item => item.symbol === 'ETHUSD' && item.width === width && item.mode === mode);
-      const comparison = {id:`BTC-ETH-${width}-${mode}`,width,mode,...comparePriceAxisStates(btc?.state,eth?.state,report.expectedSources)};
-      comparison.status = comparison.failures.length ? 'failed' : 'passed'; report.comparisons.push(comparison);
-      report.failures.push(...comparison.failures.map(reason => `${comparison.id}: ${reason}`));
+      console.log(JSON.stringify({id:result.id,status:result.status,failures:result.failures,screenshot:result.screenshot?.file || null,unobservedOverlays:result.state?.overlays.unobservedCategories || null,gutterIntrusionArea:result.overlap?.intrudedArea ?? null}));
     }
     report.sourceFilesAfter = await sourceHashes();
     if (JSON.stringify(report.sourceFilesAfter) !== JSON.stringify(report.sourceFiles)) report.failures.push('served source files changed during verification');
@@ -377,11 +391,10 @@ export async function verifyPriceAxisBrowser(argv = process.argv.slice(2)) {
     if (profile) await rm(profile,{recursive:true,force:true}).catch(error => report.failures.push(`profile cleanup: ${error.message}`));
     if (!settings?.help) {
       report.counts = {required:specs.length,attempted:report.cases.length,unattempted:specs.length-report.cases.length,passed:report.cases.filter(item => item.status === 'passed').length,failed:report.cases.filter(item => item.status === 'failed').length,
-        default:report.cases.filter(item => item.mode === 'default' && item.status === 'passed').length,candles:report.cases.filter(item => item.mode === 'candles' && item.status === 'passed').length,
-        alignmentPairs:report.comparisons.length,alignmentPassed:report.comparisons.filter(item => item.status === 'passed').length};
+        default:report.cases.filter(item => item.mode === 'default' && item.status === 'passed').length,candles:report.cases.filter(item => item.mode === 'candles' && item.status === 'passed').length};
       report.coverage = priceAxisOverlayCoverage(report.cases);
       if (report.cases.length) for (const category of report.coverage.missing) report.failures.push(`coverage: ${category} paint was not observed in any case; zero occlusion remains unverified`);
-      report.status = report.counts.passed === specs.length && report.counts.alignmentPassed === 8 && report.coverage.status === 'passed' && report.failures.length === 0 ? 'passed' : 'failed';
+      report.status = report.counts.passed === specs.length && report.coverage.status === 'passed' && report.failures.length === 0 ? 'passed' : 'failed';
       report.qualifiesPriceAxisVerification = report.status === 'passed';
       if (ownsOut) try {await writeFile(resolve(settings.out,'report.json'),JSON.stringify(report,null,2)+'\n');}
       catch (error) {report.status = 'failed';report.qualifiesPriceAxisVerification = false;report.failures.push(`report write: ${error.stack || error}`);}

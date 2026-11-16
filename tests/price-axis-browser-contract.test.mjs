@@ -1,34 +1,34 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  activePriceAxisBadge, comparePriceAxisStates, expectedPriceAxisUsd, priceAxisIntersectionArea,
-  priceAxisOverlapEvidence, priceAxisOverlayCoverage, priceAxisPaintStyleState, priceAxisSourceExpectations, validatePriceAxisState as validateState,
+  expectedPriceAxisUsd, priceAxisIntersectionArea, priceAxisOverlapEvidence, priceAxisOverlayCoverage, priceAxisSourceExpectations, validatePriceAxisState as validateState,
 } from '../scripts/price-axis-browser-contract.mjs';
 
 const validatePriceAxisState = (state,source,viewport={width:320,height:900}) => validateState(state,source,viewport);
-const inkStyle = {display:'inline',visibility:'visible',opacity:'1',contentVisibility:'visible',fill:'#fff',fillOpacity:'1',stroke:'none',strokeOpacity:'1',strokeWidth:'1px'};
 const box = (left, top, width, height) => ({left, top, right:left + width, bottom:top + height, width, height});
 const sources = priceAxisSourceExpectations({
   btcDaily:{prices:[['2026-11-05', 1], ['2026-11-06', 75826.5258667446]]},
   ethArchive:{source:'Coinbase Exchange', product:'ETH-USD', dailyHistory:{completedOnly:true, candles:[{date:'2026-11-06T00:00:00.000Z', close:2235.37}]}},
   btcVolume:{source:'Bitstamp', bars:[{date:'2026-11-06', close:75746.53}, {date:'2026-11-07', close:99999}]},
 });
+const day = 86_400_000, lastTime = Date.UTC(2026,10,6);
+// Gutter 256..320 x 118..568 in CSS pixels; three label rows and the last-price badge.
 function fixture(symbol = 'BTCUSD') {
-  const expected = sources[symbol], chartId = symbol === 'BTCUSD' ? 'lab-chart' : 'eth-chart', ownerKey = `${chartId}:axis`;
-  const target = (key, text, rect, x = 260) => ({key, text, rect, paintRect:{...rect}, painted:true, ownerKey,
-    textStyles:[{...inkStyle}],
-    anchor:{x, y:rect.top + 10}, textAnchor:{x, y:rect.top + 13}, paintIssues:[],
-    hit:{x:(rect.left + rect.right) / 2, y:(rect.top + rect.bottom) / 2, relationship:'paint-layer', ownerKey, chartId, target:'rect.price-axis-hit'}});
-  const line = (kind, start, end) => ({key:kind, start, end, paintRect:box(Math.min(start.x,end.x)-.5,Math.min(start.y,end.y)-.5,Math.abs(start.x-end.x)+1,Math.abs(start.y-end.y)+1),painted:true, stroke:'#28323f', strokeWidth:1, dash:'none', ownerKey});
+  const expected = sources[symbol], row = (top, bottom, left, right) => {
+    const rect = box(256 + left, 118 + top, right - left + 1, bottom - top + 1);
+    return {top, bottom, left, right, pixels:(right - left + 1) * (bottom - top + 1), rect, hit:{x:(rect.left + rect.right) / 2, y:(rect.top + rect.bottom) / 2, target:'canvas', insideHost:true}};
+  };
+  const surface = {readable:true, width:64, height:450, modal:'20,20,21,255', ruleColumns:[0], bands:[row(40,52,8,52), row(150,162,8,52), row(290,308,2,61), row(380,392,8,52)]};
+  const overlay = {readable:true, width:64, height:450, modal:'0,0,0,0', ruleColumns:[], bands:[]};
   return {
-    symbol, width:320, height:900, boot:'ready', page:'outlook', interval:'daily', chartType:'line', unit:'usd', overflow:0,
-    chart:{id:chartId, painted:true, rect:box(0,100,320,500), frame:box(0,100,320,500), plot:{left:8, top:118, right:256, bottom:550}},
-    ownerCount:1, owner:{key:ownerKey, chartId,lastSvgChild:true},
-    ticks:[target('tick-0','$100,000',box(260,180,52,14)), target('tick-1','$50,000',box(260,420,49,14))],
-    latest:target('latest',expected.text,box(256,290,61,18)), cursor:null,
+    symbol, width:320, height:900, boot:'ready', page:'outlook', chartType:'line', overflow:0,
+    canvas:{engine:'funnest', state:'ready', painted:true, legacyPriceNodes:0, chartType:'line', sourceMode:symbol === 'BTCUSD' ? 'close-only' : 'ohlc', currency:'USD', timeUnit:'UTC milliseconds', barCount:3,
+      lastBar:{time:lastTime, open:expected.rawValue, high:expected.rawValue, low:expected.rawValue, close:expected.rawValue}, lastIntervalMs:day,
+      layout:{width:320, height:500, plotWidth:256, panesHeight:472, timeAxisHeight:28, main:{top:0, height:450}},
+      hostRect:box(0,118,320,500), scale:{x:1,y:1}, plotRect:box(0,118,256,450), axisRect:box(256,118,64,450), paintRect:box(0,118,320,500),
+      ink:{surfaces:[surface, overlay]}},
     readout:{date:expected.date, kind:'observed', priceText:expected.text, raw:{price:expected.rawValue, date:expected.date, kind:'observed'}},
-    boundaries:{axis:[line('axis',{x:256,y:100},{x:256,y:600})], top:[line('top',{x:0,y:100},{x:256,y:100})], bottom:[line('bottom',{x:0,y:600},{x:256,y:600})]},
-    obstacles:[], geometryIssues:[], overlays:{paintObjectCounts:{legend:3,event:2,forecast:2},unobservedCategories:[]},
+    obstacles:[], geometryIssues:[], overlays:{paintObjectCounts:{legend:3,hud:2,annotation:2},unobservedCategories:[]},
   };
 }
 
@@ -42,113 +42,153 @@ test('independent source rows preserve BTC precision and select the candle sourc
   assert.throws(() => priceAxisSourceExpectations({btcDaily:{prices:[['2026-11-06',1]]}, ethArchive:{source:'Other'}}), /completed Coinbase/);
 });
 
-test('actual chart-owned hit surface and a continuous SVG frame satisfy the price-axis contract', () => {
+test('a painted Funnest gutter with clear label rows satisfies the price-axis contract', () => {
   for (const symbol of ['BTCUSD','ETHUSD']) assert.deepEqual(validatePriceAxisState(fixture(symbol), sources[symbol]), []);
 });
 
-test('price glyph ink is required even when a tag rectangle or axis hit surface remains visible', () => {
-  for (const patch of [{fill:'none'}, {fill:'rgba(255, 255, 255, 0)'}, {fillOpacity:'0'}, {visibility:'hidden'}, {opacity:'0'}]) {
-    const state = fixture(); Object.assign(state.latest.textStyles[0],patch);
-    assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /latest: price text has no visible/.test(value)),JSON.stringify(patch));
+test('the engine must be a painted Funnest canvas with no legacy price renderer behind it', () => {
+  for (const [patch, message] of [
+    [canvas => {canvas.engine = 'svg';}, /not a painted Funnest canvas/], [canvas => {canvas.painted = false;}, /not a painted Funnest canvas/],
+    [canvas => {canvas.state = 'loading';}, /not a painted Funnest canvas/], [canvas => {canvas.legacyPriceNodes = 2;}, /legacy price renderer/],
+    [canvas => {canvas.chartType = 'candles';}, /chart type differs/], [canvas => {canvas.currency = 'KRW';}, /USD observations/],
+    [canvas => {canvas.timeUnit = 'seconds';}, /UTC milliseconds/], [canvas => {canvas.lastIntervalMs = 3_600_000;}, /daily bars/],
+  ]) {
+    const state = fixture(); patch(state.canvas);
+    assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => message.test(value)),String(message));
   }
-  const state = fixture(); state.ticks[0].textStyles[0].fill = 'none';
-  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /tick-0: price text has no visible/.test(value)));
-  state.ticks[0].textStyles[0].stroke = '#fff';
+  assert.ok(validatePriceAxisState({...fixture(),canvas:null},sources.BTCUSD).includes('missing native Funnest canvas evidence'));
+});
+
+test('the last engine bar must match the independent source date and exact value', () => {
+  for (const patch of [{close:75826.5258667446 + 2e-11}, {close:75826.53}, {time:lastTime - day}, {time:lastTime + day}]) {
+    const state = fixture(); Object.assign(state.canvas.lastBar,patch);
+    assert.notEqual(patch.close ?? 0,sources.BTCUSD.rawValue,'the mutation must change the double');
+    assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /last engine bar does not match Coin Metrics/.test(value)),JSON.stringify(patch));
+  }
+  const state = fixture(); state.canvas.lastBar = null;
+  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /last engine bar/.test(value)));
+});
+
+test('candles require OHLC bars and the venue close, and reject the Coin Metrics last bar', () => {
+  const state = fixture(); state.chartType = 'candles'; state.canvas.chartType = 'candles'; state.canvas.sourceMode = 'ohlc';
+  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /last engine bar does not match Bitstamp 2026-11-06 75746.53/.test(value)));
+  Object.assign(state.canvas.lastBar,{open:75982.57,high:76294.91,low:74761.63,close:75746.53});
+  state.readout = {date:'2026-11-06', kind:'observed', priceText:sources.BTCUSD.candle.text, raw:{price:75746.53, close:75746.53, source:'Bitstamp', date:'2026-11-06', kind:'observed'}};
   assert.deepEqual(validatePriceAxisState(state,sources.BTCUSD),[]);
-  state.ticks[0].textStyles[0].strokeOpacity = '0';
-  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /tick-0: price text has no visible/.test(value)));
-  state.ticks[0].painted = false; state.ticks[0].explicitVisibility = 'visible';
-  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /tick lost paint/.test(value)));
-  state.ticks[0].explicitVisibility = 'hidden';
-  assert.deepEqual(validatePriceAxisState(state,sources.BTCUSD),[]);
-  state.cursor = {...structuredClone(state.latest),key:'cursor'}; state.latest.painted = false; state.cursor.textStyles[0].opacity = '0';
-  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /cursor: price text has no visible/.test(value)));
+  state.canvas.sourceMode = 'close-only';
+  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /candles must come from observed OHLC/.test(value)));
+  state.canvas.sourceMode = 'ohlc'; state.readout.raw.source = 'Coin Metrics';
+  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /raw candle readout differs/.test(value)));
 });
 
-test('computed child visibility overrides a hidden ancestor while display and opacity suppress descendants', () => {
-  const own = {...inkStyle}, ancestor = {...inkStyle,display:'block',visibility:'hidden'};
-  assert.equal(priceAxisPaintStyleState([own,ancestor],{content:true}).ink,true);
-  assert.equal(priceAxisPaintStyleState([{...own,visibility:'hidden'},{...ancestor,visibility:'visible'}],{content:true}).ink,false);
-  for (const patch of [{display:'none'}, {opacity:'0'}, {contentVisibility:'hidden'}]) assert.equal(priceAxisPaintStyleState([own,{...ancestor,...patch}],{content:true}).ink,false);
-  assert.equal(priceAxisPaintStyleState([{...own,hidden:true}],{content:true}).ink,true,'computed paint wins over a semantic hidden property overridden by CSS');
-  assert.equal(priceAxisPaintStyleState([{...own,contentVisibility:'hidden'}]).visible,true,'content visibility retains the owner background');
-  assert.equal(priceAxisPaintStyleState([{...own,contentVisibility:'hidden'}],{content:true}).ink,false);
-});
-
-test('actual CSS viewport must exactly match the requested matrix case', () => {
-  const state = fixture();
-  assert.ok(validateState(state,sources.BTCUSD).includes('missing requested viewport'));
-  for (const actual of [{width:980,height:900},{width:320.001,height:900},{width:320,height:899}]) {
-    Object.assign(state,actual);
-    assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /actual viewport/.test(value)));
+test('correct rounded text does not hide a raw readout precision or source mismatch', () => {
+  const state = fixture(); state.readout.raw.price = 75826.53;
+  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /raw readout differs/.test(value)));
+  for (const [key, value] of [['date','2026-11-05'],['kind','unavailable'],['priceText','$75,826.54']]) {
+    const broken = fixture(); broken.readout[key] = value;
+    assert.ok(validatePriceAxisState(broken,sources.BTCUSD).length > 0,key);
   }
 });
 
-test('foreground paint cannot interrupt frame lines between labels, including a clipped half-stroke', () => {
-  const locations = {axis:box(255.9,240,.2,1),top:box(80,100,1,.001),bottom:box(80,599.999,1,.001)};
-  for (const [kind,paintRect] of Object.entries(locations)) {
-    const state = fixture();
-    state.boundaries.axis[0].paintRect = box(255.5,100,1,500);
-    state.boundaries.top[0].paintRect = box(0,100,256,.5);
-    state.boundaries.bottom[0].paintRect = box(0,599.5,256,.5);
-    assert.deepEqual(validatePriceAxisState(state,sources.BTCUSD),[]);
-    state.obstacles = [{key:'foreground',category:'legend',surface:'html',pointerEvents:'none',paintRect}];
-    assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => value.startsWith(`frame-${kind}-0:`) && value.includes('occludes')));
-    Object.assign(state.obstacles[0],{surface:'svg',chartId:'lab-chart',paintOrder:'before-axis'});
-    assert.deepEqual(validatePriceAxisState(state,sources.BTCUSD),[]);
-    assert.ok(priceAxisOverlapEvidence(state,sources.BTCUSD).underlapArea>0);
-    state.obstacles[0].paintOrder = 'after-axis';
-    assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => value.startsWith(`frame-${kind}-0:`) && value.includes('occludes')));
+test('actual CSS viewport and horizontal overflow must match the requested matrix case', () => {
+  assert.ok(validatePriceAxisState(fixture(),sources.BTCUSD,{width:390,height:900}).some(value => /actual viewport 320x900 differs from requested 390x900/.test(value)));
+  assert.ok(validatePriceAxisState(fixture(),sources.BTCUSD,{width:320,height:844}).some(value => /differs from requested 320x844/.test(value)));
+  assert.ok(validatePriceAxisState(fixture(),sources.BTCUSD,null).includes('missing requested viewport'));
+  const state = fixture(); state.overflow = 1;
+  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /horizontal overflow 1/.test(value)));
+});
+
+test('the gutter must exist, tile the host with the plot, stay in the viewport and escape no clip', () => {
+  for (const [patch, message] of [
+    [state => {state.canvas.layout.plotWidth = 320;}, /reserved no price-axis gutter/],
+    [state => {state.canvas.plotRect = box(0,118,250,450);}, /do not tile the chart host/],
+    [state => {state.canvas.axisRect = box(256,118,70,450); state.canvas.hostRect = box(0,118,326,500); state.canvas.paintRect = box(0,118,326,500);}, /outside the viewport/],
+    [state => {state.canvas.paintRect = box(0,118,300,500);}, /clipped by an ancestor/],
+    [state => {state.canvas.paintRect = null;}, /missing host, plot or price-axis geometry/],
+    [state => {state.canvas.axisRect = null;}, /missing host, plot or price-axis geometry/],
+  ]) {
+    const state = fixture(); patch(state);
+    assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => message.test(value)),String(message));
   }
 });
 
-test('direct label center hits are valid, but another chart or arbitrary overlay cannot own the hit', () => {
-  const state = fixture(); state.ticks[0].hit.relationship = 'self';
-  assert.deepEqual(validatePriceAxisState(state, sources.BTCUSD), []);
-  for (const patch of [{relationship:'other'}, {ownerKey:'eth-chart:axis'}, {chartId:'eth-chart'}, {x:286.001}]) {
-    const broken = structuredClone(state); Object.assign(broken.ticks[0].hit, patch);
-    assert.ok(validatePriceAxisState(broken, sources.BTCUSD).some(value => /center hit/.test(value)), JSON.stringify(patch));
+test('label ink must be readable, continuous behind one rule, and show at least two rows', () => {
+  let state = fixture(); state.canvas.ink.surfaces[0].readable = false;
+  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /unreadable/.test(value)));
+  state = fixture(); state.canvas.ink.surfaces = [];
+  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /no native canvas surface/.test(value)));
+  state = fixture(); state.canvas.ink.surfaces[0].bands = [state.canvas.ink.surfaces[0].bands[0]];
+  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /fewer than two painted label rows/.test(value)));
+  state = fixture(); state.canvas.ink.surfaces[0].bands = [];
+  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /fewer than two painted label rows/.test(value)));
+  for (const ruleColumns of [[], [1], [0,1]]) {
+    state = fixture(); state.canvas.ink.surfaces[0].ruleColumns = ruleColumns;
+    assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /axis rule is not one continuous column/.test(value)),JSON.stringify(ruleColumns));
   }
 });
 
-test('touching paint bounds pass, but every positive occlusion area fails without rounding', () => {
-  const state = fixture(), label = state.ticks[0];
-  state.obstacles = [{key:'legend',category:'legend',paintRect:box(259,180,1,14)}];
-  assert.equal(priceAxisIntersectionArea(label.rect,state.obstacles[0].paintRect),0);
+test('a label pushed into the plot or out of the canvas fails, however slightly', () => {
+  for (const [patch, message] of [
+    [band => {band.left = 0;}, /touches the plot boundary/], [band => {band.right = 63;}, /touches the canvas edge/],
+    [band => {band.rect = box(255.5,band.rect.top,20,band.rect.height);}, /escapes the price-axis gutter/],
+    [band => {band.rect = box(band.rect.left,band.rect.top,70,band.rect.height);}, /escapes the price-axis gutter/],
+  ]) {
+    const state = fixture(); patch(state.canvas.ink.surfaces[0].bands[1]);
+    assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => message.test(value)),String(message));
+  }
+  const state = fixture(); state.canvas.ink.surfaces[0].bands[2].left = 1;
+  assert.deepEqual(validatePriceAxisState(state,sources.BTCUSD),[],'one clear column from the rule is the zero-tolerance boundary');
+});
+
+test('every label center hit must reach the chart and use the raw rectangle center', () => {
+  for (const patch of [{insideHost:false,target:'div.chart-legend-dock'}, {x:258}, {y:170}]) {
+    const state = fixture(); Object.assign(state.canvas.ink.surfaces[0].bands[0].hit,patch);
+    assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /center hit/.test(value)),JSON.stringify(patch));
+  }
+  const state = fixture(); state.canvas.ink.surfaces[0].bands[0].hit = null;
+  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /center hit is not the chart \(none\)/.test(value)));
+});
+
+test('touching paint bounds pass, but every positive occlusion of a label row fails without rounding', () => {
+  const state = fixture(), label = state.canvas.ink.surfaces[0].bands[0].rect;
+  state.obstacles = [{key:'legend',category:'legend',surface:'html',paintRect:box(label.left - 1,label.top,1,label.height)}];
+  assert.equal(priceAxisIntersectionArea(label,state.obstacles[0].paintRect),0);
   assert.deepEqual(validatePriceAxisState(state,sources.BTCUSD),[]);
   for (const amount of [1,0.001,Number.EPSILON * 512]) {
-    state.obstacles[0].paintRect = box(259,180,1 + amount,14);
-    const evidence = priceAxisOverlapEvidence(state,sources.BTCUSD);
+    state.obstacles[0].paintRect = box(label.left - 1,label.top,1 + amount,label.height);
+    const evidence = priceAxisOverlapEvidence(state);
     assert.ok(evidence.occludedArea > 0);
-    assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /occludes/.test(value)));
+    assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /label-40-52: legend legend occludes/.test(value)));
   }
 });
 
-test('legend, event, and forecast occlusions are all strict zero-area checks', () => {
-  for (const category of ['legend','event','forecast']) {
-    const state = fixture(); state.obstacles = [{key:category,category,paintRect:box(270,295,1,1)}];
-    assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => value.includes(`${category} ${category} occludes 1`)));
+test('legend, hud and annotation paint are all strict zero-area checks on the last-price badge too', () => {
+  const badge = fixture().canvas.ink.surfaces[0].bands[2].rect;
+  for (const [category, surface] of [['legend','html'],['hud','html'],['annotation','svg']]) {
+    const state = fixture(); state.obstacles = [{key:category,category,surface,paintRect:box(badge.left + 2,badge.top + 3,1,1)}];
+    assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => value.includes(`label-290-308: ${category} ${category} occludes 1`)),category);
   }
 });
 
-test('same-chart SVG underlap is recorded separately, but foreground paint blocks even without pointer events', () => {
-  const state = fixture();
-  state.obstacles = [{key:'event',category:'event',surface:'svg',chartId:'lab-chart',paintOrder:'before-axis',pointerEvents:'none',paintRect:box(270,295,1,1)}];
-  let evidence = priceAxisOverlapEvidence(state,sources.BTCUSD);
-  assert.equal(evidence.underlapArea,1); assert.equal(evidence.occludedArea,0);
+test('an overlay over the empty part of the gutter is recorded as evidence and does not fail', () => {
+  const state = fixture(); state.obstacles = [{key:'hud-summary',category:'hud',surface:'html',paintRect:box(250,200,10,24)}];
+  const evidence = priceAxisOverlapEvidence(state);
   assert.deepEqual(validatePriceAxisState(state,sources.BTCUSD),[]);
-  state.obstacles[0].paintOrder = 'after-axis';
-  evidence = priceAxisOverlapEvidence(state,sources.BTCUSD);
-  assert.equal(evidence.occludedArea,1);
-  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /occludes 1/.test(value)));
-  state.obstacles[0].paintOrder = 'before-axis'; state.obstacles[0].chartId = 'other-chart';
-  assert.equal(priceAxisOverlapEvidence(state,sources.BTCUSD).occludedArea,1);
-  state.obstacles = []; state.owner.lastSvgChild = false;
-  assert.ok(validatePriceAxisState(state,sources.BTCUSD).includes('price-axis paint owner is not the final SVG child'));
+  assert.equal(evidence.occlusions.length,0);
+  assert.deepEqual(evidence.gutterIntrusions,[{obstacle:'hud-summary',category:'hud',surface:'html',area:96}]);
+  assert.equal(evidence.intrudedArea,96);
+});
+
+test('missing obstacle geometry and unsupported clip shapes cannot count as a pass', () => {
+  const state = fixture(); state.obstacles = [{key:'ghost',category:'legend',surface:'html',paintRect:null}];
+  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /ghost: missing obstacle paint geometry/.test(value)));
+  const clipped = fixture(); clipped.geometryIssues = ['unsupported clip geometry on path: url(#clip)'];
+  assert.ok(validatePriceAxisState(clipped,sources.BTCUSD).some(value => /^geometry: unsupported clip geometry/.test(value)));
+  assert.deepEqual(validatePriceAxisState(null,sources.BTCUSD),['missing state or independent source expectation']);
 });
 
 test('overlay coverage distinguishes absent cases and requires actual paint somewhere in the matrix', () => {
-  for (const category of ['legend','event','forecast']) {
+  for (const category of ['legend','hud','annotation']) {
     const state = fixture(); state.overlays.paintObjectCounts[category] = 0;
     assert.deepEqual(validatePriceAxisState(state,sources.BTCUSD),[]);
     assert.equal(priceAxisOverlayCoverage([{id:'absent',state}]).status,'unverified');
@@ -157,76 +197,5 @@ test('overlay coverage distinguishes absent cases and requires actual paint some
     assert.deepEqual(coverage.categories[category].observedCases,['observed']);
     assert.equal(coverage.categories[category].unobservedCases[0].id,'absent');
   }
-  assert.deepEqual(priceAxisOverlayCoverage([]).missing,['legend','event','forecast']);
-});
-
-test('two painted labels cannot overlap even when center hits reach their shared layer', () => {
-  const state = fixture();
-  state.ticks[1] = {...structuredClone(state.ticks[0]),key:'tick-1',text:'$60,000'};
-  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /labels overlap/.test(value)));
-});
-
-test('the visible cursor can represent the hidden latest only for the same independent price and date', () => {
-  const state = fixture(); state.cursor = {...structuredClone(state.latest),key:'cursor'}; state.latest.painted = false;
-  assert.equal(activePriceAxisBadge(state,sources.BTCUSD).role,'latest-observation-cursor');
-  assert.deepEqual(validatePriceAxisState(state,sources.BTCUSD),[]);
-  for (const mutate of [value => {value.cursor.text = '$70,000';}, value => {value.readout.date = '2026-11-05';}, value => {value.readout.kind = 'forecast';}, value => {value.latest.text = '$70,000';}]) {
-    const broken = structuredClone(state); mutate(broken);
-    assert.equal(activePriceAxisBadge(broken,sources.BTCUSD).role,'missing-latest-observation');
-    assert.ok(validatePriceAxisState(broken,sources.BTCUSD).some(value => /latest/.test(value)));
-  }
-});
-
-test('candles require the venue close and reject the old Coin Metrics latest label', () => {
-  const state = fixture(), expected = sources.BTCUSD.candle;
-  state.chartType = 'candles'; state.readout = {date:expected.date,kind:'observed',priceText:expected.text,raw:{date:expected.date,kind:'observed',price:expected.rawValue,close:expected.rawValue,source:expected.source}};
-  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /latest label/.test(value)));
-  state.latest.text = expected.text;
-  assert.deepEqual(validatePriceAxisState(state,sources.BTCUSD),[]);
-  state.cursor = {...structuredClone(state.latest),key:'cursor'}; state.latest.painted = false;
-  assert.deepEqual(validatePriceAxisState(state,sources.BTCUSD),[]);
-});
-
-test('correct rounded text does not hide a raw readout precision or source mismatch', () => {
-  const state = fixture(); state.readout.raw.price = 75826.53;
-  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /raw readout differs/.test(value)));
-});
-
-test('hidden or empty ticks, missing ownership, and clipping cannot count as a pass', () => {
-  for (const mutate of [state => {state.ticks = [];}, state => {for (const tick of state.ticks) tick.painted = false;}, state => {state.ownerCount = 0;}, state => {state.ticks[0].paintRect.right -= 0.0001;}]) {
-    const state = fixture(); mutate(state);
-    assert.ok(validatePriceAxisState(state,sources.BTCUSD).length > 0);
-  }
-});
-
-test('frame lines must meet raw endpoints without gaps, dashes, or transparent paint', () => {
-  for (const mutate of [
-    state => {state.boundaries.axis[0].end.y -= 0.001;},
-    state => {state.boundaries.axis[0].start.y = state.chart.plot.top;},
-    state => {state.boundaries.top[0].end.x -= 0.001;},
-    state => {state.boundaries.bottom[0].start.x += 0.001;},
-    state => {state.boundaries.axis[0].dash = '3 3';},
-    state => {state.boundaries.axis[0].stroke = 'none';},
-    state => {state.boundaries.axis[0].paintRect.top = state.chart.plot.top;},
-    state => {state.boundaries.axis = [];},
-  ]) {
-    const state = fixture(); mutate(state);
-    assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /axis|top|bottom/.test(value)));
-  }
-});
-
-test('BTC/ETH alignment allows exactly 2 CSS pixels and rejects 2.001 without rounding', () => {
-  const btc = fixture(), eth = fixture('ETHUSD');
-  assert.deepEqual(comparePriceAxisStates(btc,eth,sources).failures,[]);
-  eth.latest.textAnchor.x += 2;
-  assert.deepEqual(comparePriceAxisStates(btc,eth,sources).failures,[]);
-  eth.latest.textAnchor.x += 0.001;
-  assert.ok(comparePriceAxisStates(btc,eth,sources).failures.some(value => /tagTextX/.test(value)));
-});
-
-test('the ±2 comparison allowance does not allow overflow or subpixel gutter intrusion', () => {
-  const state = fixture(); state.overflow = 0.0001;
-  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /overflow/.test(value)));
-  state.overflow = 0; state.latest.rect.left -= 0.0001;
-  assert.ok(validatePriceAxisState(state,sources.BTCUSD).some(value => /gutter/.test(value)));
+  assert.deepEqual(priceAxisOverlayCoverage([]).missing,['legend','hud','annotation']);
 });
