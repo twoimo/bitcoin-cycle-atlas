@@ -2,13 +2,13 @@
 
 ## 2026-11-16 두 수정의 확인
 
-동기화 커밋은 `1722f1fc7aa29edb4f9a9246b15f885bb9e14320`이다. 직전 동기화 `856e7742` 이후 검증 대상에서 바뀐 파일은 셋이다.
+동기화 커밋은 `1722f1fc7aa29edb4f9a9246b15f885bb9e14320`이고, 그 뒤 `c3bcb58f`가 런타임을, `e8873b88`이 `dist/equity-view.js`를 바꿨다. 직전 동기화 `856e7742` 이후 검증 대상에서 바뀐 파일은 셋이다. 아래 해시는 `31ba800f`의 바이트다.
 
 | 파일 | SHA-256 |
 | --- | --- |
 | `dist/equity-view.js` | `56b2f561617c5eedf75f663e8d3b77b3f87b732ff095d4b35c70ebad2bd555cf` (`e8873b88`) |
-| `src/charts/funnest-chart-runtime.js` | `cad0f5e2c38a9c2c82dc248eade24b0aea92d3acff61d125f8ac72972471882d` |
-| `dist/funnest-chart-runtime.bundle.js` | `af7abb0e745b9b88fa93b1aa6e45c8a9d784feabad940d821aaeaf403814d1bc` |
+| `src/charts/funnest-chart-runtime.js` | `f44846672c8c0435e5c4fb8b8ab70c2e6b7952e460b06c43b082063ba17fc958` (`c3bcb58f`) |
+| `dist/funnest-chart-runtime.bundle.js` | `3625ac79992191f80089ecb1d178012715f8427422baf2a43e0ad09ff233b286` (`c3bcb58f`) |
 
 아래 절이 기록한 두 발견은 고쳐졌다.
 

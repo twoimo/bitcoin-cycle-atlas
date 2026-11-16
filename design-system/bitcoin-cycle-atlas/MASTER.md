@@ -130,7 +130,7 @@ The original icon nodes retain their meaning and Korean accessible names.
 Pointer and keyboard focus reveal a body-level tooltip which cannot be clipped
 by rail scrolling. Escape, blur and navigation dismiss it. Pointer scrolling
 dismisses it; keyboard-induced scrolling keeps it beside the focused control. Preserve
-all six destinations, active destination state and mobile navigation.
+all seven destinations, active destination state and mobile navigation.
 
 The interval select already dispatches the same command and synchronizes the
 original eight choices and `aria-pressed` states. Use it on desktop as well as
