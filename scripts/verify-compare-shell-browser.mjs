@@ -168,7 +168,7 @@ const readState = () => {
       top: exists('.atlas-canvas-heading'), left: exists('.atlas-sidebar'), right: exists('.workbench-rail'),
       bottom: exists('.workbench-bottom-bar'), pageHeading: exists('#atlas-page-heading'),
     },
-    headings, duplicates,
+    h1Count: document.querySelectorAll('h1').length, headings, duplicates,
     compare: {
       exists: Boolean(compare), visible: compare ? painted(compare) : false, hidden: compare ? Boolean(compare.hidden) : null,
       parent: compare?.parentElement ? (compare.parentElement.id || compare.parentElement.className || compare.parentElement.tagName) : null,
@@ -467,7 +467,8 @@ const main = async () => {
       entry.shellRegions = state.regions;
       for (const key of ['top', 'left', 'right', 'bottom']) if (!state.present[key]) fail(where, `missing shell region ${key}`);
       if (!state.present.pageHeading) fail(where, 'missing #atlas-page-heading');
-      if (state.headings.length !== 1) fail(where, `visible h1 count ${state.headings.length} (${state.headings.map(h => h.id || h.text).join(' | ')})`);
+      const hiddenHeading = state.shell === 'chart' && state.page === 'outlook';
+      if (hiddenHeading ? state.h1Count !== 1 || state.headings.length !== 0 : state.headings.length !== 1) fail(where, `h1 count ${state.h1Count}, visible h1 count ${state.headings.length} (${state.headings.map(h => h.id || h.text).join(' | ')})`);
       if (state.duplicates.length) fail(where, 'duplicate ids: ' + state.duplicates.join(','));
       if (state.overflow > 1) fail(where, `horizontal overflow ${state.overflow}px`);
       if (errors.length) fail(where, 'console/runtime errors: ' + errors.slice(0, 2).join(' | '));

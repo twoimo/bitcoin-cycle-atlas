@@ -80,7 +80,8 @@ export function inspectP1Page(spec) {
     workspace:details(document.querySelector('.workspace')),container:details(document.querySelector('#main')),section:details(document.querySelector(`#${spec.page}-view`)),
     chartToolbar:chartToolbar?{...details(chartToolbar),label:toolbarLabel,centerPage:chartToolbar.dataset.centerPage||'',
       ariaLabel:chartToolbar.getAttribute('aria-label')||'',text:chartToolbarText,centerTool:document.body.dataset.centerTool||null,
-      identity:(()=>{const n=chartToolbar.querySelector('.symbol-selector-trigger,.workbench-symbol');return n?{painted:painted(n),label:n.getAttribute('aria-label')||n.title||'',text:n.textContent.trim()}:null})(),
+      identity:(()=>{const n=chartToolbar.querySelector('.symbol-selector-trigger,.workbench-symbol');return n?{painted:painted(n),label:n.getAttribute('aria-label')||n.title||'',text:n.textContent.trim(),
+        labelText:n.querySelector('.symbol-selector-label')?.textContent.trim()||''}:null})(),
       workspaceToolbar:[...chartToolbar.querySelectorAll('.center-workspace-toolbar')].map(n=>({painted:painted(n),role:n.getAttribute('role'),label:n.getAttribute('aria-label'),text:n.textContent.trim()}))}:null,
     nav,navOwners:document.querySelectorAll('.atlas-nav').length,
     child:child?{boot:child.documentElement.dataset.boot,page:child.body?.dataset.page,url:child.location.href,
@@ -92,15 +93,16 @@ export function inspectP1Page(spec) {
  * establish that a heading's glyphs escape clipping and covering paint. */
 export async function inspectP1Snapshot(cdp, spec) {
   const state=await evaluate(cdp,inspectP1Page,spec);
-  const chartHosted=state.shell==='chart'&&Boolean(state.center);
-  const proof=await verifyP0TextInk(cdp,chartHosted?'.atlas-canvas-heading':'#atlas-page-heading');
-  if (proof.status==='passed' && chartHosted && proof.geometry?.text?.trim()!==state.chartToolbar?.text?.trim()) {
+  const chart=state.shell==='chart',hosted=chart&&Boolean(state.center);
+  const proof=await verifyP0TextInk(cdp,hosted?'.atlas-canvas-heading':chart?'.atlas-canvas-heading .symbol-selector-label':'#atlas-page-heading');
+  const toolbarText=hosted?state.chartToolbar?.text:state.chartToolbar?.identity?.labelText;
+  if (proof.status==='passed' && chart && proof.geometry?.text?.trim()!==toolbarText?.trim()) {
     proof.status='unverified';proof.reason='toolbar text changed during native hit verification';
-  } else if (proof.status==='passed' && !chartHosted && (proof.geometry?.text?.trim()!==state.headings?.title ||
+  } else if (proof.status==='passed' && !chart && (proof.geometry?.text?.trim()!==state.headings?.title ||
     ['left','top','right','bottom'].some(key=>proof.geometry?.rect?.[key]!==state.headings?.rect?.[key]))) {
     proof.status='unverified';proof.reason='heading text/geometry changed during native hit verification';
   }
-  if(chartHosted)state.chartToolbar.nativeTextHit=proof;
+  if(chart)state.chartToolbar.nativeTextHit=proof;
   else state.headings.nativeTextHit=proof;
   if(state.shell==='chart')state.headings.accessibility=await inspectP1HeadingAccessibility(cdp,state.headings);
   return state;
@@ -141,7 +143,8 @@ export function validateP1Layout(state, spec) {
   if (state.overflow!==0) failures.push(`horizontal overflow ${state.overflow}px`);
   if (spec.hosted ? state.page!=='outlook'||state.center!==spec.id||state.shell!=='chart' : state.page!==spec.page||state.center) failures.push(`route did not own its requested page: ${state.page}/${state.center}`);
   if (spec.hosted && (!state.child || state.child.overflow!==0)) failures.push('hosted market child is missing or horizontally overflows');
-  if (state.headings?.count!==1 || (spec.hosted?state.headings?.paintedCount!==0:state.headings?.paintedCount!==1)) failures.push(spec.hosted?'expected one intentionally visually hidden chart h1':'expected exactly one DOM and painted h1');
+  const hiddenHeading=spec.hosted||spec.page==='outlook';
+  if (state.headings?.count!==1 || state.headings?.paintedCount!==(hiddenHeading?0:1)) failures.push(hiddenHeading?'expected one intentionally visually hidden chart h1':'expected exactly one DOM and painted h1');
   if (state.headings?.title!==spec.title) failures.push(`wrong h1: ${state.headings?.title}`);
   if (!state.headings?.describedBy || !state.headings?.description) failures.push('h1 source description is missing');
   if (state.headings?.duplicateTitles?.length) failures.push('duplicate visible section/header title');
@@ -152,12 +155,8 @@ export function validateP1Layout(state, spec) {
     if(spec.hosted) {
       const owner=toolbar?.workspaceToolbar?.filter(item=>item.painted);
       if(toolbar?.centerTool!==spec.id||!toolbar.centerPage||toolbar.label!==toolbar.centerPage||owner?.length!==1||owner[0]?.role!=='toolbar'||owner[0]?.label!==`${toolbar.centerPage} 도구`)failures.push('chart toolbar does not expose the active route identity and its matching visible/labeled toolbar');
-      if(toolbar?.nativeTextHit?.status!=='passed')failures.push(`chart toolbar native text paint is ${toolbar?.nativeTextHit?.status||'missing'}: ${toolbar?.nativeTextHit?.reason||'complete native hit evidence is required'}`);
-    } else {
-      if(!toolbar?.identity?.painted||!toolbar.identity.text||!toolbar.identity.label)failures.push('chart toolbar lacks a visible, labeled instrument identity');
-      if (!state.headings?.glyphs?.length || !state.headings.glyphs.every(r=>r.left>=0&&r.right<=spec.width&&r.top>=0&&r.bottom<=spec.height)) failures.push('h1 text lies outside the viewport');
-      if (state.headings?.nativeTextHit?.status!=='passed') failures.push(`h1 native text paint is ${state.headings?.nativeTextHit?.status||'missing'}: ${state.headings?.nativeTextHit?.reason||'complete native hit evidence is required'}`);
-    }
+    } else if(!toolbar?.identity?.painted||!toolbar.identity.text||!toolbar.identity.label)failures.push('chart toolbar lacks a visible, labeled instrument identity');
+    if(toolbar?.nativeTextHit?.status!=='passed')failures.push(`chart toolbar native text paint is ${toolbar?.nativeTextHit?.status||'missing'}: ${toolbar?.nativeTextHit?.reason||'complete native hit evidence is required'}`);
   } else {
     if (!state.headings?.glyphs?.length || !state.headings.glyphs.every(r=>r.left>=0&&r.right<=spec.width&&r.top>=0&&r.bottom<=spec.height)) failures.push('h1 text lies outside the viewport');
     if (state.headings?.nativeTextHit?.status!=='passed') failures.push(`h1 native text paint is ${state.headings?.nativeTextHit?.status||'missing'}: ${state.headings?.nativeTextHit?.reason||'complete native hit evidence is required'}`);

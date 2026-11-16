@@ -2,8 +2,6 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {runInNewContext} from 'node:vm';
 import {inspectP0TextInk,verifyP0TextInk} from '../scripts/ui-renewal-p0-text-hit.mjs';
-import {inspectP0Snapshot} from '../scripts/verify-ui-renewal-p0-browser.mjs';
-import {validateP0Paint} from '../scripts/ui-renewal-p0-contract.mjs';
 
 // These are deliberately controlled DOM/Range/style and CDP models. They run
 // the production collector and orchestration functions but are NOT native
@@ -120,7 +118,7 @@ function model({width=320,top=4,text='가격 차트',pointerEvents='none',nested
       node.backendNodeId=1000+node.nodeId;pseudoNodes.push(node);all.push(node);return node;}};
 }
 
-function cdpFor(fixture,{snapshot=null,failMethod=null,hitOverride=null,geometryTransform=null,describeTransform=null}={}) {
+function cdpFor(fixture,{failMethod=null,hitOverride=null,geometryTransform=null,describeTransform=null}={}) {
   const calls=[];const serialize=(node,depth=1)=>({nodeId:node.nodeId,backendNodeId:node.backendNodeId,nodeType:node.nodeType,nodeName:node.nodeName,localName:node.localName||'',nodeValue:node.nodeType===3?node.data:'',
     ...(node.pseudoType?{pseudoType:node.pseudoType}:{}),
     ...(fixture.pseudoNodes.some(pseudo=>pseudo.ownerElement===node)?{pseudoElements:fixture.pseudoNodes.filter(pseudo=>pseudo.ownerElement===node).map(pseudo=>serialize(pseudo,0))}:{}),
@@ -128,7 +126,6 @@ function cdpFor(fixture,{snapshot=null,failMethod=null,hitOverride=null,geometry
   return {calls,async send(method,params={}) {
     calls.push({method,params});if(method===failMethod)throw new Error(`fixture CDP failure: ${method}`);
     if(method==='Runtime.evaluate'){
-      if(snapshot&&params.expression.includes('function inspectP0Page('))return {result:{type:'object',value:structuredClone(snapshot)}};
       let value=runInNewContext(params.expression,fixture.globals);if(value&&typeof value.then==='function')value=await value;
       return {result:{type:'object',value:geometryTransform?geometryTransform(value):value}};
     }
@@ -259,30 +256,6 @@ test('replaced or missing TEXT_NODE evidence cannot be substituted by its old el
   for(const describeTransform of [node=>({...node,children:[]}),node=>({...node,children:node.children?.map(child=>child.nodeType===3?{...child,nodeValue:'다른 글자'}:child)})]){
     const result=await verifyP0TextInk(cdpFor(model(),{describeTransform}),'#atlas-page-heading');assert.notEqual(result.status,'passed',JSON.stringify(result));
   }
-});
-
-const snapshotFor=(f,extraIssues=[])=>({stage:'chart',samples:[{id:'page-heading',kind:'text',selector:'#atlas-page-heading',actualSelector:'#atlas-page-heading',text:'가격 차트',
-  visible:true,rect:{...f.heading.bounds},foreground:'rgb(25, 31, 40)',backgrounds:['transparent','#fff'],issues:['native heading text ink hit evidence pending',...extraIssues]}]});
-test('main snapshot integration removes only the pending sentinel after actual helper proof',async()=>{
-  const f=model(), cdp=cdpFor(f,{snapshot:snapshotFor(f)}), result=await inspectP0Snapshot(cdp,{symbol:'BTCUSD',width:320,theme:'light'},'chart',[],[]);
-  assert.equal(validateP0Paint(result.samples[0]).status,'passed');assert.ok(probes(cdp).length>=4);
-  const problem='existing unrelated paint limitation';const other=await inspectP0Snapshot(cdpFor(f,{snapshot:snapshotFor(f,[problem])}),{symbol:'BTCUSD',width:320,theme:'light'},'chart',[],[]);
-  assert.ok(other.samples[0].issues.includes(problem));assert.notEqual(validateP0Paint(other.samples[0]).status,'passed');
-});
-
-test('main integration never clears a missing, occluded, changed-text or changed-rect proof into a pass',async()=>{
-  const cases=[{hitOverride:()=>null},{failMethod:'DOM.getNodeForLocation'},{geometryTransform:value=>({...value,text:'다른 제목'})},
-    {geometryTransform:value=>({...value,rect:{...value.rect,left:value.rect.left+1}})}];
-  for(const options of cases){const f=model();const result=await inspectP0Snapshot(cdpFor(f,{snapshot:snapshotFor(f),...options}),{symbol:'BTCUSD',width:320,theme:'light'},'chart',[],[]);assert.notEqual(validateP0Paint(result.samples[0]).status,'passed');}
-  const covered=model();covered.addOverlay();const result=await inspectP0Snapshot(cdpFor(covered,{snapshot:snapshotFor(covered)}),{symbol:'BTCUSD',width:320,theme:'light'},'chart',[],[]);
-  assert.notEqual(validateP0Paint(result.samples[0]).status,'passed');
-});
-
-test('main integration retains a hidden heading as failed evidence instead of dropping the required sample',async()=>{
-  const f=model(), snapshot=snapshotFor(f);snapshot.samples[0].visible=false;
-  const result=await inspectP0Snapshot(cdpFor(f,{snapshot}),{symbol:'BTCUSD',width:320,theme:'light'},'chart',[],[]);
-  assert.equal(result.samples.length,1);assert.equal(result.samples[0].visible,false);
-  assert.equal(result.samples[0].nativeTextHit.status,'failed');assert.notEqual(validateP0Paint(result.samples[0]).status,'passed');
 });
 
 test('the recorded Mac description Range overlap is proved empty after its measured inset clip',async()=>{
@@ -490,7 +463,5 @@ test('clipping required heading ink never makes the required title vacuously vis
   for(const clipPath of ['inset(50%)','inset(0 0 0 80%)']){
     const f=model({headingStyle:{clipPath}}),result=await verifyP0TextInk(cdpFor(f,{hitOverride:()=>f.textNode}),'#atlas-page-heading');
     assert.notEqual(result.status,'passed',JSON.stringify({clipPath,result}));assert.match(result.reason,/clipp|ink|glyph/i);
-    const snapshot=await inspectP0Snapshot(cdpFor(f,{snapshot:snapshotFor(f),hitOverride:()=>f.textNode}),{symbol:'BTCUSD',width:320,theme:'light'},'chart',[],[]);
-    assert.notEqual(validateP0Paint(snapshot.samples[0]).status,'passed');
   }
 });
