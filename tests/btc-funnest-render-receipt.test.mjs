@@ -30,6 +30,7 @@ function createCanvasTrace() {
     closePath(...args) { if (paths.length) paths.at(-1).closed = true; event('closePath', args); },
     setLineDash(value) { dash = [...value]; event('setLineDash', [value]); },
     getLineDash() { return [...dash]; },
+    arc(...args) { event('arc', args); },
     fill(...args) { event('fill', args); },
     stroke(...args) { event('stroke', args); },
     save(...args) {
@@ -664,6 +665,193 @@ test('future BTC model points preserve simulated measurement anchors and tempora
       assert.equal(measurements.length, 1);
       assert.equal(measurements[0].startDate, expected.date); assert.equal(measurements[0].startKind, 'simulated');
       assert.equal(measurements[0].startPrice, anchor.price); assert.equal(measurements[0].startField, anchor.field);
+    } finally { mounted?.destroy(); }
+  });
+});
+
+const readData = async name => JSON.parse(await readFile(new URL(`../dist/data/${name}.json`, import.meta.url), 'utf8'));
+const isoDay = time => new Date(time).toISOString().slice(0, 10);
+const settle = (ms = 100) => new Promise(resolve => setTimeout(resolve, ms));
+const OHLCV = ['open', 'high', 'low', 'close', 'volume'];
+function pressKey(window, target, key) {
+  const event = new window.Event('keydown', { bubbles: true, cancelable: true });
+  Object.defineProperty(event, 'key', { value: key }); target.dispatchEvent(event);
+}
+function selectionOrder(window, svg, mounted) {
+  pressKey(window, svg, 'Home');
+  const visited = [mounted.getDate()];
+  while (mounted.hasNext()) { pressKey(window, svg, 'ArrowRight'); visited.push(mounted.getDate()); }
+  return visited;
+}
+function runsOf(rows, step) {
+  const runs = [];
+  for (const row of rows) {
+    const previous = runs.at(-1)?.at(-1);
+    if (previous && date(row.date) - date(previous.date) <= step) runs.at(-1).push(row); else runs.push([row]);
+  }
+  return runs;
+}
+const strokedLines = call => canvasPaths(call).filter(points => points.length > 1);
+function findLineThrough(calls, runs, point) {
+  const expected = JSON.stringify(runs.filter(run => run.length > 1).map(run => run.map(point)));
+  return calls.findLast(call => call.type === 'stroke' && JSON.stringify(strokedLines(call)) === expected);
+}
+
+const coinMetricsCloses = [100, 140, 60, 90, 104, 111, 300, 116, 121, 125, 122, 130]
+  .map((price, index) => ({ date: `2024-01-${String(index + 1).padStart(2, '0')}`, price }));
+const venueCandles = [['2024-01-05', 105], ['2024-01-06', 110], ['2024-01-08', 115], ['2024-01-09', 120]]
+  .map(([day, close]) => ({ date: day, time: date(day) / 1000, open: close - 2, high: close + 6, low: close - 6, close, volume: 1 }));
+const venueCandleByDate = new Map(venueCandles.map(candle => [candle.date, candle]));
+const closesWithoutCandle = coinMetricsCloses.filter(row => !venueCandleByDate.has(row.date));
+const observedDrawdownColor = '#a7b8cd';
+
+async function withDailyCandlesAndCloses(options, run) {
+  await withFunnestFixture(async fixture => {
+    const readouts = []; let mounted;
+    try {
+      mounted = mountAtlasBtcFunnestChart({ container: fixture.stage, svg: fixture.svg, sourceMode: 'ohlc', frequency: 'daily', chartType: 'candles',
+        observedRows: coinMetricsCloses, observedCandles: venueCandles, candleSource: 'Bitstamp', start: '2024-01-01', end: '2024-01-12',
+        onHover: detail => readouts.push(detail), ...options });
+      await settle();
+      await run({ ...fixture, mounted, readouts });
+    } finally { mounted?.destroy(); }
+  });
+}
+
+test('daily candle mode keeps every observed date as one selection row that reads its own source', async () => {
+  await withDailyCandlesAndCloses({}, async ({ svg, window, mounted, readouts }) => {
+    assert.deepEqual(selectionOrder(window, svg, mounted), coinMetricsCloses.map(row => row.date),
+      'the keyboard steps through every observed date once, in date order');
+    for (const row of coinMetricsCloses) {
+      mounted.selectDate(row.date);
+      const readout = readouts.at(-1), candle = venueCandleByDate.get(row.date);
+      assert.equal(readout.date, row.date); assert.equal(readout.kind, 'observed');
+      if (candle) {
+        assert.equal(readout.price, candle.close, `${row.date} reads the exchange close`); assert.equal(readout.source, 'Bitstamp');
+        for (const field of OHLCV) assert.equal(readout[field], candle[field], `${row.date} keeps the exchange ${field}`);
+      } else {
+        assert.equal(readout.price, row.price, `${row.date} reads its Coin Metrics close`); assert.equal(readout.source, 'Coin Metrics');
+        for (const field of OHLCV) assert.equal(Object.hasOwn(readout, field), false, `${row.date} has no exchange candle, so it gains no ${field}`);
+      }
+    }
+    const previousClose = day => { mounted.selectDate(day); return readouts.at(-1).previousClose; };
+    assert.equal(previousClose('2024-01-01'), null, 'the first observed close has no earlier close');
+    assert.equal(previousClose('2024-01-02'), 100);
+    assert.equal(previousClose('2024-01-07'), 111, 'a close-only date is compared with the previous Coin Metrics close, not with an exchange close');
+    assert.equal(readouts.at(-1).changePct, (300 - 111) / 111 * 100);
+    assert.equal(previousClose('2024-01-10'), 121);
+    assert.equal(svg.dataset.observedCandleCount, '4'); assert.equal(svg.dataset.observedLineCount, '8');
+  });
+});
+
+test('daily candle mode paints the closes that no candle covers as a line, and a lone one as a dot', async () => {
+  await withDailyCandlesAndCloses({}, async ({ calls, mounted }) => {
+    const axis = mounted.getPriceScale(), point = row => [mounted.x(row.date), axis.priceToY(row.price)];
+    const runs = runsOf(closesWithoutCandle, DAY);
+    assert.deepEqual(runs.map(run => run.map(row => row.date)),
+      [['2024-01-01', '2024-01-02', '2024-01-03', '2024-01-04'], ['2024-01-07'], ['2024-01-10', '2024-01-11', '2024-01-12']]);
+    const line = findLineThrough(calls, runs, point);
+    assert.ok(line, 'one canvas stroke joins each run of uncovered closes at its own date and value, and no candle date');
+    const [dotX, dotY] = point(runs[1][0]);
+    const dot = calls.findLast(call => call.type === 'arc' && call.args[0] === dotX && call.args[1] === dotY);
+    assert.ok(dot, 'a close with a candle on both sides has no neighbor to join, so the canvas paints it as a dot');
+    assert.equal(calls[dot.order + 1].type, 'fill'); assert.equal(calls[dot.order + 1].fillStyle, line.strokeStyle, 'the dot has the color of the close line');
+
+    const visible = mounted.getVisibleTimeRange(), plotWidth = mounted.host.getAtlasBtcRenderSnapshot().pane.width;
+    assert.ok(visible.from <= date('2024-01-01') && visible.to >= date('2024-01-12'), 'the time axis reaches the first observed close, four days before the first candle');
+    assert.ok(mounted.x('2024-01-01') >= 0 && mounted.x('2024-01-04') < mounted.x('2024-01-05') && mounted.x('2024-01-12') <= plotWidth,
+      'the closes before the first candle and after the last candle are inside the plot');
+    assert.deepEqual(mounted.host.getAtlasFunnestSnapshot().engineBars.map(bar => [bar.time, ...OHLCV.map(field => bar[field])]),
+      venueCandles.map(candle => [candle.time * 1000, ...OHLCV.map(field => candle[field])]),
+      'the engine holds the exchange candles unchanged and no candle for a close-only date');
+  });
+});
+
+test('daily candle mode scales the price axis and the drawdown trace from every observed close', async () => {
+  await withDailyCandlesAndCloses({ scale: 'log', showDrawdown: true }, async ({ calls, mounted }) => {
+    const axis = mounted.getPriceScale();
+    assert.equal(axis.min, 60, 'the automatic price range reaches the lowest close, which no candle covers');
+    assert.equal(axis.max, 300, 'the automatic price range reaches the highest close, which no candle covers');
+
+    let peak = 0;
+    const drawdown = coinMetricsCloses.map(row => {
+      const value = venueCandleByDate.get(row.date)?.close ?? row.price; peak = Math.max(peak, value);
+      return { date: row.date, pct: (value / peak - 1) * 100 };
+    });
+    calls.length = 0; mounted.updateCycleOverlayObstacles([]); await settle(60);
+    const drawdownY = new Map(calls.filter(call => call.type === 'stroke' && call.strokeStyle === observedDrawdownColor).flatMap(call => canvasPaths(call).flat()));
+    const baseline = drawdownY.get(mounted.x('2024-01-01'));
+    assert.ok(Number.isFinite(baseline), 'the drawdown trace starts at the first observed close');
+    const depth = row => baseline - drawdownY.get(mounted.x(row.date)), deepest = drawdown.reduce((low, row) => row.pct < low.pct ? row : low);
+    assert.equal(deepest.date, '2024-01-08');
+    for (const row of drawdown) assert.ok(Math.abs(depth(row) / depth(deepest) - row.pct / deepest.pct) < 1e-9,
+      `${row.date} sits ${row.pct.toFixed(2)}% below the highest observed close so far`);
+  });
+});
+
+test('weekly candle mode keeps the weekly close of every week that has no completed candle', async () => {
+  const closes = Array.from({ length: 38 }, (_, index) => ({ date: isoDay(date('2024-01-01') + index * DAY), price: 200 + index }));
+  const closeOn = day => closes.find(row => row.date === day).price;
+  const candles = ['2024-01-15', '2024-01-22'].map(startDate => {
+    const endDate = isoDay(date(startDate) + 6 * DAY), close = closeOn(endDate) + 0.5;
+    return { time: date(startDate) / 1000, date: endDate, startDate, endDate, open: close - 3, high: close + 4, low: close - 5, close, volume: 7, complete: true };
+  });
+  const uncovered = ['2024-01-07', '2024-01-14', '2024-02-04', '2024-02-07'].map(day => ({ date: day, price: closeOn(day) }));
+  await withFunnestFixture(async ({ stage, svg, calls, window }) => {
+    const readouts = []; let mounted;
+    try {
+      mounted = mountAtlasBtcFunnestChart({ container: stage, svg, sourceMode: 'ohlc', frequency: 'weekly', chartType: 'candles',
+        observedRows: closes, observedCandles: candles, candleSource: 'Bitstamp', start: '2024-01-01', end: '2024-02-07',
+        onHover: detail => readouts.push(detail) });
+      await settle();
+      assert.deepEqual(selectionOrder(window, svg, mounted), ['2024-01-07', '2024-01-14', '2024-01-21', '2024-01-28', '2024-02-04', '2024-02-07'],
+        'each week is one row: its completed candle, or its last observed close when no candle covers the week');
+      for (const row of uncovered) {
+        mounted.selectDate(row.date);
+        assert.equal(readouts.at(-1).date, row.date); assert.equal(readouts.at(-1).price, row.price); assert.equal(readouts.at(-1).source, 'Coin Metrics');
+        for (const field of OHLCV) assert.equal(Object.hasOwn(readouts.at(-1), field), false, `${row.date} gains no ${field}`);
+      }
+      assert.equal(readouts.at(-1).previousClose, closeOn('2024-02-04'));
+      mounted.selectDate('2024-02-04');
+      assert.equal(readouts.at(-1).previousClose, closeOn('2024-01-28'), 'a weekly close is compared with the previous weekly Coin Metrics close');
+      mounted.selectDate('2024-01-28');
+      for (const field of OHLCV) assert.equal(readouts.at(-1)[field], candles[1][field], `the completed week keeps the exchange ${field}`);
+      const axis = mounted.getPriceScale(), point = row => [mounted.x(row.date), axis.priceToY(row.price)];
+      assert.ok(findLineThrough(calls, runsOf(uncovered, 7 * DAY), point), 'the weekly closes before and after the candles are two separate lines');
+      assert.equal(svg.dataset.observedCandleCount, '2'); assert.equal(svg.dataset.observedLineCount, '4');
+    } finally { mounted?.destroy(); }
+  });
+});
+
+test('published BTC history: daily candle mode keeps the closes older than the first exchange candle', async () => {
+  const closes = (await readData('btc-daily')).prices.map(([day, price]) => ({ date: day, price })), volume = await readData('btc-volume');
+  const candleByDate = new Map(volume.bars.map(bar => [bar.date, bar])), uncovered = closes.filter(row => !candleByDate.has(row.date));
+  const older = uncovered.filter(row => row.date < volume.bars[0].date), lastCandle = volume.bars.at(-1);
+  assert.ok(older.length > 300, 'the published closes still start more than 300 days before the first exchange candle');
+  await withFunnestFixture(async ({ stage, svg, calls }) => {
+    const readouts = []; let mounted;
+    try {
+      mounted = mountAtlasBtcFunnestChart({ container: stage, svg, sourceMode: 'ohlc', frequency: 'daily', chartType: 'candles',
+        observedRows: closes, observedCandles: volume.bars, candleSource: volume.source, start: closes[0].date, end: closes.at(-1).date,
+        selectedDate: lastCandle.date, onHover: detail => readouts.push(detail) });
+      const firstReadout = readouts[0];
+      await settle(200);
+      for (const row of uncovered) {
+        mounted.selectDate(row.date);
+        const readout = readouts.at(-1);
+        assert.equal(readout.date, row.date, `${row.date} is a row of the chart`); assert.equal(readout.price, row.price, `${row.date} reads its observed close`);
+        assert.equal(readout.kind, 'observed'); assert.equal(readout.source, 'Coin Metrics');
+        for (const field of OHLCV) assert.equal(Object.hasOwn(readout, field), false, `${row.date} gains no ${field}`);
+      }
+      assert.equal(firstReadout.source, volume.source, 'a date with an exchange candle reads that candle, not a second Coin Metrics row');
+      for (const field of OHLCV) assert.equal(firstReadout[field], lastCandle[field], `the first readout on the latest candle date is the exchange ${field}`);
+      const axis = mounted.getPriceScale(), point = row => [mounted.x(row.date), axis.priceToY(row.price)];
+      assert.ok(findLineThrough(calls, runsOf(uncovered, DAY), point), 'the canvas strokes a line through every uncovered close at its own date and value');
+      const plotWidth = mounted.host.getAtlasBtcRenderSnapshot().pane.width;
+      assert.equal(Math.round(mounted.getVisibleTimeRange().from), date(closes[0].date), 'the time axis starts at the first observed close');
+      assert.ok(mounted.x(older[0].date) >= 0 && mounted.x(older.at(-1).date) < mounted.x(volume.bars[0].date) && mounted.x(volume.bars[0].date) <= plotWidth);
+      assert.equal(axis.min, Math.min(...uncovered.map(row => row.price), ...volume.bars.map(bar => bar.low)), 'the automatic price range reaches the lowest observed close');
+      assert.equal(svg.dataset.observedCandleCount, String(volume.bars.length)); assert.equal(svg.dataset.observedLineCount, String(uncovered.length));
     } finally { mounted?.destroy(); }
   });
 });
