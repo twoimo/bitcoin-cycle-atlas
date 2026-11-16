@@ -49,7 +49,7 @@ export function readNativeFunnestEvidence(selector) {
 export function installCanvasDrawTap() {
   const proto = CanvasRenderingContext2D.prototype, frames = new WeakMap();
   const frameOf = canvas => {let frame = frames.get(canvas); if (!frame) frames.set(canvas,frame = {texts:[],rects:[],sequence:0,order:0}); return frame;};
-  const fillRect = proto.fillRect, fillText = proto.fillText, roundRect = proto.roundRect;
+  const fillRect = proto.fillRect, fillText = proto.fillText, roundRect = proto.roundRect, measureText = proto.measureText;
   proto.fillRect = function(x,y,w,h) {
     if (x === 0 && y === 0) {
       const transform = this.getTransform(), canvas = this.canvas;
@@ -58,8 +58,10 @@ export function installCanvasDrawTap() {
     return fillRect.call(this,x,y,w,h);
   };
   proto.fillText = function(text,x,y,maxWidth) {
-    const frame = frameOf(this.canvas);
-    frame.texts.push({order:++frame.order,text:String(text),x,y,font:this.font,align:this.textAlign,baseline:this.textBaseline,fill:String(this.fillStyle),alpha:this.globalAlpha});
+    // Measured on the drawing context itself: a fresh context can resolve another face and give boxes narrower than the ink.
+    const frame = frameOf(this.canvas), metrics = measureText.call(this,String(text));
+    frame.texts.push({order:++frame.order,text:String(text),x,y,font:this.font,align:this.textAlign,baseline:this.textBaseline,fill:String(this.fillStyle),alpha:this.globalAlpha,
+      width:maxWidth === undefined ? metrics.width : Math.min(metrics.width,maxWidth),ascent:metrics.fontBoundingBoxAscent,descent:metrics.fontBoundingBoxDescent});
     return fillText.call(this,text,x,y,maxWidth);
   };
   proto.roundRect = function(x,y,w,h,radii) {

@@ -159,17 +159,16 @@ export function inspectPriceAxis(symbol) {
   const hitAt = (x,y) => {const node = document.elementFromPoint(x,y); return {x,y,target:describe(node),insideHost:Boolean(node && host.contains(node))};};
   // The engine reserves layout.width - layout.plotWidth for the price axis. Funnest paints each tick label with
   // one fillText and the last-price tag with one roundRect, so the recorded calls of the latest frame are the label
-  // text, anchor and tag geometry in layout pixels; measureText turns them into boxes. Pixels then prove the ink.
-  const scratch = document.createElement('canvas').getContext('2d');
+  // text, anchor and tag geometry in layout pixels; the drawing context's own measureText, recorded with each call,
+  // turns them into boxes. Pixels then prove the ink.
   const readLabels = (draws,layout,hostRect,scale) => {
     const cssX = value => hostRect.left + value * scale.x, cssY = value => hostRect.top + value * scale.y;
     const cssBox = (left,top,right,bottom) => rect(cssX(left),cssY(top),cssX(right),cssY(bottom));
     const inGutter = item => item.x >= layout.plotWidth && item.y < layout.panesHeight;
     const rects = draws.rects.filter(inGutter).map(item => ({order:item.order,layout:{left:item.x,top:item.y,right:item.x + item.w,bottom:item.y + item.h},fill:item.fill,alpha:item.alpha}));
     const entries = draws.texts.filter(inGutter).map(item => {
-      scratch.font = item.font; scratch.textBaseline = item.baseline;
-      const measured = scratch.measureText(item.text), left = item.x - measured.width * (item.align === 'right' ? 1 : item.align === 'center' ? .5 : 0);
-      const layoutBox = {left,top:item.y - measured.fontBoundingBoxAscent,right:left + measured.width,bottom:item.y + measured.fontBoundingBoxDescent};
+      const left = item.x - item.width * (item.align === 'right' ? 1 : item.align === 'center' ? .5 : 0);
+      const layoutBox = {left,top:item.y - item.ascent,right:left + item.width,bottom:item.y + item.descent};
       return {order:item.order,text:item.text,x:item.x,y:item.y,align:item.align,baseline:item.baseline,font:item.font,fill:item.fill,alpha:item.alpha,layoutBox,
         box:cssBox(layoutBox.left,layoutBox.top,layoutBox.right,layoutBox.bottom),anchor:{x:cssX(item.x),y:cssY(item.y)}};
     });
@@ -337,7 +336,7 @@ function options(argv) {
 export async function verifyPriceAxisBrowser(argv = process.argv.slice(2)) {
   const report = {schemaVersion:1,kind:'atlas-price-axis-browser',recordedAt:new Date().toISOString(),qualifiesFullVerification:false,qualifiesPriceAxisVerification:false,
     methodology:{geometry:'unrounded native CSS coordinates; the price-axis gutter is the engine layout width minus plotWidth over the main pane, scaled to the host rectangle',
-      labels:'recorded fillText and roundRect calls of the latest canvas frame give each tick label, the last-price tag and its text; measureText gives the boxes, canvas pixels give ink, the boundary rule, the bottom frame line and any ink the labels do not account for',
+      labels:'recorded fillText and roundRect calls of the latest canvas frame give each tick label, the last-price tag and its text; measureText on the drawing context at each call gives the boxes, canvas pixels give ink, the boundary rule, the bottom frame line and any ink the labels do not account for',
       occlusion:'strict zero intersection between every tick box, the last-price tag, the boundary rule and the bottom frame line and the clip-aware painted bounds of HTML overlays and SVG overlay marks; strict zero overlap between labels and between a label and the tag; pseudo paint uses conservative native owner bounds; native center elementFromPoint must reach the chart',
       sources:'preserved local JSON compared with the last engine bar, the last-price tag digits and the DOM readout, independent of canvas pixels; the engine draws digits without the currency symbol',
       alignment:'BTC against ETH at the same viewport within 2 CSS pixels for gutter, label x, label inset from the plot, tag left, tag text x and tag right gap, all read from the engine layout and the recorded draws',

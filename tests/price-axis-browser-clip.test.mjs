@@ -101,7 +101,7 @@ const tickRows=[['100,000.00',60],['50,000.00',130],['25,000.00',300],['10,000.0
 // Synthetic engine output: the draw calls the Funnest painter makes for the axis and the pixels they leave. They are
 // inputs to the collector, not a browser paint receipt.
 function engine({ticks=tickRows,latest=['75,826.53',200],rule=true,bottom=true,extra=()=>{}}={}){
-  const texts=[...ticks.map(([text,y],index)=>[text,y,index+1]),[...latest,100]].map(([text,y,order])=>({order,text,x:gutterLeft+8,y,font:'12px Fixture',align:'left',baseline:'middle',fill:'#7e7e87',alpha:1}));
+  const texts=[...ticks.map(([text,y],index)=>[text,y,index+1]),[...latest,100]].map(([text,y,order])=>({order,text,x:gutterLeft+8,y,font:'12px Fixture',align:'left',baseline:'middle',fill:'#7e7e87',alpha:1,width:text.length*glyph,ascent:7,descent:7}));
   const rects=[{order:90,...tagRect,fill:'#d53544',alpha:1}];
   const data=new Uint8ClampedArray(W*H*4),set=(x,y,color)=>data.set(color,(y*W+x)*4);
   for(let y=0;y<H;y++)for(let x=0;x<W;x++)set(x,y,[20,20,21,255]);
@@ -142,7 +142,6 @@ function fixture(options={}){
     querySelectorAll:selector=>[html,...html.descendants()].filter(node=>node.matches(selector)),
     querySelector(selector){return this.querySelectorAll(selector)[0]||null;},
     getElementById:id=>[html,...html.descendants()].find(node=>node.id===id)||null,
-    createElement:()=>({getContext:()=>({set font(value){},set textBaseline(value){},measureText:text=>({width:String(text).length*glyph,fontBoundingBoxAscent:7,fontBoundingBoxDescent:7})})}),
     elementFromPoint:(x,y)=>f.hitOverride?.(x,y)??top,elementsFromPoint:()=>[top,host],
     createRange(){let text;return {selectNodeContents(node){text=node;},getClientRects(){return [{...(text.rect||text.parentElement.rangeRect||text.parentElement.rect)}];}};},
   };
@@ -334,16 +333,18 @@ test('excluding the sr-only clock does not forgive a separate visible 13-square-
 test('the draw recorder calls through and keeps only the latest frame of each canvas',()=>{
   const calls=[];
   class Context{constructor(canvas){this.canvas=canvas;this.font='12px Fixture';this.textAlign='left';this.textBaseline='middle';this.fillStyle='#fff';this.globalAlpha=1;}
-    getTransform(){return {a:1,d:1};}fillRect(...args){calls.push(['fillRect',...args]);}fillText(...args){calls.push(['fillText',...args]);}roundRect(...args){calls.push(['roundRect',...args]);}}
+    getTransform(){return {a:1,d:1};}fillRect(...args){calls.push(['fillRect',...args]);}fillText(...args){calls.push(['fillText',...args]);}roundRect(...args){calls.push(['roundRect',...args]);}
+    measureText(text){return {width:(this.font==='12px Fixture'?6:8)*text.length,fontBoundingBoxAscent:9,fontBoundingBoxDescent:3};}}
   const window={},canvas={width:100,height:50},other={width:100,height:50},context=new Context(canvas),second=new Context(other);
   runInNewContext(`(${installCanvasDrawTap})()`,{CanvasRenderingContext2D:Context,window});
   context.fillRect(0,0,100,50);context.fillText('old',1,2);context.roundRect(3,4,5,6,2);
-  context.fillRect(0,0,100,50);context.fillText('55,000.00',70,20);context.fillRect(10,10,5,5);context.roundRect(60,30,36,20,4);second.fillText('other',1,1);
+  context.fillRect(0,0,100,50);context.fillText('55,000.00',70,20);context.font='12px Wider';context.fillText('cut',70,40,10);context.font='12px Fixture';context.fillRect(10,10,5,5);context.roundRect(60,30,36,20,4);second.fillText('other',1,1);
   const read=target=>JSON.parse(JSON.stringify(window.__atlasCanvasDraws(target))),frame=read(canvas);
-  assert.deepEqual([frame.sequence,frame.texts.map(item=>item.text),frame.rects.map(item=>[item.order,item.x,item.w,item.fill])],[2,['55,000.00'],[[2,60,36,'#fff']]]);
-  assert.deepEqual(frame.texts[0],{order:1,text:'55,000.00',x:70,y:20,font:'12px Fixture',align:'left',baseline:'middle',fill:'#fff',alpha:1});
+  assert.deepEqual([frame.sequence,frame.texts.map(item=>item.text),frame.rects.map(item=>[item.order,item.x,item.w,item.fill])],[2,['55,000.00','cut'],[[3,60,36,'#fff']]]);
+  assert.deepEqual(frame.texts[0],{order:1,text:'55,000.00',x:70,y:20,font:'12px Fixture',align:'left',baseline:'middle',fill:'#fff',alpha:1,width:54,ascent:9,descent:3});
+  assert.deepEqual([frame.texts[1].font,frame.texts[1].width],['12px Wider',10],'metrics come from the drawing context in its current font, capped by maxWidth');
   assert.deepEqual(read(other).texts.map(item=>item.text),['other']);
   assert.equal(window.__atlasCanvasDraws({}),null);
-  assert.equal(calls.filter(call=>call[0]==='fillText').length,3,'every call still reaches the real context');
+  assert.equal(calls.filter(call=>call[0]==='fillText').length,4,'every call still reaches the real context');
   assert.equal(calls.filter(call=>call[0]==='roundRect').length,2);assert.equal(calls.filter(call=>call[0]==='fillRect').length,3);
 });
