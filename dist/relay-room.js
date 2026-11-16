@@ -747,7 +747,8 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
       const doc = root.ownerDocument, active = doc.activeElement;
       if (!lastFocus || (active && active !== doc.body)) return;
       const [index] = lastFocus.split(':'), [selector, read] = FOCUS_TARGETS[Number(index)];
-      findBy(root, selector, el => `${index}:${read(el)}`, lastFocus)?.focus({ preventScroll: true });
+      const kept = findBy(root, selector, el => `${index}:${read(el)}`, lastFocus);
+      (kept?.disabled ? root.querySelector('.relay-page-chip[aria-current="true"]') : kept)?.focus({ preventScroll: true });
       return;
     }
     const target = intent.kind === 'row' ? findBy(root, '[data-room]', el => el.dataset.room, intent.room)

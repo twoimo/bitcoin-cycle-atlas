@@ -22,8 +22,12 @@ const sample = () => ({ generated_at: '2026-11-13T12:00:00+09:00', rooms: [
 // Linkedom has no focus model or CSS, and every parseHTML window shares its properties.
 const focused = new WeakMap(), stacked = new WeakSet();
 function trackFocus(window, document) {
-  Object.defineProperty(document, 'activeElement', { configurable: true, get: () => focused.get(document) ?? document.body });
+  Object.defineProperty(document, 'activeElement', { configurable: true, get: () => {
+    const el = focused.get(document);
+    return el?.isConnected ? el : document.body;
+  } });
   window.HTMLElement.prototype.focus = function focus() {
+    if (this.hasAttribute('disabled')) return;
     focused.set(this.ownerDocument, this);
     this.dispatchEvent(new window.Event('focusin', { bubbles: true }));
   };
@@ -226,6 +230,23 @@ test('arrow keys, Home and End move focus between rows without opening a room', 
   assert.deepEqual(rows.map(row => row.getAttribute('tabindex')), ['-1', '-1', '0'], 'the single tab stop follows focus');
   assert.deepEqual([address.href, address.length], ['', 1]);
   assert.equal(heading(root), '소수의견(26년 4분기)');
+});
+
+test('a page turn that reaches the first or last page leaves focus on the current page', async () => {
+  const { root, window, active } = await mount();
+  click(root, window, '[data-room="hankyung"]');
+  const turn = action => {
+    const button = root.querySelector(`[data-relay-action="${action}"]`);
+    button.focus();
+    button.dispatchEvent(new window.Event('click', { bubbles: true }));
+  };
+  const current = () => [active().textContent, active().getAttribute('aria-current')];
+  turn('page-next');
+  assert.ok(root.querySelector('[data-relay-action="page-next"]').disabled, 'the last page disables ›');
+  assert.deepEqual(current(), ['2면', 'true']);
+  turn('page-prev');
+  assert.ok(root.querySelector('[data-relay-action="page-prev"]').disabled, 'the first page disables ‹');
+  assert.deepEqual(current(), ['1면', 'true']);
 });
 
 test('loading, error, empty, ready and no-match states each have exactly one live status', async () => {
