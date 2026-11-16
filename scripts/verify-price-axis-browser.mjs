@@ -336,9 +336,10 @@ export async function verifyPriceAxisBrowser(argv = process.argv.slice(2)) {
         result.requestedUrl = `${base}?symbol=${spec.symbol}${spec.mode === 'candles' ? '&type=candles' : ''}`;
         await cdp.send('Page.navigate',{url:result.requestedUrl});
         await until(() => evaluate(cdp,symbol => {
-          if (document.documentElement.dataset.boot === 'error') throw new Error('product boot error');
+          const boot = document.documentElement?.dataset.boot;
+          if (boot === 'error') throw new Error('product boot error');
           const svg = document.querySelector(symbol === 'BTCUSD' ? '#lab-chart' : '#eth-chart');
-          return document.documentElement.dataset.boot === 'ready' && document.documentElement.dataset.symbol === symbol && document.body.dataset.page === 'outlook' && svg?.querySelector('[data-price-axis-label="tick"]') && Number(svg.dataset.visiblePointCount)>0 && (svg.dataset.chartType !== 'candles' || Number(svg.dataset.observedCandleCount)>0);
+          return boot === 'ready' && document.documentElement.dataset.symbol === symbol && document.body.dataset.page === 'outlook' && svg?.querySelector('[data-price-axis-label="tick"]') && Number(svg.dataset.visiblePointCount)>0 && (svg.dataset.chartType !== 'candles' || Number(svg.dataset.observedCandleCount)>0);
         },spec.symbol),`${spec.id} observed data ready`);
         await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',x:0,y:0});
         result.state = await settled(cdp,spec);

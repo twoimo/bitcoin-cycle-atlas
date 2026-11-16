@@ -130,8 +130,9 @@ try{
         await cdp.send('Emulation.setDeviceMetricsOverride',{width:spec.width,height:spec.height,deviceScaleFactor:1,mobile:spec.width<=620});
         await cdp.send('Page.navigate',{url:base+`?page=${spec.page}`});
         await until(()=>evaluate(cdp,page=>{
-          if(document.documentElement.dataset.boot==='error')throw new Error('product boot error');
-          if(document.documentElement.dataset.boot!=='ready'||document.body.dataset.page!==page)return false;
+          const boot=document.documentElement?.dataset.boot;
+          if(boot==='error')throw new Error('product boot error');
+          if(boot!=='ready'||document.body.dataset.page!==page)return false;
           return page==='conference'?Boolean(document.querySelector('.conference-player[data-state="ready"]')):page==='relay'?Boolean(document.querySelector('.relay-rooms .relay-room-item')):Boolean(document.querySelector('#lab-chart path'));
         },spec.page),spec.id+' product ready');
         await evaluate(cdp,async()=>{await document.fonts.ready;await new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)));});

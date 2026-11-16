@@ -273,8 +273,8 @@ async function openSettings(cdp) {
 }
 async function closeSettings(cdp) {await click(cdp,'.reader-heading button');await until(() => evaluate(cdp,() => document.querySelector('#chart-reader')?.hidden),'settings reader closes');}
 async function observedReady(cdp,symbol) {
-  await until(() => evaluate(cdp,symbol => {if (document.documentElement.dataset.boot === 'error') throw new Error('product boot error');const chart = document.querySelector(symbol === 'BTCUSD' ? '#lab-chart' : '#eth-chart');
-    return document.documentElement.dataset.boot === 'ready' && document.documentElement.dataset.symbol === symbol && chart?.querySelector('[data-price-axis-label="tick"]') && Number(chart.dataset.visiblePointCount)>0;},symbol),`${symbol} actual observed chart`);
+  await until(() => evaluate(cdp,symbol => {const boot = document.documentElement?.dataset.boot;if (boot === 'error') throw new Error('product boot error');const chart = document.querySelector(symbol === 'BTCUSD' ? '#lab-chart' : '#eth-chart');
+    return boot === 'ready' && document.documentElement.dataset.symbol === symbol && chart?.querySelector('[data-price-axis-label="tick"]') && Number(chart.dataset.visiblePointCount)>0;},symbol),`${symbol} actual observed chart`);
   await settle(cdp);
 }
 async function screenshot(cdp,out,file) {const result = await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false}), bytes = Buffer.from(result.data,'base64');await writeFile(resolve(out,file),bytes);return {file,bytes:bytes.length,sha256:sha256(bytes)};}
