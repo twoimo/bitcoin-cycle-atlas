@@ -4,9 +4,12 @@ import type { RsiRow } from '@atlas/domain/market-lab';
 import type { RsiBar } from '@atlas/domain/rsi-bars';
 import { BarPlot, CartesianChart, CandlePlot, Line, Point as ChartPoint, ReferenceLine, Scrubber, XAxis, YAxis, useCartesianChart } from '@funnest/charts-react';
 import { logTicks, ticks as niceTicks } from '@funnest/charts-viz';
+import { zoomRange, type ChartRange } from '../../../../dist/chart-navigation.js';
+import { withChartSpacing } from '../../../../dist/chart-view-policy.js';
+import { scalePriceDomain } from '../../../../dist/price-axis.js';
 import type { InstrumentMarker } from './rsi-chart-canvas.js';
-import type { RsiChartView } from '../rsi-chart-model.js';
-import type { InstrumentSeries } from '../instrument-chart-model.js';
+import { chartRange, type RsiChartView } from '../rsi-chart-model.js';
+import { instrumentRange, type InstrumentSeries } from '../instrument-chart-model.js';
 import type { RsiCrossing } from '../rsi-crossings.js';
 import { axisNumber, type Pick } from './rsi-chart-canvas.js';
 import { FunnestInstrumentMarkers } from './funnest-instrument-markers.js';
@@ -14,18 +17,19 @@ import { FunnestInstrumentMarkers } from './funnest-instrument-markers.js';
 export interface NativePricePaneBounds { left: number; right: number; top: number; bottom: number }
 
 /** Copy the public engine layout; no independently guessed chart margins. */
-function NativePricePaneLayout({ onLayout }: { onLayout?: (bounds: NativePricePaneBounds) => void }) {
+function NativePricePaneLayout({ onLayout, reflect }: { onLayout?: (bounds: NativePricePaneBounds) => void; reflect: (value: number) => number }) {
   const chart = useCartesianChart(), anchor = useRef<SVGGElement>(null);
+  const [priceMin, priceMax] = observedDomain(chart.yScales.price, reflect);
   useLayoutEffect(() => {
     const svg = anchor.current?.closest('svg'), root = svg?.closest('.rsi-chart-canvas');
     if (!svg || !root || !chart.width || !chart.height) return;
-    for (const [key, value] of Object.entries({ plotLeft: chart.plot.left, plotRight: chart.plot.right, plotTop: chart.plot.top, plotBottom: chart.plot.bottom, timeAxisTop: chart.plot.bottom })) svg.dataset[key] = String(value);
+    for (const [key, value] of Object.entries({ plotLeft: chart.plot.left, plotRight: chart.plot.right, plotTop: chart.plot.top, plotBottom: chart.plot.bottom, timeAxisTop: chart.plot.bottom, priceMin, priceMax })) svg.dataset[key] = String(value);
     const box = svg.getBoundingClientRect(), origin = root.getBoundingClientRect();
     if (!(box.width > 0 && box.height > 0)) return;
     const sx = box.width / chart.width, sy = box.height / chart.height;
     onLayout?.({ left: box.left - origin.left + chart.plot.left * sx, right: box.left - origin.left + chart.plot.right * sx,
       top: box.top - origin.top + chart.plot.top * sy, bottom: box.top - origin.top + chart.plot.bottom * sy });
-  }, [onLayout, chart.width, chart.height, chart.plot.left, chart.plot.right, chart.plot.top, chart.plot.bottom]);
+  }, [onLayout, chart.width, chart.height, chart.plot.left, chart.plot.right, chart.plot.top, chart.plot.bottom, priceMin, priceMax]);
   return <g ref={anchor}/>;
 }
 
@@ -163,10 +167,12 @@ export function priceAxisReflection(scale: RsiChartView['scale'], inverted: bool
   return scale === 'log' ? value => 1 / value : value => -value;
 }
 
+const observedDomain = (scale: { domain: readonly number[] }, reflect: (value: number) => number) => scale.domain.map(reflect).sort((a: number, b: number) => a - b);
+
 /** Ticks are chosen on the observed price range, then drawn where the reflected scale plots them. */
 function PriceAxis({ reflect }: { reflect: (value: number) => number }) {
   const { plot, yScales } = useCartesianChart(), scale = yScales.price;
-  const [low, high] = scale.domain.map(reflect).sort((a: number, b: number) => a - b);
+  const [low, high] = observedDomain(scale, reflect);
   const count = Math.max(2, Math.floor(plot.height / 32));
   const values = scale.kind === 'log' ? logTicks(low, high, count) : niceTicks(low, high, count);
   return <YAxis axisId="price" width={68} ticks={values.map(reflect)} tickLabelFormatter={(value: number) => fmt(reflect(value))}/>;
@@ -180,6 +186,34 @@ function boundedWindow(start: number, end: number, timeline: readonly string[]) 
   const span = Math.min(end - start, max - min); start = Math.max(min, Math.min(max - span, start)); end = start + span;
   return { start: new Date(start).toISOString().slice(0, 10), end: new Date(end).toISOString().slice(0, 10) };
 }
+
+interface ClientBox { left: number; top: number; width: number; height: number }
+/** The price SVG's plot and axis gutters in client pixels, measured from the plot box NativePricePaneLayout publishes. */
+function plotRegions(svg: SVGSVGElement | null | undefined): { plot: ClientBox; price: ClientBox; time: ClientBox } | null {
+  const box = svg?.dataset;
+  if (!svg || box?.plotRight === undefined) return null;
+  const rect = svg.getBoundingClientRect(), sx = rect.width / Number(svg.getAttribute('width')), sy = rect.height / Number(svg.getAttribute('height'));
+  const [left, right, top, bottom] = [box.plotLeft, box.plotRight, box.plotTop, box.plotBottom].map(Number);
+  if (![sx, sy, left, right, top, bottom].every(Number.isFinite)) return null;
+  return {
+    plot: { left: rect.left + left * sx, top: rect.top + top * sy, width: (right - left) * sx, height: (bottom - top) * sy },
+    price: { left: rect.left + right * sx, top: rect.top + top * sy, width: rect.width - right * sx, height: (bottom - top) * sy },
+    time: { left: rect.left + left * sx, top: rect.top + bottom * sy, width: (right - left) * sx, height: rect.height - bottom * sy },
+  };
+}
+const within = (box: ClientBox | undefined, event: { clientX: number; clientY: number }) => Boolean(box && box.width > 0 && box.height > 0 &&
+  event.clientX >= box.left && event.clientX <= box.left + box.width && event.clientY >= box.top && event.clientY <= box.top + box.height);
+const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
+function shownPriceRange(svg: SVGSVGElement | null | undefined) {
+  const min = Number(svg?.dataset.priceMin), max = Number(svg?.dataset.priceMax);
+  return Number.isFinite(min) && Number.isFinite(max) && max > min ? { min, max } : null;
+}
+
+/** Axis gestures wait for 3px of movement before they edit the view, as main's navigation controller did. */
+type PlotGesture =
+  | { kind: 'pan'; x: number; start: string; end: string; width: number }
+  | { kind: 'price'; y: number; height: number; domain: { min: number; max: number }; active: boolean }
+  | { kind: 'time'; x: number; width: number; anchor: number; range: ChartRange; active: boolean };
 
 /** Funnest SVG chart components render the source slots directly; no synthetic candle values. */
 export function FunnestInstrumentPlot(props: Props) {
@@ -249,22 +283,81 @@ export function FunnestInstrumentPlot(props: Props) {
     return () => { (svgRef as { current: SVGSVGElement | null }).current = null; };
   }, [svgRef, dates.length, view.chartType, view.start, view.end, view.autoScale, description, symbol, unit, chartWidth, chartHeight, hasVolume, volumeAxisWidth]);
   useEffect(() => { if (menuPulse > 0) setMenuOpen(true); }, [menuPulse]);
-  const drag = useRef<{ x: number; start: string; end: string; width: number } | null>(null);
+  const gesture = useRef<PlotGesture | null>(null), suppressClickUntil = useRef(0);
+  const priceSvg = () => host.current?.querySelector<SVGSVGElement>('svg[data-plot-right]');
+  const fullView = (): RsiChartView => ({ ...view, start: timeline[0] ?? view.start, end: timeline.at(-1) ?? view.end, autoScale: true, domain: null });
+  const applyEdit = (next: RsiChartView) => { onStart(); onView(next); onEnd(); };
   useEffect(() => {
     const win = host.current?.ownerDocument.defaultView;
     if (!win) return;
     const move = (event: PointerEvent) => {
-      const state = drag.current;
+      const state = gesture.current;
       if (!state) return;
-      const elapsed = Date.parse(state.end) - Date.parse(state.start);
-      const shift = -(event.clientX - state.x) / Math.max(1, state.width) * elapsed;
-      const next = boundedWindow(Date.parse(state.start) + shift, Date.parse(state.end) + shift, timeline);
-      if (next) onView({ ...view, ...next });
+      if (state.kind === 'pan') {
+        const elapsed = Date.parse(state.end) - Date.parse(state.start);
+        const shift = -(event.clientX - state.x) / Math.max(1, state.width) * elapsed;
+        const next = boundedWindow(Date.parse(state.start) + shift, Date.parse(state.end) + shift, timeline);
+        if (next) onView({ ...view, ...next });
+        return;
+      }
+      const delta = state.kind === 'price' ? event.clientY - state.y : event.clientX - state.x;
+      if (!state.active) { if (Math.abs(delta) < 3) return; state.active = true; onStart(); }
+      if (state.kind === 'price') {
+        const domain = scalePriceDomain({ ...state.domain, scale: view.scale }, Math.exp(clamp(delta / state.height, -1.5, 1.5) * 2));
+        if (domain) onView({ ...view, autoScale: false, domain });
+      } else {
+        const next = zoomRange(state.range, Math.exp(clamp(delta / state.width, -2, 2) * 2), state.anchor);
+        onView({ ...view, start: next.start, end: next.end, spacingBounds: next.spacingBounds });
+      }
     };
-    const up = () => { if (drag.current) { drag.current = null; onEnd(); } };
+    const up = (event: PointerEvent) => {
+      const state = gesture.current;
+      if (!state) return;
+      if (state.kind !== 'pan' && event.type === 'pointerup') move(event);
+      gesture.current = null;
+      if (state.kind === 'pan' || state.active) onEnd();
+      if (state.kind !== 'pan' && state.active) suppressClickUntil.current = Date.now() + 500;
+    };
     win.addEventListener('pointermove', move as EventListener); win.addEventListener('pointerup', up as EventListener); win.addEventListener('pointercancel', up as EventListener);
     return () => { win.removeEventListener('pointermove', move as EventListener); win.removeEventListener('pointerup', up as EventListener); win.removeEventListener('pointercancel', up as EventListener); };
-  }, [view, onView, onEnd]);
+  }, [view, onView, onStart, onEnd]);
+  const startGesture = (event: React.PointerEvent<HTMLDivElement>) => {
+    const svg = priceSvg(), regions = plotRegions(svg);
+    if (svg && regions && within(regions.price, event)) {
+      const domain = shownPriceRange(svg);
+      if (domain) { event.preventDefault(); gesture.current = { kind: 'price', y: event.clientY, height: regions.price.height, domain, active: false }; }
+      return;
+    }
+    if (svg && regions && within(regions.time, event)) {
+      const range = withChartSpacing(series ? instrumentRange(view, series) : chartRange(view, prices),
+        { frequency: view.frequency, plotWidth: Number(svg.dataset.plotRight) - Number(svg.dataset.plotLeft) });
+      if (range) { event.preventDefault(); gesture.current = { kind: 'time', x: event.clientX, width: regions.time.width, anchor: clamp((event.clientX - regions.time.left) / regions.time.width, 0, 1), range, active: false }; }
+      return;
+    }
+    if (view.tool !== 'pan') return;
+    gesture.current = { kind: 'pan', x: event.clientX, start: view.start, end: view.end, width: event.currentTarget.getBoundingClientRect().width }; onStart();
+  };
+  const scalePriceAxis = (event: React.WheelEvent<HTMLDivElement>) => {
+    const svg = priceSvg(), gutter = plotRegions(svg)?.price;
+    if (!gutter || !within(gutter, event)) return false;
+    const shown = shownPriceRange(svg), unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? gutter.height : 1;
+    const y = clamp((event.clientY - gutter.top) / gutter.height, 0, 1);
+    const domain = shown && event.deltaY ? scalePriceDomain({ ...shown, scale: view.scale }, Math.exp(clamp(event.deltaY * unit, -600, 600) * .0015), view.inverted ? y : 1 - y) : null;
+    if (domain) applyEdit({ ...view, autoScale: false, domain });
+    return true;
+  };
+  const axisOwnsClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (Date.now() < suppressClickUntil.current) { suppressClickUntil.current = 0; return true; }
+    const regions = plotRegions(priceSvg());
+    return within(regions?.price, event) || within(regions?.time, event);
+  };
+  const resetOnDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const regions = plotRegions(priceSvg()), onPlot = within(regions?.plot, event) || Boolean((event.target as Element).closest('[data-panel="rsi"]'));
+    const next = within(regions?.price, event) ? { ...view, autoScale: true, domain: null }
+      : within(regions?.time, event) || onPlot && view.tool !== 'measure' ? fullView() : null;
+    if (!next) return;
+    event.preventDefault(); applyEdit(next);
+  };
   useEffect(() => { current.current = null; setIndex(null); onHover(null); }, [view.selected, view.start, view.end]);
   const updateIndex = (next: number | null, panel: Pick['panel'] = 'price') => {
     if (current.current === next && currentPanel.current === panel) return;
@@ -292,9 +385,10 @@ export function FunnestInstrumentPlot(props: Props) {
   };
   return <div ref={host} className="atlas-funnest-instrument-plot" data-chart-engine="funnest" data-symbol={symbol} data-range-start={view.start} data-range-end={view.end}
     role="group" aria-label={`${description || `${symbol} 가격 차트`} · ${view.start}부터 ${view.end}`}
-    onWheel={event => { if (isPlotControlTarget(event.target)) return; event.preventDefault(); const first = Date.parse(view.start), last = Date.parse(view.end), duration = last - first; if (!Number.isFinite(duration) || duration <= 0) return; const rect = event.currentTarget.getBoundingClientRect(); const factor = event.deltaY < 0 ? 0.82 : 1.22; const anchor = Math.max(0, Math.min(1, (event.clientX - rect.left) / Math.max(1, rect.width))); const nextDuration = Math.max(86400000, duration * factor); const point = first + duration * anchor; const next = boundedWindow(point - nextDuration * anchor, point + nextDuration * (1-anchor), timeline); if (!next) return; onStart(); onView({ ...view, ...next }); onEnd(); }}
-    onPointerDown={event => { if (isPlotControlTarget(event.target) || !active || view.tool !== 'pan' || event.button !== 0) return; const rect = event.currentTarget.getBoundingClientRect(); drag.current = { x: event.clientX, start: view.start, end: view.end, width: rect.width }; onStart(); }}
-    onClick={event => { if (isPlotControlTarget(event.target)) return; choose(current.current ?? selectedIndex, (event.target as Element).closest('[data-panel="rsi"]') ? 'rsi' : 'price'); }}
+    onWheel={event => { if (isPlotControlTarget(event.target)) return; event.preventDefault(); if (scalePriceAxis(event)) return; const first = Date.parse(view.start), last = Date.parse(view.end), duration = last - first; if (!Number.isFinite(duration) || duration <= 0) return; const rect = event.currentTarget.getBoundingClientRect(); const factor = event.deltaY < 0 ? 0.82 : 1.22; const anchor = Math.max(0, Math.min(1, (event.clientX - rect.left) / Math.max(1, rect.width))); const nextDuration = Math.max(86400000, duration * factor); const point = first + duration * anchor; const next = boundedWindow(point - nextDuration * anchor, point + nextDuration * (1-anchor), timeline); if (!next) return; onStart(); onView({ ...view, ...next }); onEnd(); }}
+    onPointerDown={event => { if (isPlotControlTarget(event.target) || !active || event.button !== 0) return; startGesture(event); }}
+    onClick={event => { if (isPlotControlTarget(event.target)) return; if (axisOwnsClick(event)) return; choose(current.current ?? selectedIndex, (event.target as Element).closest('[data-panel="rsi"]') ? 'rsi' : 'price'); }}
+    onDoubleClick={event => { if (isPlotControlTarget(event.target) || !active || event.ctrlKey || event.metaKey || event.altKey) return; resetOnDoubleClick(event); }}
     onContextMenu={event => { if (isPlotControlTarget(event.target)) return; event.preventDefault(); setMenuOpen(true); }}
     onKeyDown={event => { if (isPlotControlTarget(event.target)) return; if (event.key === 'Escape' && menuOpen) { event.preventDefault(); setMenuOpen(false); } else if (event.key === 'Enter' && !(event.target as Element).closest('button,a,input,select,textarea,summary,[contenteditable="true"]')) { event.preventDefault(); choose(); } }}>
     <div className="atlas-funnest-axis-unit" aria-label={`가격 단위 ${unit}`}>{unit}</div>
@@ -303,7 +397,7 @@ export function FunnestInstrumentPlot(props: Props) {
       ...(hasVolume ? [{ id: 'volume', label: `거래량 (${volumeUnit || '단위 미제공'})`, data: volumes, yAxisId: 'volume', color: 'var(--muted)' }] : []),
     ]} xAxis={{ data: dates, scaleType: 'band', bandPadding: 0.2 }} yAxis={[priceAxis, ...(hasVolume ? [{ id: 'volume', domain: volumeScale.domain, nice: false }] : [])]} height={plotHeight} inset={{ left: 12, right: 0, top: 20, bottom: 30 }} enableScrubbing onScrubberPositionChange={updateIndex}
       getScrubberAccessibilityLabel={(i: number) => { const bar = candleData[i]; return bar ? `${dates[i]} · 시가 ${fmt(bar.open)} · 고가 ${fmt(bar.high)} · 저가 ${fmt(bar.low)} · 종가 ${fmt(bar.close)} ${unit} · 거래량 ${bar.volume == null ? '미공표' : `${fmt(bar.volume)} ${volumeUnit}`}` : `${dates[i]} · 관측값 없음`; }} aria-label={`${symbol} 실제 OHLC ${unit}`}>
-      <NativePricePaneLayout onLayout={onPlotGeometry}/><XAxis minTickSpacing={dateTickSpacing} tickLabelFormatter={dateLabel} showGrid/><PriceAxis reflect={reflect}/>
+      <NativePricePaneLayout onLayout={onPlotGeometry} reflect={reflect}/><XAxis minTickSpacing={dateTickSpacing} tickLabelFormatter={dateLabel} showGrid/><PriceAxis reflect={reflect}/>
       {hasVolume && <YAxis axisId="volume" position="left" width={volumeAxisWidth} ticks={volumeScale.ticks} tickLabelFormatter={fmt} showGrid={false}/>}
       {hasVolume && <BarPlot seriesIds={['volume']} radius={0} highlightScrubbed={false} getBarColor={(_value: number, i: number) => statusColor(volumeByDate.get(dates[i])?.state)}/>}
       <CandlePlot data={plottedCandles} yAxisId="price" upColor="var(--chart-candle-up)" downColor="var(--chart-candle-down)" tooltip={false} valueFormatter={fmt}/>
@@ -317,7 +411,7 @@ export function FunnestInstrumentPlot(props: Props) {
       ...(hasAverage ? [{ id: 'volume-average', label: '과거 평균 거래량', data: averages, yAxisId: 'volume', color: 'var(--text)', lineStyle: 'dashed' as const }] : []),
     ]} xAxis={{ data: dates, scaleType: hasVolume ? 'band' : 'linear', bandPadding: 0.2 }} yAxis={[priceAxis, ...(hasVolume ? [{ id: 'volume', domain: volumeScale.domain, nice: false }] : [])]} height={plotHeight} inset={{ left: 12, right: 0, top: 20, bottom: 30 }} enableScrubbing onScrubberPositionChange={updateIndex}
       getScrubberAccessibilityLabel={(i: number) => `${dates[i] ?? ''} · ${priceData[i] == null ? '관측값 없음' : `${fmt(priceData[i]!)} ${unit}`} · 거래량 ${volumes[i] == null ? '미공표' : `${fmt(volumes[i]!)} ${volumeUnit}`}`} aria-label={`${symbol} 관측 종가 ${unit}`}>
-      <NativePricePaneLayout onLayout={onPlotGeometry}/><XAxis minTickSpacing={dateTickSpacing} tickLabelFormatter={dateLabel} showGrid/><PriceAxis reflect={reflect}/>
+      <NativePricePaneLayout onLayout={onPlotGeometry} reflect={reflect}/><XAxis minTickSpacing={dateTickSpacing} tickLabelFormatter={dateLabel} showGrid/><PriceAxis reflect={reflect}/>
       {hasVolume && <YAxis axisId="volume" position="left" width={volumeAxisWidth} ticks={volumeScale.ticks} tickLabelFormatter={fmt} showGrid={false}/>}
       {hasVolume && <BarPlot seriesIds={['volume']} radius={0} highlightScrubbed={false} getBarColor={(_value: number, i: number) => statusColor(volumeByDate.get(dates[i])?.state)}/>}
       <Line seriesId="price" curve="linear" strokeWidth={2}/>{hasAverage && <Line seriesId="volume-average" curve="linear" strokeWidth={1.2}/>}
@@ -338,7 +432,7 @@ export function FunnestInstrumentPlot(props: Props) {
       <Scrubber dimFuture={false} label={dateLabel}/>
     </CartesianChart></div>}
     {view.measurement.length > 0 && <div className="atlas-funnest-measurement" role="status">{view.measurement.length === 1 ? `측정 시작 · ${view.measurement[0].date} · ${fmt(view.measurement[0].value)} ${view.measurement[0].panel === 'rsi' ? 'RSI pt' : unit}` : (() => { const [a,b] = view.measurement; const days = Math.abs(Date.parse(`${b.date}T00:00:00Z`) - Date.parse(`${a.date}T00:00:00Z`)) / 86400000; const delta=b.value-a.value; return `${a.date} → ${b.date} · 변화 ${fmt(delta)} ${a.panel === 'rsi' ? 'RSI pt' : unit}${a.value ? ` (${((delta/a.value)*100).toFixed(2)}%)` : ''} · ${days}일`; })()}</div>}
-    {menuOpen && <div className="atlas-funnest-context-menu" role="menu" aria-label="차트 메뉴"><button type="button" role="menuitem" onClick={() => { onView({ ...view, start: timeline[0] ?? view.start, end: timeline.at(-1) ?? view.end, autoScale: true, domain: null }); setMenuOpen(false); }}>전체 기간</button>{(['crosshair','pan','measure'] as const).map(tool => <button key={tool} type="button" role="menuitemradio" aria-checked={view.tool===tool} onClick={() => { onView({ ...view, tool }); setMenuOpen(false); }}>{tool==='crosshair'?'십자선':tool==='pan'?'이동':'두 점 측정'}</button>)}<button type="button" role="menuitem" onClick={() => setMenuOpen(false)}>닫기</button></div>}
+    {menuOpen && <div className="atlas-funnest-context-menu" role="menu" aria-label="차트 메뉴"><button type="button" role="menuitem" onClick={() => { onView(fullView()); setMenuOpen(false); }}>전체 기간</button>{(['crosshair','pan','measure'] as const).map(tool => <button key={tool} type="button" role="menuitemradio" aria-checked={view.tool===tool} onClick={() => { onView({ ...view, tool }); setMenuOpen(false); }}>{tool==='crosshair'?'십자선':tool==='pan'?'이동':'두 점 측정'}</button>)}<button type="button" role="menuitem" onClick={() => setMenuOpen(false)}>닫기</button></div>}
     <details className="atlas-funnest-source-table"><summary>차트 원자료 표 · {dates.length}행</summary><div className="atlas-funnest-source-body">{markersAt.length > 0 && <ul className="atlas-funnest-marker-list" aria-label="차트 근거·판정 표식">{markersAt.map(marker => <li key={marker.id}><button type="button" onClick={() => { marker.onSelect(); onMarker?.(); }} aria-pressed={marker.selected}>{marker.date} · {marker.kind === 'judgment' ? '판정' : '근거'} · {marker.title}</button></li>)}</ul>}<div className="atlas-funnest-table-scroll"><table><caption>{symbol} · {unit} · 날짜별 관측 원자료</caption><thead><tr><th scope="col">날짜</th><th scope="col">종가 / 지수 ({unit})</th>{bars.length > 0 && <><th scope="col">시가</th><th scope="col">고가</th><th scope="col">저가</th></>}{view.showVolume && <><th scope="col">거래량 ({volumeUnit})</th>{hasAverage && <th scope="col">과거 평균 ({volumeUnit})</th>}{series?.frequency === 'monthly' && <th scope="col">평균 대비 상태</th>}</>}{view.showRsi && <th scope="col">RSI14</th>}</tr></thead><tbody>{dates.map((stamp, i) => { const bar = barByDate.get(stamp), row = rowByDate.get(stamp); return <tr key={`${stamp}:${i}`}><th scope="row">{stamp}</th><td>{priceData[i] === null ? '관측값 없음' : fmt(priceData[i]!)}</td>{bars.length > 0 && <><td>{bar ? fmt(bar[1]) : '관측값 없음'}</td><td>{bar ? fmt(bar[2]) : '관측값 없음'}</td><td>{bar ? fmt(bar[3]) : '관측값 없음'}</td></>}{view.showVolume && <><td>{volumes[i] === null ? '미공표' : fmt(volumes[i]!)}</td>{hasAverage && <td>{averages[i] === null ? '산정 전' : fmt(averages[i]!)}</td>}{series?.frequency === 'monthly' && <td>{volumeByDate.get(stamp)?.state ?? '상태 없음'}</td>}</>}{view.showRsi && <td>{row?.rsi == null ? '산출 불가' : fmt(row.rsi)}</td>}</tr>; })}</tbody></table></div></div></details>
     <span className="atlas-sr-only" aria-live="polite">{selectedDate} · {priceByDate.get(selectedDate) == null ? '관측값 없음' : `${fmt(priceByDate.get(selectedDate)!)} ${unit}`}</span>
   </div>;
