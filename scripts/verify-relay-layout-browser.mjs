@@ -87,8 +87,14 @@ const report={kind:'relay-telegram-layout',startedAt:new Date().toISOString(),so
 async function evaluate(fn,...args){const result=await cdp.send('Runtime.evaluate',{expression:`(${fn.toString()})(${args.map(value=>JSON.stringify(value)).join(',')})`,awaitPromise:true,returnByValue:true});if(result.exceptionDetails)throw Error(JSON.stringify(result.exceptionDetails).slice(0,600));return result.result.value;}
 async function until(label,predicate,timeout=30000){const end=Date.now()+timeout;let last;while(Date.now()<end){last=await evaluate(snapshot).catch(()=>null);if(last&&predicate(last))return last;await delay(80);}throw Error(`${label} timed out; last ${JSON.stringify(last)?.slice(0,700)}`);}
 const settle=()=>evaluate(async()=>{const frame=document.querySelector('.atlas-center-frame:not([hidden])'),doc=frame?.contentDocument||document;await doc.fonts?.ready;await document.fonts?.ready;await new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)));});
-async function point(selector){return evaluate(sel=>{const frame=document.querySelector('.atlas-center-frame:not([hidden])'),doc=frame?.contentDocument||document,el=doc.querySelector(sel);if(!el)throw Error('missing '+sel);el.scrollIntoView({block:'nearest'});const r=el.getBoundingClientRect(),f=frame?frame.getBoundingClientRect():{x:0,y:0};return {x:Math.round(r.x+r.width/2+f.x),y:Math.round(r.y+r.height/2+f.y)};},selector);}
-async function click(selector){const at=await point(selector);for(const type of ['mouseMoved','mousePressed','mouseReleased'])await cdp.send('Input.dispatchMouseEvent',{type,...at,button:'left',clickCount:type==='mouseMoved'?0:1});}
+async function point(selector){return evaluate(async sel=>{const frame=document.querySelector('.atlas-center-frame:not([hidden])'),doc=frame?.contentDocument||document,el=doc.querySelector(sel);if(!el)throw Error('missing '+sel);el.scrollIntoView({block:'nearest'});await new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)));const r=el.getBoundingClientRect(),fr=frame?frame.getBoundingClientRect():null,f=fr?{x:fr.x+frame.clientLeft,y:fr.y+frame.clientTop}:{x:0,y:0};const x=Math.round(r.x+r.width/2+f.x),y=Math.round(r.y+r.height/2+f.y);const outer=document.elementFromPoint(x,y);const hit=frame?outer===frame&&el.contains(doc.elementFromPoint(x-f.x,y-f.y)):el.contains(outer);return {x,y,hit};},selector);}
+// The shell can still reflow around the frame (its daily-check banner collapses), so press only on a position that is stable and hit-tests to the target.
+async function click(selector){
+  let at=null,steady=false;
+  for(let i=0;i<40&&!steady;i++){const next=await point(selector);steady=next.hit&&at?.x===next.x&&at?.y===next.y;at=next;if(!steady)await delay(100);}
+  if(!steady)throw Error(`click target ${selector} is covered or moving ${JSON.stringify(at)}`);
+  for(const type of ['mouseMoved','mousePressed','mouseReleased'])await cdp.send('Input.dispatchMouseEvent',{type,x:at.x,y:at.y,button:'left',clickCount:type==='mouseMoved'?0:1});
+}
 const KEYS={ArrowDown:40,ArrowUp:38,Home:36,End:35,Enter:13,Escape:27,Tab:9};
 async function key(name){await cdp.send('Input.dispatchKeyEvent',{type:'keyDown',key:name,code:name,windowsVirtualKeyCode:KEYS[name],...(name==='Enter'?{text:'\r',unmodifiedText:'\r'}:{})});await cdp.send('Input.dispatchKeyEvent',{type:'keyUp',key:name,code:name,windowsVirtualKeyCode:KEYS[name]});}
 async function historyForward(){const {currentIndex,entries}=await cdp.send('Page.getNavigationHistory');if(currentIndex>=entries.length-1)throw Error('no forward entry');await cdp.send('Page.navigateToHistoryEntry',{entryId:entries[currentIndex+1].id});}
@@ -140,6 +146,17 @@ async function layoutCase(route,viewport){
     }else{
       check(row,!s.room.shown,'stacked list shows the room pane');
       check(row,s.relay.width<600?Math.abs(s.list.width-s.inner.width)<=1:(s.list.width===360&&s.backdrop.shown),`stacked list width ${s.list.width} in a ${s.relay.width}px box`);
+      await click('[data-room="telegram"]');
+      s=await until('chat open',v=>/[?&]room=telegram/.test(v.url)&&v.pane==='room'&&v.room.shown);await settle();s=await evaluate(snapshot);
+      row.steps.chat={...s,screenshot:await shot(`${name}-2a-chat.png`)};
+      geometry(row,s,'chat');
+      check(row,!s.list.shown&&Math.abs(s.room.width-s.inner.width)<=1&&Math.abs(s.room.height-s.inner.height)<=1,`stacked chat does not fill the relay box ${JSON.stringify([s.room,s.inner])}`);
+      check(row,s.messages===60&&s.atLatest===true,`stacked chat shows ${s.messages} messages, at newest ${s.atLatest}`);
+      check(row,s.roomBack.shown&&s.column&&s.column.width<=696,'stacked chat lacks its back button or exceeds the 696px column');
+      await click('[data-relay-action="room-back"]');
+      s=await until('chat in-app back',v=>v.pane==='list'&&!/[?&]room=/.test(v.url));await settle();
+      s=await evaluate(snapshot);row.steps.chatBack={url:s.url,pane:s.pane,listShown:s.list.shown,focus:s.focus};
+      check(row,s.list.shown&&!s.room.shown&&s.focus?.room==='telegram','in-app back from the chat did not return to the list with focus on its row');
     }
     await click('[data-room="naver"]');
     s=await until('room open',v=>/[?&]room=naver/.test(v.url)&&v.roomTitle==='인생의 방');await settle();s=await evaluate(snapshot);
