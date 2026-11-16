@@ -2,7 +2,7 @@ import { mountAtlasFunnestChart } from './funnest-chart-runtime.bundle.js';
 import { advanceMeasurement, measurePriceAnchors, resolveMagnetPoint } from './chart-magnet.js';
 import { refreshChartLegendGeometry } from './ui/chart-legend.js?v=1.36.1';
 
-let futureCrosshairSequence = 0;
+let futureCrosshairSequence = 0, noticeDescriptionSequence = 0;
 
 /** Convert trusted Atlas archive candles (UTC seconds) into Funnest's UTC-ms Bar contract. */
 export function atlasCandlesToFunnestBars(series) {
@@ -54,6 +54,15 @@ export function mountObservedPriceChart(plot, { series, symbol, currency = 'USD'
   // the host now spanning the HUD band, give the host its own stacking context so
   // Atlas HUDs (z-index 2 siblings) keep painting and hit-testing above the canvas.
   mounted.host.style.zIndex = '0';
+  const noticeDescription = mounted.host.ownerDocument.createElement('span');
+  noticeDescription.id = `atlas-funnest-notices-${++noticeDescriptionSequence}`;
+  noticeDescription.hidden = true;
+  mounted.host.append(noticeDescription);
+  mounted.host.setAttribute('aria-describedby', noticeDescription.id);
+  const describeNotices = notices => {
+    const text = notices.map(notice => `${notice.lines.map(line => line.text).filter(text => !notice.title.includes(text)).join(' · ')}. ${notice.title}`).join(' ');
+    if (noticeDescription.textContent !== text) noticeDescription.textContent = text;
+  };
   let insets = { top: 0, right: 0, bottom: 0, left: 0 };
   const nativeTopInset = () => { const value = Number(mounted.chart.mainScale?.insetTop); return Number.isFinite(value) && value > 0 ? value : 0; };
   mounted.setAtlasInsets = ({ top = 0, right = 0, bottom = 0, left = 0 } = {}) => {
@@ -246,6 +255,7 @@ export function mountObservedPriceChart(plot, { series, symbol, currency = 'USD'
         if (logGap) forecastNotices.push({ kind: 'equity-log-gap', title: '양수와 0 사이의 구간은 로그축에서 보간하지 않습니다. 해당 가격선 또는 가정 범위를 생략합니다. 선형축에서 확인해 주세요.', lines: ['0 경계 구간 · 로그 연결 생략', '선형축에서 확인해 주세요.'].map((text, index) => ({ text, x: 6, y: coords.height - 38 + index * 14 })) });
         for (const notice of forecastNotices) for (const line of notice.lines) painter.text(line.text, line.x, line.y, palette.label, 'left', 'middle');
       }
+      describeNotices(forecastNotices);
       let eventLines=[],eventLabels=[],excludedEventLabels=[],obstacles=[];
       if (overlayData.showEvents) {
         const markers = overlayData.events.map(item => ({ item, time: pointTime(item) })).filter(marker => Number.isFinite(marker.time)).map(marker => ({ ...marker, x: coords.timeToX(marker.time) })).filter(marker => Number.isFinite(marker.x) && marker.x >= 0 && marker.x <= coords.plotWidth).sort((a, b) => a.x - b.x);
