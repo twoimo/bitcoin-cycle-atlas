@@ -33,6 +33,7 @@ function createCanvasTrace() {
     setLineDash(value) { dash = [...value]; event('setLineDash', [value]); },
     getLineDash() { return [...dash]; },
     arc(...args) { event('arc', args); },
+    fillText(...args) { event('fillText', args); },
     fill(...args) { event('fill', args); },
     stroke(...args) { event('stroke', args); },
     save(...args) {
@@ -970,5 +971,77 @@ for (const interval of CHART_INTERVALS.filter(item => item.seconds * 1000 < DAY)
       assert.ok(Math.abs(plotWidth - lastX - barSpacing * (range.end - series.candles.at(-1).time) / interval.seconds) < 1e-6,
         'the last candle sits as far from the right edge as the requested end is from its open');
     } finally { mounted?.destroy(); }
+  });
+});
+
+const startUnits = [
+  { unit: 'percent', label: '표시 시작 대비 %', shown: (price, base) => (price / base - 1) * 100 },
+  { unit: 'indexed-start', label: '표시 시작 = 100', shown: (price, base) => price / base * 100 },
+];
+const twoMonthsOfCloses = Array.from({ length: 60 }, (_, index) => ({ date: isoDay(date('2024-01-01') + index * DAY), price: 150 + index * 17 % 53 }));
+const candlesFromJanuary20 = twoMonthsOfCloses.filter(row => row.date >= '2024-01-20').map(row => {
+  const close = row.price + 0.5;
+  return { date: row.date, time: date(row.date) / 1000, open: close - 2, high: close + 6, low: close - 8, close, volume: 1 };
+});
+const observedSources = [
+  { sourceMode: 'ohlc', chartType: 'candles', observedCandles: candlesFromJanuary20,
+    rows: candlesFromJanuary20.map(candle => ({ date: candle.date, price: candle.close, low: candle.low, high: candle.high })) },
+  { sourceMode: 'close-only', chartType: 'line', observedCandles: [], rows: twoMonthsOfCloses.map(row => ({ ...row, low: row.price, high: row.price })) },
+];
+const within = (actual, expected) => Math.abs(actual - expected) < 1e-9, fixed = value => value.toFixed(2);
+
+for (const { unit, label, shown } of startUnits) for (const { sourceMode, chartType, observedCandles, rows } of observedSources) {
+  test(`${label} measures the ${sourceMode} chart from the first row of its window`, async () => {
+    await withFunnestFixture(async ({ stage, svg, calls }) => {
+      for (const start of ['2024-01-25', '2024-02-10']) {
+        const readouts = [], shownRows = rows.filter(row => row.date >= start), base = shownRows[0].price, last = shownRows.at(-1);
+        const mounted = mountAtlasBtcFunnestChart({ container: stage, svg, sourceMode, frequency: 'daily', chartType, observedRows: twoMonthsOfCloses, observedCandles,
+          candleSource: 'Bitstamp', start, end: last.date, unit, onHover: detail => readouts.push(detail) });
+        try {
+          await settle();
+          const readoutOn = day => { mounted.selectDate(day); return readouts.at(-1); };
+          const first = readoutOn(start);
+          assert.deepEqual([first.display.label, first.display.baseDate, first.display.basePrice], [label, start, base], `the readout names ${start}, the first row of the window, as its base`);
+          assert.ok(within(first.displayedPrice, shown(base, base)), `the first row of the window reads ${fixed(shown(base, base))}, not ${fixed(first.displayedPrice)}`);
+          assert.ok(within(readoutOn(last.date).displayedPrice, shown(last.price, base)), `${last.date} reads its distance from the first row of the window`);
+          const axis = mounted.chart.mainScale, low = Math.min(...shownRows.map(row => row.low)), high = Math.max(...shownRows.map(row => row.high));
+          assert.ok(within(axis.min, shown(low, base)) && within(axis.max, shown(high, base)),
+            `the price axis runs from ${fixed(shown(low, base))} to ${fixed(shown(high, base))}, not from ${fixed(axis.min)} to ${fixed(axis.max)}`);
+          const latest = fixed(shown(last.price, base)), plotWidth = mounted.host.getAtlasBtcRenderSnapshot().pane.width;
+          calls.length = 0; mounted.updateCycleOverlayObstacles([]); await settle(60);
+          const axisLabels = calls.filter(call => call.type === 'fillText' && call.args[1] > plotWidth).map(call => call.args[0]);
+          assert.ok(axisLabels.includes(latest), `the price axis marks the latest close as ${latest}, among ${[...new Set(axisLabels)].join(' ')}`);
+        } finally { mounted.destroy(); }
+      }
+    });
+  });
+}
+
+test('a start-relative unit measures a window with no observed row from its first model row', async () => {
+  const forecast = Array.from({ length: 12 }, (_, index) => ({ date: isoDay(date('2024-03-01') + index * DAY), price: 240 + index * 3 }));
+  await withFunnestFixture(async ({ stage, svg }) => {
+    const readouts = [];
+    const mounted = mountAtlasBtcFunnestChart({ container: stage, svg, sourceMode: 'close-only', frequency: 'daily', chartType: 'line', observedRows: twoMonthsOfCloses, forecast,
+      start: '2024-03-04', end: '2024-03-12', unit: 'percent', onHover: detail => readouts.push(detail) });
+    try {
+      await settle();
+      mounted.selectDate('2024-03-04');
+      assert.deepEqual([readouts.at(-1).kind, readouts.at(-1).display.baseDate, readouts.at(-1).display.basePrice, readouts.at(-1).displayedPrice], ['simulated', '2024-03-04', 249, 0],
+        'the first forecast row in the window is the base and reads 0%');
+    } finally { mounted.destroy(); }
+  });
+});
+
+test('a start-relative unit stays usable when the requested window holds no row', async () => {
+  await withFunnestFixture(async ({ stage, svg }) => {
+    const readouts = [];
+    const mounted = mountAtlasBtcFunnestChart({ container: stage, svg, sourceMode: 'close-only', frequency: 'daily', chartType: 'line', observedRows: twoMonthsOfCloses,
+      start: '2030-01-01', end: '2030-02-01', unit: 'indexed-start', onHover: detail => readouts.push(detail) });
+    try {
+      await settle();
+      mounted.selectDate(twoMonthsOfCloses[0].date);
+      assert.deepEqual([readouts.at(-1).display.available, readouts.at(-1).display.baseDate, readouts.at(-1).displayedPrice], [true, twoMonthsOfCloses[0].date, 100],
+        'with nothing in the window the base stays the first observed row, so every price still has a value');
+    } finally { mounted.destroy(); }
   });
 });
