@@ -4,6 +4,8 @@ import assert from 'node:assert/strict';
 import { parseHTML } from 'linkedom';
 import { createChart } from '@funnest/charts';
 import { mountAtlasBtcFunnestChart } from '../dist/btc-funnest-chart.js';
+import { CHART_INTERVALS, parseMarketSnapshot } from '../dist/ohlc-data.js';
+import { intradayNavigationRange } from '../dist/intraday-history.js';
 
 const DAY = 86_400_000;
 const labViewSource = await readFile(new URL('../dist/lab-view.js', import.meta.url), 'utf8');
@@ -898,6 +900,24 @@ test('published BTC history: daily candle mode keeps the closes older than the f
       assert.ok(mounted.x(older[0].date) >= 0 && mounted.x(older.at(-1).date) < mounted.x(volume.bars[0].date) && mounted.x(volume.bars[0].date) <= plotWidth);
       assert.equal(axis.min, Math.min(...uncovered.map(row => row.price), ...volume.bars.map(bar => bar.low)), 'the automatic price range reaches the lowest observed close');
       assert.equal(svg.dataset.observedCandleCount, String(volume.bars.length)); assert.equal(svg.dataset.observedLineCount, String(uncovered.length));
+    } finally { mounted?.destroy(); }
+  });
+});
+
+for (const interval of CHART_INTERVALS.filter(item => item.seconds * 1000 < DAY)) test(`a ${interval.id} BTC window ends where the lab asks, not a day later`, async () => {
+  const series = parseMarketSnapshot(await readData('btc-ohlc'), interval.id), range = intradayNavigationRange(series);
+  await withFunnestFixture(async ({ stage, svg }) => {
+    let mounted;
+    try {
+      mounted = mountAtlasBtcFunnestChart({ container: stage, svg, sourceMode: 'ohlc', observedCandles: series.candles, candleSource: series.source,
+        frequency: interval.id, chartType: 'candles', start: range.start, end: range.end });
+      await settle(150);
+      const visible = mounted.getVisibleTimeRange(), plotWidth = mounted.host.getAtlasBtcRenderSnapshot().pane.width;
+      assert.equal(Math.round(visible.from), range.start * 1000, 'the window starts at the requested Unix second');
+      assert.equal(Math.round(visible.to), range.end * 1000, 'the window ends at the requested Unix second');
+      const lastX = mounted.x(series.candles.at(-1)), barSpacing = lastX - mounted.x(series.candles.at(-2));
+      assert.ok(Math.abs(plotWidth - lastX - barSpacing * (range.end - series.candles.at(-1).time) / interval.seconds) < 1e-6,
+        'the last candle sits as far from the right edge as the requested end is from its open');
     } finally { mounted?.destroy(); }
   });
 });
