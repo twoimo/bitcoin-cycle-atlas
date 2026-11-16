@@ -30,7 +30,7 @@ const positivePath = [
   { date: '2023-10-06', price: 104, low: 92, high: 121, baselinePrice: 107 },
 ];
 
-function paintForecast({ scale, path, milestones = [], invertScale = false }) {
+function paintForecast({ scale, path, milestones = [], invertScale = false, switchTo = null }) {
   const { document, window } = parseHTML('<html><body><div id="plot"></div></body></html>');
   window.devicePixelRatio = 1;
   const globalKeys = ['document', 'window', 'MutationObserver', 'ResizeObserver', 'matchMedia', 'getComputedStyle', 'requestAnimationFrame', 'cancelAnimationFrame'];
@@ -72,8 +72,14 @@ function paintForecast({ scale, path, milestones = [], invertScale = false }) {
     mounted.chart.addOverlay({ layer: 'above', render(rc) { coords = rc.coords; } });
     mounted.setAtlasOverlays({ forecast: { path, milestones }, events: [], showEvents: false });
     mounted.chart.render();
+    if (switchTo) {
+      // The views call setScale and then setAtlasOverlays in the same render pass.
+      mounted.setScale(switchTo);
+      mounted.setAtlasOverlays({ forecast: { path, milestones }, events: [], showEvents: false });
+      mounted.chart.render();
+    }
     for (const list of [fills, strokes, arcs, texts]) list.length = 0;
-    mounted.chart.render();
+    mounted.chart.invalidate(); mounted.chart.render();
     assert.ok(coords, 'the pinned Funnest runtime passed its PaneCoords to the overlays');
     const x = date => coords.timeToX(Date.parse(`${date}T00:00:00Z`)), y = price => coords.priceToY(price);
     const segment = (from, to) => ({ from: { x: x(from[0]), y: y(from[1]) }, to: { x: x(to[0]), y: y(to[1]) } });
@@ -187,4 +193,17 @@ test('a positive ETH-style forecast paints the same line, baseline, and single b
     assert.deepEqual(paint.receipt.forecastNotices ?? [], [], `${scale}: no zero or log-gap notice`);
     assert.equal(paint.texts.some(text => /잔여가치|로그 연결/.test(text)), false);
   }
+});
+
+test('a scale toggle paints the forecast as a fresh mount on the new axis does', () => {
+  const cases = [['log', 'normal', positivePath], ['normal', 'log', positivePath], ['log', 'normal', zeroPricePath], ['normal', 'log', zeroPricePath]];
+  for (const [from, to, path] of cases) {
+    const fresh = paintForecast({ scale: to, path }), toggled = paintForecast({ scale: from, path, switchTo: to });
+    const label = `${from} to ${to} with ${path === positivePath ? 'a positive' : 'a zero residual'} path`;
+    assert.deepEqual(toggled.line, fresh.line, `${label}: same painted line`);
+    assert.deepEqual(toggled.band, fresh.band, `${label}: same painted band`);
+    assert.deepEqual(toggled.receipt.forecastNotices, fresh.receipt.forecastNotices, `${label}: same notices`);
+  }
+  const linear = paintForecast({ scale: 'log', path: zeroPricePath, switchTo: 'normal' });
+  assert.ok(linear.y(0) >= 0 && linear.y(0) <= linear.coords.height, 'after the log-gap notice sends the user to the linear axis, price 0 is inside the pane');
 });
