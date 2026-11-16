@@ -11,8 +11,8 @@ import { javascriptModuleSpecifiers } from './module-references.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 
-const implementationEntries = ['dist/equity-view.js', 'dist/equity-market-data.js', 'dist/treasury-instruments.js', 'dist/cycle-engine.js', 'dist/chart-view-policy.js', 'dist/ohlc-data.js', 'dist/price-axis.js', 'dist/index.html', 'tests/equity-load-ownership.test.mjs', 'tests/helpers/equity-view-fixture.mjs', 'tests/native-chart-viewport.test.mjs'];
-const viewportArgs = ['--test-reporter=tap', '--test-name-pattern=weekly switch and scale mode', 'tests/native-chart-viewport.test.mjs'];
+const implementationEntries = ['dist/equity-view.js', 'dist/equity-market-data.js', 'dist/treasury-instruments.js', 'dist/cycle-engine.js', 'dist/chart-view-policy.js', 'dist/ohlc-data.js', 'dist/price-axis.js', 'dist/index.html', 'tests/equity-load-ownership.test.mjs', 'tests/helpers/equity-view-fixture.mjs', 'tests/equity-viewport-interval.test.mjs'];
+const viewportArgs = ['--test-reporter=tap', 'tests/equity-viewport-interval.test.mjs'];
 
 export async function copyEquityFixtureDependencies(copy, { sourceRoot = root, entries = implementationEntries } = {}) {
   const files = new Set();
