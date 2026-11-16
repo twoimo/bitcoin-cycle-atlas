@@ -13,11 +13,12 @@ body[data-page="relay"]{overflow:hidden}
 }
 .relay-room *{box-sizing:border-box}
 
-/* --relay-layout is the one value JS reads back. Telegram Web K docks a 360px list beside the chat
-   and caps the message column at 696px (tweb mediaSizes.ts, updateColumnWidths.ts). */
+/* --relay-layout is the one value JS reads back. Telegram Web K docks a 360px list (320px at least)
+   beside the chat and caps the message column at 696px (tweb mediaSizes.ts, updateColumnWidths.ts).
+   A narrow split gives the list its 320px floor first, so the room keeps 520px. */
 .relay-panes{
   --relay-layout:split;
-  --relay-list-width:360px;
+  --relay-list-width:clamp(320px,100cqi - 520px,360px);
   --relay-media-max:420px;
   --relay-column:696px;
   display:grid;grid-template-columns:var(--relay-list-width) minmax(0,1fr);
@@ -196,8 +197,8 @@ body[data-page="relay"]{overflow:hidden}
 
 /* Below the split width the list and the room take turns. The URL picks which (root[data-relay-pane]),
    and the open room fills the whole relay box. */
-@container relay (width < 880px){
-  .relay-panes{--relay-layout:stack;--relay-media-max:340px;grid-template-columns:minmax(0,1fr)}
+@container relay (width < 840px){
+  .relay-panes{--relay-layout:stack;--relay-list-width:360px;--relay-media-max:340px;grid-template-columns:minmax(0,1fr)}
   .relay-rooms{border-right:0}
   .relay-room[data-relay-pane="list"] .relay-detail,
   .relay-room[data-relay-pane="room"] .relay-rooms{display:none}
