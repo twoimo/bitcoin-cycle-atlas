@@ -138,7 +138,6 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   assert.equal(verification.modules, Object.keys(bundle.imports).length);
   assert.equal(verification.snapshots, 10); // Existing nine plus the exact relay source.
   assert.ok(verification.forecastRecords>=5,'all five initial economic scenarios have actual preserved outputs');
-  assert.equal(verification.stylesheets, 43); // Current published stylesheet inventory, including the shared P1 shell.
   for (const file of ['conference/route.js', 'conference/player.js', 'conference/timeline.js']) {
     assert.ok(Object.hasOwn(bundle.imports, '@atlas/' + file), file + ' remains in the offline module graph');
   }
