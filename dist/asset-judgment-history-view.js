@@ -1,6 +1,6 @@
 import {setLoadingSurface,clearLoadingSurface} from './loading-surfaces.js';
 import {utcDay,dateFromDay} from './cycle-engine.js?v=1.29.0';
-import {createAssetJudgmentHistory,fingerprintComparisonBundle,HISTORY_NOTE,yieldHistoryTask} from './asset-judgment-history.js?v=1.32.1';
+import {createAssetJudgmentHistory,fingerprintComparisonBundle,HISTORY_NOTE,yieldHistoryTask} from './asset-judgment-history.js?v=1.32.2';
 import {createSavedJudgmentLoader,savedJudgmentsCsv} from './asset-judgment-records.js?v=1.32.1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pct=v=>typeof v==='number'&&Number.isFinite(v)?`${v>0?'+':v<0?'−':''}${Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}%`:'—';

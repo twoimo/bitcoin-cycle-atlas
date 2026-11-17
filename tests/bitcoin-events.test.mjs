@@ -19,8 +19,8 @@ function isDay(value) {
 }
 
 test('historical catalog stays sourced, unique, chronological and within its review cutoff', () => {
-  assert.equal(BITCOIN_EVENTS.length, 50);
-  assert.equal(BITCOIN_EVENTS_REVIEW_DATE, '2026-11-08');
+  assert.equal(BITCOIN_EVENTS.length, 61);
+  assert.equal(BITCOIN_EVENTS_REVIEW_DATE, '2026-11-17');
   assert.equal(new Set(BITCOIN_EVENTS.map(event => event.id)).size, BITCOIN_EVENTS.length);
   let previous = '';
   for (const event of BITCOIN_EVENTS) {
@@ -167,6 +167,33 @@ test('tariff events preserve announcement dates, policy qualifications and searc
   assert.match(threat.limitations.join(' '),/즉시 시행됐거나/);
 });
 
+test('election days, rate statements, the bridge exploit and sourced 2026 notices stay on their source dates', () => {
+  const dated = [
+    ['us-midterm-2010', '2010-11-02', 'macro', 'https://www.fec.gov/resources/cms-content/documents/2010pdates.pdf'],
+    ['us-midterm-2014', '2014-11-04', 'macro', 'https://www.fec.gov/resources/cms-content/documents/2014pdates.pdf'],
+    ['fed-funds-hike-2015', '2015-12-16', 'macro', 'https://www.federalreserve.gov/newsevents/pressreleases/monetary20151216a.htm'],
+    ['us-midterm-2018', '2018-11-06', 'macro', 'https://www.fec.gov/resources/cms-content/documents/2018pdates.pdf'],
+    ['fed-funds-hike-2022', '2022-03-16', 'macro', 'https://www.federalreserve.gov/newsevents/pressreleases/monetary20220316a.htm'],
+    ['bnb-bridge-exploit-2022', '2022-10-06', 'security', 'https://www.bnbchain.org/en/blog/bnb-chain-a-decentralized-response'],
+    ['us-midterm-2022', '2022-11-08', 'macro', 'https://www.fec.gov/updates/tip-2022-election-day-tuesday-november-8/'],
+    ['fed-funds-last-hike-2023', '2023-07-26', 'macro', 'https://www.federalreserve.gov/newsevents/pressreleases/monetary20230726a.htm'],
+    ['binance-security-incident-2026', '2026-10-30', 'security', 'https://www.binance.com/en/support/announcement/detail/c5a8729a97ac486d963784d96c5642d7'],
+    ['us-midterm-2026', '2026-11-03', 'macro', 'https://www.fec.gov/introduction-campaign-finance/election-results-and-voting-information/'],
+    ['nvidia-ceo-resignation-2026', '2026-11-11', 'institution', 'https://www.sec.gov/Archives/edgar/data/1045810/000104581026000082/nvda-20261111.htm'],
+  ];
+  for (const [id, date, category, url] of dated) {
+    const event = byId(id);
+    assert.equal(event.date, date);
+    assert.equal(event.category, category);
+    assert.ok(event.sources.some(source => source.type === 'primary' && source.url === url));
+    assert.ok(event.sources.every(source => source.accessedAt === '2026-11-17'));
+    assert.doesNotMatch(`${event.description} ${event.title}`, /가격을 (올렸|내렸|결정)|때문에/);
+  }
+  assert.match(byId('fed-funds-last-hike-2023').limitations.join(' '), /9월 20일/);
+  assert.match(byId('nvidia-ceo-resignation-2026').limitations.join(' '), /이유를 적지 않는다/);
+  assert.equal(byId('us-midterm-2026').sources[0].publishedAt, null);
+});
+
 test('inclusive date boundaries allow adjacent-day markers and an exact single-day view', () => {
   assert.deepEqual(getVisibleBitcoinEvents({ startDate: '2024-01-10', endDate: '2024-01-11' }).map(event => event.id), [
     'us-spot-etp-approval-2024', 'us-spot-etp-trading-2024',
@@ -187,7 +214,7 @@ test('category and importance filters combine without mutating the caller filter
   assert.deepEqual(filtered.map(event => event.id), ['halving-2012', 'halving-2016', 'halving-2020', 'halving-2024']);
   assert.deepEqual([...categories], ['protocol']);
   assert.deepEqual(getVisibleBitcoinEvents({ categories: [] }), []);
-  assert.deepEqual(getVisibleBitcoinEvents({ categories: ['macro'] }).map(event => event.id), ['who-pandemic-2020', 'trump-three-country-tariffs-2025', 'trump-reciprocal-tariffs-2025', 'trump-tariff-pause-2025', 'trump-china-tariff-threat-2025']);
+  assert.deepEqual(getVisibleBitcoinEvents({ categories: ['macro'] }).map(event => event.id), ['us-midterm-2010', 'us-midterm-2014', 'fed-funds-hike-2015', 'us-midterm-2018', 'who-pandemic-2020', 'fed-funds-hike-2022', 'us-midterm-2022', 'fed-funds-last-hike-2023', 'trump-three-country-tariffs-2025', 'trump-reciprocal-tariffs-2025', 'trump-tariff-pause-2025', 'trump-china-tariff-threat-2025', 'us-midterm-2026']);
 });
 
 test('a constrained marker budget selects editorial priorities and returns chronological order', () => {

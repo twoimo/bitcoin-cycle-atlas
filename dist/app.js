@@ -11,11 +11,8 @@ import { renderPeakView } from './peak-view.js?v=1.29.0';
 import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29.0';
 // Changed release modules use a versioned URL so a cached v1.5 module cannot
 // leave a new long-horizon page running the old three-year workbench.
-import { initDailyDataView } from './daily-data-view.js?v=1.32.1';
-import { initRelayRoomView } from './relay-room.js?v=1.37.7';
-import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.32.1';
-import { initIpoView } from './ipo-view.js?v=1.32.1';
-import { initMarketLabView } from './market-lab-view.js?v=1.31.3';
+// These views are not part of the first chart paint. Loading them here would
+// parse their modules before the price path can draw.
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -57,6 +54,13 @@ const icon = name => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">$
 $$('[data-icon]').forEach(el => el.innerHTML = icon(el.dataset.icon));
 
 const params = new URLSearchParams(location.search);
+const requestedPage = params.get('page');
+const allowedPages = ['outlook', 'compare', 'evidence', 'ipo', 'market', 'relay'];
+const initialView = requestedPage === 'compare' && !params.has('legacy') ? 'outlook' : allowedPages.includes(requestedPage) ? requestedPage : 'outlook';
+if (requestedPage === 'data') {
+  params.delete('page');
+  try { history.replaceState(null, '', `${location.pathname}${params.size ? `?${params}` : ''}${location.hash || ''}`); } catch {}
+}
 // Old comparison links used `unit`; new links keep its choice separate from
 // the atlas viewport, which can change while the comparison remains hidden.
 const comparisonUnit = params.get('compare-unit') ?? (params.has('legacy') ? params.get('unit') : null);
@@ -67,7 +71,7 @@ const state = {
   horizon: ['365','730','1461','current','all'].includes(params.get('range')) ? params.get('range') : '1461',
   cursor: /^\d{1,5}$/.test(params.get('day') || '') ? Number(params.get('day')) : null,
   hidden: new Set((params.get('hide') || '').split(',').filter(Boolean)),
-  view: params.get('page')==='compare'&&!params.has('legacy')?'outlook':['outlook','compare','evidence','data','ipo','market','relay'].includes(params.get('page')) ? params.get('page') : 'outlook', dataset: null, comparison: null, chart: null,
+  view: initialView, dataset: null, comparison: null, chart: null,
   timing: null, timingDataset: null, timingBaseline: ['previous','recent2','all3'].includes(params.get('baseline')) ? params.get('baseline') : 'recent2',
   analysisView: ['forecast','peak','timing'].includes(params.get('analysis')) ? params.get('analysis') : 'forecast',
   peakThreshold: ['0.9','0.93','0.94','0.95','0.98'].includes(params.get('zone')) ? Number(params.get('zone')) : .95,
@@ -83,7 +87,7 @@ function persistUrl() {
   // atlas owns its current unit, viewport, indicators and analysis settings.
   const p = new URLSearchParams(location.search);
   for (const [key, value] of [
-    ['page', state.view !== 'outlook' ? state.view : null],
+    ['page', state.view !== 'outlook' && state.view !== 'data' ? state.view : null],
     ['mode', state.mode !== 'halving' ? state.mode : null],
     ['compare-unit', p.has('legacy') || state.view === 'compare' || state.unit !== 'rebased' ? state.unit : null],
     ['scale', state.scale !== 'log' ? state.scale : null],
@@ -114,7 +118,7 @@ document.addEventListener('atlas:page-ready', onInitialPageReady);
 let outlookController = null, workspacePromise = null, evidencePromise = null, evidenceModule = null;
 function ensureWorkspace() {
   if (!workspacePromise) workspacePromise = Promise.all([
-    import('./viewport-workspace.js?v=1.36.1'), import('./lab-view.js?v=1.36.1'),
+    import('./viewport-workspace.js?v=1.36.17'), import('./lab-view.js?v=1.36.8'),
   ]).then(([workspace, lab]) => {
     workspace.initViewportWorkspace(icon);
     outlookController = lab.initLabView();
@@ -132,32 +136,65 @@ function ensureEvidence() {
   }).catch(error => { evidencePromise = null; console.error('Evidence initialization failed', error); if (state.view === 'evidence') document.dispatchEvent(new CustomEvent('atlas:boot-error')); });
   return evidencePromise;
 }
-const ipoController = initIpoView({
-  root: $('#ipo-view'),
-  now: () => new Date(),
-  onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'ipo' } })),
-  embeddedData: () => document.getElementById('embedded-ipo-calendar-data')?.textContent ?? null,
-});
-const marketController = initMarketLabView({
-  root: $('#market-view'), now: () => new Date(),
-  onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'market' } })),
-  embeddedData: document.getElementById('embedded-market-lab-data')?.textContent ?? undefined,
-});
-const relayController = initRelayRoomView({
-  root: $('#relay-view'),
-  onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'relay' } })),
-  embeddedData: () => document.getElementById('embedded-relay-data')?.textContent ?? null,
-  embeddedAssets: () => document.getElementById('embedded-relay-assets')?.textContent ?? null,
-});
+const viewLoads = {};
+function openView(name, load) {
+  if (!viewLoads[name]) viewLoads[name] = load().catch(error => {
+    viewLoads[name] = null;
+    console.error(`${name} initialization failed`, error);
+    if (state.view === name) document.dispatchEvent(new CustomEvent('atlas:boot-error'));
+    throw error;
+  });
+  return viewLoads[name];
+}
+function ensureIpo() {
+  return openView('ipo', async () => {
+    const { initIpoView } = await import('./ipo-view.js?v=1.32.1');
+    return initIpoView({
+      root: $('#ipo-view'),
+      now: () => new Date(),
+      onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'ipo' } })),
+      embeddedData: () => document.getElementById('embedded-ipo-calendar-data')?.textContent ?? null,
+    });
+  });
+}
+function ensureMarket() {
+  return openView('market', async () => {
+    const { initMarketLabView } = await import('./market-lab-view.js?v=1.31.3');
+    return initMarketLabView({
+      root: $('#market-view'), now: () => new Date(),
+      onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'market' } })),
+      embeddedData: document.getElementById('embedded-market-lab-data')?.textContent ?? undefined,
+    });
+  });
+}
+function ensureRelay() {
+  return openView('relay', async () => {
+    const { initRelayRoomView } = await import('./relay-room.js?v=1.38.2');
+    return initRelayRoomView({
+      root: $('#relay-view'),
+      onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'relay' } })),
+      embeddedData: () => document.getElementById('embedded-relay-data')?.textContent ?? null,
+      embeddedAssets: () => document.getElementById('embedded-relay-assets')?.textContent ?? null,
+    });
+  });
+}
+function ensureDaily() {
+  return openView('data', async () => {
+    const [{ initDailyDataView }, { createAssetComparisonLoader }] = await Promise.all([
+      import('./daily-data-view.js?v=1.32.3'),
+      import('./asset-comparison-source.js?v=1.32.1'),
+    ]);
+    return initDailyDataView({
+      root: $('#data-view'), download, toast,
+      getComparisonDataset: createAssetComparisonLoader({
+        embeddedData: () => document.getElementById('embedded-asset-comparison-data')?.textContent ?? null,
+      }),
+    });
+  });
+}
 $('#market-view').addEventListener('click', event => {
   if (state.view !== 'market' || !event.target.closest('[data-view="outlook"]')) return;
   state.view = 'outlook'; syncPage(); persistUrl(); void ensureDataset();
-});
-const dailyDataController = initDailyDataView({
-  root: $('#data-view'), download, toast,
-  getComparisonDataset: createAssetComparisonLoader({
-    embeddedData: () => document.getElementById('embedded-asset-comparison-data')?.textContent ?? null,
-  }),
 });
 function syncPage() {
   document.body.dataset.page=state.view; if(state.view!=='market'){const slot=document.getElementById('market-header-slot'); if(slot){slot.hidden=true; slot.replaceChildren();}}
@@ -170,9 +207,9 @@ function syncPage() {
   outlookController?.showCompare(state.view==='compare');
   if (['outlook','compare'].includes(state.view)) void ensureWorkspace();
   if (state.view === 'evidence') void ensureEvidence();
-  if (state.view === 'ipo') void ipoController.render();
-  if (state.view === 'market') void marketController.render();
-  if (state.view === 'relay') relayController?.show(true);
+  if (state.view === 'ipo') void ensureIpo().then(controller => controller.render());
+  if (state.view === 'market') void ensureMarket().then(controller => controller.render());
+  if (state.view === 'relay') void ensureRelay().then(controller => controller.show(true));
 }
 syncPage();
 if (state.view === 'data') renderData();
@@ -386,7 +423,7 @@ $('#close-method').addEventListener('click', () => $('#method-dialog').close());
 $('#method-dialog').addEventListener('click', e => { if(e.target === $('#method-dialog')) { const r=e.target.getBoundingClientRect(); if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom) e.target.close(); } });
 
 function renderData() {
-  return dailyDataController.render().then(() => {
+  return ensureDaily().then(controller => controller.render()).then(() => {
     if (state.view !== 'data') return;
     document.dispatchEvent(new CustomEvent('atlas:page-ready',{detail:{page:'data'}}));
     initialPageRendered = true;
@@ -394,6 +431,7 @@ function renderData() {
   });
 }
 $$('[data-view]').forEach(b => b.addEventListener('click', () => {
+  if (b.dataset.view === 'data') return;
   state.view = b.dataset.view;
   if (!['data','ipo','market','relay'].includes(state.view)) void ensureDataset();
   syncPage();

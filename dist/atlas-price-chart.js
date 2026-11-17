@@ -18,6 +18,7 @@ import { chartLegendSlot, placePlotLabel } from './ui/chart-legend-layout.js';
 import { resolveMagnetPoint, advanceMeasurement, measurePriceAnchors, measurementOverlayMarkup, createMeasurementOverlay } from './chart-magnet.js?v=1.29.0';
 
 import { clearChartHover, clearChartHoverPointer, getChartHoverPointer, rememberChartHoverPointer, coalescedChartHover, paintPriceCursor } from './chart-hover.js?v=1.29.0';
+import { paintChartDrawings } from './chart-drawbar.js?v=1.0.1';
 
 import { dateWindow, intervalAtDate, lowerBoundDate, upperBoundDate, pixelExtrema } from './chart-window.js?v=1.29.0';
 
@@ -368,7 +369,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   s+=`<g id="${svg.id}-cross" pointer-events="none"><line class="cross-time" y1="${T}" y2="${bottom}" stroke="#afc4dd" stroke-dasharray="3 3" opacity=".6"/><line class="cross-price" clip-path="url(#${priceClip})" x1="${L}" x2="${W-R}" stroke="#afc4dd" stroke-dasharray="3 3" opacity=".6"/><circle clip-path="url(#${priceClip})" r="4" fill="#10151c" stroke="#f4dcac" stroke-width="1.5"/><g class="cross-price-tag" clip-path="url(#${axisClip})"><rect x="${W-R}" width="${R-3}" height="18" rx="2" fill="#465366"/><text x="${W-R+axisText.inset}" fill="#edf2f9" font-size="${axisText.badgeFontSize}"></text></g><g class="cross-date-tag"><rect width="80" height="18" rx="2" fill="#39485b"/><text fill="#edf2f9" font-size="10" text-anchor="middle"></text></g></g>`;
   s+=measurementOverlayMarkup(priceClip);
   s+=priceAxisMarkup({left:W-R,right:W,top:T,bottom:priceBottom})+timeAxisMarkup({left:L,right:W-R,top:bottom+8,bottom:H});
-  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.dataset.plotLeft=String(L);svg.dataset.plotRight=String(W-R);svg.dataset.plotTop=String(T);svg.dataset.plotBottom=String(bottom);svg.dataset.priceBottom=String(priceBottom);svg.parentElement?.style.setProperty('--plot-bottom-gap',`${H-bottom+6}px`);svg.parentElement?.style.setProperty('--plot-right-gap',`${R+7}px`);svg.dataset.scale=effectiveScale;svg.dataset.unit=unit;svg.dataset.invertScale=String(Boolean(invertScale));svg.dataset.timeAxisTop=String(bottom+8);svg.dataset.tool=tool;svg.dataset.chartType=chartType;svg.dataset.visiblePointCount=String(visible.length);svg.dataset.observedCandleCount=String(candleRows.length);svg.dataset.candleRendering=denseCandles?'batched':'individual';svg.innerHTML=s;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.dataset.plotLeft=String(L);svg.dataset.plotRight=String(W-R);svg.dataset.plotTop=String(T);svg.dataset.plotBottom=String(bottom);svg.dataset.priceBottom=String(priceBottom);svg.dataset.priceTop=String(T);svg.dataset.priceAxisBottom=String(priceBottom);svg.dataset.priceMin=String(min);svg.dataset.priceMax=String(max);svg.parentElement?.style.setProperty('--plot-bottom-gap',`${H-bottom+6}px`);svg.parentElement?.style.setProperty('--plot-right-gap',`${R+7}px`);svg.dataset.scale=effectiveScale;svg.dataset.unit=unit;svg.dataset.invertScale=String(Boolean(invertScale));svg.dataset.timeAxisTop=String(bottom+8);svg.dataset.tool=tool;svg.dataset.chartType=chartType;svg.dataset.visiblePointCount=String(visible.length);svg.dataset.observedCandleCount=String(candleRows.length);svg.dataset.candleRendering=denseCandles?'batched':'individual';svg.innerHTML=s;
   const cross=svg.querySelector('[id$="-cross"]'),crossLine=cross.querySelector('.cross-time'),crossPrice=cross.querySelector('.cross-price'),crossDot=cross.querySelector('circle'),priceTag=cross.querySelector('.cross-price-tag'),dateTag=cross.querySelector('.cross-date-tag'),stateByDate=new Map(dateWindow(states,start,end).map(p=>[p.date,p]));
   const updateAxisLabels=createPriceAxisLabelVisibility(svg,{cursorTag:priceTag});
   let measurementState=measurement?{...measurement,endDate:measurement.endDate??null}:null;
@@ -477,6 +478,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
     else commit(index,false,true);
   };
   renderMeasurement();
+  paintChartDrawings(svg);
   if(retainedPointer&&pointerPreview({...retainedPointer,target:svg})){
     if(tool!=='measure')onInspect(inspection(active),{user:false,openPanel:false});
   }else if(tool==='measure'){mark(active);onHover(hoverInfo(active,false));}else commit(active,false);

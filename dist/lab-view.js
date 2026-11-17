@@ -5,13 +5,13 @@ import { beginAction, finishAction, measureSync } from './performance-diagnostic
 import {mountChartReplay} from './chart-replay.js?v=1.36.1';
 import { createForecastComputation, browserForecastWorkerFactory } from './forecast-computation.js?v=1.29.0';
 import {bitcoinForecastEvidence} from './forecast-evidence.js?v=1.29.0';
-import {openResearchArticle} from './research-reader.js?v=1.36.1';
+const openResearchArticle = (id, options) => import('./research-reader.js?v=1.36.1').then(module => module.openResearchArticle(id, options)).catch(error => console.error('Research article failed', error));
 import {priceLegendMarkup,priceReadoutKind,observedPriceSourceLabel} from './price-legend.js?v=1.31.3';
 import {writeChartLegendMarkup} from './ui/chart-legend.js?v=1.36.1';
 import { buildCycleMilestones, INTERVAL_RELATIONS, MILESTONE_TYPES } from "./cycle-milestones.js?v=1.29.0";
 import { cycleLegendMarkup, cycleMilestoneInspection, cycleIntervalInspection, cycleDurationLabel } from "./cycle-milestones-view.js?v=1.29.0";
 import { resolveCycleSelection, cycleSelectionViewport, cycleOverviewViewport } from './cycle-selection.js?v=1.29.0';
-import { drawAtlasPriceChart as drawChart, createChartRenderSnapshot, priceChartOverlayObstacles } from "./atlas-price-chart.js?v=1.36.1";
+import { drawAtlasPriceChart as drawChart, createChartRenderSnapshot, priceChartOverlayObstacles } from "./atlas-price-chart.js?v=1.36.6";
 import { renderCryptoConAudit } from './cryptocon-audit.js?v=1.29.0';
 import { bindChartNavigation, panRange } from './chart-navigation.js?v=1.36.1';
 import { renderAtlasAnalysis } from "./atlas-analysis.js?v=1.29.0";
@@ -26,8 +26,8 @@ import { drawIntradayChart } from "./intraday-chart.js?v=1.36.1";
 import { createMarketDataController, marketStatusText } from "./market-data-controller.js?v=1.29.0";
 import { parseVolumeSnapshot, aggregateWeeklyVolume } from './volume-data.js?v=1.29.0';
 import { fitVolumeForecastModel, projectVolumeForecast } from './volume-forecast.js?v=1.29.0';
-import { BITCOIN_EVENTS } from './bitcoin-events.js?v=1.29.0';
-import { historicalEventDetail } from './research-workbench.js?v=1.29.0';
+import { BITCOIN_EVENTS } from './bitcoin-events.js?v=1.29.1';
+import { historicalEventDetail } from './research-workbench.js?v=1.29.1';
 import { formatBtcVolume } from './chart-overlays.js?v=1.29.0';
 import { analyzeMarketStructure, computeRollingStates, detectDirectionalChanges, STATE_LABELS } from "./market-structure.js?v=1.29.0";
 import { utcDay, dateFromDay } from './cycle-engine.js?v=1.29.0';
@@ -773,7 +773,7 @@ export function initLabView() {
       const first=captured.dataset.prices[0];
       return chartPresetRange({asOf:captured.forecast.asOf,referenceDate:captured.forecast.referenceDate??captured.forecast.asOf,firstDate:Array.isArray(first)?first[0]:first.date,lastDate:captured.forecast.path.at(-1).date,span});
     },
-    loadAtlasRenderer:()=>import('./chart-replay-atlas.js?v=1.36.1'),
+    loadAtlasRenderer:()=>import('./chart-replay-atlas.js?v=1.36.2'),
     loadRetrospectiveModel:()=>import('./replay-retrospective.js'),
     loadCutoffModel:()=>import('./replay-cutoff-forecast.js'),
     onAtlasFrame:({session,data,start,end,chartType,context,frequency=data.frequency??'daily',window=state.chartReplaySnapshot?.window??DEFAULT_CHART_SPAN,customRange=false,axis})=>{

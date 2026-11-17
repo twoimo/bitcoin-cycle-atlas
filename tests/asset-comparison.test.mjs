@@ -146,7 +146,8 @@ check('Fewer than five annual samples and degenerate bands are unavailable, neve
   const tooShort = row(stageBundle(100, fourYears));
   assert.equal(tooShort.sampleYears, 4);
   assert.equal(tooShort.coverage.complete, true);
-  assert.equal(tooShort.judgment.id, 'unavailable');
+  assert.equal(tooShort.judgment.available, true);
+  assert.notEqual(tooShort.judgment.id, 'unavailable');
   assert.match(tooShort.judgment.reason, /최소 5/);
   for (const path of [[100, 100, 50], [100, 200, 100], [100, 100, 100]]) {
     const history = [2021, 2022, 2023, 2024, 2025].flatMap(year => yearPrices(year, path));
@@ -272,18 +273,19 @@ check('Input prices and provenance remain unmodified', () => {
 });
 
 const published = JSON.parse(await readFile(new URL('../dist/data/asset-comparison.json', import.meta.url), 'utf8'));
-check('Digital additions preserve source units and withhold judgments for gaps and insufficient years',()=>{
+check('Digital additions preserve source units and show stages for a listing gap and a short sample',()=>{
   const result=buildAssetComparison(published),eth=result.rows.find(row=>row.symbol==='ETH'),hype=result.rows.find(row=>row.symbol==='HYPE');
   assert.equal(result.rows.length,20);assert.equal(eth.currency,'USD');assert.equal(hype.currency,'USDC');
-  assert.equal(eth.coverage.complete,false);assert.equal(eth.coverage.missingDates.length,2);assert.equal(eth.judgment.available,false);
-  assert.equal(hype.sampleYears,2);assert.equal(hype.coverage.complete,true);assert.equal(hype.judgment.available,false);assert.match(hype.judgment.reason,/최소 5개 연도/);
+  assert.equal(eth.coverage.complete,false);assert.equal(eth.coverage.listingGapOnly,true);assert.equal(eth.coverage.missingDates.length,2);assert.equal(eth.judgment.available,true);assert.notEqual(eth.judgment.id,'unavailable');assert.match(eth.judgment.reason,/짧은 공백/);
+  assert.equal(hype.sampleYears,2);assert.equal(hype.coverage.complete,true);assert.equal(hype.judgment.available,true);assert.notEqual(hype.judgment.id,'unavailable');assert.match(hype.judgment.reason,/최소 5개 연도/);
   assert.equal(hype.latestPrice,published.assets.find(asset=>asset.symbol==='HYPE').prices.at(-1)[1]);
 });
 check('A fresh year-end close on New Year’s Day is correctly unavailable before the first session', () => {
   const result = buildAssetComparison(published, { asOfDate: '2026-01-01' });
   assert.equal(result.rows.length, 20);
   for (const asset of result.rows) {
-    if (['ETH','HYPE'].includes(asset.symbol)) { assert.equal(asset.latestDate, '2026-01-01'); assert.equal(asset.yearStartDate, '2026-01-01'); assert.equal(asset.judgment.available,false); continue; }
+    if (asset.symbol === 'ETH') { assert.equal(asset.latestDate, '2026-01-01'); assert.equal(asset.yearStartDate, '2026-01-01'); assert.equal(asset.coverage.listingGapOnly, true); assert.equal(asset.judgment.id, 'neutral'); assert.equal(asset.judgment.available, true); continue; }
+    if (asset.symbol === 'HYPE') { assert.equal(asset.latestDate, '2026-01-01'); assert.equal(asset.yearStartDate, '2026-01-01'); assert.equal(asset.judgment.id, 'neutral'); assert.equal(asset.judgment.available, true); assert.match(asset.judgment.reason, /최소 5개 연도/); continue; }
     if (asset.symbol === 'BTC') { assert.equal(asset.latestDate, '2026-01-01'); assert.equal(asset.yearStartDate, '2026-01-01'); continue; }
     assert.equal(asset.latestDate, '2025-12-31');
     assert.equal(asset.coverage.complete, true);

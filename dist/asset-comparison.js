@@ -19,7 +19,7 @@ export const ASSET_COMPARISON_METHODOLOGY = Object.freeze({
   priceBasis: '분할을 반영한 종가의 가격 변화이며 배당 재투자 총수익률이 아닙니다.',
   judgment: '평균 상승을 U, 평균 낙폭을 D, 올해 첫 종가 대비 변화를 r이라 할 때 D, D/2, U/2, U를 경계로 다섯 단계를 구분합니다.',
   interpretation: '과거 평균 범위에 대한 현재 가격의 위치를 표시하는 운영 규칙입니다. 반등·하락 확률, 최적 주문 비중 또는 거래 수익성이 검증된 신호가 아닙니다.',
-  coverage: '확인된 결측·비어 있는 연도·자료 달력에 맞지 않는 관측 간격이 있으면 판단을 보류합니다. 거래소 휴장일·UTC 달력일을 서로 혼동하거나 임의로 채우지 않습니다.',
+  coverage: '최초 관측 연도 안의 7일 이하 공백은 날짜를 비워 두고 판단을 표시합니다. 그 이후의 확인된 결측·비어 있는 연도·7일을 넘는 간격이 있으면 판단을 보류합니다. 거래소 휴장일·UTC 달력일을 서로 혼동하거나 임의로 채우지 않습니다.',
   freshness: '기준일까지의 관측만 사용합니다. 올해 기준가가 없거나 최근 종가가 기준일보다 7일 넘게 오래되면 판단을 보류합니다.',
   minimumSamples: MIN_SAMPLE_YEARS,
 });
@@ -70,9 +70,8 @@ function classify({ sampleYears, meanRisePct, meanFallPct, ytdPct, current, late
     ? { strongBuyPct: meanFallPct, buyPct: meanFallPct / 2, sellPct: meanRisePct / 2, strongSellPct: meanRisePct } : null;
   if (!latest || !current || yearOf(latest.date) !== year) return unavailable('올해의 기준가와 최근 완료 종가를 함께 확보하지 못했습니다.', thresholds);
   if (asOfDay - latest.epochDay > MAX_STALE_DAYS) return unavailable('최근 종가가 기준일보다 7일 넘게 오래되어 판단을 보류합니다.', thresholds);
-  if (!coverage.complete) return unavailable('확인된 관측 공백이 있어 평균 범위에 따른 판단을 보류합니다.', thresholds);
-  if (sampleYears < MIN_SAMPLE_YEARS) return unavailable(`과거 표본 ${sampleYears}개 연도로는 최소 ${MIN_SAMPLE_YEARS}개 연도 기준을 충족하지 못합니다.`, thresholds);
-  if (!(meanRisePct > 0 && meanFallPct < 0) || !Number.isFinite(ytdPct)) return unavailable('상승·낙폭 양쪽의 평균 범위를 확보하지 못했습니다.', thresholds);
+  if (!coverage.complete && !coverage.listingGapOnly) return unavailable('확인된 관측 공백이 있어 평균 범위에 따른 판단을 보류합니다.', thresholds);
+  if (!(meanRisePct > 0 && meanFallPct < 0) || !Number.isFinite(ytdPct) || sampleYears < 1) return unavailable('상승·낙폭 양쪽의 평균 범위를 확보하지 못했습니다.', thresholds);
   let id, reason;
   if (!strictlyBelow(thresholds.strongBuyPct, ytdPct)) {
     id = 'strong-buy'; reason = '올해 첫 종가 대비 하락이 과거 평균 낙폭 경계에 도달하거나 그보다 깊습니다.';
@@ -85,6 +84,8 @@ function classify({ sampleYears, meanRisePct, meanFallPct, ytdPct, current, late
   } else {
     id = 'strong-sell'; reason = '올해 첫 종가 대비 상승이 과거 평균 상승 경계에 도달하거나 그보다 높습니다.';
   }
+  if (sampleYears < MIN_SAMPLE_YEARS) reason = `과거 표본 ${sampleYears}개 연도로는 최소 ${MIN_SAMPLE_YEARS}개 연도보다 짧습니다. ${reason}`;
+  if (coverage.listingGapOnly) reason = `${reason} 최초 관측 연도의 짧은 공백은 채우지 않고 그대로 둡니다.`;
   return { id, label: ASSET_JUDGMENTS[id], available: true, reason, thresholds };
 }
 
@@ -130,25 +131,34 @@ function coverageFor(prices, metadata, periods, year, asOfDay) {
   const calendar = metadata.calendar ?? 'sessions';
   if (!['sessions', 'calendar-days'].includes(calendar)) throw new TypeError('Unsupported asset comparison calendar');
   let gapCount = 0;
+  const gapSpans = [];
   for (let index = 1; index < prices.length; index++) {
     const intervalDays = prices[index].epochDay - prices[index - 1].epochDay;
-    if (calendar === 'calendar-days' ? intervalDays !== 1 : intervalDays > 7) gapCount++;
+    if (calendar === 'calendar-days' ? intervalDays !== 1 : intervalDays > 7) {
+      gapCount++;
+      gapSpans.push({ start: prices[index - 1].date, end: prices[index].date, days: intervalDays });
+    }
   }
   const presentYears = new Set(periods.map(period => period.year)), missingYears = [];
   if (first) for (let historicalYear = yearOf(first.date); historicalYear < year; historicalYear++) if (!presentYears.has(historicalYear)) missingYears.push(historicalYear);
-  return comparisonCoverageSummary({ first, current: periods.find(period => period.year === year), calendar, missingDates, missingYears, gapCount });
+  return comparisonCoverageSummary({ first, current: periods.find(period => period.year === year), calendar, missingDates, missingYears, gapCount, gapSpans });
 }
 
 /** Shared diagnostic semantics for current snapshots and indexed reconstruction. */
-export function comparisonCoverageSummary({ first, current, calendar, missingDates, missingYears, gapCount }) {
+export function comparisonCoverageSummary({ first, current, calendar, missingDates, missingYears, gapCount, gapSpans = null }) {
   const firstYearPartial = Boolean(first && (calendar === 'calendar-days' ? first.date.slice(5) !== '01-01' : first.date.slice(5) > '01-07'));
+  const currentIssue = Boolean(current && (calendar === 'calendar-days' ? current.startDate.slice(5) !== '01-01' : current.startDate.slice(5) > '01-07'));
   const issues = [];
   if (!first) issues.push('기준일까지의 관측 없음');
   if (missingDates.length) issues.push(`확인된 결측 ${missingDates.length}개 날짜`);
   if (missingYears.length) issues.push(`관측 없는 과거 연도 ${missingYears.join(', ')}`);
   if (gapCount) issues.push(calendar === 'calendar-days' ? `하루를 넘는 UTC 달력일 관측 간격 ${gapCount}개` : `7일을 넘는 거래 세션 관측 간격 ${gapCount}개`);
-  if (current && (calendar === 'calendar-days' ? current.startDate.slice(5) !== '01-01' : current.startDate.slice(5) > '01-07')) issues.push(calendar === 'calendar-days' ? '올해 UTC 첫 달력일 기준 종가 없음' : '올해 첫 주의 기준 종가 없음');
-  return { status: !first ? 'unavailable' : issues.length ? 'incomplete' : 'observed', complete: Boolean(first) && issues.length === 0, issues, missingYears, missingDates: missingDates.sort(), gapCount, firstYearPartial, firstPartialStartDate: firstYearPartial ? first.date : null };
+  if (currentIssue) issues.push(calendar === 'calendar-days' ? '올해 UTC 첫 달력일 기준 종가 없음' : '올해 첫 주의 기준 종가 없음');
+  const firstYear = first ? Number(first.date.slice(0, 4)) : null;
+  const inFirstYear = date => firstYear !== null && Number(String(date).slice(0, 4)) === firstYear;
+  const spans = Array.isArray(gapSpans) ? gapSpans : null;
+  const listingGapOnly = Boolean(first && firstYearPartial && missingYears.length === 0 && !currentIssue && (missingDates.length > 0 || gapCount > 0) && spans && spans.length === gapCount && missingDates.every(inFirstYear) && spans.every(span => span.days <= 7 && inFirstYear(span.start) && inFirstYear(span.end)));
+  return { status: !first ? 'unavailable' : issues.length ? 'incomplete' : 'observed', complete: Boolean(first) && issues.length === 0, listingGapOnly, issues, missingYears, missingDates: missingDates.sort(), gapCount, firstYearPartial, firstPartialStartDate: firstYearPartial ? first.date : null };
 }
 
 /** Read observed, split-adjusted closes only. Pure and O(total observations).

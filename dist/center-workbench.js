@@ -1,8 +1,8 @@
 import {atlasSitePath,atlasRootPath} from './site-paths.js';
-import { atlasPages,atlasNavigationId,atlasPageHref,labPageFromLocation,isWorkspaceChart,canonicalNativeChartEntry } from './atlas-navigation.js?v=1.36.1';
+import { atlasPages,atlasNavigationId,atlasPageHref,labPageFromLocation,isWorkspaceChart,canonicalNativeChartEntry } from './atlas-navigation.js?v=1.36.2';
 import { workspaceInstrument } from './workspace-instruments.js';
 import { mountLegacyWorkspaceToolbar } from './legacy-workspace-toolbar.js';
-import { createChartWorkbenchControls,nativeChartControlSelector } from './rsi-workbench-controls.js?v=1.36.1';
+import { createChartWorkbenchControls,nativeChartControlSelector } from './rsi-workbench-controls.js?v=1.36.2';
 import { mountCenterLoading } from './ui/center-loading.js';
 
 // Chromium retargets activeElement to an iframe when a child control owns
@@ -222,8 +222,8 @@ export function mountCenterWorkbench() {
       if(workspaceInstrument(chartUrl.searchParams.get('symbol')))chartUrl.searchParams.delete('symbol');
       if(chartUrl.searchParams.get('page')==='market')chartUrl.searchParams.delete('page');
       originalUrl=chartUrl.href;originalTitle=document.title;
-      const headingChildren=[...document.querySelector('.atlas-canvas-heading')?.children || []].filter(node=>!node.matches('.symbol-selector-trigger,.mobile-workbench-button,.center-workspace-toolbar'));
-      for(const node of new Set([...plot.children,...headingChildren,...document.querySelectorAll('.atlas-canvas-heading button:not(.symbol-selector-trigger):not(.mobile-workbench-button),.atlas-canvas-heading select,#atlas-cycle-panel,.workbench-tools,.workbench-tools button,.chart-navigation button,.workbench-detail-tools,.workbench-detail-tools button,.workbench-help,.mobile-extra-actions,.mobile-extra-actions button,.workbench-bottom-bar,.workbench-bottom-bar button,.workbench-bottom-bar select')])) {
+      const headingChildren=[...document.querySelector('.atlas-canvas-heading')?.children || []].filter(node=>!node.matches('.symbol-selector-trigger,.mobile-workbench-button,.center-workspace-toolbar,.auth-account'));
+      for(const node of new Set([...plot.children,...headingChildren,...document.querySelectorAll('.atlas-canvas-heading button:not(.symbol-selector-trigger):not(.mobile-workbench-button):not([data-auth-action]),.atlas-canvas-heading select,#atlas-cycle-panel,.workbench-tools,.workbench-tools button,.chart-navigation button,.workbench-detail-tools,.workbench-detail-tools button,.workbench-help,.mobile-extra-actions,.mobile-extra-actions button,.workbench-bottom-bar,.workbench-bottom-bar button,.workbench-bottom-bar select')])) {
         if(node.classList.contains('atlas-center-frame')||node.closest('.center-workspace-toolbar'))continue;
         const nativeControl=node.closest('.atlas-canvas-heading')&&node.matches(nativeChartControlSelector);
         saved.set(node,{inert:node.inert,aria:node.getAttribute('aria-hidden'),disabled:node.disabled,...(nativeControl?{hidden:node.hidden}:{})});

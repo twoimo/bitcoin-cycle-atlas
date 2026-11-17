@@ -142,11 +142,11 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
   <link rel="stylesheet" href="../../compact-toolbar.css?v=1.36.1">
   <link rel="stylesheet" href="../../legacy-workspace-toolbar.css?v=1.32.1">
   <link rel="stylesheet" href="../../vendor/skullet/styles.css?v=0.0.3">
-  <link rel="stylesheet" href="../../loading-surfaces.css?v=20261103">
+  <link rel="stylesheet" href="../../loading-surfaces.css?v=20261117">
   <link rel="stylesheet" href="../../editorial-system.css?v=1.35.0">
   <link rel="stylesheet" href="../../editorial-panels.css?v=1.35.0">
   <link rel="stylesheet" href="../../editorial-ledgers.css?v=1.35.0">
-  <link rel="stylesheet" href="../../relay-room.css?v=1.37.7">
+  <link rel="stylesheet" href="../../relay-room.css?v=1.38.2">
   <link rel="stylesheet" href="../../ui/chart-legend.css?v=1.36.1">
 </head>
 <body>
@@ -222,7 +222,6 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
     <nav class="atlas-nav" aria-label="주요 페이지">
       <button data-view="outlook" class="active" aria-current="page" title="통합 차트"><span data-icon="trend"></span><span>통합 차트</span></button>
       <button data-view="evidence" title="리서치 우선순위"><span data-icon="book"></span><span>리서치 자료</span></button>
-      <button data-view="data" title="자산 비교표"><span data-icon="table"></span><span>자산 비교표</span></button>
       <button data-view="ipo" title="공모주 캘린더"><span data-icon="calendar"></span><span>공모주 캘린더</span></button>
       <button data-view="market" title="세 축 연구실 · 엑박·삼플레·RSI"><span data-icon="chart"></span><span>세 축 연구실</span></button>
       <button data-view="relay" title="릴레이 콘텐츠 · 텔레그램·인생의 방·모바일한경"><span data-icon="relay"></span><span>릴레이 콘텐츠</span></button>
@@ -308,7 +307,7 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
         <details class="lab-details"><summary>정의와 수식, 데이터의 한계</summary><div id="structure-method" class="lab-details-body"></div></details>
         <details id="legacy-comparison" class="lab-details legacy-comparison"><summary>반감기와 고점권, 이전 기준점 비교</summary><div class="legacy-body">
         <section class="chart-card" aria-labelledby="chart-heading">
-          <div class="chart-card-header compact-header"><h1 id="chart-heading">비트코인 사이클 <span class="small-label">비트코인 / USD</span></h1><div class="compact-actions"><a class="text-link" href="#analysis-workbench" id="jump-forecast">미래 고저점 보기 ↓</a><div class="export-wrap"><button id="export-button" class="subtle-button" aria-haspopup="menu" aria-expanded="false"><span data-icon="table"></span>자료와 도구<span data-icon="chevron"></span></button><div id="export-menu" class="dropdown" role="menu" hidden><button data-view="data" role="menuitem">자산 비교표</button><button id="refresh-button" role="menuitem"><span data-icon="refresh"></span>데이터 갱신</button><button data-method role="menuitem">방법론과 출처</button><hr><button id="export-csv" role="menuitem">비교 데이터 .csv</button><button id="export-png" role="menuitem">차트 이미지 .png</button><button id="export-svg" role="menuitem">벡터 이미지 .svg</button><button id="export-timing" role="menuitem">전환 분석 .json</button><button id="export-research" role="menuitem">고점과 미래 분석 .json</button></div></div></div></div>
+          <div class="chart-card-header compact-header"><h1 id="chart-heading">비트코인 사이클 <span class="small-label">비트코인 / USD</span></h1><div class="compact-actions"><a class="text-link" href="#analysis-workbench" id="jump-forecast">미래 고저점 보기 ↓</a><div class="export-wrap"><button id="export-button" class="subtle-button" aria-haspopup="menu" aria-expanded="false"><span data-icon="table"></span>자료와 도구<span data-icon="chevron"></span></button><div id="export-menu" class="dropdown" role="menu" hidden><button id="refresh-button" role="menuitem"><span data-icon="refresh"></span>데이터 갱신</button><button data-method role="menuitem">방법론과 출처</button><hr><button id="export-csv" role="menuitem">비교 데이터 .csv</button><button id="export-png" role="menuitem">차트 이미지 .png</button><button id="export-svg" role="menuitem">벡터 이미지 .svg</button><button id="export-timing" role="menuitem">전환 분석 .json</button><button id="export-research" role="menuitem">고점과 미래 분석 .json</button></div></div></div></div>
           <div class="anchor-tabs" role="tablist" aria-label="사이클 시작 기준">
             <button id="tab-halving" class="anchor-tab active" role="tab" data-mode="halving" aria-selected="true" aria-controls="chart-panel"><span data-icon="half"></span>반감기<span class="tab-en">Halving</span></button>
             <button id="tab-bottom" class="anchor-tab" role="tab" data-mode="bottom" aria-selected="false" aria-controls="chart-panel" tabindex="-1"><span data-icon="bottom"></span>저점<span class="tab-en">Bottom</span></button>
@@ -390,6 +389,6 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
   <dialog id="method-dialog" aria-labelledby="method-title"><div class="dialog-top"><span class="eyebrow">자료와 방법론</span><button id="close-method" class="icon-button" aria-label="방법론 닫기"><span data-icon="close"></span></button></div><h2 id="method-title">방법론과 출처</h2><p class="dialog-lead">차트의 출발점부터 가격의 정의까지, 비교에 사용한 기준입니다.</p><div id="method-content"></div><button id="method-done" class="primary-button">확인했습니다</button></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <dialog id="evidence-dialog" aria-labelledby="evidence-detail-title"><div class="dialog-top"><span class="eyebrow">근거와 한계</span><button id="evidence-close" class="icon-button" aria-label="자료 상세 닫기"><span data-icon="close"></span></button></div><h2 id="evidence-detail-title"></h2><div id="evidence-detail-body"></div></dialog>
-  <script type="module" src="../../site-entry.js?v=1.37.7"></script>
+  <script type="module" src="../../site-entry.js?v=1.37.29"></script>
 </body>
 </html>

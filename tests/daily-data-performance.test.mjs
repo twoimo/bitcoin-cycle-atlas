@@ -51,3 +51,27 @@ test('the acquired full-history bundle renders all 20 source-backed rows once', 
   ui.resetWork(); await view.render();
   assert.equal(reads, 1); assert.equal(builds, 1); assert.deepEqual(ui.work(), {}); view.destroy();
 });
+
+test('the stored archive is judged on its collection date, while an explicit later date still withholds', async () => {
+  const bundle = JSON.parse(readFileSync(new URL('../dist/data/asset-comparison.json', import.meta.url), 'utf8'));
+  const asOf = new Date(bundle.retrievedAt).toISOString().slice(0, 10);
+  const ui = dailyViewSurface();
+  const view = initDailyDataView({ root: ui.root, getComparisonDataset: async () => bundle, buildModel: (input, options) => buildAssetComparison(input, options) });
+  const model = await view.render();
+  assert.equal(model.asOf, asOf);
+  assert.ok(ui.node('asset-judgment-header').innerHTML.includes(asOf.replaceAll('-', '.')));
+  const withheld = (ui.node('data-body').innerHTML.match(/>판단 보류<\/button>/g) || []).length;
+  assert.ok(withheld < 20);
+  const btc = model.rows.find(row => row.symbol === 'BTC');
+  assert.equal(btc.judgment.available, true);
+  assert.notEqual(btc.judgment.label, '판단 보류');
+  assert.ok(ui.node('data-body').innerHTML.includes(`>${btc.judgment.label}</button>`));
+  view.destroy();
+
+  const stale = dailyViewSurface();
+  const later = initDailyDataView({ root: stale.root, asOfDate: '2026-11-17', getComparisonDataset: async () => bundle, buildModel: (input, options) => buildAssetComparison(input, options) });
+  const staleModel = await later.render();
+  assert.ok(staleModel.rows.every(row => row.judgment.id === 'unavailable'));
+  assert.equal((stale.node('data-body').innerHTML.match(/>판단 보류<\/button>/g) || []).length, 20);
+  later.destroy();
+});

@@ -24,10 +24,11 @@ SOFTWARE.
  * Exact source and license: docs/design-system/templates/shadcn-dashboard-01; /vendor/shadcn-ui-LICENSE.txt.
  * Existing chart/data controls retain their original DOM owners and handlers. */
 import {atlasSitePath} from './site-paths.js';
-import { atlasPages, atlasNavigationPages, atlasNavigationId, labPageFromLocation } from './atlas-navigation.js?v=1.36.1';
+import { atlasPages, atlasNavigationPages, atlasNavigationId, labPageFromLocation } from './atlas-navigation.js?v=1.36.2';
 import { readShellPreference, writeShellPreference } from './atlas-shell-state.js';
-import { mountCenterWorkbench } from './center-workbench.js?v=1.36.1';
-import { mountShellSlots } from './ui/shell-slots.js';
+import { mountCenterWorkbench } from './center-workbench.js?v=1.36.6';
+import { mountShellSlots } from './ui/shell-slots.js?v=1.36.2';
+import { mountAuthAccount } from './auth-account.js?v=1.1.6';
 
 const pageNames = { outlook: '통합 차트', compare: '사이클 비교', evidence: '리서치 자료', data: '자산 비교표', ipo: '공모주 캘린더', market: '세 축 연구실' };
 
@@ -157,6 +158,11 @@ export function initAtlasShell() {
       if (active) item.setAttribute('aria-current', 'page'); else item.removeAttribute('aria-current');
     }
     preference();
+    // The chart heading is absent on relay/data pages and hidden inside the
+    // outlook view while the dashboard header is the visible top row.
+    const accountHeading = document.querySelector('.atlas-canvas-heading');
+    const accountHeadingVisible = Boolean(accountHeading && document.body.dataset.shell !== 'dashboard' && !accountHeading.closest('[hidden]'));
+    if (!accountHeadingVisible || !accountHeading.querySelector('[data-auth-account]')) mountAuthAccount(document);
   }
   const pageObserver = new MutationObserver(sync), workspaceObserver = new MutationObserver(sync);
   pageObserver.observe(document.body, { attributes: true, attributeFilter: ['data-page', 'data-center-tool'] });

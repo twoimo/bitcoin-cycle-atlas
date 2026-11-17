@@ -26,7 +26,7 @@ export function atlasNavigationId(page) {
     : isWorkspaceChart(id)?'outlook':id;
 }
 export const atlasNavigationPages=Object.freeze(atlasPages
-  .filter(page=>atlasNavigationId(page)===page.id)
+  .filter(page=>page.id!=='data'&&atlasNavigationId(page)===page.id)
   .map(page=>Object.freeze(page.id==='market-us'
     ? {...page,badge:null,label:'시장 분석',title:'시장 분석',href:'/market-lab/'}
     :page)));

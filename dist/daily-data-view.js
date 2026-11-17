@@ -1,6 +1,6 @@
 import { setLoadingSurface } from './loading-surfaces.js';
-import { buildAssetComparison } from './asset-comparison.js?v=1.32.1';
-import { initAssetJudgmentHistoryView } from './asset-judgment-history-view.js?v=1.32.1';
+import { buildAssetComparison } from './asset-comparison.js?v=1.32.2';
+import { initAssetJudgmentHistoryView } from './asset-judgment-history-view.js?v=1.32.2';
 
 const SYMBOLS = ['BTC', 'ETH', 'HYPE', 'SPY', 'QQQ', 'NVDA', 'AAPL', 'GOOG', 'MSFT', 'AMZN', 'META', 'AVGO', 'PLTR', 'TSLA', 'HOOD', 'TLT', 'IEF', 'GLD', 'SLV', 'PDBC'];
 const SECTORS = Object.freeze({BTC:'디지털 자산',ETH:'디지털 자산',HYPE:'디지털 자산',SPY:'주가지수',QQQ:'주가지수',NVDA:'반도체',AVGO:'반도체',AAPL:'전자기기',MSFT:'소프트웨어',PLTR:'소프트웨어',GOOG:'인터넷·플랫폼',AMZN:'인터넷·플랫폼',META:'인터넷·플랫폼',TSLA:'전기차',HOOD:'핀테크',TLT:'채권',IEF:'채권',GLD:'귀금속',SLV:'귀금속',PDBC:'원자재'});
@@ -24,6 +24,18 @@ const price = value => numeric(value) && value > 0 ? value.toLocaleString('en-US
 const tone = value => !numeric(value) || Math.abs(value) < .005 ? 'flat' : value > 0 ? 'gain' : 'loss';
 const displayDate = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value.replaceAll('-', '.') : '확인 중';
 const today = () => new Date().toISOString().slice(0, 10);
+function validComparisonDate(date) {
+  return typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && new Date(`${date}T00:00:00Z`).toISOString().slice(0, 10) === date;
+}
+// The published comparison file is classified on its collection date, the same
+// clock scripts/verify-asset-comparison.mjs uses. Wall-clock today withholds
+// every row once the last close is more than seven days before today.
+function archiveComparisonDate(bundle) {
+  const retrievedAt = bundle?.retrievedAt;
+  if (typeof retrievedAt !== 'string' || !Number.isFinite(Date.parse(retrievedAt))) return null;
+  const date = new Date(retrievedAt).toISOString().slice(0, 10);
+  return validComparisonDate(date) ? date : null;
+}
 
 export function formatDailyPercent(value, digits = 2) {
   if (!numeric(value)) return '—';
@@ -34,7 +46,8 @@ export function formatDailyPercent(value, digits = 2) {
 function judgment(row) {
   const result = row.judgment;
   // An incomplete model must never turn unavailable data into a neutral or buy/sell badge.
-  if (result?.available === true && LABELS[result.id] === result.label && Number.isInteger(row.sampleYears) && row.sampleYears >= 5 && numeric(row.meanRisePct) && row.meanRisePct > 0 && numeric(row.meanFallPct) && row.meanFallPct < 0 && numeric(row.ytdPct) && row.coverage?.complete !== false) return result;
+  const coverageAllows = row.coverage?.complete !== false || row.coverage?.listingGapOnly === true;
+  if (result?.available === true && LABELS[result.id] === result.label && Number.isInteger(row.sampleYears) && row.sampleYears >= 1 && numeric(row.meanRisePct) && row.meanRisePct > 0 && numeric(row.meanFallPct) && row.meanFallPct < 0 && numeric(row.ytdPct) && coverageAllows) return result;
   return { id: 'unavailable', label: '판단 보류', reason: result?.available === false && result.reason ? result.reason : '표본 또는 계산 조건이 충분하지 않아 판단을 보류합니다.', available: false };
 }
 
@@ -100,7 +113,7 @@ function frame() {
     <div class="asset-filters" aria-label="자산 표 필터"><label class="asset-search"><span class="sr-only">종목 검색</span><input type="search" id="asset-search" placeholder="종목명 · 심볼 검색" autocomplete="off" aria-controls="data-body"></label><label><span class="sr-only">자산군 선택</span><select id="asset-group-filter" aria-label="자산군 선택"><option value="all">전체 자산군</option><option>위험 자산</option><option>안전 자산</option><option>대체자산</option></select></label><label><span class="sr-only">섹터 선택</span><select id="asset-sector-filter" aria-label="섹터 선택"><option value="all">전체 섹터</option>${[...new Set(Object.values(SECTORS))].map(sector=>`<option>${esc(sector)}</option>`).join('')}</select></label><label><span class="sr-only">표 구성</span><select id="asset-columns" aria-label="표 구성"><option value="all">전체 지표</option><option value="performance">가격·등락률</option><option value="risk">위험·표본</option></select></label><label><span class="sr-only">자산군 내 정렬</span><select id="asset-sort" aria-label="자산군 내 정렬"><option value="default">기본 순서</option><option value="name">종목명순</option><option value="ytd">등락률 높은순</option><option value="rise">평균 상승 높은순</option><option value="fall">평균 낙폭 깊은순</option><option value="samples">표본 많은순</option></select></label><button type="button" id="asset-filter-reset" class="asset-filter-reset" title="검색·필터·표 구성 초기화">초기화</button></div><div class="asset-table-summary"><span id="asset-visible-count" role="status" aria-live="polite">20개 자산</span><span>가격 USD · HYPE USDC</span></div>
     <div class="asset-context" id="asset-context" role="status" aria-live="polite" hidden>자산 비교표를 열면 가격 자료를 불러옵니다.</div>
     <p class="asset-scroll-hint" id="asset-scroll-hint">좌우로 밀어 수치와 맨 끝 판단을 확인하세요.</p><nav class="asset-mobile-nav" aria-label="자산표 가로 이동"><button type="button" id="asset-scroll-start" aria-controls="asset-table-scroll">← 표본·평균</button><span>좌우 이동</span><button type="button" id="asset-scroll-end" aria-controls="asset-table-scroll">가격·판단 →</button></nav>
-    <section class="asset-table-panel" aria-label="20개 자산의 과거 상승·낙폭과 올해 판단"><div class="asset-table-scroll" id="asset-table-scroll" tabindex="0" role="region" aria-describedby="asset-scroll-hint" aria-label="자산 비교표. 작은 화면에서는 좌우로 이동할 수 있습니다."><table class="asset-comparison-table"><caption class="sr-only">20개 자산별 과거 연간 평균 상승률과 연초 대비 낙폭, 올해 종가와 등락률, 다섯 단계 판단</caption><colgroup><col class="asset-col-group"><col class="asset-col-category"><col class="asset-col-name"><col class="asset-col-samples"><col class="asset-col-return asset-col-rise"><col class="asset-col-return asset-col-fall"><col class="asset-col-price asset-col-start"><col class="asset-col-price asset-col-latest"><col class="asset-col-ytd"><col class="asset-col-judgment"></colgroup><thead><tr><th colspan="3" scope="colgroup" class="asset-identity-header">종목명</th><th scope="col" class="asset-mobile-header asset-mobile-group-header">자산군</th><th scope="col" class="asset-mobile-header asset-mobile-category-header">분류</th><th scope="col" class="asset-mobile-header asset-mobile-name-header">종목명</th><th scope="col" class="asset-sample-header" title="올해를 제외한 관측 연도 수 · 상장 첫해 일부 기간 포함">분석<br>연도 수</th><th scope="col" class="asset-stat-header asset-rise-header" aria-label="연초 종가 대비 연중 최고 종가 상승률의 과거 연도 평균"><small>연초 → 최고 종가</small><span>평균 상승률</span></th><th scope="col" class="asset-stat-header asset-fall-header" aria-label="연초 종가 대비 연중 최저 종가 하락률의 과거 연도 평균 · MDD 아님"><small>연초 → 최저 종가</small><span>평균 하락률</span></th><th scope="col" id="asset-start-header">연초 종가<small>기준일 확인 중</small></th><th scope="col" id="asset-latest-header">최근 종가<small>기준일 확인 중</small></th><th scope="col" class="asset-ytd-header" id="asset-ytd-header">연초 대비<br>상승·하락률</th><th scope="col" class="asset-judgment-header">판단</th></tr></thead><tbody id="data-body"><tr><td colspan="10" class="asset-table-empty">자산별 가격 자료를 준비하고 있습니다.</td></tr></tbody></table></div>
+    <section class="asset-table-panel" aria-label="20개 자산의 과거 상승·낙폭과 올해 판단"><div class="asset-table-scroll" id="asset-table-scroll" tabindex="0" role="region" aria-describedby="asset-scroll-hint" aria-label="자산 비교표. 작은 화면에서는 좌우로 이동할 수 있습니다."><table class="asset-comparison-table"><caption class="sr-only">20개 자산별 과거 연간 평균 상승률과 연초 대비 낙폭, 올해 종가와 등락률, 다섯 단계 판단</caption><colgroup><col class="asset-col-group"><col class="asset-col-category"><col class="asset-col-name"><col class="asset-col-samples"><col class="asset-col-return asset-col-rise"><col class="asset-col-return asset-col-fall"><col class="asset-col-price asset-col-start"><col class="asset-col-price asset-col-latest"><col class="asset-col-ytd"><col class="asset-col-judgment"></colgroup><thead><tr><th colspan="3" scope="colgroup" class="asset-identity-header">종목명</th><th scope="col" class="asset-mobile-header asset-mobile-group-header">자산군</th><th scope="col" class="asset-mobile-header asset-mobile-category-header">분류</th><th scope="col" class="asset-mobile-header asset-mobile-name-header">종목명</th><th scope="col" class="asset-sample-header" title="올해를 제외한 관측 연도 수 · 상장 첫해 일부 기간 포함">분석<br>연도 수</th><th scope="col" class="asset-stat-header asset-rise-header" aria-label="연초 종가 대비 연중 최고 종가 상승률의 과거 연도 평균"><small>연초 → 최고 종가</small><span>평균 상승률</span></th><th scope="col" class="asset-stat-header asset-fall-header" aria-label="연초 종가 대비 연중 최저 종가 하락률의 과거 연도 평균 · MDD 아님"><small>연초 → 최저 종가</small><span>평균 하락률</span></th><th scope="col" id="asset-start-header">연초 종가<small>기준일 확인 중</small></th><th scope="col" id="asset-latest-header">최근 종가<small>기준일 확인 중</small></th><th scope="col" class="asset-ytd-header" id="asset-ytd-header">연초 대비<br>상승·하락률</th><th scope="col" class="asset-judgment-header" id="asset-judgment-header">판단<small>기준일 확인 중</small></th></tr></thead><tbody id="data-body"><tr><td colspan="10" class="asset-table-empty">자산별 가격 자료를 준비하고 있습니다.</td></tr></tbody></table></div>
     </section>
     <dialog class="daily-method-dialog" id="daily-method-dialog" aria-labelledby="daily-method-title"><div class="daily-method-heading"><h2 id="daily-method-title">자산 비교표 읽는 법</h2><button type="button" id="daily-method-close" aria-label="읽는 법 닫기">×</button></div><div id="daily-method-content"></div></dialog><dialog class="asset-history-dialog" id="asset-history-dialog" aria-label="자산군별 판단 이력"></dialog>`;
 }
@@ -154,6 +167,7 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
     put('#asset-start-header', '연초 종가<small>기준일 확인 중</small>');
     put('#asset-latest-header', '최근 종가<small>기준일 확인 중</small>');
     put('#asset-ytd-header', '연초 대비<br>상승·하락률');
+    put('#asset-judgment-header', '판단<small>기준일 확인 중</small>');
     if ($('#daily-method-dialog').open) put('#daily-method-content', methodContent());
   }
 
@@ -164,7 +178,7 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
     const boundaries = thresholds && ['strongBuyPct', 'buyPct', 'sellPct', 'strongSellPct'].every(key => numeric(thresholds[key]))
       ? `<ul class="asset-method-rules asset-selected-thresholds"><li><strong>적극 매수</strong> · ${formatDailyPercent(thresholds.strongBuyPct)} 이하</li><li><strong>분할 매수</strong> · ${formatDailyPercent(thresholds.strongBuyPct)} 초과, ${formatDailyPercent(thresholds.buyPct)} 이하</li><li><strong>중립</strong> · ${formatDailyPercent(thresholds.buyPct)} 초과, ${formatDailyPercent(thresholds.sellPct)} 미만</li><li><strong>분할 매도</strong> · ${formatDailyPercent(thresholds.sellPct)} 이상, ${formatDailyPercent(thresholds.strongSellPct)} 미만</li><li><strong>적극 매도</strong> · ${formatDailyPercent(thresholds.strongSellPct)} 이상</li></ul><p>표시는 소수 둘째 자리로 반올림하며 실제 판단은 반올림 전 경계값으로 계산합니다.</p>` : '';
     const selectedNote = selected ? `<section class="asset-selected-reason"><h3>${esc(selected.name)} (${esc(selected.symbol)}) · ${selectedDecision.label}</h3><p class="asset-reason-category">${esc(selected.group)} · ${esc(selected.category)} · ${esc(selected.currency || 'USD')}</p><p>${esc(selectedDecision.reason)}</p><dl class="asset-reason-metrics"><div><dt>올해 등락률</dt><dd class="asset-text-${tone(selected.ytdPct)}">${formatDailyPercent(selected.ytdPct)}</dd></div><div><dt>과거 평균 상승</dt><dd class="asset-text-gain">${formatDailyPercent(selected.meanRisePct)}</dd></div><div><dt>과거 평균 낙폭</dt><dd class="asset-text-loss">${formatDailyPercent(selected.meanFallPct)}</dd></div></dl><button type="button" class="asset-history-inline" data-history-focus="${esc(selected.symbol)}">이 종목의 판단 이력 보기 →</button><p class="asset-reason-note">과거 평균 범위에 대한 위치 분류이며, 주문 비중이나 미래 수익률을 뜻하지 않습니다.</p>${boundaries}<p>${sourceLink(selected)} · ${esc(selected.yearStartDate || '기준일 없음')} → ${esc(selected.latestDate || '관측 없음')}<br>${esc(selected.currency || 'USD')} · 원천 수집 ${esc(selected.source?.retrievedAt || '확인 중')}${selected.meta?.refreshMode==='retained-theme-archive'?'<br>테마 저장 자료 · 원래 수집 시각 유지 · 최근 관측이 7일을 넘으면 판단 보류':''}<br>${esc(sampleDescription(selected))}</p></section>` : '';
-    const general = `<h3>평균 상승률과 평균 낙폭</h3><p>과거 각 연도의 <strong>첫 거래일 종가를 0%</strong>로 둡니다. 그해 가장 높은 종가까지의 상승률과 가장 낮은 종가까지의 낙폭을 구한 뒤, 연도별 값을 같은 비중으로 평균합니다. 올해 자료는 이 평균에 넣지 않습니다. 장중 고가·저가와 연말 수익률의 평균이 아닙니다.</p><p>연간 상승률 = (연중 최고 종가 ÷ 첫 거래일 종가 − 1) × 100<br>연간 낙폭 = (연중 최저 종가 ÷ 첫 거래일 종가 − 1) × 100</p><h3>평균 낙폭과 MDD는 다릅니다</h3><p>이 표의 평균 낙폭은 <strong>각 연도의 시작 가격을 고정</strong>합니다. MDD는 시간순으로 갱신되는 고점 이후의 최대 하락을 측정합니다. 예를 들어 종가가 100 → 150 → 120이면 이 표의 연간 낙폭은 0%, 그해 MDD는 −20%입니다. 둘을 같은 값으로 표시하지 않습니다.</p><h3>마지막 열의 다섯 단계</h3><p>올해 등락률을 <strong>r</strong>, 과거 평균 상승률을 <strong>U</strong>, 평균 낙폭을 <strong>D</strong>라고 합니다. D는 음수입니다.</p><ul class="asset-method-rules"><li><strong>적극 매수</strong> · r ≤ D</li><li><strong>분할 매수</strong> · D &lt; r ≤ D ÷ 2</li><li><strong>중립</strong> · D ÷ 2 &lt; r &lt; U ÷ 2</li><li><strong>분할 매도</strong> · U ÷ 2 ≤ r &lt; U</li><li><strong>적극 매도</strong> · r ≥ U</li></ul><p>과거 평균 범위 안에서 올해 가격이 어디에 있는지 구분하는 <strong>비교 규칙</strong>입니다. 확률을 추정하거나 미래의 저점·고점을 확정하지 않으며, 적극·분할이라는 이름이 주문 금액을 정하지 않습니다. 중립도 횡보가 확인됐다는 뜻은 아닙니다. 초록·붉은색 수익률 수치는 상승·하락 방향을 뜻하고, 매수·매도 구분은 마지막 열에서 읽습니다.</p><h3>표본 연수와 판단 보류</h3><p>표본 연수는 올해 이전에 실제 관측된 연도 수입니다. <strong>*는 상장 첫해 일부 기간이 포함</strong>되었다는 표시입니다. 표본 셀에서 기간을 확인할 수 있고, 아래 종목별 출처에도 표시합니다. 5개 연도 미만, 누락되거나 오래된 자료, 비교할 수 없는 평균값은 판단 보류로 남깁니다. 결측값을 0이나 중립으로 채우지 않습니다.</p><h3>가격과 기준일</h3><p>HYPE는 Hyperliquid 현물 @107의 USDC 종가이며 USD로 환산하지 않습니다. 그 외 가격은 USD 종가입니다. BTC·ETH·HYPE는 UTC 달력일(주말·윤일 포함), 주식·ETF는 뉴욕 거래일을 사용하므로 연초 기준일이 다를 수 있습니다. 주식분할을 반영하고 배당·분배금을 제외한 종가 기준이므로 총수익률과 다를 수 있습니다. 배당·분배금 지급에 따른 가격 하락도 포함됩니다. 특히 PDBC처럼 큰 분배금이 있는 자산의 낙폭은 분배금을 합친 투자 손실과 다를 수 있습니다. 이 판단을 총수익률이나 수익성 검증으로 해석하지 않습니다. 연초 종가는 올해 첫 거래일 종가이며 전년 마지막 거래일 종가가 아닙니다. 최근 종가는 자료에 포함된 마지막 거래일의 관측값입니다. 종목별 날짜가 다르면 해당 가격 셀에도 기준일을 표시합니다.</p><details class="asset-source-details"><summary>종목별 출처·표본 범위${rows.length ? ` (${rows.length}개)` : ''}</summary>${rows.length ? `<ul>${rows.map(row => `<li><strong>${esc(row.symbol)} · ${esc(row.name)}</strong><br>${sourceLink(row)} · ${esc(sampleDescription(row))}<br>관측 ${esc(row.source?.firstDate || '확인 중')} → ${esc(row.latestDate || '관측 없음')} · 수집 ${esc(row.source?.retrievedAt || bundle?.retrievedAt || '확인 중')}<br>${esc(row.source?.priceDefinition || '가격 정의 확인 필요')}${judgment(row).available ? '' : `<br><span class="asset-source-issue">${esc(judgment(row).reason)}</span>`}</li>`).join('')}</ul>` : '<p>자료를 불러오면 종목별 출처와 실제 관측 범위가 표시됩니다.</p>'}</details>`;
+    const general = `<h3>평균 상승률과 평균 낙폭</h3><p>과거 각 연도의 <strong>첫 거래일 종가를 0%</strong>로 둡니다. 그해 가장 높은 종가까지의 상승률과 가장 낮은 종가까지의 낙폭을 구한 뒤, 연도별 값을 같은 비중으로 평균합니다. 올해 자료는 이 평균에 넣지 않습니다. 장중 고가·저가와 연말 수익률의 평균이 아닙니다.</p><p>연간 상승률 = (연중 최고 종가 ÷ 첫 거래일 종가 − 1) × 100<br>연간 낙폭 = (연중 최저 종가 ÷ 첫 거래일 종가 − 1) × 100</p><h3>평균 낙폭과 MDD는 다릅니다</h3><p>이 표의 평균 낙폭은 <strong>각 연도의 시작 가격을 고정</strong>합니다. MDD는 시간순으로 갱신되는 고점 이후의 최대 하락을 측정합니다. 예를 들어 종가가 100 → 150 → 120이면 이 표의 연간 낙폭은 0%, 그해 MDD는 −20%입니다. 둘을 같은 값으로 표시하지 않습니다.</p><h3>마지막 열의 다섯 단계</h3><p>올해 등락률을 <strong>r</strong>, 과거 평균 상승률을 <strong>U</strong>, 평균 낙폭을 <strong>D</strong>라고 합니다. D는 음수입니다.</p><ul class="asset-method-rules"><li><strong>적극 매수</strong> · r ≤ D</li><li><strong>분할 매수</strong> · D &lt; r ≤ D ÷ 2</li><li><strong>중립</strong> · D ÷ 2 &lt; r &lt; U ÷ 2</li><li><strong>분할 매도</strong> · U ÷ 2 ≤ r &lt; U</li><li><strong>적극 매도</strong> · r ≥ U</li></ul><p>과거 평균 범위 안에서 올해 가격이 어디에 있는지 구분하는 <strong>비교 규칙</strong>입니다. 확률을 추정하거나 미래의 저점·고점을 확정하지 않으며, 적극·분할이라는 이름이 주문 금액을 정하지 않습니다. 중립도 횡보가 확인됐다는 뜻은 아닙니다. 초록·붉은색 수익률 수치는 상승·하락 방향을 뜻하고, 매수·매도 구분은 마지막 열에서 읽습니다.</p><h3>표본 연수와 판단 보류</h3><p>표본 연수는 올해 이전에 실제 관측된 연도 수입니다. <strong>*는 상장 첫해 일부 기간이 포함</strong>되었다는 표시입니다. 표본 셀에서 기간을 확인할 수 있고, 아래 종목별 출처에도 표시합니다. 5개 연도 미만이면 다섯 단계를 표시하고 사유에 표본 수를 밝힙니다. 최초 관측 연도 안의 7일 이하 공백은 날짜를 비워 둔 채 판단합니다. 그 이후의 결측, 비어 있는 연도, 7일을 넘는 간격, 오래된 최근 종가, 비교할 수 없는 평균값은 판단 보류로 남깁니다. 결측값을 0이나 중립으로 채우지 않습니다.</p><h3>가격과 기준일</h3><p>HYPE는 Hyperliquid 현물 @107의 USDC 종가이며 USD로 환산하지 않습니다. 그 외 가격은 USD 종가입니다. BTC·ETH·HYPE는 UTC 달력일(주말·윤일 포함), 주식·ETF는 뉴욕 거래일을 사용하므로 연초 기준일이 다를 수 있습니다. 주식분할을 반영하고 배당·분배금을 제외한 종가 기준이므로 총수익률과 다를 수 있습니다. 배당·분배금 지급에 따른 가격 하락도 포함됩니다. 특히 PDBC처럼 큰 분배금이 있는 자산의 낙폭은 분배금을 합친 투자 손실과 다를 수 있습니다. 이 판단을 총수익률이나 수익성 검증으로 해석하지 않습니다. 연초 종가는 올해 첫 거래일 종가이며 전년 마지막 거래일 종가가 아닙니다. 최근 종가는 자료에 포함된 마지막 거래일의 관측값입니다. 종목별 날짜가 다르면 해당 가격 셀에도 기준일을 표시합니다.</p><details class="asset-source-details"><summary>종목별 출처·표본 범위${rows.length ? ` (${rows.length}개)` : ''}</summary>${rows.length ? `<ul>${rows.map(row => `<li><strong>${esc(row.symbol)} · ${esc(row.name)}</strong><br>${sourceLink(row)} · ${esc(sampleDescription(row))}<br>관측 ${esc(row.source?.firstDate || '확인 중')} → ${esc(row.latestDate || '관측 없음')} · 수집 ${esc(row.source?.retrievedAt || bundle?.retrievedAt || '확인 중')}<br>${esc(row.source?.priceDefinition || '가격 정의 확인 필요')}${!judgment(row).available ? `<br><span class="asset-source-issue">${esc(judgment(row).reason)}</span>` : row.coverage?.listingGapOnly ? `<br><span class="asset-source-issue">${esc((row.coverage.issues || []).join(' · '))}</span>` : ''}</li>`).join('')}</ul>` : '<p>자료를 불러오면 종목별 출처와 실제 관측 범위가 표시됩니다.</p>'}</details>`;
     const statusLink='<p><button type="button" class="atlas-quiet-button" data-open-forecast-journal="data">자료 상태·공통 기준시각</button></p>';
     return selected ? `${selectedNote}${statusLink}<details class="asset-general-method"><summary>계산법과 유의사항</summary>${general}</details>` : `${statusLink}${general}`;
   }
@@ -178,6 +192,7 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
     put('#asset-start-header', `연초 종가<small>${start ? esc(displayDate(start)) : '종목별 기준일'}</small>`);
     put('#asset-latest-header', `최근 종가<small>${latest ? esc(displayDate(latest)) : '종목별 기준일'}</small>`);
     put('#asset-ytd-header', `${model.year}년<br>연초 대비 등락률`);
+    put('#asset-judgment-header', `판단<small>${esc(displayDate(model.asOf))}</small>`);
     text('#asset-context', '');
     $('#asset-context').title = '';
     $('#asset-context').hidden = true;
@@ -205,19 +220,27 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
     if ($('#daily-method-dialog').open) put('#daily-method-content', methodContent());
   }
 
+  const usesArchiveClock = asOfDate === today;
   function render({ refresh = false } = {}) {
     if (disposed || root.hidden) return Promise.resolve(null);
-    let date;
-    try {
-      date = typeof asOfDate === 'function' ? asOfDate() : asOfDate;
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || new Date(`${date}T00:00:00Z`).toISOString().slice(0, 10) !== date) throw new TypeError('비교 기준일이 올바르지 않습니다.');
-    } catch (error) { request++; pending = null; fail(error, null); return Promise.resolve(null); }
-    if (refresh || (pending && state.asOf !== date)) { request++; pending = null; model = null; if (refresh) bundle = null; state.status = 'idle'; }
-    if (pending) return pending;
-    if (state.status === 'ready' && state.asOf === date) { scheduleRowFit(); return Promise.resolve(model); }
-    if (state.status === 'error' && state.asOf === date && !refresh) return Promise.resolve(null);
+    let date = null;
+    if (!usesArchiveClock) {
+      try {
+        date = typeof asOfDate === 'function' ? asOfDate() : asOfDate;
+        if (!validComparisonDate(date)) throw new TypeError('비교 기준일이 올바르지 않습니다.');
+      } catch (error) { request++; pending = null; fail(error, null); return Promise.resolve(null); }
+      if (refresh || (pending && state.asOf !== date)) { request++; pending = null; model = null; if (refresh) bundle = null; state.status = 'idle'; }
+      if (pending) return pending;
+      if (state.status === 'ready' && state.asOf === date) { scheduleRowFit(); return Promise.resolve(model); }
+      if (state.status === 'error' && state.asOf === date && !refresh) return Promise.resolve(null);
+    } else {
+      if (refresh) { request++; pending = null; model = null; bundle = null; state.status = 'idle'; }
+      if (pending) return pending;
+      if (state.status === 'ready') { scheduleRowFit(); return Promise.resolve(model); }
+      if (state.status === 'error' && !refresh) return Promise.resolve(null);
+    }
     const token = ++request;
-    model = null; state.status = 'loading'; state.asOf = date; state.error = null;
+    model = null; state.status = 'loading'; if (!usesArchiveClock) state.asOf = date; state.error = null;
     text('#asset-context', '20개 자산의 실제 가격 자료와 표본 연수를 확인하고 있습니다.');
     $('#asset-context').title = '';
     $('#asset-context').hidden = false;
@@ -230,10 +253,12 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
       try {
         const loaded = bundle || await getComparisonDataset();
         if (disposed || token !== request) return null;
-        const calculated = await buildModel(loaded, { asOfDate: date });
+        const comparisonDate = usesArchiveClock ? (archiveComparisonDate(loaded) ?? today()) : date;
+        if (!validComparisonDate(comparisonDate)) throw new TypeError('비교 기준일이 올바르지 않습니다.');
+        const calculated = await buildModel(loaded, { asOfDate: comparisonDate });
         if (disposed || token !== request) return null;
         assertModel(calculated);
-        bundle = loaded; model = calculated; state.status = 'ready';
+        bundle = loaded; model = calculated; state.asOf = comparisonDate; state.status = 'ready';
         paint();
         return model;
       } catch (error) {

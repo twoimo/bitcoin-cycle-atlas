@@ -25,6 +25,8 @@ class ElementFixture extends EventTarget {
   setAttribute(name, value) { this.attributes.set(name, String(value)); }
   removeAttribute(name) { this.attributes.delete(name); }
   hasAttribute(name) { return this.attributes.has(name); }
+  get href() { return this.getAttribute('href'); }
+  set href(value) { this.setAttribute('href', value); }
   get hidden() { return this.hasAttribute('hidden'); }
   set hidden(value) { if (value) this.setAttribute('hidden', ''); else this.removeAttribute('hidden'); }
   get inert() { return this.hasAttribute('inert'); }
@@ -68,11 +70,13 @@ function bootstrap({ earlyErrors = [] } = {}) {
     return node && positions.get(node) < parsingPosition ? node : null;
   };
   document.querySelectorAll = selector => {
-    assert.equal(selector, '[data-boot-content]', 'The boot controller must only touch its designated content roots');
-    return content.filter(node => positions.get(node) < parsingPosition);
+    const parsed = node => positions.get(node) < parsingPosition;
+    if (selector === '[data-boot-content]') return content.filter(parsed);
+    if (selector === 'link[data-atlas-optional]') return [...positions.keys()].filter(node => parsed(node) && node.tagName === 'LINK' && node.hasAttribute('data-atlas-optional'));
+    assert.fail(`The boot controller queried ${selector}`);
   };
   let reloads = 0;
-  const location = { reload() { reloads += 1; } };
+  const location = { search: '', reload() { reloads += 1; } };
   window.location = location;
   window.document = document;
   const emit = (type, target = document) => target.dispatchEvent(new Event(type));
@@ -82,7 +86,7 @@ function bootstrap({ earlyErrors = [] } = {}) {
     Object.defineProperty(event, 'target', { value: target });
     window.dispatchEvent(event);
   };
-  const context = { window, document, location, Event, console };
+  const context = { window, document, location, Event, console, URLSearchParams };
   // Preceding stylesheets may fail before the body script is allowed to run.
   // Respect source order and do not expose DOM nodes the parser has not reached.
   const steps = [
@@ -177,7 +181,7 @@ test('successful and failed startup both cancel the fallback deadline', () => {
 });
 
 test('optional resource failures do not abort boot while script and stylesheet failures do', () => {
-  for (const resource of [{ tagName: 'IMG' }, { tagName: 'LINK', rel: 'icon' }, { tagName: 'LINK', rel: 'preload' }, { tagName: 'LINK', rel: 'stylesheet', id: 'atlas-optional-fonts' }]) {
+  for (const resource of [{ tagName: 'IMG' }, { tagName: 'LINK', rel: 'icon' }, { tagName: 'LINK', rel: 'preload' }, { tagName: 'LINK', rel: 'stylesheet', id: 'atlas-optional-fonts' }, { tagName: 'LINK', rel: 'stylesheet', hasAttribute: name => name === 'data-atlas-optional' }]) {
     const { root, byId, emit, resourceError } = bootstrap();
     resourceError(resource);
     assert.equal(root.dataset.boot, 'loading', `${resource.tagName} ${resource.rel ?? ''} is not required to initialize the app`);

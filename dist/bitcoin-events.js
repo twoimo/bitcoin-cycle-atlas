@@ -3,7 +3,7 @@
  * date is a source calendar-day label; only timestampUtc records an exact UTC
  * block timestamp. See docs/BITCOIN_EVENTS_RESEARCH.md for the selection rules.
  */
-export const BITCOIN_EVENTS_REVIEW_DATE = '2026-11-08';
+export const BITCOIN_EVENTS_REVIEW_DATE = '2026-11-17';
 
 export const BITCOIN_EVENT_CATEGORIES = Object.freeze({
   protocol: '프로토콜',
@@ -18,7 +18,8 @@ export const BITCOIN_EVENT_CATEGORIES = Object.freeze({
 const source = (publisher, title, url, publishedAt = null, type = 'primary') => ({
   publisher, title, url, publishedAt, type, accessedAt: '2026-10-22',
 });
-const reviewedSource = (...args) => ({ ...source(...args), accessedAt: BITCOIN_EVENTS_REVIEW_DATE });
+const reviewedSource = (...args) => ({ ...source(...args), accessedAt: '2026-11-08' });
+const currentSource = (...args) => ({ ...source(...args), accessedAt: BITCOIN_EVENTS_REVIEW_DATE });
 
 const consensusSource = source('Bitcoin Core', 'v29.0: mainnet consensus parameters',
   'https://github.com/bitcoin/bitcoin/blob/v29.0/src/kernel/chainparams.cpp', '2025-04-14');
@@ -511,6 +512,110 @@ const events = [
       reviewedSource('Texas Tribune', 'Texas launches cryptocurrency reserve with $5 million investment', 'https://www.texastribune.org/2025/12/08/texas-crypto-currency-investment/', '2025-12-08', 'secondary'),
       reviewedSource('The Bond Buyer', 'Texas makes first purchase for state’s bitcoin reserve', 'https://www.bondbuyer.com/news/texas-makes-first-purchase-for-states-bitcoin-reserve', '2025-12-09', 'secondary'),
       reviewedSource('Texas Comptroller / GovTribe 원문 전재', 'RFP 908-26-1778WS — Texas Strategic Bitcoin Reserve Custody and Liquidity Services, section 1.2', 'https://govtribe.com/file/government-file/esbd-513147-1778176486492-908-26-1778ws-texas-strategic-bitcoin-reserve-dot-pdf', '2026-05-07'),
+    ],
+  },
+  {
+    id: 'us-midterm-2010', date: '2010-11-02', label: '2010 미국 중간선거', title: '2010년 미국 연방 중간선거', category: 'macro', importance: 1,
+    keywords: ['중간선거', '미국 선거', 'midterm'],
+    description: '미국 하원 전원과 일부 상원의원을 뽑는 연방 일반선거가 열렸다. 대통령 선거가 아닌 중간선거다.',
+    dateBasis: 'FEC 2010년 예비선거 일정표에 적힌 일반선거일 11/2/10이다. 표의 기준일 2010-08-03과 구분한다.',
+    limitations: ['선거일 표식이다. 개표 결과나 이후 입법이 비트코인 가격을 움직였다는 기록은 아니다.', '주별 예비선거·결선일과 구분한다.'],
+    sources: [currentSource('FEC', '2010 Congressional Primary Dates — General Election Date 11/2/10', 'https://www.fec.gov/resources/cms-content/documents/2010pdates.pdf', '2010-08-03')],
+  },
+  {
+    id: 'us-midterm-2014', date: '2014-11-04', label: '2014 미국 중간선거', title: '2014년 미국 연방 중간선거', category: 'macro', importance: 1,
+    keywords: ['중간선거', '미국 선거', 'midterm'],
+    description: '미국 하원 전원과 일부 상원의원을 뽑는 연방 일반선거가 열렸다.',
+    dateBasis: 'FEC 2014년 예비선거 일정표에 적힌 일반선거일 11/04/2014이다. 표의 기준일 2014-07-28과 구분한다.',
+    limitations: ['선거일 표식이다. 당선 결과나 가격 방향을 적지 않는다.', '주별 예비선거·결선일과 구분한다.'],
+    sources: [currentSource('FEC', '2014 Congressional Primary Dates — General Election Date 11/04/2014', 'https://www.fec.gov/resources/cms-content/documents/2014pdates.pdf', '2014-07-28')],
+  },
+  {
+    id: 'fed-funds-hike-2015', date: '2015-12-16', label: '연준 금리 인상 시작', title: '2015–2018 인상 국면의 첫 연방기금금리 인상', category: 'macro', importance: 2,
+    keywords: ['연준', 'FOMC', '금리', 'federal funds'],
+    description: 'FOMC가 연방기금금리 목표 범위를 0.25–0.50%로 올렸다. 연준의 정상화 설명은 이 결정을 2008년 12월 이후 첫 변경으로 적는다.',
+    dateBasis: '2015년 12월 16일 FOMC 성명일이다. 성명은 목표 범위를 1/4 to 1/2 percent로 적는다.',
+    limitations: ['이 국면의 이후 회의를 모두 적지 않는다.', '금리 결정이 비트코인 가격의 방향이나 변동폭을 정했다는 뜻이 아니다.'],
+    sources: [
+      currentSource('Federal Reserve', 'FOMC statement, December 16, 2015', 'https://www.federalreserve.gov/newsevents/pressreleases/monetary20151216a.htm', '2015-12-16'),
+      currentSource('Federal Reserve', 'Monetary policy normalization', 'https://www.federalreserve.gov/monetarypolicy/bst_policynormalization.htm'),
+    ],
+  },
+  {
+    id: 'us-midterm-2018', date: '2018-11-06', label: '2018 미국 중간선거', title: '2018년 미국 연방 중간선거', category: 'macro', importance: 1,
+    keywords: ['중간선거', '미국 선거', 'midterm'],
+    description: '미국 하원 전원과 일부 상원의원을 뽑는 연방 일반선거가 열렸다.',
+    dateBasis: 'FEC 2018년 예비선거 일정표에 적힌 일반선거일 11/6/18이다. 표의 기준일 2018-08-17과 구분한다.',
+    limitations: ['선거일 표식이다. 당선 결과나 가격 방향을 적지 않는다.', '주별 예비선거·결선일과 구분한다.'],
+    sources: [currentSource('FEC', '2018 Congressional Primary Dates — General Election Date 11/6/18', 'https://www.fec.gov/resources/cms-content/documents/2018pdates.pdf', '2018-08-17')],
+  },
+  {
+    id: 'fed-funds-hike-2022', date: '2022-03-16', label: '2022 금리 인상 시작', title: '2022년 인상 국면의 첫 연방기금금리 인상', category: 'macro', importance: 2,
+    keywords: ['연준', 'FOMC', '금리', 'federal funds'],
+    description: 'FOMC가 연방기금금리 목표 범위를 0.25–0.50%로 올렸고, 이후 인상도 적절할 것으로 예상한다고 적었다. 2020년 3월 15일 성명은 목표 범위를 0–0.25%로 낮춘 결정이다.',
+    dateBasis: '2022년 3월 16일 14:00 EDT FOMC 성명일이다. 성명은 목표 범위를 1/4 to 1/2 percent로 적는다.',
+    limitations: ['2020년 3월 15일 인하 성명과 2022년 3월 16일 인상 성명으로 국면의 시작을 표시한다. 그 사이 회의를 모두 적지 않는다.', '금리 결정이 비트코인 가격의 방향이나 변동폭을 정했다는 뜻이 아니다.'],
+    sources: [
+      currentSource('Federal Reserve', 'FOMC statement, March 16, 2022', 'https://www.federalreserve.gov/newsevents/pressreleases/monetary20220316a.htm', '2022-03-16'),
+      currentSource('Federal Reserve', 'FOMC statement, March 15, 2020', 'https://www.federalreserve.gov/newsevents/pressreleases/monetary20200315a.htm', '2020-03-15'),
+    ],
+  },
+  {
+    id: 'bnb-bridge-exploit-2022', date: '2022-10-06', label: 'BNB 브리지 악용', title: 'BNB Chain 브리지에서 2백만 BNB 인출', category: 'security', importance: 2,
+    keywords: ['바이낸스', 'Binance', 'BNB', '브리지', '해킹'],
+    description: 'BNB Beacon Chain과 BNB Smart Chain을 잇는 BSC Token Hub에서 증명을 위조해 2백만 BNB가 인출됐다. 10월 11일 글은 이용자 자금은 영향받지 않았고 손실은 BNB Chain 쪽이라고 적으며, 규모를 약 5억 7,000만 달러로 적는다.',
+    dateBasis: '10월 11일 BNB Chain 글이 October 6 event라고 적은 날이다. 첫 경과 글의 날짜는 10월 7일이며, 그 글은 사건일을 October 6이라고 다시 적지 않는다.',
+    limitations: ['브리지에서 추가로 발행·인출된 BNB 사건이다. 비트코인 합의 규칙이 깨진 사건이 아니다.', '약 5억 7,000만 달러는 10월 11일 글의 표현이다. BTC 가격으로 다시 계산하지 않는다.', '2019년 바이낸스 핫월렛 공지 본문은 이 검토에서 차단 페이지라 읽지 못했다. 그 사건을 이 날짜에 합치지 않는다.'],
+    sources: [
+      currentSource('BNB Chain', 'BNB Chain Ecosystem Update', 'https://www.bnbchain.org/en/blog/bnb-chain-ecosystem-update', '2022-10-07'),
+      currentSource('BNB Chain', 'BNB Chain: A Decentralized Response', 'https://www.bnbchain.org/en/blog/bnb-chain-a-decentralized-response', '2022-10-11'),
+    ],
+  },
+  {
+    id: 'us-midterm-2022', date: '2022-11-08', label: '2022 미국 중간선거', title: '2022년 미국 연방 중간선거', category: 'macro', importance: 1,
+    keywords: ['중간선거', '미국 선거', 'midterm'],
+    description: '미국 하원 전원과 일부 상원의원을 뽑는 연방 일반선거가 11월 8일 화요일에 열렸다.',
+    dateBasis: 'FEC가 2022년 10월 31일에 게시한 안내의 제목이 Election Day is Tuesday, November 8이다.',
+    limitations: ['선거일 표식이다. 당선 결과나 가격 방향을 적지 않는다.', '같은 달 11일의 FTX 절차와 구분한다.'],
+    sources: [currentSource('FEC', 'Election Day is Tuesday, November 8', 'https://www.fec.gov/updates/tip-2022-election-day-tuesday-november-8/', '2022-10-31')],
+  },
+  {
+    id: 'fed-funds-last-hike-2023', date: '2023-07-26', label: '연준 마지막 금리 인상', title: '2022년 시작된 인상 국면의 마지막 연방기금금리 인상', category: 'macro', importance: 2,
+    keywords: ['연준', 'FOMC', '금리', 'federal funds'],
+    description: 'FOMC가 연방기금금리 목표 범위를 5.25–5.50%로 올렸다. 9월 20일 성명은 같은 범위를 유지했고, 2024년 9월 18일 성명은 그 범위를 0.50%포인트 낮춰 4.75–5.00%로 정했다.',
+    dateBasis: '2023년 7월 26일 14:00 EDT FOMC 성명일이다. 성명은 목표 범위를 5-1/4 to 5-1/2 percent로 적는다.',
+    limitations: ['7월 26일 이후부터 2024년 9월 18일 인하 이전의 회의를 모두 나열하지 않는다. 마지막 인상이라는 말은 7월 26일 인상, 9월 20일 유지, 2024년 9월 18일 인하 성명을 함께 본 것이다.', '금리 결정이 비트코인 가격의 방향이나 변동폭을 정했다는 뜻이 아니다.'],
+    sources: [
+      currentSource('Federal Reserve', 'FOMC statement, July 26, 2023', 'https://www.federalreserve.gov/newsevents/pressreleases/monetary20230726a.htm', '2023-07-26'),
+      currentSource('Federal Reserve', 'FOMC statement, September 20, 2023', 'https://www.federalreserve.gov/newsevents/pressreleases/monetary20230920a.htm', '2023-09-20'),
+      currentSource('Federal Reserve', 'FOMC statement, September 18, 2024', 'https://www.federalreserve.gov/newsevents/pressreleases/monetary20240918a.htm', '2024-09-18'),
+    ],
+  },
+  {
+    id: 'binance-security-incident-2026', date: '2026-10-30', label: '바이낸스 출금 침해', title: '바이낸스의 2026년 10월 보안 사고 공지', category: 'security', importance: 2,
+    keywords: ['바이낸스', 'Binance', '보안', '출금'],
+    description: '바이낸스가 보안 사고를 공지했다. 초기 조사는 데브옵스 엔지니어의 노트북이 침해돼 서비스 컨테이너에서 승인되지 않은 출금이 나갔을 가능성을 적는다. 지갑 개인키 유출 증거는 찾지 못했다고 했고, 추정 영향은 약 63억 달러, 온체인 동결은 약 30억 달러라고 적었다. 손실은 SAFU와 회사 자금으로 메우고 이용자 자금은 안전하다고 밝혔다. 출금은 일시 중단했고, 같은 날 수정 문구는 입금은 영향 없이 계속된다고 적는다.',
+    dateBasis: '공지 페이지에 표시된 게시 시각 2026-10-30 11:23과 글 끝의 2026-10-30이다. 수정 시각은 2026-10-30 20:36이다. 페이지는 시간대를 적지 않고, 사고 시작 시각도 따로 적지 않는다.',
+    limitations: ['초기 조사 공지다. 글은 상세 기술 포스트모템을 나중에 공유하겠다고 적는다.', '약 63억 달러와 약 30억 달러는 공지의 추정치다. 독립 재계산이나 BTC 가격이 아니다.', '이용자 자금이 안전하다는 문장과 입금 계속은 회사 공지의 표현이다.'],
+    sources: [currentSource('Binance', 'Security Incident Update (2026-10-30)', 'https://www.binance.com/en/support/announcement/detail/c5a8729a97ac486d963784d96c5642d7', '2026-10-30')],
+  },
+  {
+    id: 'us-midterm-2026', date: '2026-11-03', label: '2026 미국 중간선거', title: '2026년 미국 연방 중간선거', category: 'macro', importance: 1,
+    keywords: ['중간선거', '미국 선거', 'midterm'],
+    description: '미국 정기 연방 일반선거일이 2026년 11월 3일 화요일이었다. 하원 전원과 일부 상원의원을 뽑는 중간선거다.',
+    dateBasis: 'FEC 선거 안내가 Tuesday, November 3, 2026를 정기 연방 일반선거일로 적는다. 이 검토일 2026-11-17보다 앞선 날짜다.',
+    limitations: ['2026-11-17에 연 페이지는 그 날짜를 아직 다음 예정일이라고 적는다. 개표 결과나 의석 구성을 이 항목에 적지 않는다.', '선거일 표식이다. 가격 방향을 적지 않는다.'],
+    sources: [currentSource('FEC', 'Election results and voting information — federal General Election date', 'https://www.fec.gov/introduction-campaign-finance/election-results-and-voting-information/')],
+  },
+  {
+    id: 'nvidia-ceo-resignation-2026', date: '2026-11-11', label: '젠슨 황 사임', title: '젠슨 황의 엔비디아 대표이사 사임', category: 'institution', importance: 1,
+    keywords: ['엔비디아', 'NVIDIA', '젠슨 황', 'Jensen Huang'],
+    description: '엔비디아 이사회가 젠슨 황의 대표이사·사장·이사 사임을 11월 11일 즉시 효력으로 수리했다. 재무책임자 콜레트 크레스가 임시 대표이사를 맡는다.',
+    dateBasis: 'SEC 8-K가 적은 가장 이른 사건일 11월 11일이다. 서명일과 회사 보도자료 날짜는 11월 12일이다.',
+    limitations: ['8-K와 보도자료는 사임 이유를 적지 않는다. 이 항목도 이유를 적지 않는다.', '엔비디아 임원 변경이다. 비트코인 가격의 방향이나 변동폭을 정했다는 뜻이 아니다.'],
+    sources: [
+      currentSource('SEC / NVIDIA', 'Form 8-K, Item 5.02 — resignation of Jen-Hsun Huang', 'https://www.sec.gov/Archives/edgar/data/1045810/000104581026000082/nvda-20261111.htm', '2026-11-12'),
+      currentSource('NVIDIA', 'NVIDIA Announces CEO Transition', 'https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Announces-CEO-Transition/', '2026-11-12'),
     ],
   },
 ];

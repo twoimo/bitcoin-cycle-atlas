@@ -1,8 +1,15 @@
 import { enhanceBootSkeleton } from './loading-surfaces.js';
-import { initAtlasShell } from './atlas-shell.js?v=1.36.1';
-import { canonicalNativeChartEntry } from './atlas-navigation.js?v=1.36.1';
+import { initAtlasShell } from './atlas-shell.js?v=1.36.14';
+import { canonicalNativeChartEntry } from './atlas-navigation.js?v=1.36.2';
 import { mountJournalEntry } from './journal-entry.js?v=1.29.0';
 import { initPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
+
+const blockedPage = new URLSearchParams(location.search);
+if (blockedPage.get('page') === 'data') {
+  blockedPage.delete('page');
+  const blockedUrl = `${location.pathname}${blockedPage.size ? `?${blockedPage}` : ''}${location.hash || ''}`;
+  try { history.replaceState(null, '', blockedUrl); } catch { /* The chart route below ignores this removed page. */ }
+}
 
 const nativeEntry = canonicalNativeChartEntry(location);
 if (nativeEntry) {
@@ -21,13 +28,13 @@ if (nativeEntry) {
   if (bootSymbol) bootSymbol.textContent = symbol;
   try {
     if (symbol === 'ETHUSD') {
-      const { initEthView } = await import("./eth-view.js?v=1.36.1");
+      const { initEthView } = await import("./eth-view.js?v=1.36.2");
       await initEthView();
     } else if (symbol === 'MSTR' || symbol === 'BMNR') {
-      const { initEquityView } = await import("./equity-view.js?v=1.36.1");
+      const { initEquityView } = await import("./equity-view.js?v=1.36.2");
       await initEquityView({symbol});
     } else {
-      await import("./app.js?v=1.37.7");
+      await import("./app.js?v=1.37.28");
     }
   } catch (error) {
     console.error('Chart initialization failed', error);

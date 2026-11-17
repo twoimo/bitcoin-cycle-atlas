@@ -1,0 +1,35 @@
+.chart-intervals{position:relative;display:flex;align-items:center;gap:2px;min-width:0;flex:none}
+.chart-interval-chips{display:flex;align-items:center;gap:2px}
+.chart-interval-chip,.chart-interval-more{
+  height:32px;padding:0 10px;border:0;border-radius:8px;background:transparent;
+  color:rgb(126,126,135);font:600 13px/18px var(--font,'Pretendard','Noto Sans KR',sans-serif);cursor:pointer;
+}
+.chart-interval-chip[aria-pressed="true"]{background:rgb(32,32,39);color:rgb(228,228,229)}
+.chart-interval-chip:hover,.chart-interval-more:hover{color:rgb(228,228,229)}
+.chart-interval-more{display:flex;align-items:center;gap:4px}
+.chart-interval-more svg{width:14px;height:14px}
+.chart-interval-menu{
+  position:absolute;top:36px;left:0;z-index:40;width:208px;max-height:440px;overflow:auto;
+  padding:6px;border-radius:12px;background:rgb(23,23,28);
+  box-shadow:0 8px 28px rgba(0,0,0,.16),0 0 0 1px rgb(44,44,53);
+}
+.chart-interval-group{display:grid;gap:0}
+.chart-interval-group p{margin:8px 8px 2px;color:rgb(126,126,135);font-size:11px;font-weight:500}
+.chart-interval-group:first-child p{margin-top:2px}
+.chart-interval-row{display:grid;grid-template-columns:minmax(0,1fr) 28px;align-items:center;height:36px}
+.chart-interval-row button[role="menuitemradio"]{
+  height:36px;padding:0 8px;border:0;border-radius:8px;background:transparent;
+  color:rgb(228,228,229);text-align:left;font:400 13px/36px var(--font,sans-serif);cursor:pointer;
+}
+.chart-interval-row button[aria-checked="true"]{background:rgb(32,32,39)}
+.chart-interval-row button:hover:not(:disabled){background:rgb(32,32,39)}
+.chart-interval-row button:disabled{color:rgb(126,126,135);cursor:default}
+.chart-interval-star{display:grid;place-items:center;width:28px;height:28px;padding:0;border:0;border-radius:8px;background:transparent;color:rgb(126,126,135);cursor:pointer}
+.chart-interval-star[aria-pressed="true"]{color:rgb(228,228,229)}
+.chart-interval-star svg{width:14px;height:14px}
+body[data-shell=chart] #workbench-frequency:has(.chart-intervals) #workbench-interval-select,
+body[data-shell=chart] #workbench-frequency:has(.chart-intervals) .lab-segmented{display:none}
+@media (max-width:1100px){
+  .chart-interval-chips{display:none}
+  .chart-interval-more{min-width:44px;min-height:44px}
+}

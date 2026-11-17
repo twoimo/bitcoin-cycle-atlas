@@ -1,5 +1,5 @@
 import {setLoadingSurface} from './loading-surfaces.js';
-import {BITCOIN_EVENTS,BITCOIN_EVENT_CATEGORIES,BITCOIN_EVENTS_REVIEW_DATE} from './bitcoin-events.js?v=1.29.0';
+import {BITCOIN_EVENTS,BITCOIN_EVENT_CATEGORIES,BITCOIN_EVENTS_REVIEW_DATE} from './bitcoin-events.js?v=1.29.1';
 import {EVENT_COLORS,formatBtcVolume} from './chart-overlays.js?v=1.29.0';
 import {mountHistoryJournal} from './history-journal.js?v=1.29.0';
 

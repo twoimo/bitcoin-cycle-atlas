@@ -16,15 +16,22 @@ function appUrl(search = '', overrides = {}) {
   return { state, location, writes, persist() { context.persistUrl();return new URLSearchParams(location.search); } };
 }
 
+test('the asset comparison address opens the chart and leaves the address bar', () => {
+  const h = appUrl('?page=data');
+  assert.equal(h.state.view, 'outlook');
+  assert.equal(h.writes.at(-1), '/bitcoin-cycle-atlas/');
+  assert.equal(h.persist().has('page'), false);
+});
+
 test('page navigation preserves the current atlas viewport, primary indicator, and unit', () => {
   const query = '?granularity=daily&type=candles&axis=linear&unit=indexed&view-start=2023-01-01&view-end=2028-12-31&indicator-primary=range&indicators=volume,range&assumption=stress';
   const h = appUrl(query);
   h.state.unit = 'rebased'; // The hidden comparison view owns a different unit.
-  for (const page of ['data', 'evidence', 'outlook']) {
+  for (const page of ['evidence', 'outlook', 'data']) {
     h.state.view = page;
     const next = h.persist();
     for (const [key, value] of new URLSearchParams(query)) assert.equal(next.get(key), value, `${page}: ${key}`);
-    assert.equal(next.get('page'), page === 'outlook' ? null : page);
+    assert.equal(next.get('page'), page === 'evidence' ? 'evidence' : null);
   }
 });
 
@@ -32,7 +39,7 @@ test('a stale comparison preference cannot resurrect indexed units after the atl
   const h = appUrl('?unit=indexed');
   h.state.unit = 'indexed';
   h.location.search = '?granularity=1m&view-start=1792497600&view-end=1792498800&indicator-primary=volume';
-  for (const page of ['data', 'evidence', 'outlook']) {
+  for (const page of ['evidence', 'outlook', 'data']) {
     h.state.view = page;
     const next = h.persist();
     assert.equal(next.has('unit'), false);

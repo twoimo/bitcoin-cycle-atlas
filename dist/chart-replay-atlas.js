@@ -1,8 +1,8 @@
-import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.36.1';
+import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.36.6';
 import {buildCycleMilestones} from './cycle-milestones.js?v=1.29.0';
 import {validateDataset,utcDay,dateFromDay} from './cycle-engine.js?v=1.29.0';
 import {detectDirectionalChanges,computeRollingStates} from './market-structure.js?v=1.29.0';
-import {BITCOIN_EVENTS} from './bitcoin-events.js?v=1.29.0';
+import {BITCOIN_EVENTS} from './bitcoin-events.js?v=1.29.1';
 import {clearChartHover} from './chart-hover.js?v=1.29.0';
 import {retainPriceViewport} from './empty-price-chart.js?v=1.36.1';
 

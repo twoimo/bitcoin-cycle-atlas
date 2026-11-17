@@ -140,37 +140,51 @@
 .analysis-indicator-window[data-maximized=true] .analysis-chart-viewport{flex:1 0 140px}
 .indicator-value[hidden]{display:none!important}
 .cycle-milestone-markers .cycle-marker:is(:hover,:focus-visible) .cycle-marker-ring{stroke-width:calc(3px * var(--cycle-marker-line-scale,1))}
-.indicator-settings-dialog{width:min(540px,calc(100% - 24px));max-width:540px;max-height:calc(100dvh - 24px);box-sizing:border-box;padding:0;border:1px solid var(--analysis-dock-rule-16);border-radius:10px;background:var(--analysis-dock-surface-29);color:var(--analysis-dock-ink-52);font-family:var(--font);box-shadow:none;overflow:hidden}
+body dialog.indicator-settings-dialog{width:min(440px,calc(100% - 24px));min-width:min(280px,100%);max-width:440px;max-height:calc(100dvh - 24px);box-sizing:border-box;padding:0;border:1px solid var(--border,#3b506a);border-radius:6px;background:var(--surface,#14202e);color:var(--text,#c8d8ec);font-family:var(--font);font-size:14px;box-shadow:0 2px 4px #00000080;overflow:hidden;color-scheme:dark}
 .indicator-settings-dialog[open]{display:flex;flex-direction:column}
-.indicator-settings-dialog::backdrop{background:var(--analysis-dock-surface-7);backdrop-filter:none}
-.indicator-settings-dialog>header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px 8px;flex:none}
-.indicator-settings-dialog h2{margin:0;font-size:18px;font-weight:600;line-height:1.5}
-.indicator-settings-dialog button{min-height:36px;padding:8px 12px;border:1px solid var(--analysis-dock-rule-17);border-radius:5px;background:var(--analysis-dock-surface-30);color:var(--analysis-dock-ink-53);font:inherit;font-size:12px;cursor:pointer}
-.indicator-settings-dialog>header>button{border:0;background:transparent;font-size:24px;width:36px;padding:0;flex:none}
-#indicator-settings-description{margin:0;padding:0 20px 12px;color:var(--analysis-dock-ink-54);font-size:11px;line-height:1.6;flex:none}
-.indicator-settings-content{min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:0 20px 12px;display:grid;gap:12px}
-.indicator-settings-content fieldset{min-width:0;display:grid;gap:8px;border:1px solid var(--analysis-dock-rule-18);border-radius:6px;padding:12px 12px;margin:0}
-.indicator-settings-content legend{padding:0 4px;font-size:11px;color:var(--analysis-dock-ink-55)}
-.indicator-settings-content label{display:flex;align-items:center;gap:8px;font-size:12px;line-height:1.5;margin:0;min-width:0}
-.indicator-settings-content input[type=checkbox]{width:17px;height:17px;min-height:17px;flex:none;margin:0;padding:0;accent-color:var(--analysis-dock-ink-56)}
-.indicator-settings-content p{margin:0;font-size:11px;line-height:1.6;color:var(--analysis-dock-ink-25)}
-.indicator-settings-content .indicator-setting-select{display:grid;grid-template-columns:minmax(90px,1fr) minmax(0,1.5fr)}
-.indicator-settings-content select{min-height:34px;width:100%;min-width:0;border:1px solid var(--analysis-dock-rule-19);border-radius:4px;padding:4px 24px 4px 8px;background:var(--analysis-dock-surface-31);color:var(--analysis-dock-ink-57);font:inherit;font-size:11px}
-.indicator-settings-content .indicator-setting-range{display:grid;grid-template-columns:minmax(90px,1fr) minmax(64px,1.1fr) 40px;gap:8px}
-.indicator-setting-range input{width:100%;min-width:0;min-height:28px;margin:0;padding:0;accent-color:var(--analysis-dock-ink-56)}
-.indicator-setting-range output{font-size:11px;text-align:right;font-variant-numeric:tabular-nums}
-.indicator-settings-content .indicator-setting-intervals{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
-.indicator-setting-intervals>p{grid-column:1/-1}
-.indicator-settings-status{padding:4px 20px 12px;margin:0;font-size:11px;line-height:1.6;color:var(--analysis-dock-ink-58);flex:none}
-.indicator-settings-dialog>footer{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--analysis-dock-rule-20);padding:12px 20px;flex:none}
-.indicator-settings-dialog :focus-visible{outline:2px solid var(--analysis-dock-rule-8);outline-offset:2px}
+body dialog.indicator-settings-dialog::backdrop{background:#0000004d;backdrop-filter:none}
+.indicator-settings-dialog>header{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:12px 8px 0 16px;flex:none}
+.indicator-settings-dialog h2{margin:0;font-size:16px;font-weight:600;line-height:1.4;letter-spacing:0}
+.indicator-settings-dialog>header>button{display:grid;place-items:center;width:36px;height:36px;min-height:36px;padding:0;border:0;border-radius:4px;background:transparent;color:var(--muted,#a1adbf);font-size:22px;line-height:1;cursor:pointer}
+.indicator-settings-dialog>header>button:hover{background:var(--surface-hover,#202a39);color:var(--text,#e6ebf2)}
+#indicator-settings-description{margin:0;padding:2px 16px 8px;color:var(--muted,#a1adbf);font-size:12px;line-height:1.45;flex:none}
+.indicator-settings-tabs{display:flex;align-items:stretch;gap:4px;margin:0;padding:0 12px;border-bottom:1px solid var(--border,#27303e);flex:none}
+.indicator-settings-tab{min-height:36px;margin:0;padding:8px 10px 7px;border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent;color:var(--muted,#a1adbf);font:inherit;font-size:14px;line-height:1.3;cursor:pointer}
+.indicator-settings-tab:hover{color:var(--text,#e6ebf2)}
+.indicator-settings-tab[aria-selected=true]{color:var(--text,#e6ebf2);border-bottom-color:#2962ff}
+.indicator-settings-content{min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scroll-padding:8px;padding:4px 0 8px;flex:1}
+.indicator-settings-panel{display:flex;flex-direction:column;min-width:0}
+.indicator-settings-panel[hidden]{display:none!important}
+.indicator-settings-content fieldset{min-width:0;display:flex;flex-direction:column;gap:0;margin:0;padding:8px 0 0;border:0}
+.indicator-settings-content legend{padding:8px 16px 2px;font-size:12px;line-height:1.4;color:var(--muted,#a1adbf)}
+.indicator-settings-content label{display:flex;align-items:center;justify-content:flex-start;gap:8px;min-height:40px;margin:0;padding:6px 16px;border-bottom:1px solid var(--border-soft,#1d2633);font-size:13px;line-height:1.4}
+.indicator-settings-content label>span{min-width:0}
+.indicator-settings-content .indicator-setting-select,.indicator-settings-content .indicator-setting-range{justify-content:space-between;gap:12px}
+.indicator-settings-content .indicator-setting-select>span,.indicator-settings-content .indicator-setting-range>span{flex:1}
+.indicator-settings-content input[type=checkbox]{width:16px;height:16px;min-height:16px;flex:none;margin:0;padding:0;accent-color:#2962ff}
+.indicator-settings-content p{margin:0;padding:8px 16px 4px;font-size:12px;line-height:1.45;color:var(--muted,#a1adbf)}
+.indicator-settings-content .indicator-setting-select{display:flex}
+body dialog.indicator-settings-dialog select{width:168px;max-width:46%;min-width:0;min-height:32px;border:1px solid var(--border,#27303e);border-radius:4px;padding:4px 8px;background:var(--bg,#0b0e14);color:var(--text,#e6ebf2);font:inherit;font-size:13px}
+.indicator-settings-content .indicator-setting-range{display:grid;grid-template-columns:minmax(0,1fr) minmax(96px,1.1fr) 48px;gap:8px}
+body dialog.indicator-settings-dialog .indicator-setting-range input{width:100%;min-width:0;min-height:28px;margin:0;padding:0;accent-color:#2962ff;background:transparent;border:0}
+.indicator-setting-range output{font-size:13px;text-align:right;font-variant-numeric:tabular-nums;color:var(--text,#e6ebf2)}
+.indicator-settings-content .indicator-setting-intervals{display:flex;flex-direction:column}
+.indicator-settings-status{padding:8px 16px;margin:0;font-size:12px;line-height:1.45;color:var(--muted,#a1adbf);flex:none}
+.indicator-settings-dialog>footer{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid var(--border,#27303e);padding:10px 12px;flex:none}
+.indicator-settings-reset,.indicator-settings-done{min-height:36px;padding:8px 14px;border-radius:4px;font:inherit;font-size:13px;cursor:pointer}
+.indicator-settings-reset{border:0;background:transparent;color:var(--muted,#a1adbf)}
+.indicator-settings-reset:hover{background:var(--surface-hover,#202a39);color:var(--text,#e6ebf2)}
+.indicator-settings-done{border:0;background:#2962ff;color:#fff}
+.indicator-settings-done:hover{background:#1e53e5}
+.indicator-settings-dialog :focus-visible{outline:2px solid #2962ff;outline-offset:2px}
 @container price-plot (max-width:540px){
  .analysis-indicator-window>.analysis-window-heading{flex-wrap:wrap;gap:2px 8px;min-height:0;padding-top:4px;padding-bottom:4px}
  .analysis-indicator-window .analysis-window-axis{margin-left:auto;margin-right:0}
  .analysis-indicator-window .analysis-window-actions{flex-basis:100%;justify-content:flex-end;gap:4px}
  .analysis-indicator-window .analysis-window-actions>button{width:36px;min-width:36px;height:36px;min-height:36px}
 }
-@media(max-width:380px){.indicator-settings-content{padding:0 12px 12px}.indicator-settings-content fieldset{padding:8px}.indicator-settings-content .indicator-setting-range{grid-template-columns:minmax(85px,1fr) minmax(58px,.8fr) 34px;gap:4px}.indicator-settings-content .indicator-setting-intervals{grid-template-columns:repeat(3,minmax(0,1fr))}.indicator-settings-dialog h2{font-size:16px}}
+@media(max-width:380px){.indicator-settings-content label{padding-inline:12px}.indicator-settings-content .indicator-setting-range{grid-template-columns:minmax(0,1fr) minmax(72px,.9fr) 40px;gap:6px}body dialog.indicator-settings-dialog select{max-width:52%}}
+@media(pointer:coarse){.indicator-settings-dialog>header>button,.indicator-settings-tab,.indicator-settings-reset,.indicator-settings-done{min-height:44px}}
 .atlas-plot>#lab-metrics[hidden],.atlas-plot>.workbench-market-info[hidden],.atlas-plot>.lab-chart-foot[hidden]{display:none!important}
 .atlas-plot>.workbench-market-info{top:var(--source-top,47px)}
 @media(max-width:800px){.analysis-indicator-windows{--analysis-stack-top:88px;width:66%;right:8px}.indicator-library{width:calc(100% - 24px);max-height:calc(100dvh - 32px);box-shadow:none}}

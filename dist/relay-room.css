@@ -13,8 +13,10 @@ body[data-page="relay"]{overflow:hidden}
   --relay-ink-3:#8b9aad;
   --relay-mark:#e1bd6e;
   --relay-accent:#7fb0ea;
+  --relay-side-left:260px;
+  --relay-side-right:360px;
   display:grid;
-  grid-template-columns:minmax(270px,300px) minmax(0,1fr);
+  grid-template-columns:var(--relay-side-left) minmax(0,1fr) var(--relay-side-right);
   min-height:0;
   height:100%;
   color:var(--relay-ink);
@@ -22,6 +24,30 @@ body[data-page="relay"]{overflow:hidden}
   font:13px/1.55 var(--font,'Inter','Noto Sans KR',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif);
 }
 .relay-room *{box-sizing:border-box}
+.relay-room[data-left="closed"]{--relay-side-left:44px}
+.relay-room[data-right="closed"]{--relay-side-right:44px}
+.relay-room[data-center="closed"]{grid-template-columns:var(--relay-side-left) 44px var(--relay-side-right)}
+.relay-fold{min-width:36px;min-height:32px;padding:4px 8px;border:0;border-radius:8px;background:transparent;color:var(--relay-ink-2);font:inherit;font-size:12px;line-height:1.2;cursor:pointer}
+.relay-fold:hover{background:#1a2330;color:var(--relay-ink)}
+.relay-fold:focus-visible,.relay-edition-current:focus-visible,.relay-edition-chip:focus-visible,.relay-assistant-input:focus-visible,.relay-assistant-form button:focus-visible{outline:2px solid var(--relay-mark);outline-offset:2px}
+.relay-room[data-left="closed"] .relay-rooms-head h1,
+.relay-room[data-left="closed"] .relay-rooms-total,
+.relay-room[data-left="closed"] .relay-room-list,
+.relay-room[data-left="closed"] .relay-rooms > .relay-empty,
+.relay-room[data-left="closed"] .relay-rooms-foot{display:none}
+.relay-room[data-left="closed"] .relay-rooms-head{justify-content:center;height:auto;padding:4px;border-bottom:0}
+.relay-room[data-center="closed"] .relay-detail-body,
+.relay-room[data-center="closed"] .relay-peer,
+.relay-room[data-center="closed"] .relay-peer-avatar,
+.relay-room[data-center="closed"] .relay-peer-tools > :not(.relay-fold){display:none}
+.relay-room[data-center="closed"] .relay-detail-head{justify-content:center;padding:4px}
+.relay-room[data-right="closed"] .relay-assistant-log,
+.relay-room[data-right="closed"] .relay-assistant-form,
+.relay-room[data-right="closed"] .relay-assistant-head h2{display:none}
+.relay-room[data-right="closed"] .relay-assistant-head{justify-content:center;height:auto;padding:4px;border-bottom:0}
+.relay-room[data-left="closed"] .relay-fold,
+.relay-room[data-center="closed"] .relay-fold,
+.relay-room[data-right="closed"] .relay-fold{writing-mode:vertical-rl;width:100%;height:76px;min-width:0;padding:8px 0}
 
 /* 채널 목록 */
 .relay-rooms{
@@ -31,12 +57,12 @@ body[data-page="relay"]{overflow:hidden}
   border-right:1px solid var(--relay-rule);
   background:var(--relay-sidebar);
 }
-.relay-rooms-head{display:flex;align-items:center;justify-content:space-between;gap:10px;height:60px;padding:0 20px;border-bottom:1px solid var(--relay-rule-soft)}
+.relay-rooms-head{display:flex;align-items:center;justify-content:space-between;gap:8px;height:40px;padding:0 12px;border-bottom:1px solid var(--relay-rule-soft)}
 .relay-rooms-head h1{margin:0;font-size:13px;font-weight:650;letter-spacing:.01em;color:var(--relay-ink)}
 .relay-rooms-total{min-width:22px;padding:1px 7px;border:1px solid var(--relay-rule);border-radius:999px;color:var(--relay-ink-3);font-size:11px;line-height:16px;text-align:center;font-variant-numeric:tabular-nums}
-.relay-room-list{list-style:none;margin:0;padding:8px 10px;overflow:auto;min-height:0;display:grid;align-content:start;gap:2px;scrollbar-width:thin;scrollbar-color:#2b3848 transparent}
+.relay-room-list{list-style:none;margin:0;padding:4px 8px;overflow:auto;min-height:0;display:grid;align-content:start;gap:2px;scrollbar-width:thin;scrollbar-color:#2b3848 transparent}
 .relay-room-item{
-  display:flex;align-items:center;gap:11px;width:100%;padding:9px 10px;
+  display:flex;align-items:center;gap:8px;width:100%;padding:8px;
   border:0;border-radius:10px;background:transparent;color:inherit;text-align:left;cursor:pointer;font:inherit;
   transition:background .15s ease;
 }
@@ -44,7 +70,7 @@ body[data-page="relay"]{overflow:hidden}
 .relay-room-item.active{background:#1a2532}
 .relay-room-item:focus-visible{outline:2px solid var(--relay-mark);outline-offset:-2px}
 .relay-room-avatar{
-  display:grid;place-items:center;width:40px;height:40px;border-radius:50%;flex:none;
+  display:grid;place-items:center;width:32px;height:32px;border-radius:50%;flex:none;
   background:#1b2633;color:var(--relay-ink-2)
 }
 .relay-room-avatar .icon{width:18px;height:18px}
@@ -61,13 +87,13 @@ body[data-page="relay"]{overflow:hidden}
 .relay-room-count{flex:none;min-width:20px;padding:0 6px;border-radius:9px;background:#1e2a38;color:var(--relay-ink-2);font-size:11px;line-height:18px;text-align:center;font-variant-numeric:tabular-nums}
 .relay-room-item.active .relay-room-count{background:rgba(225,189,110,.16);color:var(--relay-mark)}
 .relay-room-sub{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--relay-ink-3);font-size:12px;line-height:1.45}
-.relay-rooms-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 20px;border-top:1px solid var(--relay-rule-soft);color:var(--relay-ink-3);font-size:11px;font-variant-numeric:tabular-nums}
+.relay-rooms-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;border-top:1px solid var(--relay-rule-soft);color:var(--relay-ink-3);font-size:11px;font-variant-numeric:tabular-nums}
 .relay-rooms-foot time{color:var(--relay-ink-2)}
 
 /* 대화 머리말 */
 .relay-detail{display:grid;grid-template-rows:auto minmax(0,1fr);min-width:0;min-height:0;background:var(--relay-surface)}
-.relay-detail-head{display:flex;align-items:center;gap:11px;height:60px;min-width:0;padding:0 18px 0 20px;border-bottom:1px solid var(--relay-rule-soft);background:#0f151d}
-.relay-peer-avatar{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;flex:none;background:#1b2633;color:var(--relay-ink-2)}
+.relay-detail-head{display:flex;align-items:center;gap:8px;height:40px;min-width:0;padding:0 12px;border-bottom:1px solid var(--relay-rule-soft);background:#0f151d}
+.relay-peer-avatar{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;flex:none;background:#1b2633;color:var(--relay-ink-2)}
 .relay-peer-avatar .icon{width:17px;height:17px}
 .relay-peer-avatar[data-kind="chat"]{background:rgba(225,189,110,.13);color:var(--relay-mark)}
 .relay-peer-avatar[data-kind="articles"]{background:rgba(127,176,234,.13);color:var(--relay-accent)}
@@ -79,14 +105,18 @@ body[data-page="relay"]{overflow:hidden}
 .relay-refresh{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;color:var(--relay-ink-2);transition:background .15s ease,color .15s ease}
 .relay-refresh:hover{background:#1a2330;color:var(--relay-ink)}
 .relay-refresh .icon{width:16px;height:16px}
-.relay-detail-body{overflow:auto;min-height:0;padding:0 clamp(14px,2.4vw,32px) 44px;scrollbar-width:thin;scrollbar-color:#2b3848 transparent}
+.relay-detail-body{overflow:auto;min-height:0;padding:8px 12px 16px;scrollbar-width:thin;scrollbar-color:#2b3848 transparent}
+.relay-detail-body:has(.relay-chat){display:flex;flex-direction:column;padding:0;background:#10161d}
+.relay-detail-body:has(.relay-paper){display:flex;flex-direction:column;padding:8px 12px 12px}
 .relay-empty{color:var(--relay-ink-2);padding:22px 2px;font-size:13px}
 
 /* 텔레그램 대화 */
-.relay-chat{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:3px;align-content:start}
-.relay-day{position:sticky;top:0;z-index:2;display:flex;justify-content:center;margin:14px 0 6px;padding:10px 0 4px;background:linear-gradient(180deg,var(--relay-surface) 0%,var(--relay-surface) 72%,rgba(12,17,24,0) 100%);pointer-events:none}
-.relay-day:first-child{margin-top:0;padding-top:14px}
-.relay-day span{padding:3px 12px;border:1px solid #243140;border-radius:999px;background:#16202b;color:var(--relay-ink-2);font-size:11px;font-weight:550;letter-spacing:.01em;box-shadow:0 1px 6px rgba(0,0,0,.22)}
+.relay-chat{list-style:none;width:min(720px,100%);margin:0 auto;padding:8px 12px 4px;display:grid;grid-template-columns:minmax(0,1fr);gap:2px;align-content:start}
+.relay-chat-note{width:min(720px,100%);margin:4px auto 0;padding:0 12px 8px;color:var(--relay-ink-3);font-size:11px;text-align:center}
+.relay-msg--continued{padding-top:0}
+.relay-day{position:sticky;top:0;z-index:2;display:flex;justify-content:center;margin:8px 0 4px;padding:8px 0 4px;background:#10161d;pointer-events:none}
+.relay-day:first-child{margin-top:0;padding-top:8px}
+.relay-day span{padding:2px 8px;border:1px solid #243140;border-radius:8px;background:#16202b;color:var(--relay-ink-2);font-size:11px;font-weight:500}
 .relay-msg{display:flex;justify-content:flex-start;min-width:0;padding:1px 0}
 .relay-bubble{
   position:relative;width:fit-content;max-width:min(720px,100%);min-width:0;
@@ -94,7 +124,7 @@ body[data-page="relay"]{overflow:hidden}
   background:var(--relay-panel);color:var(--relay-ink);
   overflow-wrap:anywhere;
 }
-.relay-msg-text{margin:0;white-space:normal;word-break:break-word;font-size:14px;line-height:1.62}
+.relay-msg-text{margin:0;white-space:normal;word-break:break-word;font-size:14px;line-height:1.45}
 .relay-msg-author{display:block;margin-bottom:3px;color:var(--relay-mark);font-size:12px;font-weight:600}
 .relay-msg-inline-link{color:var(--relay-accent);text-decoration:none;border-bottom:1px solid rgba(127,176,234,.32);transition:border-color .15s ease}
 .relay-msg-inline-link:hover{border-bottom-color:var(--relay-accent)}
@@ -136,53 +166,86 @@ body[data-page="relay"]{overflow:hidden}
 .relay-preview-url{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--relay-ink-3);font-size:11px}
 
 /* 인생의 방 — 글 목록 + 리더 */
-.relay-articles{list-style:none;margin:0;padding:14px 0 0;display:grid;gap:6px;max-width:780px}
-.relay-article{display:grid;gap:3px;width:100%;padding:11px 14px;border:1px solid var(--relay-rule-soft);border-radius:9px;background:var(--relay-panel-2);color:inherit;text-align:left;cursor:pointer;font:inherit;transition:background .15s ease,border-color .15s ease}
+.relay-articles{list-style:none;margin:0;padding:0;display:grid;gap:4px;max-width:760px}
+.relay-article{display:grid;grid-template-columns:72px minmax(0,1fr);gap:12px;align-items:center;width:100%;padding:8px;border:1px solid var(--relay-rule-soft);border-radius:8px;background:var(--relay-panel-2);color:inherit;text-align:left;cursor:pointer;font:inherit;transition:background .15s ease,border-color .15s ease}
+.relay-article-thumb{display:block;width:72px;height:72px;object-fit:cover;border-radius:6px;background:#0a0f15}
+.relay-article-thumb--empty{border:1px solid var(--relay-rule-soft)}
+.relay-article-copy{display:grid;gap:4px;min-width:0}
+.relay-article-title{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2}
 .relay-article:hover{border-color:#2d3b4d;background:#17222e}
 .relay-article-title{font-size:13.5px;font-weight:600;line-height:1.45}
 .relay-article-meta{color:var(--relay-ink-3);font-size:11.5px}
-.relay-reader{max-width:760px;padding-top:14px}
-.relay-reader-back{padding:0 0 12px;border:0;background:none;color:var(--relay-accent);cursor:pointer;font:inherit;font-size:12.5px}
+.relay-reader{max-width:720px;padding-top:4px}
+.relay-reader-back{padding:0 0 8px;border:0;background:none;color:var(--relay-accent);cursor:pointer;font:inherit;font-size:12px}
 .relay-reader-back:hover{text-decoration:underline;text-underline-offset:2px}
-.relay-reader h1{margin:0 0 6px;font-size:25px;line-height:1.3;letter-spacing:-.02em}
+.relay-reader h1{margin:0 0 4px;font-size:22px;font-weight:500;line-height:1.3;letter-spacing:0}
 .relay-byline{margin:0 0 4px;color:var(--relay-ink-3);font-size:12px}
-.relay-source-link{margin:0 0 18px}
+.relay-source-link{margin:0 0 12px}
 .relay-source-link a{color:var(--relay-accent);font-size:12.5px;text-decoration:none}
 .relay-source-link a:hover{text-decoration:underline;text-underline-offset:2px}
-.relay-body{font-size:16px;line-height:1.85;color:#e2eaf4}
-.relay-body p{margin:0 0 1.1em}
-.relay-body figure{margin:1.4em 0}
+.relay-body{font-size:15px;line-height:1.7;color:#e2eaf4}
+.relay-body p{margin:0 0 12px}
+.relay-body figure{margin:8px 0 12px}
 .relay-body img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--relay-rule)}
 
 /* 모바일한경 — 판본 캐러셀 */
-.relay-paper{display:grid;gap:12px;padding-top:14px}
-.relay-paper-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:space-between}
-.relay-edition-list{display:flex;flex-wrap:wrap;gap:6px}
-.relay-edition-chip{padding:4px 9px;border:1px solid var(--relay-rule);border-radius:999px;background:transparent;color:var(--relay-ink-2);cursor:pointer;font:inherit;font-size:11.5px}
+.relay-paper{display:grid;flex:1;min-height:0;grid-template-rows:auto minmax(0,1fr);gap:8px;padding-top:0}
+.relay-paper-foot{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.relay-edition-picker{position:relative}
+.relay-edition-current{min-height:32px;padding:4px 10px;border:1px solid var(--relay-rule);border-radius:8px;background:#151e29;color:var(--relay-ink);font:inherit;font-size:12px;cursor:pointer;white-space:nowrap}
+.relay-edition-current:hover{border-color:#33445a}
+.relay-edition-menu{position:absolute;top:calc(100% + 4px);right:0;z-index:6;width:max-content;min-width:168px;max-height:min(320px,50vh);margin:0;padding:4px;overflow:auto;list-style:none;border:1px solid var(--relay-rule);border-radius:8px;background:#121922}
+.relay-edition-chip{display:flex;width:100%;min-height:36px;padding:6px 10px;border:0;border-radius:6px;background:transparent;color:var(--relay-ink-2);cursor:pointer;font:inherit;font-size:13px;text-align:left}
 .relay-edition-chip:hover{border-color:#33445a;color:var(--relay-ink)}
 .relay-edition-chip.active{background:#1b2736;color:var(--relay-ink);border-color:#3c4c63}
 .relay-paper-status{color:var(--relay-ink-3);font-size:11.5px;font-variant-numeric:tabular-nums}
 .relay-paper-body{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;min-height:0}
-.relay-paper-stage{position:relative;background:var(--relay-panel-2);border:1px solid var(--relay-rule-soft);border-radius:10px;padding:10px;min-height:320px;display:grid;place-items:center}
-.relay-paper-image{max-width:100%;max-height:70vh;height:auto;border-radius:6px;background:#0b0f15}
+.relay-paper-stage{position:relative;background:var(--relay-panel-2);border:1px solid var(--relay-rule-soft);border-radius:8px;padding:8px;min-height:0;height:100%;display:grid;place-items:center}
+.relay-paper-image{max-width:100%;max-height:100%;height:auto;border-radius:4px;background:#0b0f15}
+.relay-paper-image-incoming{position:absolute;width:1px;height:1px;margin:0;padding:0;border:0;opacity:0;pointer-events:none;overflow:hidden}
 .relay-paper-placeholder{color:var(--relay-ink-2);padding:40px 20px;text-align:center;white-space:pre-wrap}
 .relay-paper-turn{position:absolute;inset:auto 10px 10px;display:flex;justify-content:flex-end;gap:6px}
 .relay-turn{width:36px;height:36px;border:1px solid var(--relay-rule);border-radius:8px;background:rgba(14,20,28,.82);color:var(--relay-ink);font-size:18px;cursor:pointer}
 .relay-turn:hover:not(:disabled){background:#1d2938}
 .relay-turn:disabled{opacity:.4;cursor:default}
-.relay-pager{display:flex;flex-direction:column;gap:5px;overflow:auto;max-height:70vh;padding-right:2px;scrollbar-width:thin;scrollbar-color:#2b3848 transparent}
+.relay-pager{display:flex;flex-direction:column;gap:4px;overflow:auto;max-height:100%;padding-right:2px;scrollbar-width:thin;scrollbar-color:#2b3848 transparent}
 .relay-page-chip{min-width:44px;padding:6px 8px;border:1px solid var(--relay-rule);border-radius:7px;background:transparent;color:var(--relay-ink-2);cursor:pointer;font:inherit;font-size:12px;font-variant-numeric:tabular-nums}
 .relay-page-chip:hover{border-color:#33445a;color:var(--relay-ink)}
 .relay-page-chip.active{background:var(--relay-mark);color:#20180a;border-color:var(--relay-mark);font-weight:650}
 
 /* 좁은 화면 — 채널은 상단 탭, 대화는 전체 폭 */
+.relay-assistant{display:grid;grid-template-rows:40px minmax(0,1fr) auto auto;min-width:0;min-height:0;border-left:1px solid var(--relay-rule);background:var(--relay-sidebar)}
+.relay-assistant-head{display:flex;align-items:center;justify-content:space-between;gap:8px;height:40px;padding:0 8px 0 12px;border-bottom:1px solid var(--relay-rule-soft)}
+.relay-assistant-head h2{margin:0;font-size:13px;font-weight:650}
+.relay-assistant-log{list-style:none;margin:0;padding:8px;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:8px}
+.relay-assistant-line{padding:8px 10px;border-radius:8px;background:#17212b}
+.relay-assistant-line[data-role="user"]{background:#1a2736}
+.relay-assistant-line p{margin:0;white-space:pre-wrap;font-size:13px;line-height:1.5}
+.relay-assistant-form{display:grid;gap:8px;padding:8px}
+.relay-assistant-label{display:grid;gap:4px;color:var(--relay-ink-2);font-size:12px}
+.relay-assistant-input{width:100%;min-height:72px;max-height:160px;resize:vertical;padding:8px;border:1px solid var(--relay-rule);border-radius:8px;background:#0c1118;color:var(--relay-ink);font:inherit;font-size:14px;line-height:1.45}
+.relay-assistant-form button{min-height:36px;border:0;border-radius:8px;background:var(--relay-ink);color:#12161c;font:inherit;font-size:13px;font-weight:650;cursor:pointer}
+.relay-assistant-form button:hover{opacity:.92}
+@media (prefers-reduced-motion:reduce){
+  .relay-room *{transition:none}
+}
 @media (max-width:1180px){
-  .relay-room{grid-template-columns:minmax(240px,270px) minmax(0,1fr)}
+  .relay-room{--relay-side-left:220px;--relay-side-right:300px}
 }
 @media (max-width:980px){
-  .relay-room{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+  .relay-room,
+  .relay-room[data-center="closed"]{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto}
   .relay-rooms{grid-template-rows:auto;border-right:0;border-bottom:1px solid var(--relay-rule)}
-  .relay-rooms-head,.relay-rooms-foot{display:none}
+  .relay-assistant{border-left:0;border-top:1px solid var(--relay-rule);max-height:46vh}
+  .relay-room[data-right="closed"] .relay-assistant{max-height:none}
+  .relay-rooms-foot{display:none}
+  .relay-rooms-head{display:flex;justify-content:flex-end;height:44px}
+  .relay-rooms-head h1,.relay-rooms-total{display:none}
+  .relay-fold,.relay-edition-current,.relay-assistant-form button{min-width:44px;min-height:44px}
+  .relay-room[data-left="closed"] .relay-fold,
+  .relay-room[data-center="closed"] .relay-fold,
+  .relay-room[data-right="closed"] .relay-fold{writing-mode:horizontal-tb;width:auto;height:auto}
+  .relay-detail-head{height:auto;min-height:44px}
   .relay-room-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:8px 10px;overflow:visible}
   .relay-room-item{justify-content:center;gap:6px;padding:7px 5px}
   .relay-room-item.active{background:rgba(225,189,110,.08)}
@@ -191,7 +254,7 @@ body[data-page="relay"]{overflow:hidden}
   .relay-room-avatar .icon{width:14px;height:14px}
   .relay-room-copy{display:block;width:auto;min-width:0}
   .relay-room-top{display:block;min-width:0}
-  .relay-room-name{display:block;width:100%;font-size:11px;text-align:left}
+  .relay-room-name{display:block;width:100%;font-size:12px;text-align:left}
   .relay-room-full{display:none}
   .relay-room-short{display:inline}
   .relay-room-count,.relay-room-sub{display:none}
@@ -203,15 +266,16 @@ body[data-page="relay"]{overflow:hidden}
   .relay-room-item{padding:5px 4px;gap:2px}
   .relay-room-avatar{width:24px;height:24px}
   .relay-room-avatar .icon{width:14px;height:14px}
-  .relay-room-name{font-size:10.5px}
-  .relay-detail-head{height:52px;gap:8px;padding:0 10px 0 12px}
-  .relay-peer-avatar{width:32px;height:32px}
+  .relay-room-name{font-size:12px}
+  .relay-detail-head{height:auto;min-height:44px;gap:8px;padding:0 8px}
+  .relay-peer-avatar{width:28px;height:28px}
   .relay-peer-avatar .icon{width:15px;height:15px}
   .relay-peer h2{font-size:13px}
-  .relay-peer-sub{font-size:10.5px}
+  .relay-peer-sub{font-size:12px}
   .relay-peer-updated{display:none}
   .relay-refresh{width:32px;height:32px}
-  .relay-detail-body{padding:0 8px 28px}
+  .relay-detail-body{padding:8px 8px 12px}
+  .relay-chat,.relay-chat-note{width:100%}
   .relay-bubble{max-width:100%}
   .relay-msg-text{font-size:14px;line-height:1.64}
   .relay-msg--media .relay-bubble{max-width:100%}

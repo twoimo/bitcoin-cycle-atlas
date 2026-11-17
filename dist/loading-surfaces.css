@@ -21,6 +21,8 @@
 .atlas-inline-loading{height:3px;position:relative;flex:none;overflow:hidden;width:100%}
 .atlas-inline-loading>[skullet-bar]{display:block;width:40%;height:3px;background:var(--skullet-base)}
 .atlas-center-loading{position:absolute;inset:0;z-index:21;background:var(--loading-surface);min-height:0}
+.atlas-center-loading .atlas-skeleton{opacity:0;animation:atlas-center-skeleton-in 0s linear 200ms forwards}
+@keyframes atlas-center-skeleton-in{to{opacity:1}}
 .atlas-center-frame[data-center-status=loading],.atlas-center-frame[data-center-status=error],.center-workspace-toolbar[data-center-status=loading],.center-workspace-toolbar[data-center-status=error]{visibility:hidden;pointer-events:none}
 .atlas-center-error{height:100%;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;box-sizing:border-box;text-align:center;color:var(--text);overflow:auto}
 .atlas-center-error strong{font-size:16px}
@@ -36,7 +38,7 @@
 .atlas-boot-canvas.atlas-has-skeleton{min-height:0}
 @keyframes atlas-skeleton-pulse{0%,100%{opacity:.45}50%{opacity:.85}}
 @media(max-width:620px){.atlas-skeleton-shape{padding:12px;gap:16px}.atlas-skeleton-heading{gap:12px}.atlas-skeleton-heading>[skullet-bar]:last-child{display:none}.atlas-skeleton-fields{gap:12px}.atlas-skeleton-row{gap:16px}.atlas-skeleton-row>[skullet-bar]:nth-child(n+4){display:none}}
-@media(prefers-reduced-motion:reduce){.atlas-skeleton *,.atlas-inline-loading *{animation:none!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){.atlas-skeleton *,.atlas-inline-loading *,.atlas-center-loading .atlas-skeleton{animation:none!important;transition:none!important;opacity:1}}
 
 body[data-center-tool] .workspace-toast{display:none!important}
 .atlas-plot[aria-busy=true]::after{content:"";position:absolute;top:0;left:0;width:36%;height:3px;background:var(--skullet-base);animation:atlas-skeleton-pulse 2.4s ease-in-out infinite;pointer-events:none}

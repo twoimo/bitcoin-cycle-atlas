@@ -48,9 +48,19 @@ function referencePrerequisites(asset, expected, asOf) {
   const noKnownMissing = !(asset.meta?.missingDates ?? []).some(date => first && date >= first[0] && date <= asOf);
   const currentStartsInFirstWeek = !expected.first || (asset.meta?.calendar === 'calendar-days' ? expected.first[0] === `${year}-01-01` : expected.first[0] <= `${year}-01-07`);
   const complete = Boolean(first && noAbsentYears && noLargeGaps && noKnownMissing && currentStartsInFirstWeek);
+  const firstYearPartial = Boolean(first && (asset.meta?.calendar === 'calendar-days' ? first[0].slice(5) !== '01-01' : first[0].slice(5) > '01-07'));
+  const firstYear = first ? Number(first[0].slice(0, 4)) : null;
+  const inFirstYear = date => firstYear !== null && Number(date.slice(0, 4)) === firstYear;
+  const gapSpans = [];
+  for (let index = 1; index < expected.prefix.length; index++) {
+    const interval = day(expected.prefix[index][0]) - day(expected.prefix[index - 1][0]);
+    if (asset.meta?.calendar === 'calendar-days' ? interval !== 1 : interval > 7) gapSpans.push({ start: expected.prefix[index - 1][0], end: expected.prefix[index][0], days: interval });
+  }
+  const knownMissing = (asset.meta?.missingDates ?? []).filter(date => first && date >= first[0] && date <= asOf);
+  const listingGapOnly = Boolean(firstYearPartial && noAbsentYears && currentStartsInFirstWeek && (knownMissing.length > 0 || gapSpans.length > 0) && knownMissing.every(inFirstYear) && gapSpans.every(span => span.days <= 7 && inFirstYear(span.start) && inFirstYear(span.end)));
   const available = Boolean(
-    complete && expected.first && expected.latest && Number(expected.latest[0].slice(0, 4)) === year &&
-    day(asOf) - day(expected.latest[0]) <= 7 && expected.samples.length >= 5 &&
+    (complete || listingGapOnly) && expected.first && expected.latest && Number(expected.latest[0].slice(0, 4)) === year &&
+    day(asOf) - day(expected.latest[0]) <= 7 && expected.samples.length >= 1 &&
     expected.rise > 0 && expected.fall < 0 && Number.isFinite(expected.ytd)
   );
   return { complete, available };
@@ -204,7 +214,7 @@ const negativeControls = [
     id: 'minimum-sample-guard-removed',
     before: 'if (sampleYears < MIN_SAMPLE_YEARS)',
     after: 'if (sampleYears < 0)',
-    property: build => assert.equal(buildRow(build, short).judgment.available, false, 'control: minimum samples'),
+    property: build => assert.match(buildRow(build, short).judgment.reason, /최소 5개 연도/, 'control: minimum samples'),
     failure: 'control: minimum samples',
   },
   {

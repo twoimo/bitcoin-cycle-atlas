@@ -286,7 +286,7 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     // last character when its parent button clips a longer observed readout.
     (evidence.observationGeometry??=[]).push({symbol,...result.observation});
     assertConsolidatedObservationGeometry(result.observation,symbol,unit);
-    assert.deepEqual(result.nav,['outlook','market-us','evidence','data','ipo','relay'],symbol+': one price destination');
+    assert.deepEqual(result.nav,['outlook','market-us','evidence','ipo','relay'],symbol+': one price destination');
     assert.deepEqual(result.active,['outlook'],symbol+': price destination owns all charts');
     assert.ok(result.range.includes(symbol+' / '+unit+' /'),symbol+': original price unit');
     assert.deepEqual(result.frequencies,frequencies,symbol+': only observed source frequencies');

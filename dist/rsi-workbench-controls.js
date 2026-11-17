@@ -1,5 +1,5 @@
 import {workspaceInstrument} from './workspace-instruments.js';
-import {refreshShellSlots} from './ui/shell-slots.js';
+import {refreshShellSlots} from './ui/shell-slots.js?v=1.36.2';
 import {chartUrlRange,writeChartUrlState} from './ui/chart-url-state.js';
 import {normalizePriceDomain} from './price-axis.js';
 

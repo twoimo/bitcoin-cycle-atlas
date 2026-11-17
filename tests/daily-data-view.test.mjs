@@ -245,7 +245,7 @@ test('unavailable samples never become neutral; individual observed prices remai
   const { view, ui } = setup({ model }); await view.render();
   assert.equal(view.state.status, 'ready');
   const table = ui.node('data-body').innerHTML;
-  assert.equal((table.match(/>판단 보류<\/button>/g) || []).length, 4);
+  assert.equal((table.match(/>판단 보류<\/button>/g) || []).length, 3);
   assert.deepEqual(symbols(table), COMPARISON_SYMBOLS);
   assert.match(table, /최근 관측 종가">85\.00/);
   ui.click('', { assetReason: 'BTC' });

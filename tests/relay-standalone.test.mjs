@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {resolve} from 'node:path';
 import {parseHTML} from 'linkedom';
 import {relayLocalImagePaths,readRelayStandaloneAssets} from '../scripts/relay-standalone-assets.mjs';
-import {initRelayRoomView} from '../dist/relay-room.js';
+import {initRelayRoomView, latestEditionIndex, answerRelayQuestion} from '../dist/relay-room.js';
 
 const payload=path=>({rooms:[{id:'articles',kind:'articles',title:'자료',articles:[{id:'a',title:'원문',body_text:'원문 <script> 그대로',images:[path]}]}]});
 
@@ -115,6 +115,143 @@ test('unsafe chat links and previews are not rendered as anchors',async t=>{
   initRelayRoomView({root,embeddedData:()=>JSON.stringify(data),onReady:ready}).show(true);await loaded;
   assert.equal(root.querySelector('.relay-msg-inline-link'),null);assert.equal(root.querySelector('.relay-preview'),null);
   assert.equal(root.querySelector('.relay-msg-text').textContent,'본문');
+});
+
+test('a newspaper page turn keeps the channel list and a decoded sheet on screen',async()=>{
+  const data={rooms:[
+    {id:'telegram',kind:'chat',title:'소수의견',messages:[{id:'1',at:'2026-11-16T11:00:00+09:00',author:'소수의견',text:'본문'}]},
+    {id:'hankyung',kind:'editions',title:'모바일한경',editions:[{date:'2026-11-16',version:'v5',pages:[
+      {label:'1면',alt:'1면',image:'data/relay/assets/p1.webp'},
+      {label:'2면',alt:'2면',image:'data/relay/assets/p2.webp'},
+    ]}]},
+  ]};
+  const {document,window}=parseHTML('<section id="relay"></section>');
+  let ready;const loaded=new Promise(resolve=>{ready=resolve;});
+  const root=document.getElementById('relay');
+  initRelayRoomView({root,embeddedData:()=>JSON.stringify(data),onReady:ready}).show(true);await loaded;
+  root.querySelector('[data-room="hankyung"]').dispatchEvent(new window.Event('click',{bubbles:true}));
+  const rooms=root.querySelector('.relay-rooms');
+  const first=root.querySelector('.relay-paper-image');
+  assert.equal(first.getAttribute('src'),'data/relay/assets/p1.webp');
+  root.querySelector('[data-relay-action="page-next"]').dispatchEvent(new window.Event('click',{bubbles:true}));
+  assert.equal(root.querySelector('.relay-rooms'),rooms,'the channel list is not rebuilt for a page turn');
+  const visible=()=>root.querySelector('.relay-paper-image:not(.relay-paper-image-incoming)');
+  assert.ok(visible(),'a sheet stays in the stage while the next page decodes');
+  const src=visible().getAttribute('src');
+  assert.ok(src==='data/relay/assets/p1.webp'||src==='data/relay/assets/p2.webp');
+  if(src==='data/relay/assets/p1.webp'){
+    const incoming=root.querySelector('.relay-paper-image-incoming');
+    assert.equal(incoming.getAttribute('src'),'data/relay/assets/p2.webp');
+    incoming.dispatchEvent(new window.Event('load'));
+  }
+  assert.equal(visible().getAttribute('src'),'data/relay/assets/p2.webp');
+  assert.equal(visible().classList.contains('relay-paper-image-incoming'),false);
+  assert.equal(root.querySelector('.relay-paper-status').textContent,'2면 · 2/2');
+  assert.equal(root.querySelector('[data-page="1"]').getAttribute('aria-current'),'true');
+  assert.equal(root.querySelector('[data-relay-action="page-prev"]').disabled,false);
+});
+
+test('the paper opens on the newest edition that is not after today', () => {
+  assert.equal(latestEditionIndex([
+    {date:'2020-01-01', version:'v1'},
+    {date:'2020-06-01', version:'v2'},
+    {date:'2099-01-01', version:'v9'},
+  ], '2026-11-17'), 1);
+});
+
+test('opening the paper selects that latest edition', async () => {
+  const data = {rooms:[
+    {id:'telegram', kind:'chat', title:'소수의견', messages:[{id:'1', at:'2020-06-01T09:00:00+09:00', text:'본문'}]},
+    {id:'hankyung', kind:'editions', title:'모바일한경', editions:[
+      {date:'2020-01-01', version:'v1', pages:[{label:'1면', image:'data/relay/assets/old.webp'}]},
+      {date:'2020-06-01', version:'v2', pages:[{label:'1면', image:'data/relay/assets/new.webp'}]},
+      {date:'2099-01-01', version:'v9', pages:[{label:'1면', image:'data/relay/assets/future.webp'}]},
+    ]},
+  ]};
+  const {document, window} = parseHTML('<section id="relay"></section>');
+  let ready; const loaded = new Promise(resolve => { ready = resolve; });
+  const root = document.getElementById('relay');
+  initRelayRoomView({root, embeddedData:() => JSON.stringify(data), onReady:ready}).show(true);
+  await loaded;
+  assert.match(root.querySelector('[data-room="hankyung"] .relay-room-sub').textContent, /2020/);
+  root.querySelector('[data-room="hankyung"]').dispatchEvent(new window.Event('click', {bubbles:true}));
+  assert.equal(root.querySelector('.relay-paper-image').getAttribute('src'), 'data/relay/assets/new.webp');
+  assert.match(root.querySelector('.relay-edition-current').textContent, /2020\.06\.01/);
+  assert.match(root.querySelector('.relay-edition-chip.active').textContent, /2020\.06\.01|2020-06-01|6월 1일|2020/);
+  root.querySelector('[data-relay-action="edition-menu"]').dispatchEvent(new window.Event('click', {bubbles:true}));
+  assert.equal(root.querySelector('#relay-edition-menu').hidden, false);
+});
+
+test('article blocks keep photos between paragraphs and drop zero-width marks', async () => {
+  const data = {rooms:[{id:'naver', kind:'articles', title:'인생의 방', articles:[
+    {id:'old', title:'이전 글', published_date:'2020-01-01', body_text:'이전'},
+    {id:'new', title:'최근 글', published_date:'2020-06-01', blocks:[
+      {kind:'text', text:'첫째 문단\n\n\u200b\n\n둘째 문단'},
+      {kind:'image', src:'data/relay/assets/inline.webp', alt:'본문 사진'},
+      {kind:'text', text:'사진 다음'},
+    ]},
+  ]}]};
+  const {document, window} = parseHTML('<section id="relay"></section>');
+  let ready; const loaded = new Promise(resolve => { ready = resolve; });
+  const root = document.getElementById('relay');
+  initRelayRoomView({root, embeddedData:() => JSON.stringify(data), onReady:ready}).show(true);
+  await loaded;
+  assert.equal(root.querySelector('.relay-article-title').textContent, '최근 글');
+  assert.equal(root.querySelector('.relay-article-thumb').getAttribute('src'), 'data/relay/assets/inline.webp');
+  assert.equal(root.querySelector('.relay-article-thumb').getAttribute('alt').includes('본문 사진'), true);
+  root.querySelector('[data-article="new"]').dispatchEvent(new window.Event('click', {bubbles:true}));
+  const body = root.querySelector('.relay-body');
+  const parts = [...body.children].map(node => node.tagName);
+  assert.deepEqual(parts, ['P', 'P', 'FIGURE', 'P']);
+  assert.equal(body.querySelector('img').getAttribute('src'), 'data/relay/assets/inline.webp');
+  assert.equal(body.textContent.includes('\u200b'), false);
+  assert.match(body.textContent, /첫째 문단/);
+  assert.match(body.textContent, /사진 다음/);
+});
+
+test('consecutive messages from one author share a chat thread', async () => {
+  const data = {rooms:[{id:'telegram', kind:'chat', title:'소수의견', messages:[
+    {id:'1', at:'2020-06-01T09:00:00+09:00', author:'소수의견', text:'첫 메시지'},
+    {id:'2', at:'2020-06-01T09:01:00+09:00', author:'소수의견', text:'이어서'},
+  ]}]};
+  const {document} = parseHTML('<section id="relay"></section>');
+  let ready; const loaded = new Promise(resolve => { ready = resolve; });
+  const root = document.getElementById('relay');
+  initRelayRoomView({root, embeddedData:() => JSON.stringify(data), onReady:ready}).show(true);
+  await loaded;
+  const rows = root.querySelectorAll('.relay-msg');
+  assert.equal(rows[1].classList.contains('relay-msg--continued'), true);
+  assert.equal(root.querySelector('.relay-chat-note').textContent, '받아 보기만 합니다');
+  assert.match(root.querySelector('.relay-peer-sub').textContent, /최근 2020\.06\.01/);
+  assert.equal(root.querySelector('[data-latest="true"]').dataset.messageId, '2');
+});
+
+test('each relay column can collapse and open again', async () => {
+  const data = {rooms:[{id:'telegram', kind:'chat', title:'소수의견', messages:[{id:'1', at:'2026-11-17T18:20:08+09:00', text:'오늘 마감 전 관망'}]}]};
+  const {document, window} = parseHTML('<section id="relay"></section>');
+  let ready; const loaded = new Promise(resolve => { ready = resolve; });
+  const root = document.getElementById('relay');
+  initRelayRoomView({root, embeddedData:() => JSON.stringify(data), onReady:ready}).show(true);
+  await loaded;
+  assert.match(root.querySelector('.relay-peer-sub').textContent, /최근 2026\.11\.17/);
+  for (const name of ['left', 'center', 'right']) {
+    root.querySelector(`[data-relay-column="${name}"]`).dispatchEvent(new window.Event('click', {bubbles:true}));
+    assert.equal(root.dataset[name], 'closed');
+    assert.equal(root.querySelector(`[data-relay-column="${name}"]`).getAttribute('aria-expanded'), 'false');
+    root.querySelector(`[data-relay-column="${name}"]`).dispatchEvent(new window.Event('click', {bubbles:true}));
+    assert.equal(root.dataset[name], 'open');
+  }
+});
+
+test('the relay question quotes loaded text and admits a miss', () => {
+  const rooms = [{id:'telegram', kind:'chat', title:'소수의견', messages:[{id:'1', at:'2026-11-17T18:20:08+09:00', text:'엔비디아 실적 앞두고 관망'}]}];
+  const found = answerRelayQuestion('엔비디아 실적', rooms);
+  assert.match(found.text, /엔비디아 실적/);
+  assert.match(found.text, /2026\.11\.17/);
+  assert.equal(found.citations.length, 1);
+  const missed = answerRelayQuestion('존재하지않는종목코드', rooms);
+  assert.equal(missed.text, '불러온 릴레이에서 근거를 찾지 못했습니다.');
+  assert.equal(missed.citations.length, 0);
 });
 
 test('the relay chat track can shrink below its content width on narrow screens',async()=>{
