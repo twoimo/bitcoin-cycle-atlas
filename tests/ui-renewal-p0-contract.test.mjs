@@ -13,7 +13,7 @@ import {
   p0Thresholds, p0TokenPairs, readP0RootTokens, resolveP0Token, validateP0FontEvidence,
   validateP0Paint, validateP0PaintRole, validateP0Typography,
 } from '../scripts/ui-renewal-p0-contract.mjs';
-import {collectP0Settings,inspectP0Page,p0EvaluationExpression,parseP0Arguments,readP0ReaderScroll,readP0Sources} from '../scripts/verify-ui-renewal-p0-browser.mjs';
+import {collectP0Settings,inspectP0Page,p0EvaluationExpression,findInertPoint,p0PreferenceSeed,parseP0Arguments,readP0ReaderScroll,readP0Sources} from '../scripts/verify-ui-renewal-p0-browser.mjs';
 import {drawAtlasPriceChart} from '../dist/atlas-price-chart.js';
 import {drawIntradayChart} from '../dist/intraday-chart.js';
 
@@ -349,6 +349,20 @@ test('a control inside the viewport but outside its reader scroll clip is not co
   const exposed = runInNewContext(expression,model);assert.equal(exposed.samples[0].visible,true);assert.equal(exposed.font.visibleInk,true);
 });
 
+test('canvas price-axis ticks are recorded with their drawn font in the deferred dense-text evidence', () => {
+  const model = collectorModel(), canvas = {};
+  const host = {getAtlasFunnestSnapshot:() => ({layout:{plotWidth:200,panesHeight:400}}),querySelectorAll:selector => selector === 'canvas' ? [canvas] : []};
+  const chart = {closest:selector => selector === '.atlas-plot' ? {querySelector:inner => inner === '.atlas-funnest-canvas' ? host : null} : null};
+  const original = model.document.querySelector;model.document.querySelector = selector => selector === '#lab-chart' ? chart : original(selector);
+  model.document.createElement = () => ({style:{set font(value) {const [size,...family] = value.split(' ');this.fontSize = size;this.fontFamily = family.join(' ');}}});
+  const text = (order,value,x,y) => ({order,text:value,x,y,font:'11px Pretendard'});
+  model.window = {__atlasCanvasDraws:surface => surface === canvas ? {texts:[text(1,'2026',40,420),text(2,'90,000.00',210,40),text(3,'80,000.00',210,120),text(5,'85,123.45',210,90)],rects:[{order:4,x:204,y:80,w:90,h:20}]} : null};
+  const state = runInNewContext(p0EvaluationExpression(inspectP0Page,[p0Cases[0],'chart',[],[]]),model);
+  const ticks = state.denseText.filter(item => item.selector === 'canvas.atlas-funnest-canvas price-axis tick');
+  assert.deepEqual(JSON.parse(JSON.stringify(ticks.map(item => [item.text,item.fontSize,item.fontFamily]))),[['90,000.00',11,'Pretendard'],['80,000.00',11,'Pretendard']],'time labels and the last-price tag text are not ticks');
+  assert.equal(validateP0Typography(state).deferredDensity.filter(item => item.selector.includes('price-axis tick')).length,2);
+});
+
 test('the restored price-axis explanation participates in the P0 prose floor', () => {
   const model = collectorModel(), paragraph = {...model.document.body.children[0],tagName:'P',id:'basis-model',textContent:'가격 자료의 범위를 기준으로 맞춥니다.'};
   const original = model.document.querySelectorAll;model.document.querySelectorAll = selector => selector.includes('.price-axis-options > .price-axis-basis') ? [paragraph] : original(selector);
@@ -422,4 +436,26 @@ test('a real CLI preflight failure creates missing parents, records the reason, 
   await writeFile(resolve(out,'sentinel'),'preserved');
   const second = await command(process.execPath,args).catch(error => error);assert.equal(second.code,1);assert.match(second.stdout,/EEXIST/);
   assert.equal(await readFile(resolve(out,'report.json'),'utf8'),bytes);assert.equal(await readFile(resolve(out,'sentinel'),'utf8'),'preserved');
+});
+
+test('dark cases keep a clean profile and light cases save the only non-default preference once per tab', () => {
+  const origin = 'http://127.0.0.1:4321';
+  assert.equal(p0PreferenceSeed({theme:'dark'},origin),null);
+  const seed = p0PreferenceSeed({theme:'light'},origin), storage = new Map(), session = new Map();
+  const run = location => runInNewContext(seed,{location,localStorage:{setItem:(key,value) => storage.set(key,value)},sessionStorage:{getItem:key => session.get(key) ?? null,setItem:(key,value) => session.set(key,value)}});
+  run({origin:'https://example.invalid'});assert.equal(storage.size,0,'another origin is never seeded');
+  run({origin});assert.deepEqual([...storage],[['atlas-ui-theme','light']]);
+  storage.set('atlas-ui-theme','dark');run({origin});assert.equal(storage.get('atlas-ui-theme'),'dark','a reload keeps the viewer choice');
+});
+
+test('the parked pointer lands on the first point with no control under it', () => {
+  const tried = [], viewport = {innerWidth:1000,innerHeight:500};
+  const control = {closest:selector => selector.includes('button') ? control : null}, inert = {closest:() => null};
+  const point = under => JSON.parse(JSON.stringify(runInNewContext(`(${findInertPoint})()`,{...viewport,document:{elementFromPoint:(x,y) => {tried.push([x,y]);return under(x,y);}}})));
+  assert.deepEqual(point(() => inert),{x:970,y:485});
+  assert.deepEqual(point((x,y) => y === 485 ? control : inert),{x:970,y:450},'the bottom row is covered, so the next row is used');
+  tried.length = 0;
+  assert.equal(point(() => control),null,'a page covered by controls has no inert point');
+  assert.equal(tried.length,42,'every grid point is tried once before giving up');
+  assert.equal(point(() => null),null,'a point outside the document is not inert');
 });

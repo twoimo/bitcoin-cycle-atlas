@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
-import {inspectPriceAxis} from '../scripts/verify-price-axis-browser.mjs';
+import {inspectPriceAxis, installCanvasDrawTap} from '../scripts/verify-price-axis-browser.mjs';
 import {
   priceAxisHasEmptyInsetClip, priceAxisPaintStyleState, priceAxisOverlapEvidence, validatePriceAxisState,
 } from '../scripts/price-axis-browser-contract.mjs';
@@ -96,43 +96,63 @@ class Element {
 }
 
 const expected={symbol:'BTCUSD',source:'Coin Metrics',date:'2026-11-06',rawValue:75826.5258667446,text:'$75,826.53'};
-function fixture(){
+const lastTime=Date.UTC(2026,10,6),W=320,H=500,gutterLeft=256,mainHeight=450,hostTop=100,glyph=5;
+const tickRows=[['100,000.00',60],['50,000.00',130],['25,000.00',300],['10,000.00',390]],tagRect={x:258,y:190,w:60,h:20};
+// Synthetic engine output: the draw calls the Funnest painter makes for the axis and the pixels they leave. They are
+// inputs to the collector, not a browser paint receipt.
+function engine({ticks=tickRows,latest=['75,826.53',200],rule=true,bottom=true,extra=()=>{}}={}){
+  const texts=[...ticks.map(([text,y],index)=>[text,y,index+1]),[...latest,100]].map(([text,y,order])=>({order,text,x:gutterLeft+8,y,font:'12px Fixture',align:'left',baseline:'middle',fill:'#7e7e87',alpha:1,width:text.length*glyph,ascent:7,descent:7}));
+  const rects=[{order:90,...tagRect,fill:'#d53544',alpha:1}];
+  const data=new Uint8ClampedArray(W*H*4),set=(x,y,color)=>data.set(color,(y*W+x)*4);
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++)set(x,y,[20,20,21,255]);
+  if(rule)for(let y=0;y<mainHeight;y++)set(gutterLeft,y,[48,48,52,255]);
+  if(bottom)for(let x=0;x<W;x++)set(x,mainHeight,[48,48,52,255]);
+  for(let y=tagRect.y;y<tagRect.y+tagRect.h;y++)for(let x=tagRect.x;x<tagRect.x+tagRect.w;x++)set(x,y,[213,53,68,255]);
+  for(const {text,x,y} of texts)for(let px=x;px<x+text.length*glyph;px+=2)set(px,Math.round(y),[200,200,205,255]);
+  extra(set);
+  return {texts,rects,data};
+}
+function surface(data,css={}){
+  const el=new Element('canvas',{},box(0,hostTop,W,H),css);el.width=W;el.height=H;
+  el.getContext=()=>({getImageData(x,y,width,height){
+    const out=new Uint8ClampedArray(width*height*4);
+    for(let row=0;row<height;row++)out.set(data.subarray(((y+row)*W+x)*4,((y+row)*W+x+width)*4),row*width*4);
+    return {data:out};
+  }});
+  return el;
+}
+function fixture(options={}){
   const html=new Element('html',{'data-boot':'ready'},box(0,0,320,900)),body=html.append(new Element('body',{'data-page':'outlook'},box(0,0,320,900)));
-  const plot=body.append(new Element('div',{class:'atlas-plot'},box(0,100,320,500)));
-  const svg=plot.append(new Element('svg',{id:'lab-chart',viewBox:'0 0 320 500'},box(0,100,320,500),{overflowX:'hidden',overflowY:'hidden'}));
-  svg.matrix={...identity,f:100};svg.viewBox={baseVal:{x:0,y:0,width:320,height:500}};
-  Object.assign(svg.dataset,{plotLeft:'8',plotRight:'256',plotTop:'18',priceBottom:'450',interval:'daily',chartType:'line',unit:'usd'});
-  const owner=svg.append(new Element('g',{'data-price-axis-paint-layer':'true'},box(256,100,64,500)));
-  const hit=owner.append(new Element('rect',{},box(256,118,64,432),{fill:'transparent',pointerEvents:'all'}));
-  const tick=owner.append(new Element('text',{'data-price-axis-label':'tick',visibility:'visible',x:'260',y:'94'},box(260,180,52,14)));tick.text('$100,000');
-  const second=owner.append(new Element('text',{'data-price-axis-label':'tick',visibility:'visible',x:'260',y:'334'},box(260,420,49,14)));second.text('$50,000');
-  const latest=owner.append(new Element('g',{class:'chart-latest-price-tag'},box(256,290,61,18)));
-  latest.append(new Element('rect',{x:'256',y:'190',width:'61',height:'18'},latest.rect,{fill:'#2b6558'}));
-  latest.append(new Element('text',{x:'260',y:'203'},box(260,294,52,14))).text(expected.text);
-  const boundaries={};
-  for(const [kind,coords,bounds] of [
-    ['axis',[256,256,0,500],box(256,100,0,500)],['top',[0,256,0,0],box(0,100,256,0)],['bottom',[0,256,500,500],box(0,600,256,0)],
-  ])boundaries[kind]=owner.append(new Element('line',{'data-price-axis-boundary':kind,...Object.fromEntries(['x1','x2','y1','y2'].map((name,index)=>[name,String(coords[index])]))},bounds,{stroke:'#333',strokeWidth:'1px',fill:'none'}));
+  const plot=body.append(new Element('div',{class:'atlas-plot'},box(0,hostTop,W,H)));
+  const host=plot.append(new Element('div',{class:'atlas-funnest-canvas'},box(0,hostTop,W,H)));
+  const drawn=engine(options),base=host.append(surface(drawn.data)),top=host.append(surface(new Uint8ClampedArray(W*H*4)));
+  const bars=[{time:lastTime-86400000,open:1,high:1,low:1,close:1},{time:lastTime,open:expected.rawValue,high:expected.rawValue,low:expected.rawValue,close:expected.rawValue}];
+  host.getAtlasFunnestSnapshot=()=>({engine:'funnest',state:'ready',painted:true,legacy:{priceNodes:0},chartType:'line',sourceMode:'close-only',currency:'USD',timeUnit:'UTC milliseconds',source:{name:'Coin Metrics'},engineBars:bars,
+    layout:{width:W,height:H,plotWidth:gutterLeft,panesHeight:mainHeight,timeAxisHeight:28,panes:[{id:'main',kind:'main',top:0,height:mainHeight}]}});
+  const svg=plot.append(new Element('svg',{id:'lab-chart',viewBox:'0 0 320 500'},box(0,hostTop,W,H),{overflowX:'hidden',overflowY:'hidden'}));
+  svg.matrix={...identity,f:hostTop};svg.viewBox={baseVal:{x:0,y:0,width:W,height:H}};
   const manager=plot.append(new Element('div',{id:'chart-indicator-manager'},box(10,150,200,60)));
-  const clock=manager.append(new Element('p',{id:'indicator-readout-date','aria-hidden':'true'},box(260,180,1,1),{clipPath:'inset(50%)'}));clock.text('2026-11-06');
-  const child=clock.append(new Element('span',{id:'clock-child'},box(260,180,1,1)));child.text('clock descendant');
+  const clock=manager.append(new Element('p',{id:'indicator-readout-date','aria-hidden':'true'},box(270,155,1,1),{clipPath:'inset(50%)'}));clock.text('2026-11-06');
+  const child=clock.append(new Element('span',{id:'clock-child'},box(270,155,1,1)));child.text('clock descendant');
   const sibling=manager.append(new Element('span',{id:'visible-overlay'},box(20,150,80,14)));sibling.text('visible legend');
   const metrics=body.append(new Element('div',{id:'lab-metrics','data-kind':'observed'},box(0,700,100,14)));
   metrics.append(new Element('div',{class:'readout-main'})).append(new Element('strong')).text(expected.text);
+  const calls=new Map([[base,{sequence:2,texts:drawn.texts,rects:drawn.rects}]]);
   const document={documentElement:html,body,fonts:{status:'loaded'},
     querySelectorAll:selector=>[html,...html.descendants()].filter(node=>node.matches(selector)),
     querySelector(selector){return this.querySelectorAll(selector)[0]||null;},
     getElementById:id=>[html,...html.descendants()].find(node=>node.id===id)||null,
-    elementFromPoint:()=>hit,elementsFromPoint:()=>[hit,owner,svg],
+    elementFromPoint:(x,y)=>f.hitOverride?.(x,y)??top,elementsFromPoint:()=>[top,host],
     createRange(){let text;return {selectNodeContents(node){text=node;},getClientRects(){return [{...(text.rect||text.parentElement.rangeRect||text.parentElement.rect)}];}};},
   };
   const environment={document,Node:NodeValues,URLSearchParams,innerWidth:320,innerHeight:900,
     getComputedStyle:(node,pseudo)=>pseudo?{...style,display:'none',content:'none'}:node.css,
     DOMPoint:class{constructor(x,y){this.x=x;this.y=y;}matrixTransform(m){return {x:m.a*this.x+m.c*this.y+m.e,y:m.b*this.x+m.d*this.y+m.f};}},
-    window:{__atlasPriceAxisReadout:{price:expected.rawValue,date:expected.date,kind:'observed'}},
+    window:{__atlasPriceAxisReadout:{price:expected.rawValue,date:expected.date,kind:'observed'},...(options.tap===false?{}:{__atlasCanvasDraws:canvas=>calls.get(canvas)||null})},
     location:{href:'http://fixture.invalid/?page=outlook',search:'?page=outlook'},
   };
-  return {environment,html,body,plot,svg,owner,tick,latest,boundaries,manager,clock,child,sibling};
+  const f={environment,html,body,plot,host,base,top,svg,manager,clock,child,sibling,calls,hitOverride:null};
+  return f;
 }
 
 // Exercise the real evaluate() serialization path. The target VM deliberately
@@ -147,10 +167,83 @@ async function inspect(f){
     count++;assert.equal(method,'Runtime.evaluate');assert.equal(params.returnByValue,true);assert.equal(params.awaitPromise,true);
     return {result:{value:runInNewContext(params.expression,f.environment)}};
   }},inspectPriceAxis,'BTCUSD');
-  assert.equal(count,1);return state;
+  assert.equal(count,1);return JSON.parse(JSON.stringify(state));
 }
 const failures=state=>validatePriceAxisState(state,expected,{width:320,height:900});
 const clockObstacles=state=>state.obstacles.filter(item=>/indicator-readout-date|clock-child/.test(item.element));
+const has=(state,pattern)=>assert.ok(failures(state).some(issue=>pattern.test(issue)),String(pattern)+' in '+JSON.stringify(failures(state)));
+
+test('serialized collector reads each label box, the tag, the rule and the bottom line from the recorded draws and pixels',async()=>{
+  const state=await inspect(fixture()),{labels,ink}=state.canvas;
+  assert.deepEqual(failures(state),[]);
+  assert.deepEqual(state.canvas.axisRect,{left:256,top:100,right:320,bottom:550,width:64,height:450});
+  assert.deepEqual(labels.ticks.map(tick=>[tick.text,tick.anchor.x,tick.anchor.y]),tickRows.map(([text,y])=>[text,264,hostTop+y]));
+  assert.deepEqual(labels.ticks[0].box,{left:264,top:153,right:314,bottom:167,width:50,height:14});
+  assert.deepEqual([labels.ticks[0].hit.insideHost,labels.ticks[0].hit.x,labels.ticks[0].hit.y,labels.ticks[0].hit.target],[true,289,160,'canvas']);
+  assert.ok(labels.ticks.every(tick=>tick.ink>0&&tick.fill==='#7e7e87'&&tick.alpha===1));
+  assert.equal(labels.latest.text,'75,826.53');assert.deepEqual(labels.latest.badge.rect,{left:258,top:290,right:318,bottom:310,width:60,height:20});
+  assert.equal(labels.countdown,null);assert.equal(labels.badgeCount,1);assert.equal(labels.frame.sequence,2);
+  assert.deepEqual([ink.readable,ink.modal,ink.ruleColumns,ink.strayInkPixels],[true,'20,20,21,255',[0],0]);
+  assert.deepEqual(ink.rule.rect,{left:256,top:100,right:257,bottom:550,width:1,height:450});
+  assert.deepEqual([ink.bottomLine.row,ink.bottomLine.rect.top,ink.bottomLine.rect.right],[450,550,320]);
+  assert.deepEqual([state.canvas.lastBar.close,state.canvas.lastIntervalMs,state.canvas.legacyPriceNodes,state.canvas.tapInstalled],[expected.rawValue,86400000,0,true]);
+  assert.deepEqual([state.readout.priceText,state.readout.date,state.readout.kind],[expected.text,expected.date,'observed']);
+});
+
+test('without the draw recorder the collector reports it instead of guessing labels from pixels',async()=>{
+  const state=await inspect(fixture({tap:false}));
+  assert.equal(state.canvas.tapInstalled,false);assert.equal(state.canvas.labels,null);
+  has(state,/draw recorder is not installed/);has(state,/no price-axis draw calls were recorded/);
+});
+
+test('a label wider than its gutter, a colliding label and a wrong tag text fail the collected state',async()=>{
+  has(await inspect(fixture({ticks:[['1,000,000,000.00',60],...tickRows.slice(1)]})),/tick-0: (?:clipped or outside chart\/viewport|clipped painted bounds)/);
+  has(await inspect(fixture({ticks:[tickRows[0],['50,000.00',65],...tickRows.slice(2)]})),/tick-0\/tick-1: labels overlap/);
+  has(await inspect(fixture({latest:['75,826.54',200]})),/latest label "75,826.54" does not match Coin Metrics 2026-11-06 75,826.53/);
+  has(await inspect(fixture({ticks:[tickRows[0],['50,000.00',195],...tickRows.slice(2)]})),/tick-1\/latest-tag: labels overlap/);
+  has(await inspect(fixture({ticks:[tickRows[0],tickRows[0],...tickRows.slice(2)]})),/duplicate painted tick text/);
+});
+
+test('ink that no label, tag or rule accounts for, and a broken rule or bottom line, fail the collected state',async()=>{
+  const stray=await inspect(fixture({extra:set=>{for(let y=240;y<246;y++)for(let x=280;x<284;x++)set(x,y,[232,196,109,255]);}}));
+  assert.equal(stray.canvas.ink.strayInkPixels,24);has(stray,/canvas paint covers the price axis outside its labels \(24 pixels\)/);
+  has(await inspect(fixture({rule:false})),/axis: does not span the complete frame/);
+  has(await inspect(fixture({extra:set=>set(gutterLeft,200,[232,196,109,255])})),/axis: does not span the complete frame/);
+  has(await inspect(fixture({bottom:false})),/bottom: the frame line does not meet the left frame and price axis/);
+  has(await inspect(fixture({extra:set=>set(100,mainHeight,[20,20,21,255])})),/bottom: the frame line does not meet/);
+  const invisible=await inspect(fixture({extra:set=>{for(let x=264;x<314;x++)set(x,60,[20,20,21,255]);}}));
+  has(invisible,/tick-0: price text has no visible/);
+});
+
+test('a covered label center hit and an overlay over a tick, the tag or the rule all fail',async()=>{
+  const covered=fixture();covered.hitOverride=(x,y)=>x>=264&&x<=314&&y>=153&&y<=167?covered.manager:null;
+  has(await inspect(covered),/tick-0: center hit is not the chart \(div#chart-indicator-manager\)/);
+  const over=fixture();over.manager.rect=box(250,150,70,30);over.manager.css.backgroundColor='rgb(32, 32, 39)';
+  const state=await inspect(over);
+  has(state,/tick-0: legend .*occludes/);has(state,/frame-axis: legend .*occludes/);
+  assert.ok(priceAxisOverlapEvidence(state).intrudedArea>0);
+  const tag=fixture();tag.manager.rect=box(300,295,10,10);tag.manager.css.backgroundColor='rgb(32, 32, 39)';
+  has(await inspect(tag),/latest-tag: legend .*occludes 100 square CSS pixels/);
+});
+
+test('event, forecast and other SVG overlay marks are classified, and canvas forecast paint is counted',async()=>{
+  const f=fixture(),painted={fill:'#e8c46d',stroke:'none'};
+  f.svg.append(new Element('g',{'data-history-event-label':'e1'})).append(new Element('rect',{},box(20,300,20,10),painted));
+  f.svg.append(new Element('g',{'data-cycle-marker':'m1'})).append(new Element('text',{},box(60,300,20,10),painted));
+  f.svg.append(new Element('g',{'data-forecast-evidence':'true'})).append(new Element('circle',{},box(100,300,10,10),painted));
+  f.svg.append(new Element('g')).append(new Element('path',{d:'M0 0'},box(140,300,10,10),painted));
+  const state=await inspect(f),count=category=>state.overlays.paintObjectCounts[category];
+  assert.deepEqual([count('event'),count('forecast'),state.obstacles.filter(item=>item.surface==='svg'&&item.category==='hud').length],[2,1,1]);
+  assert.deepEqual(failures(state),[]);
+  f.plot.inspectAtlasOverlayRender=()=>({forecastSegments:{count:7}});
+  const painter=await inspect(f);
+  assert.deepEqual([painter.overlays.forecastPaint,painter.overlays.paintObjectCounts.forecast,painter.overlays.observations.forecast.renderedCount],[{source:'funnest overlay painter',segments:7},8,7]);
+  const g=fixture();g.host.getAtlasBtcRenderSnapshot=()=>({paint:{paths:{forecast:{subpaths:[[{x:1},{x:2},{x:3}],[{x:4},{x:5}]]}}}});
+  const btc=await inspect(g);
+  assert.deepEqual([btc.overlays.forecastPaint,btc.overlays.paintObjectCounts.forecast],[{source:'btc funnest render',segments:3},3]);
+  const absent=await inspect(fixture());
+  assert.equal(absent.overlays.forecastPaint,null);assert.deepEqual(absent.overlays.unobservedCategories,['event','forecast']);
+});
 
 test('serialized collector excludes proven-empty sr-only text and descendants while keeping a painted sibling',async()=>{
   for(const clip of ['inset(50%)','inset(0 50%)','inset(60% 0 40% 0)']){
@@ -167,7 +260,7 @@ test('the same ID, aria-hidden, pointer-events:none and a 1px box cannot hide vi
     assert.equal(f.clock.getAttribute('aria-hidden'),'true');assert.equal(f.clock.css.pointerEvents,'none');assert.equal(f.clock.rect.width,1);
     assert.ok(clockObstacles(state).some(item=>item.element==='p#indicator-readout-date'));
     assert.ok(clockObstacles(state).some(item=>item.element==='span#clock-child'));
-    assert.ok(failures(state).some(issue=>issue.includes('occludes')),'every positive intersection still fails');
+    has(state,/occludes/);
     if(clip==='none')assert.equal(state.geometryIssues.length,0);
     else assert.ok(state.geometryIssues.some(issue=>issue.includes('unsupported clip geometry')&&issue.includes(clip)));
   }
@@ -179,27 +272,21 @@ test('an unknown descendant clip is irrelevant only when an ancestor box proves 
   f.clock.css.clipPath='none';const visible=await inspect(f);
   assert.ok(clockObstacles(visible).some(item=>item.element==='span#clock-child'));
   assert.ok(visible.geometryIssues.some(issue=>issue.includes('span#clock-child: circle(50%)')));
-  assert.ok(failures(visible).some(issue=>issue.startsWith('geometry:')));
+  has(visible,/^geometry:/);
 });
 
 test('display:contents does not supply an empty clipping box for its visible descendants',async()=>{
-  const f=fixture();f.clock.css.display='contents';f.clock.rect=box(260,180,0,0);f.clock.rangeRect=box(260,180,1,1);
+  const f=fixture();f.clock.css.display='contents';f.clock.rect=box(270,155,0,0);f.clock.rangeRect=box(270,155,1,1);
   const state=await inspect(f);
   assert.ok(clockObstacles(state).some(item=>item.element==='span#clock-child'));
   assert.ok(state.geometryIssues.some(issue=>issue.includes('p#indicator-readout-date: inset(50%)')));
-  assert.ok(failures(state).some(issue=>issue.startsWith('geometry:')));
+  has(state,/^geometry:/);
 });
 
-test('empty clipping of a tick, latest badge or continuous boundary still fails its original paint contract',async()=>{
-  for(const target of ['tick','latest','axis']){
-    const f=fixture();(target==='axis'?f.boundaries.axis:f[target]).css.clipPath='inset(50%)';
-    const state=await inspect(f);assert.equal(state.geometryIssues.length,0);
-    const messages=failures(state);
-    if(target==='tick')assert.ok(messages.some(issue=>issue.includes('tick-0: tick lost paint')));
-    if(target==='latest')assert.ok(messages.some(issue=>issue.includes('latest hidden without')));
-    if(target==='axis')assert.ok(messages.some(issue=>issue.includes('axis: frame line is unpainted')));
-    assert.ok(messages.length>0,'an empty axis target is never accepted as a valid obstacle exclusion');
-  }
+test('empty clipping of the chart host leaves no painted gutter and never counts as a pass',async()=>{
+  const f=fixture();f.host.css.clipPath='inset(50%)';
+  const state=await inspect(f);assert.equal(state.geometryIssues.length,0);assert.equal(state.canvas.paintRect,null);
+  has(state,/missing host, plot or price-axis geometry/);
 });
 
 test('visible unsupported CSS clips remain explicit geometry failures',async()=>{
@@ -208,29 +295,56 @@ test('visible unsupported CSS clips remain explicit geometry failures',async()=>
     const f=fixture();f.clock.css.clipPath=clip;const state=await inspect(f);
     assert.ok(clockObstacles(state).length>0,clip);
     assert.ok(state.geometryIssues.some(issue=>issue.includes('unsupported clip geometry')&&issue.includes(clip)),clip);
-    assert.ok(failures(state).some(issue=>issue.startsWith('geometry:')),clip);
+    has(state,/^geometry:/);
   }
 });
 
 test('nonrectangular SVG clip paths preserve the original unsupported-geometry failure',async()=>{
   for(const shape of ['path','circle']){
-    const f=fixture(),defs=f.svg.insertBefore(new Element('defs'),f.owner);
+    const f=fixture(),defs=f.svg.append(new Element('defs'));
     const clip=defs.append(new Element('clipPath',{id:'original-clip'}));clip.append(new Element(shape));
-    const event=f.svg.insertBefore(new Element('g',{'data-history-event':'source-event'}),f.owner);
-    event.append(new Element('path',{d:'M260 180h2v2z'},box(260,180,2,2),{clipPath:'url(#original-clip)'}));
+    const event=f.svg.append(new Element('g',{'data-history-event':'source-event'}));
+    event.append(new Element('path',{d:'M270 155h2v2z'},box(270,155,2,2),{clipPath:'url(#original-clip)'}));
     const state=await inspect(f);
     assert.ok(state.obstacles.some(item=>item.category==='event'&&item.surface==='svg'));
     assert.ok(state.geometryIssues.some(issue=>issue.includes('unsupported clip geometry on path: url(#original-clip)')));
-    assert.ok(failures(state).some(issue=>issue.startsWith('geometry:')));
+    has(state,/^geometry:/);
   }
 });
 
-test('excluding the sr-only clock does not forgive a separate visible 13-square-pixel frame occlusion',async()=>{
-  const f=fixture(),readout=f.plot.append(new Element('div',{class:'eth-readout'},box(255.5,240,1,13)));
-  readout.append(new Element('time',{id:'eth-bar-time'},box(255.5,240,1,13))).text('2026-11-06');
-  const state=await inspect(f),evidence=priceAxisOverlapEvidence(state,expected);
+test('transparent SVG hit targets paint nothing and cannot cover a label',async()=>{
+  const f=fixture(),hits=f.svg.append(new Element('g'));
+  hits.append(new Element('circle',{},box(264,153,20,20),{fill:'rgba(0, 0, 0, 0)',stroke:'rgba(0, 0, 0, 0)'}));
+  const state=await inspect(f);
+  assert.ok(!state.obstacles.some(item=>item.surface==='svg'));
+  assert.deepEqual(failures(state),[]);
+});
+
+test('excluding the sr-only clock does not forgive a separate visible 13-square-pixel label occlusion',async()=>{
+  const f=fixture(),readout=f.plot.append(new Element('div',{class:'eth-readout'},box(313,153,1,13)));
+  readout.append(new Element('time',{id:'eth-bar-time'},box(313,153,1,13))).text('2026-11-06');
+  const state=await inspect(f),evidence=priceAxisOverlapEvidence(state);
   assert.equal(clockObstacles(state).length,0);assert.equal(state.geometryIssues.length,0);
-  const obstruction=evidence.occlusions.find(item=>item.target==='frame-axis-0'&&item.obstacle.includes('time#eth-bar-time'));
+  const obstruction=evidence.occlusions.find(item=>item.target==='tick-0'&&item.obstacle.includes('time#eth-bar-time'));
   assert.ok(obstruction);assert.equal(obstruction.area,13);
-  assert.ok(failures(state).some(issue=>issue.includes('time#eth-bar-time')&&issue.includes('occludes 13 square CSS pixels')));
+  has(state,/time#eth-bar-time.*occludes 13 square CSS pixels/);
+});
+
+test('the draw recorder calls through and keeps only the latest frame of each canvas',()=>{
+  const calls=[];
+  class Context{constructor(canvas){this.canvas=canvas;this.font='12px Fixture';this.textAlign='left';this.textBaseline='middle';this.fillStyle='#fff';this.globalAlpha=1;}
+    getTransform(){return {a:1,d:1};}fillRect(...args){calls.push(['fillRect',...args]);}fillText(...args){calls.push(['fillText',...args]);}roundRect(...args){calls.push(['roundRect',...args]);}
+    measureText(text){return {width:(this.font==='12px Fixture'?6:8)*text.length,fontBoundingBoxAscent:9,fontBoundingBoxDescent:3};}}
+  const window={},canvas={width:100,height:50},other={width:100,height:50},context=new Context(canvas),second=new Context(other);
+  runInNewContext(`(${installCanvasDrawTap})()`,{CanvasRenderingContext2D:Context,window});
+  context.fillRect(0,0,100,50);context.fillText('old',1,2);context.roundRect(3,4,5,6,2);
+  context.fillRect(0,0,100,50);context.fillText('55,000.00',70,20);context.font='12px Wider';context.fillText('cut',70,40,10);context.font='12px Fixture';context.fillRect(10,10,5,5);context.roundRect(60,30,36,20,4);second.fillText('other',1,1);
+  const read=target=>JSON.parse(JSON.stringify(window.__atlasCanvasDraws(target))),frame=read(canvas);
+  assert.deepEqual([frame.sequence,frame.texts.map(item=>item.text),frame.rects.map(item=>[item.order,item.x,item.w,item.fill])],[2,['55,000.00','cut'],[[3,60,36,'#fff']]]);
+  assert.deepEqual(frame.texts[0],{order:1,text:'55,000.00',x:70,y:20,font:'12px Fixture',align:'left',baseline:'middle',fill:'#fff',alpha:1,width:54,ascent:9,descent:3});
+  assert.deepEqual([frame.texts[1].font,frame.texts[1].width],['12px Wider',10],'metrics come from the drawing context in its current font, capped by maxWidth');
+  assert.deepEqual(read(other).texts.map(item=>item.text),['other']);
+  assert.equal(window.__atlasCanvasDraws({}),null);
+  assert.equal(calls.filter(call=>call[0]==='fillText').length,4,'every call still reaches the real context');
+  assert.equal(calls.filter(call=>call[0]==='roundRect').length,2);assert.equal(calls.filter(call=>call[0]==='fillRect').length,3);
 });

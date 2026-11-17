@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { parseHTML } from 'linkedom';
 import { createChart } from '@funnest/charts';
-import { ATLAS_FUNNEST_THEME, exposeAtlasFunnestSnapshot, inspectAtlasFunnestChart, mapCloseOnlyToFunnestLine, mountAtlasFunnestChart, setFunnestPriceExtrema, setFunnestPriceScaleInverted, validateFunnestBars } from '../src/charts/funnest-chart-runtime.js';
+import { ATLAS_FUNNEST_THEME, ATLAS_PRICE_AXIS_MIN_WIDTH, exposeAtlasFunnestSnapshot, holdFunnestPriceAxisWidth, inspectAtlasFunnestChart, mapCloseOnlyToFunnestLine, mountAtlasFunnestChart, setFunnestPriceExtrema, setFunnestPriceScaleInverted, validateFunnestBars } from '../src/charts/funnest-chart-runtime.js';
 import { withChartSpacing } from '../dist/chart-view-policy.js';
 import { sessionBars, sessionDay, withNativeRuntime } from './helpers/funnest-native-fixture.mjs';
 
@@ -364,7 +364,7 @@ test('a suspended live canvas never counts as visibly painted during replay', ()
 
 test('a narrower price label never moves bars or the plot edge after the viewer has taken the viewport', async () => {
   await withNativeRuntime(async ({ container, window, settle, relayout }) => {
-    const mounted = mountAtlasFunnestChart(container, { bars: sessionBars, symbol: 'MSTR', range: { from: sessionBars[40].time, to: sessionBars.at(-1).time + 90 * sessionDay }, volume: false });
+    const mounted = mountAtlasFunnestChart(container, { bars: sessionBars, symbol: 'MSTR', range: { from: sessionBars[40].time, to: sessionBars.at(-1).time + 90 * sessionDay }, volume: false, minPriceAxisWidth: 0 });
     try {
       await settle(80);
       container.dispatchEvent(new window.Event('pointerdown', { bubbles: true, cancelable: true }));
@@ -383,7 +383,7 @@ test('a narrower price label never moves bars or the plot edge after the viewer 
 test('while the caller still owns the range, a narrower label gives its width back and the range is refit', async () => {
   await withNativeRuntime(async ({ container, settle, relayout }) => {
     const owned = { from: sessionBars[40].time, to: sessionBars.at(-1).time + 90 * sessionDay };
-    const mounted = mountAtlasFunnestChart(container, { bars: sessionBars, symbol: 'MSTR', range: owned, volume: false });
+    const mounted = mountAtlasFunnestChart(container, { bars: sessionBars, symbol: 'MSTR', range: owned, volume: false, minPriceAxisWidth: 0 });
     try {
       await settle(80);
       const narrow = mounted.chart.layout.plotWidth;
@@ -463,4 +463,47 @@ test('a setRange made before the data restore runs keeps its window', async () =
       assert.deepEqual({ from: Math.round(visible.from), to: Math.round(visible.to) }, next, 'the delayed restore does not replace the newer requested window');
     } finally { mounted.destroy(); }
   });
+});
+
+test('the price axis never falls below the shared minimum width and still grows for a wider label', () => {
+  const engine = width => ({ priceAxisWidth: width });
+  const chart = engine(56);
+  holdFunnestPriceAxisWidth(chart, () => false, 96);
+  assert.equal(chart.priceAxisWidth, 96, 'the narrow starting width is raised at once');
+  chart.priceAxisWidth = 80; assert.equal(chart.priceAxisWidth, 96, 'a narrower label cannot lower it');
+  chart.priceAxisWidth = 112; assert.equal(chart.priceAxisWidth, 112, 'a wider label takes the room it needs');
+  chart.priceAxisWidth = 88; assert.equal(chart.priceAxisWidth, 96, 'before the viewer takes the viewport it returns to the floor');
+  let owned = true; const held = engine(112);
+  holdFunnestPriceAxisWidth(held, () => owned, 96);
+  held.priceAxisWidth = 88; assert.equal(held.priceAxisWidth, 112, 'the viewer-owned width is still never given back');
+  owned = false; held.priceAxisWidth = 88; assert.equal(held.priceAxisWidth, 96);
+  const legacy = engine(88); holdFunnestPriceAxisWidth(legacy, () => false); legacy.priceAxisWidth = 56;
+  assert.equal(legacy.priceAxisWidth, 56, 'without a minimum the engine width passes through unchanged');
+  for (const bad of [-1, NaN, Infinity, '96']) assert.throws(() => holdFunnestPriceAxisWidth(engine(56), () => false, bad), RangeError);
+  assert.equal(ATLAS_PRICE_AXIS_MIN_WIDTH, 96);
+});
+
+test('instruments with different label widths share one gutter and keep the observed bars byte for byte', async () => {
+  const gutters = [];
+  for (const glyph of [6, 8, 9]) {
+    await withNativeRuntime(async ({ container, settle, relayout }) => {
+      const mounted = mountAtlasFunnestChart(container, { bars: sessionBars, symbol: 'MSTR', volume: false });
+      try {
+        await settle(80); await relayout(mounted, glyph);
+        const layout = mounted.chart.layout;
+        gutters.push(layout.width - layout.plotWidth);
+        assert.deepEqual(mounted.getBars(), sessionBars, 'observed values are untouched by the axis width');
+        assert.deepEqual(mounted.inspect().observations, sessionBars);
+      } finally { mounted.destroy(); }
+    });
+  }
+  assert.deepEqual(gutters, [ATLAS_PRICE_AXIS_MIN_WIDTH, ATLAS_PRICE_AXIS_MIN_WIDTH, ATLAS_PRICE_AXIS_MIN_WIDTH]);
+  const unfloored = [];
+  for (const glyph of [6, 9]) {
+    await withNativeRuntime(async ({ container, settle, relayout }) => {
+      const mounted = mountAtlasFunnestChart(container, { bars: sessionBars, symbol: 'MSTR', volume: false, minPriceAxisWidth: 0 });
+      try { await settle(80); await relayout(mounted, glyph); unfloored.push(mounted.chart.layout.width - mounted.chart.layout.plotWidth); } finally { mounted.destroy(); }
+    });
+  }
+  assert.ok(unfloored[1] > unfloored[0], 'without the minimum, a wider label still gives a wider gutter, which is the gap this closes');
 });

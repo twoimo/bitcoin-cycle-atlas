@@ -4442,6 +4442,7 @@ var Chart = class {
 var BAR_FIELDS = ["time", "open", "high", "low", "close"];
 var TIME_SCALE_BUDGET = Object.freeze({ minBarSpacing: 0.5, maxBarSpacing: 64, maxBars: 6e3 });
 var NATIVE_TIME_LABEL_MIN_GAP = 72;
+var ATLAS_PRICE_AXIS_MIN_WIDTH = 96;
 function sourceInterval(bars) {
   let interval = Infinity;
   for (let index = Math.max(1, bars.length - 20); index < bars.length; index++) interval = Math.min(interval, bars[index].time - bars[index - 1].time);
@@ -4582,12 +4583,13 @@ function setFunnestPriceExtrema(chart, domain) {
   scale.setRange(min, max);
   chart.invalidate();
 }
-function holdFunnestPriceAxisWidth(chart, viewerOwnsViewport) {
+function holdFunnestPriceAxisWidth(chart, viewerOwnsViewport, minWidth = 0) {
   if (!chart || typeof chart.priceAxisWidth !== "number") throw new TypeError("Funnest 0.6.22 price-axis width field is unavailable");
   if (typeof viewerOwnsViewport !== "function") throw new TypeError("A viewport-ownership predicate is required");
-  let held = chart.priceAxisWidth;
+  if (!Number.isFinite(minWidth) || minWidth < 0) throw new RangeError("The price-axis minimum width must be a finite nonnegative number");
+  let held = Math.max(chart.priceAxisWidth, minWidth);
   Object.defineProperty(chart, "priceAxisWidth", { configurable: true, enumerable: true, get: () => held, set(next) {
-    held = viewerOwnsViewport() ? Math.max(held, next) : next;
+    held = Math.max(minWidth, viewerOwnsViewport() ? Math.max(held, next) : next);
   } });
 }
 function inspectAtlasFunnestChart({ chart, host, source = {}, state = "unknown", sourceMode = "ohlc", observations = [], crosshair = null, crosshairEventSequence = 0 } = {}) {
@@ -4666,6 +4668,7 @@ function mountAtlasFunnestChart(container, options = {}) {
     range = null,
     source = {},
     sourceMode = "ohlc",
+    minPriceAxisWidth = ATLAS_PRICE_AXIS_MIN_WIDTH,
     volumeByTime = null,
     volumeSource = null,
     accessibleName = `${symbol} \uC2E4\uC81C \uAD00\uCE21 \uAC00\uACA9 \uCC28\uD2B8`,
@@ -4746,7 +4749,7 @@ function mountAtlasFunnestChart(container, options = {}) {
     }
     chart.timeScale.options.minBarSpacing = Math.min(TIME_SCALE_BUDGET.minBarSpacing, width / span);
   };
-  holdFunnestPriceAxisWidth(chart, () => !initialRangeOwned);
+  holdFunnestPriceAxisWidth(chart, () => !initialRangeOwned, minPriceAxisWidth);
   mapData(bars);
   chart.setData(currentBars);
   chart.setChartType(chartType);
@@ -5145,6 +5148,7 @@ function mountAtlasFunnestChart(container, options = {}) {
 }
 export {
   DEFAULT_THEME as ATLAS_FUNNEST_THEME,
+  ATLAS_PRICE_AXIS_MIN_WIDTH,
   exposeAtlasFunnestSnapshot,
   holdFunnestPriceAxisWidth,
   inspectAtlasFunnestChart,

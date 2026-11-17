@@ -561,6 +561,10 @@ export function mountObservedPriceChart(plot, { series, symbol, currency = 'USD'
     const layout = mounted.chart.layout, box = plot.getBoundingClientRect(), hostBox = mounted.host.getBoundingClientRect();
     const width = plot.clientWidth || box.width, height = plot.clientHeight || box.height, left = hostBox.left - box.left - (plot.clientLeft || 0);
     if (!(layout?.width > 0 && layout.plotWidth > 0 && hostBox.width > 0 && width > 0 && height > 0)) return;
+    // The readout and notes size themselves by --plot-right-gap, the measured price-axis width plus 7px, which the
+    // SVG renderers set. The canvas engine reports that width in its layout, so publish it from there.
+    const axisWidth = hostBox.width * (1 - layout.plotWidth / layout.width);
+    plot.style.setProperty('--plot-right-gap', `${Math.round((axisWidth + 7) * 100) / 100}px`);
     refreshChartLegendGeometry(plot, { width, height, left, right: left + layout.plotWidth * hostBox.width / layout.width });
   }));
   listenInteraction('pointerleave', () => { if (clearingNativeCrosshair) return; if (!measurePointer) { pointer = null; lastInspectionKey = null; lastFutureCrosshairKey = null; nativeCrosshairCleared = false; clearFutureCrosshair?.(); interactionHandle?.redraw?.(); } });
