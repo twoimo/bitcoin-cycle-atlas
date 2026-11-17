@@ -232,3 +232,327 @@ body[data-shell=chart] #chart-reader > :is(.reader-heading, .reader-body,
   background: var(--surface);
   color: var(--text);
 }
+
+/* Compact trade chrome, measured from funnest.xyz/trade at 390 and 768.
+   The desktop header stays on the existing toolbar. 780px and wider on the
+   source is the desktop bar, so this block stops at 768. */
+.atlas-trade-tabs,
+.atlas-trade-quote,
+.atlas-trade-tools { display: none; }
+body.atlas-funnest-compact {
+  --atlas-trade-tabs: calc(56px + env(safe-area-inset-bottom, 0px));
+}
+body.atlas-funnest-compact .atlas-trade-tabs {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 70;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  height: var(--atlas-trade-tabs);
+  margin: 0;
+  padding: 0 0 env(safe-area-inset-bottom, 0px);
+  background: rgb(16, 16, 19);
+  border-top: 1px solid rgb(44, 44, 53);
+  box-sizing: border-box;
+}
+body.atlas-funnest-compact .atlas-trade-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  height: 55px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgb(126, 126, 135);
+  font: 600 11px/1.2 var(--font);
+  text-decoration: none;
+  cursor: pointer;
+}
+body.atlas-funnest-compact .atlas-trade-tab svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+body.atlas-funnest-compact .atlas-trade-tab[aria-current="page"] {
+  color: rgb(236, 236, 239);
+}
+body.atlas-funnest-compact .atlas-trade-tab:focus-visible,
+body.atlas-funnest-compact .atlas-trade-brand:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+body.atlas-funnest-compact[data-shell="dashboard"] .workspace,
+body.atlas-funnest-compact[data-shell="chart"] .workspace {
+  box-sizing: border-box;
+  padding-bottom: var(--atlas-trade-tabs);
+}
+body.atlas-funnest-compact[data-shell="chart"] .workbench-rail { display: none; }
+body.atlas-funnest-compact[data-shell="chart"] .workspace {
+  margin-left: 0 !important;
+  width: 100% !important;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-chart-stage {
+  border: 0;
+  border-radius: 0;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: flex-start;
+  order: 0;
+  gap: 0;
+  height: auto;
+  min-height: 48px;
+  max-height: none;
+  padding: 0;
+  overflow: visible;
+  background: rgb(16, 16, 19);
+  border: 0;
+  color: rgb(236, 236, 239);
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading[data-mobile-heading="phone-dock"] {
+  order: 0;
+  flex-wrap: wrap;
+  height: auto;
+  min-height: 148px;
+  max-height: none;
+  padding: 0;
+  border-top: 0;
+  overflow: visible;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading[data-mobile-heading="phone-dock"] > :is(.symbol-selector-trigger, .workbench-symbol) {
+  flex: 1 0 100%;
+  width: auto;
+  min-width: 100%;
+  max-width: none;
+  height: 52px;
+  min-height: 52px;
+  padding: 0 120px 0 12px;
+  background: rgb(23, 23, 28);
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading[data-mobile-heading="phone-dock"] > #workbench-frequency {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  height: 48px;
+  overflow-x: auto;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading[data-mobile-heading="phone-dock"] > :is(#mobile-tools-toggle, #mobile-details-toggle, #workbench-chart-type, #atlas-mode-menu) {
+  flex: 0 0 36px;
+  width: 36px;
+  min-width: 36px;
+  max-width: 36px;
+  height: 36px;
+  min-height: 36px;
+  padding: 0;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading #workbench-interval-select {
+  display: none;
+}
+body.atlas-funnest-compact[data-shell="chart"] #workbench-frequency .lab-segmented {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 48px;
+  overflow-x: auto;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading[data-mobile-heading="phone-dock"] .shell-feature-panel {
+  bottom: var(--atlas-trade-tabs);
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading::before {
+  content: "";
+  order: 4;
+  flex-basis: 100%;
+  width: 100%;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  font-size: 0;
+  line-height: 0;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-trade-brand {
+  display: grid;
+  place-items: center;
+  order: 1;
+  width: 24px;
+  height: 48px;
+  margin-left: 12px;
+  flex: none;
+  color: inherit;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-trade-brand svg {
+  width: 24px;
+  height: 24px;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > #workbench-workspace {
+  display: inline-flex;
+  position: absolute;
+  top: 6px;
+  right: 88px;
+  order: 2;
+  width: 36px;
+  min-width: 36px;
+  max-width: 36px;
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  margin: 0;
+  padding: 0;
+  border-radius: 8px;
+  background: rgb(32, 32, 39);
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > .auth-account {
+  position: absolute;
+  top: 9px;
+  right: 8px;
+  order: 3;
+  height: 30px;
+  margin: 0;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > .workbench-symbol {
+  order: 5;
+  flex: 1 0 100%;
+  width: auto;
+  min-width: 100%;
+  max-width: none;
+  height: 52px;
+  min-height: 52px;
+  justify-content: flex-start;
+  padding: 0 120px 0 12px;
+  background: rgb(23, 23, 28);
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading { position: relative; }
+body.atlas-funnest-compact[data-shell="chart"] .atlas-trade-price {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  order: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  height: 52px;
+  min-width: 72px;
+  padding: 0 12px 0 8px;
+  background: rgb(23, 23, 28);
+  line-height: 1.15;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-trade-price strong {
+  font-size: 14px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-trade-change {
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-trade-change[data-tone="down"] { color: var(--negative-ink, var(--red)); }
+body.atlas-funnest-compact[data-shell="chart"] .atlas-trade-change[data-tone="up"] { color: var(--positive-ink, var(--green)); }
+body.atlas-funnest-compact[data-shell="chart"] #workbench-frequency {
+  order: 7;
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  height: 48px;
+  margin: 0;
+  padding: 0 8px;
+  overflow: hidden;
+  background: rgb(16, 16, 19);
+}
+body.atlas-funnest-compact[data-shell="chart"] #workbench-frequency legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+body.atlas-funnest-compact[data-shell="chart"] #workbench-frequency .lab-segmented button {
+  width: auto;
+  min-width: 0;
+  height: 32px;
+  min-height: 32px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: rgb(176, 176, 186);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+body.atlas-funnest-compact[data-shell="chart"] #workbench-frequency .lab-segmented button[aria-pressed="true"] {
+  background: rgb(32, 32, 39);
+  color: rgb(236, 236, 239);
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > :is(#workbench-chart-type, #atlas-mode-menu, #atlas-display-options, #mobile-tools-toggle, #mobile-details-toggle) {
+  order: 8;
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  min-height: 36px;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > :is(.shell-instrument-slot, .shell-history-slot, .workspace-history-controls, #workbench-chart-menu, #lab-svg) {
+  order: 9;
+  flex: 1 1 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+}
+body.atlas-funnest-compact .auth-account [data-auth-action="account"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 64px;
+  height: 30px;
+  min-height: 30px;
+  max-height: 30px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: rgb(108, 77, 255);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 30px;
+}
+body.atlas-funnest-compact .auth-account [data-auth-action="account"] :is(svg, .auth-account-mark) {
+  display: none;
+}
+body.atlas-funnest-compact .workspace.atlas-details-layout > .atlas-chat { bottom: var(--atlas-trade-tabs); }
+@media (min-width: 641px) and (max-width: 768px) {
+  body.atlas-funnest-compact[data-shell="chart"] .atlas-sidebar {
+    display: flex;
+    position: fixed;
+    inset: 148px auto var(--atlas-trade-tabs) 0;
+    width: 48px;
+    height: auto;
+    min-height: 0;
+    padding: 4px 0;
+    border-right: 1px solid rgb(44, 44, 53);
+    background: rgb(16, 16, 19);
+    z-index: 40;
+    overflow: hidden;
+  }
+  body.atlas-funnest-compact[data-shell="chart"] .atlas-sidebar > :not(.workbench-tools) { display: none; }
+  body.atlas-funnest-compact[data-shell="chart"] .workspace {
+    margin-left: 48px !important;
+    width: calc(100% - 48px) !important;
+  }
+}
+@media (max-width: 640px) {
+  body.atlas-funnest-compact[data-shell="chart"] .atlas-sidebar { display: none; }
+}

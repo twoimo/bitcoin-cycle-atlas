@@ -1,6 +1,6 @@
 // The shell owns positions, while the existing chart controllers keep their
 // nodes, listeners and state. Asset-specific controls share only top slot 5.
-import {mountMobileShellHeading, shellFeatureContainer} from './mobile-shell-heading.js';
+import {mountMobileShellHeading, shellFeatureContainer} from './mobile-shell-heading.js?v=1.0.1';
 
 export const SHELL_SLOT_KEYS = Object.freeze({
   top: ['symbol', 'interval', 'chart-type', 'indicators', 'instrument', 'history', 'workspace', 'chart-menu', 'export', 'settings'],

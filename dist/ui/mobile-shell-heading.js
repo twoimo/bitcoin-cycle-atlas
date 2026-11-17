@@ -58,7 +58,7 @@ export function mountMobileShellHeading(document) {
     // Settings stays in the visible phone dock. Move the original indicator
     // action into this disclosure instead, keeping the same 44px slot budget
     // and both source-owned handlers rather than adding a duplicate shortcut.
-    for(const node of heading.querySelectorAll('#workbench-chart-type,#atlas-mode-menu,.workspace-history-controls,#workbench-workspace,#workbench-chart-menu,#lab-svg')){
+    for(const node of heading.querySelectorAll('#workbench-chart-type,#atlas-mode-menu,.workspace-history-controls,#workbench-chart-menu,#lab-svg')){
       if(node.parentElement!==heading||secondary.has(node))continue;
       if(node===document.activeElement||node.contains(document.activeElement))movedFocus=document.activeElement;
       const marker=document.createComment('phone secondary control');node.before(marker);
