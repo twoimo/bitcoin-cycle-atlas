@@ -67,7 +67,8 @@ test('filtering changes only selected entries, preserves original text and expos
   assert.equal(root.querySelectorAll('[data-message-id]').length,1);
   assert.equal(root.querySelector('.relay-msg-text').textContent,'비트코인과 금리 변화');
   assert.equal(root.querySelector('.relay-msg-link').getAttribute('href'),'https://example.test/a');
-  assert.match(root.querySelector('output').textContent,/1 \/ 3건/);
+  assert.match(root.querySelector('output').textContent,/1 \/ 5건/,'the list search counts every room');
+  assert.equal(root.querySelector('[data-room="telegram"] .relay-room-sub').textContent,'1 / 3건 일치');
   root.querySelector('[name="query"]').value='not-present';
   root.querySelector('form').dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));
   assert.equal(root.querySelectorAll('[data-message-id]').length,0);
