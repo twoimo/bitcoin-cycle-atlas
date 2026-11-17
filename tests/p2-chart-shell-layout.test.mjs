@@ -25,7 +25,7 @@ function ownLayout(rules, node, width) {
       continue;
     }
     const values={};
-    for(const key of ['box-sizing','border','border-radius','padding-top','position','inset','width','max-width']) {
+    for(const key of ['box-sizing','border','border-radius','padding-top','margin-top','height','position','inset','width','max-width']) {
       const value=rule.style?.getPropertyValue(key);
       if(value)values[key]=value;
     }
@@ -65,7 +65,7 @@ for(const [width,native] of [[320,false],[1440,false],[900,false],[320,true],[14
       f.context.sync();
       assert.deepEqual(nodes.map(node=>ownLayout(rules,node,width)),before,'center ownership cannot remove the card border or restore a fixed toolbar');
       assert.equal(f.heading.parentElement,parent);
-      assert.equal(f.heading.nextElementSibling,intro,'the existing normal-flow title stays beside its toolbar');
+      assert.equal(f.heading.nextElementSibling,intro,'the hidden page title stays beside its toolbar');
       assert.equal(intro.dataset.headingPlacement,'label');
       assert.equal(f.document.querySelectorAll('h1').length,1);
       assert.equal(f.document.querySelector('h1'),title);
@@ -74,6 +74,22 @@ for(const [width,native] of [[320,false],[1440,false],[900,false],[320,true],[14
     assert.equal(ownLayout(rules,f.card,width).border,undefined,'the existing comparison layout owns its own frame');
     f.document.body.dataset.shell='dashboard';
     assert.equal(ownLayout(rules,f.heading,width).position,undefined,'content headers keep the accepted P1 layout');
+  });
+}
+
+for(const width of [390,1024,1440]) {
+  test(`the right rail and reader start at the top edge beside the card toolbar at ${width}px`,t=>{
+    const f=chartFixture(false);t.after(()=>f.context.destroy());
+    const workspace=f.document.querySelector('.workspace');
+    workspace.insertAdjacentHTML('beforeend','<aside class="chart-details-panel"></aside><aside class="workbench-rail"></aside>');
+    const rules=stylesheet(f.document,'chart-chrome.css');
+    const [panel,rail]=['.chart-details-panel','.workbench-rail'].map(selector=>ownLayout(rules,f.document.querySelector(selector),width));
+    if(width>=621) {
+      assert.deepEqual([rail['margin-top'],rail.height],['0','100dvh'],'the former fixed-toolbar spacer stays off the rail');
+      assert.deepEqual([panel['margin-top'],panel.height,panel['padding-top']],['0','100%','var(--workbench-gap)'],'the reader header shares the toolbar row');
+    } else assert.deepEqual([rail,panel],[{},{}],'phone trays keep their own sheet geometry');
+    f.document.body.dataset.page='compare';
+    assert.equal(ownLayout(rules,f.document.querySelector('.workbench-rail'),width)['margin-top'],undefined,'compare keeps its fixed toolbar spacer');
   });
 }
 

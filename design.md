@@ -10,6 +10,11 @@ The latest user request explicitly selects UI/UX Pro Max plus Unslop for all-pag
 Keep the deployed chart-first home: root navigation opens the real price chart directly, with its existing four perimeter regions and compact toolbar. Do not introduce a landing or card dashboard before the chart. Use the existing dark theme as the new-visitor default, while preserving an explicitly saved light/dark preference. Bloomberg is a density/function reference, not a request to copy its branding or invent a new multi-panel product. This supersedes the Funnest renewal's light-by-default interpretation for initial entry; it does not discard readability, accessibility, data contracts or R22. Scope and tests: [home contract](docs/requirements/REQ_HOME_CHART_FIRST_20261113.md).
 
 
+## Chart heading and right panel top — 2026-11-16
+
+The user asked to remove the visible 가격 차트 row above the chart toolbar and the empty band at the top of the right panel. The toolbar's instrument identity names the page, so the shell's single described H1 stays for assistive technology and is visually hidden. This supersedes the 22px visible label row. From 621px wide the right rail starts at the top edge. From 960px wide the reader starts there too, and its header sits in the toolbar's row with a 4px top inset. The portrait-tablet reader overlay keeps its 52px top, and the phone reader overlay and tray keep their existing geometry.
+
+
 ## Current direction — 2026-11-08 (Asia/Seoul)
 
 The approved follow-up also covers the chart's zoom behavior. Use the observed

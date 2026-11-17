@@ -22,10 +22,6 @@ body[data-shell=chart][data-page=outlook] .workspace.native-chart-workspace > #m
   border-radius: var(--card-radius-md);
   background: var(--surface);
 }
-/* Keep the native toolbar as the card's own header. Its original scrollport,
- * sizes and node identities remain; only the former fixed positioning and
- * matching desktop spacer are removed. Hosted workspaces retain that same
- * flow and border allocation, and the phone dock still orders last. */
 @media (min-width: 621px) {
   body[data-shell=chart][data-page=outlook] .workspace.atlas-details-layout > #main,
   body[data-shell=chart][data-page=outlook] .workspace.native-chart-workspace > #main.native-chart-workbench {
@@ -36,6 +32,15 @@ body[data-shell=chart][data-page=outlook] .workspace.native-chart-workspace > #m
     inset: auto;
     width: 100%;
     max-width: 100%;
+  }
+  body[data-shell=chart][data-page=outlook] .workbench-rail {
+    height: 100dvh;
+    margin-top: 0;
+  }
+  body[data-shell=chart][data-page=outlook] .chart-details-panel {
+    height: 100%;
+    margin-top: 0;
+    padding-top: var(--workbench-gap);
   }
 }
 

@@ -6,10 +6,10 @@ const clone = value => structuredClone(value);
 const box = (left,top,width,height) => ({left,top,right:left+width,bottom:top+height,width,height});
 const native = () => ({box:box(4,4,100,44),clip:box(4,4,100,44),painted:true,disabled:false,topmost:true,inside:true,outline:'solid',outlineWidth:2});
 function layout(spec=p1Cases.find(s=>s.caseId==='evidence-1440')) {
-  const gutter=spec.width>=768?24:12,width=Math.min(spec.limit||spec.width,spec.width-gutter*2),left=(spec.width-width)/2;
-  return {page:spec.hosted?'outlook':spec.page,center:spec.hosted?spec.id:null,shell:spec.limit?'dashboard':'chart',overflow:0,
-    headings:{count:1,paintedCount:spec.hosted?0:1,title:spec.title,rect:box(20,12,100,20),describedBy:'atlas-page-description',description:'Source basis',inHeader:Boolean(spec.limit),duplicateTitles:[],glyphs:spec.hosted?[]:[box(20,12,100,20)],nativeTextHit:{status:'passed'},accessibility:(spec.hosted||spec.id==='outlook')?{status:'passed'}:null},
-    chartToolbar:spec.hosted?{painted:true,centerPage:'미국 시장 진단',label:'미국 시장 진단',ariaLabel:'차트 상단 도구',centerTool:spec.id,text:'미국 시장 진단 도구',workspaceToolbar:[{painted:true,role:'toolbar',label:'미국 시장 진단 도구'}],nativeTextHit:{status:'passed'}}:spec.id==='outlook'?{painted:true,ariaLabel:'차트 상단 도구',identity:{painted:true,label:'종목 선택 · Bitcoin / USD · BTCUSD',text:'BTCUSD'}}:null,
+  const gutter=spec.width>=768?24:12,width=Math.min(spec.limit||spec.width,spec.width-gutter*2),left=(spec.width-width)/2,chart=!spec.limit;
+  return {page:spec.hosted?'outlook':spec.page,center:spec.hosted?spec.id:null,shell:chart?'chart':'dashboard',overflow:0,
+    headings:{count:1,paintedCount:chart?0:1,title:spec.title,rect:box(20,12,100,20),describedBy:'atlas-page-description',description:'Source basis',inHeader:Boolean(spec.limit),duplicateTitles:[],glyphs:chart?[]:[box(20,12,100,20)],nativeTextHit:{status:'passed'},accessibility:chart?{status:'passed'}:null},
+    chartToolbar:spec.hosted?{painted:true,centerPage:'미국 시장 진단',label:'미국 시장 진단',ariaLabel:'차트 상단 도구',centerTool:spec.id,text:'미국 시장 진단 도구',workspaceToolbar:[{painted:true,role:'toolbar',label:'미국 시장 진단 도구'}],nativeTextHit:{status:'passed'}}:spec.id==='outlook'?{painted:true,ariaLabel:'차트 상단 도구',identity:{painted:true,label:'종목 선택 · 비트코인 / USD · BTCUSD',text:'비트코인BTCUSD',labelText:'BTCUSD'},nativeTextHit:{status:'passed'}}:null,
     navOwners:1,nav:p1Destinations.map(d=>({id:d.id,active:d.id===spec.id?'page':null,painted:true,rect:box(0,0,100,44),radii:['4px','4px','4px','4px']})),
     container:{painted:true,maxWidth:`${spec.limit}px`,rect:box(left,112,width,700)},
     workspace:{rect:box(0,112,spec.width,740),paddingLeft:`${gutter}px`,paddingRight:`${gutter}px`,borderLeftWidth:'0px',borderRightWidth:'0px'},
@@ -35,8 +35,8 @@ function snapshotCdp(state,{text=state.headings.title,rect=state.headings.rect,i
     if(method==='DOM.getDocument')return {root:{nodeId:1}};
     if(method==='DOM.querySelector')return {nodeId:2};
     if(method==='DOM.describeNode')return {node:{nodeType:1,backendNodeId:2,children:[{nodeType:3,backendNodeId:3,nodeValue:text}]}};
-    if(method==='Accessibility.getPartialAXTree')return {nodes:[{backendDOMNodeId:2,role:{value:'heading'},name:{value:'시장 분석'},description:{value:'Source basis'},ignored:false,properties:[{name:'level',value:{value:1}}]}]};
-    if(method==='Accessibility.getFullAXTree')return {nodes:[{backendDOMNodeId:2,role:{value:'heading'},name:{value:'시장 분석'},ignored:false,properties:[{name:'level',value:{value:1}}]}]};
+    if(method==='Accessibility.getPartialAXTree')return {nodes:[{backendDOMNodeId:2,role:{value:'heading'},name:{value:state.headings.title},description:{value:state.headings.description},ignored:false,properties:[{name:'level',value:{value:1}}]}]};
+    if(method==='Accessibility.getFullAXTree')return {nodes:[{backendDOMNodeId:2,role:{value:'heading'},name:{value:state.headings.title},ignored:false,properties:[{name:'level',value:{value:1}}]}]};
     if(method==='DOM.getNodeForLocation')return {backendNodeId:hit};
     throw new Error(`Unexpected CDP method: ${method}`);
   }};
@@ -176,7 +176,23 @@ test('chart-first route keeps one hidden H1 only when native AX and visible tool
   const dashboardSpec=p1Cases.find(s=>s.caseId==='evidence-1440'),dashboard=layout(dashboardSpec);dashboard.headings.paintedCount=0;
   assert.ok(validateP1Layout(dashboard,dashboardSpec).length,'dashboard H1 still requires its original native visible-ink proof');
   const chartSpec=p1Cases.find(s=>s.caseId==='outlook-1440'),chart=layout(chartSpec);assert.deepEqual(validateP1Layout(chart,chartSpec),[]);
-  for(const change of [s=>s.headings.accessibility.status='failed',s=>s.chartToolbar.ariaLabel='',s=>s.chartToolbar.identity.painted=false,s=>s.chartToolbar.identity.label='',s=>s.chartToolbar.identity.text='']){const state=clone(chart);change(state);assert.ok(validateP1Layout(state,chartSpec).length);}
+  for(const change of [s=>s.headings.accessibility.status='failed',s=>s.chartToolbar.ariaLabel='',s=>s.chartToolbar.identity.painted=false,s=>s.chartToolbar.identity.label='',s=>s.chartToolbar.identity.text='',
+    s=>s.headings.paintedCount=1,s=>s.headings.count=2,s=>s.chartToolbar.nativeTextHit.status='failed',s=>delete s.chartToolbar.nativeTextHit]){const state=clone(chart);change(state);assert.ok(validateP1Layout(state,chartSpec).length);}
+});
+
+test('the plain price chart proves its painted instrument label and the hidden H1 instead of a visible heading row',async()=>{
+  const spec=p1Cases.find(s=>s.caseId==='outlook-1440'),state=layout(spec),selector='.atlas-canvas-heading .symbol-selector-label';
+  const cdp=snapshotCdp(state,{selector,text:'BTCUSD'}),observed=await inspectP1Snapshot(cdp,spec);
+  assert.equal(cdp.calls.find(call=>call.method==='Runtime.evaluate'&&call.params.expression.includes('function inspectP0TextInk')).params.expression.includes(JSON.stringify(selector)),true);
+  assert.equal(observed.headings.accessibility.status,'passed');assert.equal(observed.chartToolbar.nativeTextHit.status,'passed');
+  assert.deepEqual(validateP1Layout(observed,spec),[]);
+  const visibleRow=clone(observed);visibleRow.headings.paintedCount=1;visibleRow.headings.glyphs=[box(8,52,68,14)];
+  assert.ok(validateP1Layout(visibleRow,spec).includes('expected one intentionally visually hidden chart h1'),'the removed 22px heading row cannot pass');
+  for(const options of [{hit:4},{issues:['#symbol-label: text ink is clipped by overflow']},{text:'ETHUSD'}]) {
+    const blocked=await inspectP1Snapshot(snapshotCdp(state,{selector,text:'BTCUSD',...options}),spec);
+    assert.notEqual(blocked.chartToolbar.nativeTextHit.status,'passed');
+    assert.ok(validateP1Layout(blocked,spec).some(f=>f.includes('chart toolbar native text paint')));
+  }
 });
 
 

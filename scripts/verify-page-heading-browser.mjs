@@ -75,11 +75,11 @@ function inspectHeading() {
   const heading = document.getElementById('atlas-page-heading'), copy = heading?.parentElement;
   const toolbar = document.querySelector('.atlas-canvas-heading'), plot = document.querySelector('.atlas-plot');
   const allHeadings = [...document.querySelectorAll('h1')], headingBox = rect(heading), glyphs = textBoxes(heading), viewport = {left:0, top:0, right:innerWidth, bottom:innerHeight};
-  const style = heading ? getComputedStyle(heading) : null, copyStyle = copy ? getComputedStyle(copy) : null, paintIssues = [];
+  const style = heading ? getComputedStyle(heading) : null, copyStyle = copy ? getComputedStyle(copy) : null, paintIssues = [], hiddenBy = [];
   let fixedEscape = false;
   for (let node = heading; node; node = node.parentElement) {
     const css = getComputedStyle(node), label = node.id || node.className || node.tagName;
-    if (css.display === 'none' || css.visibility === 'hidden' || Number(css.opacity) === 0 || node.hidden || node.inert) paintIssues.push(`hidden ancestor: ${label}`);
+    if (css.display === 'none' || css.visibility === 'hidden' || Number(css.opacity) === 0 || node.hidden || node.inert || node.getAttribute('aria-hidden') === 'true') hiddenBy.push(label);
     if (css.clipPath !== 'none') paintIssues.push(`clip-path: ${label} ${css.clipPath}`);
     // A fixed overlay escapes ordinary ancestor overflow. Transform/paint
     // containment establishes its containing block and restores clipping.
@@ -113,11 +113,8 @@ function inspectHeading() {
     title:text, h1Count:allHeadings.length, paintedH1Count:allHeadings.filter(painted).length, heading:headingBox, glyphs,
     headingInViewport:inBox(headingBox, viewport), glyphsInViewport:glyphs.length > 0 && glyphs.every(box => inBox(box, viewport)),
     headingInToolbar:inBox(headingBox, rect(toolbar)), glyphsInToolbar:glyphs.length > 0 && glyphs.every(box => inBox(box, rect(toolbar))),
-    // The label's visible text is the H1. A Range over the whole copy would
-    // also count the deliberately hidden aria-describedby paragraph.
-    labelRow:labelBox ? {rect:labelBox, glyphs, painted:painted(copy), inViewport:inBox(labelBox, viewport),
-      position:copyStyle.position, order:copyStyle.order, padding:copyStyle.padding} : null,
-    painted:painted(heading), paintIssues:[...new Set(paintIssues)], color:style?.color, fontSize:style?.fontSize, lineHeight:style?.lineHeight, fontFamily:style?.fontFamily,
+    labelRow:labelBox ? {rect:labelBox, position:copyStyle.position} : null,
+    painted:painted(heading), hiddenBy:[...new Set(hiddenBy)], paintIssues:[...new Set(paintIssues)], color:style?.color, fontSize:style?.fontSize, lineHeight:style?.lineHeight, fontFamily:style?.fontFamily,
     describedBy:descriptionId, description:description?.textContent.trim() || '', descriptionCount:descriptionId ? document.querySelectorAll(`[id="${descriptionId}"]`).length : 0,
     followsToolbar:Boolean(toolbar && toolbar.nextElementSibling === copy), outsidePlot:Boolean(copy && !copy.closest('.atlas-plot')),
     placement:{kind:placement, anchor:anchorBox, expected, delta:expected && headingBox ? {left:headingBox.left - expected.left, top:headingBox.top - expected.top} : null},
@@ -126,7 +123,7 @@ function inspectHeading() {
       rect:rect(notice), compareReservedHeight:document.documentElement.style.getPropertyValue('--btc-compare-notice-height')} : null,
     overflow:Math.max(0, document.documentElement.scrollWidth - innerWidth), duplicateTitles:duplicates,
     overlayCollisions:overlays.filter(node => intersects(headingBox, rect(node)) || glyphs.some(box => intersects(box, rect(node)))).map(node => node.id || node.className),
-    symbolGlyphs, symbolGlyphsInToolbar:symbolGlyphs.every(box => inBox(box, rect(toolbar)) && inBox(box, viewport)), symbolCollision:glyphs.some(a => symbolGlyphs.some(b => intersects(a, b))),
+    symbolGlyphs, symbolPainted:painted(symbolLabel), symbolGlyphsInToolbar:symbolGlyphs.every(box => inBox(box, rect(toolbar)) && inBox(box, viewport)), symbolCollision:glyphs.some(a => symbolGlyphs.some(b => intersects(a, b))),
     symbolButton:rect(symbolButton), symbolLabel:rect(symbolLabel), symbolButtonStyle:buttonStyle && Object.fromEntries(['height','minHeight','maxHeight','paddingTop','paddingBottom','marginTop','marginBottom','fontSize','lineHeight'].map(key => [key, buttonStyle[key]])),
     pointer:Object.fromEntries(['fine','coarse','none'].map(value => [value, matchMedia(`(pointer:${value})`).matches])),
     geometry:{toolbar:rect(toolbar), plot:rect(plot), bottom:rect(document.querySelector('.workbench-bottom-bar')), readout:painted(readout) ? rect(readout) : null, source:painted(source) ? rect(source) : null},

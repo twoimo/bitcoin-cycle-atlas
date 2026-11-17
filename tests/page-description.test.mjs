@@ -378,7 +378,7 @@ test('label ownership is invariant for the four requested viewport reference box
       const {document, controller, heading} = f, copy = heading.parentElement;
       controller.sync(); controller.sync();
       const toolbar = document.querySelector('.atlas-canvas-heading');
-      assert.equal(copy.dataset.headingPlacement, 'label', width + ': normal-flow placement');
+      assert.equal(copy.dataset.headingPlacement, 'label', width + ': hidden label placement');
       assert.equal(toolbar.nextElementSibling, copy);
       assert.equal(copy.hasAttribute('style'), false);
       assert.equal(copy.closest('.atlas-plot,.symbol-selector-trigger'), null);

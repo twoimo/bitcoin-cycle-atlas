@@ -37,12 +37,14 @@ test('matrix fixes both instruments, both themes, both widths and separate fallb
   assert.deepEqual(p0Thresholds,{text:4.5,icon:3});
 });
 
-test('twenty token pairs and twenty painted elements are distinct fixed inventories', () => {
-  for (const list of [p0TokenPairs,p0PaintSamples]) {
-    assert.equal(list.length,20); assert.equal(new Set(list.map(value => value.id)).size,20);
-    assert.equal(list.filter(value => value.kind === 'text').length,16);
+test('twenty token pairs and nineteen painted elements are distinct fixed inventories', () => {
+  for (const [list,size,text] of [[p0TokenPairs,20,16],[p0PaintSamples,19,15]]) {
+    assert.equal(list.length,size); assert.equal(new Set(list.map(value => value.id)).size,size);
+    assert.equal(list.filter(value => value.kind === 'text').length,text);
     assert.equal(list.filter(value => value.kind === 'icon').length,4);
   }
+  assert.ok(!p0PaintSamples.some(value => value.selector === '#atlas-page-heading'),'the visually hidden price heading paints no ink to sample');
+  assert.equal(p0PaintSamples.find(value => value.id === 'instrument-symbol').selector,'.symbol-selector-label');
   assert.ok(p0PaintSamples.some(value => value.symbol === 'ETHUSD'));
   assert.ok(p0PaintSamples.some(value => value.stage === 'settings'));
   assert.equal(p0PaintSamples.find(value => value.id === 'chart-indicators').selector,'#atlas-mode-name');
@@ -237,9 +239,9 @@ test('computed UI ink must match the active canonical role palette even when a p
 
 test('fixed coverage needs every ID in both themes and never substitutes repeated passing samples', () => {
   const cases = ['light','dark'].map(theme => ({id:theme,theme,fallback:false,snapshots:[{stage:'chart',samples:p0PaintSamples.map(spec => paint(spec))}]}));
-  assert.equal(p0SampleCoverage(cases).status,'passed');assert.equal(p0SampleCoverage(cases).passed,40);
+  assert.equal(p0SampleCoverage(cases).status,'passed');assert.equal(p0SampleCoverage(cases).passed,38);
   const missing = structuredClone(cases);missing[1].snapshots[0].samples[0]=missing[1].snapshots[0].samples[1];
-  assert.equal(p0SampleCoverage(missing).status,'unverified');assert.equal(p0SampleCoverage(missing).observed,39);
+  assert.equal(p0SampleCoverage(missing).status,'unverified');assert.equal(p0SampleCoverage(missing).observed,37);
   const failed = structuredClone(cases);failed[0].snapshots[0].samples[0].foreground='#aaa';
   assert.equal(p0SampleCoverage(failed).status,'failed');
   const duplicateNode = structuredClone(cases);duplicateNode[0].snapshots[0].samples[0].actualSelector='#same-node';duplicateNode[0].snapshots[0].samples[1].actualSelector='#same-node';
@@ -275,7 +277,7 @@ test('fallback evidence needs induced local failure plus real system glyphs and 
 
 function completeReport() {
   return {sourceAudit:{status:'passed'},sourceStable:true,tokenPairs:inspectP0TokenPairs(readP0RootTokens(palette)),failures:[],
-    sampleCoverage:{status:'passed',required:40,passed:40,rows:['light','dark'].flatMap(theme => p0PaintSamples.map(sample => ({id:sample.id,theme,status:'passed'})))},
+    sampleCoverage:{status:'passed',required:38,passed:38,rows:['light','dark'].flatMap(theme => p0PaintSamples.map(sample => ({id:sample.id,theme,status:'passed'})))},
     cases:p0Cases.map(spec => ({...spec,status:'passed'}))};
 }
 test('a blocked or absent browser cannot qualify P0 even with all static checks passing', () => {
@@ -289,7 +291,7 @@ test('a blocked or absent browser cannot qualify P0 even with all static checks 
 test('matching totals alone cannot replace complete unique token, paint or browser evidence', () => {
   const report = completeReport();
   for (const changed of [{...report,tokenPairs:Array(40).fill(report.tokenPairs[0])},
-    {...report,sampleCoverage:{...report.sampleCoverage,rows:Array(40).fill(report.sampleCoverage.rows[0])}},
+    {...report,sampleCoverage:{...report.sampleCoverage,rows:Array(38).fill(report.sampleCoverage.rows[0])}},
     {...report,cases:Array(10).fill(report.cases[0])},{...report,sourceAudit:{status:'failed'}},
     {...report,cases:report.cases.map((item,i) => i ? item : {...item,status:'failed'})}]) assert.equal(p0FinalStatus(changed).qualifiesP0Verification,false);
 });
@@ -331,24 +333,8 @@ test('actual collector survives CDP-style serialization with no imported helper 
   assert.equal(result.rootTokens['--text'],'#191f28');assert.equal(result.themeControl.pressed,'false');
 });
 
-test('a full-width non-interactive heading remains unverified until native text-owner evidence arrives', () => {
-  const model = collectorModel(), body = model.document.body, button = body.children[0];body.id = 'main';
-  const heading = {...button,tagName:'H1',id:'atlas-page-heading',textContent:'가격 차트',parentElement:body,
-    style:{...button.style,pointerEvents:'none'},
-    getBoundingClientRect:() => ({left:8,right:312,top:57,bottom:71,width:304,height:14})};
-  body.children.push(heading);
-  const original = model.document.querySelectorAll;
-  model.document.querySelectorAll = selector => selector === '#atlas-page-heading' ? [heading] : selector === 'body *' ? [button,heading] : original(selector);
-  model.document.elementFromPoint = () => body;
-  const result = runInNewContext(p0EvaluationExpression(inspectP0Page,[p0Cases[0],'chart',[p0PaintSamples[0]],[]]),model);
-  const sample = result.samples[0];assert.equal(sample.visible,true);assert.equal(sample.rect.width,304);
-  assert.equal(sample.nativeHit,'#main','keep the original empty-block hit as a diagnostic');
-  assert.deepEqual([...sample.issues],['native heading text ink hit evidence pending']);
-  assert.equal(validateP0Paint(sample).status,'unverified','removing the wrong centre assertion must not itself pass the heading');
-});
-
 test('collector never turns unsupported group opacity into a passing colour sample or real-ink proof', () => {
-  const result = runInNewContext(p0EvaluationExpression(inspectP0Page,[p0Cases[0],'settings',[p0PaintSamples[7]],[]]),collectorModel({opacity:'.5'}));
+  const result = runInNewContext(p0EvaluationExpression(inspectP0Page,[p0Cases[0],'settings',[p0PaintSamples.find(sample => sample.id === 'theme-toggle')],[]]),collectorModel({opacity:'.5'}));
   assert.equal(validateP0Paint(result.samples[0]).status,'unverified');assert.match(result.samples[0].issues.join(' '),/group opacity/);
   assert.equal(result.font.visibleInk,false);
 });
@@ -357,7 +343,7 @@ test('a control inside the viewport but outside its reader scroll clip is not co
   const model = collectorModel(), body = model.document.body, button = body.children[0];
   Object.assign(body,{clientLeft:0,clientTop:0,clientWidth:160,clientHeight:44});body.style.overflowY='auto';
   button.getBoundingClientRect = () => ({left:4,right:164,top:80,bottom:124,width:160,height:44});
-  const expression = p0EvaluationExpression(inspectP0Page,[p0Cases[0],'settings',[p0PaintSamples[7]],[]]);
+  const expression = p0EvaluationExpression(inspectP0Page,[p0Cases[0],'settings',[p0PaintSamples.find(sample => sample.id === 'theme-toggle')],[]]);
   const clipped = runInNewContext(expression,model);assert.equal(clipped.samples[0].visible,false);assert.equal(clipped.font.visible,false);assert.equal(clipped.font.visibleInk,false);
   button.getBoundingClientRect = () => ({left:4,right:164,top:4,bottom:48,width:160,height:44});
   const exposed = runInNewContext(expression,model);assert.equal(exposed.samples[0].visible,true);assert.equal(exposed.font.visibleInk,true);

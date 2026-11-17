@@ -22,7 +22,6 @@ export const p0TokenPairs = Object.freeze([
 // observed at either required width; every ID must be observed in BOTH themes.
 // P1/P2 chart controls retain their density; contrast still applies to them.
 export const p0PaintSamples = Object.freeze([
-  {id:'page-heading',stage:'chart',selector:'#atlas-page-heading',kind:'text'},
   {id:'instrument-symbol',stage:'chart',selector:'.symbol-selector-label',kind:'text'},
   {id:'chart-indicators',stage:'chart',selector:'#atlas-mode-name',kind:'text'},
   {id:'chart-interval',stage:'chart',selector:'#workbench-interval-select',kind:'text'},
@@ -295,7 +294,7 @@ export function p0FinalStatus(report) {
   const duplicate = cases.length !== new Set(cases.map(item => item.id)).size;
   const exactRows = (rows,inventory) => rows?.length === inventory.length*2 && ['light','dark'].every(theme => inventory.every(spec => rows.filter(row => row.id === spec.id && row.theme === theme && row.status === 'passed').length === 1));
   const sourcePassed = report.sourceAudit?.status === 'passed', tokenPassed = exactRows(report.tokenPairs,p0TokenPairs);
-  const coveragePassed = report.sampleCoverage?.status === 'passed' && report.sampleCoverage.required === 40 && report.sampleCoverage.passed === 40 && exactRows(report.sampleCoverage.rows,p0PaintSamples);
+  const coveragePassed = report.sampleCoverage?.status === 'passed' && report.sampleCoverage.required === 38 && report.sampleCoverage.passed === 38 && exactRows(report.sampleCoverage.rows,p0PaintSamples);
   const passed = !missing.length && !duplicate && cases.length === required && cases.every(item => item.status === 'passed') && sourcePassed && tokenPassed && coveragePassed && report.sourceStable === true && !(report.failures || []).length;
   const failed = duplicate || cases.some(item => item.status === 'failed') || report.sourceAudit?.status === 'failed' || report.tokenPairs?.some(item => item.status === 'failed') || report.sampleCoverage?.status === 'failed';
   return {status:passed ? 'passed' : failed ? 'failed' : 'unverified',qualifiesP0Verification:passed,
