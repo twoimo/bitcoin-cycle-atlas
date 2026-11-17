@@ -23,6 +23,12 @@ function readerIsOpen(doc) {
   const reader = doc.getElementById('chart-reader');
   return Boolean(reader && !reader.hidden);
 }
+function preferredOpen() {
+  try { return localStorage.getItem(OPEN_KEY) === '1'; } catch { return false; }
+}
+function priceSurface(doc, chart) {
+  return Boolean(chart) && !doc.body?.dataset.centerTool;
+}
 function placeChat(doc, panel, open) {
   panel.hidden = !open;
   const host = panel.closest('.workspace');
@@ -126,9 +132,9 @@ export function syncChartChat(doc, { chart = false, rail = null } = {}) {
       setOpen(false, { persist: true, notify: true, restore: true });
     });
     paint();
-    let open = false;
-    try { open = localStorage.getItem(OPEN_KEY) === '1'; } catch { open = false; }
-    setOpen(open);
+    const open = preferredOpen();
+    if (open && !priceSurface(doc, chart)) panel.dataset.chatResume = '1';
+    setOpen(open && priceSurface(doc, chart));
   }
   let button = rail?.querySelector('[data-chart-chat]');
   if (chart && rail) {
@@ -144,6 +150,7 @@ export function syncChartChat(doc, { chart = false, rail = null } = {}) {
       button.addEventListener('click', () => {
         const open = panel.hidden;
         if (open && readerIsOpen(doc)) doc.dispatchEvent(new CustomEvent('atlas:close-detail'));
+        if (open) panel.dataset.chatHold = '1'; else delete panel.dataset.chatHold;
         placeChat(doc, panel, open);
         button.setAttribute('aria-pressed', String(open));
         button.setAttribute('aria-expanded', String(open));
@@ -156,5 +163,21 @@ export function syncChartChat(doc, { chart = false, rail = null } = {}) {
     button.setAttribute('aria-pressed', String(!panel.hidden));
     button.setAttribute('aria-expanded', String(!panel.hidden));
   } else if (button) button.remove();
-  placeChat(doc, panel, Boolean(chart) && !panel.hidden);
+  // A stored open chat belongs to the price surface. A center page, such as
+  // market diagnosis, keeps that preference and stays visible until return.
+  if (!priceSurface(doc, chart)) {
+    if (!panel.hidden && panel.dataset.chatHold !== '1') {
+      panel.dataset.chatResume = preferredOpen() ? '1' : '0';
+      placeChat(doc, panel, false);
+    }
+  } else if (panel.dataset.chatResume === '1') {
+    delete panel.dataset.chatResume;
+    delete panel.dataset.chatHold;
+    placeChat(doc, panel, true);
+  } else delete panel.dataset.chatHold;
+  const toggle = doc.querySelector('[data-chart-chat]');
+  if (toggle) {
+    toggle.setAttribute('aria-pressed', String(!panel.hidden));
+    toggle.setAttribute('aria-expanded', String(!panel.hidden));
+  }
 }

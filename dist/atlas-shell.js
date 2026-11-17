@@ -30,9 +30,9 @@ import { readShellPreference, writeShellPreference } from './atlas-shell-state.j
 import { mountCenterWorkbench } from './center-workbench.js?v=1.36.3';
 import { mountShellSlots } from './ui/shell-slots.js';
 import { mountPageDescription } from './ui/page-description.js';
-import { createContentShell, CONTENT_SHELL_PAGES } from './content-shell.js?v=1.38.0';
+import { createContentShell, CONTENT_SHELL_PAGES } from './content-shell.js?v=1.38.1';
 import { mountAuthAccount } from './auth-account.js?v=1.1.9';
-import { syncChartChat } from './chart-chat.js?v=1.0.1';
+import { syncChartChat } from './chart-chat.js?v=1.0.2';
 
 // The compact rails keep their Korean names visible for pointer and keyboard
 // users. A body-level tooltip avoids clipping inside the scrolling rail.
@@ -180,6 +180,7 @@ export function initAtlasShell() {
       item.classList.toggle('active', active);
       if (active) item.setAttribute('aria-current', 'page'); else item.removeAttribute('aria-current');
     }
+    contentShell.revealCurrentPage();
     preference();
     // The chart toolbar is the visible top row on outlook/compare. Dashboard
     // routes use this header, which receives the same class while visible.

@@ -252,8 +252,17 @@ export function createContentShell({ document }) {
     restore();
   }
 
+  // The current page is not focused on entry. Reveal that pill only when
+  // keyboard focus is outside this row, so a later pager or Tab move is kept.
+  function revealCurrentPage() {
+    if (!navHost || !nav || nav.parentElement !== navHost) return;
+    if (nav.contains(document.activeElement)) return;
+    revealNavigationTarget(nav.querySelector('[aria-current="page"]'));
+  }
+
   return {
     setActive,
+    revealCurrentPage,
     isActive: () => active,
     get rail() { return rail; },
     get bottom() { return bottom; },

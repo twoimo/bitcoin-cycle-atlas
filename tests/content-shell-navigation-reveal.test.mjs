@@ -177,6 +177,25 @@ test('pointer arrows and native scrolling are not snapped back to a previously f
   assert.equal(f.moves.length,1,'scroll events update arrows without recentering focus');
 });
 
+test('entry reveals the current page when focus is outside the row and leaves a focused pill alone',()=>{
+  const f=fixture(),current=f.place('relay',520,150);
+  current.setAttribute('aria-current','page');
+  assert.equal(f.fullyExposed(current),false);
+  f.shell.revealCurrentPage();
+  assert.equal(f.fullyExposed(current),true);
+  assert.equal(f.document.activeElement.id,'outside');
+  const parked=f.nav.scrollLeft;
+  f.shell.revealCurrentPage();
+  assert.equal(f.nav.scrollLeft,parked);
+  const focused=f.place('outlook',4,100);
+  f.focus(focused);
+  f.scroll(-f.nav.scrollLeft);
+  assert.equal(f.fullyExposed(current),false);
+  const before=f.moves.length;
+  f.shell.revealCurrentPage();
+  assert.equal(f.moves.length,before,'a focused pill keeps its place instead of jumping to the current page');
+});
+
 test('unmount removes reveal listeners and repeated re-entry retains the original navigation',()=>{
   const f=fixture(),node=f.place('data',180,100),original=[...f.nav.children];
   f.shell.setActive(false);

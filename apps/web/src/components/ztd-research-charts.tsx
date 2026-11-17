@@ -41,9 +41,9 @@ export function observedPointMarkers(model: Pick<ReturnType<typeof observedChart
   return (index: number) => model.isolatedIndices.has(index);
 }
 
-export function ObservedResearchChart({ id, points, unit, label, selected, onSelect, compactToolbar = false }: {
+export function ObservedResearchChart({ id, points, unit, label, selected, onSelect, compactToolbar = false, fit = false }: {
   id: string; points: readonly Observation[]; unit: string; label: string;
-  selected: number | null; onSelect: (sourceIndex: number) => void; compactToolbar?: boolean;
+  selected: number | null; onSelect: (sourceIndex: number) => void; compactToolbar?: boolean; fit?: boolean;
 }) {
   const model = useMemo(() => observedChartModel(points), [points]);
   const figure = useRef<HTMLElement>(null), plotSlot = useRef<HTMLDivElement>(null), scrubIndex = useRef<number | null>(null), lastScrub = useRef<number | null>(null);
@@ -59,12 +59,12 @@ export function ObservedResearchChart({ id, points, unit, label, selected, onSel
     const measure = () => {
       const bounds = slot.getBoundingClientRect();
       if (bounds.width > 0) setPlotWidth(previous => { const next = Math.max(1, Math.round(bounds.width)); return previous === next ? previous : next; });
-      if (compactToolbar && bounds.height > 0) setPlotHeight(previous => { const next = Math.max(180, Math.round(bounds.height)); return previous === next ? previous : next; });
+      if ((compactToolbar || fit) && bounds.height > 0) setPlotHeight(previous => { const next = Math.max(compactToolbar ? 180 : 96, Math.round(bounds.height)); return previous === next ? previous : next; });
     };
     measure();
     if (typeof ResizeObserver !== 'undefined') { const observer = new ResizeObserver(measure); observer.observe(slot); return () => observer.disconnect(); }
     const view = node.ownerDocument.defaultView; view?.addEventListener('resize', measure); return () => view?.removeEventListener('resize', measure);
-  }, [compactToolbar, model.validCount]);
+  }, [compactToolbar, fit, model.validCount]);
   if (!model.validCount) return <div data-chart={id} className="atlas-funnest-observed-chart"><Empty>{label}에 유효한 수치가 없습니다.</Empty></div>;
   const index = selected == null || !Number.isFinite(selected) ? points.length - 1 : Math.max(0, Math.min(points.length - 1, Math.trunc(selected)));
   const activeIndex = current ?? index, [date, value] = points[activeIndex];
@@ -75,9 +75,9 @@ export function ObservedResearchChart({ id, points, unit, label, selected, onSel
     aria-label={`${label} 관측일`} aria-valuetext={`${date}, ${finite(value) ? `${fmt(value)} ${unit}` : `관측값 없음 ${unit}`}`} disabled={points.length === 1} onChange={event => onSelect(Number(event.currentTarget.value))}/></label>;
   return <div data-chart={id} data-chart-engine="funnest" data-source-count={points.length} className="atlas-funnest-observed-chart" onKeyDownCapture={event => { if ((event.target as Element).closest('input')) return; const step = event.shiftKey ? 10 : 1; const base = index; let next: number | null = null; if (event.key === 'Home') next = 0; else if (event.key === 'End') next = points.length - 1; else if (event.key === 'ArrowLeft') next = Math.max(0, base - step); else if (event.key === 'ArrowRight') next = Math.min(points.length - 1, base + step); else if (event.key === 'Escape') next = null; if (next !== null) { event.preventDefault(); scrubIndex.current = next; lastScrub.current = next; setCurrent(next); onSelect(next); } }}>
     {compactToolbar && <CompactToolbar label="선택 관측" order={20}><span className="compact-toolbar-summary" data-selected-date={date} data-selected-index={activeIndex}>{readout}</span><CompactToolbarMenu name="market-date" label="관측일" title={`${label} 관측일 선택`}><p className="compact-toolbar-summary">{readout}</p>{dateControl}</CompactToolbarMenu></CompactToolbar>}
-    <figure ref={figure} className={`ml-chart${compactToolbar ? ' ml-viewport-chart' : ''}`} onClick={event => { if ((event.target as Element).closest('button,a,input,summary')) return; const at = scrubIndex.current ?? index; if (at >= 0 && at < points.length) onSelect(at); }}>
-      {compactToolbar ? <figcaption className="atlas-sr-only">{label} · {readout}</figcaption> : <figcaption><strong>{label}</strong><span data-selected-date={date} data-selected-index={activeIndex}>{readout}</span></figcaption>}
-      <div ref={plotSlot} className={compactToolbar ? 'atlas-funnest-observed-plot-slot' : undefined}>
+    <figure ref={figure} className={`ml-chart${compactToolbar || fit ? ' ml-viewport-chart' : ''}`} onClick={event => { if ((event.target as Element).closest('button,a,input,summary')) return; const at = scrubIndex.current ?? index; if (at >= 0 && at < points.length) onSelect(at); }}>
+      {compactToolbar ? <figcaption className="atlas-sr-only">{label} · {readout}</figcaption> : <figcaption className={fit ? 'ml-axis-readout' : undefined}>{fit ? null : <strong>{label}</strong>}<span data-selected-date={date} data-selected-index={activeIndex}>{readout}</span></figcaption>}
+      <div ref={plotSlot} className={compactToolbar || fit ? 'atlas-funnest-observed-plot-slot' : undefined}>
           <CartesianChart series={[{ id: 'observed', label, data: points.map(([, amount]) => finite(amount) ? amount : null), color: 'var(--data-gold)' }]}
             xAxis={{ data: points.map(point => point[0]), scaleType: 'linear' }} height={plotHeight} inset={{ left: 64, right: 20, top: 20, bottom: 36 }} enableScrubbing animate={false}
             onScrubberPositionChange={selectEvent} aria-label={`${label} · ${model.validCount}개 관측`} getScrubberAccessibilityLabel={(i: number) => { const row = points[i]; return row ? `${row[0]} · ${finite(row[1]) ? `${fmt(row[1])} ${unit}` : `관측값 없음 ${unit}`}` : ''; }}>

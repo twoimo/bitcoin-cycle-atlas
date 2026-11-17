@@ -905,7 +905,7 @@ body[data-shell=dashboard] #data-view .daily-heading :is(h1,h2,strong,button) { 
 body[data-shell=dashboard] #data-view .daily-heading :is(p,span,small) { color:var(--ledger-sticky-muted); }
 
 
-/* Source: editorial-panels.css; SHA-256: f051fb78371c37d54059bfe0b8ce5d278fc639dafea999988deb7b48b78cb8ba */
+/* Source: editorial-panels.css; SHA-256: bb790dd645cc2b088d74d3a4d13b19ca54ef51e80535757c322be7c9e5b34b12 */
 /* Atlas analytical panels, shared by React and its host document.
    The host also paints portaled summaries. All calculations and chart owners
    remain in their original components; these rules only arrange their output. */
@@ -974,10 +974,13 @@ body[data-shell=dashboard] #data-view .daily-heading :is(p,span,small) { color:v
   display: flex;
 }
 #market-view .ml-axis-chart .ml-ztd-card {
+  display: flex;
+  flex-direction: column;
   flex: 1 1 auto;
   width: 100%;
   height: 100%;
   min-height: 0;
+  overflow: hidden;
 }
 #market-view .ml-axis-chart [data-ztd-chart="observed"] {
   display: flex;
@@ -986,7 +989,23 @@ body[data-shell=dashboard] #data-view .daily-heading :is(p,span,small) { color:v
   min-height: 0;
 }
 #market-view .ml-axis-chart .ml-viewport-chart {
+  min-height: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+#market-view .ml-axis-chart .atlas-funnest-observed-chart {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+#market-view .ml-axis-chart .atlas-funnest-observed-plot-slot {
+  flex: 1 1 auto;
   min-height: 96px;
+  overflow: hidden;
 }
 #market-view .ml-axis-readout {
   display: flex;
