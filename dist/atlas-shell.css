@@ -723,3 +723,30 @@ body[data-shell="dashboard"] .research-article :is(.research-provenance, .resear
     font-size: 12px;
   }
 }
+
+.atlas-chat{display:flex;flex-direction:column;box-sizing:border-box;background:var(--surface);color:var(--text);border-left:1px solid var(--border)}
+.workspace.atlas-details-layout>.atlas-chat{position:relative;grid-column:2;grid-row:1;z-index:40;min-width:0;min-height:0}
+.atlas-chat[hidden]{display:none!important}
+.atlas-chat-head{display:flex;align-items:center;gap:8px;height:44px;padding:0 8px 0 16px;flex:none;border-bottom:1px solid var(--border)}
+.atlas-chat-head h2{margin:0;font-size:15px;font-weight:600;line-height:1.3}
+.atlas-chat-presence{display:inline-flex;align-items:center;gap:8px;margin-right:auto;color:var(--muted);font-size:12px}
+.atlas-chat-dot{width:8px;height:8px;border-radius:50%;background:var(--focus);flex:none}
+.atlas-chat-head button{min-width:44px;height:32px;padding:0 8px;border:0;border-radius:8px;background:transparent;color:var(--muted);font:inherit;cursor:pointer}
+.atlas-chat-head button:hover{background:var(--surface-hover);color:var(--text)}
+.atlas-chat-head button:focus-visible,.atlas-chat-form button:focus-visible,.atlas-chat-form input:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.atlas-chat-log{flex:1 1 auto;min-height:0;overflow:auto;padding:8px}
+.atlas-chat-empty{margin:8px;color:var(--muted);font-size:12px;line-height:1.5}
+.atlas-chat-line{display:flex;gap:8px;margin:0 0 8px}
+.atlas-chat-avatar{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--surface-raised);color:var(--text);font-size:12px;flex:none}
+.atlas-chat-who{display:block;margin-bottom:4px;color:var(--muted);font-size:11px}
+.atlas-chat-bubble{margin:0;padding:8px 12px;border-radius:4px 14px 14px;background:var(--surface-raised);color:var(--text);font-size:13px;line-height:1.5}
+.atlas-chat-form{display:flex;gap:8px;padding:8px;flex:none;border-top:1px solid var(--border)}
+.atlas-chat-form input{flex:1;min-width:0;height:36px;padding:0 8px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
+.atlas-chat-form button{height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--text);color:var(--bg);font:inherit;cursor:pointer}
+@media(max-width:900px){
+  .workspace.atlas-details-layout>.atlas-chat{position:absolute;grid-column:1;inset:0 var(--rail-width) 0 auto;width:min(340px,calc(100% - var(--rail-width)));height:100%;box-shadow:-10px 0 28px var(--atlas-shadow-2)}
+  .atlas-chat-form input,.atlas-chat-form button,.atlas-chat-head button{min-height:44px;height:44px}
+}
+@media(max-width:620px){
+  .workspace.atlas-details-layout>.atlas-chat{position:fixed;inset:calc(54px + var(--mobile-top,0px) + var(--btc-refresh-height,0px)) 6px calc(6px + var(--mobile-bottom,0px));width:auto;height:auto;z-index:55;border:1px solid var(--border);border-radius:10px;box-shadow:none}
+}

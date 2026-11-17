@@ -69,13 +69,29 @@ function calculations(html: string, options: { ztdDiagnosis?: boolean } = {}) {
     errors: texts('[role=alert]'), empty: texts('.ml-empty'),
   };
 }
+function withoutIndexChart(value: ReturnType<typeof calculations>) {
+  const indexCopy = (field: unknown) => String(field || '').replace(/\s+/g, '').includes('관측종가');
+  return { ...value, controls: value.controls.filter(control => !control.some(indexCopy)), empty: value.empty.filter(text => !indexCopy(text)) };
+}
 for (const region of ['us', 'kr'] as Region[]) {
   test(`React diagnosis ${region}: values and original date/market controls match the previous renderer`, async () => {
     const before = await legacy('diagnosis', snapshot, { region });
     const after = renderToStaticMarkup(<DiagnosisPanel snapshot={snapshot} region={region} now={now} marketId={null} priceIndex={null} onMarket={noChange} onDate={noChange} />);
-    assert.deepEqual(calculations(after, { ztdDiagnosis: true }), calculations(before, { ztdDiagnosis: true }));
+    assert.deepEqual(withoutIndexChart(calculations(after, { ztdDiagnosis: true })), withoutIndexChart(calculations(before, { ztdDiagnosis: true })));
   });
 }
+test('diagnosis shows alpha, beta and gamma observations in that order', () => {
+  const html = renderToStaticMarkup(<DiagnosisPanel snapshot={snapshot} region="us" now={now} marketId={null} priceIndex={null} onMarket={noChange} onDate={noChange} />);
+  const { document } = parseHTML(html);
+  const charts = [...document.querySelectorAll('.ml-axis-stack [data-chart]')].map(node => node.getAttribute('data-chart'));
+  assert.deepEqual(charts, ['axis-alpha', 'axis-beta', 'axis-gamma']);
+  for (const id of charts) {
+    const chart = document.querySelector(`[data-chart="${id}"]`)!;
+    assert.ok(chart.querySelector('svg'), id);
+    assert.ok(Number(chart.getAttribute('data-source-count')) > 1, id);
+  }
+  assert.deepEqual([...document.querySelectorAll('.ml-axis-chart h3')].map(node => node.textContent), ['α 알파 · 성장', 'β 베타 · 유동성', 'γ 감마 · 심리']);
+});
 test('React diagnosis preserves selected market/date and source-error chart withholding', async () => {
   const cases = [
     { doc: snapshot, marketId: 'nasdaq', priceIndex: 10 },
@@ -88,7 +104,7 @@ test('React diagnosis preserves selected market/date and source-error chart with
   for (const { doc, marketId, priceIndex } of cases) {
     const before = await legacy('diagnosis', doc, { region: 'us', marketId, priceIndex });
     const after = renderToStaticMarkup(<DiagnosisPanel snapshot={doc} region="us" now={now} marketId={marketId} priceIndex={priceIndex} onMarket={noChange} onDate={noChange} />);
-    assert.deepEqual(calculations(after, { ztdDiagnosis: true }), calculations(before, { ztdDiagnosis: true }));
+    assert.deepEqual(withoutIndexChart(calculations(after, { ztdDiagnosis: true })), withoutIndexChart(calculations(before, { ztdDiagnosis: true })));
   }
 });
 

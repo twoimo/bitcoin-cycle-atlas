@@ -6,7 +6,6 @@ import { CompactToolbar, useCompactToolbar } from './compact-toolbar.js';
 export type WorkspaceInstrument = typeof WORKSPACE_INSTRUMENTS[number];
 const marketViews = [
   { id:'market-us', label:'미국', code:'US' },
-  { id:'market-kr', label:'국내', code:'KR' },
   { id:'scenario', label:'조건 실험', code:null },
   { id:'cashflow', label:'현금흐름', code:null },
 ];

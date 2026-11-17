@@ -170,9 +170,11 @@ test('the toolbar shows Korean account actions and keeps them on the visible top
   const heading = document.querySelector('.atlas-canvas-heading');
   assert.equal(heading.lastElementChild, ui.root);
   assert.equal(ui.root.previousElementSibling.id, 'atlas-display-options');
-  assert.deepEqual(visibleLabels(ui.root), ['계정']);
-  assert.equal(document.querySelector('link[data-auth-account-style]').href.endsWith('auth-account.css?v=1.7'), true);
   const account = ui.root.querySelector('[data-auth-action="account"]');
+  assert.equal(account.getAttribute('aria-label'), '계정');
+  assert.equal(account.querySelector('.auth-account-mark svg') instanceof window.SVGElement, true);
+  assert.equal(account.querySelector('.auth-account-label'), null);
+  assert.equal(document.querySelector('link[data-auth-account-style]').href.endsWith('auth-account.css?v=1.10'), true);
   account.click();
   const dialog = document.querySelector('#auth-account-gate');
   assert.equal(dialog.open, true);
@@ -532,7 +534,11 @@ test('chart chrome and the shell mount the same account control without pretendi
   assert.match(shell, /mountAuthAccount\(document\)/);
   assert.match(center, /:not\(\[data-auth-action\]\)/);
   assert.match(center, /\.auth-account/);
-  assert.equal(module.includes('accounts.google.com'), false);
+  assert.equal(module.includes('accounts.google.com'), true);
+  assert.equal(module.includes('id_token=${'), false);
+  assert.match(module, /method: 'POST'/);
+  assert.match(module, /referrerPolicy: 'no-referrer'/);
+  assert.match(module, /Static \/data JSON stays public/);
   assert.equal(module.includes('backdrop-filter'), false);
   assert.equal(module.includes("filter: 'blur") || module.includes('filter: blur'), false);
 });

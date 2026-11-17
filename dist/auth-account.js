@@ -1,4 +1,4 @@
-/** Browser-local accounts. This does not gate static /data JSON or start Google OAuth. */
+/** Browser-local accounts. Static /data JSON stays public. Google signup needs a configured client id. */
 import { mountDialogViewport } from './dialog-viewport.js?v=1.29.0';
 
 export const AUTH_ACCOUNTS_KEY = 'atlas-auth-accounts-v1';
@@ -19,6 +19,10 @@ const messages = {
   'invite-invalid': '초대 코드를 확인해 주세요.',
   'invite-expired': '만료된 초대 코드입니다.',
   'invite-used': '이미 사용된 초대 코드입니다.',
+  'google-unconfigured': 'Google 가입 설정이 아직 없습니다.',
+  'google-unverified': 'Google 계정을 확인하지 못했습니다.',
+  'google-cancelled': 'Google 가입을 취소했습니다.',
+  'google-unknown': '가입된 Google 계정이 없습니다.',
   credentials: '이메일 또는 비밀번호가 올바르지 않습니다.',
   deleted: '탈퇴한 계정입니다.',
   rejected: '가입이 거절된 계정입니다.',
@@ -126,6 +130,7 @@ function publicAccount(record) {
     id: record.id,
     email: record.email,
     displayName: record.displayName,
+    ...(record.picture ? { picture: record.picture } : {}),
     role: record.role,
     status: record.status,
   };
@@ -143,6 +148,8 @@ function readAccount(value) {
     id: value.id,
     email: value.email,
     displayName: typeof value.displayName === 'string' ? value.displayName : '',
+    ...(typeof value.picture === 'string' && value.picture.startsWith('https://') ? { picture: value.picture } : {}),
+    ...(typeof value.googleSub === 'string' && value.googleSub.length > 0 && value.googleSub.length <= 255 ? { googleSub: value.googleSub } : {}),
     role,
     status,
     password: { algorithm: 'PBKDF2-SHA-256', iterations, salt: password.salt, hash: password.hash },
@@ -340,6 +347,63 @@ export function createAuthAccount({ storage, crypto = globalThis.crypto, now = (
         data.accounts.push(account);
         attachSession(data, account, prepared);
         const session = publicAccount(account);
+        return { token: prepared.token, account: session, value: session };
+      });
+    });
+  }
+  async function signupWithGoogle(input = {}) {
+    const email = normalizeEmail(input.email);
+    const displayName = normalizeName(input.displayName || email.split('@')[0]);
+    const subject = String(input.subject || '');
+    const picture = typeof input.picture === 'string' && input.picture.startsWith('https://') ? input.picture : '';
+    if (!subject) throw new AuthError('google-unverified');
+    const passwordRecord = await hashPassword(`${randomId(crypto)}${randomId(crypto)}`);
+    const inviteText = String(input.inviteCode ?? '').trim();
+    const inviteHash = inviteText ? await sha256Hex(inviteText, crypto) : '';
+    return withLock(async () => {
+      const prepared = await preparedSession();
+      const stamp = nowIso();
+      return commitSync(data => {
+        if (liveAccount(data, prepared.previousHash)) throw new AuthError('session-active');
+        if (data.accounts.some(account => account.email === email && !account.deletedAt)) throw new AuthError('email-taken');
+        const invite = claimInvite(data, inviteHash);
+        const adminExists = hasActiveAdmin(data);
+        const account = {
+          id: randomId(crypto), email, displayName,
+          role: adminExists ? 'pending' : 'admin',
+          status: adminExists ? 'pending' : 'active',
+          password: passwordRecord,
+          sessionHash: null, createdAt: stamp, updatedAt: stamp, deletedAt: null,
+          approvedBy: null, approvedAt: null, rejectedAt: null, inviteId: null,
+          googleSub: subject,
+          ...(picture ? { picture } : {}),
+        };
+        if (invite) {
+          invite.usedAt = stamp;
+          invite.usedBy = account.id;
+          account.inviteId = invite.id;
+        }
+        data.accounts.push(account);
+        attachSession(data, account, prepared);
+        const session = publicAccount(account);
+        return { token: prepared.token, account: session, value: session };
+      });
+    });
+  }
+  async function loginWithGoogle(input = {}) {
+    const email = normalizeEmail(input.email);
+    const subject = String(input.subject || '');
+    if (!subject) throw new AuthError('google-unverified');
+    return withLock(async () => {
+      const prepared = await preparedSession();
+      return commitSync(data => {
+        const fresh = data.accounts.find(account => account.email === email && !account.deletedAt && account.googleSub === subject);
+        if (!fresh) throw new AuthError('google-unknown');
+        if (fresh.status === 'rejected') throw new AuthError('rejected');
+        if (fresh.deletedAt || fresh.status === 'deleted') throw new AuthError('deleted');
+        if (typeof input.picture === 'string' && input.picture.startsWith('https://')) fresh.picture = input.picture;
+        attachSession(data, fresh, prepared);
+        const session = publicAccount(fresh);
         return { token: prepared.token, account: session, value: session };
       });
     });
@@ -619,7 +683,7 @@ export function createAuthAccount({ storage, crypto = globalThis.crypto, now = (
     };
   }
   return {
-    signup, login, logout, deleteAccount, changePassword, createInvite, createUser, updateUser, removeUser,
+    signup, signupWithGoogle, loginWithGoogle, login, logout, deleteAccount, changePassword, createInvite, createUser, updateUser, removeUser,
     approve: userId => decide(userId, 'active'),
     reject: userId => decide(userId, 'rejected'),
     restore,
@@ -634,6 +698,29 @@ function messageOf(error) {
   return error instanceof AuthError ? error.message : '다시 시도해 주세요.';
 }
 
+function guestMark(doc) {
+  const mark = doc.createElement('span');
+  mark.className = 'auth-account-mark';
+  mark.setAttribute('aria-hidden', 'true');
+  const svg = doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 16 16');
+  svg.setAttribute('aria-hidden', 'true');
+  const head = doc.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  head.setAttribute('cx', '8');
+  head.setAttribute('cy', '5.6');
+  head.setAttribute('r', '2.3');
+  head.setAttribute('fill', 'currentColor');
+  const body = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
+  body.setAttribute('d', 'M3.1 13.1a4.9 4.9 0 0 1 9.8 0');
+  body.setAttribute('fill', 'none');
+  body.setAttribute('stroke', 'currentColor');
+  body.setAttribute('stroke-width', '1.5');
+  body.setAttribute('stroke-linecap', 'round');
+  svg.append(head, body);
+  mark.append(svg);
+  return mark;
+}
+
 function focusNode(node) {
   if (typeof node?.focus === 'function') node.focus({ preventScroll: true });
 }
@@ -644,6 +731,53 @@ function selectValue(select, value) {
 
 function selectedValue(select) {
   return [...select.options].find(option => option.selected)?.value || 'member';
+}
+
+function googleProfile(doc) {
+  const clientId = doc.querySelector('meta[name="atlas-google-client"]')?.getAttribute('content')?.trim();
+  if (!clientId) return Promise.reject(new AuthError('google-unconfigured'));
+  const win = doc.defaultView || globalThis;
+  const ready = win.google?.accounts?.id ? Promise.resolve() : new Promise((resolve, reject) => {
+    const script = doc.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new AuthError('google-unconfigured'));
+    doc.head.append(script);
+  });
+  return ready.then(() => new Promise((resolve, reject) => {
+    let settled = false;
+    win.google.accounts.id.initialize({
+      client_id: clientId,
+      callback: async response => {
+        if (settled) return;
+        settled = true;
+        try {
+          const infoResponse = await fetch('https://oauth2.googleapis.com/tokeninfo', {
+            method: 'POST',
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ id_token: response.credential }),
+            redirect: 'error',
+            credentials: 'omit',
+            referrerPolicy: 'no-referrer',
+          });
+          if (!infoResponse.ok) throw new AuthError('google-unverified');
+          const info = await infoResponse.json();
+          const verified = info.email_verified === true || info.email_verified === 'true';
+          const issuer = info.iss === 'https://accounts.google.com' || info.iss === 'accounts.google.com';
+          if (!info.email || info.aud !== clientId || !verified || !info.sub || !issuer) throw new AuthError('google-unverified');
+          resolve({ email: info.email, displayName: info.name || info.email, picture: info.picture || '', subject: info.sub });
+        } catch (error) { reject(error instanceof AuthError ? error : new AuthError('google-unverified')); }
+      },
+    });
+    win.google.accounts.id.prompt(notification => {
+      if (settled) return;
+      if (notification.isNotDisplayed?.() || notification.isSkippedMoment?.()) {
+        settled = true;
+        reject(new AuthError('google-cancelled'));
+      }
+    });
+  }));
 }
 
 export function authAccountTarget(doc) {
@@ -678,7 +812,7 @@ export function mountAuthAccount(doc = globalThis.document, options = {}) {
     const link = doc.createElement('link');
     link.rel = 'stylesheet';
     link.dataset.authAccountStyle = 'auth-account';
-    link.href = new URL('./auth-account.css?v=1.7', import.meta.url).href;
+    link.href = new URL('./auth-account.css?v=1.10', import.meta.url).href;
     head.append(link);
   }
   const root = doc.createElement('div');
@@ -732,7 +866,10 @@ export function mountAuthAccount(doc = globalThis.document, options = {}) {
     const account = auth.current();
     const visible = [];
     if (!account) {
-      const accountButton = actionButton('account', '계정');
+      const accountButton = actionButton('account');
+      accountButton.classList.add('auth-account-name');
+      accountButton.replaceChildren(guestMark(doc));
+      accountButton.setAttribute('aria-label', '계정');
       accountButton.setAttribute('aria-haspopup', 'dialog');
       accountButton.setAttribute('aria-controls', 'auth-account-gate');
       visible.push(accountButton);
@@ -743,7 +880,8 @@ export function mountAuthAccount(doc = globalThis.document, options = {}) {
       const mark = doc.createElement('span');
       mark.className = 'auth-account-mark';
       mark.setAttribute('aria-hidden', 'true');
-      mark.textContent = ([...account.displayName.trim()][0] || '·').toUpperCase();
+      if (account.picture) { const photo = doc.createElement('img'); photo.src = account.picture; photo.alt = ''; mark.append(photo); }
+      else mark.textContent = ([...account.displayName.trim()][0] || '·').toUpperCase();
       const name = doc.createElement('span');
       name.className = 'auth-account-label';
       name.textContent = account.displayName;
@@ -960,8 +1098,23 @@ export function mountAuthAccount(doc = globalThis.document, options = {}) {
   const loginError = errorLine(login.form);
   const loginActions = doc.createElement('div');
   loginActions.className = 'auth-account-actions';
-  loginActions.append(login.submit);
+  const loginGoogle = doc.createElement('button');
+  loginGoogle.type = 'button';
+  loginGoogle.className = 'auth-google';
+  loginGoogle.textContent = 'Google로 로그인';
+  loginActions.append(loginGoogle, login.submit);
   login.form.append(loginActions);
+  loginGoogle.addEventListener('click', () => {
+    clearFormErrors(login.form, loginError);
+    watchSubmit(loginGoogle, async () => {
+      try {
+        const profile = await googleProfile(doc);
+        await auth.loginWithGoogle(profile);
+        render();
+        closeDialog(login.form.closest('dialog'));
+      } catch (error) { showFormError(login.form, loginError, {}, error); }
+    });
+  });
   login.form.addEventListener('submit', event => {
     event.preventDefault();
     clearFormErrors(login.form, loginError);
@@ -983,8 +1136,31 @@ export function mountAuthAccount(doc = globalThis.document, options = {}) {
   const signupError = errorLine(signup.form);
   const signupActions = doc.createElement('div');
   signupActions.className = 'auth-account-actions';
-  signupActions.append(signup.submit);
+  const signupGoogle = doc.createElement('button');
+  signupGoogle.type = 'button';
+  signupGoogle.className = 'auth-google';
+  signupGoogle.textContent = 'Google로 가입';
+  signupActions.append(signupGoogle, signup.submit);
   signup.form.append(signupActions);
+  signupGoogle.addEventListener('click', () => {
+    clearFormErrors(signup.form, signupError);
+    watchSubmit(signupGoogle, async () => {
+      try {
+        const profile = await googleProfile(doc);
+        await auth.signupWithGoogle({ ...profile, inviteCode: signupInvite.value });
+        render();
+        closeDialog(signup.form.closest('dialog'));
+      } catch (error) {
+        showFormError(signup.form, signupError, {
+          'invite-required': signupInvite,
+          'invite-invalid': signupInvite,
+          'invite-expired': signupInvite,
+          'invite-used': signupInvite,
+          'email-taken': signupEmail,
+        }, error);
+      }
+    });
+  });
   signup.form.addEventListener('submit', event => {
     event.preventDefault();
     clearFormErrors(signup.form, signupError);
@@ -1372,7 +1548,8 @@ export function mountAuthAccount(doc = globalThis.document, options = {}) {
       const mark = doc.createElement('span');
       mark.className = 'auth-account-mark';
       mark.setAttribute('aria-hidden', 'true');
-      mark.textContent = ([...account.displayName.trim()][0] || '·').toUpperCase();
+      if (account.picture) { const photo = doc.createElement('img'); photo.src = account.picture; photo.alt = ''; mark.append(photo); }
+      else mark.textContent = ([...account.displayName.trim()][0] || '·').toUpperCase();
       const main = doc.createElement('div');
       main.className = 'auth-account-user-main';
       const name = doc.createElement('span');

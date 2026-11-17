@@ -187,7 +187,7 @@ test('real PostgreSQL publication, API and calculation parity', async t => {
     assert.equal(redirect.headers.location, '/market-lab/?page=market&lab-tab=rsi&lab-region=kr');
     const page = await web.inject(redirect.headers.location!);
     assert.equal(page.statusCode, 200); assert.match(page.body, /시장 분석/);
-    for (const [path,title] of [['us','미국 시장 진단'],['kr','국내 시장 진단'],['scenario','조건 실험'],['cashflow','현금흐름'],['rsi','삼플레·RSI']]) {
+    for (const [path,title] of [['us','미국 시장 진단'],['scenario','조건 실험'],['cashflow','현금흐름'],['rsi','삼플레·RSI']]) {
       const direct = await web.inject(`/market-lab/${path}/`);
       assert.equal(direct.statusCode, 200); assert(direct.body.includes(`<title>${title} · Cycle Atlas</title>`));
       assert.match(direct.body,/<base href="\/">/);

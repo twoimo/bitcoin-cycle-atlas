@@ -5,7 +5,6 @@ import { workspaceInstrument } from './workspace-instruments.js';
 export const atlasPages = Object.freeze([
   {id:'outlook', label:'가격 차트', title:'가격 차트', view:'outlook', href:'/?page=outlook', icon:'M3 17l5-6 4 3 8-10M15 4h5v5'},
   {id:'market-us', badge:'US', label:'미국 시장', title:'미국 시장 진단', view:'market', tab:'diagnosis', region:'us', href:'/market-lab/us/', icon:'M4 20V10m8 10V4m8 16v-7'},
-  {id:'market-kr', badge:'KR', label:'국내 시장', title:'국내 시장 진단', view:'market', tab:'diagnosis', region:'kr', href:'/market-lab/kr/', icon:'M4 20V10m8 10V4m8 16v-7'},
   {id:'scenario', label:'조건 실험', title:'조건 실험', view:'market', tab:'scenario', href:'/market-lab/scenario/', icon:'M3 12h4l3-8 4 16 3-8h4'},
   {id:'cashflow', label:'현금흐름', title:'현금흐름', view:'market', tab:'ai', href:'/market-lab/cashflow/', icon:'M3 6h18v12H3zM3 10h18M7 14h3'},
   {id:'rsi', label:'삼플레·RSI', title:'삼플레·RSI', view:'market', tab:'rsi', href:'/market-lab/rsi/', icon:'M3 4v16h18M4 14l4-3 4 4 4-9 5 4'},
@@ -42,7 +41,6 @@ export function atlasPageHref(page,{symbol,region}={}) {
   }
   if(atlasNavigationId(item)==='market-us') {
     const query=new URLSearchParams();
-    if(item.id==='market-kr')query.set('region','kr');
     if(item.id==='scenario'||item.id==='cashflow')query.set('view',item.id);
     return '/market-lab/'+(query.size?'?'+query:'');
   }

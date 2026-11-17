@@ -1,6 +1,6 @@
 import { setLoadingSurface } from './loading-surfaces.js';
 import { mountInstrumentIndicatorOverlay } from './instrument-indicator-overlay.js?v=1.36.1';
-import { mountNativeChartApp, mountNativeChartWorkbench, nativeDateRange } from './native-chart-workbench.js?v=1.36.1';
+import { mountNativeChartApp, mountNativeChartWorkbench, nativeDateRange } from './native-chart-workbench.js?v=1.36.2';
 import { readChartUrlState, writeChartUrlState } from './ui/chart-url-state.js';
 import {bindPreservedArchiveDownload} from './preserved-archive-download.js?v=1.29.0';
 import {CAPITAL_POLICIES} from './treasury-instruments.js';
@@ -11,7 +11,7 @@ import {withChartSpacing,retargetChartRange} from './chart-view-policy.js?v=1.36
 import {normalizePriceDomain} from './price-axis.js?v=1.29.0';
 import {mountChartTouchTracking} from "./chart-touch-tracking.js?v=1.29.0";
 import {clearChartHover} from './chart-hover.js?v=1.29.0';
-import {mountSymbolSelector} from './symbol-selector.js?v=1.35.0';
+import {mountSymbolSelector} from './symbol-selector.js?v=1.35.4';
 import {mountDialogViewport} from './dialog-viewport.js?v=1.29.0';
 import {buildTreasuryProjection} from "./treasury-projection.js?v=1.29.0";
 import {forecastAvailabilityForSeries} from './forecast/forecast-ui-gate.js';

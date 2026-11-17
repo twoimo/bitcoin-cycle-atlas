@@ -1,5 +1,5 @@
 import { setLoadingSurface } from './loading-surfaces.js';
-import { mountNativeChartApp, mountNativeChartWorkbench, nativeDateRange } from './native-chart-workbench.js?v=1.36.1';
+import { mountNativeChartApp, mountNativeChartWorkbench, nativeDateRange } from './native-chart-workbench.js?v=1.36.2';
 import {bindPreservedArchiveDownload} from './preserved-archive-download.js?v=1.29.0';
 import {buildEthereumForecasts} from './ethereum-forecast.js';
 import {buildEthereumAdaptiveForecast} from './ethereum-adaptive-model.js';
@@ -14,7 +14,7 @@ import { withChartSpacing, retargetChartRange } from './chart-view-policy.js?v=1
 import { normalizePriceDomain } from './price-axis.js?v=1.29.0';
 import { mountChartTouchTracking } from "./chart-touch-tracking.js?v=1.29.0";
 import { clearChartHover } from './chart-hover.js?v=1.29.0';
-import { mountSymbolSelector } from './symbol-selector.js?v=1.35.0';
+import { mountSymbolSelector } from './symbol-selector.js?v=1.35.4';
 import { readEthView, ethViewQuery, ethHistoryRange } from './eth-view-state.js?v=1.36.1';
 import { readChartUrlState } from './ui/chart-url-state.js';
 import { ETHEREUM_EVENTS, ETHEREUM_EVENT_COLORS, getEthereumEvents } from './ethereum-events.js?v=1.29.0';

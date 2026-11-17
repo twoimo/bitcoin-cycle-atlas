@@ -233,7 +233,7 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
             {navigation.tab === 'housing'&&<HousingPanel cache={housingCache.current} selectedRegion={housingRegion} embedded={embedded} active={centerActive} epoch={centerEpoch} onRegion={region => { const instrument=WORKSPACE_INSTRUMENTS.find(item => item.page === 'housing' && item.region === region); if(instrument)selectInstrument(instrument); }}/>}
             {navigation.tab === 'themes'&&<ThemePanel cache={themeCache.current} embedded={embedded} active={centerActive} epoch={centerEpoch}/>}
           </section>
-          {!independent&&<SourceDisclosure key={`${navigation.tab}:${navigation.region}`} snapshot={data.doc} region={navigation.region} now={now} onOpen={()=>setSnapshotRequested(true)}/>}
+          {!independent&&navigation.tab!=='diagnosis'&&<SourceDisclosure key={`${navigation.tab}:${navigation.region}`} snapshot={data.doc} region={navigation.region} now={now} onOpen={()=>setSnapshotRequested(true)}/>}
         </div>
       </section>
     </main>

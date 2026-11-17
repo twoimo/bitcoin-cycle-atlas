@@ -57,8 +57,8 @@ test('canonical chart selection preserves exact instrument and housing region at
     assert.equal(url.searchParams.get('symbol'),symbol);
     assert.equal(labPageFromLocation(url).id,id);
   }
-  assert.equal(labPageFromLocation(new URL('https://example.com/market-lab/?region=kr')).id,'market-kr');
-  assert.equal(labPageFromLocation(new URL('https://example.com/market-lab/app/?embedded=1&lab-tab=diagnosis&lab-region=kr')).id,'market-kr');
+  assert.equal(labPageFromLocation(new URL('https://example.com/market-lab/?region=kr')).id,'market-us');
+  assert.equal(labPageFromLocation(new URL('https://example.com/market-lab/app/?embedded=1&lab-tab=diagnosis&lab-region=kr')).id,'market-us');
   assert.equal(labPageFromLocation(new URL('https://example.com/market-lab/app/?embedded=1&lab-tab=housing&region=seoul')).id,'housing');
   assert.equal(atlasPageHref('housing',{symbol:'https://evil.test/',region:'../../'}),'/market-lab/charts/?symbol=HOUSING-BUSAN&region=busan');
 });

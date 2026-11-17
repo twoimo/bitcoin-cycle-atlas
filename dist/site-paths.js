@@ -3,6 +3,10 @@ export function atlasRootPath(doc=globalThis.document){
   const declared=doc?.querySelector('meta[name="atlas-root"]')?.getAttribute('content');
   if(declared!==undefined&&declared!==null){
     if(!/^\/(?:[A-Za-z0-9._~-]+\/)*$/.test(declared)||declared.includes('/../')||declared.includes('/./'))throw new Error('Invalid Atlas site root');
+    // A Pages subpath is only real when the current document is actually under it.
+    // A root-hosted copy, including the local static server, keeps its own files at /.
+    const view=doc?.defaultView,path=view?.location?.pathname,protocol=view?.location?.protocol;
+    if(declared!=='/'&&typeof path==='string'&&path.startsWith('/')&&/^https?:$/.test(protocol)&&!path.startsWith(declared))return '/';
     return declared;
   }
   const url=new URL(import.meta.url);

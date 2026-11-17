@@ -3,11 +3,15 @@ import test from 'node:test';
 import { SYMBOLS, normalizeSymbol, searchSymbols, createSymbolUrl, mountSymbolSelector } from '../dist/symbol-selector.js';
 
 test('supported products retain their exact quote currency and searchable identity',()=>{
-  assert.deepEqual(SYMBOLS.map(item=>item.product),['BTC-USD','ETH-USD','MSTR','BMNR','TQQQ','SOXL','233740.KS','HYPE/USDC','부산 아파트','서울 아파트','경기 아파트','전국 아파트']);
+  assert.deepEqual(SYMBOLS.map(item=>item.product),['BTC-USD','ETH-USD','MSTR','BMNR','미국 α×β×γ','TQQQ','SOXL','233740.KS','HYPE/USDC','부산 아파트','서울 아파트','경기 아파트','전국 아파트']);
   for(const value of ['ETHUSD','ethusd','ETH-USD',' ETH/USD '])assert.equal(normalizeSymbol(value),'ETHUSD');
   for(const value of ['ETHUSDT','ETHBTC','javascript:ETHUSD',null,undefined])assert.equal(normalizeSymbol(value),'BTCUSD');
   for(const query of ['ethereum','이더리움','ETH/USD','eth usd','ETH Coinbase'])assert.deepEqual(searchSymbols(query).map(item=>item.symbol),['ETHUSD']);
-  assert.equal(searchSymbols('USDT').length,0);assert.equal(searchSymbols('btc').length,1);assert.equal(searchSymbols('').length,12);
+  assert.equal(searchSymbols('USDT').length,0);assert.equal(searchSymbols('btc').length,1);assert.equal(searchSymbols('').length,13);
+  assert.deepEqual(searchSymbols('알파').map(item=>item.symbol),['AXES-US']);
+  assert.deepEqual(searchSymbols('엑박').map(item=>item.symbol),['AXES-US']);
+  assert.equal(searchSymbols('국내 시장 진단').some(item=>item.assetClass==='diagnosis'),false);
+  assert.equal(searchSymbols('달러').some(item=>item.assetClass==='diagnosis'),false);
 });
 
 test('switching preserves supported chart choices and removes cross-asset models, bounds and layers',()=>{
@@ -89,6 +93,25 @@ test('standalone preserves its four supported charts while the service exposes t
   const offline=fixture(t);offline.selector.open();assert.equal(offline.node('symbol-search-results').children.length,4);assert.equal(offline.node('symbol-option-SOXL'),null);
   const service=fixture(t,{service:true});service.selector.open();assert.equal(service.node('symbol-search-results').children.length,12);
   service.node('symbol-option-SOXL').click();assert.equal(service.destinations[0],'https://example.com/market-lab/charts/?symbol=SOXL');
+});
+
+test('market diagnosis stays in the search dialog and opens the regional chart view',t=>{
+  assert.equal(createSymbolUrl('https://twoimo.github.io/bitcoin-cycle-atlas/?page=outlook','AXES-US'),'https://twoimo.github.io/bitcoin-cycle-atlas/market-lab/');
+  assert.equal(createSymbolUrl('https://twoimo.github.io/bitcoin-cycle-atlas/market-lab/rsi/?symbol=TQQQ','AXES-US'),'https://twoimo.github.io/bitcoin-cycle-atlas/market-lab/');
+  assert.throws(()=>createSymbolUrl('https://example.com/','AXES-KR'),/Unsupported chart symbol/);
+  const service=fixture(t,{service:true});service.selector.open();
+  const group=service.selector.element.find(node=>node.className==='symbol-search-diagnosis');
+  assert.equal(group.hidden,false);
+  assert.equal(group.find(node=>node.id==='symbol-option-AXES-US').find(node=>node.className==='symbol-search-name').textContent,'미국 시장 진단 · 알파 × 베타 × 감마');
+  assert.equal(group.find(node=>node.id==='symbol-option-AXES-KR'),null);
+  group.find(node=>node.id==='symbol-option-AXES-US').click();
+  assert.equal(service.destinations[0],'https://example.com/market-lab/');
+  const keyed=fixture(t,{service:true});keyed.selector.open();
+  assert.equal(keyed.input.getAttribute('aria-activedescendant'),'symbol-option-BTCUSD');
+  keyed.key('ArrowUp');keyed.key('Enter');
+  assert.equal(keyed.destinations[0],'https://example.com/market-lab/');
+  const offline=fixture(t);offline.selector.open();
+  assert.equal(offline.selector.element.find(node=>node.className==='symbol-search-diagnosis').hidden,true);
 });
 
 test('theme and housing selections use the same chart route without borrowing price-chart state',()=>{

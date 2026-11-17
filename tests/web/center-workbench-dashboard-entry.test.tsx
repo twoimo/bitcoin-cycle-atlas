@@ -93,7 +93,7 @@ test('consecutive child intents retain the final choice and cannot cross a newer
   await f.addPlot(); f.click('market-us');
   const frame = f.document.querySelector('iframe') as HTMLIFrameElement;
   const send = (data: Record<string, unknown>, source: unknown = frame.contentWindow, origin = 'http://localhost') => f.listeners.get('message')!({ data, source, origin });
-  const first = { kind: 'atlas:center-select', page: 'market-kr', symbol: 'TQQQ', epoch: 1, intentSerial: 1 };
+  const first = { kind: 'atlas:center-select', page: 'cashflow', symbol: 'TQQQ', epoch: 1, intentSerial: 1 };
   const last = { ...first, page: 'scenario', intentSerial: 2 };
   send(first); send(last);
   assert.equal(f.document.body.dataset.centerTool, 'scenario');
@@ -103,7 +103,7 @@ test('consecutive child intents retain the final choice and cannot cross a newer
   send(first); send(last); send({ ...last, intentSerial: 3 }, {}); send({ ...last, intentSerial: 3 }, undefined, 'https://foreign.test');
   send({ ...last, intentSerial: 0 }); send({ ...last, intentSerial: NaN }); send({ ...last, epoch: 100, intentSerial: 3 });
   assert.equal(f.histories.length, accepted, 'duplicates, reordered choices and foreign or malformed requests cannot change the selected view');
-  send({ kind: 'atlas:center-state', page: 'market-kr', symbol: 'TQQQ', epoch: 2 });
+  send({ kind: 'atlas:center-state', page: 'cashflow', symbol: 'TQQQ', epoch: 2 });
   assert.deepEqual(f.posts.at(-1), { kind: 'atlas:center-navigate', page: 'scenario', symbol: 'TQQQ', epoch: 3, intentSerial: 2 });
 
   f.click('rsi');

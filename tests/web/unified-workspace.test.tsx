@@ -87,14 +87,15 @@ test('chart search exposes all retained chart types and supports keyboard select
   assert.equal(fixture.document.querySelector('.workspace-search-popover'),null);
 });
 
-test('market workspace presents one labelled view selector with independently selected US and KR diagnostics',async t=>{
+test('market workspace presents one labelled view selector for the US diagnosis',async t=>{
   function Harness(){const [page,setPage]=useState('market-us');return <MarketWorkspaceToolbar page={page} onNavigate={setPage}/>;}
   const fixture=await mount(<Harness/>);t.after(fixture.cleanup);
   assert.equal(fixture.document.querySelectorAll('[role=tablist]').length,1);
-  assert.equal(fixture.document.querySelectorAll('[role=tab]').length,4);
-  await fixture.click('[data-workspace-page="market-kr"]');
-  assert.equal(fixture.document.querySelector('[role=tab][aria-selected=true]')!.getAttribute('data-workspace-page'),'market-kr');
-  await fixture.key('[data-workspace-page="market-kr"]','End');
+  assert.equal(fixture.document.querySelectorAll('[role=tab]').length,3);
+  assert.equal(fixture.document.querySelector('[data-workspace-page="market-kr"]'),null);
+  await fixture.click('[data-workspace-page="market-us"]');
+  assert.equal(fixture.document.querySelector('[role=tab][aria-selected=true]')!.getAttribute('data-workspace-page'),'market-us');
+  await fixture.key('[data-workspace-page="market-us"]','End');
   assert.equal(fixture.document.querySelector('[role=tab][aria-selected=true]')!.getAttribute('data-workspace-page'),'cashflow');
 });
 
@@ -103,14 +104,13 @@ test('one standalone price-chart destination retains every selected source and r
   const fixture=await mount(<MarketLabApp load={pending} clock={()=>new Date('2026-11-04T06:00:00Z')}/>);t.after(fixture.cleanup);
   const priceLink=()=>fixture.document.querySelector('[data-atlas-page="outlook"]')!;
   const selectedPage=()=>fixture.document.querySelector('.atlas-nav [aria-current="page"]')?.getAttribute('data-atlas-page');
-  assert.deepEqual([...fixture.document.querySelectorAll('.atlas-nav [data-atlas-page]')].map(node=>node.getAttribute('data-atlas-page')),['outlook','market-us','evidence','data','ipo','relay']);
+  assert.deepEqual([...fixture.document.querySelectorAll('.atlas-nav [data-atlas-page]')].map(node=>node.getAttribute('data-atlas-page')),['outlook','market-us','ipo','relay','evidence']);
   assert.deepEqual([...fixture.document.querySelectorAll('.atlas-nav [data-atlas-page]')].map(node=>[node.getAttribute('aria-label'),node.getAttribute('href')]),[
     ['가격 차트','/market-lab/charts/?symbol=TQQQ'],
     ['시장 분석','/market-lab/'],
-    ['리서치','/?page=evidence'],
-    ['자산 비교','/?page=data'],
     ['공모주','/?page=ipo'],
     ['릴레이 콘텐츠','/?page=relay'],
+    ['리서치','/?page=evidence'],
   ]);
   assert.equal(fixture.document.querySelector('[data-atlas-page="rsi"]'),null);
   for(const instrument of WORKSPACE_INSTRUMENTS) {
@@ -158,13 +158,13 @@ test('rapid market tab choices ignore intermediate replies and yield to host-own
   const fixture = await mount(<MarketLabApp load={pending} embedded />, 'https://example.test/market-lab/app/?embedded=1&lab-tab=scenario&epoch=10'); t.after(fixture.cleanup);
   const selected = () => fixture.document.querySelector('[data-workspace-page][aria-selected=true]')?.getAttribute('data-workspace-page');
   const choices = () => fixture.posts.filter(post => post.message.kind === 'atlas:center-select').map(post => post.message);
-  await fixture.click('[data-workspace-page="market-kr"]');
+  await fixture.click('[data-workspace-page="market-us"]');
   await fixture.click('[data-workspace-page="cashflow"]');
   await fixture.click('[data-workspace-page="scenario"]');
   assert.deepEqual(choices().map(({ page, epoch, intentSerial }) => ({ page, epoch, intentSerial })), [
-    { page: 'market-kr', epoch: 10, intentSerial: 1 }, { page: 'cashflow', epoch: 10, intentSerial: 2 }, { page: 'scenario', epoch: 10, intentSerial: 3 },
+    { page: 'market-us', epoch: 10, intentSerial: 1 }, { page: 'cashflow', epoch: 10, intentSerial: 2 }, { page: 'scenario', epoch: 10, intentSerial: 3 },
   ]);
-  await fixture.message({ kind: 'atlas:center-navigate', page: 'market-kr', symbol: 'TQQQ', epoch: 11, intentSerial: 1 });
+  await fixture.message({ kind: 'atlas:center-navigate', page: 'market-us', symbol: 'TQQQ', epoch: 11, intentSerial: 1 });
   await fixture.message({ kind: 'atlas:center-navigate', page: 'cashflow', symbol: 'TQQQ', epoch: 12, intentSerial: 2 });
   assert.equal(selected(), 'scenario', 'intermediate replies do not briefly replace the final choice');
   await fixture.message({ kind: 'atlas:center-navigate', page: 'scenario', symbol: 'TQQQ', epoch: 13, intentSerial: 3 });
@@ -175,10 +175,10 @@ test('rapid market tab choices ignore intermediate replies and yield to host-own
   assert.equal(selected(), 'market-us', 'host search/menu/history navigation cancels a pending child choice');
   await fixture.message({ kind: 'atlas:center-navigate', page: 'cashflow', symbol: 'TQQQ', epoch: 14, intentSerial: 4 });
   assert.equal(selected(), 'market-us');
-  await fixture.click('[data-workspace-page="market-kr"]');
-  assert.deepEqual(choices().at(-1), { kind: 'atlas:center-select', page: 'market-kr', symbol: 'TQQQ', region: undefined, epoch: 15, intentSerial: 5 });
-  await fixture.message({ kind: 'atlas:center-navigate', page: 'market-kr', symbol: 'TQQQ', epoch: 16, intentSerial: 5 });
-  assert.equal(selected(), 'market-kr');
+  await fixture.click('[data-workspace-page="market-us"]');
+  assert.deepEqual(choices().at(-1), { kind: 'atlas:center-select', page: 'market-us', symbol: 'TQQQ', region: undefined, epoch: 15, intentSerial: 5 });
+  await fixture.message({ kind: 'atlas:center-navigate', page: 'market-us', symbol: 'TQQQ', epoch: 16, intentSerial: 5 });
+  assert.equal(selected(), 'market-us');
 });
 
 test('rapid header region choices keep the last housing intent through delayed host replies', async t => {

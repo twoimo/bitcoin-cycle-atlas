@@ -1,24 +1,37 @@
 import { mountDialogViewport } from './dialog-viewport.js?v=1.29.0';
 import { WORKSPACE_INSTRUMENTS } from './workspace-instruments.js';
 
+// Market diagnosis is a three-chart destination, not another tradable symbol.
+export const DIAGNOSIS_INSTRUMENTS = Object.freeze([
+  Object.freeze({ symbol:'AXES-US', product:'미국 α×β×γ', name:'Alpha × Beta × Gamma', koreanName:'미국 시장 진단', source:'성장·유동성·심리', description:'엑박 알파 베타 감마 미국 시장 진단 성장 유동성 심리', base:'AX', assetClass:'diagnosis', page:'market-us' }),
+]);
+
 /** Supported instruments are explicit: equity, spot USD and USDT are distinct. */
 export const SYMBOLS = Object.freeze([
   Object.freeze({ symbol:'BTCUSD', product:'BTC-USD', name:'Bitcoin', koreanName:'비트코인', source:'지수·거래소', description:'Coin Metrics · Bitstamp · Coinbase', base:'BTC' }),
   Object.freeze({ symbol:'ETHUSD', product:'ETH-USD', name:'Ethereum', koreanName:'이더리움', source:'Coinbase', description:'Coinbase Exchange · 현물 USD', base:'ETH' }),
   Object.freeze({ symbol:'MSTR', product:'MSTR', name:'Strategy', koreanName:'스트래티지', source:'Nasdaq', description:'MicroStrategy · Michael Saylor · 마이클 세일러 · 미국 주식', base:'MSTR', assetClass:'equity' }),
   Object.freeze({ symbol:'BMNR', product:'BMNR', name:'Bitmine', koreanName:'비트마인', source:'NYSE', description:'Bitmine Immersion Technologies · Tom Lee · 톰 리 · 미국 주식', base:'BMNR', assetClass:'equity' }),
+  ...DIAGNOSIS_INSTRUMENTS,
   ...WORKSPACE_INSTRUMENTS,
 ]);
 const intervals = new Set(['1m','5m','15m','30m','1h','4h','daily','weekly']);
+const coinLogos = { BTC:'https://static.upbit.com/logos/BTC.png', ETH:'https://static.upbit.com/logos/ETH.png' };
+const coinLogo = instrument => coinLogos[instrument?.base] || '';
 const symbolValue = value => typeof value === 'string' ? value.toUpperCase().replace(/[\s/\-]/g,'') : '';
 
 export function normalizeSymbol(value) {
   return SYMBOLS.find(item => symbolValue(item.symbol) === symbolValue(value) || symbolValue(item.product) === symbolValue(value))?.symbol || 'BTCUSD';
 }
 
+export function diagnosisInstrument(value) {
+  const key = symbolValue(value);
+  return DIAGNOSIS_INSTRUMENTS.find(item => symbolValue(item.symbol) === key || symbolValue(item.product) === key) || null;
+}
+
 export function searchSymbols(query = '') {
   const terms = String(query).trim().toLocaleLowerCase().split(/\s+/u).filter(Boolean);
-  return SYMBOLS.filter(item => terms.every(term => `${item.symbol} ${item.product} ${item.base}/${item.currency || 'USD'} ${item.name} ${item.koreanName} ${item.assetClass==='housing'?'국내 한국 부동산 지수':item.currency === 'KRW' ? '국내 한국 원화 KRW' : item.currency==='USDC'?'USDC 현물':'미국 달러 USD'} ${item.source} ${item.description}`.toLocaleLowerCase().includes(term)));
+  return SYMBOLS.filter(item => terms.every(term => `${item.symbol} ${item.product} ${item.base}/${item.assetClass==='diagnosis'?'':item.currency || 'USD'} ${item.name} ${item.koreanName} ${item.assetClass==='diagnosis'?'시장 진단 알파 베타 감마 엑박':item.assetClass==='housing'?'국내 한국 부동산 지수':item.currency === 'KRW' ? '국내 한국 원화 KRW' : item.currency==='USDC'?'USDC 현물':'미국 달러 USD'} ${item.source} ${item.description}`.toLocaleLowerCase().includes(term)));
 }
 
 /** A symbol change keeps presentation choices, but resets asset-owned ranges,
@@ -32,6 +45,11 @@ export function createSymbolUrl(currentUrl, targetSymbol) {
   next.search = ''; next.hash = '';
   const labRoot = next.pathname.indexOf('/market-lab/');
   if (labRoot >= 0) next.pathname = next.pathname.slice(0,labRoot+1);
+  if (instrument.assetClass === 'diagnosis') {
+    if(current.protocol==='file:')throw new RangeError('Workspace charts require the web app');
+    next.pathname=(next.pathname.endsWith('/')?next.pathname:next.pathname.slice(0,next.pathname.lastIndexOf('/')+1))+'market-lab/';
+    return next.href;
+  }
   if (instrument.page) {
     if(current.protocol==='file:')throw new RangeError('Workspace charts require the web app');
     next.pathname=(next.pathname.endsWith('/')?next.pathname:next.pathname.slice(0,next.pathname.lastIndexOf('/')+1))+'market-lab/charts/';
@@ -65,6 +83,8 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', showName=false, d
   };
   button.type = 'button'; button.classList.add('symbol-selector-trigger');
   button.replaceChildren();
+  const logo = coinLogo(current);
+  if (logo) { const avatar = add(button,'img','symbol-selector-avatar'); avatar.src = logo; avatar.alt = ''; avatar.width = 24; avatar.height = 24; }
   // The shared outer heading has room for a separate name. Compact chart
   // headers retain their canonical instrument value and descriptive aria-label.
   const instrumentName = showName ? add(button,'span','symbol-selector-name',current.assetClass==='housing'?'':current.koreanName) : null;
@@ -79,11 +99,12 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', showName=false, d
   dialog.setAttribute('aria-labelledby','symbol-search-title');
   const header = add(dialog,'header','symbol-search-heading');
   add(header,'h2','', '종목 검색').id = 'symbol-search-title';
-  const dismiss = add(header,'button','symbol-search-close','×'); dismiss.type = 'button'; dismiss.setAttribute('aria-label','종목 검색 닫기');
+  const dismiss = add(header,'button','symbol-search-close','esc'); dismiss.type = 'button'; dismiss.setAttribute('aria-label','종목 검색 닫기');
   const search = add(dialog,'div','symbol-search-input'); add(search,'span','symbol-search-icon').innerHTML = searchIcon;
-  const input = add(search,'input',''); input.type = 'search'; input.placeholder = '심볼 또는 이름 검색'; input.autocomplete = 'off'; input.spellcheck = false;
-  input.setAttribute('aria-label','심볼 또는 이름 검색'); input.setAttribute('role','combobox'); input.setAttribute('aria-autocomplete','list'); input.setAttribute('aria-controls','symbol-search-results'); input.setAttribute('aria-expanded','true');
-  const filters = add(dialog,'div','symbol-search-filters'); add(filters,'span','','디지털 자산 · 주식 · ETF · 부동산'); add(filters,'span','','USD · KRW · USDC · 지수');
+  const input = add(search,'input',''); input.type = 'search'; input.placeholder = '심볼, 이름 또는 시장 진단'; input.autocomplete = 'off'; input.spellcheck = false;
+  input.setAttribute('aria-label','심볼, 이름 또는 시장 진단'); input.setAttribute('role','combobox'); input.setAttribute('aria-autocomplete','list'); input.setAttribute('aria-controls','symbol-search-dialog'); input.setAttribute('aria-expanded','true');
+  const filters = add(dialog,'div','symbol-search-filters'); add(filters,'span','','시장 진단'); add(filters,'span','','디지털 자산 · 주식 · ETF · 부동산'); add(filters,'span','','USD · KRW · USDC · 지수');
+  const diagnosis = add(dialog,'div','symbol-search-diagnosis'); diagnosis.setAttribute('role','group'); diagnosis.setAttribute('aria-label','알파 베타 감마 시장 진단');
   const results = add(dialog,'div','symbol-search-results'); results.id = 'symbol-search-results'; results.setAttribute('role','listbox'); results.setAttribute('aria-label','지원 종목');
   const empty = add(dialog,'p','symbol-search-empty','일치하는 종목이 없습니다.'); empty.hidden = true; empty.setAttribute('role','status');
   const count = add(dialog,'span','symbol-search-count'); count.setAttribute('role','status'); count.setAttribute('aria-live','polite');
@@ -102,31 +123,45 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', showName=false, d
     if (focus) row.focus({preventScroll:true});
     // Only the option list scrolls: revealing a current/keyboard option must
     // never move the search input underneath the dialog's fixed heading.
-    if (opened && results.clientHeight > 0) {
+    if (opened && row.parentElement === results && results.clientHeight > 0) {
       const bounds = row.getBoundingClientRect(), frame = results.getBoundingClientRect();
       const top = frame.top + results.clientTop, bottom = top + results.clientHeight;
       if (bounds.top < top) results.scrollTop -= top - bounds.top;
       else if (bounds.bottom > bottom) results.scrollTop += bounds.bottom - bottom;
     }
   }
+  function renderRow(parent, instrument) {
+    const row = add(parent,'button',`symbol-search-row${instrument.assetClass==='diagnosis'?' symbol-search-diagnosis-row':''}`); row.id = `symbol-option-${instrument.symbol}`; row.type = 'button'; row.setAttribute('role','option'); row.dataset.symbol = instrument.symbol;
+    const logo = coinLogo(instrument);
+    const mark = logo ? add(row,'img','symbol-search-logo') : add(row,'span',`symbol-search-mark symbol-search-mark-${instrument.base.toLowerCase()}`);
+    mark.setAttribute('aria-hidden','true');
+    if (logo) { mark.src = logo; mark.alt = ''; mark.width = 30; mark.height = 30; }
+    else if (instrument.assetClass==='diagnosis') mark.textContent = 'α';
+    else if (instrument.base === 'ETH') mark.innerHTML = ethIcon;
+    else mark.textContent = instrument.assetClass==='housing'?'집':instrument.base==='HYPE'?'H':instrument.assetClass==='etf' ? 'E' : instrument.assetClass==='equity'?instrument.symbol==='MSTR'?'M':'B':'₿';
+    const identity = add(row,'span','symbol-search-identity');
+    const symbolLine = add(identity,'span','symbol-search-symbol'); add(symbolLine,'strong','',instrument.assetClass==='housing'||instrument.assetClass==='diagnosis'?instrument.product:instrument.symbol);
+    if (instrument.symbol === currentSymbol) add(symbolLine,'small','symbol-search-current','현재');
+    add(identity,'span','symbol-search-name',instrument.assetClass==='diagnosis'?`${instrument.koreanName} · 알파 × 베타 × 감마`:instrument.symbol==='BTCUSD'?instrument.koreanName:`${instrument.name} · ${instrument.koreanName}`);
+    const source = add(row,'span','symbol-search-source'); add(source,'span','',instrument.source); add(source,'small','',instrument.assetClass==='diagnosis'?'알파 · 베타 · 감마':instrument.assetClass==='housing'?'월별 지수 · 거래량':instrument.assetClass==='etf'?`ETF · ${instrument.currency}`:instrument.assetClass==='equity'?'주식 · USD':`현물 · ${instrument.currency||'USD'}`);
+    row.title = instrument.assetClass==='diagnosis'?`${instrument.koreanName} · 알파, 베타, 감마 차트`:`${instrument.description} · ${instrument.koreanName} / ${instrument.currency || 'USD'}`;
+    row.onclick = () => choose(instrument.symbol);
+    row.onfocus = () => activate(rows.indexOf(row));
+    rows.push(row);
+    return row;
+  }
   function renderResults() {
-    matches = searchSymbols(input.value || '').filter(item=>supported.includes(item)); results.replaceChildren(); rows = [];
-    for (const instrument of matches) {
-      const row = add(results,'button','symbol-search-row'); row.id = `symbol-option-${instrument.symbol}`; row.type = 'button'; row.setAttribute('role','option'); row.dataset.symbol = instrument.symbol;
-      const mark = add(row,'span',`symbol-search-mark symbol-search-mark-${instrument.base.toLowerCase()}`); mark.setAttribute('aria-hidden','true');
-      instrument.base === 'ETH' ? mark.innerHTML = ethIcon : mark.textContent = instrument.assetClass==='housing'?'집':instrument.base==='HYPE'?'H':instrument.assetClass==='etf' ? 'E' : instrument.assetClass==='equity'?instrument.symbol==='MSTR'?'M':'B':'₿';
-      const identity = add(row,'span','symbol-search-identity');
-      const symbolLine = add(identity,'span','symbol-search-symbol'); add(symbolLine,'strong','',instrument.assetClass==='housing'?instrument.product:instrument.symbol);
-      if (instrument.symbol === currentSymbol) add(symbolLine,'small','symbol-search-current','현재');
-      add(identity,'span','symbol-search-name',instrument.symbol==='BTCUSD'?instrument.koreanName:`${instrument.name} · ${instrument.koreanName}`);
-      const source = add(row,'span','symbol-search-source'); add(source,'span','',instrument.source); add(source,'small','',instrument.assetClass==='housing'?'월별 지수 · 거래량':instrument.assetClass==='etf'?`ETF · ${instrument.currency}`:instrument.assetClass==='equity'?'주식 · USD':`현물 · ${instrument.currency||'USD'}`);
-      row.title = `${instrument.description} · ${instrument.koreanName} / ${instrument.currency || 'USD'}`;
-      row.onclick = () => choose(instrument.symbol);
-      row.onfocus = () => activate(rows.indexOf(row));
-      rows.push(row);
-    }
-    empty.hidden = matches.length > 0; count.textContent = `${matches.length}개 종목`;
-    const currentIndex = matches.findIndex(item => item.symbol === currentSymbol);
+    const found = searchSymbols(input.value || '').filter(item=>supported.includes(item));
+    const diagnoses = found.filter(item=>item.assetClass==='diagnosis');
+    matches = found.filter(item=>item.assetClass!=='diagnosis');
+    diagnosis.replaceChildren(); rows = [];
+    if (diagnoses.length) add(diagnosis,'p','symbol-search-diagnosis-label','시장 진단 · 알파 × 베타 × 감마');
+    diagnosis.hidden = diagnoses.length === 0;
+    for (const instrument of diagnoses) renderRow(diagnosis, instrument);
+    results.replaceChildren();
+    for (const instrument of matches) renderRow(results, instrument);
+    empty.hidden = found.length > 0; count.textContent = `${found.length}개 종목`;
+    const currentIndex = rows.findIndex(row => row.dataset.symbol === currentSymbol);
     activate(currentIndex >= 0 ? currentIndex : 0);
   }
   function restoreFocus() { if (button.isConnected !== false && !button.disabled && !button.hidden) button.focus({preventScroll:true}); }
@@ -141,7 +176,7 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', showName=false, d
     close(); if (instrument.symbol === currentSymbol && !document.body?.dataset?.centerTool) return;
     let url = createSymbolUrl(getUrl ? getUrl() : win.location.href,instrument.symbol);
     const service = document.querySelector?.('meta[name="atlas-service-base"]')?.getAttribute('content');
-    if (service && instrument.page) url = new URL(`charts/?symbol=${instrument.symbol}${instrument.page==='housing'?`&region=${instrument.region}`:''}`, new URL(service, win.location.href)).href;
+    if (service && instrument.page && instrument.assetClass !== 'diagnosis') url = new URL(`charts/?symbol=${instrument.symbol}${instrument.page==='housing'?`&region=${instrument.region}`:''}`, new URL(service, win.location.href)).href;
     const SelectedEvent = win?.CustomEvent || globalThis.CustomEvent;
     if (SelectedEvent && !document.dispatchEvent(new SelectedEvent('atlas:symbol-select',{cancelable:true,detail:{symbol:instrument.symbol,url}}))) return;
     if (onSelect) onSelect(instrument.symbol,url);
@@ -165,7 +200,7 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', showName=false, d
     if (['ArrowDown','ArrowUp'].includes(event.key)) {
       event.preventDefault(); activate(activeIndex+(event.key === 'ArrowDown' ? 1 : -1),{focus:document.activeElement !== input}); return;
     }
-    if (event.key === 'Enter' && document.activeElement === input) { event.preventDefault(); if (matches[activeIndex]) choose(matches[activeIndex].symbol); return; }
+    if (event.key === 'Enter' && document.activeElement === input) { event.preventDefault(); const symbol=rows[activeIndex]?.dataset?.symbol; if (symbol) choose(symbol); return; }
     if (event.key !== 'Tab') return;
     const controls = [dismiss,input,...rows.filter((_,index) => index === activeIndex)], index = controls.indexOf(document.activeElement);
     if (event.shiftKey && index <= 0) { event.preventDefault(); controls.at(-1).focus({preventScroll:true}); }

@@ -15,9 +15,9 @@ test('Buy/Sell markers use observed directional crossings, equality once, and no
   assert.deepEqual(rsiCrossings(rows([null,20,null,45])),[],'missing RSI never manufactures a crossing');
 });
 test('sidebar tools have unique direct pages and old tab/region links select the same tool', () => {
-  const tools=atlasPages.filter(p=>p.tab); assert.equal(new Set(tools.map(p=>p.href)).size,7);
+  const tools=atlasPages.filter(p=>p.tab); assert.equal(new Set(tools.map(p=>p.href)).size,6);
   for(const page of tools) assert.equal(labPageFromLocation({pathname:page.href,search:''}).id,page.id);
-  assert.equal(labPageFromLocation({pathname:'/market-lab/',search:'?lab-tab=diagnosis&lab-region=kr'}).id,'market-kr');
+  assert.equal(labPageFromLocation({pathname:'/market-lab/',search:'?lab-tab=diagnosis&lab-region=kr'}).id,'market-us');
   assert.equal(labPageFromLocation({pathname:'/market-lab/',search:'?lab-tab=ai'}).id,'cashflow');
   assert.equal(labPageFromLocation({pathname:'/market-lab/',search:'?lab-tab=rsi'}).id,'rsi');
 });

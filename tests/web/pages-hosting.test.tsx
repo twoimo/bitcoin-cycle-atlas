@@ -15,6 +15,10 @@ test('project paths retain a declared subpath and reject escaping resource paths
   assert.equal(atlasSitePath('/data/market-lab.json',atlasRootPath(document)),'/bitcoin-cycle-atlas/data/market-lab.json');
   for(const bad of ['//evil.test','/../data','/a/./b','/a\\b','/a\nb'])assert.throws(()=>atlasSitePath(bad));
   document.querySelector('[name=atlas-root]')!.setAttribute('content','/../');assert.throws(()=>atlasRootPath(document));
+  const hosted={querySelector:()=>({getAttribute:()=>'/bitcoin-cycle-atlas/'}),defaultView:{location:{protocol:'https:',pathname:'/bitcoin-cycle-atlas/market-lab/app/'}}};
+  assert.equal(atlasRootPath(hosted as unknown as Document),'/bitcoin-cycle-atlas/');
+  const local={querySelector:()=>({getAttribute:()=>'/bitcoin-cycle-atlas/'}),defaultView:{location:{protocol:'http:',pathname:'/market-lab/app/'}}};
+  assert.equal(atlasRootPath(local as unknown as Document),'/');
 });
 test('all React deep links recognize the same page at a project subpath',()=>{
   for(const page of ['us','kr','scenario','cashflow','rsi','housing','themes']){

@@ -44,6 +44,8 @@ test('deployment HTML changes only the site origin and asset root while preservi
   assert.match(result, /<meta name="atlas-root" content="\/">/);
   assert.ok(result.includes(`href="${origin}/"`));
   assert.ok(result.includes('href="../../?page=housing&region=seoul"'));
+  assert.match(headers, /X-Frame-Options: SAMEORIGIN/);
+  assert.match(headers, /frame-ancestors 'self'/);
   assert.equal(publicOrigin(`${origin}/`), origin);
   for (const value of ['', 'http://atlas.example.com', 'https://user:pass@atlas.example.com', `${origin}/charts`, `${origin}/?token=x`]) {
     assert.throws(() => publicOrigin(value));
