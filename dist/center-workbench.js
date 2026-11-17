@@ -222,8 +222,8 @@ export function mountCenterWorkbench() {
       if(workspaceInstrument(chartUrl.searchParams.get('symbol')))chartUrl.searchParams.delete('symbol');
       if(chartUrl.searchParams.get('page')==='market')chartUrl.searchParams.delete('page');
       originalUrl=chartUrl.href;originalTitle=document.title;
-      const headingChildren=[...document.querySelector('.atlas-canvas-heading')?.children || []].filter(node=>!node.matches('.symbol-selector-trigger,.mobile-workbench-button,.center-workspace-toolbar'));
-      for(const node of new Set([...plot.children,...headingChildren,...document.querySelectorAll('.atlas-canvas-heading button:not(.symbol-selector-trigger):not(.mobile-workbench-button),.atlas-canvas-heading select,#atlas-cycle-panel,.workbench-tools,.workbench-tools button,.chart-navigation button,.workbench-detail-tools,.workbench-detail-tools button,.workbench-help,.mobile-extra-actions,.mobile-extra-actions button,.workbench-bottom-bar,.workbench-bottom-bar button,.workbench-bottom-bar select')])) {
+      const headingChildren=[...document.querySelector('.atlas-canvas-heading')?.children || []].filter(node=>!node.matches('.symbol-selector-trigger,.mobile-workbench-button,.center-workspace-toolbar,.auth-account'));
+      for(const node of new Set([...plot.children,...headingChildren,...document.querySelectorAll('.atlas-canvas-heading button:not(.symbol-selector-trigger):not(.mobile-workbench-button):not([data-auth-action]),.atlas-canvas-heading select,#atlas-cycle-panel,.workbench-tools,.workbench-tools button,.chart-navigation button,.workbench-detail-tools,.workbench-detail-tools button,.workbench-help,.mobile-extra-actions,.mobile-extra-actions button,.workbench-bottom-bar,.workbench-bottom-bar button,.workbench-bottom-bar select')])) {
         if(node.classList.contains('atlas-center-frame')||node.closest('.center-workspace-toolbar'))continue;
         const nativeControl=node.closest('.atlas-canvas-heading')&&node.matches(nativeChartControlSelector);
         saved.set(node,{inert:node.inert,aria:node.getAttribute('aria-hidden'),disabled:node.disabled,...(nativeControl?{hidden:node.hidden}:{})});

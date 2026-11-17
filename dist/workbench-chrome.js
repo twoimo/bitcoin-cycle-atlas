@@ -7,6 +7,7 @@ import { mountChartBottomBar } from './chart-bottom-bar.js?v=1.29.0';
 import { mountSymbolSelector } from './symbol-selector.js?v=1.35.0';
 import { createThemeControl } from './ui/theme.js';
 import { createChartColorsControl } from './ui/chart-colors.js';
+import { mountAuthAccount } from './auth-account.js?v=1.1.6';
 const $ = selector => document.querySelector(selector);
 
 const paths = {
@@ -100,6 +101,7 @@ export function mountWorkbenchChrome({icon,stage,workspace,plot,tools,controlSto
   const chartMenu=button('more','차트 빠른 조작 · 우클릭 / Shift+F10',{'id':'workbench-chart-menu','aria-haspopup':'menu','aria-controls':'atlas-chart-context-menu'});chartMenu.onclick=()=>command('context-menu');
   const workspaceButton=button('search','작업 화면·명령 검색 · Ctrl/⌘ K',{'id':'workbench-workspace'});
   heading.append(symbol,frequency,chartType,menu,scenario,$('#atlas-cycle-panel'),$('#workbench-monthly-backtest'),spacer,workspaceButton,chartMenu,save,settingButton);stage.prepend(heading);
+  mountAuthAccount(document);
   const workspaceTools=mountWorkspaceTools({trigger:workspaceButton,plot,openReader,closeReader});
   const marketInfo=document.createElement('div');marketInfo.className='workbench-market-info';marketInfo.hidden=true;
   const marketStatus=document.createElement('span');marketStatus.id='workbench-market-status';marketStatus.setAttribute('role','status');marketStatus.setAttribute('aria-live','polite');
@@ -216,7 +218,7 @@ export function mountWorkbenchChrome({icon,stage,workspace,plot,tools,controlSto
   };
   const handleKey=event=>{
     if(document.documentElement.dataset.chartReplayActive==='true')return;
-    if(event.defaultPrevented||document.body.dataset.page!=='outlook'||event.ctrlKey||event.metaKey||event.target.closest?.('input,textarea,select,[contenteditable=true],#chart-reader,#indicator-library,#workspace-dialog,#chart-indicator-manager,.analysis-indicator-window,.chart-context-menu,.chart-go-to-dialog,.chart-bottom-popover'))return;
+    if(event.defaultPrevented||document.body.dataset.page!=='outlook'||event.ctrlKey||event.metaKey||event.target.closest?.('input,textarea,select,[contenteditable=true],#chart-reader,#indicator-library,#workspace-dialog,#chart-indicator-manager,.analysis-indicator-window,.chart-context-menu,.chart-go-to-dialog,.chart-bottom-popover,.auth-account-dialog'))return;
     if(workspace.dataset.chartMode!=='price')return;
     const key=event.key.toLowerCase(),intraday=plot.dataset.intraday==='true';
     if(event.altKey){

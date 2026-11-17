@@ -12,7 +12,7 @@ import {readP1RouteReadiness, isP1RouteReady} from '../scripts/verify-ui-renewal
 const app = readFileSync(new URL('../dist/app.js', import.meta.url), 'utf8');
 const shell = readFileSync(new URL('../dist/atlas-shell.js', import.meta.url), 'utf8');
 const lifecycle = app.slice(app.indexOf('let outlookController ='), app.indexOf('function ensureEvidence()'))
-  .replace("import('./viewport-workspace.js?v=1.36.1')", 'loadViewport()')
+  .replace("import('./viewport-workspace.js?v=1.36.2')", 'loadViewport()')
   .replace("import('./lab-view.js?v=1.36.1')", 'loadLab()');
 assert.doesNotMatch(lifecycle, /\bimport\(/, 'only the two module import boundaries are deferred by this fixture');
 const syncPage = app.slice(app.indexOf('function syncPage()'), app.indexOf('\nsyncPage();'));
@@ -90,6 +90,7 @@ function fixture(t, width = 320) {
     ensureEvidence() {}, btcRefreshStatus:{update() {}}, ipoController:{render() {}}, marketController:{render() {}},
     relayController:{show() {}},
     header:document.querySelector('.atlas-dashboard-header'), group:document.querySelector('.atlas-sidebar-group'),
+    mountAuthAccount() {},
     sidebar:document.querySelector('.atlas-sidebar'), contentShell, CONTENT_SHELL_PAGES,
     pageDescription:{sync() {}}, preference() {}, atlasNavigationId, atlasPages, labPageFromLocation,
     location:new URL('https://example.test/bitcoin-cycle-atlas/?page=relay'),

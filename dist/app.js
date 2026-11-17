@@ -134,7 +134,7 @@ document.addEventListener('atlas:page-ready', event => {
 });
 function ensureWorkspace() {
   if (!workspacePromise) workspacePromise = Promise.all([
-    import('./viewport-workspace.js?v=1.36.1'), import('./lab-view.js?v=1.36.1'),
+    import('./viewport-workspace.js?v=1.36.2'), import('./lab-view.js?v=1.36.1'),
   ]).then(([workspace, lab]) => {
     // Imports may finish after a second navigation. Leave that dashboard's
     // original navigation owner intact; cached modules can mount next visit.

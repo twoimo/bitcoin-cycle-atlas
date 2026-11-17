@@ -27,10 +27,11 @@ SOFTWARE.
 import {atlasSitePath} from './site-paths.js';
 import { atlasPages, atlasNavigationPages, atlasNavigationId, labPageFromLocation } from './atlas-navigation.js?v=1.36.1';
 import { readShellPreference, writeShellPreference } from './atlas-shell-state.js';
-import { mountCenterWorkbench } from './center-workbench.js?v=1.36.1';
+import { mountCenterWorkbench } from './center-workbench.js?v=1.36.2';
 import { mountShellSlots } from './ui/shell-slots.js';
 import { mountPageDescription } from './ui/page-description.js';
 import { createContentShell, CONTENT_SHELL_PAGES } from './content-shell.js?v=1.38.0';
+import { mountAuthAccount } from './auth-account.js?v=1.1.6';
 
 // The compact rails keep their Korean names visible for pointer and keyboard
 // users. A body-level tooltip avoids clipping inside the scrolling rail.
@@ -176,6 +177,11 @@ export function initAtlasShell() {
       if (active) item.setAttribute('aria-current', 'page'); else item.removeAttribute('aria-current');
     }
     preference();
+    // The chart toolbar is the visible top row on outlook/compare. Dashboard
+    // routes use this header, which receives the same class while visible.
+    const accountHeading = document.querySelector('.atlas-canvas-heading');
+    const accountHeadingVisible = Boolean(accountHeading && document.body.dataset.shell !== 'dashboard' && !accountHeading.closest('[hidden]'));
+    if (!accountHeadingVisible || !accountHeading.querySelector('[data-auth-account]')) mountAuthAccount(document);
   }
   const pageObserver = new MutationObserver(sync), workspaceObserver = new MutationObserver(sync);
   pageObserver.observe(document.body, { attributes: true, attributeFilter: ['data-page', 'data-center-tool'] });

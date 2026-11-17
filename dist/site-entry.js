@@ -1,6 +1,6 @@
 import { initTheme } from './ui/theme.js';
 import { enhanceBootSkeleton } from './loading-surfaces.js';
-import { initAtlasShell } from './atlas-shell.js?v=1.36.1';
+import { initAtlasShell } from './atlas-shell.js?v=1.36.2';
 import { canonicalNativeChartEntry, canonicalRetiredPageEntry } from './atlas-navigation.js?v=1.36.1';
 import { canonicalWorkspaceChartEntry } from './atlas-navigation.js?v=1.36.1';
 import { mountJournalEntry } from './journal-entry.js?v=1.29.0';
@@ -29,7 +29,7 @@ if (canonicalEntry) {
       const { initEquityView } = await import("./equity-view.js?v=1.36.1");
       await initEquityView({symbol});
     } else {
-      await import("./app.js?v=1.37.8");
+      await import("./app.js?v=1.37.9");
     }
   } catch (error) {
     console.error('Chart initialization failed', error);
