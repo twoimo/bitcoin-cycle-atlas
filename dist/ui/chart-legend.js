@@ -1,5 +1,5 @@
 import {mountDialogViewport} from '../dialog-viewport.js?v=1.29.0';
-import {chartLegendSlot,fitLegendEntries} from './chart-legend-layout.js';
+import {chartLegendSlot,fitLegendEntries} from './chart-legend-layout.js?v=1.36.3';
 
 const controllers=new WeakMap(),sources=new WeakMap();
 
@@ -20,7 +20,7 @@ export function mountChartLegend({plot,groups}={}){
   const groupSpecs=groups||[{id:'price',label:'가격 계열',shortLabel:'가격',selector:'.price-legend-item'},{id:'cycle',label:'사이클 색상',shortLabel:'사이클',selector:'.cycle-legend-item,.cycle-style-sample,.cycle-reference-key'}];
   const request=win.requestAnimationFrame?.bind(win)||globalThis.requestAnimationFrame;
   const cancel=win.cancelAnimationFrame?.bind(win)||globalThis.cancelAnimationFrame;
-  let geometry=null,rows=[],frame=null,queued=false,destroyed=false,opener=null,lastLayoutKey='',lastMarkup=null,lastFitWidth=null;
+  let geometry=null,rows=[],frame=null,queued=false,destroyed=false,opener=null,lastLayoutKey='',lastMarkup=null,lastFitWidth=null,lastPacked=0;
   foot.classList.add('chart-legend-dock');foot.setAttribute('aria-label','차트 범례');foot.removeAttribute('tabindex');
   plot.dataset.legendDock='top-right';
   const chip=doc.createElement('button');chip.type='button';chip.className='chart-legend-open';chip.textContent='범례';
@@ -84,29 +84,36 @@ export function mountChartLegend({plot,groups}={}){
     prepareSource();schedule();return true;
   }
   function setStyle(node,name,value){const formatted=`${Math.max(0,Math.round(value*100)/100)}px`;if(node.style.getPropertyValue(name)!==formatted)node.style.setProperty(name,formatted);}
-  function fitRows(){
-    // Do not discard an external edit when geometry refresh precedes its observer.
+  function fitRows(cap){
+    // Pack both groups from the left of one shared line, then let the dock
+    // shrink to that content so the empty 42% budget does not become padding.
     if(sourceObserver?.takeRecords?.().length){lastMarkup=null;prepareSource(true);}
-    const width=source.clientWidth;
-    if(!(width>0)){lastFitWidth=null;return;}
-    if(width===lastFitWidth)return;
+    const styles=win.getComputedStyle(foot);
+    const chrome=(parseFloat(styles.paddingLeft)||0)+(parseFloat(styles.paddingRight)||0)+(parseFloat(styles.borderLeftWidth)||0)+(parseFloat(styles.borderRightWidth)||0);
+    const width=Math.max(0,cap-chrome);
+    if(!(width>0)){lastFitWidth=null;lastPacked=0;return 0;}
+    if(width===lastFitWidth)return lastPacked;
     sourceObserver?.disconnect();
-    for(const row of rows){
+    const gap=4,measured=rows.map(row=>{
       for(const entry of row.entries)entry.node.hidden=false;
       row.more.hidden=false;row.more.textContent=`+${row.entries.length}`;
-      const widths=row.entries.map(entry=>entry.node.getBoundingClientRect().width);
-      // Both semantic groups share one line. Each group fits only its own
-      // allocated width, not the full legend width used by the former stack.
-      const rowWidth=row.row.clientWidth||Math.max(0,(width-8*(rows.length-1))/rows.length);
-      const available=Math.max(0,rowWidth-row.labelNode.getBoundingClientRect().width-8);
-      const result=fitLegendEntries(widths,{available,gap:8,moreWidth:Math.max(44,row.more.getBoundingClientRect().width)});
-      row.entries.forEach((entry,index)=>{entry.node.hidden=index>=result.visibleCount;});
+      const more=Math.max(24,row.more.getBoundingClientRect().width),label=row.labelNode.getBoundingClientRect().width;
+      const entries=row.entries.map(entry=>entry.node.getBoundingClientRect().width);
+      return {more,label,entries};
+    });
+    let cursor=0;
+    rows.forEach((row,index)=>{
+      const spec=measured[index],room=Math.max(0,width-cursor-(index?gap:0));
+      const result=fitLegendEntries(spec.entries,{available:Math.max(0,room-spec.label-gap),gap,moreWidth:spec.more});
+      row.entries.forEach((entry,entryIndex)=>{entry.node.hidden=entryIndex>=result.visibleCount;});
       row.more.textContent=`+${result.hiddenCount}`;row.more.hidden=result.hiddenCount===0;
       row.more.setAttribute('aria-label',`${row.label} ${result.hiddenCount}개 더 보기 · 전체 ${row.entries.length}개`);
       row.row.dataset.visibleCount=String(result.visibleCount);row.row.dataset.hiddenCount=String(result.hiddenCount);
-    }
-    lastFitWidth=width;
-    observeSource();
+      const shown=spec.entries.slice(0,result.visibleCount);
+      const items=shown.reduce((sum,entry)=>sum+entry,0)+Math.max(0,shown.length-1)*gap;
+      cursor+=(index?gap:0)+spec.label+gap+items+(result.hiddenCount?gap+spec.more:0);
+    });
+    lastFitWidth=width;lastPacked=cursor;observeSource();return cursor;
   }
   function refresh(nextGeometry){
     if(destroyed)return null;if(nextGeometry)geometry=nextGeometry;
@@ -114,15 +121,27 @@ export function mountChartLegend({plot,groups}={}){
     const width=plot.clientWidth||box.width,height=plot.clientHeight||box.height;
     const input=geometry&&geometry.width===width&&geometry.height===height?geometry:{width,height,left:Number(svg?.dataset.plotLeft)||0,right:Number(svg?.dataset.plotRight)||width-80,top:Number(svg?.dataset.plotTop)||18,bottom:Number(svg?.dataset.priceBottom)||height};
     const slot=chartLegendSlot({...input,width,height,viewportWidth:win.innerWidth||width});
-    setStyle(foot,'--chart-legend-top',slot.y);setStyle(foot,'--chart-legend-right',width-slot.x-slot.width);setStyle(foot,'--chart-legend-width',slot.width);setStyle(foot,'--chart-legend-height',slot.height);
-    setStyle(plot,'--chart-legend-hud-max-width',slot.hudMaxWidth);
+    const rightOffset=Math.max(0,width-input.right+slot.inset);
+    // The price pane starts below a small chart margin. The preferred row sits
+    // 4px from the plot's top-right corner instead of waiting at that margin.
+    const paneTop=Number.isFinite(input.top)?input.top:18;
+    const cornerY=!slot.compact&&slot.y===paneTop?Math.min(paneTop,4):slot.y;
+    let usedWidth=slot.width;
     plot.dataset.legendVisible=String(!foot.hidden&&plot.dataset.chartFocus!=='true');
     foot.dataset.legendMode=slot.compact?'chip':'rows';foot.dataset.legendCompactReason=slot.compactReason||'';dialog.dataset.fullscreen=String(slot.compact);
     chip.hidden=!slot.compact;source.hidden=slot.compact;
-    if(!slot.compact&&!foot.hidden&&plot.dataset.chartFocus!=='true')fitRows();else lastFitWidth=null;
-    const layoutKey=JSON.stringify([slot.x,slot.y,slot.width,slot.height,slot.compact,foot.hidden]);
-    if(layoutKey!==lastLayoutKey){lastLayoutKey=layoutKey;doc.dispatchEvent(new win.CustomEvent('atlas:legend-layout-change',{detail:{...slot}}));}
-    return slot;
+    if(!slot.compact&&!foot.hidden&&plot.dataset.chartFocus!=='true'){
+      const packed=fitRows(slot.width),styles=win.getComputedStyle(foot);
+      const chrome=(parseFloat(styles.paddingLeft)||0)+(parseFloat(styles.paddingRight)||0)+(parseFloat(styles.borderLeftWidth)||0)+(parseFloat(styles.borderRightWidth)||0);
+      usedWidth=Math.min(slot.width,Math.max(0,Math.round((packed+chrome)*100)/100));
+    }else lastFitWidth=null;
+    const x=Math.max(input.left,width-rightOffset-usedWidth);
+    setStyle(foot,'--chart-legend-top',cornerY);setStyle(foot,'--chart-legend-right',rightOffset);setStyle(foot,'--chart-legend-width',usedWidth);setStyle(foot,'--chart-legend-height',slot.height);
+    setStyle(plot,'--chart-legend-hud-max-width',Math.max(0,x-20));
+    const visual={...slot,x,y:cornerY,width:usedWidth};
+    const layoutKey=JSON.stringify([visual.x,visual.y,visual.width,visual.height,visual.compact,foot.hidden]);
+    if(layoutKey!==lastLayoutKey){lastLayoutKey=layoutKey;doc.dispatchEvent(new win.CustomEvent('atlas:legend-layout-change',{detail:visual}));}
+    return visual;
   }
   function schedule(){
     if(destroyed||queued)return;queued=true;

@@ -1,6 +1,6 @@
 // The shell owns positions, while the existing chart controllers keep their
 // nodes, listeners and state. Asset-specific controls share only top slot 5.
-import {mountMobileShellHeading, shellFeatureContainer} from './mobile-shell-heading.js?v=1.0.1';
+import {mountMobileShellHeading, shellFeatureContainer} from './mobile-shell-heading.js?v=1.0.2';
 
 export const SHELL_SLOT_KEYS = Object.freeze({
   top: ['symbol', 'interval', 'chart-type', 'indicators', 'instrument', 'history', 'workspace', 'chart-menu', 'export', 'settings'],
@@ -80,8 +80,11 @@ export function refreshShellSlots(document, {symbol} = {}) {
   set(feature, 'aria-label', `${currentSymbol} 종목 기능`);
   const featureControls=shellFeatureContainer(feature);
   const special = '#workbench-scenario,#atlas-cycle-panel,#workbench-monthly-backtest,#workbench-replay,#workbench-next-turn,#equity-scenario,#eth-history-trigger,[data-eth-action],[data-equity-action],.center-workspace-toolbar';
+  const compact = document.body.classList.contains('atlas-funnest-compact');
   for (const node of heading.querySelectorAll(special)) {
-    if (node.matches('.center-workspace-toolbar') && document.body.dataset.centerTool && !document.body.dataset.chartControls) {
+    // Phone and tablet keep the real center controls in the heading. Desktop
+    // chart pages still share the instrument slot with the other chart tools.
+    if (node.matches('.center-workspace-toolbar') && document.body.dataset.centerTool && (!document.body.dataset.chartControls || compact)) {
       if (node.parentElement !== heading) heading.append(node);
       continue;
     }
@@ -98,7 +101,10 @@ export function refreshShellSlots(document, {symbol} = {}) {
   } else heading.querySelector('.shell-history-slot')?.remove();
   const top = [heading.querySelector('.symbol-selector-trigger,.workbench-symbol'), $('#workbench-frequency'), $('#workbench-chart-type'), $('#atlas-mode-menu'), feature, history, $('#workbench-workspace'), $('#workbench-chart-menu'), $('#lab-svg'), $('#atlas-display-options')];
   top.forEach((node, index) => slot(node, 'top', index));
-  ordered(heading, [...top, ...[...heading.children].filter(node => !top.includes(node))]);
+  // The chart tools menu sits beside 지표 without taking the instrument slot.
+  const toolsMenu = $('#chart-tools-menu');
+  const visual = toolsMenu ? [...top.slice(0, 4), toolsMenu, ...top.slice(4)] : top;
+  ordered(heading, [...visual, ...[...heading.children].filter(node => !visual.includes(node))]);
   for (const spacer of heading.querySelectorAll('.workbench-spacer,.eth-divider')) if (!spacer.hidden) spacer.hidden = true;
 
   const footer = $('.workbench-bottom-bar');
@@ -171,13 +177,15 @@ export function mountShellSlots(document) {
       return [...record.addedNodes].some(node => node.closest?.('.atlas-canvas-heading,.workbench-bottom-bar,.workbench-tools,.workbench-rail') || node.querySelector?.('.atlas-canvas-heading,.workbench-bottom-bar,.workbench-tools,.workbench-rail'));
     })) schedule();
   }) : null;
+  const shellObserver = Observer ? new Observer(() => schedule()) : null;
   state.controller = {refresh: options => refreshShellSlots(document, options), destroy() {
-    destroyed = true; observer?.disconnect();state.mobileHeading.destroy(); document.removeEventListener('atlas:active-symbol', onSymbol); document.removeEventListener('atlas:workbench-state', schedule); instances.delete(document);
+    destroyed = true; observer?.disconnect(); shellObserver?.disconnect(); state.mobileHeading.destroy(); document.removeEventListener('atlas:active-symbol', onSymbol); document.removeEventListener('atlas:workbench-state', schedule); instances.delete(document);
   }};
   instances.set(document, state);
   document.addEventListener('atlas:active-symbol', onSymbol);
   document.addEventListener('atlas:workbench-state', schedule);
   observer?.observe(document.body, {childList: true, subtree: true});
+  shellObserver?.observe(document.body, {attributes: true, attributeFilter: ['class', 'data-center-tool', 'data-chart-controls']});
   schedule();
   return state.controller;
 }

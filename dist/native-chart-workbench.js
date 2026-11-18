@@ -1,4 +1,4 @@
-import { atlasNavigationPages } from './atlas-navigation.js?v=1.36.2';
+import { atlasNavigationPages } from './atlas-navigation.js?v=1.36.3';
 import { mountChartBottomBar } from './chart-bottom-bar.js';
 import { mountMobileWorkspace } from './mobile-workspace.js';
 import { createWorkspaceHistory } from './workspace-history.js';
@@ -6,7 +6,8 @@ import { parseGoToRequest } from './chart-view-policy.js?v=1.36.1';
 import { normalizePriceDomain } from './price-axis.js';
 import { createChartSvgExport, createChartPngFromSvg } from './chart-export.js';
 import { isIntradayInterval } from './ohlc-data.js';
-import { mountNativeChartLegend } from './ui/native-chart-legend.js?v=1.36.1';
+import { mountIntervalPicker } from './interval-picker.js?v=1.0.0';
+import { mountNativeChartLegend } from './ui/native-chart-legend.js?v=1.36.3';
 import { createThemeControl } from './ui/theme.js';
 import { initChartColors, createChartColorsControl } from './ui/chart-colors.js';
 
@@ -93,13 +94,11 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
   const oldStatus=$('#eth-status')||$('#equity-status');
   if(oldBottom)legacy.append(oldBottom);if(oldPeriods)oldPeriods.classList.add('native-legacy-controls');if(oldPeriodSelect)oldPeriodSelect.classList.add('native-legacy-controls');
   const frequency=$('.eth-interval-buttons')||$('.equity-intervals');frequency.id='workbench-frequency';frequency.classList.add('native-frequency');
-  const segmented=make('div','lab-segmented');segmented.append(...frequency.children);frequency.append(segmented);
-  for(const node of segmented.querySelectorAll('button')){node.dataset.labFrequency=node.dataset.ethInterval||node.dataset.equityInterval;node.id=`workbench-interval-${node.dataset.labFrequency}`;}
-  const intervalControls=[...segmented.querySelectorAll('[data-lab-frequency]')];
-  const interval=make('select');interval.id='workbench-interval-select';interval.setAttribute('aria-label','가격 표시 간격');
-  for(const item of intervals){const option=make('option','',item.label);option.value=item.id;interval.append(option);}interval.onchange=()=>command('frequency',interval.value);frequency.append(interval);
+  const datasetKey=frequency.classList.contains('equity-intervals')?'equityInterval':'ethInterval';
+  const intervalPicker=mountIntervalPicker({host:frequency,intervals,selected:state.frequency,datasetKey,onSelect:id=>command('frequency',id)});
+  const intervalControls=intervalPicker.buttons,interval=intervalPicker.select;
   const type=button('line','가격 표시 · 캔들로 변경','workbench-chart-type','chart-type');frequency.after(type);
-  const indicators=button('layers','지표 표시','atlas-mode-menu','reader','layers');indicators.classList.add('workbench-mode');const mode=make('span','','인디케이터');mode.id='atlas-mode-name';indicators.append(mode);type.after(indicators);
+  const indicators=button('layers','지표 표시','atlas-mode-menu','reader','layers');indicators.classList.add('workbench-mode');const mode=make('span','','지표');mode.id='atlas-mode-name';indicators.append(mode);type.after(indicators);
   const forecast=top.querySelector('[data-eth-action=forecast],[data-equity-action=forecast]');if(forecast){forecast.id='workbench-scenario';forecast.classList.add('workbench-icon');}
   for(const node of top.querySelectorAll('.eth-icon'))node.classList.add('workbench-icon');
   const spacer=$('.eth-top-spacer');if(spacer)spacer.classList.add('workbench-spacer');
@@ -285,5 +284,5 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
   return {update,command,inspect(detail){inspection=detail;if(active()&&!reader.hidden&&readerKind==='selection')renderReader();},
     beginGesture(){if(active())uiHistory.begin('차트 이동');},endGesture(){return uiHistory.commit();},
     measure(value){uiHistory.run('두 지점 측정',()=>{state.measurement=value;});update();},
-    destroy(){if(destroyed)return;destroyed=true;for(const cleanup of owned)cleanup();releasePlot();legend.destroy();mobile.destroy();bottom.destroy();releaseExport();dateDialog.node.remove();exportDialog.node.remove();reader.remove();left.remove();rail.remove();}};
+    destroy(){if(destroyed)return;destroyed=true;for(const cleanup of owned)cleanup();releasePlot();intervalPicker.destroy();legend.destroy();mobile.destroy();bottom.destroy();releaseExport();dateDialog.node.remove();exportDialog.node.remove();reader.remove();left.remove();rail.remove();}};
 }

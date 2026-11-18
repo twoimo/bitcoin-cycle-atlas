@@ -8,6 +8,24 @@ const observedNumber = (value: number) => fmt(value, 2);
 const contributionNumber = (value: number) => fmt(value, 3);
 const dateText = (value: string | number | undefined) => String(value ?? '').slice(0, 10);
 
+/**
+ * Date labels are 11px, about 64px wide, and the chart anchors a label at the
+ * plot edge to the outside. Keep ticks in the middle of the plot, at least
+ * 96px apart, so neighboring labels do not cover each other.
+ */
+export function observedDateTicks(count: number, plotWidth: number) {
+  if (count <= 0) return [];
+  if (count === 1) return [0];
+  const inner = Math.max(1, plotWidth - 84);
+  const slots = Math.max(1, Math.min(count, Math.floor(inner / 96)));
+  const ticks: number[] = [];
+  for (let i = 0; i < slots; i++) ticks.push(Math.min(count - 1, Math.round(((i + 0.5) / slots) * (count - 1))));
+  const unique = [...new Set(ticks)];
+  if (unique.length > 1 && unique[0] === 0) unique.shift();
+  if (unique.length > 1 && unique.at(-1) === count - 1) unique.pop();
+  return unique.length ? unique : [Math.round((count - 1) / 2)];
+}
+
 export function ResearchChartCard({ title, actions, children, className = '' }: {
   title: ReactNode; actions?: ReactNode; children: ReactNode; className?: string;
 }) {
@@ -81,7 +99,7 @@ export function ObservedResearchChart({ id, points, unit, label, selected, onSel
           <CartesianChart series={[{ id: 'observed', label, data: points.map(([, amount]) => finite(amount) ? amount : null), color: 'var(--data-gold)' }]}
             xAxis={{ data: points.map(point => point[0]), scaleType: 'linear' }} height={plotHeight} inset={{ left: 64, right: 20, top: 20, bottom: 36 }} enableScrubbing animate={false}
             onScrubberPositionChange={selectEvent} aria-label={`${label} · ${model.validCount}개 관측`} getScrubberAccessibilityLabel={(i: number) => { const row = points[i]; return row ? `${row[0]} · ${finite(row[1]) ? `${fmt(row[1])} ${unit}` : `관측값 없음 ${unit}`}` : ''; }}>
-            <XAxis minTickSpacing={85} tickLabelFormatter={dateText} showGrid/><YAxis width={64} tickLabelFormatter={observedNumber}/><Line seriesId="observed" curve="linear" strokeWidth={2} points={pointMarkers}/><Scrubber dimFuture={false} showValues valueFormatter={observedNumber} label={dateText}/>
+            <XAxis ticks={observedDateTicks(points.length, plotWidth)} minTickSpacing={96} tickLabelFormatter={dateText} showGrid/><YAxis width={64} tickLabelFormatter={observedNumber}/><Line seriesId="observed" curve="linear" strokeWidth={2} points={pointMarkers}/><Scrubber dimFuture={false} showValues valueFormatter={observedNumber} label={dateText}/>
           </CartesianChart>
         </div>
       <details className="atlas-funnest-source-table"><summary>관측 원자료 표 · {points.length}행</summary><div className="atlas-funnest-table-scroll"><table><caption>{label} ({unit}), 날짜별 원자료</caption><thead><tr><th scope="col">날짜</th><th scope="col">{label} ({unit})</th></tr></thead><tbody>{points.map(([stamp, amount], sourceIndex) => <tr key={`${stamp}:${sourceIndex}`}><th scope="row">{stamp}</th><td>{finite(amount) ? fmt(amount) : '관측값 없음'}</td></tr>)}</tbody></table></div></details>

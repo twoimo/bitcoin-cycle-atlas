@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-import {normalizeIndicatorState,isIndicatorVisible,ANALYSIS_PANE_MIN_HEIGHT,ANALYSIS_PANE_MAX_HEIGHT,ANALYSIS_PANE_DEFAULT_HEIGHT} from './indicator-state.js?v=1.29.0';
+import {normalizeIndicatorState,isIndicatorVisible,ANALYSIS_PANE_MIN_HEIGHT,ANALYSIS_PANE_MAX_HEIGHT,ANALYSIS_PANE_DEFAULT_HEIGHT} from './indicator-state.js?v=1.29.1';
 
 export const ANALYSIS_MODES = Object.freeze([
   {id:'cycles',label:'4년 비교'},

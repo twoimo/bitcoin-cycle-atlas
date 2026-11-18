@@ -1,5 +1,5 @@
 import {atlasSitePath,atlasRootPath} from './site-paths.js';
-import { atlasPages,atlasNavigationId,atlasPageHref,labPageFromLocation,isWorkspaceChart,canonicalNativeChartEntry } from './atlas-navigation.js?v=1.36.2';
+import { atlasPages,atlasNavigationId,atlasPageHref,labPageFromLocation,isWorkspaceChart,canonicalNativeChartEntry } from './atlas-navigation.js?v=1.36.3';
 import { workspaceInstrument } from './workspace-instruments.js';
 import { mountLegacyWorkspaceToolbar } from './legacy-workspace-toolbar.js';
 import { createChartWorkbenchControls,nativeChartControlSelector } from './rsi-workbench-controls.js?v=1.36.1';
@@ -135,7 +135,11 @@ export function mountCenterWorkbench() {
   navigationObserver.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['disabled']});
   const closeTray=()=>document.querySelector('.mobile-workbench-button[aria-expanded="true"]')?.click();
   const navigateMessage=()=>({kind:'atlas:center-navigate',page:activePage.id,symbol:activeSymbol,epoch,...(activeRegion?{region:activeRegion}:{}),...(activeIntentSerial?{intentSerial:activeIntentSerial}:{})});
-  const centerHref=(page,symbol,region)=>page.tab?atlasSitePath(atlasPageHref(page,{symbol,region})):`${home}?page=outlook&center=${page.id}`;
+  const centerHref=(page,symbol,region)=>{
+    if(page.tab)return atlasSitePath(atlasPageHref(page,{symbol,region}));
+    if(!atlasPages.some(item=>item===page&&item.id!=='outlook'))return home;
+    return `${home}?${new URLSearchParams({center:page.id})}`;
+  };
   function syncPriceLink(){
     const href=lastChart?atlasSitePath(atlasPageHref('outlook',{symbol:lastChart.symbol})):originalUrl||atlasSitePath(atlasPageHref('outlook',{symbol:originalSymbol}));
     for(const item of document.querySelectorAll('a[data-atlas-page=outlook]'))item.href=href;
@@ -262,7 +266,13 @@ export function mountCenterWorkbench() {
     else if(!existing) {
       if(page.tab&&staticEntry){const target=new URL(staticEntry,new URL(home,location.origin));if(target.origin!==location.origin||!target.pathname.startsWith(atlasRootPath()))throw new Error('Static frame escaped Atlas root');target.search=new URLSearchParams({embedded:'1','lab-tab':page.tab,'lab-region':page.region||'us',epoch:String(epoch),...(isWorkspaceChart(page)?{symbol:activeSymbol}:{}),...(activeRegion?{region:activeRegion}:{})}).toString();frame.src=versionedFrame(target);}
       else if(page.tab){const target=new URL(atlasSitePath(atlasPageHref(page,{symbol:activeSymbol,region:activeRegion})),location.origin);target.searchParams.set('embedded','1');target.searchParams.set('epoch',String(epoch));frame.src=versionedFrame(target);}
-      else frame.src=versionedFrame(new URL(`${home}?page=${page.view}&embedded=1`,location.origin));
+      else {
+        if(!atlasPages.some(item=>item===page))throw new Error('Unknown center view');
+        const target=new URL(home,location.origin);
+        if(target.origin!==location.origin||!target.pathname.startsWith(atlasRootPath()))throw new Error('Center frame escaped Atlas root');
+        target.search=new URLSearchParams({page:page.view,embedded:'1'}).toString();
+        frame.src=versionedFrame(target);
+      }
     }
     if(!page.tab) {
       const owned=frame;
@@ -283,7 +293,7 @@ export function mountCenterWorkbench() {
       event.preventDefault();event.stopImmediatePropagation();
       if(lastChart){
         if(!isWorkspaceChart(activePage))open(lastChart.page,lastChart.symbol,{region:lastChart.region});
-      }else{restore();window.history.pushState(null,'',originalUrl && !originalUrl.includes('/market-lab/') ? originalUrl : home+'?page=outlook');}
+      }else{restore();window.history.pushState(null,'',originalUrl && !originalUrl.includes('/market-lab/') ? originalUrl : home);}
       return;
     }
     event.preventDefault();event.stopImmediatePropagation();
@@ -301,8 +311,9 @@ export function mountCenterWorkbench() {
     open(selected,isWorkspaceChart(page)&&lastChart?.page.id===page.id?lastChart.symbol:activeSymbol,{region:isWorkspaceChart(page)?lastChart?.region:undefined});
   }
   document.addEventListener('click',click,true);
+  document.addEventListener('atlas:restore-chart',()=>restore());
   document.addEventListener('atlas:symbol-select',event=>{
-    if(event.detail?.symbol===originalSymbol && activePage) {event.preventDefault();restore();window.history.pushState(null,'',originalUrl && !originalUrl.includes('/market-lab/') ? originalUrl : home+'?page=outlook');return;}
+    if(event.detail?.symbol===originalSymbol && activePage) {event.preventDefault();restore();window.history.pushState(null,'',originalUrl && !originalUrl.includes('/market-lab/') ? originalUrl : home);return;}
     const instrument=workspaceInstrument(event.detail?.symbol);
     if(!instrument)return;event.preventDefault();open(atlasPages.find(page=>page.id===instrument.page),instrument.symbol,{region:instrument.page==='housing'?instrument.region:undefined});
   });

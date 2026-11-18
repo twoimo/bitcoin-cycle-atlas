@@ -58,6 +58,31 @@ function sharedDate(rows, key) {
   return dates.size === 1 && rows.every(row => row[key]) ? [...dates][0] : null;
 }
 
+function headerDate(rows, key) {
+  const shared = sharedDate(rows, key);
+  if (shared) return displayDate(shared);
+  const dates = rows.map(row => row[key]).filter(date => typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)).sort();
+  const newest = dates.at(-1);
+  return newest ? `${displayDate(newest)} · 종목별 기준일` : '종목별 기준일';
+}
+
+function newestObservationDate(bundle) {
+  let newest = null;
+  for (const asset of bundle?.assets || []) {
+    const date = asset?.prices?.at?.(-1)?.[0];
+    if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && (!newest || date > newest)) newest = date;
+  }
+  return newest;
+}
+
+function modelAsOf(bundle, clockDate, followLatest) {
+  if (!followLatest) return clockDate;
+  const newest = newestObservationDate(bundle);
+  if (!newest || newest > clockDate) return clockDate;
+  const lag = (Date.parse(`${clockDate}T00:00:00Z`) - Date.parse(`${newest}T00:00:00Z`)) / 86400000;
+  return lag <= 7 ? newest : clockDate;
+}
+
 /** One row per selected asset, preserving contiguous group headers. */
 export function renderAssetComparisonRows(rows = []) {
   if (!rows.length) return '<tr><td colspan="10" class="asset-table-empty">조건에 맞는 종목이 없습니다. 검색어나 섹터를 바꿔 주세요.</td></tr>';
@@ -175,8 +200,8 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
     put('#data-body', renderAssetComparisonRows(rows));
     table.setAttribute('data-columns',filters.columns);
     text('#asset-visible-count',`표시 ${rows.length} / 전체 ${model.rows.length}개`);
-    put('#asset-start-header', `연초 종가<small>${start ? esc(displayDate(start)) : '종목별 기준일'}</small>`);
-    put('#asset-latest-header', `최근 종가<small>${latest ? esc(displayDate(latest)) : '종목별 기준일'}</small>`);
+    put('#asset-start-header', `연초 종가<small>${esc(headerDate(rows, 'yearStartDate'))}</small>`);
+    put('#asset-latest-header', `최근 종가<small>${esc(headerDate(rows, 'latestDate'))}</small>`);
     put('#asset-ytd-header', `${model.year}년<br>연초 대비 등락률`);
     text('#asset-context', '');
     $('#asset-context').title = '';
@@ -230,7 +255,7 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
       try {
         const loaded = bundle || await getComparisonDataset();
         if (disposed || token !== request) return null;
-        const calculated = await buildModel(loaded, { asOfDate: date });
+        const calculated = await buildModel(loaded, { asOfDate: modelAsOf(loaded, date, asOfDate === today) });
         if (disposed || token !== request) return null;
         assertModel(calculated);
         bundle = loaded; model = calculated; state.status = 'ready';
@@ -242,6 +267,24 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
       } finally { if (token === request) pending = null; }
     })();
     return pending;
+  }
+
+  async function replaceDataset(next) {
+    if (disposed || root.hidden || !next || next === bundle) return model;
+    const date = state.asOf;
+    const token = ++request;
+    pending = null;
+    try {
+      const calculated = await buildModel(next, { asOfDate: modelAsOf(next, date, asOfDate === today) });
+      if (disposed || token !== request) return null;
+      assertModel(calculated);
+      bundle = next; model = calculated; state.status = 'ready'; state.error = null;
+      paint();
+      return model;
+    } catch (error) {
+      if (!disposed && token === request) fail(error, date);
+      return null;
+    }
   }
 
   function openHistory(symbol) {
@@ -295,5 +338,5 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
   root.addEventListener('click', click);
   root.addEventListener('input',changeFilter);
   root.addEventListener('change',changeFilter);
-  return { render, refresh: () => render({ refresh: true }), get state() { return { ...state }; }, destroy() { disposed = true; request++; pending = null; model = null; bundle = null; root.removeEventListener('click', click);root.removeEventListener('input',changeFilter);root.removeEventListener('change',changeFilter); historyView?.destroy(); closeMethod(); rowFitObserver?.disconnect(); if (rowFitFrame !== null) { browser?.cancelAnimationFrame(rowFitFrame); rowFitFrame = null; } } };
+  return { render, replaceDataset, refresh: () => render({ refresh: true }), get state() { return { ...state }; }, destroy() { disposed = true; request++; pending = null; model = null; bundle = null; root.removeEventListener('click', click);root.removeEventListener('input',changeFilter);root.removeEventListener('change',changeFilter); historyView?.destroy(); closeMethod(); rowFitObserver?.disconnect(); if (rowFitFrame !== null) { browser?.cancelAnimationFrame(rowFitFrame); rowFitFrame = null; } } };
 }

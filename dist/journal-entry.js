@@ -1,7 +1,7 @@
 let mounted=false,pending=null,assetPending=null,generation=0;
 export function mountJournalEntry({
-  loadForecastModule=()=>import('./forecast-journal.js?v=1.29.0'),
-  loadAssetModule=()=>import('./asset-forecast-journal.js?v=1.29.0'),
+  loadForecastModule=()=>import('./forecast-journal.js?v=1.29.3'),
+  loadAssetModule=()=>import('./asset-forecast-journal.js?v=1.29.3'),
 }={}){
   if(mounted||typeof document==='undefined')return;
   mounted=true;

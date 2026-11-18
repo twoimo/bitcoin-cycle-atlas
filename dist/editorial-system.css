@@ -2,7 +2,7 @@
  * Visual roles only. Financial series, data, toolbar ownership and scroll geometry remain with their original components.
  * Direction and skill provenance: design-system/bitcoin-cycle-atlas/MASTER.md.
  */
-:root { --workbench-top:38px; --workbench-gap:4px; }
+:root { --workbench-top:38px; --workbench-gap:0px; }
 
 body { font-variant-numeric: tabular-nums; }
 ::selection { background: var(--ui-primary); color: var(--on-ui-primary); }
@@ -51,9 +51,8 @@ body[data-shell=chart] :is(.atlas-sidebar, .workbench-rail, .atlas-canvas-headin
   border-color: var(--border);
   letter-spacing: normal;
 }
-.symbol-selector-name { display: none; }
 .atlas-canvas-heading .symbol-selector-name:empty { display: none; }
-.symbol-selector-label { font-variant-numeric: tabular-nums; }
+.symbol-selector-label { color: var(--muted); font-variant-numeric: tabular-nums; }
 .center-workspace-toolbar :is(button, select, input),
 .legacy-toolbar-field :is(input, select) { font-size: 12px; }
 .center-workspace-toolbar :is(select, input),
@@ -167,9 +166,9 @@ body :is(.chart-export-dialog, .research-annotations-dialog, .chart-go-to-dialog
 
 /* The search is a ruled instrument directory with distinct identity and
    exchange columns. Its fixed search/header and original list scroll remain. */
-body .symbol-search-dialog { width: min(760px, calc(100% - 24px)); height: min(680px, calc(100dvh - 64px)); max-height: min(680px, calc(100dvh - 64px)); border-radius: 14px; background: #17171c; box-shadow: none; }
-.symbol-search-heading { padding: 12px 20px; border-bottom: 0; background: transparent; }
-.symbol-search-heading h2 { font-size: 16px; font-weight: 600; }
+body .symbol-search-dialog { width: min(760px, calc(100% - 24px)); height: min(680px, calc(100dvh - 64px)); max-height: min(680px, calc(100dvh - 64px)); border-radius: 12px; background: var(--surface); box-shadow: none; }
+.symbol-search-heading { padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--surface); }
+.symbol-search-heading h2 { font-size: 14px; font-weight: 500; letter-spacing: 0; }
 .symbol-search-input { padding: 4px 20px 8px; background: transparent; }
 .symbol-search-input input { height: 40px; font-size: 16px; }
 .symbol-search-filters { padding: 4px 20px 12px; gap: 8px; }
@@ -195,9 +194,9 @@ body .symbol-search-row {
 }
 .symbol-search-row .symbol-search-mark {
   border: 0;
-  border-radius: 0;
+  border-radius: 4px;
   background: transparent;
-  color: var(--ui-link);
+  color: var(--text);
   font-weight: 500;
 }
 .symbol-search-source { max-width: none; padding-left: 12px; border-left: 0; font-size: 12px; }
@@ -207,8 +206,8 @@ body .symbol-search-row {
   background: var(--surface-hover);
   box-shadow: none;
 }
-.symbol-search-symbol strong { font-family: var(--font); font-size: 14px; font-weight: 600; letter-spacing: normal; }
-.symbol-search-name { font-size: 13px; color: var(--text); }
+.symbol-search-symbol strong { font-family: var(--font); font-size: 13px; font-weight: 500; letter-spacing: 0; }
+.symbol-search-name { font-size: 12px; color: var(--text); }
 .symbol-search-footer { padding-inline: 20px; }
 .symbol-search-current { border-radius: 0; background: transparent; color: var(--ui-link); }
 .symbol-search-close:hover { background: var(--surface-hover); color: var(--text); }
@@ -272,14 +271,14 @@ body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
 .research-annotation-row { border-color: var(--border-soft); border-radius: 0; }
 .research-annotation-row.is-selected { background: var(--nav-active-bg); border-color: var(--border); }
 
-/* The reference has 52px left tools, a 4px gutter, a 38px header,
+/* Desktop chart panels share edges: 52px left tools, a 38px header,
    a 45px right rail and a 38px time bar. Keep the actual outer toolbar as
    its original DOM owner; only its desktop placement spans the perimeter. */
 @media (min-width: 621px) {
   body[data-shell=chart] {
-    --sidebar-width: 56px;
+    --sidebar-width: 52px;
     --rail-width: 45px;
-    background: var(--workbench-gutter);
+    background: var(--sidebar);
   }
   body[data-shell=chart] .atlas-sidebar {
     width: 52px;
@@ -293,16 +292,16 @@ body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
     height: 38px;
     min-height: 38px;
     margin: 0;
-    border-bottom: 4px solid var(--workbench-gutter);
-    box-sizing: content-box;
+    border-bottom: 0;
+    box-sizing: border-box;
   }
   body[data-shell=chart] .workspace {
-    margin-left: 56px!important;
-    width: calc(100% - 56px);
-    background: var(--workbench-gutter);
+    margin-left: 52px!important;
+    width: calc(100% - 52px);
+    background: var(--bg);
   }
   body[data-shell=chart] .workspace.atlas-details-layout > #main {
-    padding: 42px 4px 0 0;
+    padding: 38px 0 0 0;
   }
   body[data-shell=chart] .atlas-canvas-heading {
     position: fixed;
@@ -337,22 +336,22 @@ body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
   body[data-shell=chart] .atlas-canvas-heading #atlas-mode-name,
   body[data-shell=chart] #workbench-scenario-name { font-size: 13px; }
   body[data-shell=chart] .atlas-canvas-heading button.symbol-selector-trigger {
-    height: 28px;
-    min-height: 28px;
-    min-width: 128px;
-    max-width: 180px;
-    padding-inline: 12px;
-    margin: 0 4px 0 0;
+    height: 32px;
+    min-height: 32px;
+    min-width: 0;
+    max-width: 240px;
+    padding-inline: 8px;
+    margin: 0;
     gap: 8px;
     border: 0;
-    border-radius: 14px;
-    background: var(--surface-hover);
+    border-radius: 8px;
+    background: transparent;
     color: var(--text);
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
   }
-  .atlas-canvas-heading .symbol-selector-name { display: none; }
-  body[data-shell=chart] .symbol-selector-label { font-size: 14px; }
+  body[data-shell=chart] .atlas-canvas-heading .symbol-selector-name { display: inline; font-size: 14px; font-weight: 500; }
+  body[data-shell=chart] .symbol-selector-label { font-size: 12px; font-weight: 400; color: var(--muted); }
   body[data-shell=chart] #workbench-frequency { padding: 0 8px 0 0; }
   body[data-shell=chart] #workbench-frequency .lab-segmented { display: none; }
   body[data-shell=chart] #workbench-interval-select {
@@ -396,7 +395,7 @@ body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
   }
   body[data-shell=chart] .workbench-tools {
     width: 52px;
-    margin: 6px 0 0;
+    margin: 0;
     gap: 0;
     align-items: center;
   }
@@ -414,20 +413,20 @@ body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
     height: 24px;
     stroke-width: 1.35;
   }
-  body[data-shell=chart] #workbench-navigation { width: 36px; padding-top: 8px; margin-top: 8px; }
+  body[data-shell=chart] #workbench-navigation { width: 36px; padding-top: 0; margin-top: 0; }
   body[data-shell=chart] #workbench-navigation .chart-navigation { align-items: center; gap: 0; }
   body[data-shell=chart] .workbench-rail {
     width: 45px;
-    height: calc(100dvh - 42px);
-    margin-top: 42px;
-    padding: 2px 0;
+    height: calc(100dvh - 38px);
+    margin-top: 38px;
+    padding: 0;
     border: 0;
     background: var(--sidebar);
   }
   body[data-shell=chart] .workbench-rail .atlas-nav {
-    gap: 2px;
-    margin: 0 0 8px;
-    padding: 0 0 8px;
+    gap: 0;
+    margin: 0;
+    padding: 0;
     border-bottom: 1px solid var(--border);
   }
   body[data-shell=chart] .workbench-rail .atlas-nav :is(a, button),
@@ -470,13 +469,13 @@ body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
   body[data-shell=chart] .workbench-detail-tools {
     align-items: center;
     gap: 0;
-    padding-block: 0 8px;
+    padding-block: 0;
   }
   body[data-shell=chart] .chart-details-panel {
-    height: calc(100% - 42px);
-    margin-top: 42px;
+    height: calc(100% - 38px);
+    margin-top: 38px;
     border: 0;
-    border-right: 4px solid var(--workbench-gutter);
+    border-right: 0;
     background: var(--sidebar);
   }
   body[data-shell=chart] .has-chart-bottom-bar { --chart-bottom-height: 38px; }
@@ -507,7 +506,7 @@ body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
   .center-workspace-toolbar .compact-toolbar-group { padding-inline: 4px; gap: 4px; }
   .center-workspace-toolbar .workspace-view-tabs button { gap: 4px; }
   .center-workspace-toolbar :is(.compact-toolbar-summary strong, .compact-toolbar-summary b) { font-size: 12px; }
-  .symbol-search-heading h2 { font-size: 16px; }
+  .symbol-search-heading h2 { font-size: 14px; font-weight: 500; }
   .symbol-search-heading, .symbol-search-input { padding: 12px 16px; }
   .symbol-search-filters { flex-wrap: wrap; padding: 12px 16px; }
   .symbol-search-close { width: 44px; height: 44px; }

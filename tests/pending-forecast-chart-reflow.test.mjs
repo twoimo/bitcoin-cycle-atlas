@@ -32,7 +32,7 @@ function pendingController(snapshot,svg,{centerTool,visible=true,replay=false}={
   const nextDataset=Object.freeze({prices:Object.freeze([Object.freeze(['2026-11-07',777])])});
   const state={dataset:nextDataset,visible,scenario:'base',requestedScenario:'base',models:new Map(),priceController:snapshot?.controller};
   if(replay)svg.dataset.chartReplayActive='true';
-  const paint=vm.runInNewContext('('+drawOutlook+')',{state,forecastComputer:computer,priceSnapshot:snapshot,document:{body:{dataset:centerTool?{centerTool}:{}}},$:()=>svg,
+  const paint=vm.runInNewContext('('+drawOutlook+')',{state,forecastComputer:computer,priceSnapshot:snapshot,guestChart:null,readChartSymbol:()=>'BTCUSD',document:{documentElement:{dataset:{}},body:{dataset:centerTool?{centerTool}:{}}},$:()=>svg,
     requestForecast(scenario){promise??=computer.run(nextDataset,{scenario},{revision:2});},fail(error){throw error;}});
   return {state,paint,computer,get worker(){return worker;},get promise(){return promise;}};
 }
@@ -121,6 +121,9 @@ test('pending geometry never redraws replay, an inactive owner, a hidden or zero
     if(blocked==='zero')svg.clientHeight=0;else if(blocked==='css-hidden')svg.ownerDocument.defaultView.getComputedStyle=()=>({visibility:'hidden'});else svg[blocked]=true;
     assert.equal(snapshot.reflow(),false);assert.equal(paints,1,blocked);
   }
-  const {svg}=allocatedChart(390,752),pending=pendingController(null,svg);t.after(()=>pending.computer.destroy());pending.paint();assert.equal(svg.getAttribute('viewBox'),null);
-  pending.computer.cancel();await pending.promise;pending.computer.destroy();
+  const {svg}=allocatedChart(390,752),pending=pendingController(null,svg);t.after(()=>pending.computer.destroy());
+  assert.throws(()=>pending.paint(), /model is not defined/);
+  assert.equal(svg.getAttribute('viewBox'), null, 'the first screen does not keep a blank chart while a worker is still pending');
+  assert.equal(pending.promise, undefined);
+  pending.computer.destroy();
 });

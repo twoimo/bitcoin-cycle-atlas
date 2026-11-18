@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Point } from '@atlas/contracts/market-lab';
 import { BarPlot, CartesianChart, Line, Point as ChartPoint, ReferenceLine, Scrubber, XAxis, YAxis } from '@funnest/charts-react';
 import { Empty, finite, fmt } from './common.js';
+import { observedDateTicks } from './ztd-research-charts.js';
 
 interface Props {
   id: string;
@@ -26,7 +27,7 @@ const number = (value: number) => fmt(value, 4);
 export function ObservedChart({ id, points, unit, label, caption, selected, onSelect, lines = noLines, rsi = false, signal = noSignal, markers = [], plotHeight = 290 }: Props) {
   const chart = useRef<HTMLDivElement>(null);
   const scrubIndex = useRef<number | null>(null);
-  const [current, setCurrent] = useState<number | null>(null), lastScrub = useRef<number | null>(null);
+  const [current, setCurrent] = useState<number | null>(null), lastScrub = useRef<number | null>(null), [plotWidth, setPlotWidth] = useState(640);
   const valid = points.some(point => point && finite(point[1]));
   const values = useMemo(() => points.map(point => point && finite(point[1]) ? point[1] : null), [points]);
   const signalValues = useMemo(() => points.map(([date]) => {
@@ -39,6 +40,16 @@ export function ObservedChart({ id, points, unit, label, caption, selected, onSe
     return value === null || value === undefined ? [] : [{ ...marker, index, value }];
   }), [markers, points, values]);
   useEffect(() => { lastScrub.current = null; scrubIndex.current = null; setCurrent(null); }, [selected, points]);
+  useEffect(() => {
+    const node = chart.current;
+    if (!node) return;
+    const measure = () => {
+      const width = Math.round(node.getBoundingClientRect().width);
+      if (width > 0) setPlotWidth(previous => previous === width ? previous : width);
+    };
+    measure();
+    if (typeof ResizeObserver !== 'undefined') { const observer = new ResizeObserver(measure); observer.observe(node); return () => observer.disconnect(); }
+  }, [points]);
   if (!valid) return <div data-chart={id} className="atlas-funnest-observed-chart"><Empty>{label}에 유효한 수치가 없습니다.</Empty></div>;
   const safeSelected = selected == null || !Number.isFinite(selected) ? points.length - 1 : Math.max(0, Math.min(points.length - 1, Math.trunc(selected)));
   const readIndex = current ?? safeSelected;
@@ -56,7 +67,7 @@ export function ObservedChart({ id, points, unit, label, caption, selected, onSe
       ]} xAxis={{ data: points.map(point => point[0]), scaleType: 'linear' }} yAxis={{ includeZero: rsi, domain: rsi ? { min: 0, max: 100 } : undefined }} height={plotHeight} inset={{ left: 64, right: 20, top: 20, bottom: 36 }}
         enableScrubbing onScrubberPositionChange={(index: number | null) => { if (lastScrub.current === index) return; lastScrub.current = index; scrubIndex.current = index; queueMicrotask(() => setCurrent(index)); }} aria-label={`${label} · ${points.length}개 원자료 행`}
         getScrubberAccessibilityLabel={(index: number) => { const row = points[index]; return row ? `${row[0]} · ${finite(row[1]) ? `${fmt(row[1])} ${unit}` : `관측값 없음 ${unit}`}` : ''; }}>
-        <XAxis minTickSpacing={85} tickLabelFormatter={showDate} showGrid/>
+        <XAxis ticks={observedDateTicks(points.length, plotWidth)} minTickSpacing={96} tickLabelFormatter={showDate} showGrid/>
         <YAxis width={64} tickLabelFormatter={number}/>
         <Line seriesId="observed" curve="linear" strokeWidth={2} points={true}/>
         {rsi && signal.some(row => finite(row[1])) && <Line seriesId="signal" curve="linear" strokeWidth={1.4}/>}

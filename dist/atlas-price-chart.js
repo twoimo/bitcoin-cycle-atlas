@@ -12,12 +12,13 @@ import { priceAxisMarkup, timeAxisMarkup, createPriceAxisLayout, createPriceAxis
 import { createPriceDisplay, formatDisplayPrice } from './price-display.js?v=1.29.0';
 import { retainPriceViewport, renderEmptyPriceViewport } from './empty-price-chart.js?v=1.36.1';
 import { researchAnnotationsMarkup } from './research-annotations.js?v=1.29.0';
-import { refreshChartLegendGeometry } from './ui/chart-legend.js?v=1.36.1';
-import { chartLegendSlot, placePlotLabel } from './ui/chart-legend-layout.js';
+import { refreshChartLegendGeometry } from './ui/chart-legend.js?v=1.36.4';
+import { chartLegendSlot, placePlotLabel } from './ui/chart-legend-layout.js?v=1.36.3';
 import { createChartAnnotationLayout } from './ui/chart-annotation-layout.js';
 import {linearScale as fLinear,logScale as fLog,linePath as fLine,areaPath as fArea,barPath as fBar,segments as fSegments} from './funnest-research-primitives.bundle.js?v=1.29.0';
 
 import { resolveMagnetPoint, advanceMeasurement, measurePriceAnchors, measurementOverlayMarkup, createMeasurementOverlay } from './chart-magnet.js?v=1.29.0';
+import { paintChartDrawings } from './chart-drawbar.js?v=1.0.4';
 
 import { clearChartHover, clearChartHoverPointer, getChartHoverPointer, rememberChartHoverPointer, coalescedChartHover, paintPriceCursor } from './chart-hover.js?v=1.29.0';
 
@@ -514,6 +515,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   };
   annotationLayout=createChartAnnotationLayout(svg,{isCurrent:()=>svg.onpointermove===hoverHandler,eventPriorities:new Map(historicalEvents.map(event=>[event.id,event.importance]))});
   renderMeasurement();
+  paintChartDrawings(svg);
   if(retainedPointer&&pointerPreview({...retainedPointer,target:svg})){
     if(tool!=='measure')onInspect(inspection(active),{user:false,openPanel:false});
   }else if(tool==='measure'){mark(active);onHover(hoverInfo(active,false));}else commit(active,false);

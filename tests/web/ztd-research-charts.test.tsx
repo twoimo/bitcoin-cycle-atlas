@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { parseHTML } from 'linkedom';
 import { positiveFactorScenario } from '@atlas/domain/market-lab';
-import { ObservedResearchChart, ResearchChartCard, ScenarioContributionChart, observedChartModel, observedPointMarkers } from '../../apps/web/src/components/ztd-research-charts.js';
+import { ObservedResearchChart, ResearchChartCard, ScenarioContributionChart, observedChartModel, observedDateTicks, observedPointMarkers } from '../../apps/web/src/components/ztd-research-charts.js';
 import { DiagnosisPanel } from '../../apps/web/src/panels/diagnosis-panel.js';
 import type { MarketSnapshot } from '@atlas/contracts/market-lab';
 
@@ -14,6 +14,16 @@ const points: readonly (readonly [string, number | null])[] = [
   ['2026-01-04', 13], ['2026-01-05', 14], ['2026-01-06', Infinity], ['2026-01-07', 16],
 ];
 const domFor = (content: React.ReactNode) => parseHTML(`<html><body>${renderToStaticMarkup(content)}</body></html>`).document;
+
+test('observed date ticks stay inside the plot so neighboring labels do not overlap', () => {
+  const ticks = observedDateTicks(66, 768);
+  assert.ok(ticks.length >= 2);
+  assert.ok(ticks[0] > 0 && ticks.at(-1)! < 65);
+  const inner = 768 - 84;
+  for (let i = 1; i < ticks.length; i++) assert.ok((ticks[i] - ticks[i - 1]) / 65 * inner >= 72);
+  assert.deepEqual(observedDateTicks(1, 320), [0]);
+  assert.deepEqual(observedDateTicks(0, 320), []);
+});
 
 test('observed Funnest markers follow pixel density without dropping path vertices or isolated observations', () => {
   const dense: readonly (readonly [string, number | null])[] = Array.from({ length: 150 }, (_, index) =>

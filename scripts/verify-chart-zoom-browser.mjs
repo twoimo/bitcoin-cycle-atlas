@@ -86,6 +86,99 @@ export function funnestTimeAxis(times) {
   return {interval,indexOf,timeOf};
 }
 
+/** User outcome: zoom in and zoom out change the visible time span while the
+ * chart stays painted. Blank single-color frames after the first painted frame,
+ * or removal of the chart host, are the page flicker. */
+export function installZoomContinuity() {
+  if (window.__atlasZoomContinuity) {
+    const current = window.__atlasZoomContinuity;
+    return { removed: current.removed, blank: current.blank, varied: current.varied, frames: current.frames };
+  }
+  const state = { removed: 0, blank: 0, varied: 0, frames: 0, seenPaint: false };
+  const plot = document.querySelector('.atlas-plot') || document.body;
+  const observer = new MutationObserver(records => {
+    for (const record of records) for (const node of record.removedNodes) {
+      if (node.nodeType === 1 && (node.classList?.contains('atlas-funnest-canvas') || node.querySelector?.('.atlas-funnest-canvas'))) state.removed += 1;
+    }
+  });
+  observer.observe(plot, { childList: true, subtree: true });
+  const sample = () => {
+    state.frames += 1;
+    const canvas = document.querySelector('.atlas-funnest-canvas canvas');
+    if (canvas?.width > 0 && canvas.height > 0) {
+      try {
+        const data = canvas.getContext('2d')?.getImageData(0, 0, canvas.width, canvas.height)?.data;
+        if (data) {
+          let first = null, varied = false;
+          const stride = Math.max(4, Math.floor(data.length / 2000 / 4) * 4);
+          for (let index = 0; index < data.length; index += stride) {
+            const pixel = `${data[index]},${data[index + 1]},${data[index + 2]},${data[index + 3]}`;
+            if (first === null) first = pixel;
+            else if (pixel !== first) { varied = true; break; }
+          }
+          if (varied) { state.seenPaint = true; state.varied += 1; }
+          else if (state.seenPaint) state.blank += 1;
+        }
+      } catch { /* A tainted canvas cannot prove a blank frame. */ }
+    }
+    state.frame = requestAnimationFrame(sample);
+  };
+  state.frame = requestAnimationFrame(sample);
+  state.observer = observer;
+  window.__atlasZoomContinuity = state;
+  return { removed: 0, blank: 0, varied: 0, frames: 0 };
+}
+
+export function readZoomContinuity() {
+  const state = window.__atlasZoomContinuity;
+  return state ? { removed: state.removed, blank: state.blank, varied: state.varied, frames: state.frames } : null;
+}
+
+/** Installed before the document starts. Counts presented chart frames that
+ * are a single color after the boot shell has revealed the page. */
+export function bootPaintContinuitySource() {
+  return `(() => {
+    if (window.__atlasBootPaint) return;
+    const state = { frames: 0, readyBlank: 0, varied: 0, boot: '', readyFrame: 0, stopped: false };
+    window.__atlasBootPaint = state;
+    const tick = () => {
+      if (state.stopped) return;
+      setTimeout(() => {
+        state.frames += 1;
+        state.boot = document.documentElement?.dataset?.boot || '';
+        const shell = document.getElementById('atlas-boot-shell');
+        const canvas = document.querySelector('.atlas-funnest-canvas canvas');
+        let varied = false;
+        if (canvas?.width > 0 && canvas.height > 0) {
+          try {
+            const data = canvas.getContext('2d')?.getImageData(0, 0, canvas.width, canvas.height)?.data;
+            if (data) {
+              let first = null;
+              const stride = Math.max(4, Math.floor(data.length / 2000 / 4) * 4);
+              for (let index = 0; index < data.length; index += stride) {
+                const pixel = data[index] + ',' + data[index + 1] + ',' + data[index + 2] + ',' + data[index + 3];
+                if (first === null) first = pixel;
+                else if (pixel !== first) { varied = true; break; }
+              }
+            }
+          } catch { varied = true; }
+        }
+        if (varied) state.varied += 1;
+        if (state.boot === 'ready' && !state.readyFrame) state.readyFrame = state.frames;
+        if (state.boot === 'ready' && shell?.hidden && canvas && !varied) state.readyBlank += 1;
+        if (state.frames >= 450 || (state.readyFrame && state.frames >= state.readyFrame + 90 && state.varied > 0)) state.stopped = true;
+        else requestAnimationFrame(tick);
+      }, 0);
+    };
+    requestAnimationFrame(tick);
+  })();`;
+}
+
+export function readBootPaintContinuity() {
+  const state = window.__atlasBootPaint;
+  return state ? { frames: state.frames, readyBlank: state.readyBlank, varied: state.varied, boot: state.boot, stopped: state.stopped } : null;
+}
+
 export function pointerAnchorDrift({axis,before,after,pointerX}) {
   const at=state=>{const from=axis.indexOf(state.first),to=axis.indexOf(state.last);return axis.timeOf(from+(pointerX-state.plot.left)/(state.plot.right-state.plot.left)*(to-from));};
   const candle=before.intervalMs,pixel=(before.last-before.first)/(before.plot.right-before.plot.left);
@@ -166,6 +259,7 @@ export async function verifyChartZoomBrowser({cdp,context=cdp,receipt,evaluate,u
     await settled(context);
     baseline=await read();perimeter=await evaluate(cdp,readPerimeter);
     record.states.push({stage:'initial',...baseline,perimeter});assertGeometry(baseline,perimeter,'initial');
+    await evaluate(context, installZoomContinuity);
     const barTimes=await evaluate(context,readEngineBarTimes,{svgSelector});
     assert.equal(barTimes?.length,baseline.barCount,label+': the engine bar times must be the bars the initial state counted');
     axis=funnestTimeAxis(barTimes);
@@ -202,6 +296,11 @@ export async function verifyChartZoomBrowser({cdp,context=cdp,receipt,evaluate,u
     await settled(context);const expanded=await capture('time-axis-drag');
     assert.ok(span(expanded)>span(automatic),label+': dragging the time axis right must expand the visible time span');
     samePointerTime(automatic,expanded,automatic.points.time.x,'time-axis drag');
+    const continuity = await evaluate(context, readZoomContinuity);
+    record.continuity = continuity;
+    assert.equal(continuity?.removed, 0, label+': zoom removed the chart canvas');
+    assert.equal(continuity?.blank, 0, label+': zoom showed a blank chart frame');
+    assert.ok((continuity?.varied ?? 0) > 0 && (continuity?.frames ?? 0) > 0, label+': zoom continuity sampler did not observe the painted chart');
     record.status='passed';return record;
   }catch(error){
     record.status='failed';record.error=error instanceof Error?error.message:String(error);

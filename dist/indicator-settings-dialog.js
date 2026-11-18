@@ -1,4 +1,4 @@
-import {INDICATORS} from './indicator-state.js?v=1.29.0';
+import {INDICATORS} from './indicator-state.js?v=1.29.1';
 import {INDICATOR_SETTINGS,INDICATOR_SETTING_INTERVALS,indicatorSettings} from './indicator-settings.js?v=1.29.0';
 
 /** An editor of only settings that the shipped graph actually consumes. */

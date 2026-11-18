@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
-import { canonicalNativeChartEntry, canonicalRetiredPageEntry, canonicalWorkspaceChartEntry, labPageFromLocation } from '../dist/atlas-navigation.js';
+import { canonicalNativeChartEntry, canonicalRetiredPageEntry, canonicalWorkspaceChartEntry, canonicalDefaultChartEntry, labPageFromLocation } from '../dist/atlas-navigation.js';
 
 const entrySource = (await readFile(new URL('../dist/site-entry.js', import.meta.url), 'utf8'))
   .replace(/^import [^\n]+;\s*$/gm, '')
@@ -17,7 +17,7 @@ async function boot(url) {
   const symbolNode = { textContent: '' };
   const document = { documentElement: { dataset: {} }, querySelector: () => symbolNode, dispatchEvent: event => events.push(event.type) };
   await runInNewContext(`(async () => {${entrySource}\n})()`, {
-    location, document, URLSearchParams, canonicalNativeChartEntry, canonicalRetiredPageEntry, canonicalWorkspaceChartEntry, console,
+    location, document, URLSearchParams, canonicalNativeChartEntry, canonicalRetiredPageEntry, canonicalWorkspaceChartEntry, canonicalDefaultChartEntry, console,
     initTheme: () => {},
     enhanceBootSkeleton: () => calls.push('skeleton'), initAtlasShell: () => calls.push('shell'),
     initPerformanceDiagnostics: () => calls.push('diagnostics'), mountJournalEntry: () => calls.push('journal'),
@@ -57,8 +57,8 @@ for (const symbol of ['MSTR', 'BMNR']) for (const path of ['/', '/market-lab/cha
     }
     assert.deepEqual(result.redirects, []);
     assert.equal(result.modules.length, 1);
-    assert.match(result.modules[0], /^\.\/equity-view\.js\?v=/);
-    assert.deepEqual(result.calls, ['skeleton', 'shell', 'diagnostics', 'journal', `equity:${symbol}`]);
+    assert.match(result.modules[0], /^\.\/app\.js\?v=/);
+    assert.deepEqual(result.calls, ['skeleton', 'shell', 'diagnostics', 'journal']);
     assert.equal(result.document.documentElement.dataset.symbol, symbol);
     assert.equal(result.symbolNode.textContent, symbol);
     assert.deepEqual(result.events, []);
@@ -99,7 +99,7 @@ for (const symbol of ['BTCUSD', 'ETHUSD', 'MSTR', 'TQQQ', 'SOXL', '233740']) {
       assert.equal(result.document.documentElement.dataset.symbol, symbol);
       assert.equal(result.symbolNode.textContent, symbol);
       assert.equal(result.modules.length, 1);
-      assert.match(result.modules[0], new RegExp('^\\./' + ({BTCUSD:'app', ETHUSD:'eth-view', MSTR:'equity-view'})[symbol] + '\\.js\\?v='));
+      assert.match(result.modules[0], /^\.\/app\.js\?v=/);
       assert.deepEqual(result.events, []);
     }
   });

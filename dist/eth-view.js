@@ -1,5 +1,5 @@
 import { setLoadingSurface } from './loading-surfaces.js';
-import { mountNativeChartApp, mountNativeChartWorkbench, nativeDateRange } from './native-chart-workbench.js?v=1.36.2';
+import { mountNativeChartApp, mountNativeChartWorkbench, nativeDateRange } from './native-chart-workbench.js?v=1.36.6';
 import {bindPreservedArchiveDownload} from './preserved-archive-download.js?v=1.29.0';
 import {buildEthereumForecasts} from './ethereum-forecast.js';
 import {buildEthereumAdaptiveForecast} from './ethereum-adaptive-model.js';
@@ -8,13 +8,15 @@ import {ethereumResearchPanel} from './ethereum-research-panel.js';
 import { CHART_INTERVALS, chartInterval, isIntradayInterval, fetchMarketCandles } from './ohlc-data.js?v=1.29.0';
 import { parseEthArchive, mergeEthArchive } from './eth-market-data.js?v=1.29.0';
 import { createMarketDataController, marketStatusText } from "./market-data-controller.js?v=1.29.0";
-import { mountObservedPriceChart, atlasCandlesToFunnestBars } from './funnest-observed-price-adapter.js';
+import { mountObservedPriceChart, atlasCandlesToFunnestBars } from './funnest-observed-price-adapter.js?v=1.36.7';
+import { intervalShortLabel } from './interval-picker.js?v=1.0.0';
+import { compactQuantity, renderChartSymbolLegend, signedChange, symbolLogo } from './chart-symbol-legend.js?v=1.0.0';
 import { bindChartNavigation } from './chart-navigation.js?v=1.36.1';
 import { withChartSpacing, retargetChartRange } from './chart-view-policy.js?v=1.36.1';
 import { normalizePriceDomain } from './price-axis.js?v=1.29.0';
 import { mountChartTouchTracking } from "./chart-touch-tracking.js?v=1.29.0";
 import { clearChartHover } from './chart-hover.js?v=1.29.0';
-import { mountSymbolSelector } from './symbol-selector.js?v=1.35.4';
+import { mountSymbolSelector } from './symbol-selector.js?v=1.35.6';
 import { readEthView, ethViewQuery, ethHistoryRange } from './eth-view-state.js?v=1.36.1';
 import { readChartUrlState } from './ui/chart-url-state.js';
 import { ETHEREUM_EVENTS, ETHEREUM_EVENT_COLORS, getEthereumEvents } from './ethereum-events.js?v=1.29.0';
@@ -91,6 +93,7 @@ export async function initEthView() {
   mountNativeChartApp(app);
   const $ = selector => app.querySelector(selector), $$ = selector => [...app.querySelectorAll(selector)];
   const svg = $('#eth-chart'), plot = $('.eth-plot'), readout = $('.eth-readout');
+  const symbolLegend=document.createElement('div');readout.append(symbolLegend);
   plot.getAtlasChartExportSurface=()=>state.controller?.getExportSurface?.()??null;
   plot.inspectAtlasChart=()=>state.controller?.inspect?.()??null;
   const info = document.createElement('dialog');info.id='eth-data-dialog';info.className='eth-data-dialog';info.setAttribute('aria-labelledby','eth-data-title');
@@ -114,7 +117,7 @@ export async function initEthView() {
     onSettingsChange:settings=>{cancelInteraction();state.eventSettings=settings;persist();schedule();},onFocusEvent:focusHistoricalEvent});
   const indicatorOverlay = mountInstrumentIndicatorOverlay({
     plot,
-    anchor: () => { const note = $('#eth-forecast-note'); if (note && note.getClientRects().length) return note; const source = $('.eth-readout-source'); return source.getClientRects().length ? source : readout; },
+    anchor: () => { const note = $('#eth-forecast-note'); if (note && note.getClientRects().length) return note; if (symbolLegend.getClientRects().length) return symbolLegend; const source = $('.eth-readout-source'); return source.getClientRects().length ? source : readout; },
     context: () => `ETH-USD · ${chartInterval(state.frequency).label} · UTC`,
     items: [
       {id:'volume', label:'Vol', title:'거래량'},
@@ -209,9 +212,10 @@ export async function initEthView() {
       $('#eth-price').textContent=`$${number(row.price)}`;$('#eth-change').textContent='';
       $('#eth-bar-time').textContent=(row.date||'').slice(0,10);$('#eth-bar-time').dateTime=row.date||'';
       $('#eth-ohlc').innerHTML=`<span>${state.ethModel!=='valuation'?'모의 10–90%':'세 조건 범위'} $${number(row.low)} – $${number(row.high)}</span><span>미래 OHLC 아님</span>`;
+      renderChartSymbolLegend(symbolLegend,{name:'이더리움',logo:symbolLogo('ETH'),interval:intervalShortLabel(state.frequency),source:state.ethModel!=='valuation'?'ETH 연구 모형':'외부 평가 조건',close:number(row.price),tone:'flat'});
       if(!row.hovered)state.selectedTime=row.time;return;
     }
-    if(row.kind==='unavailable'){$('#eth-price').textContent='—';$('#eth-change').textContent='';$('#eth-bar-time').textContent='';$('#eth-ohlc').textContent='이 구간에 완료된 봉이 없습니다.';return;}
+    if(row.kind==='unavailable'){$('#eth-price').textContent='—';$('#eth-change').textContent='';$('#eth-bar-time').textContent='';$('#eth-ohlc').textContent='이 구간에 완료된 봉이 없습니다.';renderChartSymbolLegend(symbolLegend,{name:'이더리움',logo:symbolLogo('ETH'),interval:intervalShortLabel(state.frequency),source:'Coinbase',close:'—',tone:'flat'});return;}
     $('#eth-price').textContent=`$${number(row.close)}`;
     const change=Number.isFinite(row.changePct)?row.changePct:null;
     $('#eth-change').textContent=change===null?'':`${change>=0?'+':'−'}${number(Math.abs(change))}%`;
@@ -220,6 +224,7 @@ export async function initEthView() {
     $('#eth-bar-time').dateTime=row.date||'';
     $('#eth-ohlc').innerHTML=[['O',row.open],['H',row.high],['L',row.low],['C',row.close]].map(([label,value])=>`<span><i>${label}</i> ${number(value)}</span>`).join('');
     if(!row.hovered)state.selectedTime=row.time;
+    renderChartSymbolLegend(symbolLegend,{name:'이더리움',logo:symbolLogo('ETH'),interval:intervalShortLabel(state.frequency),source:'Coinbase',open:number(row.open),high:number(row.high),low:number(row.low),close:number(row.close),changeText:signedChange(change,null),volumeText:Number.isFinite(row.volume)?`${compactQuantity(row.volume)} ETH`:'',tone:change>0?'up':change<0?'down':'flat'});
   }
   function restoreArchiveReadout(series,forecast){
     state.readoutSelection=state.selectedTime;

@@ -164,6 +164,41 @@ test('a silent startup stalls for at most 20 seconds and exposes a working retry
   assert.equal(f.reloads(), 1);
 });
 
+test('a dataset already on the page survives the first deadline and still opens', () => {
+  const f = bootstrap();
+  f.emit('atlas:dataset');
+  f.advance(20_000);
+  assert.equal(f.root.dataset.boot, 'loading');
+  assert.equal(f.byId.get('atlas-boot-error').hidden, true);
+  assert.equal(f.pendingTimers(), 1);
+  f.emit('atlas:ready');
+  assert.equal(f.root.dataset.boot, 'ready');
+  assert.equal(f.byId.get('atlas-boot-shell').hidden, true);
+  assert.equal(f.pendingTimers(), 0);
+});
+
+test('a dataset that never renders fails on the extended deadline and stays failed', () => {
+  const f = bootstrap();
+  f.emit('atlas:dataset');
+  f.advance(20_000);
+  assert.equal(f.root.dataset.boot, 'loading');
+  f.advance(20_000);
+  assert.equal(f.root.dataset.boot, 'error');
+  assert.equal(f.byId.get('atlas-boot-error').hidden, false);
+  assert.equal(f.pendingTimers(), 0);
+  f.emit('atlas:ready');
+  assert.equal(f.root.dataset.boot, 'error');
+});
+
+test('an explicit boot failure records the caller message', () => {
+  const f = bootstrap();
+  f.document.dispatchEvent(new CustomEvent('atlas:boot-error', { detail: { message: 'workspace exploded' } }));
+  const failure = JSON.parse(f.root.dataset.bootFailure);
+  assert.equal(failure.kind, 'atlas:boot-error');
+  assert.equal(failure.reason, 'workspace exploded');
+  assert.equal(f.root.dataset.boot, 'error');
+});
+
 test('successful and failed startup both cancel the fallback deadline', () => {
   for (const event of ['atlas:ready', 'atlas:boot-error']) {
     const f = bootstrap();

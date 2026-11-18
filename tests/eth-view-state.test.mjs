@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
 import { readEthView, ethViewQuery, ethHistoryRange, ethRangeLabel } from '../dist/eth-view-state.js';
 import { panRange, zoomRange, fitRange } from '../dist/chart-navigation.js';
-import { canonicalNativeChartEntry, canonicalRetiredPageEntry, canonicalWorkspaceChartEntry } from '../dist/atlas-navigation.js';
+import { canonicalNativeChartEntry, canonicalRetiredPageEntry, canonicalWorkspaceChartEntry, canonicalDefaultChartEntry } from '../dist/atlas-navigation.js';
 
 const DAY=86400,WEEK=7*DAY;
 const seconds=date=>Date.parse(`${date}T00:00:00Z`)/1000;
@@ -104,7 +104,7 @@ async function runEntry(search,{failImport=false,failInit=false}={}){
   const source=await readFile(new URL('../dist/site-entry.js',import.meta.url),'utf8');
   const imports=[],events=[],errors=[],bootSymbol={textContent:'BTCUSD'},root={dataset:{}},initializations=[];
   const context={
-    URLSearchParams,canonicalNativeChartEntry,canonicalRetiredPageEntry,canonicalWorkspaceChartEntry,location:{search,pathname:'/'},console:{error:(...values)=>errors.push(values)},
+    URLSearchParams,canonicalNativeChartEntry,canonicalRetiredPageEntry,canonicalWorkspaceChartEntry,canonicalDefaultChartEntry,location:{search,pathname:'/'},console:{error:(...values)=>errors.push(values)},
     initTheme:()=>{},enhanceBootSkeleton:()=>{},mountJournalEntry:()=>{},initPerformanceDiagnostics:()=>{},initAtlasShell:()=>{},
     CustomEvent:class{constructor(type){this.type=type;}},
     document:{documentElement:root,querySelector:()=>bootSymbol,dispatchEvent:event=>events.push(event.type)},
@@ -117,11 +117,11 @@ async function runEntry(search,{failImport=false,failInit=false}={}){
   return {imports,events,errors,bootSymbol,root,initializations};
 }
 
-test('ETH routing loads and awaits only the ETH workspace, while BTC and unsupported symbols retain the BTC entry',async()=>{
+test('ETH routing stays on the shared outlook chart, while BTC and unsupported symbols retain the BTC entry',async()=>{
   for(const query of ['?symbol=ETHUSD','?symbol=ethusd','?symbol=ETHUSD&page=compare&assumption=stress']){
     const result=await runEntry(query);
-    assert.equal(result.imports.length,1);assert.match(result.imports[0],/^\.\/eth-view\.js\?/);
-    assert.deepEqual(result.initializations,['ETHUSD','ready']);assert.deepEqual(result.events,[]);
+    assert.equal(result.imports.length,1);assert.match(result.imports[0],/^\.\/app\.js\?/);
+    assert.deepEqual(result.initializations,[]);assert.deepEqual(result.events,[]);
     assert.equal(result.root.dataset.symbol,'ETHUSD');assert.equal(result.bootSymbol.textContent,'ETHUSD');
   }
   for(const query of ['','?symbol=BTCUSD','?symbol=ETHUSDT','?symbol=unknown']){
@@ -130,13 +130,11 @@ test('ETH routing loads and awaits only the ETH workspace, while BTC and unsuppo
   }
 });
 
-test('a failed ETH import or initialization reports the boot error and never falls back to a mislabeled BTC chart',async()=>{
-  for(const failure of [{failImport:true},{failInit:true}]){
-    const result=await runEntry('?symbol=ETHUSD',failure);
-    assert.equal(result.imports.length,1);assert.match(result.imports[0],/^\.\/eth-view\.js\?/);
-    assert.deepEqual(result.events,['atlas:boot-error']);assert.equal(result.errors.length,1);
-    assert.equal(result.root.dataset.symbol,'ETHUSD');
-  }
+test('a failed shared chart import reports the boot error and keeps the requested ETH identity',async()=>{
+  const result=await runEntry('?symbol=ETHUSD',{failImport:true});
+  assert.equal(result.imports.length,1);assert.match(result.imports[0],/^\.\/app\.js\?/);
+  assert.deepEqual(result.events,['atlas:boot-error']);assert.equal(result.errors.length,1);
+  assert.equal(result.root.dataset.symbol,'ETHUSD');
 });
 
 test('the complete ETH module graph excludes BTC workspaces, forecast engines and cycle-analysis controllers',async()=>{

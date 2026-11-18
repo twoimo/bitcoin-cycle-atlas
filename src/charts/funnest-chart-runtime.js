@@ -3,8 +3,8 @@ import { createChart } from '@funnest/charts';
 const BAR_FIELDS = ['time', 'open', 'high', 'low', 'close'];
 const TIME_SCALE_BUDGET = Object.freeze({ minBarSpacing: 0.5, maxBarSpacing: 64, maxBars: 6000 });
 const NATIVE_TIME_LABEL_MIN_GAP = 72; // Pinned Funnest 0.6.22 TIME_LABEL_MIN_GAP.
-// Fits the widest price label any chart shows, up to a six-digit BTC price with cents, plus the engine's 20px padding.
-export const ATLAS_PRICE_AXIS_MIN_WIDTH = 96;
+// Shared gutter. Wider labels still grow it; the engine adds its own 20px pad and rounds to 8px.
+export const ATLAS_PRICE_AXIS_MIN_WIDTH = 80;
 function sourceInterval(bars) {
   let interval = Infinity;
   for (let index = Math.max(1, bars.length - 20); index < bars.length; index++) interval = Math.min(interval, bars[index].time - bars[index - 1].time);
@@ -210,6 +210,76 @@ export function exposeAtlasFunnestSnapshot(host, readSnapshot) {
   return () => { if (Object.getOwnPropertyDescriptor(host, 'getAtlasFunnestSnapshot')?.value === read) delete host.getAtlasFunnestSnapshot; };
 }
 
+function canvasDimensionAccessors(canvas) {
+  let prototype = canvas;
+  while (prototype) {
+    const width = Object.getOwnPropertyDescriptor(prototype, 'width');
+    const height = Object.getOwnPropertyDescriptor(prototype, 'height');
+    if (width?.get && width?.set && height?.get && height?.set) return { width, height };
+    prototype = Object.getPrototypeOf(prototype);
+  }
+  return null;
+}
+
+/** Setting a canvas dimension clears its bitmap immediately. The pinned engine
+ * then waits for another animation frame, so the browser presents the cleared
+ * chart. Repaint after the resize returns and before that presentation. */
+function repaintClearedFunnestSurface(chart) {
+  const canvases = [chart.mainLayer?.canvas, chart.overlayLayer?.canvas].filter(Boolean);
+  let queued = false;
+  const paint = () => {
+    queued = false;
+    if (chart.destroyed || typeof chart.render !== 'function') return;
+    chart.render();
+  };
+  const schedule = () => {
+    if (queued || chart.destroyed) return;
+    queued = true;
+    // The dimension assignment has already cleared the main bitmap. render()
+    // skips that layer when a frame is cached and this flag is clear.
+    chart.mainDirty = true;
+    queueMicrotask(paint);
+  };
+  const installed = [];
+  for (const canvas of canvases) {
+    const accessors = canvasDimensionAccessors(canvas);
+    if (!accessors) continue;
+    for (const name of ['width', 'height']) {
+      Object.defineProperty(canvas, name, {
+        configurable: true, enumerable: true,
+        get() { return accessors[name].get.call(this); },
+        set(value) { accessors[name].set.call(this, value); schedule(); },
+      });
+    }
+    installed.push(canvas);
+  }
+  return () => {
+    queued = true;
+    for (const canvas of installed) { delete canvas.width; delete canvas.height; }
+  };
+}
+
+/** Fill the visible canvas before the caller returns.
+ * A mount that only schedules an animation frame is presented blank when the
+ * caller itself is already inside one, which is the first-load chart flash. */
+export function paintMountedFunnestChart(chart, host) {
+  if (!chart || chart.destroyed || typeof chart.render !== 'function' || !host?.isConnected) return false;
+  const rect = host.getBoundingClientRect?.();
+  const width = Math.floor(rect?.width || 0);
+  const height = Math.floor(rect?.height || 0);
+  const dpr = host.ownerDocument?.defaultView?.devicePixelRatio || 1;
+  if (width > 0 && height > 0 && chart.size && chart.mainLayer?.resize && chart.overlayLayer?.resize
+      && (chart.size.width !== width || chart.size.height !== height || chart.size.dpr !== dpr)) {
+    chart.size = { width, height, dpr };
+    chart.mainLayer.resize(width, height, dpr);
+    chart.overlayLayer.resize(width, height, dpr);
+  }
+  if (!(chart.size?.width > 0) || !(chart.size?.height > 0)) return false;
+  chart.mainDirty = true;
+  chart.render();
+  return chart.mainLayer?.canvas?.width > 0 && chart.mainLayer?.canvas?.height > 0;
+}
+
 /**
  * Mount Atlas's shared Funnest Canvas engine. Funnest owns observed prices, OHLC candles,
  * time/price axes, scaling, viewport, crosshair, pointer navigation and drawing state. Atlas
@@ -246,10 +316,12 @@ export function mountAtlasFunnestChart(container, options = {}) {
   const chart = createChart(host, { locale, displayTimezone: timezone, pricePrecision: precision, tickSize,
     volume: showVolume, theme: { ...DEFAULT_THEME, ...theme }, settings: { volume: showVolume, lastPriceLine: true, priceScale: scale },
     timeScale: { minBarSpacing: TIME_SCALE_BUDGET.minBarSpacing, maxBarSpacing: TIME_SCALE_BUDGET.maxBarSpacing } });
+  const releaseClearedSurfaceRepaint = repaintClearedFunnestSurface(chart);
   // Funnest's first computeFrame switches scale mode and enables auto-scale when these
   // disagree. Set the native mode alongside constructor settings before data can paint.
   if (chart.mainScale && typeof chart.mainScale.mode === 'string') chart.mainScale.mode = scale;
   const cleanups = [];
+  cleanups.push(releaseClearedSurfaceRepaint);
   let destroyed = false, readyPromise = null, observations = [], currentBars = [], pendingRange = range, ownedRange = range, retainedRange = range, retainedMaxSpan = 0, retainedFitException = Boolean(range), initialRangeOwned = Boolean(range), userRange = false, userInput = false, inputStamp = 0, restoreEpoch = 0, restoringData = false, futureDateTicks = [], announceTimer = 0, currentInverted = Boolean(invertScale), lastCrosshair = null, crosshairEventSequence = 0;
   const volumeMap = new Map();
   if (volumeByTime !== null) {

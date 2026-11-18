@@ -1,5 +1,5 @@
 import { setLoadingSurface } from './loading-surfaces.js';
-import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.36.1';
+import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.36.7';
 import {esc} from './ui/html-escape.js';
 import {decimal,percent,day,fromDay} from './ui/journal-format.js';
 

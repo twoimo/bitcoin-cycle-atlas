@@ -424,7 +424,7 @@ test('equity refresh preserves an explicit selected archive observation and upda
 
 test('ETH and equity active price renderers use the shared Funnest adapter rather than the legacy SVG painter', async () => {
   const adapter = await readFile(new URL('../dist/funnest-observed-price-adapter.js', import.meta.url), 'utf8');
-  assert.match(adapter, /from ['"]\.\/funnest-chart-runtime\.bundle\.js['"]/);
+  assert.match(adapter, /from ['"]\.\/funnest-chart-runtime\.bundle\.js(?:\?[^'"]*)?['"]/);
   assert.doesNotMatch(adapter, /from ['"]\.\/funnest-chart-runtime\.js['"]/);
   assert.match(adapter, /getExportSurface\s*=\s*\(\)\s*=>\s*\(\{ canvas: mounted\.getCanvas\(\), svg: mounted\.getOverlaySvg\(\) \}\)/);
   for (const name of ['eth-view.js', 'equity-view.js']) {

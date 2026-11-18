@@ -69,8 +69,9 @@ body[data-embedded=true] #data-view .daily-heading { position: relative; inset: 
 #data-view .asset-comparison-table tr > :last-child { border-right: 0; }
 #data-view .asset-comparison-table tbody tr:last-child > th, #data-view .asset-comparison-table tbody tr:last-child > td { border-bottom: 0; }
 #data-view .asset-comparison-table thead { z-index: 3; }
-#data-view .asset-comparison-table thead th { height: 54px; padding: 8px; color: var(--asset-muted); background: var(--surface); font-size: 12px; font-weight: 500; border-bottom: 1px solid var(--border); line-height: 1.5; }
+#data-view .asset-comparison-table thead th { height: auto; min-height: 54px; padding: 8px; color: var(--asset-muted); background: var(--surface); font-size: 12px; font-weight: 500; border-bottom: 1px solid var(--border); line-height: 1.5; }
 #data-view .asset-comparison-table thead th small { display: block; color: var(--asset-muted); font: 11px/1.55 var(--font-mono); }
+#data-view #asset-start-header small, #data-view #asset-latest-header small { color: var(--text); white-space: normal; }
 /* Each heading follows its own body column; a colspan identity heading would
    scroll away from the pinned name cells on tablet and desktop overflows. */
 #data-view .asset-comparison-table .asset-identity-header { display: none; }
@@ -89,9 +90,9 @@ body[data-embedded=true] #data-view .daily-heading { position: relative; inset: 
 #data-view .asset-name-label { color: var(--asset-ink); font: 600 13px/1.5 var(--font); overflow: hidden; text-overflow: ellipsis; }
 #data-view .asset-samples { color: var(--asset-muted); background: var(--asset-paper); font: 13px/1.5 var(--font-mono); }
 #data-view .asset-samples sup { margin-left: 2px; color: var(--asset-sign); font-size: 11px; }
-#data-view .asset-comparison-table .asset-price { text-align: right; background: var(--asset-paper); color: var(--asset-muted); font: 13px/1.35 var(--font-mono); }
+#data-view .asset-comparison-table .asset-price { text-align: right; background: var(--asset-paper); color: var(--asset-ink); font: 13px/1.35 var(--font-mono); }
 #data-view .asset-comparison-table .asset-latest { color: var(--asset-ink); }
-#data-view .asset-cell-date { display: block; color: var(--asset-muted); font-size: 11px; line-height: 1.2; font-weight: 400; white-space: nowrap; }
+#data-view .asset-cell-date { display: block; color: var(--text); font-size: 11px; line-height: 1.2; font-weight: 500; white-space: nowrap; }
 #data-view .asset-comparison-table .asset-return { text-align: right; font: 500 14px/1.5 var(--font-mono); white-space: nowrap; }
 #data-view .asset-comparison-table .asset-return-gain { color: var(--green, var(--daily-data-ink)); background: var(--asset-paper); }
 #data-view .asset-comparison-table .asset-return-loss { color: var(--red, var(--daily-data-ink-2)); background: var(--asset-paper); }
@@ -106,7 +107,7 @@ body[data-embedded=true] #data-view .daily-heading { position: relative; inset: 
 #data-view .asset-judgment-neutral { color: var(--asset-sign); }
 #data-view .asset-judgment-sell { color: var(--red, var(--daily-data-ink-2)); }
 #data-view .asset-judgment-strong-sell { color: var(--red); font-weight: 650; }
-#data-view .asset-judgment-unavailable { color: var(--asset-muted); }
+#data-view .asset-judgment-unavailable { color: var(--text); }
 #data-view .asset-comparison-table .asset-table-empty { height: 220px; padding: 36px 20px; background: var(--asset-paper); color: var(--asset-muted); font-size: 13px; }
 #data-view .asset-table-empty > span { display: block; }
 #data-view #asset-retry { margin-top: 16px; min-height: 34px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface-raised); color: var(--asset-ink); font-size: 12px; }
@@ -147,9 +148,9 @@ body[data-embedded=true] #data-view .daily-heading { position: relative; inset: 
   #data-view .asset-context { gap: 4px 12px; font-size: 11px; }
   #data-view .asset-scroll-hint { display: none; }
   #data-view .asset-mobile-nav { display: flex; flex: none; align-items: center; justify-content: space-between; gap: 8px; padding: 2px 8px; border-top: 1px solid var(--asset-grid); background: var(--surface); }
-  #data-view .asset-mobile-nav button { min-height: 32px; padding: 4px 8px; border: 1px solid transparent; border-radius: 4px; background: transparent; color: var(--asset-muted); font-size: 11px; }
+  #data-view .asset-mobile-nav button { min-height: 44px; padding: 4px 8px; border: 1px solid transparent; border-radius: 4px; background: transparent; color: var(--asset-muted); font-size: 12px; }
   #data-view .asset-mobile-nav button:hover { color: var(--asset-ink); background: var(--surface-hover); }
-  #data-view .asset-mobile-nav > span { color: var(--asset-muted); font-size: 11px; }
+  #data-view .asset-mobile-nav > span { color: var(--asset-muted); font-size: 12px; }
   #data-view .asset-table-scroll { container-type: inline-size; scroll-snap-type: x mandatory; scroll-padding-inline-start: 120px; }
   #data-view .asset-comparison-table { width: calc(100cqw + 432px); min-width: calc(100cqw + 432px); font-size: 12px; }
   #data-view .asset-col-group { width: 0px; display: none; }

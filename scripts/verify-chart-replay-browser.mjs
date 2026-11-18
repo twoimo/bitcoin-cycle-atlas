@@ -532,7 +532,7 @@ export async function verifyChartReplaySurface(api) {
         assert.ok(geometry.legend.trigger.height >= 44, 'Mobile legend lost its 44px touch target');
       } else {
         assert.deepEqual(geometry.legend.rows.map(row => row.id), ['price', 'cycle'], 'BTC legend must keep both semantic groups');
-        assert.ok(geometry.legend.height <= 40, 'Desktop legend must fit in one 40px line');
+        assert.ok(geometry.legend.height <= 22, 'Desktop legend must fit in one 22px line');
         assert.ok(Math.abs(geometry.legend.rows[1].top - geometry.legend.rows[0].top) <= 1, 'Legend groups must share one line');
         assert.ok(geometry.legend.rows[1].left >= geometry.legend.rows[0].right, 'Legend groups overlap horizontally');
         for (const row of geometry.legend.rows) {

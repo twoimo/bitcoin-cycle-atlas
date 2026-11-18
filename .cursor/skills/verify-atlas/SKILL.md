@@ -37,6 +37,7 @@ Prefer the repo harnesses:
 
 - `node scripts/verify-ui-contract-browser.mjs` for shell geometry across the viewports in that file
 - `node scripts/verify-workspace-browser.mjs` for the shared workspace cases
+- `node scripts/verify-chart-first-paint.mjs` for the first revealed Bitcoin chart canvas
 - `node scripts/verify-published-origin-browser.mjs` only after a deployment, against the published origin
 
 For one journey, use the browser on the served origin. Stable handles:
@@ -65,4 +66,6 @@ Stop only the server this run started, by its PID. Do not kill the port 8000 ser
 
 ## Helpers
 
-No extra helper is shipped. The feature map is `features/README.md`.
+`node scripts/verify-chart-first-paint.mjs [url] [width] [height]` opens a throwaway headless Chrome against the already running server. It does not start or stop that server. The default URL is `http://127.0.0.1:8765/?page=outlook` at 1440×900. A module connection reset is a failed load, not a painted chart. The script retries that load and writes `build/verification-evidence/2026-11-18/first-paint.json`.
+
+The feature map is `features/README.md`.

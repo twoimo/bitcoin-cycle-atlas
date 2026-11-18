@@ -14,7 +14,7 @@ import {headlessWindowArgument,verifyHeadlessWindowEnvelope} from './headless-br
 import {classifyProjectBrowserResource,verifyProjectGeneratedImages} from './browser-project-resource-policy.mjs';
 import {mountUiReviewCase,uiContractBrowserCases,verifyUiContractSurface,verifyUiShellSurface} from './verify-ui-contract-browser.mjs';
 import {verifyNativeChartWorkbench} from './verify-native-chart-workbench-browser.mjs';
-import {verifyChartZoomBrowser} from './verify-chart-zoom-browser.mjs';
+import {bootPaintContinuitySource,readBootPaintContinuity,verifyChartZoomBrowser} from './verify-chart-zoom-browser.mjs';
 import {emitBrowserEvidenceChunks,emitCompressedBrowserReport} from './browser-evidence-transport.mjs';
 import {fastCadencePolicy,fastCadenceMilestonePrefix,browserSourceInventorySha256} from './browser-fast-cadence-contract.mjs';
 import {replayProfileEnabled,profileEarlyReplayCadence} from './chart-replay-profile.mjs';
@@ -1222,6 +1222,7 @@ async function main(){
       await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:touch,maxTouchPoints:1});
       await cdp.send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'},{name:'prefers-color-scheme',value:'dark'}]});
       receipt.url=spec.route?base+spec.route:base+(page==='zero-fixture'?'/__synthetic-zero__/?symbol=BMNR&granularity=daily&type=line':page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol='+page.toUpperCase()+'&granularity=daily&type=line');
+      await cdp.send('Page.addScriptToEvaluateOnNewDocument',{source:bootPaintContinuitySource()});
       await cdp.send('Page.navigate',{url:receipt.url});
       if(spec.uiContract)await verifyUiContractSurface({cdp,receipt,evaluate,until,settled,click,screenshot,verifyOfflineRefresh});
       else if(spec.uiShell)await verifyUiShellSurface({cdp,receipt,evaluate,until,settled,click,screenshot,verifyOfflineRefresh});
@@ -1237,6 +1238,10 @@ async function main(){
       else if(spec.surface){
         await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh,expectedBtc,verifyHeaderOwnership:()=>verifyHeaderOwnership(cdp)});
         if(spec.surface==='btc'){
+          const bootPaint = await evaluate(cdp, readBootPaintContinuity);
+          receipt.bootPaint = bootPaint;
+          assert.equal(bootPaint?.readyBlank, 0, 'BTCUSD: the first revealed chart presented a blank frame');
+          assert.ok((bootPaint?.varied ?? 0) > 0 && (bootPaint?.frames ?? 0) > 0, 'BTCUSD: boot paint sampler did not observe the revealed chart');
           await verifyChartZoomBrowser({cdp,receipt,evaluate,until,settled,svgSelector:'#lab-chart',allocationSelector:'#lab-chart-stage > .atlas-plot',label:'BTCUSD'});
           await screenshot(cdp,page+'-'+width+'x'+height+'-chart-zoom.png',receipt);
         }

@@ -480,7 +480,7 @@ test('the price axis never falls below the shared minimum width and still grows 
   const legacy = engine(88); holdFunnestPriceAxisWidth(legacy, () => false); legacy.priceAxisWidth = 56;
   assert.equal(legacy.priceAxisWidth, 56, 'without a minimum the engine width passes through unchanged');
   for (const bad of [-1, NaN, Infinity, '96']) assert.throws(() => holdFunnestPriceAxisWidth(engine(56), () => false, bad), RangeError);
-  assert.equal(ATLAS_PRICE_AXIS_MIN_WIDTH, 96);
+  assert.equal(ATLAS_PRICE_AXIS_MIN_WIDTH, 80);
 });
 
 test('instruments with different label widths share one gutter and keep the observed bars byte for byte', async () => {
@@ -506,4 +506,25 @@ test('instruments with different label widths share one gutter and keep the obse
     });
   }
   assert.ok(unfloored[1] > unfloored[0], 'without the minimum, a wider label still gives a wider gutter, which is the gap this closes');
+});
+
+test('resizing the chart canvas repaints before the next browser turn', async () => {
+  await withNativeRuntime(async ({ container }) => {
+    const mounted = mountAtlasFunnestChart(container, { bars: sessionBars.slice(0, 40), symbol: 'BTCUSD', volume: false });
+    try {
+      const chart = mounted.chart;
+      let paints = 0;
+      const original = chart.render.bind(chart);
+      chart.render = () => { paints += 1; return original(); };
+      const canvas = chart.mainLayer.canvas;
+      canvas.width = 860;
+      canvas.height = 480;
+      assert.equal(paints, 0, 'both dimension writes clear the bitmap before either one should paint');
+      let timerRan = false;
+      setTimeout(() => { timerRan = true; }, 0);
+      await Promise.resolve();
+      assert.equal(paints, 1, 'the cleared canvas is painted before the browser can present it');
+      assert.equal(timerRan, false, 'the repaint stays ahead of the next macrotask');
+    } finally { mounted.destroy(); }
+  });
 });

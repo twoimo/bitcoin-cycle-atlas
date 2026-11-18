@@ -222,3 +222,17 @@ test('shell ARIA context follows research and restores symbol-specific chart lab
   assert.equal(heading.querySelector('.workbench-symbol'), symbolSelector);
   assert.ok(sourceNodes.every(node => node.isConnected));
 });
+
+test('chart tools menu sits immediately after indicators and leaves the instrument slot at 5', () => {
+  const {document} = fixture();
+  const heading = document.querySelector('.atlas-canvas-heading');
+  const tools = document.createElement('div');
+  tools.id = 'chart-tools-menu';
+  heading.append(tools);
+  refreshShellSlots(document, {symbol:'BTCUSD'});
+  const mode = heading.querySelector('#atlas-mode-menu');
+  assert.equal(tools.previousElementSibling, mode);
+  assert.equal(tools.hasAttribute('data-shell-slot'), false);
+  assert.equal(heading.querySelector('.shell-instrument-slot').dataset.shellSlot, '5');
+  assert.equal(heading.querySelector('.shell-instrument-slot').dataset.shellKey, 'instrument');
+});

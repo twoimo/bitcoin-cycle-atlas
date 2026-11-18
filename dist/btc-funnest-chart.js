@@ -1,10 +1,11 @@
-import { mountAtlasFunnestChart, ATLAS_FUNNEST_THEME } from './funnest-chart-runtime.bundle.js';
+import { mountAtlasFunnestChart, ATLAS_FUNNEST_THEME, paintMountedFunnestChart } from './funnest-chart-runtime.bundle.js?v=1.36.5';
 import { createPriceDisplay, formatDisplayPrice } from './price-display.js?v=1.29.0';
 import { barPriceChange } from './chart-math.js?v=1.29.0';
 import { resolveMagnetPoint, advanceMeasurement } from './chart-magnet.js?v=1.29.0';
 import { EVENT_COLORS, historicalMarkersMarkup } from './chart-overlays.js?v=1.29.0';
 import { milestoneMarkersMarkup } from './cycle-milestones-view.js?v=1.29.0';
 import { cycleIntervalsOverlayMarkup } from './cycle-interval-overlay.js?v=1.31.3';
+import { paintChartDrawings } from './chart-drawbar.js?v=1.0.4';
 
 const DAY = 86_400_000;
 let nextBtcRenderInstance = 1;
@@ -223,15 +224,20 @@ export function mountAtlasBtcFunnestChart({
   const volumeByDate = new Map(volumeBars.map(row => [row.endDate ?? row.date, row]));
   const forecastRows = forecast.filter(row => row?.date && finitePositive(row.price)).map(row => ({ ...row, time: utcMs(row.date) }));
   const retrospectiveRows = retrospective.filter(row => row?.date && finitePositive(row.price)).map(row => ({ ...row, time: utcMs(row.date) }));
-  const initialRange = start && end ? { from: rangeTime(start), to: rangeTime(end, true) } : null;
-  const inRequestedWindow = row => !initialRange || (Number.isFinite(row.time) && row.time >= initialRange.from && row.time <= initialRange.to);
+  // Zoom changes this window in place. Replacing the canvas to publish a new
+  // range leaves one blank frame, which reads as the page flashing.
+  let viewStart = start, viewEnd = end;
+  let viewportRange = viewStart && viewEnd ? { from: rangeTime(viewStart), to: rangeTime(viewEnd, true) } : null;
+  let historyEventId = activeHistoricalEventId, cycleMarkerId = activeCycleMarkerId, cycleMarkerIds = activeCycleMarkerIds, cycleInterval = activeCycleInterval, turnMarker = nextTurn;
+  let manualPriceDomain = priceDomain;
+  const inRequestedWindow = row => !viewportRange || (Number.isFinite(row.time) && row.time >= viewportRange.from && row.time <= viewportRange.to);
   // The start-relative units measure from the first row of the requested window, as the SVG chart did. A window with no
   // observed row starts at its first model row. A window with no row keeps the first observed row, so every price has a value.
   const displayStart = observedTimeline.find(inRequestedWindow)
     ?? [...forecastRows, ...retrospectiveRows].filter(inRequestedWindow).sort((a, b) => a.time - b.time)[0] ?? observedTimeline[0];
-  const display = createPriceDisplay({ unit, rows: [{ date: displayStart.date, price: displayStart.price ?? displayStart.close }], denominator, denominatorDate, scale });
+  let display = createPriceDisplay({ unit, rows: [{ date: displayStart.date, price: displayStart.price ?? displayStart.close }], denominator, denominatorDate, scale });
   const volumeByTime = sourceMode === 'close-only' && showVolume ? rawRows.map(row => ({ time: row.time, volume: volumeByDate.get(row.date)?.volume })).filter(row => Number.isFinite(row.volume)) : null;
-  const effectiveScale = display.effectiveScale === 'log' ? 'log' : 'normal';
+  let effectiveScale = display.effectiveScale === 'log' ? 'log' : 'normal';
   const toEngineBar = row => sourceMode === 'close-only'
     ? { time: row.time, close: scaleValue(row.close, display) }
     : { time: row.time, open: scaleValue(row.open, display), high: scaleValue(row.high, display), low: scaleValue(row.low, display), close: scaleValue(row.close, display), volume: row.volume };
@@ -277,10 +283,11 @@ export function mountAtlasBtcFunnestChart({
     futurePointerActive = false; futurePreviewLayer.setAttribute('display', 'none');
     if (clearPointer) pointerDetail = null;
   };
-  const mounted = mountAtlasFunnestChart(container, {
+  let mounted = null;
+  mounted = mountAtlasFunnestChart(container, {
     bars, sourceMode, chartType: sourceMode === 'close-only' ? 'line' : chartType, symbol: 'BTCUSD', currency: unit === 'usd' ? 'USD' : unit,
-    timezone: 'UTC', locale: 'ko', precision: unit === 'usd' ? 2 : 2, tickSize: unit === 'usd' ? 0.01 : 0.01,
-    scale: effectiveScale, invertScale, range: initialRange, theme: chartTheme, volume: showVolume, volumeByTime, volumeSource: sourceMode === 'close-only' && showVolume ? volumeSource : actualSource,
+    timezone: 'UTC', locale: 'ko', precision: 0, tickSize: 1,
+    scale: effectiveScale, invertScale, range: viewportRange, theme: chartTheme, volume: showVolume, volumeByTime, volumeSource: sourceMode === 'close-only' && showVolume ? volumeSource : actualSource,
     source: { name: actualSource, ...source, ...(lineRows.length ? { observedLineSource: lineSource, observedLineRows: lineRows.length } : {}), ...(sourceMode === 'close-only' && showVolume ? { volumeSource: { name: volumeSource, scope: 'BTC-USD 단일 거래소 거래량', rows: volumeByTime.length } } : {}) }, accessibleName: `비트코인 ${sourceMode === 'ohlc' ? '실제 OHLC 가격 차트' : `${actualSource} 실제 일말 종가 차트`}`,
     onCrosshair: detail => {
       if (destroyed || selectionPreview) return;
@@ -361,7 +368,7 @@ export function mountAtlasBtcFunnestChart({
       lastCoords = coords;
       const receipt = { sequence: ++renderSequence, layer: 'above', order: ++paintOrder, paths: {}, markers: [], intervals: [], turns: [], boundaries: [], measurements: [], snapFeedback: null, bands: lastBands };
       lastOverlay = receipt;
-      const boundaryRows = mapAtlasReplayBoundaries(replayBoundaries, coords, { start, end });
+      const boundaryRows = mapAtlasReplayBoundaries(replayBoundaries, coords, { start: viewStart, end: viewEnd });
       replayBoundaryLayer.replaceChildren(...boundaryRows.map(item => {
         const color = item.color === 'var(--muted)' ? chartTheme.textSecondary : item.color === 'var(--data-gold)' ? '#e2b66c' : item.color === 'var(--text)' ? chartTheme.text : item.color || chartTheme.textSecondary;
         painter.vLine(item.x, 0, coords.height, color, [3, 5]);
@@ -370,7 +377,7 @@ export function mountAtlasBtcFunnestChart({
         group.append(svgNode(svg.ownerDocument, 'title', {}, `${item.label} ${item.date}`));
         return group;
       }));
-      const timingRows = timingPaneHeight ? mapAtlasReplayTimingRows(cycleCalibration, coords, { cursorDate: replayCursorDate, start, end }) : [];
+      const timingRows = timingPaneHeight ? mapAtlasReplayTimingRows(cycleCalibration, coords, { cursorDate: replayCursorDate, start: viewStart, end: viewEnd }) : [];
       const layoutHeight = Number(mounted.chart.layout?.height) || 0;
       replayTimingLayer.replaceChildren();
       if (timingPaneHeight) {
@@ -441,15 +448,15 @@ export function mountAtlasBtcFunnestChart({
       }
       retrospectiveLabelLayer.replaceChildren(...retrospectiveLabels);
       const actualRows = observedTimeline.filter(row => Number.isFinite(row.price ?? row.close) && (row.price ?? row.close) > 0);
-      const hasAnnotationDomain = typeof start === 'string' && typeof end === 'string';
-      const historicalAnchors = historicalEvents.filter(event => hasAnnotationDomain && event?.date && event.date >= start && event.date <= end && actualRows.length)
+      const hasAnnotationDomain = typeof viewStart === 'string' && typeof viewEnd === 'string';
+      const historicalAnchors = historicalEvents.filter(event => hasAnnotationDomain && event?.date && event.date >= viewStart && event.date <= viewEnd && actualRows.length)
         .map(event => {
           const time = utcMs(event.date);
           let nearest = actualRows[0], distance = Math.abs(nearest.time - time);
           for (const row of actualRows.slice(1)) { const next = Math.abs(row.time - time); if (next < distance) { nearest = row; distance = next; } }
           return { event, x: coords.timeToX(time), y: coords.priceToY(scaleValue(nearest.price ?? nearest.close, display)) };
         }).filter(anchor => anchor.event.date >= actualRows[0].date && anchor.event.date <= (actualRows.at(-1).endDate ?? actualRows.at(-1).date));
-      const historyLayout = historicalMarkersMarkup(historicalAnchors, { left: 0, right: coords.plotWidth, top: 5, bottom: coords.height - 4, activeEventId: activeHistoricalEventId, ...(hasAnnotationDomain ? { visibleSpanDays: Math.max(1, (utcMs(end) - utcMs(start)) / DAY) } : {}) });
+      const historyLayout = historicalMarkersMarkup(historicalAnchors, { left: 0, right: coords.plotWidth, top: 5, bottom: coords.height - 4, activeEventId: historyEventId, ...(hasAnnotationDomain ? { visibleSpanDays: Math.max(1, (utcMs(viewEnd) - utcMs(viewStart)) / DAY) } : {}) });
       const annotationLabels = [];
       for (const marker of historyLayout.markers) {
         const override = marker.event.category && EVENT_COLORS[marker.event.category];
@@ -479,7 +486,7 @@ export function mountAtlasBtcFunnestChart({
         const x = coords.timeToX(row.time), y = coords.priceToY(scaleValue(row.price, display));
         if (Number.isFinite(x) && Number.isFinite(y)) { painter.circle(x, y, 3, row.type === 'high' ? '#e7bb73' : '#85bfdc', background, 1); receipt.turns.push({ date: row.date, time: row.time, kind: row.kind ?? null, replaySource: row.replaySource ?? null, type: row.type, x, y, radius: 3, layer: 'above', order: ++paintOrder }); }
       }
-      const cycleLayout = milestoneMarkersMarkup({ markers: markerRows, start, end, x: marker => coords.timeToX(utcMs(marker.date)), y: price => coords.priceToY(scaleValue(price, display)), left: 0, right: coords.plotWidth, top: 0, bottom: coords.height, clipId: `${svg.id || 'btc'}-milestones`, activeMarkerId: activeCycleMarkerId, activeMarkerIds: activeCycleMarkerIds, activeInterval: activeCycleInterval });
+      const cycleLayout = milestoneMarkersMarkup({ markers: markerRows, start: viewStart, end: viewEnd, x: marker => coords.timeToX(utcMs(marker.date)), y: price => coords.priceToY(scaleValue(price, display)), left: 0, right: coords.plotWidth, top: 0, bottom: coords.height, clipId: `${svg.id || 'btc'}-milestones`, activeMarkerId: cycleMarkerId, activeMarkerIds: cycleMarkerIds, activeInterval: cycleInterval });
       const visibleCycleIds = new Set(cycleLayout.markers.map(point => point.marker.id));
       for (const point of cycleLayout.markers) {
         const marker = point.marker, color = point.color, radius = point.radius || 4;
@@ -515,11 +522,11 @@ export function mountAtlasBtcFunnestChart({
         ]),
       ];
       const intervalLayout = cycleIntervalsOverlayMarkup({
-        intervals: intervalRows, comparisons: cyclePeriodComparisons, start, end,
+        intervals: intervalRows, comparisons: cyclePeriodComparisons, start: viewStart, end: viewEnd,
         x: point => coords.timeToX(utcMs(point.date)), left: 0, right: coords.plotWidth, top: 0, bottom: coords.height,
         clipId: intervalClipId, relation: cycleRelation,
-        activeIntervalId: typeof activeCycleInterval === 'string' ? activeCycleInterval : activeCycleInterval?.id,
-        activeMarkerId: activeCycleMarkerId, obstacles: intervalObstacles, pricePoints,
+        activeIntervalId: typeof cycleInterval === 'string' ? cycleInterval : cycleInterval?.id,
+        activeMarkerId: cycleMarkerId, obstacles: intervalObstacles, pricePoints,
       });
       const intervalChildren = [];
       if (intervalLayout.markup) {
@@ -595,9 +602,9 @@ export function mountAtlasBtcFunnestChart({
         const palette = { warmup:'#637080','price-discovery':'#d8aa60','bottom-formation':'#7f91c4',range:'#8f9ba8',rebound:'#6ea89d',pullback:'#a58ca5',advance:'#6e9f87',correction:'#bd7e82',transition:'#617181' };
         for (let index = 0; index < states.length; index++) { const item = states[index]; if (!item?.date) continue; const x1 = coords.timeToX(utcMs(item.date)), x2 = coords.timeToX(utcMs(states[index + 1]?.date || item.date) + (states[index + 1] ? 0 : expectedGap)); if (Number.isFinite(x1) && Number.isFinite(x2)) { ctx.save(); ctx.globalAlpha = .28; ctx.fillStyle = palette[item.state] || '#718096'; ctx.fillRect(Math.max(0, x1), coords.height - 6, Math.max(1, Math.min(coords.plotWidth, x2) - Math.max(0, x1)), 4); ctx.restore(); } }
       }
-      if (nextTurn?.date) { const x = coords.timeToX(utcMs(nextTurn.date)); if (Number.isFinite(x)) painter.vLine(x, 0, coords.height, '#e2b66c', [3, 5]); }
+      if (turnMarker?.date) { const x = coords.timeToX(utcMs(turnMarker.date)); if (Number.isFinite(x)) painter.vLine(x, 0, coords.height, '#e2b66c', [3, 5]); }
       targetItems = [
-        ...(nextTurn?.date ? [{ type: 'next-turn', id: nextTurn.type || nextTurn.date, title: nextTurn.label || '다음 방향 후보', time: utcMs(nextTurn.date), price: nextTurn.price, fixedY: 24 }] : []),
+        ...(turnMarker?.date ? [{ type: 'next-turn', id: turnMarker.type || turnMarker.date, title: turnMarker.label || '다음 방향 후보', time: utcMs(turnMarker.date), price: turnMarker.price, fixedY: 24 }] : []),
         ...eventRows.filter(row => row.kind !== 'historical').map(row => ({ type: 'event', id: row.id, title: row.label || row.title || row.shortLabel, time: row.time, price: row.price, fixedY: 14 })),
         ...historyLayout.markers.map(marker => ({ type: 'history', id: marker.event.id, title: `${marker.event.date} ${marker.event.title || marker.event.label || ''} · 사건 원문 보기`, time: utcMs(marker.event.date), fixedX: marker.x, fixedY: marker.y, pressed: Boolean(marker.active) })),
         ...markerRows.filter(row => visibleCycleIds.has(row.id)).map(row => ({ type: 'cycle', id: row.id, title: row.displayLabel || row.label || row.type, time: row.time, price: row.price, pressed: Boolean(cycleLayout.markers.find(point => point.marker.id === row.id)?.active) })),
@@ -617,7 +624,7 @@ export function mountAtlasBtcFunnestChart({
     },
   };
   const overlayHandle = mounted.addOverlay(overlay);
-  let initialRangeApplied = false, redrawTimer = null;
+  let viewportRangeApplied = false, redrawTimer = null;
   const scheduleReplayOverlayRedraw = () => {
     clearTimeout(redrawTimer);
     // Range installation can happen during Funnest's first layout pass. Wait
@@ -627,7 +634,7 @@ export function mountAtlasBtcFunnestChart({
       redrawTimer = null;
       if (destroyed) return;
       const visible = mounted.chart.getVisibleTimeRange?.();
-      const ready = visible && visible.from <= initialRange.from + DAY && visible.to >= initialRange.to - DAY;
+      const ready = visible && visible.from <= viewportRange.from + DAY && visible.to >= viewportRange.to - DAY;
       if (ready) redrawTimer = setTimeout(() => { redrawTimer = null; if (!destroyed) mounted.chart.render(); }, 40);
       else if (attempts++ >= 30) mounted.chart.render();
       else redrawTimer = setTimeout(refresh, 16);
@@ -640,24 +647,37 @@ export function mountAtlasBtcFunnestChart({
     const layout = mounted.chart.layout, width = Number(layout?.width), height = Number(layout?.height), plotWidth = Number(layout?.plotWidth), plotBottom = Number(mounted.chart.mainScale?.height);
     if (!(width > 0 && height > 0 && plotWidth > 0 && plotBottom > 0)) return;
     svg.setAttribute('viewBox', `0 0 ${width} ${height + timingPaneHeight}`);
-    const plotGeometry = { plotLeft: '0', plotRight: String(plotWidth), plotTop: String(mounted.chart.mainScale.insetTop || 0), plotBottom: String(plotBottom), priceBottom: String(plotBottom), timeAxisTop: String(layout.panesHeight || plotBottom), visiblePointCount: String(rawRows.length) };
+    const axis = mounted.chart.mainScale;
+    const range = mounted.chart.getVisibleTimeRange?.();
+    const priceTop = Number(axis.innerTop), priceAxisBottom = priceTop + Number(axis.innerHeight);
+    const plotGeometry = { plotLeft: '0', plotRight: String(plotWidth), plotTop: String(axis.insetTop || 0), plotBottom: String(plotBottom), priceBottom: String(plotBottom), priceTop: String(priceTop), priceAxisBottom: String(priceAxisBottom), priceMin: String(axis.min), priceMax: String(axis.max), timeAxisTop: String(layout.panesHeight || plotBottom), visiblePointCount: String(rawRows.length), ...(range?.to > range?.from ? { start: new Date(range.from).toISOString(), end: new Date(range.to).toISOString() } : {}) };
     const plotGeometryChanged = Object.entries(plotGeometry).some(([key, value]) => svg.dataset[key] !== value);
     Object.assign(svg.dataset, plotGeometry);
+    let overlay = container.querySelector('#chart-draw-overlay');
+    if (!overlay) {
+      overlay = svg.ownerDocument.createElementNS(NS, 'svg');
+      overlay.id = 'chart-draw-overlay';
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.style.cssText = 'position:absolute;inset:0;z-index:4;pointer-events:none;overflow:visible';
+      svg.after(overlay);
+    }
+    overlay.setAttribute('viewBox', svg.getAttribute('viewBox'));
+    paintChartDrawings(svg);
     // The legend dock and HUD read these plot coordinates from the SVG dataset. Funnest reports its
     // layout asynchronously, so tell those listeners the pane moved; this carries no paint or data.
     if (plotGeometryChanged) {
       const doc = container.ownerDocument, EventType = doc.defaultView?.CustomEvent ?? globalThis.CustomEvent;
       doc.dispatchEvent(new EventType('atlas:hud-layout-change', { detail: { source: 'funnest-layout', plotRight: plotWidth, priceBottom: plotBottom } }));
     }
-    if (initialRange && !initialRangeApplied) {
+    if (viewportRange && !viewportRangeApplied) {
       // The shared runtime owns startup dates; this schedules only the annotation paint.
-      initialRangeApplied = true;
+      viewportRangeApplied = true;
       scheduleReplayOverlayRedraw();
     }
     svg.style.width = '100%'; svg.style.height = '100%';
   };
   const cleanupLayout = mounted.chart.on('layoutChange', updateLayout);
-  const cleanupReplayViewport = mounted.chart.on('visibleRangeChange', () => { if (futurePointerActive) hideFuturePreview({ clearPointer: true }); overlayHandle.redraw(); });
+  const cleanupReplayViewport = mounted.chart.on('visibleRangeChange', () => { if (futurePointerActive) hideFuturePreview({ clearPointer: true }); updateLayout(); overlayHandle.redraw(); });
   // The shared runtime owns the detached, read-only getAtlasFunnestSnapshot hook.
   updateLayout();
 
@@ -800,21 +820,53 @@ export function mountAtlasBtcFunnestChart({
   svg.addEventListener('keydown', onKeyDown);
 
   // Establish native scale settings before installing the manual forecast-aware domain.
+  const refreshDisplay = () => {
+    const anchor = observedTimeline.find(inRequestedWindow)
+      ?? [...forecastRows, ...retrospectiveRows].filter(inRequestedWindow).sort((a, b) => a.time - b.time)[0] ?? observedTimeline[0];
+    const next = createPriceDisplay({ unit, rows: [{ date: anchor.date, price: anchor.price ?? anchor.close }], denominator, denominatorDate, scale });
+    const changed = next.factor !== display.factor || next.offset !== display.offset || next.effectiveScale !== display.effectiveScale || next.metadata.baseDate !== display.metadata.baseDate;
+    display = next;
+    const nextScale = display.effectiveScale === 'log' ? 'log' : 'normal';
+    if (nextScale !== effectiveScale) { effectiveScale = nextScale; mounted.setScale(effectiveScale); svg.dataset.scale = effectiveScale; }
+    return changed;
+  };
+  const applyPriceWindow = () => {
+    const values = [];
+    if (!manualPriceDomain) {
+      for (const row of observedTimeline.filter(inRequestedWindow)) for (const value of [row.price ?? row.close, row.low, row.high]) if (Number.isFinite(value) && value > 0) values.push(scaleValue(value, display));
+      for (const row of [...forecastRows, ...retrospectiveRows].filter(inRequestedWindow)) for (const value of [row.price, row.lower, row.upper]) if (Number.isFinite(value) && value > 0 && (!priceOnlyAuto || value === row.price)) values.push(scaleValue(value, display));
+      for (const row of markerRows.filter(inRequestedWindow)) if (Number.isFinite(row.price) && row.price > 0 && !priceOnlyAuto) values.push(scaleValue(row.price, display));
+    }
+    let min = manualPriceDomain ? scaleValue(manualPriceDomain.min, display) : (values.length ? Math.min(...values) : NaN), max = manualPriceDomain ? scaleValue(manualPriceDomain.max, display) : (values.length ? Math.max(...values) : NaN);
+    if (Number.isFinite(min) && Number.isFinite(max)) {
+      if (!manualPriceDomain && max <= min) { const pad = Math.max(1, Math.abs(max) * .01); min -= pad; max += pad; }
+      if (max > min) mounted.setPriceExtrema({ min, max });
+    }
+  };
+  const applyView = options => {
+    if (destroyed || options?.start == null || options?.end == null) return false;
+    const nextRange = { from: rangeTime(options.start), to: rangeTime(options.end, true) };
+    if (!(nextRange.to > nextRange.from)) return false;
+    viewStart = options.start; viewEnd = options.end; viewportRange = nextRange;
+    historyEventId = options.activeHistoricalEventId ?? null;
+    cycleMarkerId = options.activeCycleMarkerId ?? null;
+    cycleMarkerIds = Array.isArray(options.activeCycleMarkerIds) ? options.activeCycleMarkerIds : [];
+    cycleInterval = options.activeCycleInterval ?? null;
+    activeAnnotationIdLocal = options.activeAnnotationId ?? null;
+    if (options.selectedDate) activeSelection = options.selectedDate;
+    turnMarker = options.nextTurn ?? null;
+    manualPriceDomain = options.priceDomain ?? null;
+    if (refreshDisplay()) { bars = rawRows.map(toEngineBar); mounted.setData(bars, { preserveRange: false }); }
+    applyPriceWindow();
+    const applied = mounted.setRange(viewportRange);
+    overlayHandle.redraw();
+    return applied !== false;
+  };
   mounted.setScale(effectiveScale);
   mounted.setInverted(invertScale);
-  const values = [];
-  if (!priceDomain) {
-    for (const row of observedTimeline.filter(inRequestedWindow)) for (const value of [row.price ?? row.close, row.low, row.high]) if (Number.isFinite(value) && value > 0) values.push(scaleValue(value, display));
-    for (const row of [...forecastRows, ...retrospectiveRows].filter(inRequestedWindow)) for (const value of [row.price, row.lower, row.upper]) if (Number.isFinite(value) && value > 0 && (!priceOnlyAuto || value === row.price)) values.push(scaleValue(value, display));
-    for (const row of markerRows.filter(inRequestedWindow)) if (Number.isFinite(row.price) && row.price > 0 && !priceOnlyAuto) values.push(scaleValue(row.price, display));
-  }
-  let min = priceDomain ? scaleValue(priceDomain.min, display) : (values.length ? Math.min(...values) : NaN), max = priceDomain ? scaleValue(priceDomain.max, display) : (values.length ? Math.max(...values) : NaN);
-  if (Number.isFinite(min) && Number.isFinite(max)) {
-    if (!priceDomain && max <= min) { const pad = Math.max(1, Math.abs(max) * .01); min -= pad; max += pad; }
-    mounted.setPriceExtrema({ min, max });
-  }
+  applyPriceWindow();
   mounted.setDrawingTool(null); mounted.setMagnet(magnet !== 'off');
-  if (initialRange) mounted.setRange(initialRange);
+  if (viewportRange) mounted.setRange(viewportRange);
   const svgPointAt = clientX => {
     const coords = lastCoords, rect = svg.getBoundingClientRect(), view = svg.viewBox?.baseVal;
     const viewWidth = Number(view?.width) || Number(svg.getAttribute('viewBox')?.trim().split(/\s+/)[2]);
@@ -858,6 +910,7 @@ export function mountAtlasBtcFunnestChart({
     next() { if (selectionIndex < uniqueRows.length - 1) commit(uniqueRows[++selectionIndex]); },
     hasPrevious() { return selectionIndex > 0; }, hasNext() { return selectionIndex < uniqueRows.length - 1; },
     previewPointer(point) { return moveCrosshair(point); }, clearPreview() { pointerDetail = null; if (host && !selectionPreview) onPointerLeave({ pointerId: 1, pointerType: 'mouse' }); return true; },
+    applyView,
     updateCycleOverlayObstacles(obstacles = []) {
       if (destroyed) return false;
       cycleOverlayObstaclesLocal = Array.isArray(obstacles) ? [...obstacles] : [];
@@ -890,5 +943,8 @@ export function mountAtlasBtcFunnestChart({
   // Publish the selected real observation on mount; a price readout must not
   // depend on the first mouse movement or a synthetic crosshair event.
   if (!selectionPreview) onHover(detailFor(nearestSelection(activeSelection)));
+  // This mount is reached from inside an animation frame. The engine's own
+  // follow-up frame would leave the replacement canvas blank for one paint.
+  paintMountedFunnestChart(mounted.chart, host);
   return controller;
 }

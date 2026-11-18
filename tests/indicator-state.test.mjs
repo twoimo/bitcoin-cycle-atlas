@@ -8,8 +8,9 @@ import {INDICATOR_PREFERENCES_KEY,readIndicatorPreferences,writeIndicatorPrefere
 test('fresh chart shows the indicator legend without unsolicited research analysis windows',()=>{
   const state=readIndicatorState('');
   assert.equal(state.collapsed,false);assert.deepEqual(visibleAnalysisIds(state),[]);
-  for(const id of ['readout','source','legend','history','cycle-timing'])assert.ok(isIndicatorVisible(state,id));
+  for(const id of ['readout','source','legend','history'])assert.ok(isIndicatorVisible(state,id));
   assert.ok(state.added.includes('volume'));assert.ok(state.hidden.includes('volume'));assert.equal(isIndicatorVisible(state,'volume'),false);
+  assert.ok(state.added.includes('cycle-timing'));assert.ok(state.hidden.includes('cycle-timing'));assert.equal(isIndicatorVisible(state,'cycle-timing'),false);
 });
 
 test('first render keeps untouched BTC and direct instrument URLs free of default indicator parameters',()=>{
@@ -19,8 +20,9 @@ test('first render keeps untouched BTC and direct instrument URLs free of defaul
     assert.equal(params.toString(),before,`${search} mobile=${mobile}`);
     const visible=changeIndicatorState(readIndicatorState(params,{mobile}),{action:'visibility',id:'volume'});
     writeIndicatorState(params,visible,{mobile});
-    assert.equal(params.get('indicator-hide'),'');
+    assert.equal(params.get('indicator-hide'),'cycle-timing');
     assert.equal(isIndicatorVisible(readIndicatorState(params,{mobile}),'volume'),true);
+    assert.equal(isIndicatorVisible(readIndicatorState(params,{mobile}),'cycle-timing'),false);
   }
 });
 
@@ -29,7 +31,7 @@ test('fresh and reset charts keep volume added but hidden, and an explicit visib
     const fresh=readIndicatorState('',{mobile});assert.ok(fresh.added.includes('volume'));assert.equal(isIndicatorVisible(fresh,'volume'),false);
     const visible=changeIndicatorState(fresh,{action:'visibility',id:'volume'});assert.equal(isIndicatorVisible(visible,'volume'),true);assert.deepEqual(visible.added,fresh.added);
     const params=writeIndicatorState(new URLSearchParams('granularity=1h&type=candles'),visible);
-    assert.equal(params.has('indicator-hide'),true);assert.equal(params.get('indicator-hide'),'','an explicit visible default must not disappear from the shared link');
+    assert.equal(params.has('indicator-hide'),true);assert.equal(params.get('indicator-hide'),'cycle-timing','an explicit visible volume choice must survive while the cycle clock stays hidden');
     assert.equal(params.get('granularity'),'1h');assert.equal(params.get('type'),'candles');
     assert.deepEqual(readIndicatorState(params,{mobile:!mobile}),applyIndicatorLayout(visible,{mobile:!mobile}));
     const reset=changeIndicatorState(visible,{action:'reset'});assert.ok(reset.added.includes('volume'));assert.equal(isIndicatorVisible(reset,'volume'),false);assert.deepEqual(reset.added,fresh.added);
@@ -43,6 +45,8 @@ test('existing explicit indicator URLs preserve volume visibility while absent c
     assert.deepEqual(readIndicatorState(writeIndicatorState(new URLSearchParams(),restored)),restored);
   }
   assert.equal(isIndicatorVisible(readIndicatorState('granularity=1h&type=candles'),'volume'),false);
+  assert.equal(isIndicatorVisible(readIndicatorState(''),'cycle-timing'),false);
+  assert.equal(isIndicatorVisible(readIndicatorState('indicators=readout,source,legend,history,volume,range,turns,cycle-landmarks,cycle-intervals,cycle-timing'),'cycle-timing'),true);
   assert.equal(isIndicatorVisible(readIndicatorState('indicators=volume&indicator-hide=volume'),'volume'),false);
   const empty=readIndicatorState('indicators=');assert.deepEqual(empty.added,[]);assert.deepEqual(empty.hidden,[]);
 });

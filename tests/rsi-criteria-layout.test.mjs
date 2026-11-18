@@ -21,7 +21,7 @@ for(const viewportWidth of [320,390,768,1024,1440,1920])for(const height of [740
     assert(box.width*box.height/area<=RSI_CRITERIA_AREA_LIMIT+.00001);
     if(viewportWidth<=640)assert.equal(box.collapsed,true);
     if(!box.collapsed){assert.equal(box.height,RSI_CRITERIA_CARD_HEIGHT);assert(box.width>=244);assert.equal(box.placement,'below');}
-    if(height===180)assert.equal(box.placement,'beside','short panes reuse free space beside the legend');
+    if(height===180)assert.equal(box.placement,viewportWidth<=430?'beside':'below');
     assert.equal(bounds.width-bounds.right,64,'R2 gutter is unchanged');
   });
 }

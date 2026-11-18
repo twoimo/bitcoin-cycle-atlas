@@ -50,6 +50,15 @@ body[data-center-toolbar-hosted=true] #evidence-view { grid-template-rows:minmax
 body[data-center-toolbar-hosted=true] #evidence-view .evidence-table-shell,
 body[data-center-toolbar-hosted=true] #ipo-view .ipo-table-shell { position:relative; border-radius:0; }
 body[data-center-toolbar-hosted=true] :is(.evidence-table,.ipo-table) > caption { position:absolute; width:1px; height:1px; padding:0; margin:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+@media(max-width:760px) {
+  body[data-embedded=true][data-center-toolbar-hosted=true] #data-view > .asset-mobile-nav {
+    display:flex !important;
+    align-items:center;
+    min-height:44px;
+  }
+  body[data-embedded=true] #data-view .asset-mobile-nav button { min-height:44px; font-size:12px; }
+  body[data-embedded=true] #data-view .asset-mobile-nav > span { font-size:12px; }
+}
 @media(max-width:760px),(pointer:coarse) {
   .legacy-toolbar-action,.legacy-toolbar-field :is(input,select) { min-height:44px; height:44px; }
   .legacy-toolbar-icon-action { width:44px; min-width:44px; }

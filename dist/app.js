@@ -14,9 +14,10 @@ import { renderPeakView } from './peak-view.js?v=1.29.0';
 import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29.0';
 // Changed release modules use a versioned URL so a cached v1.5 module cannot
 // leave a new long-horizon page running the old three-year workbench.
-import { initDailyDataView } from './daily-data-view.js?v=1.32.1';
+import { initDailyDataView } from './daily-data-view.js?v=1.32.3';
+import { extendComparisonToLatest } from './asset-comparison-live.js?v=1.0.1';
 import { initRelayRoomView } from './relay-room.js?v=1.37.8';
-import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.32.1';
+import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.32.2';
 import { initIpoView } from './ipo-view.js?v=1.32.1';
 import { initMarketLabView } from './market-lab-view.js?v=1.31.3';
 
@@ -133,22 +134,55 @@ document.addEventListener('atlas:page-ready', event => {
   for (const view of ['outlook','compare']) document.getElementById(`${view}-view`).removeAttribute('aria-busy');
 });
 function ensureWorkspace() {
-  if (!workspacePromise) workspacePromise = Promise.all([
-    import('./viewport-workspace.js?v=1.36.3'), import('./lab-view.js?v=1.36.1'),
-  ]).then(([workspace, lab]) => {
-    // Imports may finish after a second navigation. Leave that dashboard's
-    // original navigation owner intact; cached modules can mount next visit.
-    if (!['outlook','compare'].includes(state.view)) { workspacePromise = null; return null; }
-    workspace.initViewportWorkspace(icon);
-    outlookController = lab.initLabView();
-    if (state.dataset) outlookController.setDataset(state.dataset);
-    outlookController.show(state.view === 'outlook');
-    outlookController.showCompare(state.view === 'compare');
-    hostCompareCenter(state.view === 'compare');
-    if (state.view === 'compare') render();
-    return outlookController;
-  }).catch(error => { workspacePromise = null; console.error('Workspace initialization failed', error); if (['outlook','compare'].includes(state.view)) document.dispatchEvent(new CustomEvent('atlas:boot-error')); });
+  if (!workspacePromise) workspacePromise = mountWorkspace();
   return workspacePromise;
+}
+function transientModuleError(error) {
+  return error instanceof TypeError && /Failed to fetch|Load failed|dynamically imported module|Importing a module script failed/i.test(String(error?.message || error));
+}
+function importWorkspaceModules(attempt) {
+  if (attempt === 0) return Promise.all([
+    import('./viewport-workspace.js?v=1.36.20'), import('./lab-view.js?v=1.36.19'),
+  ]);
+  // A failed module URL stays failed for this document, so a dropped response
+  // has to be requested again under a new address.
+  return Promise.all([
+    import(`./viewport-workspace.js?v=1.36.20&retry=${attempt}`),
+    import(`./lab-view.js?v=1.36.19&retry=${attempt}`),
+  ]);
+}
+async function mountWorkspace() {
+  let workspace, lab, error = null;
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    try {
+      [workspace, lab] = await importWorkspaceModules(attempt);
+      error = null;
+      break;
+    } catch (caught) {
+      error = caught;
+      if (!transientModuleError(caught) || attempt === 3) break;
+      await new Promise(resolve => setTimeout(resolve, 120 * (attempt + 1)));
+    }
+  }
+  if (!error) {
+    try {
+      // Imports may finish after a second navigation. Leave that dashboard's
+      // original navigation owner intact; cached modules can mount next visit.
+      if (!['outlook','compare'].includes(state.view)) { workspacePromise = null; return null; }
+      workspace.initViewportWorkspace(icon);
+      outlookController = lab.initLabView();
+      if (state.dataset) outlookController.setDataset(state.dataset);
+      outlookController.show(state.view === 'outlook');
+      outlookController.showCompare(state.view === 'compare');
+      hostCompareCenter(state.view === 'compare');
+      if (state.view === 'compare') render();
+      return outlookController;
+    } catch (caught) { error = caught; }
+  }
+  workspacePromise = null;
+  console.error('Workspace initialization failed', error);
+  if (['outlook','compare'].includes(state.view)) document.dispatchEvent(new CustomEvent('atlas:boot-error', { detail: { message: String(error?.message || error) } }));
+  return null;
 }
 function ensureEvidence() {
   if (!evidencePromise) evidencePromise = import('./evidence-view.js?v=1.36.1').then(module => {
@@ -177,11 +211,39 @@ $('#market-view').addEventListener('click', event => {
   if (state.view !== 'market' || !event.target.closest('[data-view="outlook"]')) return;
   state.view = 'outlook'; syncPage(); persistUrl(); void ensureDataset();
 });
+const loadAssetComparison = createAssetComparisonLoader({
+  embeddedData: () => document.getElementById('embedded-asset-comparison-data')?.textContent ?? null,
+});
+let publishedComparison = null;
+let comparisonExtend = null;
+function currentComparison() {
+  if (publishedComparison) {
+    if (comparisonExtend) return Promise.resolve(publishedComparison);
+    const base = publishedComparison;
+    const pending = extendComparisonToLatest(base).then(next => next || base).catch(() => base);
+    comparisonExtend = pending.finally(() => { comparisonExtend = null; });
+    return pending.then(next => { publishedComparison = next; return next; });
+  }
+  return loadAssetComparison().then(archive => {
+    const pending = extendComparisonToLatest(archive).then(next => next || archive).catch(() => archive);
+    comparisonExtend = pending.finally(() => { comparisonExtend = null; });
+    return Promise.race([
+      pending.then(next => ({ settled: true, next })),
+      new Promise(resolve => setTimeout(() => resolve({ settled: false, next: archive }), 1200)),
+    ]).then(({ settled, next }) => {
+      publishedComparison = next || archive;
+      if (!settled) void pending.then(later => {
+        if (!later || later === publishedComparison) return;
+        publishedComparison = later;
+        if (state.view === 'data') void dailyDataController.replaceDataset(later);
+      });
+      return publishedComparison;
+    });
+  });
+}
 const dailyDataController = initDailyDataView({
   root: $('#data-view'), download, toast,
-  getComparisonDataset: createAssetComparisonLoader({
-    embeddedData: () => document.getElementById('embedded-asset-comparison-data')?.textContent ?? null,
-  }),
+  getComparisonDataset: () => currentComparison(),
 });
 // The compare route uses the price chart's four perimeter regions. Only its
 // center is replaced: the existing section is moved into the plot, never
@@ -606,16 +668,36 @@ function ensureDataset() {
 }
 async function init() {
   try {
-    const embedded=document.getElementById('embedded-btc-data');let bundled;if(embedded){bundled=JSON.parse(embedded.textContent);}else{const response=await fetch(atlasResourcePath('data/btc-daily.json'),{signal:AbortSignal.timeout(15000)});if(!response.ok)throw Error('Bundled data unavailable');bundled=await response.json();}inspectPublishedDataset(bundled,null);state.dataset=bundled;
-    try{const cached=JSON.parse(localStorage.getItem('btc-cycles-daily-v1'));if(cached&&inspectPublishedDataset(cached,bundled).changed)state.dataset=cached;}catch{}
+    let bundled = null;
+    try {
+      const embedded = document.getElementById('embedded-btc-data');
+      if (embedded) bundled = JSON.parse(embedded.textContent);
+      else {
+        const response = await fetch(atlasResourcePath('data/btc-daily.json'), { signal: AbortSignal.timeout(15000) });
+        if (!response.ok) throw new Error('Bundled data unavailable');
+        bundled = await response.json();
+      }
+      inspectPublishedDataset(bundled, null);
+    } catch (error) {
+      bundled = null;
+      console.error('Published price archive unavailable', error);
+    }
+    let dataset = bundled;
+    try {
+      const cached = JSON.parse(localStorage.getItem('btc-cycles-daily-v1'));
+      if (cached && inspectPublishedDataset(cached, bundled).changed) dataset = cached;
+    } catch { /* An unusable cache cannot replace a verified archive. */ }
+    if (!dataset) throw new Error('Bundled data unavailable');
+    state.dataset = dataset;
     render();
     publishComparisonReadiness(true);
-    const today=new Date().toISOString().slice(0,10);if(utcDay(today)-utcDay(state.dataset.prices.at(-1)[0])>1)refreshData();
+    const today = new Date().toISOString().slice(0, 10);
+    if (utcDay(today) - utcDay(state.dataset.prices.at(-1)[0]) > 1) refreshData();
   } catch (error) {
     console.error('Initial dataset or page setup failed', error);
     publishComparisonReadiness(false);
     if (state.view === 'data') renderData();
-    else document.dispatchEvent(new CustomEvent('atlas:boot-error'));
+    else document.dispatchEvent(new CustomEvent('atlas:boot-error', { detail: { message: String(error?.message || error) } }));
   }
 }
 // Relay is ready without the price dataset (see finishInitialPage). Requesting

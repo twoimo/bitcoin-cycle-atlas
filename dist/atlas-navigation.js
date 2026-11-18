@@ -3,7 +3,7 @@ import { workspaceInstrument } from './workspace-instruments.js';
 // Route identities remain stable for saved links. All instruments share the
 // price-chart destination while source-specific workspaces keep their routes.
 export const atlasPages = Object.freeze([
-  {id:'outlook', label:'가격 차트', title:'가격 차트', view:'outlook', href:'/?page=outlook', icon:'M3 17l5-6 4 3 8-10M15 4h5v5'},
+  {id:'outlook', label:'가격 차트', title:'가격 차트', view:'outlook', href:'/', icon:'M3 17l5-6 4 3 8-10M15 4h5v5'},
   {id:'market-us', badge:'US', label:'미국 시장', title:'미국 시장 진단', view:'market', tab:'diagnosis', region:'us', href:'/market-lab/us/', icon:'M4 20V10m8 10V4m8 16v-7'},
   {id:'scenario', label:'조건 실험', title:'조건 실험', view:'market', tab:'scenario', href:'/market-lab/scenario/', icon:'M3 12h4l3-8 4 16 3-8h4'},
   {id:'cashflow', label:'현금흐름', title:'현금흐름', view:'market', tab:'ai', href:'/market-lab/cashflow/', icon:'M3 6h18v12H3zM3 10h18M7 14h3'},
@@ -32,12 +32,12 @@ export const atlasNavigationPages=Object.freeze(atlasPages
 
 export function atlasPageHref(page,{symbol,region}={}) {
   const item=typeof page==='string'?atlasPages.find(item=>item.id===page):page;
-  if(!item)return '/?page=outlook';
+  if(!item)return '/';
   if(item.id==='outlook') {
     const instrument=workspaceInstrument(symbol);
     if(instrument)return atlasPageHref(instrument.page,{symbol:instrument.symbol,region:instrument.region});
     const native=String(symbol||'').normalize('NFKC').trim().toUpperCase();
-    return ['ETHUSD','MSTR','BMNR'].includes(native)?'/?page=outlook&symbol='+native:item.href;
+    return ['ETHUSD','MSTR','BMNR'].includes(native)?'/?symbol='+native:item.href;
   }
   if(atlasNavigationId(item)==='market-us') {
     const query=new URLSearchParams();
@@ -65,8 +65,18 @@ export function canonicalNativeChartEntry(location) {
   if(!['BTCUSD','ETHUSD','MSTR','BMNR'].includes(symbol))return null;
   query.set('symbol',symbol);
   for(const key of ['center','lab-tab','lab-region','view','region','embedded'])query.delete(key);
-  if(query.get('page')==='market')query.delete('page');
+  if(query.get('page')==='market'||query.get('page')==='outlook')query.delete('page');
   return `${root}?${query}${location?.hash||''}`;
+}
+export function canonicalDefaultChartEntry(location){
+  const root=location?.pathname||'/';
+  if(location?.protocol&&!/^https?:$/.test(location.protocol))return null;
+  if(!/^\/(?:[A-Za-z0-9._~-]+\/)*$/.test(root)||root.includes('/market-lab/')||root.includes('/../')||root.includes('/./'))return null;
+  const query=new URLSearchParams(location?.search||'');
+  if(query.get('page')!=='outlook')return null;
+  query.delete('page');
+  const rest=String(query);
+  return `${root}${rest?`?${rest}`:''}${location?.hash||''}`;
 }
 // Root symbol links are also valid chart entry points. Route known hosted
 // instruments before the native BTC boot fallback can claim their identity.

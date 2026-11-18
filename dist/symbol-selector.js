@@ -16,7 +16,16 @@ export const SYMBOLS = Object.freeze([
   ...WORKSPACE_INSTRUMENTS,
 ]);
 const intervals = new Set(['1m','5m','15m','30m','1h','4h','daily','weekly']);
-const coinLogos = { BTC:'https://static.upbit.com/logos/BTC.png', ETH:'https://static.upbit.com/logos/ETH.png' };
+const coinLogos = {
+  BTC:'https://static.upbit.com/logos/BTC.png',
+  ETH:'https://static.upbit.com/logos/ETH.png',
+  HYPE:'https://static.upbit.com/logos/HYPE.png',
+  MSTR:'https://financialmodelingprep.com/image-stock/MSTR.png',
+  BMNR:'https://financialmodelingprep.com/image-stock/BMNR.png',
+  TQQQ:'https://financialmodelingprep.com/image-stock/TQQQ.png',
+  SOXL:'https://financialmodelingprep.com/image-stock/SOXL.png',
+  '233740':'https://financialmodelingprep.com/image-stock/233740.KS.png',
+};
 const coinLogo = instrument => coinLogos[instrument?.base] || '';
 const symbolValue = value => typeof value === 'string' ? value.toUpperCase().replace(/[\s/\-]/g,'') : '';
 
@@ -66,9 +75,13 @@ export function createSymbolUrl(currentUrl, targetSymbol) {
   return next.href;
 }
 
-const searchIcon = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>';
-const chevronIcon = '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m4 6 4 4 4-4"/></svg>';
-const ethIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 6 10-6 3-6-3Z" fill="currentColor"/><path d="m6 14 6 8 6-8-6 3Z" fill="currentColor" opacity=".75"/><path d="M12 2v13l6-3Z" fill="#fff" opacity=".2"/></svg>';
+const searchIcon = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>';
+const chevronIcon = '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m4 6 4 4 4-4"/></svg>';
+const closeIcon = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+const houseSvg = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3.2 3 11.1h2.2V20.5h5.1v-5.4h3.4v5.4h5.1V11.1H21L12 3.2Z"/></svg>';
+const tickerSvg = instrument => instrument?.assetClass === 'housing'
+  ? houseSvg
+  : `<svg viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="4" fill="currentColor" opacity=".14"/><text x="12" y="16" text-anchor="middle" font-size="11" font-family="system-ui,sans-serif" fill="currentColor">${String(instrument?.base || '').slice(0, 2)}</text></svg>`;
 
 /** @param {{button?:HTMLButtonElement|null,symbol?:string,showName?:boolean,document?:Document,onSelect?:((symbol:string,url:string)=>void)|null,navigate?:((url:string)=>void)|null,getUrl?:(()=>string)|null}} options */
 export function mountSymbolSelector({ button, symbol='BTCUSD', showName=false, document=button?.ownerDocument || globalThis.document, onSelect=null, navigate=null, getUrl=null } = {}) {
@@ -83,33 +96,27 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', showName=false, d
   };
   button.type = 'button'; button.classList.add('symbol-selector-trigger');
   button.replaceChildren();
-  const logo = coinLogo(current);
-  if (logo) { const avatar = add(button,'img','symbol-selector-avatar'); avatar.src = logo; avatar.alt = ''; avatar.width = 24; avatar.height = 24; }
-  // The shared outer heading has room for a separate name. Compact chart
-  // headers retain their canonical instrument value and descriptive aria-label.
-  const instrumentName = showName ? add(button,'span','symbol-selector-name',current.assetClass==='housing'?'':current.koreanName) : null;
+  const avatar = add(button,'span','symbol-selector-avatar'); avatar.setAttribute('aria-hidden','true');
+  const instrumentName = showName ? add(button,'span','symbol-selector-name','') : null;
   instrumentName?.setAttribute('aria-hidden','true');
-  add(button,'span','symbol-selector-label',current.assetClass==='housing'?current.koreanName:current.symbol);
+  const label = add(button,'span','symbol-selector-label','');
   add(button,'span','symbol-selector-chevron').innerHTML = chevronIcon;
-  button.title = `종목 선택 · ${current.koreanName} / ${current.currency || 'USD'}`;
-  button.setAttribute('aria-label',`${button.title} · ${current.symbol}`);
   button.setAttribute('aria-haspopup','dialog'); button.setAttribute('aria-controls','symbol-search-dialog'); button.setAttribute('aria-expanded','false');
 
   const dialog = document.createElement('dialog'); dialog.id = 'symbol-search-dialog'; dialog.className = 'symbol-search-dialog';
   dialog.setAttribute('aria-labelledby','symbol-search-title');
   const header = add(dialog,'header','symbol-search-heading');
   add(header,'h2','', '종목 검색').id = 'symbol-search-title';
-  const dismiss = add(header,'button','symbol-search-close','esc'); dismiss.type = 'button'; dismiss.setAttribute('aria-label','종목 검색 닫기');
+  const dismiss = add(header,'button','symbol-search-close'); dismiss.type = 'button'; dismiss.innerHTML = closeIcon; dismiss.setAttribute('aria-label','종목 검색 닫기');
   const search = add(dialog,'div','symbol-search-input'); add(search,'span','symbol-search-icon').innerHTML = searchIcon;
-  const input = add(search,'input',''); input.type = 'search'; input.placeholder = '심볼, 이름 또는 시장 진단'; input.autocomplete = 'off'; input.spellcheck = false;
-  input.setAttribute('aria-label','심볼, 이름 또는 시장 진단'); input.setAttribute('role','combobox'); input.setAttribute('aria-autocomplete','list'); input.setAttribute('aria-controls','symbol-search-dialog'); input.setAttribute('aria-expanded','true');
-  const filters = add(dialog,'div','symbol-search-filters'); add(filters,'span','','시장 진단'); add(filters,'span','','디지털 자산 · 주식 · ETF · 부동산'); add(filters,'span','','USD · KRW · USDC · 지수');
-  const diagnosis = add(dialog,'div','symbol-search-diagnosis'); diagnosis.setAttribute('role','group'); diagnosis.setAttribute('aria-label','알파 베타 감마 시장 진단');
+  const input = add(search,'input',''); input.type = 'search'; input.placeholder = '심볼 또는 이름'; input.autocomplete = 'off'; input.spellcheck = false;
+  input.setAttribute('aria-label','심볼 또는 이름'); input.setAttribute('role','combobox'); input.setAttribute('aria-autocomplete','list'); input.setAttribute('aria-controls','symbol-search-dialog'); input.setAttribute('aria-expanded','true');
   const results = add(dialog,'div','symbol-search-results'); results.id = 'symbol-search-results'; results.setAttribute('role','listbox'); results.setAttribute('aria-label','지원 종목');
   const empty = add(dialog,'p','symbol-search-empty','일치하는 종목이 없습니다.'); empty.hidden = true; empty.setAttribute('role','status');
   const count = add(dialog,'span','symbol-search-count'); count.setAttribute('role','status'); count.setAttribute('aria-live','polite');
+  const listed = supported.filter(item => item.assetClass !== 'diagnosis');
   const footer = add(dialog,'footer','symbol-search-footer');
-  add(footer,'span','',`${supported.length}개 종목·지역 · 실제 관측 자료`); add(footer,'small','','↑ ↓ 이동 · Enter 선택 · Esc 닫기');
+  add(footer,'span','',`${listed.length}개 종목 · 관측 자료`); add(footer,'small','','↑ ↓ 이동 · Enter 선택 · Esc 닫기');
   document.body.append(dialog);
   const viewport = mountDialogViewport(dialog);
   let opened = false, activeIndex = 0, rows = [], matches = [];
@@ -130,15 +137,24 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', showName=false, d
       else if (bounds.bottom > bottom) results.scrollTop += bounds.bottom - bottom;
     }
   }
-  function renderRow(parent, instrument) {
-    const row = add(parent,'button',`symbol-search-row${instrument.assetClass==='diagnosis'?' symbol-search-diagnosis-row':''}`); row.id = `symbol-option-${instrument.symbol}`; row.type = 'button'; row.setAttribute('role','option'); row.dataset.symbol = instrument.symbol;
+  function fillTicker(box, instrument) {
+    box.replaceChildren();
     const logo = coinLogo(instrument);
-    const mark = logo ? add(row,'img','symbol-search-logo') : add(row,'span',`symbol-search-mark symbol-search-mark-${instrument.base.toLowerCase()}`);
-    mark.setAttribute('aria-hidden','true');
-    if (logo) { mark.src = logo; mark.alt = ''; mark.width = 30; mark.height = 30; }
-    else if (instrument.assetClass==='diagnosis') mark.textContent = 'α';
-    else if (instrument.base === 'ETH') mark.innerHTML = ethIcon;
-    else mark.textContent = instrument.assetClass==='housing'?'집':instrument.base==='HYPE'?'H':instrument.assetClass==='etf' ? 'E' : instrument.assetClass==='equity'?instrument.symbol==='MSTR'?'M':'B':'₿';
+    if (!logo) { box.innerHTML = tickerSvg(instrument); return; }
+    const img = add(box,'img',''); img.src = logo; img.setAttribute('src', logo); img.alt = ''; img.width = 24; img.height = 24;
+    img.onerror = () => { box.innerHTML = tickerSvg(instrument); };
+  }
+  function paintTrigger(instrument) {
+    fillTicker(avatar, instrument);
+    if (instrumentName) instrumentName.textContent = instrument.assetClass==='housing' ? '' : instrument.koreanName;
+    label.textContent = instrument.assetClass==='housing' ? instrument.koreanName : instrument.symbol;
+    button.title = `종목 선택 · ${instrument.koreanName} / ${instrument.currency || 'USD'}`;
+    button.setAttribute('aria-label', `${button.title} · ${instrument.symbol}`);
+  }
+  function renderRow(parent, instrument) {
+    const row = add(parent,'button','symbol-search-row'); row.id = `symbol-option-${instrument.symbol}`; row.type = 'button'; row.setAttribute('role','option'); row.dataset.symbol = instrument.symbol;
+    const mark = add(row,'span','symbol-search-mark'); mark.setAttribute('aria-hidden','true');
+    fillTicker(mark, instrument);
     const identity = add(row,'span','symbol-search-identity');
     const symbolLine = add(identity,'span','symbol-search-symbol'); add(symbolLine,'strong','',instrument.assetClass==='housing'||instrument.assetClass==='diagnosis'?instrument.product:instrument.symbol);
     if (instrument.symbol === currentSymbol) add(symbolLine,'small','symbol-search-current','현재');
@@ -151,16 +167,11 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', showName=false, d
     return row;
   }
   function renderResults() {
-    const found = searchSymbols(input.value || '').filter(item=>supported.includes(item));
-    const diagnoses = found.filter(item=>item.assetClass==='diagnosis');
-    matches = found.filter(item=>item.assetClass!=='diagnosis');
-    diagnosis.replaceChildren(); rows = [];
-    if (diagnoses.length) add(diagnosis,'p','symbol-search-diagnosis-label','시장 진단 · 알파 × 베타 × 감마');
-    diagnosis.hidden = diagnoses.length === 0;
-    for (const instrument of diagnoses) renderRow(diagnosis, instrument);
+    matches = searchSymbols(input.value || '').filter(item => supported.includes(item) && item.assetClass !== 'diagnosis');
+    rows = [];
     results.replaceChildren();
     for (const instrument of matches) renderRow(results, instrument);
-    empty.hidden = found.length > 0; count.textContent = `${found.length}개 종목`;
+    empty.hidden = matches.length > 0; count.textContent = `${matches.length}개 종목`;
     const currentIndex = rows.findIndex(row => row.dataset.symbol === currentSymbol);
     activate(currentIndex >= 0 ? currentIndex : 0);
   }
@@ -220,10 +231,9 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', showName=false, d
   document.addEventListener('atlas:modal-open',onOtherModal);
   const activeSymbol = event => {
     const instrument=SYMBOLS.find(item=>item.symbol===event.detail?.symbol);if(!instrument)return;currentSymbol=instrument.symbol;
-    if(instrumentName)instrumentName.textContent=instrument.assetClass==='housing'?'':instrument.koreanName;
-    button.querySelector?.('.symbol-selector-label')?.replaceChildren(document.createTextNode(instrument.assetClass==='housing'?instrument.koreanName:instrument.symbol));
-    button.title=`종목 선택 · ${instrument.koreanName} / ${instrument.currency || 'USD'}`;button.setAttribute('aria-label',`${button.title} · ${instrument.symbol}`);
+    paintTrigger(instrument);
   };
   document.addEventListener('atlas:active-symbol',activeSymbol);
+  paintTrigger(current);
   return { open, close, isOpen:() => opened, element:dialog, destroy() { close(); viewport.destroy(); button.removeEventListener('click',open); document.removeEventListener('atlas:modal-open',onOtherModal);document.removeEventListener('atlas:active-symbol',activeSymbol); dialog.remove(); button.setAttribute('aria-expanded','false'); } };
 }

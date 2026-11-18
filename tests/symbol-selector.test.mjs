@@ -68,12 +68,12 @@ class Element extends Surface {
   findAll(predicate){return [...(predicate(this)?[this]:[]),...this.children.flatMap(child=>child.findAll(predicate))];}
 }
 function event(type,extra={}){return {type,defaultPrevented:false,stopped:false,...extra,preventDefault(){this.defaultPrevented=true;},stopPropagation(){this.stopped=true;}};}
-function fixture(t,{symbol='BTCUSD',onSelect=null,service=false}={}){
+function fixture(t,{symbol='BTCUSD',onSelect=null,service=false,showName=false}={}){
   const doc=new Surface(),destinations=[];doc.createElement=tag=>new Element(tag,doc);doc.body=doc.createElement('body');
   if(service)doc.querySelector=selector=>selector==='meta[name="atlas-service-base"]'?{getAttribute:()=>'/market-lab/'}:null;
   doc.defaultView={location:{href:'https://example.com/chart?granularity=1h&type=candles&price-min=85000&assumption=base',assign:url=>destinations.push(url)},CustomEvent:class {constructor(type,options){this.type=type;this.detail=options.detail;}}};
   const button=doc.createElement('button');doc.body.append(button);doc.activeElement=button;
-  const selector=mountSymbolSelector({button,symbol,document:doc,onSelect});t.after(()=>selector.destroy());
+  const selector=mountSymbolSelector({button,symbol,document:doc,onSelect,showName});t.after(()=>selector.destroy());
   const node=id=>doc.body.find(item=>item.id===id),input=selector.element.find(item=>item.tagName==='input');
   const key=(value,extra={})=>{const e=event('keydown',{key:value,bubbles:true,...extra});doc.activeElement.dispatchEvent(e);return e;};
   return {doc,button,selector,node,input,key,destinations};
@@ -95,23 +95,35 @@ test('standalone preserves its four supported charts while the service exposes t
   service.node('symbol-option-SOXL').click();assert.equal(service.destinations[0],'https://example.com/market-lab/charts/?symbol=SOXL');
 });
 
-test('market diagnosis stays in the search dialog and opens the regional chart view',t=>{
+test('market diagnosis keeps its chart route and stays out of the symbol search dialog',t=>{
   assert.equal(createSymbolUrl('https://twoimo.github.io/bitcoin-cycle-atlas/?page=outlook','AXES-US'),'https://twoimo.github.io/bitcoin-cycle-atlas/market-lab/');
   assert.equal(createSymbolUrl('https://twoimo.github.io/bitcoin-cycle-atlas/market-lab/rsi/?symbol=TQQQ','AXES-US'),'https://twoimo.github.io/bitcoin-cycle-atlas/market-lab/');
   assert.throws(()=>createSymbolUrl('https://example.com/','AXES-KR'),/Unsupported chart symbol/);
-  const service=fixture(t,{service:true});service.selector.open();
-  const group=service.selector.element.find(node=>node.className==='symbol-search-diagnosis');
-  assert.equal(group.hidden,false);
-  assert.equal(group.find(node=>node.id==='symbol-option-AXES-US').find(node=>node.className==='symbol-search-name').textContent,'미국 시장 진단 · 알파 × 베타 × 감마');
-  assert.equal(group.find(node=>node.id==='symbol-option-AXES-KR'),null);
-  group.find(node=>node.id==='symbol-option-AXES-US').click();
-  assert.equal(service.destinations[0],'https://example.com/market-lab/');
+  const service=fixture(t,{service:true,showName:true});service.selector.open();
+  const text=service.selector.element.textContent;
+  assert.equal(text.includes('시장 진단'),false);
+  assert.equal(text.includes('디지털 자산 · 주식 · ETF · 부동산'),false);
+  assert.equal(text.includes('USD · KRW · USDC · 지수'),false);
+  assert.equal(service.selector.element.find(node=>node.className==='symbol-search-filters'),null);
+  assert.equal(service.node('symbol-option-AXES-US'),null);
+  const src = symbol => service.node('symbol-option-'+symbol).find(node=>node.className==='symbol-search-mark').find(node=>node.tagName==='img').getAttribute('src');
+  assert.match(src('BTCUSD'),/BTC\.png/);
+  assert.match(src('ETHUSD'),/ETH\.png/);
+  assert.match(src('HYPE'),/HYPE\.png/);
+  assert.match(src('MSTR'),/MSTR\.png/);
+  assert.match(src('BMNR'),/BMNR\.png/);
+  assert.match(src('TQQQ'),/TQQQ\.png/);
+  assert.match(src('SOXL'),/SOXL\.png/);
+  assert.match(src('233740'),/233740\.KS\.png/);
+  assert.match(service.node('symbol-option-HOUSING-SEOUL').find(node=>node.className==='symbol-search-mark').innerHTML,/M12 3\.2/);
+  service.doc.dispatchEvent({type:'atlas:active-symbol',detail:{symbol:'ETHUSD'}});
+  assert.equal(service.button.find(node=>node.className==='symbol-selector-name').textContent,'이더리움');
+  assert.equal(service.button.find(node=>node.className==='symbol-selector-label').textContent,'ETHUSD');
+  assert.match(service.button.find(node=>node.className==='symbol-selector-avatar').find(node=>node.tagName==='img').getAttribute('src'),/ETH\.png/);
   const keyed=fixture(t,{service:true});keyed.selector.open();
   assert.equal(keyed.input.getAttribute('aria-activedescendant'),'symbol-option-BTCUSD');
   keyed.key('ArrowUp');keyed.key('Enter');
-  assert.equal(keyed.destinations[0],'https://example.com/market-lab/');
-  const offline=fixture(t);offline.selector.open();
-  assert.equal(offline.selector.element.find(node=>node.className==='symbol-search-diagnosis').hidden,true);
+  assert.equal(keyed.destinations[0],'https://example.com/market-lab/charts/?symbol=HOUSING-NATIONAL&region=national');
 });
 
 test('theme and housing selections use the same chart route without borrowing price-chart state',()=>{

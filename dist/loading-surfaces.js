@@ -77,7 +77,8 @@ export function enhanceBootSkeleton(){
   const shell=document.querySelector('#atlas-boot-shell');if(!shell||shell.hidden||document.documentElement.dataset.boot!=='loading')return;
   const page=new URLSearchParams(location.search).get('page'),path=location.pathname,canvas=shell.querySelector('.atlas-boot-canvas');
   const kind=page==='ipo'?'calendar':page==='data'?'table':['research','evidence'].includes(page)?'list':path.includes('/rsi/')?'rsi':path.includes('/us/')||path.includes('/kr/')?'diagnosis':'chart';
-  setLoadingSurface(canvas,true,{kind,label:'화면 로딩'});
+  const compact=window.matchMedia?.('(max-width: 1024px)')?.matches;
+  if(!compact)setLoadingSurface(canvas,true,{kind,label:'화면 로딩'});
   const boxes=[];
   for(const old of shell.querySelectorAll('.atlas-boot-bar')){
     const style=getComputedStyle(old),box=createSkeletonBox({width:style.width,height:style.height,radius:style.borderRadius});box.className=old.className;box.dataset.skulletBoot='true';old.replaceWith(box);boxes.push(box);

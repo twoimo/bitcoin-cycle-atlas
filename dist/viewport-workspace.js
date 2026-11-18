@@ -1,12 +1,12 @@
 import { mountCompactChartLayout } from './compact-chart-layout.js?v=1.31.3';
 import { DATA_UPDATE } from './data-update.js?v=1.29.0';
-import { mountWorkbenchChrome } from './workbench-chrome.js?v=1.35.2';
+import { mountWorkbenchChrome } from './workbench-chrome.js?v=1.35.15';
 import { mountResearchWorkbench } from './research-workbench.js?v=1.29.0';
-import { mountAnalysisIndicators } from "./analysis-dock.js?v=1.29.0";
-import { mountIndicatorWorkbench } from './indicator-workbench.js?v=1.29.0';
+import { mountAnalysisIndicators } from "./analysis-dock.js?v=1.29.1";
+import { mountIndicatorWorkbench } from './indicator-workbench.js?v=1.29.2';
 import { inspectionPanelAction } from './inspection-policy.js?v=1.29.0';
 import { mountMobileWorkspace } from './mobile-workspace.js?v=1.29.0';
-import { mountChartLegend } from './ui/chart-legend.js?v=1.36.1';
+import { mountChartLegend } from './ui/chart-legend.js?v=1.36.4';
 import { esc } from './ui/html-escape.js';
 
 const $ = selector => document.querySelector(selector);

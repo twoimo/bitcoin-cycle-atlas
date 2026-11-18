@@ -1,17 +1,19 @@
 import { setLoadingSurface } from './loading-surfaces.js';
 import { mountInstrumentIndicatorOverlay } from './instrument-indicator-overlay.js?v=1.36.1';
-import { mountNativeChartApp, mountNativeChartWorkbench, nativeDateRange } from './native-chart-workbench.js?v=1.36.2';
+import { mountNativeChartApp, mountNativeChartWorkbench, nativeDateRange } from './native-chart-workbench.js?v=1.36.6';
 import { readChartUrlState, writeChartUrlState } from './ui/chart-url-state.js';
 import {bindPreservedArchiveDownload} from './preserved-archive-download.js?v=1.29.0';
 import {CAPITAL_POLICIES} from './treasury-instruments.js';
 import {EQUITIES,EQUITY_INTERVALS,parseEquityArchive,equityHistoryRange} from './equity-market-data.js?v=1.29.0';
-import { mountObservedPriceChart, atlasCandlesToFunnestBars } from './funnest-observed-price-adapter.js';
+import { mountObservedPriceChart, atlasCandlesToFunnestBars } from './funnest-observed-price-adapter.js?v=1.36.7';
 import {bindChartNavigation} from './chart-navigation.js?v=1.36.1';
 import {withChartSpacing,retargetChartRange} from './chart-view-policy.js?v=1.36.1';
 import {normalizePriceDomain} from './price-axis.js?v=1.29.0';
 import {mountChartTouchTracking} from "./chart-touch-tracking.js?v=1.29.0";
 import {clearChartHover} from './chart-hover.js?v=1.29.0';
-import {mountSymbolSelector} from './symbol-selector.js?v=1.35.4';
+import {mountSymbolSelector} from './symbol-selector.js?v=1.35.6';
+import { intervalShortLabel } from './interval-picker.js?v=1.0.0';
+import { compactQuantity, renderChartSymbolLegend, signedChange } from './chart-symbol-legend.js?v=1.0.0';
 import {mountDialogViewport} from './dialog-viewport.js?v=1.29.0';
 import {buildTreasuryProjection} from "./treasury-projection.js?v=1.29.0";
 import {forecastAvailabilityForSeries} from './forecast/forecast-ui-gate.js';
@@ -49,6 +51,7 @@ export async function initEquityView({symbol}={}){
     <footer class="eth-bottom"><div class="eth-periods" role="group" aria-label="표시 기간">${[['1m','1개월'],['6m','6개월'],['1y','1년'],['4y','4년'],['all','전체']].map(([id,label])=>`<button type="button" data-equity-span="${id}">${label}</button>`).join('')}</div><select id="equity-period-select" aria-label="표시 기간">${[['1m','1개월'],['6m','6개월'],['1y','1년'],['4y','4년'],['all','전체']].map(([id,label])=>`<option value="${id}">${label}</option>`).join('')}</select><span id="equity-status" role="status" aria-live="polite"></span><span class="eth-timezone">뉴욕 세션</span><button type="button" data-equity-action="scale">로그</button><button type="button" data-equity-action="auto">Auto</button></footer><span id="equity-announcement" class="lab-visually-hidden" role="status" aria-live="polite"></span>`;
   mountNativeChartApp(app);
   const $=selector=>app.querySelector(selector),$$=selector=>[...app.querySelectorAll(selector)],svg=$('#equity-chart'),plot=$('.equity-plot');
+  const symbolLegend=document.createElement('div');$('#equity-readout').append(symbolLegend);
   plot.getAtlasChartExportSurface=()=>state.controller?.getExportSurface?.()??null;
   plot.inspectAtlasChart=()=>state.controller?.inspect?.()??null;
   const selector=mountSymbolSelector({button:$('#equity-symbol'),symbol,showName:true});
@@ -134,6 +137,8 @@ export async function initEquityView({symbol}={}){
     $('#equity-change').textContent=Number.isFinite(change)?`${change>=0?'+':'−'}${nf.format(Math.abs(change))}%`:'';$('#equity-change').className=change<0?'eth-loss':'eth-gain';
     $('#equity-ohlc').innerHTML=row.kind==='forecast'?`${row.candle?[['시작',row.candle.open],['최고',row.candle.high],['최저',row.candle.low],['끝',row.candle.close]].map(([label,value])=>`<span><i>${label}</i> ${money(value)}</span>`).join(''):''}<span>조건 범위 ${row.interpolation?.unavailableBounds?.length?'로그축 0 경계 · 선형축에서 확인':`${money(row.low)} – ${money(row.high)}`}</span><span>원형 표식 → 계산 근거</span>`:row.kind==='unavailable'?'이 구간에 관측 또는 가정 값이 없습니다.':[['O',row.open],['H',row.high],['L',row.low],['C',row.close]].map(([label,value])=>`<span><i>${label}</i> ${money(value)}</span>`).join('');
     $('#equity-ohlc').title=row.candle?EQUITY_FORECAST_BAR_NOTE:'';
+    const observed=row.kind!=='forecast'&&row.kind!=='unavailable';
+    renderChartSymbolLegend(symbolLegend,{name:instrument.koreanName,interval:intervalShortLabel(state.frequency),source:instrument.exchange,open:observed?money(row.open):'',high:observed?money(row.high):'',low:observed?money(row.low):'',close:money(row.price??row.close),changeText:observed?signedChange(row.changePct,null):'',volumeText:observed&&Number.isFinite(row.volume)?compactQuantity(row.volume):'',tone:row.changePct>0?'up':row.changePct<0?'down':'flat'});
     if(!row.hovered){state.selectedTime=row.time;state.selectedValuationDate=row.kind==='forecast'?(row.valuationDate??row.candle?.endDate??row.date.slice(0,10)):null;}
   }
   const readoutSelection=()=>`${state.selectedTime}|${state.selectedValuationDate}`;
@@ -167,7 +172,7 @@ export async function initEquityView({symbol}={}){
   const compactIndicatorNumber = new Intl.NumberFormat('ko-KR', {notation:'compact', maximumFractionDigits:0});
   const equityIndicatorOverlay = mountInstrumentIndicatorOverlay({
     plot,
-    anchor: () => { const notice = $('#equity-forecast-unavailable'); if (notice && notice.getClientRects().length) return notice; const source = $('.eth-readout-source'); return source.getClientRects().length ? source : $('#equity-readout'); },
+    anchor: () => { const notice = $('#equity-forecast-unavailable'); if (notice && notice.getClientRects().length) return notice; if (symbolLegend.getClientRects().length) return symbolLegend; const source = $('.eth-readout-source'); return source.getClientRects().length ? source : $('#equity-readout'); },
     context: () => `${symbol} · ${state.frequency==='daily'?'1D':'1W'} · 뉴욕 세션`,
     items: [
       {id:'volume', label:'Vol', title:'거래량'},

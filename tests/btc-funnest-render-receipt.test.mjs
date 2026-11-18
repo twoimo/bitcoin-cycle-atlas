@@ -1049,3 +1049,25 @@ test('a start-relative unit stays usable when the requested window holds no row'
     } finally { mounted.destroy(); }
   });
 });
+
+test('zooming keeps the painted BTC canvas and only changes the visible window', async () => {
+  await withFunnestFixture(async ({ stage, svg }) => {
+    const mounted = mountAtlasBtcFunnestChart({ container: stage, svg, sourceMode: 'close-only', frequency: 'daily', chartType: 'line', observedRows: twoMonthsOfCloses, start: '2024-01-01', end: '2024-02-29', unit: 'usd' });
+    try {
+      await settle();
+      const host = mounted.host, canvas = host.querySelector('canvas');
+      const before = mounted.getVisibleTimeRange();
+      assert.equal(mounted.applyView({ start: '2024-02-01', end: '2024-02-20' }), true);
+      const after = mounted.getVisibleTimeRange();
+      assert.equal(mounted.host, host, 'zoom keeps the same chart host');
+      assert.equal(host.isConnected, true);
+      assert.equal(host.querySelector('canvas'), canvas, 'zoom keeps the same canvas element');
+      assert.equal(stage.querySelectorAll('.atlas-funnest-canvas').length, 1);
+      assert.ok(before && after && after.to - after.from < before.to - before.from, 'zoom in shortens the visible time span');
+      assert.equal(mounted.applyView({ start: '2024-01-01', end: '2024-02-29' }), true);
+      const restored = mounted.getVisibleTimeRange();
+      assert.equal(mounted.host, host);
+      assert.ok(restored && restored.to - restored.from > after.to - after.from, 'zoom out lengthens the visible time span');
+    } finally { mounted.destroy(); }
+  });
+});

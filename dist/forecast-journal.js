@@ -1,10 +1,10 @@
 import { replaceWithSkeleton } from './loading-surfaces.js';
 import { loadForecastIndex, loadForecastRecord, loadForecastSnapshot, loadForecastEvaluation, loadForecastExperiments, verifyForecastRecord, restoreForecastPath, compareForecastRecords } from './forecast-records.js?v=1.29.0';
-import { drawAtlasPriceChart } from './atlas-price-chart.js?v=1.36.1';
+import { drawAtlasPriceChart } from './atlas-price-chart.js?v=1.36.7';
 import { mountDialogViewport } from './dialog-viewport.js?v=1.29.0';
 import { describeFreshness } from './data-freshness.js?v=1.29.0';
 import { performanceSnapshot, downloadPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
-import {mountForecastReplay} from './forecast-replay-view.js?v=1.29.0';
+import {mountForecastReplay} from './forecast-replay-view.js?v=1.29.2';
 import {withRequestTimeout} from './ui/request-timeout.js';
 import {esc} from './ui/html-escape.js';
 import {decimal,percent,day,fromDay} from './ui/journal-format.js';

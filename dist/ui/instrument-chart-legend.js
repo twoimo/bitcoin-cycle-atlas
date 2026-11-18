@@ -1,4 +1,4 @@
-import {mountChartLegend,writeChartLegendMarkup} from './chart-legend.js?v=1.36.1';
+import {mountChartLegend,writeChartLegendMarkup} from './chart-legend.js?v=1.36.4';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const line=(color,dash='')=>`<path d="M1 6h16" stroke="${color}" stroke-width="1.5"${dash?` stroke-dasharray="${dash}"`:''}/>`;

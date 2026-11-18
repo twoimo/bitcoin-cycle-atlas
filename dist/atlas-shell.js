@@ -25,15 +25,15 @@ SOFTWARE.
  * Exact source and license: docs/design-system/templates/shadcn-dashboard-01; /vendor/shadcn-ui-LICENSE.txt.
  * Existing chart/data controls retain their original DOM owners and handlers. */
 import {atlasSitePath} from './site-paths.js';
-import { atlasPages, atlasNavigationPages, atlasNavigationId, labPageFromLocation } from './atlas-navigation.js?v=1.36.2';
+import { atlasPages, atlasNavigationPages, atlasNavigationId, labPageFromLocation } from './atlas-navigation.js?v=1.36.3';
 import { readShellPreference, writeShellPreference } from './atlas-shell-state.js';
-import { mountCenterWorkbench } from './center-workbench.js?v=1.36.3';
-import { mountShellSlots } from './ui/shell-slots.js?v=1.0.1';
+import { mountCenterWorkbench } from './center-workbench.js?v=1.36.7';
+import { mountShellSlots } from './ui/shell-slots.js?v=1.0.4';
 import { mountPageDescription } from './ui/page-description.js';
 import { createContentShell, CONTENT_SHELL_PAGES } from './content-shell.js?v=1.38.1';
 import { mountAuthAccount } from './auth-account.js?v=1.1.9';
 import { syncChartChat } from './chart-chat.js?v=1.0.2';
-import { mountTradeChrome } from './mobile-trade-chrome.js?v=1.0.2';
+import { mountTradeChrome } from './mobile-trade-chrome.js?v=1.0.11';
 
 // The compact rails keep their Korean names visible for pointer and keyboard
 // users. A body-level tooltip avoids clipping inside the scrolling rail.
