@@ -1,553 +1,15 @@
 {
   "schema": 1,
   "source": "RelayDeck",
-  "generated_at": "2026-11-18T07:19:05+09:00",
+  "generated_at": "2026-11-18T10:47:38+09:00",
   "rooms": [
     {
       "id": "telegram",
       "kind": "chat",
       "title": "소수의견(26년 4분기)",
       "subtitle": "Telegram",
-      "updated_at": "2026-11-17T23:40:57+09:00",
+      "updated_at": "2026-11-18T09:40:05+09:00",
       "messages": [
-        {
-          "id": "1811",
-          "at": "2026-10-30T07:49:39+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-1811.webp",
-              "width": 489,
-              "height": 279,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "1812",
-          "at": "2026-10-30T07:49:49+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-1812.webp",
-              "width": 392,
-              "height": 214,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "1813",
-          "at": "2026-10-30T07:50:01+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "↘️시간외) 아마존 실적 발표 후 하락\n인텔 실적발표 후 급락"
-        },
-        {
-          "id": "1814",
-          "at": "2026-10-30T07:50:33+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "🔴아마존도 200일선 이탈\n🔴인텔도 200일선 이탈\n(기술적 상승추세 중요 지지선)\n\n좋지 않은 흐름입니다"
-        },
-        {
-          "id": "1815",
-          "at": "2026-10-30T07:52:40+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-1815-01.webp",
-              "width": 1280,
-              "height": 570,
-              "alt": "텔레그램 사진 (1/4)"
-            },
-            {
-              "src": "data/relay/assets/telegram-1815-02.webp",
-              "width": 1280,
-              "height": 232,
-              "alt": "텔레그램 사진 (2/4)"
-            },
-            {
-              "src": "data/relay/assets/telegram-1815-03.webp",
-              "width": 923,
-              "height": 351,
-              "alt": "텔레그램 사진 (3/4)"
-            },
-            {
-              "src": "data/relay/assets/telegram-1815-04.webp",
-              "width": 918,
-              "height": 350,
-              "alt": "텔레그램 사진 (4/4)"
-            }
-          ],
-          "post_ids": [
-            "1815",
-            "1816",
-            "1817",
-            "1818"
-          ]
-        },
-        {
-          "id": "1819",
-          "at": "2026-10-30T07:53:26+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "↘️미 증시 알파벳/AI인프라 동반 하락 마감"
-        },
-        {
-          "id": "1820",
-          "at": "2026-10-30T07:54:24+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-1820.webp",
-              "width": 578,
-              "height": 185,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "1821",
-          "at": "2026-10-30T07:54:45+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "↘️시간외)메모리 샌디스크도 약세,\n메모리와 AI인프라 덩달아 낙폭 확대 중"
-        },
-        {
-          "id": "1822",
-          "at": "2026-10-30T08:03:50+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-1822.webp",
-              "width": 1280,
-              "height": 553,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "1823",
-          "at": "2026-10-30T08:04:02+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "↘️시간외)아마존+AI인프라 전반 낙폭 확대 중"
-        },
-        {
-          "id": "1824",
-          "at": "2026-10-30T08:21:25+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-1824.webp",
-              "width": 671,
-              "height": 277,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "1825",
-          "at": "2026-10-30T08:21:32+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "↘️오늘 하루 알파벳 사상 최대 낙폭 기록"
-        },
-        {
-          "id": "1826",
-          "at": "2026-10-30T08:21:43+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-1826.webp",
-              "width": 530,
-              "height": 280,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "1827",
-          "at": "2026-10-30T08:21:51+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "↘️아마존, 현금흐름 악화 지속에 시간외 하락"
-        },
-        {
-          "id": "1828",
-          "at": "2026-10-30T08:26:13+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-1828.webp",
-              "width": 529,
-              "height": 454,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "1829",
-          "at": "2026-10-30T08:26:37+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "<↘️아마존, 분기기준 3연속 현금적자 기록 중>\n(누적으로는 2분기 연속 적자)"
-        },
-        {
-          "id": "1830",
-          "at": "2026-10-30T08:26:59+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-1830.webp",
-              "width": 525,
-              "height": 314,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "1831",
-          "at": "2026-10-30T08:27:17+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "↘️인텔도 가이던스 하회로 급락세(시간외)"
-        },
-        {
-          "id": "1832",
-          "at": "2026-10-30T08:28:30+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-1832.webp",
-              "width": 498,
-              "height": 359,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "1833",
-          "at": "2026-10-30T08:30:45+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "https://www.edaily.co.kr/News/Read?newsId=02863446645618168",
-          "links": [
-            {
-              "offset": 0,
-              "length": 59,
-              "url": "https://www.edaily.co.kr/News/Read?newsId=02863446645618168"
-            }
-          ],
-          "previews": [
-            {
-              "url": "https://edaily.co.kr/News/Read?newsId=02863446645618168",
-              "title": "아마존, 잉여현금흐름 적자에도 투자 확대…“감당 가능해”",
-              "description": "아마존이 대규모 인공지능(AI) 투자에 따른 잉여현금흐름 적자에도 내년 투자 지출을 더 늘리겠다고 밝혔다. 앤디 재시 최고경영자(CEO)는 장기 수요를 근거로 투자 여력을 자신했다. 다만 회사는 AI 사업 확대가 클라우드 전체의 이익률을 압박하는 요인이라는 점도 인정...",
-              "site_name": "이데일리",
-              "display_url": "edaily.co.kr/News/Read?newsId=02863446645618168"
-            }
-          ]
-        },
-        {
-          "id": "1834",
-          "at": "2026-10-30T08:31:06+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "https://www.jasm.co.kr/news/view/323510/%EC%9D%B8%ED%85%94-AI-%EB%A7%A4%EC%B6%9C-%EA%B8%89%EC%84%B1%EC%9E%A5%EC%97%90%EB%8F%84-4%EB%B6%84%EA%B8%B0-%EB%B6%80%EC%A0%95%EC%A0%81-%EC%A0%84%EB%A7%9D-%EC%A3%BC%EA%B0%80-20-2026",
-          "links": [
-            {
-              "offset": 0,
-              "length": 220,
-              "url": "https://www.jasm.co.kr/news/view/323510/%EC%9D%B8%ED%85%94-AI-%EB%A7%A4%EC%B6%9C-%EA%B8%89%EC%84%B1%EC%9E%A5%EC%97%90%EB%8F%84-4%EB%B6%84%EA%B8%B0-%EB%B6%80%EC%A0%95%EC%A0%81-%EC%A0%84%EB%A7%9D-%EC%A3%BC%EA%B0%80-20-2026"
-            }
-          ],
-          "previews": [
-            {
-              "url": "https://jasm.co.kr/news/view/323510/%EC%9D%B8%ED%85%94-AI-%EB%A7%A4%EC%B6%9C-%EA%B8%89%EC%84%B1%EC%9E%A5%EC%97%90%EB%8F%84-4%EB%B6%84%EA%B8%B0-%EB%B6%80%EC%A0%95%EC%A0%81-%EC%A0%84%EB%A7%9D-%EC%A3%BC%EA%B0%80-20-2026",
-              "title": "인텔, AI 매출 급성장에도…4분기 부정적 전망에 주가 20% ↓",
-              "description": "미국 반도체 기업 인텔이 시장 기대치를 웃도는 실적을 기록했지만 4분기 실적 전망이 부정적으로 나오면서 주가가 폭락했다.인텔은 3분기 매출이 전년 동기 대비 21% 증가한 165억1000만 달러(약 22조1000억원)를 기록했다고 29일(현지시간) 공시했다.시장조사기관 런던증권거래소그룹",
-              "site_name": "중앙신문",
-              "display_url": "jasm.co.kr/news/view/323510/인텔-AI-매출-급성장에도-4분기-부정적-전망-주가-20-2026"
-            }
-          ]
-        },
-        {
-          "id": "1835",
-          "at": "2026-10-30T08:31:13+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "https://www.newspim.com/news/view/20261030000091",
-          "links": [
-            {
-              "offset": 0,
-              "length": 48,
-              "url": "https://www.newspim.com/news/view/20261030000091"
-            }
-          ],
-          "previews": [
-            {
-              "url": "https://newspim.com/news/view/20261030000091",
-              "title": "아시아 증시 '검은 금요일' 오나…알파벳 이어 아마존·인텔 실적 쇼크",
-              "description": "[시드니=뉴스핌] 권지언 특파원 = 구글 모회사 알파벳의 역대 최대 주가 폭락에 이어 아마존과 인텔까지 실적 발표 후 시간 외 거래에서 급락하면서 글로벌 기술주 투자심리가 위축되고 있다. 인공지능(AI)에 막대한 투자를 이어온 빅테크들이 기존 핵심 사업 둔화와",
-              "site_name": "뉴스핌",
-              "display_url": "newspim.com/news/view/20261030000091"
-            }
-          ]
-        },
-        {
-          "id": "1836",
-          "at": "2026-10-30T08:33:16+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-1836-01.webp",
-              "width": 1091,
-              "height": 802,
-              "alt": "텔레그램 사진 (1/3)"
-            },
-            {
-              "src": "data/relay/assets/telegram-1836-02.webp",
-              "width": 1083,
-              "height": 824,
-              "alt": "텔레그램 사진 (2/3)"
-            },
-            {
-              "src": "data/relay/assets/telegram-1836-03.webp",
-              "width": 1076,
-              "height": 579,
-              "alt": "텔레그램 사진 (3/3)"
-            }
-          ],
-          "post_ids": [
-            "1836",
-            "1837",
-            "1838"
-          ]
-        },
-        {
-          "id": "1839",
-          "at": "2026-10-30T08:34:47+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-1839.webp",
-              "width": 485,
-              "height": 688,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "1840",
-          "at": "2026-10-30T08:35:36+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "<↗️DAILY ETF 현황>\n\nAI인프라에서 투심 약화에\n금리도 하락, 방어주/배당주/금리인하주가\n강세보인 하루였습니다\n\n(건설,헬스케어,리츠 등)"
-        },
-        {
-          "id": "1841",
-          "at": "2026-10-30T08:39:35+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-1841.webp",
-              "width": 1167,
-              "height": 949,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "1842",
-          "at": "2026-10-30T08:40:11+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "<🔔미 10년 금리 하락세 지속>\n\n1) AI인프라 투심경쟁 둔화 \n2) 안전자산 선호 심화 \n\n-> 배당주,방어주,가치주가 오르는 이유"
-        },
-        {
-          "id": "1843",
-          "at": "2026-10-30T08:42:30+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-1843.webp",
-              "width": 1018,
-              "height": 574,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "1844",
-          "at": "2026-10-30T08:42:51+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "💊헬스케어 ETF XLV 신고가 경신\n(방어, 배당주)\n\n대장주는 LLY(비만약)"
-        },
-        {
-          "id": "1845",
-          "at": "2026-10-30T08:57:14+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "https://www.yna.co.kr/view/AKR20261030006700091",
-          "links": [
-            {
-              "offset": 0,
-              "length": 47,
-              "url": "https://www.yna.co.kr/view/AKR20261030006700091"
-            }
-          ],
-          "previews": [
-            {
-              "url": "https://yna.co.kr/view/AKR20261030006700091",
-              "title": "MS, AI투자 경쟁에 9년만에 회사채 33조원 발행…신용등급 AAA | 연합뉴스",
-              "description": "(샌프란시스코=연합뉴스) 권영전 특파원 = 거대 기술기업이 인공지능(AI) 투자액을 앞다퉈 늘리는 가운데 그간 차입에 신중했던 마이크로소프트(M...",
-              "site_name": "연합뉴스",
-              "display_url": "yna.co.kr/view/AKR20261030006700091"
-            }
-          ]
-        },
-        {
-          "id": "1846",
-          "at": "2026-10-30T08:57:45+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "💰마소, 9년만에 회사채 발행 \n-> 보수적인 마소마저도 외부자금조달 확대 중"
-        },
-        {
-          "id": "1847",
-          "at": "2026-10-30T08:58:34+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "https://www.sedaily.com/article/20107820",
-          "links": [
-            {
-              "offset": 0,
-              "length": 40,
-              "url": "https://www.sedaily.com/article/20107820"
-            }
-          ],
-          "previews": [
-            {
-              "url": "https://sedaily.com/article/20107820",
-              "title": "아마존, 프랑스보다 채권 더 찍었다…전세계 채권 발행 사상 최대",
-              "description": "올해 전세계 채권 발행액이 역대 최대를 기록한 가운데 아마존이 기업 중에서는 가장 많은 채권을 찍은 것으로 나타났다. 28일(현지 시간) 블룸버그통신에 따르면 올해 현재까지 금융사와 기업, 정부가 투자적격과 부적격 등급을 포함해 채권 발행으로 조달한 자금은 모두 6조",
-              "site_name": "서울경제",
-              "display_url": "sedaily.com/article/20107820"
-            }
-          ]
-        },
-        {
-          "id": "1848",
-          "at": "2026-10-30T08:59:07+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "💰아마존, 올해 전세계 채권 발행 1위\n-> 정부를 포함해도 전세계 4위\n(국가 규모급 돈을 찍는 중)"
-        },
-        {
-          "id": "1849",
-          "at": "2026-10-30T09:31:16+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "<🗞소몽선정 데일리 뉴스,10/30>\n[테크]\n아마존, 2분기 연속 FCF 적자\n아마존 실적 실망, AWS만 39%↑\n구글, 22년 만에 첫 적자 전환\n구글, 985억弗 추가 우발약정 공시\n알파벳 시총 하루 669조원 증발\n인텔, 4분기 전망 부진에 20% 폭락\nMS, 33조원 회사채 발행\n스페이스X 최대 고객은 앤트로픽\n캐터필러, 가이던스 유지에 9%↓\n샌디스크, 8대1 액면분할\n\n[실적/기타]\n카타르, 미국산 LNG 대거 매입\n앤트로픽, 1인 신약 개발사 인수\n일라이릴리 호실적, 주가 5%↑\n릴리 '트리플G', 체중 20% 감소\n\n[발언]\n머스크 \"AI 시대, 장기 저축 무의미\"\n아이스먼도 AI 투자 경계\n드러켄밀러 한마디에 코인주 19%↑\n월가, 이제 현금 창출력 주목\n\n출처 : 소수의견 🐒\n(기사 누르면 링크 연결됩니다)",
-          "links": [
-            {
-              "offset": 27,
-              "length": 18,
-              "url": "https://www.sedaily.com/article/20108090"
-            },
-            {
-              "offset": 46,
-              "length": 20,
-              "url": "https://www.yna.co.kr/view/AKR20261030007351091"
-            },
-            {
-              "offset": 66,
-              "length": 19,
-              "url": "https://www.g-enews.com/article/Global-Biz/2026/10/202610290659054989fda4f5ab74_1"
-            },
-            {
-              "offset": 86,
-              "length": 20,
-              "url": "https://view.asiae.co.kr/article/2026103004361702016"
-            },
-            {
-              "offset": 107,
-              "length": 18,
-              "url": "https://n.news.naver.com/mnews/article/001/0016410701"
-            },
-            {
-              "offset": 126,
-              "length": 21,
-              "url": "https://www.yna.co.kr/view/AKR20261030013500091"
-            },
-            {
-              "offset": 148,
-              "length": 15,
-              "url": "https://www.asiae.co.kr/article/world-stockmarket/2026103005283523829"
-            },
-            {
-              "offset": 164,
-              "length": 17,
-              "url": "https://n.news.naver.com/mnews/article/001/0016410771"
-            },
-            {
-              "offset": 182,
-              "length": 18,
-              "url": "https://www.edaily.co.kr/News/Read?newsId=08390246645617840&mediaCodeNo=257"
-            },
-            {
-              "offset": 201,
-              "length": 14,
-              "url": "https://www.edaily.co.kr/News/Read?newsId=02942166645618168&mediaCodeNo=257"
-            },
-            {
-              "offset": 225,
-              "length": 18,
-              "url": "https://n.news.naver.com/mnews/article/421/0009259731"
-            },
-            {
-              "offset": 244,
-              "length": 18,
-              "url": "https://www.aitimes.com/news/articleView.html?idxno=216778"
-            },
-            {
-              "offset": 263,
-              "length": 17,
-              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4442034"
-            },
-            {
-              "offset": 281,
-              "length": 20,
-              "url": "https://www.g-enews.com/article/Global-Biz/2026/10/202610291021309388fda4f5ab74_1"
-            },
-            {
-              "offset": 308,
-              "length": 22,
-              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4442073"
-            },
-            {
-              "offset": 331,
-              "length": 14,
-              "url": "https://www.edaily.co.kr/News/Read?newsId=08947846645617840&mediaCodeNo=257"
-            },
-            {
-              "offset": 346,
-              "length": 19,
-              "url": "https://www.edaily.co.kr/News/Read?newsId=01617046645618168&mediaCodeNo=257"
-            },
-            {
-              "offset": 366,
-              "length": 16,
-              "url": "https://kr.benzinga.com/news/usa/trading/%EC%9D%B4%EC%A0%9C-%ED%98%84%EA%B8%88-%EC%B0%BD%EC%B6%9C%EB%A0%A5%EC%9D%B4-%EC%A4%91%EC%9A%94%ED%95%98%EB%8B%A4%EC%9B%94%EA%B0%80%EC%97%90%EC%84%9C-%EC%9E%89/"
-            }
-          ],
-          "previews": [
-            {
-              "url": "https://sedaily.com/article/20108090",
-              "title": "아마존, 2분기 연속 잉여현금흐름 적자...온라인 쇼핑 성장폭 3년여 만 최저",
-              "description": "세계 최대 클라우드·전자상거래 기업 아마존이 2분기 연속 잉여현금흐름 적자를 기록했다. 인공지능(AI) 투자에 막대한 돈을 쏟아붓는 가운데 주요 사업인 전자상거래 부문 매출 성장세가 둔화된 것으로 나타났다. 온라인 매출 증가폭이 2023년 이후 가장 낮게 나타나고 연말",
-              "site_name": "서울경제",
-              "display_url": "sedaily.com/article/20108090"
-            }
-          ]
-        },
         {
           "id": "1850",
           "at": "2026-10-30T12:13:44+09:00",
@@ -11548,6 +11010,416 @@
           "at": "2026-11-17T23:40:57+09:00",
           "author": "소수의견(26년 4분기)",
           "text": "🔔증시 혼조세 출발입니다\n거래 거의 없고 관망세로 엔비디아 실적\n기다리는 중입니다\n\n그것도 그렇고\n이번주 앤트로픽 상장 때\n천하제일 단타대회 열릴 예정이라\n그쪽으로 자금이 다 쏠려갈 것 같습니다"
+        },
+        {
+          "id": "2863",
+          "at": "2026-11-18T08:12:11+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2863.webp",
+              "width": 268,
+              "height": 182,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2864",
+          "at": "2026-11-18T08:12:24+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "↗️시간외)엔비디아 견조한 실적 덕에 상승\n-> AI인프라주 덩달아 시간외 반등 중입니다"
+        },
+        {
+          "id": "2865",
+          "at": "2026-11-18T08:12:43+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2865.webp",
+              "width": 1280,
+              "height": 584,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2866",
+          "at": "2026-11-18T08:12:53+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "↗️시간외 증시 흐름입니다(AI인프라 상승세)"
+        },
+        {
+          "id": "2867",
+          "at": "2026-11-18T08:16:24+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2867-01.webp",
+              "width": 1151,
+              "height": 1280,
+              "alt": "텔레그램 사진 (1/4)"
+            },
+            {
+              "src": "data/relay/assets/telegram-2867-02.webp",
+              "width": 1240,
+              "height": 1242,
+              "alt": "텔레그램 사진 (2/4)"
+            },
+            {
+              "src": "data/relay/assets/telegram-2867-03.webp",
+              "width": 1113,
+              "height": 1280,
+              "alt": "텔레그램 사진 (3/4)"
+            },
+            {
+              "src": "data/relay/assets/telegram-2867-04.webp",
+              "width": 960,
+              "height": 1046,
+              "alt": "텔레그램 사진 (4/4)"
+            }
+          ],
+          "post_ids": [
+            "2867",
+            "2868",
+            "2869",
+            "2870"
+          ]
+        },
+        {
+          "id": "2871",
+          "at": "2026-11-18T08:18:32+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2871-01.webp",
+              "width": 1124,
+              "height": 897,
+              "alt": "텔레그램 사진 (1/3)"
+            },
+            {
+              "src": "data/relay/assets/telegram-2871-02.webp",
+              "width": 1104,
+              "height": 741,
+              "alt": "텔레그램 사진 (2/3)"
+            },
+            {
+              "src": "data/relay/assets/telegram-2871-03.webp",
+              "width": 1087,
+              "height": 585,
+              "alt": "텔레그램 사진 (3/3)"
+            }
+          ],
+          "post_ids": [
+            "2871",
+            "2872",
+            "2873"
+          ]
+        },
+        {
+          "id": "2874",
+          "at": "2026-11-18T08:19:21+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2874.webp",
+              "width": 461,
+              "height": 331,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2875",
+          "at": "2026-11-18T08:20:33+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<🎙드러켄밀러 인터뷰 주목>\n\n지금 시장에서 가장 주목받는 발언입니다\n\n1. 주식 관망세, 롱도 숏도 없다\n2. 이렇게 불확실했던 적이 없다\n3. 구리 숏, 긴축 가능성 베팅\n4. AI인프라보다 AI 활용사례 찾고있다"
+        },
+        {
+          "id": "2876",
+          "at": "2026-11-18T08:21:47+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "🐒아마 다들 비슷하게 생각해서\n이 인터뷰가 특히 주목받는 것 같습니다\n\n숏베팅도 조심스럽고 그렇다고\n낙관 베팅을 공격적으로 하기도 어려운\n상황입니다\n\n그러면서도 긴축 기조로 인해\n내년 경기 역풍 가능성도\n생각해야하고\n\nAI인프라 이후 AI 다음 수혜주로\n넘어갈 가능성도 계속 고려해야 합니다\n(공감)"
+        },
+        {
+          "id": "2877",
+          "at": "2026-11-18T08:23:29+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<⚠️FBI, 사이버공격 공식 경고>"
+        },
+        {
+          "id": "2878",
+          "at": "2026-11-18T08:23:50+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<⚠️현재 확산 중인 서버 장애>\n11/12 - Microsoft 장애\n11/13 - 미국 전역 항공편 지상 대기\n11/13 - 급여 시스템 장애\n11/13 - Claude 장애\n11/16 - 주요 미국 은행 시스템 다운\n11/17 - NSA의 기밀 내부 네트워크 장애"
+        },
+        {
+          "id": "2879",
+          "at": "2026-11-18T08:24:27+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "🐒더이상 음모론이 아니라\nAI활용한 사이버 해킹 전쟁으로\n봐야할 것 같습니다 \n\nFBI도 공식 입장을 냈으니까요"
+        },
+        {
+          "id": "2880",
+          "at": "2026-11-18T08:26:41+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2880.webp",
+              "width": 756,
+              "height": 737,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2881",
+          "at": "2026-11-18T08:27:33+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<🎙마크 미너비니, 이제 반등이 다가온다>\n\n🐒최근 방향성을 잘 맞춰서\n더 주목받고 있는 트레이더입니다\n\n오늘 글을 올려서\n\n이제 주식시장 역풍보다는 순풍\n가능성이 높다고하며\n\n숏베팅을 분할매도하고\n롱으로 갈아탈 준비를 하고 있다고\n밝혔습니다"
+        },
+        {
+          "id": "2882",
+          "at": "2026-11-18T08:32:48+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2882.webp",
+              "width": 688,
+              "height": 288,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2883",
+          "at": "2026-11-18T08:33:13+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "🐒처음엔 인프라 노후라고 했지만\nFBI에서 결국 사이버 공격이라고\n밝혔습니다"
+        },
+        {
+          "id": "2884",
+          "at": "2026-11-18T08:34:51+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2884.webp",
+              "width": 675,
+              "height": 613,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2885",
+          "at": "2026-11-18T08:34:59+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2885.webp",
+              "width": 816,
+              "height": 492,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2886",
+          "at": "2026-11-18T08:35:39+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<⚠️변동성 지수 25, 야금야금 상승 중>\n\n20 이하 : 안정\n20 이상 : 경계🟡\n30 이상 : 공포\n40 이상 : 패닉"
+        },
+        {
+          "id": "2887",
+          "at": "2026-11-18T08:35:56+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2887.webp",
+              "width": 793,
+              "height": 627,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2888",
+          "at": "2026-11-18T08:36:11+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<🔔앤트로픽 매수하려고 코인 매도 중>"
+        },
+        {
+          "id": "2889",
+          "at": "2026-11-18T08:36:35+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2889.webp",
+              "width": 786,
+              "height": 499,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2890",
+          "at": "2026-11-18T08:37:12+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<🔔사이버 해킹전쟁에 금 부각?>\n사이버전쟁 우려가 커지자 \n디지털 자산보다 실물 자산인 금\n사야되는 것 아니냐는 이야기도\n많이 나오고 있습니다"
+        },
+        {
+          "id": "2891",
+          "at": "2026-11-18T08:44:56+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2891.webp",
+              "width": 630,
+              "height": 497,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2892",
+          "at": "2026-11-18T08:45:11+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "🔔코스트코 \"불안감에 사재기 증가 중\"\n(비상용품 구매 증가)"
+        },
+        {
+          "id": "2893",
+          "at": "2026-11-18T09:13:45+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<🗞소몽선정 데일리 뉴스,11/18>\n<엔비디아>\n엔비디아 분기 매출 111%↑\n젠슨 황, 12/1 美 의회 출석\n엔비 이사회 \"젠슨 복귀 없다\"\n엔비 FY28 성장률 75%로 상향\n엔비, 中 임대업체 칩 공급 제한\n美 SEC, 엔비디아 조사 착수\n\n<테크/빅마우스>\n올트먼 \"AI칩 수요 과다계산\"\n세미애널, AI칩 지출 전망 40%↓\n전 SEC 위원장 \"AI 버블 침체\"\n美, 中 데이터센터 장비 수입금지 추진\n오픈AI 'GPT-6.2 아스트라' 출시\n스페이스X, 40억달러 채권 매각\n\n<IPO>\n앤트로픽 공모가 78달러 웃돌 듯\n\n<매크로/지정학>\nAPEC 개막, 첫 미중러 회담\n\n<기타>\n美안보국 기밀통신망 마비\n엡스타인 의혹에 도이체방크 6%↓\n\n출처 : 소수의견 🐒\n(기사 누르면 링크 연결됩니다)",
+          "links": [
+            {
+              "offset": 29,
+              "length": 16,
+              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4445236"
+            },
+            {
+              "offset": 46,
+              "length": 18,
+              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4445220"
+            },
+            {
+              "offset": 65,
+              "length": 17,
+              "url": "https://www.hankyung.com/article/202611183319i"
+            },
+            {
+              "offset": 83,
+              "length": 19,
+              "url": "https://view.asiae.co.kr/article/2026111807344921282"
+            },
+            {
+              "offset": 103,
+              "length": 18,
+              "url": "https://biz.sbs.co.kr/article/20000347152"
+            },
+            {
+              "offset": 122,
+              "length": 17,
+              "url": "https://biz.chosun.com/international/international_economy/2026/11/18/YDNALCQ6SJDNFFPHVD3KYJVJIA/"
+            },
+            {
+              "offset": 150,
+              "length": 18,
+              "url": "https://www.sedaily.com/article/20115584"
+            },
+            {
+              "offset": 169,
+              "length": 20,
+              "url": "https://www.g-enews.com/article/Global-Biz/2026/11/202611180251206525fbbec65dfb_1"
+            },
+            {
+              "offset": 190,
+              "length": 20,
+              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4445204"
+            },
+            {
+              "offset": 211,
+              "length": 21,
+              "url": "https://www.news1.kr/world/usa-canada/6357358"
+            },
+            {
+              "offset": 233,
+              "length": 22,
+              "url": "https://www.aitimes.com/news/articleView.html?idxno=217513"
+            },
+            {
+              "offset": 256,
+              "length": 18,
+              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4445239"
+            },
+            {
+              "offset": 281,
+              "length": 19,
+              "url": "https://n.news.naver.com/mnews/article/138/0002248966"
+            },
+            {
+              "offset": 312,
+              "length": 17,
+              "url": "https://biz.sbs.co.kr/article/20000347181"
+            },
+            {
+              "offset": 336,
+              "length": 13,
+              "url": "https://www.yna.co.kr/view/AKR20261118001851071"
+            },
+            {
+              "offset": 350,
+              "length": 18,
+              "url": "https://www.g-enews.com/article/Global-Biz/2026/11/2026111721442850789a1f309431_1"
+            }
+          ],
+          "previews": [
+            {
+              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4445236",
+              "title": "엔비디아, 최근 분기 매출 전년비 111% 증가·컨센 상회(종합)",
+              "description": "'인공지능(AI) 테마'를 선도하는 엔비디아(NAS:NVDA)가 시장 예상을 웃도는 최근 분기 실적과 다음 분기 매출 가이던스를 내놨다.엔비디아는 17일(현지시간) 뉴욕증시 장 마감 후 지난 10월 25일로 끝난 2027 회...",
+              "site_name": "연합인포맥스",
+              "display_url": "news.einfomax.co.kr/news/articleView.html?idxno=4445236"
+            }
+          ]
+        },
+        {
+          "id": "2894",
+          "at": "2026-11-18T09:23:32+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<🔔젠슨 황, 12월 1일 청문회 출석 예정>\n\n🐒불확실 해소는 빠를수록 좋으므로\n이렇게 일정 빨리빨리 잡히는 것이 낫습니다\n(악재보다 불확실 해소가 더 중요)"
+        },
+        {
+          "id": "2895",
+          "at": "2026-11-18T09:39:46+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2895.webp",
+              "width": 683,
+              "height": 732,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2896",
+          "at": "2026-11-18T09:40:05+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<🎙드러켄밀러 인터뷰 핵심 요약>\n\n핵심내용 위주로 요약했으니\n참고용으로 읽어봐주시기 바랍니다!"
         }
       ]
     },
