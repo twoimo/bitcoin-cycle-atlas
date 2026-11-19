@@ -1,117 +1,15 @@
 {
   "schema": 1,
   "source": "RelayDeck",
-  "generated_at": "2026-11-19T08:52:22+09:00",
+  "generated_at": "2026-11-19T09:14:30+09:00",
   "rooms": [
     {
       "id": "telegram",
       "kind": "chat",
       "title": "소수의견(26년 4분기)",
       "subtitle": "Telegram",
-      "updated_at": "2026-11-19T08:20:20+09:00",
+      "updated_at": "2026-11-19T08:52:27+09:00",
       "messages": [
-        {
-          "id": "1929",
-          "at": "2026-10-31T10:45:46+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "<🗞소몽선정 데일리 뉴스,10/31>\n[테크]\n인텔 AI 투매 속 하루 30% 폭락\n애플, 엔비디아 꺾고 시총 1위\n샌디스크 성장 둔화·마진 정점 우려\n10개주 데이터센터 투표, 아마존 위기\n알파벳 시총 669조 증발, 삼전·닉스 비상\n키옥시아 실적 전망 기대 밑돌아\n'아마존 쇼크'에 필리 7.20%↓\n앤트로픽 IPO 코앞, AI주 팔릴까\n\n[암호화폐]\n바이낸스 8.4조 해킹, 北 배후설\n비트코인 8만달러 붕괴, 청산 13.4억\n트럼프 \"바이낸스 北소행 모른다\"\n머스크 \"AI 에이전트가 코인 훔칠 수도\"\n\n[중간선거]\n중간선거 사전투표 4800만 역대 최다\n트럼프, 중간선거 '참패의 경고'\n\n[기타]\n美 석유업계 4~9월 이익 173조\n로블록스 3Q 이용자 감소, 20%↓\n레딧 4분기 전망 부진, 30% 폭락\n\n출처 : 소수의견 🐒\n(기사 누르면 링크 연결됩니다)",
-          "links": [
-            {
-              "offset": 27,
-              "length": 20,
-              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4442290"
-            },
-            {
-              "offset": 48,
-              "length": 17,
-              "url": "https://www.yna.co.kr/view/AKR20261031009500091"
-            },
-            {
-              "offset": 66,
-              "length": 19,
-              "url": "https://www.edaily.co.kr/News/Read?newsId=06222166645618168&mediaCodeNo=257"
-            },
-            {
-              "offset": 86,
-              "length": 21,
-              "url": "https://n.news.naver.com/mnews/article/015/0005348627"
-            },
-            {
-              "offset": 108,
-              "length": 24,
-              "url": "https://www.joongang.co.kr/article/25474593"
-            },
-            {
-              "offset": 133,
-              "length": 17,
-              "url": "https://www.sedaily.com/article/20108541"
-            },
-            {
-              "offset": 151,
-              "length": 19,
-              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4442297"
-            },
-            {
-              "offset": 171,
-              "length": 20,
-              "url": "https://n.news.naver.com/mnews/article/015/0005348713"
-            },
-            {
-              "offset": 200,
-              "length": 19,
-              "url": "https://www.sedaily.com/article/20108403"
-            },
-            {
-              "offset": 220,
-              "length": 22,
-              "url": "https://www.digitaltoday.co.kr/news/articleView.html?idxno=711598"
-            },
-            {
-              "offset": 243,
-              "length": 18,
-              "url": "https://www.yna.co.kr/view/AKR20261031006851071"
-            },
-            {
-              "offset": 262,
-              "length": 23,
-              "url": "https://www.digitaltoday.co.kr/news/articleView.html?idxno=711600"
-            },
-            {
-              "offset": 294,
-              "length": 21,
-              "url": "https://www.sedaily.com/article/20108555"
-            },
-            {
-              "offset": 316,
-              "length": 18,
-              "url": "https://www.joongang.co.kr/article/25474618"
-            },
-            {
-              "offset": 341,
-              "length": 19,
-              "url": "https://n.news.naver.com/mnews/article/018/0006400431"
-            },
-            {
-              "offset": 361,
-              "length": 20,
-              "url": "https://www.edaily.co.kr/News/Read?newsId=01298886645618496&mediaCodeNo=257"
-            },
-            {
-              "offset": 382,
-              "length": 20,
-              "url": "https://www.digitaltoday.co.kr/news/articleView.html?idxno=711602"
-            }
-          ],
-          "previews": [
-            {
-              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4442290",
-              "title": "인텔, AI 투매 속 50년래 최악의 하루…주가 30% 폭락",
-              "description": "미국 반도체 제조업체 인텔(NAS:INTC)이 하루에만 30% 넘게 폭락하면서 약 50년 만에 최악의 하루를 기록할 것으로 보인다.연합인포맥스의 종목현재가 화면(화면번호 7219)에 따르면 30일(현지시간) 오후 12시 20...",
-              "site_name": "연합인포맥스",
-              "display_url": "news.einfomax.co.kr/news/articleView.html?idxno=4442290"
-            }
-          ]
-        },
         {
           "id": "1930",
           "at": "2026-10-31T16:59:51+09:00",
@@ -11240,6 +11138,154 @@
           "at": "2026-11-19T08:20:20+09:00",
           "author": "소수의견(26년 4분기)",
           "text": "🐒공모가 83불이고\n시초가 100불 넘을 것 같습니다\n\n\"앤트로픽이 자금 조달에 성공했다\"며\n\"다른 AI기업들도 우려가 덜해졌다\"\n\"앤트로픽 상장 불확실 해소\" \n논리가 적용될 수 있겠습니다"
+        },
+        {
+          "id": "2958",
+          "at": "2026-11-19T08:39:56+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "🐒개인적으로는\n반도체/AI인프라쪽 단기 반등은 가능하나,\n어차피 12월 청문회/1월 새 의회 들어오기 전까지\n불확실 해소가 되기가 어려워서\n\n매수한다하더라도 \n단타 정도로 접근해야할 것 같고\n \n그게 아니라면 일단 큰 매수는\n미루려고 합니다 \n(다른 분야 주식들에 좀 더 \n기회가 있을 것 같습니다)"
+        },
+        {
+          "id": "2959",
+          "at": "2026-11-19T08:41:20+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2959.webp",
+              "width": 629,
+              "height": 425,
+              "alt": "텔레그램 사진"
+            }
+          ]
+        },
+        {
+          "id": "2960",
+          "at": "2026-11-19T08:43:50+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "",
+          "images": [
+            {
+              "src": "data/relay/assets/telegram-2960-01.webp",
+              "width": 1136,
+              "height": 940,
+              "alt": "텔레그램 사진 (1/3)"
+            },
+            {
+              "src": "data/relay/assets/telegram-2960-02.webp",
+              "width": 1095,
+              "height": 698,
+              "alt": "텔레그램 사진 (2/3)"
+            },
+            {
+              "src": "data/relay/assets/telegram-2960-03.webp",
+              "width": 1100,
+              "height": 587,
+              "alt": "텔레그램 사진 (3/3)"
+            }
+          ],
+          "post_ids": [
+            "2960",
+            "2961",
+            "2962"
+          ]
+        },
+        {
+          "id": "2963",
+          "at": "2026-11-19T08:52:27+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<🗞소몽선정 데일리 뉴스,11/19>\n<시황/테크>\n앤트로픽 공모가 83달러, 최대 IPO\n엔비디아 차기 CEO에 르네 하스 거론\n엔비디아 2.9%↓, AMD 5.3%↑\n오픈AI \"사이버보안, 코딩보다 커\"\n타겟, 호실적에 급등\n팔로알토, 호실적·45억달러 인수\n\n<매크로/지정학>\n12월 FOMC \"추가 인상\" 주문\n월러 \"12월 0.5%P 인상 필요\"\n금값 3% 급락, 3,800달러 붕괴\n국제유가 3%대 급락, 재고 급증\n美 민주당, 中 정상무역관계 박탈 법안\n美 의회, 러트닉 이해충돌 겨냥\n美 민주, 상원 56석 확보\n\n<기타>\n美 연쇄 장애에 사재기 조짐\n비트코인 급락, 트레저리 기업 흔들\n건강보험株, 보험금 환수에 급락\n\n출처 : 소수의견 🐒\n(기사 누르면 링크 연결됩니다)",
+          "links": [
+            {
+              "offset": 30,
+              "length": 21,
+              "url": "https://n.news.naver.com/mnews/article/421/0009297519"
+            },
+            {
+              "offset": 52,
+              "length": 21,
+              "url": "https://www.edaily.co.kr/News/Read?newsId=01289046645647360"
+            },
+            {
+              "offset": 74,
+              "length": 21,
+              "url": "https://www.sedaily.com/article/20116205"
+            },
+            {
+              "offset": 96,
+              "length": 20,
+              "url": "https://www.aitimes.com/news/articleView.html?idxno=217542"
+            },
+            {
+              "offset": 117,
+              "length": 11,
+              "url": "https://www.edaily.co.kr/News/Read?newsId=01141446645647360"
+            },
+            {
+              "offset": 129,
+              "length": 18,
+              "url": "https://www.edaily.co.kr/News/Read?newsId=01485846645647360"
+            },
+            {
+              "offset": 159,
+              "length": 19,
+              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4445438"
+            },
+            {
+              "offset": 179,
+              "length": 20,
+              "url": "https://n.news.naver.com/mnews/article/014/0005606470"
+            },
+            {
+              "offset": 200,
+              "length": 20,
+              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4445430"
+            },
+            {
+              "offset": 221,
+              "length": 18,
+              "url": "https://n.news.naver.com/mnews/article/421/0009297452"
+            },
+            {
+              "offset": 240,
+              "length": 21,
+              "url": "https://n.news.naver.com/mnews/article/018/0006412032"
+            },
+            {
+              "offset": 262,
+              "length": 17,
+              "url": "https://www.g-enews.com/article/Global-Biz/2026/11/202611190618541335fda4f5ab74_1"
+            },
+            {
+              "offset": 280,
+              "length": 15,
+              "url": "https://n.news.naver.com/mnews/article/243/0000105850"
+            },
+            {
+              "offset": 302,
+              "length": 15,
+              "url": "https://www.yna.co.kr/view/AKR20261119007500075"
+            },
+            {
+              "offset": 318,
+              "length": 19,
+              "url": "https://www.digitaltoday.co.kr/news/articleView.html?idxno=716515"
+            },
+            {
+              "offset": 338,
+              "length": 17,
+              "url": "https://www.edaily.co.kr/News/Read?newsId=01351366645647360"
+            }
+          ],
+          "previews": [
+            {
+              "url": "https://n.news.naver.com/mnews/article/421/0009297519",
+              "title": "[속보] 앤트로픽 공모가 83달러 확정…IPO 940억달러 넘어 역대 최대",
+              "description": "",
+              "site_name": "네이버 뉴스",
+              "display_url": "n.news.naver.com/mnews/article/421/0009297519"
+            }
+          ]
         }
       ]
     },
