@@ -169,7 +169,7 @@ test('a photo opens in a viewer and can move across the album',async ()=>{
   assert.equal(dialog.querySelector('.relay-viewer-image').getAttribute('src'),'data/relay/assets/chat-2.jpg');
   dialog.querySelector('[data-relay-action="close-image"]').dispatchEvent(new window.Event('click',{bubbles:true}));
   assert.equal(Boolean(dialog.open||dialog.hasAttribute('open')),false);
-  assert.equal(root.querySelector('.relay-day-chip').textContent,'11.08');
+  assert.equal(root.querySelector('.relay-date-menu .relay-edition-chip').textContent,'11.08');
   assert.doesNotMatch(root.querySelector('.relay-detail').textContent,/분류 근거/);
 });
 

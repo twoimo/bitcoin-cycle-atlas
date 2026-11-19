@@ -344,7 +344,7 @@ html[data-embedded] #atlas-boot-shell .atlas-boot-main,body[data-embedded=true] 
 html[data-embedded] #atlas-boot-shell :is(.atlas-boot-side,.atlas-boot-top,.atlas-boot-bottom),body[data-embedded=true] #atlas-boot-shell :is(.atlas-boot-side,.atlas-boot-top,.atlas-boot-bottom){display:none!important}
 
 
-/* Source: editorial-system.css; SHA-256: 880c6fc09902118695ee513babd9e20a6067ee7bee5d010bd093428a458fe900 */
+/* Source: editorial-system.css; SHA-256: b8a15177a42edd71de10e556678aead25da871e0a6eef7c30071ade52281ee75 */
 /* Atlas workbench — measured against TradingView's desktop chart perimeter.
  * Visual roles only. Financial series, data, toolbar ownership and scroll geometry remain with their original components.
  * Direction and skill provenance: design-system/bitcoin-cycle-atlas/MASTER.md.
@@ -770,7 +770,10 @@ body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
     margin-top: 38px;
     padding: 0;
     border: 0;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scrollbar-width: none;
     flex-direction: column;
     align-items: center;
     background: var(--sidebar);

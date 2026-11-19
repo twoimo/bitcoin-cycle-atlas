@@ -1113,7 +1113,12 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     swipe = null;
     if (!Number.isFinite(dx) || Math.abs(dx) < 48 || Math.abs(dx) <= Math.abs(dy)) return;
     const delta = dx < 0 ? 1 : -1;
-    if (kind === 'paper' ? turnPaper(delta) : turnArticle(delta)) noteSwipeTurn();
+    if (kind === 'paper') {
+      turnPaper(delta);
+      noteSwipeTurn();
+    } else if (turnArticle(delta)) {
+      noteSwipeTurn();
+    }
   });
   root.addEventListener('pointercancel', event => {
     if (swipe && (event.pointerId == null || event.pointerId === swipe.id)) swipe = null;

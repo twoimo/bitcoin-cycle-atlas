@@ -300,8 +300,8 @@ export function mountTradeChrome(doc) {
     if (Math.abs(scroller.scrollLeft - page.offsetLeft) > 1) scroller.scrollTo({ left: page.offsetLeft, behavior: 'instant' });
     updateDots();
   });
-  const SPA_VIEWS = { relay: 'relay', assets: 'data', ipo: 'ipo', evidence: 'evidence', chart: 'outlook' };
-  const WORKBENCH_PAGES = { data: 'data', market: 'market-us', scenario: 'scenario', cashflow: 'cashflow', rsi: 'rsi', housing: 'housing', themes: 'themes' };
+  const SPA_VIEWS = { relay: 'relay', assets: 'data', data: 'data', ipo: 'ipo', evidence: 'evidence', market: 'market', 'market-home': 'market', chart: 'outlook' };
+  const WORKBENCH_PAGES = { data: 'data', market: 'market-us', 'market-home': 'market-us', scenario: 'scenario', cashflow: 'cashflow', rsi: 'rsi', housing: 'housing', themes: 'themes' };
   const triggerWorkbenchPage = pageId => {
     const existing = doc.querySelector(`[data-atlas-page="${pageId}"]`);
     if (existing) { existing.click(); return true; }
@@ -323,6 +323,14 @@ export function mountTradeChrome(doc) {
       if (here) {
         event.preventDefault();
         if (chatOpen()) doc.querySelector('[data-chart-chat]')?.click();
+        return;
+      }
+      if (doc.body.dataset.centerTool) {
+        event.preventDefault();
+        if (chatOpen()) doc.querySelector('[data-chart-chat]')?.click();
+        doc.dispatchEvent(new (view.CustomEvent || CustomEvent)('atlas:restore-chart'));
+        doc.querySelector('[data-view="outlook"]')?.click();
+        schedule();
         return;
       }
       const outlook = doc.querySelector('[data-view="outlook"]');

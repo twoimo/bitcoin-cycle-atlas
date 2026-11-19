@@ -19,7 +19,7 @@ const ALIASES = {
   '이더리움': 'ETHUSD',
 };
 
-const NON_CHART_TOOLS = new Set(['data', 'market-us', 'market-kr', 'scenario', 'cashflow', 'ipo', 'evidence', 'relay', 'themes', 'housing']);
+const NON_CHART_TOOLS = new Set(['data', 'market-us', 'market-kr', 'scenario', 'cashflow', 'ipo', 'evidence', 'relay', 'housing']);
 
 export function normalizeQuoteSymbol(symbol) {
   const key = String(symbol ?? '').trim().toUpperCase();
@@ -94,7 +94,8 @@ export function mountLiveQuote(doc = document, { fetchImpl, intervalMs = 10000 }
   function activeSymbol() {
     const centerTool = doc.body?.dataset?.centerTool;
     if (centerTool && NON_CHART_TOOLS.has(centerTool)) return '';
-    if (doc.body?.dataset?.page === 'market') return '';
+    const page = doc.body?.dataset?.page;
+    if (page && page !== 'outlook' && page !== 'compare') return '';
     const symbolEl = doc.querySelector('.workbench-symbol, .symbol-selector-trigger');
     const labelEl = symbolEl?.querySelector?.('.symbol-selector-label');
     const labelText = (labelEl?.textContent || symbolEl?.textContent || '').trim();
@@ -104,7 +105,9 @@ export function mountLiveQuote(doc = document, { fetchImpl, intervalMs = 10000 }
         try { return new URLSearchParams(view.location?.search || '').get('symbol') || ''; }
         catch { return ''; }
       })();
-      return normalizeQuoteSymbol(urlSym || labelText || '');
+      const sym = normalizeQuoteSymbol(urlSym || labelText || '');
+      if (centerTool === 'themes') return sym === 'HYPE' ? sym : '';
+      return sym;
     }
     return normalizeQuoteSymbol(labelText || doc.documentElement.dataset.symbol || 'BTCUSD');
   }

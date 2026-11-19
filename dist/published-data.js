@@ -48,10 +48,12 @@ export function shouldCheckPublishedSnapshot(lastAttempt, now = Date.now(), visi
 export async function replaceStaleSeries(dataset, today, refresh) {
   const last = dataset?.prices?.at?.(-1)?.[0];
   if (typeof last !== 'string' || typeof today !== 'string' || utcDay(today) - utcDay(last) <= 1) return dataset;
+  const now = new Date(`${today}T23:59:59.999Z`);
+  if (!Number.isFinite(now.getTime()) || now.toISOString().slice(0, 10) !== today) return dataset;
   try {
     const next = await refresh();
-    inspectPublishedDataset(next, dataset);
-    if (next.prices.at(-1)[0] < last) return dataset;
+    const inspection = inspectPublishedDataset(next, dataset, { now });
+    if (!inspection.changed) return dataset;
     return next;
   } catch {
     return dataset;

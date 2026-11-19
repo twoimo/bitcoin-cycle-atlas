@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { liveQuoteRequest, parseLiveQuote, formatLivePrice } from '../dist/live-quote.js';
+import { parseHTML } from 'linkedom';
+import { liveQuoteRequest, parseLiveQuote, formatLivePrice, mountLiveQuote } from '../dist/live-quote.js';
 
 test('traded charts map to their exchange sources and non-traded index charts omit quotes', () => {
   assert.match(liveQuoteRequest('BTCUSD').url, /BTC-USD\/ticker$/);
@@ -35,4 +36,31 @@ test('traded charts map to their exchange sources and non-traded index charts om
   assert.throws(() => parseLiveQuote('coinbase', { price: '0', time: '2026-11-19T13:00:00.000Z' }), /positive price/);
   assert.throws(() => parseLiveQuote('hyperliquid', { '@107': '0' }), /positive price/);
   assert.throws(() => parseLiveQuote('yahoo', { chart: { result: [{ meta: {} }] } }), /positive price/);
+});
+
+test('mountLiveQuote serves HYPE on themes workspace and skips non-chart SPA routes', async () => {
+  const { window } = parseHTML('<!doctype html><html><body data-page="outlook" data-center-tool="themes"><div class="bar"><button class="workbench-symbol"><span class="symbol-selector-label">HYPE</span></button></div></body></html>');
+  window.location = new URL('https://atlas.example/?symbol=HYPE');
+  const calls = [];
+  const unmount = mountLiveQuote(window.document, {
+    intervalMs: 60000,
+    fetchImpl: async (url) => {
+      calls.push(url);
+      return { ok: true, json: async () => ({ '@107': '66.932' }) };
+    },
+  });
+  await new Promise(resolve => setTimeout(resolve, 20));
+  assert.equal(calls.length, 1);
+  assert.match(calls[0], /api\.hyperliquid\.xyz\/info$/);
+  const badge = window.document.querySelector('.workbench-live-quote');
+  assert.equal(badge?.hidden, false);
+  assert.equal(badge?.querySelector('b')?.textContent, '66.93 USDC');
+
+  window.document.body.removeAttribute('data-center-tool');
+  window.document.body.dataset.page = 'relay';
+  window.document.querySelector('.symbol-selector-label').textContent = 'BTCUSD';
+  await new Promise(resolve => setTimeout(resolve, 20));
+  assert.equal(calls.length, 1, 'non-chart SPA page must not fetch live quotes');
+  assert.equal(badge?.hidden, true);
+  unmount();
 });

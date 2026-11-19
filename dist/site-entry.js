@@ -1,6 +1,6 @@
 import { initTheme } from './ui/theme.js';
 import { enhanceBootSkeleton } from './loading-surfaces.js?v=1.0.3';
-import { initAtlasShell } from './atlas-shell.js?v=1.36.27';
+import { initAtlasShell } from './atlas-shell.js?v=1.36.28';
 import { canonicalNativeChartEntry, canonicalRetiredPageEntry, canonicalWorkspaceChartEntry, canonicalDefaultChartEntry } from './atlas-navigation.js?v=1.36.3';
 import { mountJournalEntry } from './journal-entry.js?v=1.29.3';
 import { initPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
@@ -23,16 +23,20 @@ if (canonicalEntry) {
   initAtlasShell();
   initPerformanceDiagnostics();
   mountJournalEntry();
-  const requested = new URLSearchParams(location.search).get('symbol')?.toUpperCase();
+  const params = new URLSearchParams(location.search);
+  const requested = params.get('symbol')?.toUpperCase();
+  const reqPage = params.get('page')?.toLowerCase();
   const symbol = ['ETHUSD','MSTR','BMNR'].includes(requested) ? requested : 'BTCUSD';
   document.documentElement.dataset.symbol = symbol;
-  const bootSymbol = document.querySelector('.atlas-boot-symbol');
-  if (bootSymbol) bootSymbol.textContent = symbol;
+  if (!location.pathname.includes('/market-lab/') && (!reqPage || reqPage === 'outlook' || reqPage === 'compare')) {
+    const bootSymbol = document.querySelector('.atlas-boot-symbol');
+    if (bootSymbol) bootSymbol.textContent = symbol;
+  }
   let opened = false, failure = null;
   const retryDelay = [400, 900, 1600, 2500, 3500];
   for (let attempt = 0; attempt < retryDelay.length + 1 && !opened; attempt += 1) {
     try {
-      const specifier = attempt === 0 ? "./app.js?v=1.37.61" : `./app.js?v=1.37.61&retry=${attempt}`;
+      const specifier = attempt === 0 ? "./app.js?v=1.37.62" : `./app.js?v=1.37.62&retry=${attempt}`;
       await import(specifier);
       opened = true;
     } catch (error) {

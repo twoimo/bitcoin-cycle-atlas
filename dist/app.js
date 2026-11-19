@@ -2,7 +2,7 @@ import { atlasResourcePath } from './site-paths.js';
 import { linearScale, logScale, ticks, logTicks, linePath as funnestLinePath, areaPath, segments } from './funnest-research-primitives.bundle.js?v=1.29.0';
 import { buildComparison, getAnchors, getPointAtDay, comparisonToCsv, validateDataset, utcDay } from './cycle-engine.js?v=1.29.0';
 import { fetchLatestDataset } from "./data-source.js?v=1.29.0";
-import { inspectPublishedDataset, replaceStaleSeries, shouldCheckPublishedSnapshot } from "./published-data.js?v=1.37.7";
+import { inspectPublishedDataset, replaceStaleSeries, shouldCheckPublishedSnapshot } from "./published-data.js?v=1.37.8";
 import { createCompareShellHost } from './compare-shell-host.js?v=1.37.8';
 import { parseComparisonUrl, comparisonUrlChanged } from './comparison-url-state.js?v=1.37.8';
 import { mountBtcRefreshStatus } from "./btc-refresh-status.js?v=1.29.0";
@@ -16,7 +16,7 @@ import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29
 // leave a new long-horizon page running the old three-year workbench.
 import { initDailyDataView } from './daily-data-view.js?v=1.32.4';
 import { extendComparisonToLatest } from './asset-comparison-live.js?v=1.0.1';
-import { initRelayRoomView } from './relay-room.js?v=1.37.13';
+import { initRelayRoomView } from './relay-room.js?v=1.37.14';
 import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.32.2';
 import { initIpoView } from './ipo-view.js?v=1.32.2';
 import { initMarketLabView } from './market-lab-view.js?v=1.31.3';

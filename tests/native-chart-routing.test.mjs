@@ -129,4 +129,6 @@ test('workspace root routing preserves explicit non-chart owners and existing fa
     assert.equal(result.document.documentElement.dataset.symbol, 'BTCUSD');
     assert.match(result.modules[0], /^\.\/app\.js\?v=/);
   }
+  const relayBoot = await boot('https://atlas.example/?page=relay');
+  assert.equal(relayBoot.symbolNode.textContent, '');
 });

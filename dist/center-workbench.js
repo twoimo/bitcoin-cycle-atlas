@@ -296,6 +296,7 @@ export function mountCenterWorkbench() {
       }else{restore();window.history.pushState(null,'',originalUrl && !originalUrl.includes('/market-lab/') ? originalUrl : home);}
       return;
     }
+    if(!document.querySelector('.atlas-plot')&&!page.tab&&item?.hasAttribute?.('data-view')&&!['housing','themes'].includes(page.id))return;
     event.preventDefault();event.stopImmediatePropagation();
     // A dashboard route has no chart host to open into, so its navigation must
     // reach the shared shell by URL. Without this the click is swallowed and the
