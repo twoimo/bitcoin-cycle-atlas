@@ -135,39 +135,54 @@ test('render readiness releases the real workspace once and later errors cannot 
   assert.ok(content.every(node => !node.inert));
 });
 
-test('startup failures expose accessible recovery and a late ready event cannot reveal a broken page', () => {
+test('recoverable startup signals keep the skeleton and still reveal a completed page', () => {
   for (const type of ['atlas:boot-error', 'error', 'unhandledrejection']) {
     const { root, content, byId, emit, window, reloads } = bootstrap();
     emit(type, type === 'atlas:boot-error' ? undefined : window);
-    assert.equal(root.dataset.boot, 'error', type);
-    assert.equal(byId.get('atlas-boot-shell').hidden, false);
-    assert.equal(byId.get('atlas-boot-status').getAttribute('aria-busy'), 'false');
-    assert.equal(byId.get('atlas-boot-error').hidden, false);
-    assert.equal(byId.get('atlas-boot-error').getAttribute('role'), 'alert');
-    assert.ok(content.every(node => node.inert));
+    assert.equal(root.dataset.boot, 'loading', type);
+    assert.equal(byId.get('atlas-boot-error').hidden, true, type);
+    assert.equal(byId.get('atlas-boot-status').hidden, false, type);
+    assert.ok(content.every(node => node.inert), type);
+    if (type === 'atlas:boot-error') assert.equal(reloads(), 1, 'a reported module failure reloads once without the connection alert');
     emit('atlas:ready');
-    assert.equal(root.dataset.boot, 'error', 'A failed boot requires a fresh load');
-    assert.ok(content.every(node => node.inert));
-    byId.get('atlas-boot-retry').click();
-    assert.equal(reloads(), 1, 'Recovery remains actionable while the app workspace is inert');
+    assert.equal(root.dataset.boot, 'ready', type);
+    assert.equal(byId.get('atlas-boot-shell').hidden, true, type);
+    assert.ok(content.every(node => !node.inert), type);
   }
 });
 
-test('a silent startup stalls for at most 20 seconds and exposes a working retry without releasing old content', () => {
+test('a price refresh keeps the skeleton through the first 20 seconds and still opens when ready', () => {
+  const f = bootstrap();
+  f.emit('atlas:dataset');
+  f.advance(20_000);
+  assert.equal(f.reloads(), 0);
+  assert.equal(f.root.dataset.boot, 'loading');
+  assert.equal(f.byId.get('atlas-boot-error').hidden, true);
+  f.advance(4_999);
+  assert.equal(f.reloads(), 0);
+  f.advance(1);
+  assert.equal(f.reloads(), 1);
+  f.emit('atlas:ready');
+  assert.equal(f.root.dataset.boot, 'ready');
+  assert.equal(f.byId.get('atlas-boot-shell').hidden, true);
+});
+
+test('a silent startup waits 20 seconds, reloads once, and still opens when the page becomes ready', () => {
   const f = bootstrap();
   f.advance(19_999);
   assert.equal(f.root.dataset.boot, 'loading');
+  assert.equal(f.reloads(), 0);
   f.advance(1);
-  assert.equal(f.root.dataset.boot, 'error');
-  assert.equal(f.byId.get('atlas-boot-status').hidden, true);
-  assert.equal(f.byId.get('atlas-boot-status').getAttribute('aria-busy'), 'false');
-  assert.equal(f.byId.get('atlas-boot-error').hidden, false);
+  assert.equal(f.root.dataset.boot, 'loading');
+  assert.equal(f.byId.get('atlas-boot-error').hidden, true);
+  assert.equal(f.byId.get('atlas-boot-status').getAttribute('aria-busy'), 'true');
   assert.ok(f.content.every(node => node.inert && node.getAttribute('aria-hidden') === 'true'));
+  assert.equal(f.reloads(), 1);
   assert.equal(f.pendingTimers(), 0);
   f.emit('atlas:ready');
-  assert.equal(f.root.dataset.boot, 'error', 'late rendering cannot replace the terminal failure');
-  f.byId.get('atlas-boot-retry').click();
-  assert.equal(f.reloads(), 1);
+  assert.equal(f.root.dataset.boot, 'ready');
+  assert.equal(f.byId.get('atlas-boot-shell').hidden, true);
+  assert.ok(f.content.every(node => !node.inert));
 });
 
 test('a dataset already on the page survives the first deadline and still opens', () => {
@@ -183,42 +198,8 @@ test('a dataset already on the page survives the first deadline and still opens'
   assert.equal(f.pendingTimers(), 0);
 });
 
-test('a dataset that never renders fails on the extended deadline and stays failed', () => {
-  const f = bootstrap();
-  f.emit('atlas:dataset');
-  f.advance(20_000);
-  assert.equal(f.root.dataset.boot, 'loading');
-  f.advance(20_000);
-  assert.equal(f.root.dataset.boot, 'error');
-  assert.equal(f.byId.get('atlas-boot-error').hidden, false);
-  assert.equal(f.pendingTimers(), 0);
-  f.emit('atlas:ready');
-  assert.equal(f.root.dataset.boot, 'error');
-});
-
-test('an explicit boot failure records the caller message', () => {
-  const f = bootstrap();
-  f.document.dispatchEvent(new CustomEvent('atlas:boot-error', { detail: { message: 'workspace exploded' } }));
-  const failure = JSON.parse(f.root.dataset.bootFailure);
-  assert.equal(failure.kind, 'atlas:boot-error');
-  assert.equal(failure.reason, 'workspace exploded');
-  assert.equal(f.root.dataset.boot, 'error');
-});
-
-test('successful and failed startup both cancel the fallback deadline', () => {
-  for (const event of ['atlas:ready', 'atlas:boot-error']) {
-    const f = bootstrap();
-    assert.equal(f.pendingTimers(), 1);
-    f.emit(event);
-    assert.equal(f.pendingTimers(), 0);
-    const terminal = f.root.dataset.boot;
-    f.advance(60_000);
-    assert.equal(f.root.dataset.boot, terminal);
-  }
-});
-
-test('optional resource failures do not abort boot while script and stylesheet failures do', () => {
-  for (const resource of [{ tagName: 'IMG' }, { tagName: 'LINK', rel: 'icon' }, { tagName: 'LINK', rel: 'preload' }, { tagName: 'LINK', rel: 'stylesheet', id: 'atlas-optional-fonts' }]) {
+test('optional resource failures stay quiet, and a required fault reloads once without trapping a later ready', () => {
+  for (const resource of [{ tagName: 'IMG' }, { tagName: 'LINK', rel: 'icon' }, { tagName: 'LINK', rel: 'preload' }, { tagName: 'LINK', rel: 'stylesheet', id: 'atlas-optional-fonts' }, { tagName: 'LINK', rel: 'stylesheet', hasAttribute: name => name === 'data-atlas-optional' }, { tagName: 'SCRIPT', type: 'module', src: '/funnest-research-primitives.bundle.js?v=1.29.0' }]) {
     const { root, byId, emit, resourceError } = bootstrap();
     resourceError(resource);
     assert.equal(root.dataset.boot, 'loading', `${resource.tagName} ${resource.rel ?? ''} is not required to initialize the app`);
@@ -226,23 +207,29 @@ test('optional resource failures do not abort boot while script and stylesheet f
     emit('atlas:ready');
     assert.equal(root.dataset.boot, 'ready', 'A harmless resource failure must not prevent the completed page from opening');
   }
-  for (const resource of [{ tagName: 'SCRIPT', type: 'module' }, { tagName: 'LINK', rel: 'stylesheet' }]) {
-    const { root, byId, resourceError } = bootstrap();
+  for (const resource of [{ tagName: 'SCRIPT', type: 'module', src: '/site-entry.js?v=1.37.41' }, { tagName: 'LINK', rel: 'stylesheet' }]) {
+    const { root, byId, content, emit, resourceError, reloads } = bootstrap();
     resourceError(resource);
-    assert.equal(root.dataset.boot, 'error', `${resource.tagName} ${resource.rel ?? resource.type} is required to initialize the app`);
-    assert.equal(byId.get('atlas-boot-error').hidden, false);
+    assert.equal(root.dataset.boot, 'loading', `${resource.tagName} ${resource.rel ?? resource.type} keeps the skeleton instead of the connection alert`);
+    assert.equal(byId.get('atlas-boot-error').hidden, true);
+    assert.equal(reloads(), 1);
+    assert.ok(content.every(node => node.inert));
+    emit('atlas:ready');
+    assert.equal(root.dataset.boot, 'ready', 'A later ready still opens the page after one reload');
+    assert.equal(byId.get('atlas-boot-error').hidden, true, 'the connection alert stays hidden');
+    assert.equal(byId.get('atlas-boot-shell').hidden, true);
   }
 });
 
-test('stylesheet failure during head parsing reaches recovery while early icon failure remains optional', () => {
+test('stylesheet failure during head parsing reloads once without the connection alert while early icon failure remains optional', () => {
   const failed = bootstrap({ earlyErrors: [{ tagName: 'LINK', rel: 'stylesheet' }] });
-  assert.equal(failed.root.dataset.boot, 'error', 'A failed head stylesheet must survive the later body-controller handoff');
-  assert.equal(failed.byId.get('atlas-boot-error').hidden, false);
+  assert.equal(failed.root.dataset.boot, 'loading', 'A failed head stylesheet keeps the boot skeleton');
+  assert.equal(failed.byId.get('atlas-boot-error').hidden, true);
+  assert.equal(failed.reloads(), 1);
   assert.ok(failed.content.every(node => node.inert));
   failed.emit('atlas:ready');
-  assert.equal(failed.root.dataset.boot, 'error', 'Later rendering cannot override the recorded stylesheet failure');
-  failed.byId.get('atlas-boot-retry').click();
-  assert.equal(failed.reloads(), 1);
+  assert.equal(failed.root.dataset.boot, 'ready', 'A stylesheet fault cannot leave the skeleton up after the page is ready');
+  assert.equal(failed.byId.get('atlas-boot-error').hidden, true);
 
   const optional = bootstrap({ earlyErrors: [{ tagName: 'LINK', rel: 'icon' }, { tagName: 'LINK', rel: 'preload' }, { tagName: 'LINK', rel: 'stylesheet', id: 'atlas-optional-fonts' }] });
   assert.equal(optional.root.dataset.boot, 'loading');
@@ -267,16 +254,17 @@ test('optional webfonts cannot hold essential CSS or page boot behind a network 
 });
 
 
-test('runtime boot diagnostics retain the first actual error event, source and phase', () => {
+test('stray runtime script errors keep the skeleton open without blocking atlas:ready', () => {
+  assert.doesNotMatch(html, /화면을 불러오지 못했습니다|연결을 확인한 뒤 다시 불러와 주세요/);
   const f = bootstrap(); const event = new Event('error');
   Object.defineProperties(event, { message: { value: 'renderer failed' }, error: { value: new Error('renderer failed') }, filename: { value: 'http://127.0.0.1/chart.js' } });
   f.window.dispatchEvent(event);
-  const first = JSON.parse(f.root.dataset.bootFailure);
-  assert.equal(first.kind, 'error'); assert.equal(first.reason, 'renderer failed');
-  assert.equal(first.url, 'http://127.0.0.1/chart.js'); assert.equal(first.phase, 'boot'); assert.equal(first.route, '/');
-  assert.equal(f.root.dataset.boot, 'error'); assert.ok(f.content.every(node => node.inert));
-  f.emit('atlas:ready'); f.emit('error', f.window);
-  assert.deepEqual(JSON.parse(f.root.dataset.bootFailure), first, 'late events cannot overwrite the first causal evidence');
+  assert.equal(f.root.dataset.boot, 'loading');
+  assert.equal(f.byId.get('atlas-boot-error').hidden, true);
+  assert.ok(f.content.every(node => node.inert));
+  f.emit('atlas:ready');
+  assert.equal(f.root.dataset.boot, 'ready');
+  assert.ok(f.content.every(node => !node.inert));
 });
 
 test('a dropped entry script stays on the loading screen and still opens when the next copy is ready', () => {
@@ -300,7 +288,7 @@ test('a dropped entry script stays on the loading screen and still opens when th
   assert.equal(f.byId.get('atlas-boot-error').hidden, true);
 });
 
-test('a dropped module import reloads once and only the next drop shows the connection failure', () => {
+test('a dropped module import reloads once and keeps the skeleton instead of showing a connection failure', () => {
   const f = bootstrap();
   const message = 'Failed to fetch dynamically imported module: http://127.0.0.1/viewport-workspace.js?v=1.36.29&retry=3';
   f.document.dispatchEvent(new CustomEvent('atlas:boot-error', { detail: { message } }));
@@ -308,7 +296,9 @@ test('a dropped module import reloads once and only the next drop shows the conn
   assert.equal(f.byId.get('atlas-boot-error').hidden, true);
   assert.equal(f.reloads(), 1);
   f.document.dispatchEvent(new CustomEvent('atlas:boot-error', { detail: { message } }));
-  assert.equal(f.root.dataset.boot, 'error');
-  assert.equal(f.byId.get('atlas-boot-error').hidden, false);
+  assert.equal(f.root.dataset.boot, 'loading');
+  assert.equal(f.byId.get('atlas-boot-error').hidden, true);
   assert.equal(f.reloads(), 1);
+  f.emit('atlas:ready');
+  assert.equal(f.root.dataset.boot, 'ready');
 });

@@ -29,9 +29,9 @@ body[data-page="market"] .atlas-sidebar{position:fixed;top:0;left:0;width:100%;h
 body[data-page="market"] .workspace{margin-left:0}
 body[data-page="market"] .atlas-side-foot,body[data-page="market"] .atlas-brand div,body[data-page="market"] .atlas-brand small{display:none}
 body[data-page="market"] .atlas-brand{width:36px;height:36px;padding:0;flex:none}
-body[data-page="market"] .atlas-nav{display:flex;flex-direction:row;align-items:center;gap:4px;width:auto;margin:0;overflow:hidden}
-body[data-page="market"] .atlas-nav button{width:auto;height:32px;min-height:32px;padding:0 12px;white-space:nowrap}
-body[data-page="market"] .atlas-nav button>span:last-child:not([data-icon]){position:static;width:auto;height:auto;margin:0;clip-path:none;overflow:visible}
+body[data-page="market"] .atlas-sidebar .atlas-nav{display:flex;flex-direction:row;align-items:center;gap:4px;width:auto;margin:0;overflow:hidden}
+body[data-page="market"] .atlas-sidebar .atlas-nav button{width:auto;height:32px;min-height:32px;padding:0 12px;white-space:nowrap}
+body[data-page="market"] .atlas-sidebar .atlas-nav button>span:last-child:not([data-icon]){position:static;width:auto;height:auto;margin:0;clip-path:none;overflow:visible}
 body[data-page="market"] #market-header-slot{margin-left:auto;display:flex;align-items:center;flex:none}
 body[data-page="market"] #market-header-slot .ml-region{margin-left:0}
 body[data-page="market"] .ml-header{display:none}
@@ -46,9 +46,9 @@ body .atlas-sidebar{position:fixed;top:0;left:0;width:100%;height:48px;min-heigh
 body .workspace{margin-left:0 !important}
 body .atlas-side-foot,body .atlas-brand div,body .atlas-brand small,body .evidence-mobile-heading,body .lab-heading,body .daily-back,body .daily-heading-title,body .ipo-heading-title{display:none !important}
 body .atlas-brand{width:32px;height:32px;padding:0;flex:none}
-body .atlas-nav{display:flex;flex-direction:row;align-items:center;gap:2px;width:auto;margin:0;overflow:hidden}
-body .atlas-nav button{width:auto;height:32px;min-height:32px;padding:0 8px;white-space:nowrap}
-body .atlas-nav button>span:last-child:not([data-icon]){position:static;width:auto;height:auto;margin:0;clip-path:none;overflow:visible}
+body .atlas-sidebar .atlas-nav{display:flex;flex-direction:row;align-items:center;gap:2px;width:auto;margin:0;overflow:hidden}
+body .atlas-sidebar .atlas-nav button{width:auto;height:32px;min-height:32px;padding:0 8px;white-space:nowrap}
+body .atlas-sidebar .atlas-nav button>span:last-child:not([data-icon]){position:static;width:auto;height:auto;margin:0;clip-path:none;overflow:visible}
 body .daily-heading,body .ipo-heading,body .evidence-controls,body .atlas-canvas-heading{position:fixed;top:6px;right:8px;left:auto;height:36px;margin:0;padding:0 0 0 8px;z-index:51;display:flex;align-items:center;gap:8px;background:transparent;border:0;box-shadow:none;width:auto;max-width:calc(100% - 430px);overflow:hidden;white-space:nowrap}
 body .daily-heading-actions,body .ipo-toolbar{display:flex;align-items:center;gap:8px;margin:0}
 body[data-page="market"] .atlas-canvas-heading,body[data-page="market"] .daily-heading,body[data-page="market"] .ipo-heading,body[data-page="market"] .evidence-controls{display:none !important}

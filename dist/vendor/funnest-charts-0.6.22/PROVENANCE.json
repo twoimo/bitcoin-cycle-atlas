@@ -9,13 +9,13 @@
       "source": "src/charts/funnest-chart-runtime.js",
       "sourceSha256": "c8af8f66c44b7721df6c09c3103b444ec22f9e99fa4e59f0d6d4bd711f5a5582",
       "bundle": "dist/funnest-chart-runtime.bundle.js",
-      "bundleSha256": "ba28a48ffeae9ded5b36f90128b539f30acbce6f95035cdf1aaa73f55dccdc08"
+      "bundleSha256": "8952912f9d61abbf201d3041862d4317f372b13c097e0bc864f5262e10785aa5"
     },
     {
       "source": "src/charts/funnest-research-primitives.js",
       "sourceSha256": "a6b34bfe529d6e02fa9f3f8dd77e7636343f272e5a56e24c82cbe6958471ff48",
       "bundle": "dist/funnest-research-primitives.bundle.js",
-      "bundleSha256": "2afe3500a8ea95be6ced98491abb9a6fa99067e699b0b3627504b8be75fac5b4"
+      "bundleSha256": "049bad34b5e65a344dc86535ff6bce2f8eedae0348fb1969d3a76e92a6f69777"
     }
   ],
   "packages": [

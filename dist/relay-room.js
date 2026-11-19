@@ -27,6 +27,19 @@ function dayKey(iso) {
   if (!d) return '';
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
 }
+function shortDate(iso) {
+  const d = kst(iso);
+  if (!d) return '';
+  return `${d.getUTCMonth() + 1}.${String(d.getUTCDate()).padStart(2, '0')}`;
+}
+/** Page and article indexes stay inside a loaded list; moving past either end stays put. */
+export function stepRelayIndex(index, delta, count) {
+  const size = Number.isInteger(count) && count > 0 ? count : 0;
+  if (!size) return 0;
+  const current = Number.isInteger(index) ? index : 0;
+  const move = Number.isInteger(delta) ? delta : 0;
+  return Math.min(size - 1, Math.max(0, current + move));
+}
 function dayHeading(iso) {
   const d = kst(iso);
   if (!d) return '';
@@ -35,7 +48,7 @@ function dayHeading(iso) {
   const year = d.getUTCFullYear() === now.getUTCFullYear() ? '' : `${d.getUTCFullYear()}년 `;
   return `${year}${d.getUTCMonth() + 1}월 ${d.getUTCDate()}일 (${weekday})`;
 }
-function dateRail(entries, timeOf, activeKey) {
+function dateDropdown(entries, timeOf, activeKey, ariaLabel) {
   const chips = [];
   const seen = new Set();
   for (const entry of entries) {
@@ -43,15 +56,16 @@ function dateRail(entries, timeOf, activeKey) {
     const key = dayKey(raw);
     if (!key || seen.has(key)) continue;
     seen.add(key);
-    const d = kst(raw);
-    const label = d ? `${d.getUTCMonth() + 1}.${String(d.getUTCDate()).padStart(2, '0')}` : key.slice(5);
+    const label = shortDate(raw) || key.slice(5);
     chips.push({ key, label, name: dayHeading(raw) || label });
   }
   if (!chips.length) return '';
-  return `<div class="relay-date-rail" aria-label="날짜">${chips.map(chip => {
-    const on = chip.key === activeKey;
-    return `<button type="button" class="relay-day-chip${on ? ' active' : ''}" data-relay-day="${esc(chip.key)}" aria-label="${esc(chip.name)}"${on ? ' aria-current="true"' : ''}>${esc(chip.label)}</button>`;
-  }).join('')}</div>`;
+  const active = chips.find(chip => chip.key === activeKey) || chips[0];
+  const items = chips.map(chip => {
+    const on = chip.key === active.key;
+    return `<button type="button" class="relay-edition-chip${on ? ' active' : ''}" role="option" data-relay-day="${esc(chip.key)}" aria-label="${esc(chip.name)}" aria-selected="${on ? 'true' : 'false'}"${on ? ' aria-current="true"' : ''}>${esc(chip.label)}</button>`;
+  }).join('');
+  return `<div class="relay-edition-menu relay-date-menu"><button type="button" class="relay-edition-trigger" data-relay-action="edition-menu" aria-expanded="false" aria-haspopup="listbox" aria-controls="relay-edition-list"><span class="relay-edition-label">${esc(active.label)}</span>${GLYPH.chevron}</button><div class="relay-edition-list" id="relay-edition-list" role="listbox" aria-label="${esc(ariaLabel)}" hidden>${items}</div></div>`;
 }
 const safeHref = value => {
   const href = typeof value === 'string' ? value.trim() : '';
@@ -448,12 +462,19 @@ function editionLabel(entry) {
   const date = d ? `${d.getUTCMonth() + 1}.${String(d.getUTCDate()).padStart(2, '0')}` : dayLabel(entry?.date);
   return `${date}${entry?.version ? ` ${entry.version}` : ''}`.trim();
 }
-function editionRail(view) {
+function editionCenterStatus(view) {
   const editions = relayEntries(view.room);
   const { index, page: pageIndex } = view.edition;
   const edition = editions[index];
   const pages = Array.isArray(edition?.pages) ? edition.pages : [];
   const page = pages[pageIndex];
+  const status = [page?.label || '', `${pageIndex + 1}/${Math.max(pages.length, 1)}`].filter(Boolean).join(' ');
+  return `<span class="relay-paper-status">${esc(status)}</span>`;
+}
+function editionMenuControl(view) {
+  const editions = relayEntries(view.room);
+  const { index } = view.edition;
+  const edition = editions[index];
   const current = editionLabel(edition);
   const items = view.shown.map(entry => {
     const source = editions.indexOf(entry);
@@ -462,8 +483,7 @@ function editionRail(view) {
     const name = `${entry.version || ''} ${dayLabel(entry.date)}`.trim();
     return `<button type="button" class="relay-edition-chip${active ? ' active' : ''}" role="option" data-edition="${source}" title="${esc(name)}" aria-label="${esc(name)}" aria-selected="${active ? 'true' : 'false'}"${active ? ' aria-current="true"' : ''}>${esc(label)}</button>`;
   }).join('');
-  const status = [page?.label || '', `${pageIndex + 1}/${Math.max(pages.length, 1)}`].filter(Boolean).join(' · ');
-  return `<div class="relay-edition-menu"><button type="button" class="relay-edition-trigger" data-relay-action="edition-menu" aria-expanded="false" aria-haspopup="listbox" aria-controls="relay-edition-list">${esc(current)}${GLYPH.chevron}</button><div class="relay-edition-list" id="relay-edition-list" role="listbox" aria-label="신문 날짜" hidden>${items}</div></div><span class="relay-paper-status">${esc(status)}</span>`;
+  return `<div class="relay-edition-menu"><button type="button" class="relay-edition-trigger" data-relay-action="edition-menu" aria-expanded="false" aria-haspopup="listbox" aria-controls="relay-edition-list"><span class="relay-edition-label">${esc(current)}</span>${GLYPH.chevron}</button><div class="relay-edition-list" id="relay-edition-list" role="listbox" aria-label="신문 날짜" hidden>${items}</div></div>`;
 }
 
 function renderPhase(phase) {
@@ -511,16 +531,27 @@ function renderRoom(view) {
   const query = view.filters.query.trim();
   const note = view.filtering
     ? `<p class="relay-filter-note">${esc([query ? `'${query}'` : '', topic, `${view.shown.length} / ${relayEntries(room).length}건`].filter(Boolean).join(' · '))}</p>` : '';
-  let dates = '';
-  if (!article && room.kind === 'chat' && view.shown.length) dates = dateRail(view.shown, item => item.at, dayKey(view.shown.at(-1).at));
-  else if (!article && room.kind === 'articles' && view.shown.length) dates = dateRail(view.shown, item => item.published_date || item.at, dayKey(view.shown[0].published_date || view.shown[0].at));
-  else if (room.kind === 'editions' && view.edition) dates = editionRail(view);
+  let centerSlot = '', rightControl = '';
+  if (!article && room.kind === 'chat' && view.shown.length) {
+    rightControl = dateDropdown(view.shown, item => item.at, dayKey(view.shown.at(-1).at), '대화 날짜');
+  } else if (!article && room.kind === 'articles' && view.shown.length) {
+    rightControl = dateDropdown(view.shown, item => item.published_date || item.at, dayKey(view.shown[0].published_date || view.shown[0].at), '글 날짜');
+  } else if (article && room.kind === 'articles') {
+    const at = view.shown.findIndex(item => item.id === article.id);
+    if (at >= 0) centerSlot = `<span class="relay-paper-status">${at + 1}/${view.shown.length}</span>`;
+    const stamp = shortDate(article.published_date || article.at);
+    if (stamp) rightControl = `<span class="relay-head-stamp" title="${esc(dayLabel(article.published_date || article.at))}">${esc(stamp)}</span>`;
+  } else if (room.kind === 'editions' && view.edition) {
+    centerSlot = editionCenterStatus(view);
+    rightControl = editionMenuControl(view);
+  }
   const body = room.kind === 'chat' ? chatDetail(room, view, src)
     : room.kind === 'editions' ? editionDetail(room, view, src)
       : article ? articleReader(article, title, src) : articleStream(view, src);
-  return `<header class="relay-detail-head${article ? ' relay-detail-head--reading' : ''}${dates ? ' relay-detail-head--dates' : ''}">${lead}
-      <div class="relay-peer"><h2 id="relay-room-title">${esc(title)}</h2><p class="relay-peer-sub">${esc([room.subtitle, countLabel(room)].filter(Boolean).join(' · '))}</p></div>
-      ${dates}
+  return `<header class="relay-detail-head${article ? ' relay-detail-head--reading' : ''}${rightControl ? ' relay-detail-head--dates' : ''}">
+      <div class="relay-head-lead">${lead}<div class="relay-peer"><h2 id="relay-room-title">${esc(title)}</h2><p class="relay-peer-sub">${esc([room.subtitle, countLabel(room)].filter(Boolean).join(' · '))}</p></div></div>
+      <div class="relay-head-center">${centerSlot}</div>
+      <div class="relay-head-date">${rightControl}</div>
       ${data.generatedAt ? `<span class="relay-peer-updated">최근 갱신 ${esc(hhmm(data.generatedAt))}</span>` : ''}
     </header>${note}
     <div class="relay-detail-body" role="region" aria-label="${esc(title)} 내용" tabindex="0">${body}</div>`;
@@ -962,21 +993,24 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
   }
   function syncDateRail() {
     const body = root.querySelector('.relay-detail-body');
-    const rail = root.querySelector('.relay-date-rail');
+    const rail = root.querySelector('.relay-date-menu, .relay-date-rail');
     const markers = [...(body?.querySelectorAll('[data-day]') || [])];
     if (!body || !rail || !markers.length || !rail.querySelector('[data-relay-day]')) return;
     const edge = body.getBoundingClientRect().top + 12;
     let current = markers[0];
     for (const marker of markers) if (marker.getBoundingClientRect().top <= edge) current = marker;
     const key = current.dataset.day;
-    let changed = false;
+    let changed = false, activeLabel = '';
     for (const chip of rail.querySelectorAll('[data-relay-day]')) {
       const on = chip.dataset.relayDay === key;
       if (chip.classList.contains('active') !== on) changed = true;
       chip.classList.toggle('active', on);
-      if (on) chip.setAttribute('aria-current', 'true');
+      if (chip.hasAttribute('aria-selected')) chip.setAttribute('aria-selected', on ? 'true' : 'false');
+      if (on) { chip.setAttribute('aria-current', 'true'); activeLabel = chip.textContent; }
       else chip.removeAttribute('aria-current');
     }
+    const label = root.querySelector('.relay-date-menu .relay-edition-label');
+    if (label && activeLabel && label.textContent !== activeLabel) label.textContent = activeLabel;
     if (changed) alignDateRail();
   }
   function scrollToDay(key) {
@@ -985,6 +1019,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     if (!body || !target) return;
     body.scrollTop += target.getBoundingClientRect().top - body.getBoundingClientRect().top;
     syncDateRail();
+    closeEditionMenu();
   }
   function viewerDialog() {
     let dialog = root.querySelector('.relay-viewer');
@@ -1037,6 +1072,53 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
   }
   const viewerOpen = () => { const dialog = root.querySelector('.relay-viewer'); return Boolean(dialog?.open || dialog?.hasAttribute('open')); };
 
+  function turnPaper(delta) {
+    if (!view?.edition || view.room?.kind !== 'editions') return false;
+    const pages = relayEntries(view.room)[view.edition.index]?.pages || [];
+    const next = stepRelayIndex(view.edition.page, delta, pages.length);
+    if (next === view.edition.page) return false;
+    setCursor(view.edition.index, next);
+    return true;
+  }
+  function turnArticle(delta) {
+    if (!view?.article || view.room?.kind !== 'articles') return false;
+    const articles = view.shown || [];
+    const current = articles.findIndex(item => item.id === view.article.id);
+    if (current < 0 || !articles.length) return false;
+    const next = stepRelayIndex(current, delta, articles.length);
+    if (next === current) return false;
+    openArticle(articles[next].id);
+    return true;
+  }
+  let swipe = null;
+  let suppressImageClick = false;
+  let suppressImageTimer = null;
+  function noteSwipeTurn() {
+    suppressImageClick = true;
+    if (suppressImageTimer) clearTimeout(suppressImageTimer);
+    suppressImageTimer = setTimeout(() => { suppressImageClick = false; suppressImageTimer = null; }, 300);
+  }
+  root.addEventListener('pointerdown', event => {
+    suppressImageClick = false;
+    if (typeof event.button === 'number' && event.button > 0) return;
+    const surface = event.target?.closest?.('.relay-paper-stage, .relay-reader');
+    if (!surface || !root.contains(surface) || event.target.closest('a, input, textarea, select, .relay-turn')) return;
+    swipe = { id: event.pointerId, x: event.clientX, y: event.clientY, kind: surface.classList.contains('relay-paper-stage') ? 'paper' : 'article' };
+  });
+  root.addEventListener('pointerup', event => {
+    if (!swipe || (swipe.id != null && event.pointerId != null && event.pointerId !== swipe.id)) return;
+    const dx = event.clientX - swipe.x;
+    const dy = event.clientY - swipe.y;
+    const kind = swipe.kind;
+    swipe = null;
+    if (!Number.isFinite(dx) || Math.abs(dx) < 48 || Math.abs(dx) <= Math.abs(dy)) return;
+    const delta = dx < 0 ? 1 : -1;
+    if (kind === 'paper' ? turnPaper(delta) : turnArticle(delta)) noteSwipeTurn();
+  });
+  root.addEventListener('pointercancel', event => {
+    if (swipe && (event.pointerId == null || event.pointerId === swipe.id)) swipe = null;
+  });
+
   root.addEventListener('click', event => {
     const action = event.target.closest('[data-relay-action]')?.dataset.relayAction;
     if (action === 'close-image') { closeViewer(); return; }
@@ -1046,7 +1128,11 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     if (action === 'edition-menu') { toggleEditionMenu(); return; }
     if (!view) return;
     const imageButton = event.target.closest('.relay-msg-image, .relay-paper-open');
-    if (imageButton) { openViewer(imageButton); return; }
+    if (imageButton) {
+      if (suppressImageClick) { suppressImageClick = false; event.preventDefault(); return; }
+      openViewer(imageButton);
+      return;
+    }
     const dayButton = event.target.closest('[data-relay-day]');
     if (dayButton) { scrollToDay(dayButton.dataset.relayDay); return; }
     const roomButton = event.target.closest('[data-room]');
@@ -1062,11 +1148,8 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
       if (field) field.value = '';
       applyFilters(NO_FILTERS, 'query');
     } else if (action === 'article-back' || action === 'room-back') leave();
-    else if (action === 'page-prev') setCursor(view.edition.index, Math.max(0, view.edition.page - 1));
-    else if (action === 'page-next') {
-      const pages = relayEntries(view.room)[view.edition.index].pages?.length || 1;
-      setCursor(view.edition.index, Math.min(pages - 1, view.edition.page + 1));
-    }
+    else if (action === 'page-prev') turnPaper(-1);
+    else if (action === 'page-next') turnPaper(1);
   });
   root.addEventListener('submit', event => {
     const form = event.target.closest('.relay-filter-form');
@@ -1088,8 +1171,13 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     if (event.key === 'Escape' && viewerOpen()) { event.preventDefault(); closeViewer(); return; }
     if (event.key === 'Escape' && root.querySelector('.relay-edition-list:not([hidden])')) { event.preventDefault(); closeEditionMenu(); return; }
     const row = event.target.closest('.relay-room-item');
-    if (row && ROW_KEYS.has(event.key)) moveRowFocus(event, row);
-    else if (event.key === 'Escape') escape(event);
+    if (row && ROW_KEYS.has(event.key)) { moveRowFocus(event, row); return; }
+    if (!viewerOpen() && !event.target?.closest?.('input, textarea, select') && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
+      const delta = event.key === 'ArrowRight' ? 1 : -1;
+      if (view.room?.kind === 'editions') { event.preventDefault(); turnPaper(delta); return; }
+      if (view.room?.kind === 'articles' && view.article) { event.preventDefault(); turnArticle(delta); return; }
+    }
+    if (event.key === 'Escape') escape(event);
   });
   root.addEventListener('scroll', event => {
     if (event.target?.classList?.contains('relay-detail-body')) syncDateRail();

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
-import { inspectPublishedDataset, shouldCheckPublishedSnapshot, PUBLISHED_REFRESH_INTERVAL_MS } from '../dist/published-data.js';
+import { inspectPublishedDataset, replaceStaleSeries, shouldCheckPublishedSnapshot, PUBLISHED_REFRESH_INTERVAL_MS } from '../dist/published-data.js';
 const data=JSON.parse(await readFile(new URL('./fixtures/btc-daily-2026-10-20.json',import.meta.url),'utf8'));
 const now=new Date('2026-10-22T12:00:00Z');
 
@@ -51,6 +51,27 @@ test('published tuple shape and finite completed-day retrieval timestamps are re
     const invalid=structuredClone(data);invalid.meta.retrievedAt=retrievedAt;
     assert.throws(()=>inspectPublishedDataset(invalid,data,{now}),/retrieval time/);
   }
+});
+
+test('a stale series is replaced once before paint, and a failed or older refresh keeps the archive', async () => {
+  const last = data.prices.at(-1)[0];
+  const day = offset => new Date(Date.parse(`${last}T00:00:00Z`) + offset * 86400000).toISOString().slice(0, 10);
+  let calls = 0;
+  assert.equal(await replaceStaleSeries(data, day(1), () => { calls += 1; throw new Error('unused'); }), data);
+  assert.equal(calls, 0);
+  const newer = structuredClone(data);
+  newer.prices = data.prices.concat([[day(1), data.prices.at(-1)[1]]]);
+  newer.meta.lastDate = day(1);
+  newer.meta.count = newer.prices.length;
+  newer.meta.retrievedAt = `${day(2)}T00:00:01.000Z`;
+  assert.equal(await replaceStaleSeries(data, day(3), async () => newer), newer);
+  assert.equal(await replaceStaleSeries(data, day(3), async () => { throw new Error('provider down'); }), data);
+  const older = structuredClone(data);
+  older.prices = data.prices.slice(0, -1);
+  older.meta.lastDate = older.prices.at(-1)[0];
+  older.meta.count = older.prices.length;
+  older.meta.retrievedAt = `${last}T00:00:01.000Z`;
+  assert.equal(await replaceStaleSeries(data, day(3), async () => older), data);
 });
 
 test('visibility and a six-hour throttle bound revalidation even under repeated focus events',()=>{

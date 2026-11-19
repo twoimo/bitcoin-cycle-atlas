@@ -300,28 +300,68 @@ export function mountTradeChrome(doc) {
     if (Math.abs(scroller.scrollLeft - page.offsetLeft) > 1) scroller.scrollTo({ left: page.offsetLeft, behavior: 'instant' });
     updateDots();
   });
+  const SPA_VIEWS = { relay: 'relay', assets: 'data', ipo: 'ipo', evidence: 'evidence', chart: 'outlook' };
+  const WORKBENCH_PAGES = { data: 'data', market: 'market-us', scenario: 'scenario', cashflow: 'cashflow', rsi: 'rsi', housing: 'housing', themes: 'themes' };
+  const triggerWorkbenchPage = pageId => {
+    const existing = doc.querySelector(`[data-atlas-page="${pageId}"]`);
+    if (existing) { existing.click(); return true; }
+    const trigger = doc.createElement('button');
+    trigger.type = 'button';
+    trigger.hidden = true;
+    trigger.dataset.atlasPage = pageId;
+    doc.body.append(trigger);
+    try { trigger.click(); }
+    finally { trigger.remove(); }
+    return true;
+  };
   nav.addEventListener('click', event => {
     const tab = event.target instanceof Element ? event.target.closest('[data-trade-tab]') : null;
     if (!tab) return;
-    if (tab.dataset.tradeTab === 'chart') {
+    const id = tab.dataset.tradeTab;
+    if (id === 'chart') {
       const here = (doc.body.dataset.page === 'outlook' || doc.body.dataset.page === 'compare') && doc.body.dataset.shell === 'chart' && !doc.body.dataset.centerTool;
       if (here) {
         event.preventDefault();
         if (chatOpen()) doc.querySelector('[data-chart-chat]')?.click();
+        return;
+      }
+      const outlook = doc.querySelector('[data-view="outlook"]');
+      if (outlook) {
+        event.preventDefault();
+        if (chatOpen()) doc.querySelector('[data-chart-chat]')?.click();
+        outlook.click();
+        schedule();
       }
       return;
     }
-    if (tab.dataset.tradeTab === 'indicators') {
+    if (Object.hasOwn(WORKBENCH_PAGES, id) && doc.querySelector('.atlas-plot')) {
+      event.preventDefault();
+      if (chatOpen()) doc.querySelector('[data-chart-chat]')?.click();
+      triggerWorkbenchPage(WORKBENCH_PAGES[id]);
+      schedule();
+      return;
+    }
+    if (Object.hasOwn(SPA_VIEWS, id)) {
+      const target = doc.querySelector(`[data-view="${SPA_VIEWS[id]}"]`);
+      if (target) {
+        event.preventDefault();
+        if (chatOpen()) doc.querySelector('[data-chart-chat]')?.click();
+        target.click();
+        schedule();
+        return;
+      }
+    }
+    if (id === 'indicators') {
       event.preventDefault();
       doc.getElementById('atlas-mode-menu')?.click();
       return;
     }
-    if (tab.dataset.tradeTab === 'tools') {
+    if (id === 'tools') {
       event.preventDefault();
       (doc.getElementById('mobile-tools-toggle') || doc.getElementById('chart-tools-menu'))?.click();
       return;
     }
-    if (tab.dataset.tradeTab !== 'chat') return;
+    if (id !== 'chat') return;
     event.preventDefault();
     const opener = doc.querySelector('[data-chart-chat]');
     if (doc.body.dataset.shell === 'chart' && !doc.body.dataset.centerTool && opener) {

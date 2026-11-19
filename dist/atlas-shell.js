@@ -27,13 +27,14 @@ SOFTWARE.
 import {atlasSitePath} from './site-paths.js';
 import { atlasPages, atlasNavigationPages, atlasNavigationId, labPageFromLocation } from './atlas-navigation.js?v=1.36.4';
 import { readShellPreference, writeShellPreference } from './atlas-shell-state.js';
-import { mountCenterWorkbench } from './center-workbench.js?v=1.36.7';
+import { mountCenterWorkbench } from './center-workbench.js?v=1.36.8';
 import { mountShellSlots } from './ui/shell-slots.js?v=1.0.5';
 import { mountPageDescription } from './ui/page-description.js';
 import { createContentShell, CONTENT_SHELL_PAGES } from './content-shell.js?v=1.38.2';
 import { mountAuthAccount } from './auth-account.js?v=1.1.10';
 import { syncChartChat } from './chart-chat.js?v=1.0.2';
-import { mountTradeChrome } from './mobile-trade-chrome.js?v=1.0.13';
+import { mountTradeChrome } from './mobile-trade-chrome.js?v=1.0.14';
+import { mountLiveQuote } from './live-quote.js?v=1.0.0';
 
 // The compact rails keep their Korean names visible for pointer and keyboard
 // users. A body-level tooltip avoids clipping inside the scrolling rail.
@@ -199,5 +200,6 @@ export function initAtlasShell() {
   const removeRailTooltip = mountRailTooltip(document);
   const shellSlots = mountShellSlots(document);
   const removeTradeChrome = mountTradeChrome(document);
-  return () => { pageObserver.disconnect(); workspaceObserver.disconnect(); pageDescription.destroy(); shellSlots.destroy(); contentShell.setActive(false); removeRailTooltip(); removeTradeChrome(); document.removeEventListener('click', routeToService, true); };
+  const removeLiveQuote = mountLiveQuote(document);
+  return () => { pageObserver.disconnect(); workspaceObserver.disconnect(); pageDescription.destroy(); shellSlots.destroy(); contentShell.setActive(false); removeRailTooltip(); removeTradeChrome(); removeLiveQuote(); document.removeEventListener('click', routeToService, true); };
 }

@@ -40,42 +40,43 @@
   </script>
   <!-- Keep the first paint stable while the module graph builds the workbench. -->
   <style id="atlas-boot-style">
-
-html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface);overflow:clip}
+html[data-boot="loading"]{background:var(--boot-surface,#0f0f0f);overflow:clip}
     html:not([data-boot="ready"]) body>:not(#atlas-boot-shell),html:not([data-boot="ready"]) body>:not(#atlas-boot-shell) *{visibility:hidden!important}
-    #atlas-boot-shell{position:fixed;inset:0;z-index:200;display:grid;grid-template-columns:56px minmax(0,1fr) 45px;background:var(--boot-surface);color:var(--boot-ink);font:13px/1.6 var(--boot-font)}
+    #atlas-boot-shell{position:fixed;inset:0;z-index:200;display:grid;grid-template-columns:56px minmax(0,1fr) 45px;background:var(--boot-surface,#0f0f0f);color:var(--boot-ink,#dbdbdb);font:13px/1.6 var(--boot-font,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif)}
     #atlas-boot-shell[hidden],#atlas-boot-shell [hidden]{display:none!important}
     #atlas-boot-shell *{box-sizing:border-box}
-    .atlas-boot-side{display:flex;flex-direction:column;align-items:center;gap:16px;padding:8px 8px;background:var(--boot-surface-2);border-right:4px solid var(--boot-rule)}
-    .atlas-boot-side:last-child{border-right:0;border-left:1px solid var(--boot-rule);padding-top:50px}
-    .atlas-boot-brand{font-size:23px;line-height:25px;color:var(--boot-ink-2);margin-bottom:8px}
+    .atlas-boot-side{display:flex;flex-direction:column;align-items:center;gap:0;width:100%;min-width:0;padding:0;overflow:hidden;background:var(--boot-surface-2,#000000);border-right:4px solid var(--boot-rule,#333333)}
+    .atlas-boot-side:last-child{justify-content:flex-start;gap:2px;padding:42px 0 2px;border-right:0;border-left:0}
+    .atlas-boot-brand{display:grid;place-items:center;width:100%;height:42px;margin:0 0 6px;font-size:22px;line-height:1;color:var(--boot-ink-2,#d8b56d);border-bottom:4px solid var(--boot-rule,#333333)}
     .atlas-boot-main{display:grid;grid-template-rows:42px minmax(0,1fr) 38px;min-width:0;min-height:0}
-    .atlas-boot-top{display:flex;align-items:center;gap:16px;padding:0 12px;background:var(--boot-surface-2);border-bottom:4px solid var(--boot-rule);overflow:hidden}
-    .atlas-boot-symbol{font-size:13px;font-weight:650;letter-spacing:.1px;white-space:nowrap}
-    .atlas-boot-bar{display:block;flex:none;width:64px;height:9px;border-radius:3px;background:var(--boot-surface-3);animation:atlas-boot-pulse 1.8s ease-in-out infinite}
-    .atlas-boot-square{width:17px;height:17px;border-radius:4px}
-    .atlas-boot-wide{width:106px}.atlas-boot-short{width:38px}
-    .atlas-boot-canvas{position:relative;min-height:0;overflow:hidden;background-image:linear-gradient(var(--boot-surface-4) 1px,transparent 1px),linear-gradient(90deg,var(--boot-surface-4) 1px,transparent 1px);background-size:100% 20%,20% 100%}
-    .atlas-boot-readout{display:flex;align-items:center;gap:16px;margin:16px 16px}.atlas-boot-readout .atlas-boot-wide{height:15px}
-    .atlas-boot-indicators{display:grid;gap:16px;margin:24px 16px}
-    .atlas-boot-bottom{display:flex;gap:0;background:var(--boot-surface-2);border-top:1px solid var(--boot-rule)}
+    .atlas-boot-top{display:flex;align-items:center;gap:8px;height:42px;padding:0 8px;background:var(--boot-surface-2,#000000);border-bottom:4px solid var(--boot-rule,#333333);overflow:hidden}
+    .atlas-boot-symbol{font-size:14px;font-weight:600;letter-spacing:0;white-space:nowrap}
+    .atlas-boot-bar{display:block;flex:none;width:64px;height:8px;border-radius:3px;background:var(--boot-surface-3,#303030);animation:atlas-boot-pulse 1.8s ease-in-out infinite}
+    .atlas-boot-square{width:38px;height:38px;border-radius:4px}
+    .atlas-boot-side:last-child .atlas-boot-square{width:44px;height:44px}
+    .atlas-boot-side:last-child .atlas-boot-square:last-child{margin-top:auto}
+    .atlas-boot-wide{width:108px}.atlas-boot-short{width:40px}
+    .atlas-boot-canvas{position:relative;min-height:0;overflow:hidden;background-image:linear-gradient(var(--boot-surface-4,#24242480) 1px,transparent 1px),linear-gradient(90deg,var(--boot-surface-4,#24242480) 1px,transparent 1px);background-size:100% 20%,20% 100%}
+    .atlas-boot-readout{position:absolute;top:8px;left:12px;display:flex;align-items:center;gap:8px;margin:0}.atlas-boot-readout .atlas-boot-wide{height:12px}
+    .atlas-boot-indicators{position:absolute;top:32px;left:12px;display:flex;gap:8px;margin:0}
+    .atlas-boot-bottom{display:flex;align-items:center;height:38px;gap:0;background:var(--boot-surface-2,#000000);border-top:1px solid var(--boot-rule,#333333)}
+    html[data-embedded] #atlas-boot-shell{grid-template-columns:minmax(0,1fr)}
+    html[data-embedded] .atlas-boot-main{grid-template-rows:minmax(0,1fr)}
+    html[data-embedded] #atlas-boot-shell :is(.atlas-boot-side,.atlas-boot-top,.atlas-boot-bottom){display:none!important}
     .atlas-boot-bottom>div{display:flex;align-items:center;gap:12px;padding:0 12px;overflow:hidden}
-    .atlas-boot-bottom>div+div{border-top:1px solid var(--boot-rule)}
+    .atlas-boot-bottom>div+div{border-top:1px solid var(--boot-rule,#333333)}
     .atlas-boot-message{position:absolute;inset:0;display:grid;align-content:center;justify-items:center;padding:24px;text-align:center}
     #atlas-boot-status{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-    #atlas-boot-error{max-width:390px;padding:24px;background:var(--boot-surface-6);border:1px solid var(--boot-rule-2);border-radius:8px;box-shadow:none}
-    #atlas-boot-error strong{display:block;color:var(--boot-ink-4);font-size:15px}
-    #atlas-boot-error p{margin:8px 0 20px;font-size:13px;color:var(--boot-ink-5)}
-    #atlas-boot-retry{min-height:44px;padding:8px 20px;border:1px solid var(--boot-rule-3);border-radius:5px;background:var(--boot-surface-7);color:var(--boot-ink-6);font:inherit;cursor:pointer}
-    #atlas-boot-retry:hover{background:var(--boot-surface-8)}#atlas-boot-retry:focus-visible{outline:2px solid var(--boot-rule-4);outline-offset:3px}
-    .atlas-boot-noscript{padding:20px;max-width:360px;color:var(--boot-ink-7);background:var(--boot-surface-6);border:1px solid var(--boot-rule-2);border-radius:6px}
-    html[data-boot="error"] .atlas-boot-bar{animation:none}
+    .atlas-boot-noscript{padding:20px;max-width:360px;color:var(--boot-ink-7,#dbdbdb);background:var(--boot-surface-6,#191919);border:1px solid var(--boot-rule-2,#333333);border-radius:6px}
     @keyframes atlas-boot-pulse{0%,100%{opacity:.45}50%{opacity:.85}}
-    @media(max-width:1024px){#atlas-boot-shell{grid-template-columns:minmax(0,1fr)}.atlas-boot-side{display:none}.atlas-boot-main{grid-template-rows:48px minmax(0,1fr) 56px}.atlas-boot-top{box-sizing:border-box;height:48px;padding:0 12px;gap:8px;border-bottom:0}.atlas-boot-symbol{font-size:14px}.atlas-boot-top .atlas-boot-wide{display:none}.atlas-boot-bottom{box-sizing:border-box;height:56px;padding:0;border-top:0}.atlas-boot-readout,.atlas-boot-indicators{display:none}.atlas-boot-message{padding:16px}}
-    @media(max-width:1024px) and (max-height:500px){.atlas-boot-main{grid-template-rows:48px minmax(0,1fr) 56px}.atlas-boot-top{height:48px}.atlas-boot-bottom{height:56px}}
+    .atlas-boot-tools{display:none;align-items:center;gap:8px;margin-left:auto}
+    .atlas-boot-tool{width:32px;height:32px;border-radius:4px}
+    @media(max-width:620px){#atlas-boot-shell{grid-template-columns:minmax(0,1fr)}.atlas-boot-side{display:none}.atlas-boot-main{grid-template-rows:calc(48px + env(safe-area-inset-top,0px)) minmax(0,1fr) calc(44px + env(safe-area-inset-bottom,0px))}.atlas-boot-top{padding-top:env(safe-area-inset-top,0px);gap:8px}.atlas-boot-symbol{font-size:13px}.atlas-boot-tools{display:flex}.atlas-boot-top>.atlas-boot-bar{display:none}.atlas-boot-readout,.atlas-boot-indicators{display:none}.atlas-boot-bottom{padding-bottom:env(safe-area-inset-bottom,0px)}.atlas-boot-bottom .atlas-boot-short{width:48px;height:28px;border-radius:4px}.atlas-boot-readout{gap:12px}.atlas-boot-readout .atlas-boot-short{display:none}.atlas-boot-message{padding:16px}}
+    @media(max-width:620px) and (max-height:500px){.atlas-boot-main{grid-template-rows:44px minmax(0,1fr) 44px}.atlas-boot-bottom>div{gap:12px}}
     @media(prefers-reduced-motion:reduce){.atlas-boot-bar{animation:none;opacity:.65}}
     html,body{overflow-x:clip}
   </style>
+  <script id="atlas-embedded-flag">if(/(?:^|[?&])embedded=1(?:&|$)/.test(location.search))document.documentElement.dataset.embedded="true";</script>
   <noscript><style id="atlas-boot-noscript-style">#atlas-boot-status{display:none}.atlas-boot-bar{animation:none}</style></noscript>
   <script id="atlas-boot-resource-script">
     (() => {
@@ -94,7 +95,7 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
     })();
   </script>
   <!-- Fetch modules during CSS loading; execution still belongs to site-entry. -->
-  <link rel="modulepreload" href="../site-entry.js?v=1.37.77">
+  <link rel="modulepreload" href="../site-entry.js?v=1.37.78">
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link id="atlas-optional-fonts" rel="stylesheet" href="../fonts/pretendard/pretendard-variable.css?v=2973bcae8026" media="print">
   <script id="atlas-fonts-script">
@@ -106,9 +107,9 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
     })();
   </script>
   <link rel="stylesheet" href="../styles.css?v=dd920856be9e">
-  <link rel="stylesheet" href="../site-before-shell.css?v=86a14f5d5e92">
-  <link rel="stylesheet" href="../atlas-shell.css?v=1.36.5">
-  <link rel="stylesheet" href="../site-after-shell.css?v=e96aeb8a1118">
+  <link rel="stylesheet" href="../site-before-shell.css?v=4f41b708956b">
+  <link rel="stylesheet" href="../atlas-shell.css?v=1.36.6">
+  <link rel="stylesheet" href="../site-after-shell.css?v=3de8f3e0fd1b">
   <link rel="stylesheet" href="../chart-drawbar.css?v=1.0.3">
 </head>
 <body>
@@ -116,19 +117,19 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
   <div id="atlas-boot-shell">
     <div class="atlas-boot-side" aria-hidden="true"><span class="atlas-boot-brand">₿</span><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i></div>
     <div class="atlas-boot-main">
-      <div class="atlas-boot-top" aria-hidden="true"><span class="atlas-boot-symbol">비트코인</span><i skullet-bar class="atlas-boot-bar atlas-boot-short"></i><i skullet-bar class="atlas-boot-bar atlas-boot-wide"></i><i skullet-bar class="atlas-boot-bar"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i></div>
+      <div class="atlas-boot-top" aria-hidden="true"><span id="atlas-boot-symbol" class="atlas-boot-symbol">비트코인</span><span class="atlas-boot-tools"><i skullet-bar class="atlas-boot-bar atlas-boot-tool"></i><i skullet-bar class="atlas-boot-bar atlas-boot-tool"></i><i skullet-bar class="atlas-boot-bar atlas-boot-tool"></i><i skullet-bar class="atlas-boot-bar atlas-boot-tool"></i><i skullet-bar class="atlas-boot-bar atlas-boot-tool"></i></span><i skullet-bar class="atlas-boot-bar atlas-boot-short"></i><i skullet-bar class="atlas-boot-bar atlas-boot-wide"></i><i skullet-bar class="atlas-boot-bar"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i></div>
       <div class="atlas-boot-canvas">
         <div class="atlas-boot-readout" aria-hidden="true"><i skullet-bar class="atlas-boot-bar atlas-boot-wide"></i><i skullet-bar class="atlas-boot-bar"></i><i skullet-bar class="atlas-boot-bar atlas-boot-short"></i></div>
         <div class="atlas-boot-indicators" aria-hidden="true"><i skullet-bar class="atlas-boot-bar atlas-boot-wide"></i><i skullet-bar class="atlas-boot-bar"></i></div>
         <div class="atlas-boot-message">
           <p id="atlas-boot-status" role="status" aria-live="polite" aria-busy="true">화면과 데이터를 준비하고 있습니다.</p>
-          <div id="atlas-boot-error" role="alert" hidden><strong>화면을 불러오지 못했습니다.</strong><p>연결을 확인한 뒤 다시 불러와 주세요.</p><button id="atlas-boot-retry" type="button">다시 불러오기</button></div>
+          <div id="atlas-boot-error" role="alert" hidden><button id="atlas-boot-retry" type="button" hidden></button></div>
           <noscript><p class="atlas-boot-noscript">이 차트는 JavaScript가 필요합니다. 브라우저에서 JavaScript를 허용한 뒤 다시 불러와 주세요.</p></noscript>
         </div>
       </div>
       <div class="atlas-boot-bottom" aria-hidden="true"><div><i skullet-bar class="atlas-boot-bar atlas-boot-short"></i><i skullet-bar class="atlas-boot-bar atlas-boot-short"></i><i skullet-bar class="atlas-boot-bar atlas-boot-short"></i><i skullet-bar class="atlas-boot-bar atlas-boot-short"></i></div></div>
     </div>
-    <div class="atlas-boot-side" aria-hidden="true"><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i></div>
+    <div class="atlas-boot-side" aria-hidden="true"><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i></div>
   </div>
   <script id="atlas-boot-script">
     (() => {
@@ -136,13 +137,28 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
       const shell = document.getElementById('atlas-boot-shell');
       const status = document.getElementById('atlas-boot-status');
       const error = document.getElementById('atlas-boot-error');
-      const clock = () => (typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now());
-      const startedAt = clock();
+      const bootSymbol = document.getElementById('atlas-boot-symbol');
+      if (bootSymbol) {
+        try {
+          const qs = new URL(location.href).searchParams;
+          const reqPage = qs.get('page');
+          const reqSym = (qs.get('symbol') || '').toUpperCase();
+          const labels = { relay: '리서치 채널', evidence: '리서치 자료', data: '자산 비교', ipo: 'IPO', market: '시장 분석' };
+          if (reqPage && labels[reqPage]) bootSymbol.textContent = labels[reqPage];
+          else if (['ETHUSD', 'MSTR', 'BMNR', 'TQQQ', 'SOXL', '233740'].includes(reqSym)) bootSymbol.textContent = reqSym;
+        } catch { /* Initial fallback label stays safe. */ }
+      }
       let phase = 'boot';
-      for (const name of ['atlas:page-ready', 'atlas:dataset', 'atlas:center-restored'])
-        document.addEventListener(name, () => { phase = name; });
-      let timeout = window.setTimeout(() => fail('timeout'), 20000);
       let deadlineExtended = false;
+      function extendDeadline() {
+        if (deadlineExtended || root.dataset.boot !== 'loading' || timeout == null) return;
+        deadlineExtended = true;
+        window.clearTimeout(timeout);
+        timeout = window.setTimeout(softReload, 25000);
+      }
+      for (const name of ['atlas:page-ready', 'atlas:dataset', 'atlas:center-restored'])
+        document.addEventListener(name, () => { phase = name; extendDeadline(); });
+      let timeout = window.setTimeout(softReload, 20000);
       function detach() {
         window.clearTimeout(timeout);
         timeout = null;
@@ -152,8 +168,8 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
         window.removeEventListener('unhandledrejection', onRejection);
       }
       function ready() {
-        if (root.dataset.boot !== 'loading') return;
-        try { sessionStorage.removeItem('atlas-boot-recover'); } catch { /* A closed store cannot block the open page. */ }
+        if (root.dataset.boot === 'ready') return;
+        try { sessionStorage.removeItem('atlas-boot-recover'); sessionStorage.removeItem('atlas-boot-retry'); } catch { /* A closed store cannot block the open page. */ }
         root.dataset.boot = 'ready';
         status.setAttribute('aria-busy', 'false');
         for (const node of document.querySelectorAll('[data-boot-content]')) {
@@ -161,46 +177,41 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
           node.removeAttribute('aria-hidden');
         }
         shell.hidden = true;
+        error.hidden = true;
         detach();
       }
-      function fail(cause) {
+      function reloadOnce() {
+        let done = false;
+        try { done = sessionStorage.getItem('atlas-boot-retry') === '1'; }
+        catch { done = root.dataset.bootRetry === '1'; }
+        if (done) return;
+        try { sessionStorage.setItem('atlas-boot-retry', '1'); }
+        catch { root.dataset.bootRetry = '1'; }
+        location.reload();
+      }
+      // Keep the layout-matched skeleton visible on slow loads and reload at most once.
+      // Never show a terminal connection error screen; a later ready event still opens the page.
+      function hold() {
         if (root.dataset.boot !== 'loading') return;
-        // A dataset or page event means the document is running. One extra
-        // deadline lets that screen finish; a silent boot still fails on time.
-        if (cause === 'timeout' && phase !== 'boot' && !deadlineExtended) {
-          deadlineExtended = true;
-          timeout = window.setTimeout(() => fail('timeout'), 20000);
-          return;
-        }
-        // Record the first failure before the surface changes. Without this the
-        // flaky first paint only ever reported "boot=error" with no cause.
-        try {
-          const detail = cause instanceof Error
-            ? { kind: 'error', message: String(cause.message || '').slice(0, 200) }
-            : cause && typeof cause === 'object'
-              ? { kind: cause.type || 'event', reason: String(cause.detail?.message ?? cause.detail?.reason ?? cause.reason?.message ?? cause.reason ?? cause.error?.message ?? cause.message ?? '').slice(0, 200),
-                  target: cause.target?.tagName || null, url: String(cause.target?.src || cause.target?.href || cause.filename || '').slice(0, 200) }
-              : { kind: String(cause ?? 'unknown') };
-          root.dataset.bootFailure = JSON.stringify({ phase, elapsedMs: Math.round(clock() - startedAt),
-            route: (location.pathname + location.search).slice(0, 160), ...detail }).slice(0, 900);
-        } catch { /* Diagnostics must never change the boot outcome. */ }
-        root.dataset.boot = 'error';
-        status.setAttribute('aria-busy', 'false');
-        status.hidden = true;
-        error.hidden = false;
-        detach();
+        window.clearTimeout(timeout);
+        timeout = null;
+        reloadOnce();
+      }
+      function softReload() {
+        hold();
       }
       const droppedFetch = value => /Failed to fetch|Load failed|dynamically imported module|Importing a module script failed/i.test(String(value?.message || value || ''));
       let resourceAttempt = 0;
       function failedResource(event) {
         const target = event?.target;
         if (!target || target === window) return null;
-        const stylesheet = target.tagName === 'LINK' && target.id !== 'atlas-optional-fonts' && /(?:^|\s)stylesheet(?:\s|$)/i.test(target.rel || '');
-        if (target.tagName !== 'SCRIPT' && !stylesheet) return null;
+        const optional = target.id === 'atlas-optional-fonts' || target.hasAttribute?.('data-atlas-optional');
+        const stylesheet = target.tagName === 'LINK' && !optional && /(?:^|\s)stylesheet(?:\s|$)/i.test(target.rel || '');
+        const src = String(target.getAttribute?.('src') || target.src || '');
+        const script = target.tagName === 'SCRIPT' && (!src || /(?:^|\/)(?:site-entry|app)\.js(?:[?#]|$)/.test(src));
+        if (!script && !stylesheet) return null;
         return { target, stylesheet, url: String(target.src || target.href || '') };
       }
-      // A dropped connection keeps its failed module address. Ask for a new
-      // address after the burst, and leave the loading screen up until it opens.
       function retryResource(resource) {
         const parent = resource.target.parentNode || document.head || document.body || document.documentElement;
         if (!resource.url || resourceAttempt >= 4 || typeof document.createElement !== 'function' || typeof parent?.appendChild !== 'function') return false;
@@ -210,7 +221,7 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
           if (root.dataset.boot !== 'loading') return;
           let next;
           try { next = new URL(resource.url, location.href); }
-          catch { fail(resource.target); return; }
+          catch { hold(); return; }
           next.searchParams.set('boot-retry', String(attempt));
           const copy = document.createElement(resource.stylesheet ? 'link' : 'script');
           if (resource.stylesheet) { copy.rel = 'stylesheet'; copy.href = next.href; }
@@ -221,33 +232,21 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
       }
       function onError(event) {
         const resource = failedResource(event);
-        if (resource) { if (!retryResource(resource)) fail(event); return; }
-        if (event.target === window) fail(event);
+        if (resource) { if (!retryResource(resource)) hold(); return; }
+        if (event.target === window && phase === 'boot') return;
       }
       function onRejection(event) {
-        if (droppedFetch(event?.reason)) return;
-        fail(event);
+        if (droppedFetch(event?.reason)) hold();
       }
-      function onBootError(event) {
-        if (droppedFetch(event?.detail?.message)) {
-          try {
-            if (sessionStorage.getItem('atlas-boot-recover') !== '1') {
-              sessionStorage.setItem('atlas-boot-recover', '1');
-              location.reload();
-              return;
-            }
-          } catch { /* The visible failure below is the recovery when storage is closed. */ }
-        }
-        fail(event);
+      function onBootError() {
+        hold();
       }
       document.getElementById('atlas-boot-retry').addEventListener('click', () => location.reload());
       document.addEventListener('atlas:ready', ready);
       document.addEventListener('atlas:boot-error', onBootError);
-      // Module/runtime failures block setup; optional images and icons do not.
       window.addEventListener('error', onError, true);
       window.addEventListener('unhandledrejection', onRejection);
-      // Install the regular handler before releasing the early capture.
-      if (window.__atlasTakeEarlyStyleFailure?.()) fail();
+      if (window.__atlasTakeEarlyStyleFailure?.()) hold();
     })();
   </script>
   <a class="skip-link" href="#main" data-boot-content inert aria-hidden="true">본문으로 이동</a>
@@ -424,6 +423,6 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
   <dialog id="method-dialog" aria-labelledby="method-title"><div class="dialog-top"><span class="eyebrow">자료와 방법론</span><button id="close-method" class="icon-button" aria-label="방법론 닫기"><span data-icon="close"></span></button></div><h2 id="method-title">방법론과 출처</h2><p class="dialog-lead">차트의 출발점부터 가격의 정의까지, 비교에 사용한 기준입니다.</p><div id="method-content"></div><button id="method-done" class="primary-button">확인했습니다</button></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <dialog id="evidence-dialog" aria-labelledby="evidence-detail-title"><div class="dialog-top"><span class="eyebrow">근거와 한계</span><button id="evidence-close" class="icon-button" aria-label="자료 상세 닫기"><span data-icon="close"></span></button></div><h2 id="evidence-detail-title"></h2><div id="evidence-detail-body"></div></dialog>
-  <script type="module" src="../site-entry.js?v=1.37.77"></script>
+  <script type="module" src="../site-entry.js?v=1.37.78"></script>
 </body>
 </html>

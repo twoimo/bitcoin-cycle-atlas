@@ -779,7 +779,7 @@ body.atlas-funnest-compact[data-shell="dashboard"][hidden],
 body.atlas-funnest-compact .atlas-dashboard-header[hidden] {
   display: none !important;
 }
-body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > :not(.symbol-selector-trigger):not(.workbench-symbol):not(.atlas-trade-price):not(#workbench-frequency):not(.atlas-trade-indicators):not(.atlas-trade-tools-btn):not(.atlas-trade-draw):not(.atlas-trade-brand):not(.atlas-trade-search):not(.atlas-trade-account):not(.center-workspace-toolbar):not(.lab-toolbar) {
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > :not(.symbol-selector-trigger):not(.workbench-symbol):not(.workbench-live-quote):not(.atlas-trade-price):not(#workbench-frequency):not(.atlas-trade-indicators):not(.atlas-trade-tools-btn):not(.atlas-trade-draw):not(.atlas-trade-brand):not(.atlas-trade-search):not(.atlas-trade-account):not(.center-workspace-toolbar):not(.lab-toolbar) {
   display: none !important;
 }
 /* Center controls share the same 48px row and scroll sideways. */

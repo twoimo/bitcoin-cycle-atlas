@@ -1,26 +1,38 @@
 /* Shared loading geometry. Price paths and invented numeric samples have no place here. */
-:root{--skullet-animation:pulse;--skullet-speed:slow;--skullet-radius:3px}
+:root{--loading-surface:var(--bg,#0b0e14);--loading-border:var(--border-soft,#20252e);--skullet-base:var(--surface-hover,#202a39);--skullet-highlight:#52617433;--skullet-animation:pulse;--skullet-speed:slow;--skullet-radius:3px}
 .atlas-loading-label{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .atlas-skeleton{position:relative;min-width:0;width:100%;height:100%;min-height:220px;overflow:hidden;pointer-events:none;user-select:none}
 .atlas-skeleton-paint,.atlas-skeleton-paint>[skullet-pane],.atlas-skeleton-paint [skullet-loading],.atlas-skeleton-paint [skullet-ghost]{width:100%;height:100%;min-height:inherit}
-.atlas-skeleton-shape{height:100%;min-height:inherit;display:flex;flex-direction:column;padding:16px;gap:20px;box-sizing:border-box}
-.atlas-skeleton-heading,.atlas-skeleton-footer{display:flex;align-items:center;gap:16px;min-height:24px;flex:none}
+.atlas-skeleton-shape{height:100%;min-height:inherit;display:flex;flex-direction:column;padding:0;gap:0;box-sizing:border-box}
+.atlas-skeleton-toolbar,.atlas-skeleton-heading,.atlas-skeleton-footer{display:flex;align-items:center;gap:8px;height:40px;min-height:40px;padding:0 12px;flex:none;border-bottom:1px solid var(--loading-border);box-sizing:border-box}
+.atlas-skeleton-chart{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 66px;grid-template-rows:minmax(0,1fr) 28px}
+.atlas-skeleton-chart>.atlas-skeleton-plot{grid-column:1;grid-row:1;min-height:0;border-radius:0}
+.atlas-skeleton-y-axis{grid-column:2;grid-row:1;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;padding:12px 8px;box-sizing:border-box}
+.atlas-skeleton-x-axis{grid-column:1;grid-row:2;display:flex;align-items:center;justify-content:space-between;padding:0 12px;box-sizing:border-box}
+.atlas-skeleton-scores{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px;flex:none}
+.atlas-skeleton-scores>[skullet-block]{height:112px;border-radius:4px;background:var(--skullet-base);opacity:.55}
+.atlas-skeleton-stack{display:flex;flex-direction:column;gap:8px;flex:1;min-height:0;padding:0 12px 12px;box-sizing:border-box}
+.atlas-skeleton-stack>[skullet-block]{flex:1;min-height:72px;border-radius:4px;background:var(--skullet-base);opacity:.4}
+.atlas-skeleton-split{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:12px;flex:1;min-height:0;padding:12px;box-sizing:border-box}
+.atlas-skeleton-table-head{display:flex;align-items:center;gap:12px;min-height:36px;padding:0 12px;border-bottom:1px solid var(--loading-border);box-sizing:border-box}
 .atlas-skeleton [skullet-bar]{background:var(--skullet-base);border-radius:var(--skullet-radius);flex:none;max-width:100%}
 .atlas-skeleton-paint:not([data-enhanced]) [skullet-bar],.atlas-inline-loading [skullet-bar]{animation:atlas-skeleton-pulse 2.4s ease-in-out infinite}
 .atlas-skeleton-plot{flex:1;min-height:120px;border-radius:3px;background:var(--skullet-base);opacity:.32}
-.atlas-skeleton-oscillator{height:24%;min-height:64px;border-radius:3px;background:var(--skullet-base);opacity:.32}
+.atlas-skeleton-oscillator{height:92px;border-radius:3px;background:var(--skullet-base);opacity:.26}
 .atlas-skeleton-footer{margin-top:auto}
 .atlas-skeleton-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
 .atlas-skeleton-fields>div{display:grid;gap:12px}
-.atlas-skeleton-rows{display:flex;flex:1;flex-direction:column;justify-content:space-around;gap:20px}
-.atlas-skeleton-row{display:flex;align-items:center;gap:24px;min-height:28px;border-bottom:1px solid var(--loading-border);padding-bottom:12px;overflow:hidden}
+.atlas-skeleton-rows{display:flex;flex:1;flex-direction:column;justify-content:flex-start;gap:0;min-height:0}
+.atlas-skeleton-row{display:flex;align-items:center;gap:12px;min-height:40px;padding:0 12px;border-bottom:1px solid var(--loading-border);box-sizing:border-box;overflow:hidden}
 .atlas-skeleton-row>[skullet-bar]{flex:0 1 auto}
 .atlas-has-skeleton{position:relative;min-height:240px}
 .atlas-has-skeleton>:not(.atlas-skeleton){visibility:hidden!important;pointer-events:none!important}
-.atlas-has-skeleton>.atlas-skeleton{position:absolute;inset:0;z-index:1;background:var(--loading-surface)}
+.atlas-has-skeleton>.atlas-skeleton,.atlas-has-skeleton>.atlas-center-loading{position:absolute;inset:0;z-index:20}
 .atlas-inline-loading{height:3px;position:relative;flex:none;overflow:hidden;width:100%}
 .atlas-inline-loading>[skullet-bar]{display:block;width:40%;height:3px;background:var(--skullet-base)}
 .atlas-center-loading{position:absolute;inset:0;z-index:21;background:var(--loading-surface);min-height:0}
+.atlas-center-loading .atlas-skeleton{opacity:0;animation:atlas-center-skeleton-in 0s linear 200ms forwards}
+@keyframes atlas-center-skeleton-in{to{opacity:1}}
 .atlas-center-frame[data-center-status=loading],.atlas-center-frame[data-center-status=error],.center-workspace-toolbar[data-center-status=loading],.center-workspace-toolbar[data-center-status=error]{visibility:hidden;pointer-events:none}
 .atlas-center-error{height:100%;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;box-sizing:border-box;text-align:center;color:var(--text);overflow:auto}
 .atlas-center-error strong{font-size:16px}
@@ -35,29 +47,29 @@
 .atlas-boot-bar[data-skullet-boot]{animation:none}
 .atlas-boot-canvas.atlas-has-skeleton{min-height:0}
 @keyframes atlas-skeleton-pulse{0%,100%{opacity:.45}50%{opacity:.85}}
-@media(max-width:620px){.atlas-skeleton-shape{padding:12px;gap:16px}.atlas-skeleton-heading{gap:12px}.atlas-skeleton-heading>[skullet-bar]:last-child{display:none}.atlas-skeleton-fields{gap:12px}.atlas-skeleton-row{gap:16px}.atlas-skeleton-row>[skullet-bar]:nth-child(n+4){display:none}}
-@media(prefers-reduced-motion:reduce){.atlas-skeleton *,.atlas-inline-loading *{animation:none!important;transition:none!important}}
+@media(max-width:620px){.atlas-skeleton-toolbar{gap:8px;padding-inline:8px}.atlas-skeleton-scores{gap:8px;padding:8px}.atlas-skeleton-scores>[skullet-block]{height:96px}.atlas-skeleton-split{grid-template-columns:minmax(0,1fr);padding:8px}.atlas-skeleton-row{gap:8px;padding-inline:8px}.atlas-skeleton-row>[skullet-bar]:nth-child(n+4),.atlas-skeleton-table-head>[skullet-bar]:nth-child(n+4){display:none}.atlas-skeleton-chart{grid-template-columns:minmax(0,1fr) 56px}}
+@media(prefers-reduced-motion:reduce){.atlas-skeleton *,.atlas-inline-loading *,.atlas-center-loading .atlas-skeleton{animation:none!important;transition:none!important;opacity:1}}
 
 body[data-center-tool] .workspace-toast{display:none!important}
 .atlas-plot[aria-busy=true]::after{content:"";position:absolute;top:0;left:0;width:36%;height:3px;background:var(--skullet-base);animation:atlas-skeleton-pulse 2.4s ease-in-out infinite;pointer-events:none}
 @media(prefers-reduced-motion:reduce){.atlas-plot[aria-busy=true]::after{animation:none}}
 
 .atlas-skeleton[data-atlas-skeleton=rsi] .atlas-skeleton-shape{padding:0;gap:0;min-height:0}
-.atlas-skeleton[data-atlas-skeleton=rsi] .atlas-skeleton-heading{min-height:44px;padding:4px 12px;box-sizing:border-box;border-bottom:1px solid var(--border-soft)}
+.atlas-skeleton[data-atlas-skeleton=rsi] .atlas-skeleton-toolbar{height:40px;min-height:40px;border-bottom:1px solid var(--border-soft)}
 .atlas-skeleton-rsi-meta{display:flex;align-items:center;gap:12px;height:24px;padding:0 12px;overflow:hidden;flex:none}
 .atlas-skeleton-rsi-panels{flex:1;min-height:0;position:relative}
 .atlas-skeleton-rsi-panels>.atlas-skeleton-plot,.atlas-skeleton-rsi-panels>.atlas-skeleton-oscillator{position:absolute;left:var(--atlas-rsi-left);right:var(--atlas-rsi-right);height:auto;min-height:0}
 .atlas-skeleton-rsi-panels>.atlas-skeleton-plot{top:var(--atlas-rsi-top);height:calc(var(--atlas-rsi-price-bottom) - var(--atlas-rsi-top))}
 .atlas-skeleton-rsi-panels>.atlas-skeleton-oscillator{top:calc(var(--atlas-rsi-price-bottom) + var(--atlas-rsi-gap));bottom:var(--atlas-rsi-bottom)}
-@media(max-width:620px){.atlas-skeleton[data-atlas-skeleton=rsi] .atlas-skeleton-heading{height:48px}}
+@media(max-width:620px){.atlas-skeleton[data-atlas-skeleton=rsi] .atlas-skeleton-toolbar{height:48px;min-height:48px}}
 
 .atlas-skeleton-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr));gap:4px;flex:1;min-height:180px}
 .atlas-skeleton-calendar>[skullet-block]{background:var(--skullet-base);color:transparent;opacity:.55;border-radius:3px}
 .atlas-boot-canvas>.atlas-skeleton,.atlas-chart-pending>.atlas-skeleton,.atlas-center-loading>.atlas-skeleton{height:100%;min-height:0}
-@media(max-height:740px){.atlas-skeleton,.atlas-skeleton-plot,.atlas-skeleton-calendar,.atlas-has-skeleton{min-height:0}.atlas-skeleton-rows{gap:8px}.atlas-skeleton-row{min-height:0;padding-bottom:6px}}
-@media(max-width:640px){.atlas-skeleton-calendar{gap:0;min-height:0}.atlas-skeleton-calendar>[skullet-block]{border-radius:0}.atlas-skeleton-shape{padding:8px 8px 0;gap:8px}}
+@media(max-height:740px){.atlas-skeleton,.atlas-skeleton-plot,.atlas-skeleton-calendar,.atlas-has-skeleton{min-height:0}.atlas-skeleton-rows{gap:0}.atlas-skeleton-row{min-height:32px;padding-bottom:0}}
+@media(max-width:640px){.atlas-skeleton-calendar{gap:0;min-height:0}.atlas-skeleton-calendar>[skullet-block]{border-radius:0}}
 
 /* A nested page has a center only; the parent already owns all four tool rails. */
-body[data-embedded=true] #atlas-boot-shell{grid-template-columns:minmax(0,1fr)}
-body[data-embedded=true] #atlas-boot-shell .atlas-boot-main{grid-template-rows:minmax(0,1fr)}
-body[data-embedded=true] #atlas-boot-shell :is(.atlas-boot-side,.atlas-boot-top,.atlas-boot-bottom){display:none!important}
+html[data-embedded] #atlas-boot-shell,body[data-embedded=true] #atlas-boot-shell{grid-template-columns:minmax(0,1fr)}
+html[data-embedded] #atlas-boot-shell .atlas-boot-main,body[data-embedded=true] #atlas-boot-shell .atlas-boot-main{grid-template-rows:minmax(0,1fr)}
+html[data-embedded] #atlas-boot-shell :is(.atlas-boot-side,.atlas-boot-top,.atlas-boot-bottom),body[data-embedded=true] #atlas-boot-shell :is(.atlas-boot-side,.atlas-boot-top,.atlas-boot-bottom){display:none!important}

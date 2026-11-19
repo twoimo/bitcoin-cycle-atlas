@@ -64,6 +64,9 @@
 .atlas-chart-stage{height:auto;min-height:0}
 .atlas-canvas-heading{height:40px;min-height:40px;box-sizing:border-box;display:flex;align-items:center;gap:4px;padding:2px 4px;flex:none;background:var(--chrome);border-bottom:1px solid var(--chrome-border)}
 .workbench-symbol{font-size:13px;font-weight:650;letter-spacing:.1px;padding:0 12px 0 4px;color:var(--chart-details-panel-ink-14);white-space:nowrap;border-right:1px solid var(--chrome-border);line-height:24px}
+.workbench-live-quote{display:inline-flex;align-items:baseline;gap:6px;margin:0 8px 0 4px;color:var(--chart-details-panel-ink-14);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+.workbench-live-quote[hidden]{display:none}
+.workbench-live-quote small{color:var(--chart-details-panel-ink-8,#8e9aac);font-size:11px;font-weight:400}
 .workbench-icon,.workbench-rail .atlas-nav button{display:flex;align-items:center;justify-content:center;gap:4px;flex:none;min-height:32px;width:32px;height:32px;margin:0;padding:8px;border:0;border-radius:3px;box-sizing:border-box;background:transparent;color:var(--chart-bottom-bar-ink);cursor:pointer;position:relative}
 .workbench-icon .icon{width:19px;height:19px;flex:none;pointer-events:none}
 .workbench-icon:hover,.workbench-ranges button:hover,.workbench-axis button:hover,.workbench-update:hover{background:var(--chart-details-panel-surface-6);color:var(--chart-details-panel-ink-15)}

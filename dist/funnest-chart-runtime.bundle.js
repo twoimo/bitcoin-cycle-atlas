@@ -1,4 +1,4 @@
-// ../../../Users/twoimo/Documents/projects/bitcoin-cycle-atlas/node_modules/@funnest/charts/dist/index.js
+// node_modules/@funnest/charts/dist/index.js
 var Emitter = class {
   listeners = /* @__PURE__ */ new Map();
   on(event, listener) {

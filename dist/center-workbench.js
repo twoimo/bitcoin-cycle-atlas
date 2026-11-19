@@ -3,7 +3,7 @@ import { atlasPages,atlasNavigationId,atlasPageHref,labPageFromLocation,isWorksp
 import { workspaceInstrument } from './workspace-instruments.js';
 import { mountLegacyWorkspaceToolbar } from './legacy-workspace-toolbar.js';
 import { createChartWorkbenchControls,nativeChartControlSelector } from './rsi-workbench-controls.js?v=1.36.1';
-import { mountCenterLoading } from './ui/center-loading.js';
+import { mountCenterLoading } from './ui/center-loading.js?v=1.0.3';
 
 // Chromium retargets activeElement to an iframe when a child control owns
 // focus, without matching :focus or :focus-within on that iframe. Reflect the
@@ -226,7 +226,7 @@ export function mountCenterWorkbench() {
       if(workspaceInstrument(chartUrl.searchParams.get('symbol')))chartUrl.searchParams.delete('symbol');
       if(chartUrl.searchParams.get('page')==='market')chartUrl.searchParams.delete('page');
       originalUrl=chartUrl.href;originalTitle=document.title;
-      const headingChildren=[...document.querySelector('.atlas-canvas-heading')?.children || []].filter(node=>!node.matches('.symbol-selector-trigger,.mobile-workbench-button,.center-workspace-toolbar,.auth-account'));
+      const headingChildren=[...document.querySelector('.atlas-canvas-heading')?.children || []].filter(node=>!node.matches('.symbol-selector-trigger,.workbench-live-quote,.mobile-workbench-button,.center-workspace-toolbar,.auth-account'));
       for(const node of new Set([...plot.children,...headingChildren,...document.querySelectorAll('.atlas-canvas-heading button:not(.symbol-selector-trigger):not(.mobile-workbench-button):not([data-auth-action]),.atlas-canvas-heading select,#atlas-cycle-panel,.workbench-tools,.workbench-tools button,.chart-navigation button,.workbench-detail-tools,.workbench-detail-tools button,.workbench-help,.mobile-extra-actions,.mobile-extra-actions button,.workbench-bottom-bar,.workbench-bottom-bar button,.workbench-bottom-bar select')])) {
         if(node.classList.contains('atlas-center-frame')||node.closest('.center-workspace-toolbar'))continue;
         const nativeControl=node.closest('.atlas-canvas-heading')&&node.matches(nativeChartControlSelector);
@@ -246,7 +246,7 @@ export function mountCenterWorkbench() {
     const focusOwner=frame,focusEpoch=epoch;
     frameFocus=mountCenterFrameFocus({frame:focusOwner,epoch:focusEpoch,isActive:()=>frame===focusOwner&&!!activePage&&epoch===focusEpoch});
     loading=mountCenterLoading({frame:focusOwner,plot,toolbar,
-      kind:page.id==='rsi'?'rsi':page.tab==='diagnosis'?'diagnosis':page.id==='data'?'table':'chart',
+      kind:page.id==='rsi'?'rsi':page.tab==='diagnosis'?'diagnosis':page.id==='data'?'table':page.id==='scenario'?'scenario':page.id==='cashflow'?'cashflow':page.id==='ipo'?'calendar':'chart',
       label:isWorkspaceChart(page)?`${activeSymbol} 가격 차트`:page.title,
       isCurrent:()=>frame===focusOwner&&activePage?.id===page.id&&epoch===focusEpoch,
       documentReady:!page.tab,

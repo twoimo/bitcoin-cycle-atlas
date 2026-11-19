@@ -56,10 +56,10 @@ body[data-sidebar=compact][data-shell=dashboard] .atlas-sidebar :is(.atlas-brand
   body[data-shell=chart] .workspace{margin-left:44px!important;margin-top:0;width:calc(100% - 44px);height:100dvh}
   body[data-shell=chart] .atlas-sidebar .atlas-brand{width:36px;height:36px;padding:0;flex:none}
   body[data-shell=chart] .atlas-canvas-heading{position:relative;left:auto;right:auto;top:auto;width:100%;max-width:none;height:44px;min-height:44px;padding:0 8px;z-index:30;overflow-x:auto;overflow-y:hidden;flex:none;gap:4px;background:var(--bg);border-bottom:1px solid var(--border)}
-  body[data-shell=chart] .workbench-rail{width:38px;border-left:1px solid var(--border);background:var(--bg);overflow-x:hidden;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:none}
-  body[data-shell=chart] .workbench-rail .atlas-nav{display:flex;flex-direction:column;gap:4px;align-items:center;width:100%;margin:8px 0;overflow:visible}
-  body[data-shell=chart] .workbench-rail .atlas-nav :is(a,button){display:grid;place-items:center;width:34px;min-height:34px;height:34px;padding:8px;overflow:hidden}
-  body[data-shell=chart] .workbench-rail .atlas-nav :is(a,button)>span:last-child:not([data-icon]){position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden;margin:0}
+  body[data-shell=chart] .workbench-rail{width:45px;min-width:0;max-width:45px;flex:0 0 45px;display:flex;flex-direction:column;align-items:center;border-left:1px solid var(--border);background:var(--bg);overflow:hidden;overscroll-behavior-y:contain;scrollbar-width:none}
+  body[data-shell=chart] .workbench-rail :is(.atlas-nav,.workbench-detail-tools){display:flex;flex-direction:column;flex-wrap:nowrap;gap:4px;align-items:center;width:100%;max-width:100%;margin:8px 0;overflow:hidden}
+  body[data-shell=chart] .workbench-rail :is(a,button){display:grid;place-items:center;width:34px;max-width:34px;min-height:34px;height:34px;padding:8px;overflow:hidden}
+  body[data-shell=chart] .workbench-rail :is(a,button)>span:last-child:not([data-icon]){position:absolute!important;display:block!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important}
 }
 @media(max-width:1000px){
   .atlas-dashboard-header>.atlas-sidebar-toggle{display:none}
@@ -214,6 +214,7 @@ body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top]>.shell-instr
 body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top]>.workspace-history-controls{margin-left:0}
 body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top]>.shell-history-slot{width:76px}
 body[data-shell=chart] .workbench-rail[data-shell-region=right]{flex:0 0 45px;width:45px;box-sizing:border-box}
+body[data-shell=chart] .workbench-rail [data-atlas-page="market-us"]{display:none}
 body[data-shell=chart] .workbench-rail[data-shell-region=right] [data-shell-owner=right]{width:44px;min-width:44px;max-width:44px;box-sizing:border-box}
 body[data-shell=chart] [data-disabled-reason]{cursor:not-allowed}
 @media(max-width:620px){

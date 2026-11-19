@@ -2,7 +2,7 @@ import { atlasResourcePath } from './site-paths.js';
 import { linearScale, logScale, ticks, logTicks, linePath as funnestLinePath, areaPath, segments } from './funnest-research-primitives.bundle.js?v=1.29.0';
 import { buildComparison, getAnchors, getPointAtDay, comparisonToCsv, validateDataset, utcDay } from './cycle-engine.js?v=1.29.0';
 import { fetchLatestDataset } from "./data-source.js?v=1.29.0";
-import { inspectPublishedDataset, shouldCheckPublishedSnapshot } from "./published-data.js?v=1.29.0";
+import { inspectPublishedDataset, replaceStaleSeries, shouldCheckPublishedSnapshot } from "./published-data.js?v=1.37.7";
 import { createCompareShellHost } from './compare-shell-host.js?v=1.37.8';
 import { parseComparisonUrl, comparisonUrlChanged } from './comparison-url-state.js?v=1.37.8';
 import { mountBtcRefreshStatus } from "./btc-refresh-status.js?v=1.29.0";
@@ -14,9 +14,9 @@ import { renderPeakView } from './peak-view.js?v=1.29.0';
 import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29.0';
 // Changed release modules use a versioned URL so a cached v1.5 module cannot
 // leave a new long-horizon page running the old three-year workbench.
-import { initDailyDataView } from './daily-data-view.js?v=1.32.3';
+import { initDailyDataView } from './daily-data-view.js?v=1.32.4';
 import { extendComparisonToLatest } from './asset-comparison-live.js?v=1.0.1';
-import { initRelayRoomView } from './relay-room.js?v=1.37.12';
+import { initRelayRoomView } from './relay-room.js?v=1.37.13';
 import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.32.2';
 import { initIpoView } from './ipo-view.js?v=1.32.2';
 import { initMarketLabView } from './market-lab-view.js?v=1.31.3';
@@ -218,28 +218,22 @@ let publishedComparison = null;
 let comparisonExtend = null;
 function currentComparison() {
   if (publishedComparison) {
-    if (comparisonExtend) return Promise.resolve(publishedComparison);
+    if (comparisonExtend) return comparisonExtend;
     const base = publishedComparison;
-    const pending = extendComparisonToLatest(base).then(next => next || base).catch(() => base);
+    const pending = extendComparisonToLatest(base)
+      .then(next => { if (next) publishedComparison = next; return publishedComparison; })
+      .catch(() => publishedComparison);
     comparisonExtend = pending.finally(() => { comparisonExtend = null; });
-    return pending.then(next => { publishedComparison = next; return next; });
+    return pending;
   }
-  return loadAssetComparison().then(archive => {
-    const pending = extendComparisonToLatest(archive).then(next => next || archive).catch(() => archive);
-    comparisonExtend = pending.finally(() => { comparisonExtend = null; });
-    return Promise.race([
-      pending.then(next => ({ settled: true, next })),
-      new Promise(resolve => setTimeout(() => resolve({ settled: false, next: archive }), 1200)),
-    ]).then(({ settled, next }) => {
-      publishedComparison = next || archive;
-      if (!settled) void pending.then(later => {
-        if (!later || later === publishedComparison) return;
-        publishedComparison = later;
-        if (state.view === 'data') void dailyDataController.replaceDataset(later);
-      });
-      return publishedComparison;
-    });
-  });
+  if (comparisonExtend) return comparisonExtend;
+  const pending = loadAssetComparison().then(archive =>
+    extendComparisonToLatest(archive)
+      .then(next => { publishedComparison = next || archive; return publishedComparison; })
+      .catch(() => { publishedComparison = archive; return publishedComparison; })
+  );
+  comparisonExtend = pending.finally(() => { comparisonExtend = null; });
+  return pending;
 }
 const dailyDataController = initDailyDataView({
   root: $('#data-view'), download, toast,
@@ -669,8 +663,9 @@ function ensureDataset() {
 async function init() {
   try {
     let bundled = null;
+    let embedded = null;
     try {
-      const embedded = document.getElementById('embedded-btc-data');
+      embedded = document.getElementById('embedded-btc-data');
       if (embedded) bundled = JSON.parse(embedded.textContent);
       else {
         const response = await fetch(atlasResourcePath('data/btc-daily.json'), { signal: AbortSignal.timeout(15000) });
@@ -688,11 +683,22 @@ async function init() {
       if (cached && inspectPublishedDataset(cached, bundled).changed) dataset = cached;
     } catch { /* An unusable cache cannot replace a verified archive. */ }
     if (!dataset) throw new Error('Bundled data unavailable');
+    const today = new Date().toISOString().slice(0, 10);
+    if (!embedded && utcDay(today) - utcDay(dataset.prices.at(-1)[0]) > 1) {
+      document.dispatchEvent(new CustomEvent('atlas:dataset', { detail: { pending: true, latestObservationDate: dataset.prices.at(-1)[0] } }));
+      btcRefreshStatus.update({ phase: 'refreshing', asOf: dataset.prices.at(-1)[0] });
+      const next = await replaceStaleSeries(dataset, today, () => fetchLatestDataset({ signal: AbortSignal.timeout(22000) }));
+      if (next !== dataset) {
+        dataset = next;
+        try { localStorage.setItem('btc-cycles-daily-v1', JSON.stringify(dataset)); } catch { /* Storage is optional. */ }
+        btcRefreshStatus.update({ phase: 'checked', asOf: dataset.prices.at(-1)[0] });
+      } else {
+        btcRefreshStatus.update({ phase: 'failed', asOf: dataset.prices.at(-1)[0] });
+      }
+    }
     state.dataset = dataset;
     render();
     publishComparisonReadiness(true);
-    const today = new Date().toISOString().slice(0, 10);
-    if (utcDay(today) - utcDay(state.dataset.prices.at(-1)[0]) > 1) refreshData();
   } catch (error) {
     console.error('Initial dataset or page setup failed', error);
     publishComparisonReadiness(false);

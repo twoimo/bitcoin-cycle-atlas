@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { parseHTML } from 'linkedom';
-import { initRelayRoomView, createMemoryRelayAddress } from '../dist/relay-room.js';
+import { initRelayRoomView, createMemoryRelayAddress, stepRelayIndex } from '../dist/relay-room.js';
 
 const sample = () => ({ generated_at: '2026-11-13T12:00:00+09:00', rooms: [
   { id: 'telegram', kind: 'chat', title: '소수의견(26년 4분기)', subtitle: 'Telegram', messages: [
@@ -373,4 +374,57 @@ test('a document that refuses URL writes still opens rooms and never pops histor
   click(root, window, '[data-relay-action="article-back"]');
   assert.equal(root.querySelectorAll('.relay-reader').length, 0);
   assert.deepEqual([history.backs(), history.entries.length, history.url()], [0, 1, 'https://atlas.test/?page=relay']);
+});
+
+test('relay aligns telegram bubbles right, keeps a 3-column header, and turns pages/articles via swipe or arrow keys', async () => {
+  const relayCss = readFileSync(new URL('../dist/relay-room.css', import.meta.url), 'utf8');
+  assert.match(relayCss, /\.relay-msg\{[^}]*justify-content:flex-end/);
+  assert.match(relayCss, /\.relay-bubble\{[^}]*margin-left:auto/);
+  assert.match(relayCss, /\.relay-detail-head\{[^}]*display:grid;[^}]*grid-template-columns:minmax\(0,1fr\) auto minmax\(0,1fr\)/);
+
+  assert.deepEqual([stepRelayIndex(0, -1, 3), stepRelayIndex(0, 1, 3), stepRelayIndex(2, 1, 3), stepRelayIndex(0, 1, 0)], [0, 1, 2, 0]);
+
+  const { root, window } = await mount();
+  assert.ok(root.querySelector('.relay-head-lead .relay-peer'));
+  assert.equal(root.querySelector('.relay-date-menu .relay-edition-trigger .relay-edition-label').textContent, '11.13');
+  assert.equal(root.querySelector('.relay-edition-trigger').getAttribute('aria-expanded'), 'false');
+
+  click(root, window, '[data-room="hankyung"]');
+  assert.equal(root.querySelector('.relay-head-date .relay-edition-label').textContent, '11.13 v6');
+  assert.equal(root.querySelector('.relay-head-center .relay-paper-status').textContent, '1면 1/2');
+
+  const stageOpen = root.querySelector('.relay-paper-open');
+  const down = new window.Event('pointerdown', { bubbles: true });
+  down.button = 0; down.clientX = 240; down.clientY = 200;
+  stageOpen.dispatchEvent(down);
+  const up = new window.Event('pointerup', { bubbles: true });
+  up.clientX = 120; up.clientY = 205;
+  stageOpen.dispatchEvent(up);
+  assert.equal(root.querySelector('.relay-head-center .relay-paper-status').textContent, '2면 2/2', 'left swipe turns to page 2');
+  root.querySelector('.relay-paper-open').dispatchEvent(new window.Event('click', { bubbles: true }));
+  const viewer = root.querySelector('.relay-viewer');
+  assert.equal(Boolean(viewer?.open || viewer?.hasAttribute('open')), false, 'swiping does not trigger lightbox zoom');
+
+  key(root.querySelector('.relay-detail-body'), window, 'ArrowLeft');
+  assert.equal(root.querySelector('.relay-head-center .relay-paper-status').textContent, '1면 1/2');
+
+  click(root, window, '[data-room="naver"]');
+  assert.equal(root.querySelector('.relay-date-menu .relay-edition-label').textContent, '11.12');
+  click(root, window, '[data-article="n1"]');
+  assert.equal(root.querySelector('.relay-head-center .relay-paper-status').textContent, '1/2');
+  assert.equal(root.querySelector('.relay-head-date .relay-head-stamp').textContent, '11.12');
+
+  key(root.querySelector('.relay-detail-body'), window, 'ArrowRight');
+  assert.equal(root.querySelector('.relay-reader-head>h2').textContent, '나중에 쓴 글');
+  assert.equal(root.querySelector('.relay-head-center .relay-paper-status').textContent, '2/2');
+  assert.equal(root.querySelector('.relay-head-date .relay-head-stamp').textContent, '11.13');
+
+  const reader = root.querySelector('.relay-reader');
+  const rDown = new window.Event('pointerdown', { bubbles: true });
+  rDown.button = 0; rDown.clientX = 100; rDown.clientY = 200;
+  reader.dispatchEvent(rDown);
+  const rUp = new window.Event('pointerup', { bubbles: true });
+  rUp.clientX = 220; rUp.clientY = 205;
+  reader.dispatchEvent(rUp);
+  assert.equal(root.querySelector('.relay-reader-head>h2').textContent, '먼저 쓴 글');
 });

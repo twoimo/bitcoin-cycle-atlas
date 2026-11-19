@@ -471,7 +471,7 @@ body[data-page=compare] .footer{display:flex}
 }
 
 
-/* Source: chart-details-panel.css; SHA-256: fd9538beca7997973596a752fd38996ec78032ab79682946f58a21a8ed01ef1c */
+/* Source: chart-details-panel.css; SHA-256: 5c0e0f7d5ad317f5cd2902c497ae1eaf60f8696da131626af2b12367f75f2a1f */
 .workspace.atlas-details-layout{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 0 var(--rail-width);grid-template-rows:minmax(0,1fr)}
 .workspace.atlas-details-layout>#main{grid-column:1;grid-row:1;width:100%;margin:0;justify-self:stretch;min-width:0;min-height:0}
 .workspace.atlas-details-layout[data-details-open=true]{grid-template-columns:minmax(0,1fr) var(--detail-width,320px) var(--rail-width)}
@@ -538,6 +538,9 @@ body[data-page=compare] .footer{display:flex}
 .atlas-chart-stage{height:auto;min-height:0}
 .atlas-canvas-heading{height:40px;min-height:40px;box-sizing:border-box;display:flex;align-items:center;gap:4px;padding:2px 4px;flex:none;background:var(--chrome);border-bottom:1px solid var(--chrome-border)}
 .workbench-symbol{font-size:13px;font-weight:650;letter-spacing:.1px;padding:0 12px 0 4px;color:var(--chart-details-panel-ink-14);white-space:nowrap;border-right:1px solid var(--chrome-border);line-height:24px}
+.workbench-live-quote{display:inline-flex;align-items:baseline;gap:6px;margin:0 8px 0 4px;color:var(--chart-details-panel-ink-14);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+.workbench-live-quote[hidden]{display:none}
+.workbench-live-quote small{color:var(--chart-details-panel-ink-8,#8e9aac);font-size:11px;font-weight:400}
 .workbench-icon,.workbench-rail .atlas-nav button{display:flex;align-items:center;justify-content:center;gap:4px;flex:none;min-height:32px;width:32px;height:32px;margin:0;padding:8px;border:0;border-radius:3px;box-sizing:border-box;background:transparent;color:var(--chart-bottom-bar-ink);cursor:pointer;position:relative}
 .workbench-icon .icon{width:19px;height:19px;flex:none;pointer-events:none}
 .workbench-icon:hover,.workbench-ranges button:hover,.workbench-axis button:hover,.workbench-update:hover{background:var(--chart-details-panel-surface-6);color:var(--chart-details-panel-ink-15)}
@@ -2940,7 +2943,7 @@ body[data-shell=dashboard] #ipo-view :focus-visible {
 }
 
 
-/* Source: market-lab.css; SHA-256: 28643276fe80be0fc2af32f0b9e74dd11302e32a103c2dc13ff8100f9acc27ee */
+/* Source: market-lab.css; SHA-256: 36ec1921bfce4e7afa0209ba6976e683be7592d7913d916d0e74f8f1aea05b8d */
 /* Atlas reversible research candidate. Shared financial roles remain owned by styles.css. */
 
 #market-view[hidden]{display:none!important}
@@ -2972,9 +2975,9 @@ body[data-page="market"] .atlas-sidebar{position:fixed;top:0;left:0;width:100%;h
 body[data-page="market"] .workspace{margin-left:0}
 body[data-page="market"] .atlas-side-foot,body[data-page="market"] .atlas-brand div,body[data-page="market"] .atlas-brand small{display:none}
 body[data-page="market"] .atlas-brand{width:36px;height:36px;padding:0;flex:none}
-body[data-page="market"] .atlas-nav{display:flex;flex-direction:row;align-items:center;gap:4px;width:auto;margin:0;overflow:hidden}
-body[data-page="market"] .atlas-nav button{width:auto;height:32px;min-height:32px;padding:0 12px;white-space:nowrap}
-body[data-page="market"] .atlas-nav button>span:last-child:not([data-icon]){position:static;width:auto;height:auto;margin:0;clip-path:none;overflow:visible}
+body[data-page="market"] .atlas-sidebar .atlas-nav{display:flex;flex-direction:row;align-items:center;gap:4px;width:auto;margin:0;overflow:hidden}
+body[data-page="market"] .atlas-sidebar .atlas-nav button{width:auto;height:32px;min-height:32px;padding:0 12px;white-space:nowrap}
+body[data-page="market"] .atlas-sidebar .atlas-nav button>span:last-child:not([data-icon]){position:static;width:auto;height:auto;margin:0;clip-path:none;overflow:visible}
 body[data-page="market"] #market-header-slot{margin-left:auto;display:flex;align-items:center;flex:none}
 body[data-page="market"] #market-header-slot .ml-region{margin-left:0}
 body[data-page="market"] .ml-header{display:none}
@@ -2989,9 +2992,9 @@ body .atlas-sidebar{position:fixed;top:0;left:0;width:100%;height:48px;min-heigh
 body .workspace{margin-left:0 !important}
 body .atlas-side-foot,body .atlas-brand div,body .atlas-brand small,body .evidence-mobile-heading,body .lab-heading,body .daily-back,body .daily-heading-title,body .ipo-heading-title{display:none !important}
 body .atlas-brand{width:32px;height:32px;padding:0;flex:none}
-body .atlas-nav{display:flex;flex-direction:row;align-items:center;gap:2px;width:auto;margin:0;overflow:hidden}
-body .atlas-nav button{width:auto;height:32px;min-height:32px;padding:0 8px;white-space:nowrap}
-body .atlas-nav button>span:last-child:not([data-icon]){position:static;width:auto;height:auto;margin:0;clip-path:none;overflow:visible}
+body .atlas-sidebar .atlas-nav{display:flex;flex-direction:row;align-items:center;gap:2px;width:auto;margin:0;overflow:hidden}
+body .atlas-sidebar .atlas-nav button{width:auto;height:32px;min-height:32px;padding:0 8px;white-space:nowrap}
+body .atlas-sidebar .atlas-nav button>span:last-child:not([data-icon]){position:static;width:auto;height:auto;margin:0;clip-path:none;overflow:visible}
 body .daily-heading,body .ipo-heading,body .evidence-controls,body .atlas-canvas-heading{position:fixed;top:6px;right:8px;left:auto;height:36px;margin:0;padding:0 0 0 8px;z-index:51;display:flex;align-items:center;gap:8px;background:transparent;border:0;box-shadow:none;width:auto;max-width:calc(100% - 430px);overflow:hidden;white-space:nowrap}
 body .daily-heading-actions,body .ipo-toolbar{display:flex;align-items:center;gap:8px;margin:0}
 body[data-page="market"] .atlas-canvas-heading,body[data-page="market"] .daily-heading,body[data-page="market"] .ipo-heading,body[data-page="market"] .evidence-controls{display:none !important}

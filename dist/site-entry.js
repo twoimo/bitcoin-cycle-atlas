@@ -1,13 +1,21 @@
 import { initTheme } from './ui/theme.js';
-import { enhanceBootSkeleton } from './loading-surfaces.js?v=1.0.2';
-import { initAtlasShell } from './atlas-shell.js?v=1.36.26';
+import { enhanceBootSkeleton } from './loading-surfaces.js?v=1.0.3';
+import { initAtlasShell } from './atlas-shell.js?v=1.36.27';
 import { canonicalNativeChartEntry, canonicalRetiredPageEntry, canonicalWorkspaceChartEntry, canonicalDefaultChartEntry } from './atlas-navigation.js?v=1.36.3';
 import { mountJournalEntry } from './journal-entry.js?v=1.29.3';
 import { initPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
 
 initTheme();
 
-const canonicalEntry = canonicalRetiredPageEntry(location) || canonicalNativeChartEntry(location) || canonicalWorkspaceChartEntry(location) || canonicalDefaultChartEntry(location);
+function embeddedChartFrame() {
+  try {
+    return typeof window !== 'undefined' && window.parent !== window && new URLSearchParams(location.search).get('embedded') === '1';
+  } catch {
+    return false;
+  }
+}
+
+const canonicalEntry = canonicalRetiredPageEntry(location) || (embeddedChartFrame() ? null : canonicalNativeChartEntry(location)) || canonicalWorkspaceChartEntry(location) || canonicalDefaultChartEntry(location);
 if (canonicalEntry) {
   location.replace(canonicalEntry);
 } else {
@@ -24,7 +32,7 @@ if (canonicalEntry) {
   const retryDelay = [400, 900, 1600, 2500, 3500];
   for (let attempt = 0; attempt < retryDelay.length + 1 && !opened; attempt += 1) {
     try {
-      const specifier = attempt === 0 ? "./app.js?v=1.37.60" : `./app.js?v=1.37.60&retry=${attempt}`;
+      const specifier = attempt === 0 ? "./app.js?v=1.37.61" : `./app.js?v=1.37.61&retry=${attempt}`;
       await import(specifier);
       opened = true;
     } catch (error) {

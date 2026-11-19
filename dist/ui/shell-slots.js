@@ -103,7 +103,9 @@ export function refreshShellSlots(document, {symbol} = {}) {
   top.forEach((node, index) => slot(node, 'top', index));
   // The chart tools menu sits beside 지표 without taking the instrument slot.
   const toolsMenu = $('#chart-tools-menu');
-  const visual = toolsMenu ? [...top.slice(0, 4), toolsMenu, ...top.slice(4)] : top;
+  const liveQuote = heading.querySelector('.workbench-live-quote');
+  const afterIndicators = toolsMenu ? [...top.slice(0, 4), toolsMenu, ...top.slice(4)] : top;
+  const visual = liveQuote ? [afterIndicators[0], liveQuote, ...afterIndicators.slice(1)] : afterIndicators;
   ordered(heading, [...visual, ...[...heading.children].filter(node => !visual.includes(node))]);
   for (const spacer of heading.querySelectorAll('.workbench-spacer,.eth-divider')) if (!spacer.hidden) spacer.hidden = true;
 

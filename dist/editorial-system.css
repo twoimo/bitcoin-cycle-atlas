@@ -417,10 +417,15 @@ body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
   body[data-shell=chart] #workbench-navigation .chart-navigation { align-items: center; gap: 0; }
   body[data-shell=chart] .workbench-rail {
     width: 45px;
+    min-width: 0;
+    max-width: 45px;
     height: calc(100dvh - 38px);
     margin-top: 38px;
     padding: 0;
     border: 0;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: center;
     background: var(--sidebar);
   }
   body[data-shell=chart] .workbench-rail .atlas-nav {
@@ -446,6 +451,7 @@ body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
     color: var(--muted);
     line-height: 1;
   }
+  body[data-shell=chart] .workbench-rail :is(a, button) > span:last-child:not([data-icon]),
   body[data-shell=chart] .workbench-rail .atlas-nav :is(a, button) > .atlas-nav-label:last-child:not([data-icon]) {
     position: absolute;
     display: block;

@@ -1,5 +1,5 @@
 import { utcDay, dateFromDay, validateDataset } from './cycle-engine.js?v=1.29.0';
-import { ASSET_JUDGMENTS, ASSET_COMPARISON_VERSION, comparisonAsOf, comparisonAssetName, comparisonPercentage as pct, comparisonMean as mean, classifyAssetComparison as classify, comparisonCoverageSummary } from './asset-comparison.js?v=1.32.1';
+import { ASSET_JUDGMENTS, ASSET_COMPARISON_VERSION, comparisonAsOf, comparisonAssetName, comparisonPercentage as pct, comparisonMean as mean, classifyAssetComparison as classify, comparisonCoverageSummary } from './asset-comparison.js?v=1.32.2';
 
 export const HISTORY_KIND = 'reconstructed';
 export const HISTORY_NOTE = '현재 보관 원자료 버전으로 재계산한 이력입니다. 당시 운영 판단·당시 공급자 원본·거래 가능 시점을 복원한 기록이 아닙니다.';
@@ -46,9 +46,9 @@ export function createAssetJudgmentHistory(bundle, { endDate, sourceVersion = ''
     }
     missingDays.sort((a,b) => a-b);
     if (prices.length) firstDay = Math.min(firstDay, prices[0].epochDay);
-    const periods = [], gapEnds = [], bands = new Map(); let period, prior;
+    const periods = [], gapEnds = [], gapSpans = [], bands = new Map(); let period, prior;
     for (const point of prices) {
-      if (prior && (calendar === 'calendar-days' ? point.epochDay - prior.epochDay !== 1 : point.epochDay - prior.epochDay > 7)) gapEnds.push(point.epochDay);
+      if (prior && (calendar === 'calendar-days' ? point.epochDay - prior.epochDay !== 1 : point.epochDay - prior.epochDay > 7)) { gapEnds.push(point.epochDay); gapSpans.push({ start: prior.date, end: point.date, days: point.epochDay - prior.epochDay }); }
       const y = yearOf(point.date);
       if (!period || period.year !== y) { period = { year:y, first:point, last:point, high:point, low:point, peak:point, mddPct:0 }; periods.push(period); }
       period.last = point;
@@ -77,7 +77,7 @@ export function createAssetJudgmentHistory(bundle, { endDate, sourceVersion = ''
       const knownMissing=first ? missingDays.slice(upper(missingDays,first.epochDay-1),upper(missingDays,day)).map(dateFromDay) : [];
       const years=new Set(periods.filter(p=>p.first.epochDay<=day).map(p=>p.year)), missingYears=[];
       if(first)for(let y=yearOf(first.date);y<year;y++)if(!years.has(y))missingYears.push(y);
-      const coverage=comparisonCoverageSummary({first,current:current ? {startDate:current.first.date} : null,calendar,missingDates:knownMissing,missingYears,gapCount:upper(gapEnds,day)});
+      const gapCount=upper(gapEnds,day),coverage=comparisonCoverageSummary({first,current:current ? {startDate:current.first.date} : null,calendar,missingDates:knownMissing,missingYears,gapCount,gapSpans:gapSpans.slice(0,gapCount)});
       const ytdPct=current && latest ? pct(latest.price,current.first.price) : null;
       const judgment=classify({...b,ytdPct,current:current?.first??null,latest,year,asOfDay:day,coverage});
       return {...info,...b,asOf:date,year,observationCount:pos+1,firstDate:first?.date??null,lastDate:latest?.date??null,latestDate:latest?.date ?? null,latestPrice:latest?.price ?? null,yearStartDate:current?.first.date ?? null,yearStartPrice:current?.first.price ?? null,ytdPct,judgment,coverage,samplePartialFirstYear:Boolean(b.sampleYears&&coverage.firstYearPartial),firstPartialStartDate:b.sampleYears?coverage.firstPartialStartDate:null};

@@ -1,3 +1,4 @@
+import { utcDay } from "./cycle-engine.js?v=1.29.0";
 import { validateFullSeries, COMMUNITY_ENDPOINT } from "./data-source.js?v=1.29.0";
 
 export const PUBLISHED_REFRESH_INTERVAL_MS = 6 * 60 * 60 * 1000;
@@ -40,4 +41,19 @@ export function inspectPublishedDataset(candidate, current, { now = new Date() }
 
 export function shouldCheckPublishedSnapshot(lastAttempt, now = Date.now(), visible = true) {
   return visible && Number.isFinite(now) && (!Number.isFinite(lastAttempt) || now - lastAttempt >= PUBLISHED_REFRESH_INTERVAL_MS);
+}
+
+// Keep a stale archive series off the first paint so users do not see an old
+// close jump to the refreshed close right after boot.
+export async function replaceStaleSeries(dataset, today, refresh) {
+  const last = dataset?.prices?.at?.(-1)?.[0];
+  if (typeof last !== 'string' || typeof today !== 'string' || utcDay(today) - utcDay(last) <= 1) return dataset;
+  try {
+    const next = await refresh();
+    inspectPublishedDataset(next, dataset);
+    if (next.prices.at(-1)[0] < last) return dataset;
+    return next;
+  } catch {
+    return dataset;
+  }
 }

@@ -39,15 +39,7 @@ export function mountCenterLoading({ frame, plot, toolbar, kind, label, isCurren
   function fail() {
     if (!current() || phase !== 'loading') return;
     clearTimeout(timeout);
-    state('error');
-    clearLoadingSurface(layer); unbindChild();
-    const content = document.createElement('div'); content.className = 'atlas-center-error'; content.setAttribute('role', 'alert');
-    const title = document.createElement('strong'); title.textContent = '화면을 불러오지 못했습니다.';
-    const detail = document.createElement('p'); detail.textContent = `${label} 연결을 확인한 뒤 다시 시도해 주세요.`;
-    const retry = document.createElement('button'); retry.type = 'button'; retry.textContent = '재시도'; retry.setAttribute('aria-label', `${label} 재시도`);
-    retry.addEventListener('click', () => { if (current() && phase === 'error') onRetry(); });
-    content.append(title, detail, retry); layer.replaceChildren(content);
-    onSettled?.();
+    // Keep the layout skeleton. A late acknowledgement from this same frame can still open it.
   }
   function acceptDocument() {
     if (!current() || !documentReady || child !== frame.contentDocument) return;

@@ -3,21 +3,25 @@ import { RSI_CHART_LAYOUT,rsiChartLayout } from './rsi-chart-layout.js';
 
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const kinds=new Set(['chart','rsi','diagnosis','scenario','cashflow','table','list','detail','calendar']);
-const bar=(width='72%',height='12px')=>`<span skullet-block skullet-bar style="width:${width};height:${height}"></span>`;
-const row=(widths=['36%','20%','18%','12%'])=>`<div class="atlas-skeleton-row">${widths.map(w=>bar(w)).join('')}</div>`;
+const bar=(width='72%',height='8px')=>`<span skullet-block skullet-bar style="width:${width};height:${height}"></span>`;
+const line=(widths)=>`<div class="atlas-skeleton-row">${widths.map(width=>bar(width,'8px')).join('')}</div>`;
 // Visible first-paint geometry also derives from the real chart's coordinate
 // contract. Enhancement resolves the split and axis width to measured pixels.
 const rsiLayout=RSI_CHART_LAYOUT;
 const rsiStyle=`--atlas-rsi-left:${rsiLayout.left}px;--atlas-rsi-top:${rsiLayout.top}px;--atlas-rsi-bottom:${rsiLayout.bottom}px;--atlas-rsi-right:${rsiLayout.right}px;--atlas-rsi-price-bottom:max(${rsiLayout.top+rsiLayout.minimumPriceHeight}px,${rsiLayout.priceShare*100}%);--atlas-rsi-gap:${rsiLayout.panelGap}px`;
+const toolbar=(widths)=>`<div class="atlas-skeleton-toolbar">${widths.map(width=>bar(width,'12px')).join('')}</div>`;
+const chartBody=`<div class="atlas-skeleton-chart"><div class="atlas-skeleton-plot" skullet-block></div><div class="atlas-skeleton-y-axis">${[0,1,2,3,4].map(()=>bar('48px','8px')).join('')}</div><div class="atlas-skeleton-x-axis">${[0,1,2,3,4].map(()=>bar('36px','8px')).join('')}</div></div>`;
 export function skeletonShape(kind='chart') {
   if(!kinds.has(kind))kind='detail';
-  const heading=`<div class="atlas-skeleton-heading">${bar('76px','16px')}${bar('44px')}${bar('64px')}${bar('52px')}</div>`;
-  if(kind==='calendar')return `${heading}<div class="atlas-skeleton-calendar">${Array.from({length:42},()=>'<div skullet-block></div>').join('')}</div>`;
-  if(kind==='rsi')return `${heading}<div class="atlas-skeleton-rsi-meta">${[0,1,2,3,4].map(()=>bar('52px','10px')).join('')}</div><div class="atlas-skeleton-rsi-panels" style="${rsiStyle}"><div class="atlas-skeleton-plot" skullet-block></div><div class="atlas-skeleton-oscillator" skullet-block></div></div>`;
-  if(kind==='table'||kind==='list')return `${heading}<div class="atlas-skeleton-rows">${Array.from({length:kind==='table'?9:6},(_,i)=>row(i%2?['28%','20%','16%','12%']:undefined)).join('')}</div>`;
-  if(kind==='detail')return `${heading}<div class="atlas-skeleton-rows">${[0,1,2,3,4].map(()=>row(['32%','52%'])).join('')}</div>`;
-  const fields=kind==='scenario'||kind==='cashflow'||kind==='diagnosis'?`<div class="atlas-skeleton-fields">${[0,1,2].map(()=>`<div>${bar('72px')}${bar('100%','36px')}</div>`).join('')}</div>`:'';
-  return `${heading}${fields}<div class="atlas-skeleton-plot" skullet-block></div>${kind==='rsi'?'<div class="atlas-skeleton-oscillator" skullet-block></div>':''}<div class="atlas-skeleton-footer">${bar('48px')}${bar('48px')}${bar('64px')}</div>`;
+  if(kind==='chart')return chartBody;
+  if(kind==='calendar')return `${toolbar(['120px'])}<div class="atlas-skeleton-calendar">${Array.from({length:42},()=>'<div skullet-block></div>').join('')}</div>`;
+  if(kind==='rsi')return `${toolbar(['88px','64px'])}<div class="atlas-skeleton-rsi-panels" style="${rsiStyle}"><div class="atlas-skeleton-plot" skullet-block></div><div class="atlas-skeleton-oscillator" skullet-block></div></div>`;
+  if(kind==='diagnosis')return `${toolbar(['96px'])}<div class="atlas-skeleton-scores">${[0,1,2].map(()=>'<div skullet-block></div>').join('')}</div><div class="atlas-skeleton-stack">${[0,1,2].map(()=>'<div skullet-block></div>').join('')}</div>`;
+  if(kind==='scenario')return `${toolbar(['72px','64px'])}<div class="atlas-skeleton-split"><div class="atlas-skeleton-rows">${[0,1,2].map(()=>line(['28%','44%'])).join('')}</div><div class="atlas-skeleton-stack"><div skullet-block></div>${[0,1,2].map(()=>line(['22%','16%','16%'])).join('')}</div></div>`;
+  if(kind==='cashflow')return `${toolbar(['88px'])}<div class="atlas-skeleton-split"><div class="atlas-skeleton-rows">${[0,1,2,3].map(()=>line(['32%','40%'])).join('')}</div><div class="atlas-skeleton-rows">${[0,1,2,3].map(()=>line(['36%','28%'])).join('')}</div></div>`;
+  if(kind==='table')return `<div class="atlas-skeleton-table-head">${['18%','16%','14%','12%','12%'].map(width=>bar(width,'8px')).join('')}</div><div class="atlas-skeleton-rows">${Array.from({length:9},(_,index)=>line(index%2?['16%','14%','12%','10%','10%']:['18%','16%','14%','12%','12%'])).join('')}</div>`;
+  if(kind==='list')return `<div class="atlas-skeleton-rows">${Array.from({length:6},()=>line(['46%','22%'])).join('')}</div>`;
+  return `${toolbar(['46%'])}<div class="atlas-skeleton-rows">${[0,1,2,3,4].map(()=>line(['32%','40%'])).join('')}</div>`;
 }
 export function skeletonMarkup(kind='chart',label='자료 로딩') {
   const key=kinds.has(kind)?kind:'detail';
@@ -76,15 +80,15 @@ export function setChartLoading(plot,loading,label='가격 자료 로딩'){
 export function enhanceBootSkeleton(){
   const shell=document.querySelector('#atlas-boot-shell');if(!shell||shell.hidden||document.documentElement.dataset.boot!=='loading')return;
   const page=new URLSearchParams(location.search).get('page'),path=location.pathname,canvas=shell.querySelector('.atlas-boot-canvas');
-  const kind=page==='ipo'?'calendar':page==='data'?'table':['research','evidence'].includes(page)?'list':path.includes('/rsi/')?'rsi':path.includes('/us/')||path.includes('/kr/')?'diagnosis':'chart';
+  const kind=page==='ipo'?'calendar':page==='data'?'table':['research','evidence','relay'].includes(page)?'list':path.includes('/rsi/')?'rsi':path.includes('/scenario/')?'scenario':path.includes('/cashflow/')?'cashflow':path.includes('/us/')||path.includes('/kr/')?'diagnosis':'chart';
   setLoadingSurface(canvas,true,{kind,label:'화면 로딩'});
   const boxes=[];
   for(const old of shell.querySelectorAll('.atlas-boot-bar')){
     const style=getComputedStyle(old),box=createSkeletonBox({width:style.width,height:style.height,radius:style.borderRadius});box.className=old.className;box.dataset.skulletBoot='true';old.replaceWith(box);boxes.push(box);
   }
-  const stop=()=>{clearLoadingSurface(canvas);for(const box of boxes){for(const animation of box.getAnimations?.()||[])animation.cancel();box.remove();}bootObserver.disconnect();document.removeEventListener('atlas:ready',stop);document.removeEventListener('atlas:boot-error',stop);};
+  const stop=()=>{clearLoadingSurface(canvas);for(const box of boxes){for(const animation of box.getAnimations?.()||[])animation.cancel();box.remove();}bootObserver.disconnect();document.removeEventListener('atlas:ready',stop);};
   const bootObserver=new MutationObserver(()=>{if(document.documentElement.dataset.boot!=='loading')stop();});
   bootObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-boot']});
-  document.addEventListener('atlas:ready',stop);document.addEventListener('atlas:boot-error',stop);
+  document.addEventListener('atlas:ready',stop);
 }
 if(typeof window!=='undefined')window.addEventListener('pagehide',()=>{for(const item of [...active])item.destroy();});
