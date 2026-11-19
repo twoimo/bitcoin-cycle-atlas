@@ -3,8 +3,9 @@ import { createChart } from '@funnest/charts';
 const BAR_FIELDS = ['time', 'open', 'high', 'low', 'close'];
 const TIME_SCALE_BUDGET = Object.freeze({ minBarSpacing: 0.5, maxBarSpacing: 64, maxBars: 6000 });
 const NATIVE_TIME_LABEL_MIN_GAP = 72; // Pinned Funnest 0.6.22 TIME_LABEL_MIN_GAP.
-// Shared gutter. Wider labels still grow it; the engine adds its own 20px pad and rounds to 8px.
-export const ATLAS_PRICE_AXIS_MIN_WIDTH = 80;
+// No fixed spare column. The axis is the measured label plus 24px (8px from the plot, 8px inside the tag, 8px from the screen edge).
+export const ATLAS_PRICE_AXIS_MIN_WIDTH = 0;
+const PRICE_AXIS_LABEL_PAD = 24;
 function sourceInterval(bars) {
   let interval = Infinity;
   for (let index = Math.max(1, bars.length - 20); index < bars.length; index++) interval = Math.min(interval, bars[index].time - bars[index - 1].time);
@@ -158,9 +159,59 @@ export function setFunnestPriceExtrema(chart, domain) {
  * `priceAxisWidth` is a TypeScript-private own field in this exact build, with no public option.
  * While `viewerOwnsViewport()` is true the width grows to fit a wider label and is never given back.
  * Until then the caller's range is refit after every layout, so the engine's own width passes through.
- * The width never falls below `minWidth`, so every instrument shares one gutter: the engine otherwise sizes
- * it from the widest label (88px for BTC, 80px for ETH) and the same axis sits at different x per chart.
+ * The width never falls below `minWidth`. The default floor is 0, so the gutter follows the current price text.
  */
+function measuredPriceAxisWidth(chart, frame) {
+  const canvas = chart.mainLayer?.canvas;
+  const context = canvas?.getContext?.('2d');
+  if (!context || !frame?.font) return 0;
+  context.save();
+  context.font = frame.font;
+  let labelWidth = 0;
+  const measure = text => { if (text) labelWidth = Math.max(labelWidth, context.measureText(String(text)).width); };
+  const main = frame.panes?.find(pane => pane.kind === 'main');
+  if (main) {
+    for (const value of main.ticks || frame.priceTicks || []) measure((main.tickFormat ?? main.format)?.(value));
+    const last = chart.bars?.at?.(-1);
+    if (last) measure(main.format?.(last.close));
+  }
+  measure(frame.countdown);
+  for (const pane of frame.panes || []) {
+    if (pane.kind !== 'indicator') continue;
+    for (const value of pane.ticks || []) measure((pane.tickFormat ?? pane.format)?.(value));
+  }
+  context.restore();
+  return labelWidth > 0 ? Math.ceil(labelWidth + PRICE_AXIS_LABEL_PAD) : 0;
+}
+
+/** The engine rounds the price column up and left-aligns the digits, which leaves empty space on their right. */
+function followPriceLabelWidth(chart) {
+  if (typeof chart.computeFrame !== 'function') return;
+  const original = chart.computeFrame.bind(chart);
+  let lock = null;
+  chart.computeFrame = function() {
+    if (lock != null) return original();
+    const frame = original();
+    const tight = measuredPriceAxisWidth(chart, frame);
+    if (!(tight > 0) || tight === chart.priceAxisWidth) return frame;
+    const current = Object.getOwnPropertyDescriptor(chart, 'priceAxisWidth');
+    if (!current?.get || !current?.set) return frame;
+    lock = tight;
+    Object.defineProperty(chart, 'priceAxisWidth', {
+      configurable: true, enumerable: true,
+      get: () => current.get.call(chart),
+      set() { current.set.call(chart, lock); },
+    });
+    try {
+      current.set.call(chart, tight);
+      return original();
+    } finally {
+      Object.defineProperty(chart, 'priceAxisWidth', current);
+      lock = null;
+    }
+  };
+}
+
 export function holdFunnestPriceAxisWidth(chart, viewerOwnsViewport, minWidth = 0) {
   if (!chart || typeof chart.priceAxisWidth !== 'number') throw new TypeError('Funnest 0.6.22 price-axis width field is unavailable');
   if (typeof viewerOwnsViewport !== 'function') throw new TypeError('A viewport-ownership predicate is required');
@@ -351,6 +402,7 @@ export function mountAtlasFunnestChart(container, options = {}) {
     chart.timeScale.options.minBarSpacing = Math.min(TIME_SCALE_BUDGET.minBarSpacing, width / span);
   };
   holdFunnestPriceAxisWidth(chart, () => !initialRangeOwned, minPriceAxisWidth);
+  followPriceLabelWidth(chart);
   mapData(bars);
   chart.setData(currentBars);
   chart.setChartType(chartType);

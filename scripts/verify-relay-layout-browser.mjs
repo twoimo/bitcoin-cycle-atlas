@@ -159,7 +159,7 @@ async function layoutCase(route,viewport){
       check(row,s.list.shown&&!s.room.shown&&s.focus?.room==='telegram','in-app back from the chat did not return to the list with focus on its row');
     }
     await click('[data-room="naver"]');
-    s=await until('room open',v=>/[?&]room=naver/.test(v.url)&&v.roomTitle==='인생의 방');await settle();s=await evaluate(snapshot);
+    s=await until('room open',v=>/[?&]room=naver/.test(v.url)&&v.roomTitle==='플스포 인생의 방 (네프콘)');await settle();s=await evaluate(snapshot);
     row.steps.room={...s,screenshot:await shot(`${name}-2-room.png`)};
     geometry(row,s,'room');
     check(row,s.pane==='room'&&s.articles===8,`room pane ${s.pane}, ${s.articles} articles`);
@@ -180,7 +180,7 @@ async function layoutCase(route,viewport){
     if(s.layout==='stack')check(row,s.list.shown&&!s.room.shown&&s.focus?.room==='naver','stacked Back did not return to the list with focus on the row');
     else check(row,s.room.shown&&s.rows.find(item=>item.room==='telegram')?.current&&s.roomTitle==='소수의견(26년 4분기)','split Back did not restore the default room');
     await historyForward();
-    s=await until('forward',v=>/[?&]room=naver/.test(v.url)&&v.roomTitle==='인생의 방'&&(v.layout==='split'||v.room.shown));
+    s=await until('forward',v=>/[?&]room=naver/.test(v.url)&&v.roomTitle==='플스포 인생의 방 (네프콘)'&&(v.layout==='split'||v.room.shown));
     row.steps.forward={url:s.url,pane:s.pane,roomShown:s.room.shown,listShown:s.list.shown};
     await click('[data-article]');
     s=await until('reader',v=>/[?&]post=/.test(v.url)&&v.mode==='reading');await settle();s=await evaluate(snapshot);

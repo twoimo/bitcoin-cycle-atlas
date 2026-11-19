@@ -59,22 +59,13 @@ test('all current corpus entries have source identity and verifiable evidence or
     for(const topic of row.topics) if(topic.evidence){const e=topic.evidence;const field=relayTextFields(item).find(x=>x.field===e.field);assert.equal(field.text.slice(e.offset,e.offset+e.length),e.quote);}
   }
 });
-test('filtering changes only selected entries, preserves original text and exposes empty/reset states', async () => {
-  const {root,window}=await view(sample());
+test('the channel list does not render a title search or an all-topic count', async () => {
+  const {root}=await view(sample());
+  assert.equal(root.querySelector('.relay-filter-form'),null);
+  assert.equal(root.querySelector('[name="query"]'),null);
+  assert.equal(root.querySelector('[name="topic"]'),null);
   assert.equal(root.querySelectorAll('[data-message-id]').length,3);
-  root.querySelector('[name="query"]').value='비트코인';
-  root.querySelector('form').dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));
-  assert.equal(root.querySelectorAll('[data-message-id]').length,1);
   assert.equal(root.querySelector('.relay-msg-text').textContent,'비트코인과 금리 변화');
-  assert.equal(root.querySelector('.relay-msg-link').getAttribute('href'),'https://example.test/a');
-  assert.match(root.querySelector('output').textContent,/1 \/ 5건/,'the list search counts every room');
-  assert.equal(root.querySelector('[data-room="telegram"] .relay-room-sub').textContent,'1 / 3건 일치');
-  root.querySelector('[name="query"]').value='not-present';
-  root.querySelector('form').dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));
-  assert.equal(root.querySelectorAll('[data-message-id]').length,0);
-  assert.match(root.querySelector('.relay-detail-body').textContent,/조건에 맞는 항목이 없습니다/);
-  click(root,window,'[data-relay-action="clear-filters"]');
-  assert.equal(root.querySelectorAll('[data-message-id]').length,3);
 });
 test('newly loaded items use the same rules and stale previous results disappear', async () => {
   const data=sample();const {root,controller}=await view(data);
@@ -111,8 +102,6 @@ test('untrusted classification evidence and search terms remain escaped text', a
   const data=sample();data.rooms[0].messages[0].text='비트코인 <img src=x onerror=alert(1)>';
   const {root,window}=await view(data);
   assert.equal(root.querySelector('.relay-topic-evidence img'),null);
-  root.querySelector('[name="query"]').value='\"><script>alert(1)</script>';
-  root.querySelector('form').dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));
   assert.equal(root.querySelector('script'),null);
 });
 
@@ -138,7 +127,7 @@ test('loading, unavailable, empty and recovered relay have one status owner and 
   } finally {globalThis.fetch=originalFetch;}
 });
 
-test('a pending latest-message scroll never takes ownership of newer search results', async () => {
+test('opening a room reveals its latest message', async () => {
   const original=globalThis.requestAnimationFrame;const scheduled=[];globalThis.requestAnimationFrame=callback=>{scheduled.push(callback);return scheduled.length;};
-  try {const {root,window}=await view(sample());root.querySelector('[name="query"]').value='비트코인';root.querySelector('form').dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));const body=root.querySelector('.relay-detail-body');body.scrollTop=0;Object.defineProperty(body,'scrollHeight',{value:500});for(const fn of scheduled)fn();assert.equal(body.scrollTop,0);}finally{globalThis.requestAnimationFrame=original;}
+  try {const {root}=await view(sample());const body=root.querySelector('.relay-detail-body');Object.defineProperty(body,'scrollHeight',{value:500});for(const fn of scheduled)fn();assert.equal(body.scrollTop,500);}finally{globalThis.requestAnimationFrame=original;}
 });

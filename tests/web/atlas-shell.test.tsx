@@ -18,7 +18,11 @@ test('dashboard/chart shell moves the existing navigation without replacing hand
   const stop = initAtlasShell();
   t.after(() => { stop?.(); for (const [key, old] of originals) { if (old) Object.defineProperty(globalThis, key, old); else Reflect.deleteProperty(globalThis, key); } });
   assert.equal(document.body.dataset.shell, 'dashboard');
-  assert.equal(nav.parentElement, document.querySelector('.atlas-dashboard-nav'));
+  assert.equal(document.body.dataset.contentFrame, 'full');
+  assert.equal(document.querySelector('.atlas-dashboard-header')!.hidden, true);
+  assert.equal(nav.parentElement, document.getElementById('content-rail'));
+  assert.equal(document.getElementById('content-rail')!.dataset.shellRegion, 'right');
+  assert.equal(document.getElementById('content-bottom-bar')!.hidden, true);
   assert.equal(document.body.dataset.shellWidth, 'wide');
   assert.equal(exportButton.parentElement, document.querySelector('.daily-heading'));
   const rail = document.createElement('aside'); rail.className = 'workbench-rail'; document.querySelector('.workspace')!.append(rail);

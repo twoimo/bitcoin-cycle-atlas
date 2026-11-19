@@ -805,6 +805,7 @@ export function mountAuthAccount(doc = globalThis.document, options = {}) {
   let pending = Promise.resolve();
   let observer = null;
   let observed = null;
+  let observedMode = '';
   let placing = false;
   const track = promise => { pending = Promise.resolve(promise); return pending; };
   const head = doc.head || doc.querySelector('head');
@@ -825,19 +826,38 @@ export function mountAuthAccount(doc = globalThis.document, options = {}) {
   status.id = 'auth-account-status';
   status.hidden = true;
 
+  function brandSlot() {
+    if (doc.body?.dataset?.shell === 'dashboard') return null;
+    if (doc.body?.classList?.contains('atlas-funnest-compact')) return null;
+    return doc.querySelector('.atlas-sidebar .atlas-brand') || null;
+  }
   function place() {
-    const target = authAccountTarget(doc);
+    const brand = brandSlot();
+    const target = brand?.parentElement || authAccountTarget(doc);
     if (!target) return;
+    const atBrand = Boolean(brand);
     placing = true;
-    if (root.parentElement !== target || target.lastElementChild !== root) target.append(root);
+    if (atBrand) {
+      if (brand.nextElementSibling !== root) brand.after(root);
+    } else if (root.parentElement !== target || target.lastElementChild !== root) target.append(root);
     placing = false;
-    if (observed === target) return;
+    const mode = atBrand ? 'brand' : 'end';
+    if (observed === target && observedMode === mode) return;
     observer?.disconnect();
     observed = target;
+    observedMode = mode;
     const Observer = doc.defaultView?.MutationObserver || globalThis.MutationObserver;
     if (!Observer) return;
     observer = new Observer(() => {
-      if (placing || root.parentElement !== target || target.lastElementChild === root) return;
+      if (placing) return;
+      if (atBrand) {
+        if (brand.nextElementSibling === root) return;
+        placing = true;
+        brand.after(root);
+        placing = false;
+        return;
+      }
+      if (root.parentElement === target && target.lastElementChild === root) return;
       placing = true;
       target.append(root);
       placing = false;
@@ -1755,6 +1775,11 @@ export function mountAuthAccount(doc = globalThis.document, options = {}) {
     track(auth.restore().then(render));
   };
   doc.defaultView?.addEventListener?.('storage', onStorage);
+  const onChrome = () => place();
+  const chromeObserver = doc.body && (doc.defaultView?.MutationObserver || globalThis.MutationObserver)
+    ? new (doc.defaultView?.MutationObserver || globalThis.MutationObserver)(onChrome)
+    : null;
+  chromeObserver?.observe(doc.body, { attributes: true, attributeFilter: ['class', 'data-shell'] });
   place();
   track(auth.restore().then(render));
   const controller = {
@@ -1764,6 +1789,7 @@ export function mountAuthAccount(doc = globalThis.document, options = {}) {
     settled: () => pending,
     destroy() {
       observer?.disconnect();
+      chromeObserver?.disconnect();
       doc.defaultView?.removeEventListener?.('storage', onStorage);
       for (const viewport of viewports) viewport.destroy?.();
       for (const dialog of doc.querySelectorAll('dialog.auth-account-dialog')) dialog.remove();

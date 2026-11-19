@@ -480,10 +480,10 @@ test('the price axis never falls below the shared minimum width and still grows 
   const legacy = engine(88); holdFunnestPriceAxisWidth(legacy, () => false); legacy.priceAxisWidth = 56;
   assert.equal(legacy.priceAxisWidth, 56, 'without a minimum the engine width passes through unchanged');
   for (const bad of [-1, NaN, Infinity, '96']) assert.throws(() => holdFunnestPriceAxisWidth(engine(56), () => false, bad), RangeError);
-  assert.equal(ATLAS_PRICE_AXIS_MIN_WIDTH, 80);
+  assert.equal(ATLAS_PRICE_AXIS_MIN_WIDTH, 0);
 });
 
-test('instruments with different label widths share one gutter and keep the observed bars byte for byte', async () => {
+test('instruments with different label widths keep a gutter that follows the price text', async () => {
   const gutters = [];
   for (const glyph of [6, 8, 9]) {
     await withNativeRuntime(async ({ container, settle, relayout }) => {
@@ -497,7 +497,8 @@ test('instruments with different label widths share one gutter and keep the obse
       } finally { mounted.destroy(); }
     });
   }
-  assert.deepEqual(gutters, [ATLAS_PRICE_AXIS_MIN_WIDTH, ATLAS_PRICE_AXIS_MIN_WIDTH, ATLAS_PRICE_AXIS_MIN_WIDTH]);
+  assert.ok(gutters[0] < gutters[1] && gutters[1] < gutters[2], 'a wider price label widens the axis');
+  assert.ok(gutters[2] - gutters[0] <= 48, 'the axis grows by the label, not by a spare column');
   const unfloored = [];
   for (const glyph of [6, 9]) {
     await withNativeRuntime(async ({ container, settle, relayout }) => {

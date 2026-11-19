@@ -114,14 +114,37 @@ export function createContentShell({ document }) {
   // The regions exist only while a dashboard route owns them, so the price
   // chart's own `.workbench-rail` / `.workbench-bottom-bar` are the only ones
   // in the document once the chart frame is back.
+  function fullFrame() {
+    return document.body?.dataset?.contentFrame === 'full';
+  }
+
+  function applyFrame() {
+    const full = fullFrame();
+    if (!rail) return full;
+    if (full) {
+      rail.className = 'workbench-rail content-rail';
+      rail.dataset.shellRegion = 'right';
+      for (const button of rail.querySelectorAll('.atlas-nav-scroll')) button.hidden = true;
+    } else if (navHost) {
+      rail.className = 'atlas-dashboard-nav content-rail';
+      rail.dataset.shellRegion = 'top';
+    }
+    return full;
+  }
+
   function mount() {
     const workspace = document.querySelector('.workspace');
     if (!workspace) return;
-    if (navHost) {
+    const full = fullFrame();
+    if (full || !navHost) {
+      if (rail.parentElement !== workspace) workspace.append(rail);
+    } else {
       const header = document.querySelector('.atlas-dashboard-header');
       if (header && navHost.parentElement !== header) header.append(navHost);
-    } else if (rail.parentElement !== workspace) workspace.append(rail);
-    if (bottom.parentElement !== workspace) workspace.append(bottom);
+    }
+    if (full) {
+      if (bottom.isConnected) bottom.remove();
+    } else if (bottom.parentElement !== workspace) workspace.append(bottom);
     // Visibility belongs to place() alone. Writing `hidden` here as well made
     // the two functions alternate the value, and the shell's mutation observer
     // re-entered sync() on every write.
@@ -186,20 +209,24 @@ export function createContentShell({ document }) {
   }
 
   function place() {
+    const full = applyFrame();
+    footer = footer || document.querySelector('#main > .footer') || document.querySelector('.footer');
+    if (full && footer && footer.parentElement === bottom && footerHome) footerHome.insertBefore(footer, footerNext);
     mount();
     nav = nav || document.querySelector('.atlas-nav');
     if (nav) {
       if (navHome === null) { navHome = nav.parentElement; navNext = nav.nextElementSibling; }
       // navHome records the chart's prior owner. A dashboard uses its header,
       // never that hidden chart rail; older documents keep their fallback host.
-      const host = navHost || (sidebarOwnsNav() ? document.querySelector('.atlas-sidebar') : rail);
+      // Full-bleed routes keep the same links in the vertical right rail.
+      const host = full ? rail : (navHost || (sidebarOwnsNav() ? document.querySelector('.atlas-sidebar') : rail));
       if (host && nav.parentElement !== host) {
         const focused = nav.contains(document.activeElement) ? document.activeElement : null;
         if (host === navHost) host.insertBefore(nav, nextNav);
         else if (host === rail) rail.prepend(nav); else host.append(nav);
         focused?.focus?.({preventScroll: true});
       }
-      if (navHost) {
+      if (navHost && !full) {
         if (!nav.id) nav.id = 'atlas-primary-navigation';
         previousNav.setAttribute('aria-controls', nav.id);
         nextNav.setAttribute('aria-controls', nav.id);
@@ -212,7 +239,10 @@ export function createContentShell({ document }) {
     }
     const hideRail = !nav || nav.parentElement !== rail;
     if (rail.hidden !== hideRail) rail.hidden = hideRail;
-    footer = footer || document.querySelector('#main > .footer') || document.querySelector('.footer');
+    if (full) {
+      if (!bottom.hidden) bottom.hidden = true;
+      return;
+    }
     if (footer) {
       if (footerHome === null) { footerHome = footer.parentElement; footerNext = footer.nextElementSibling; }
       if (footer.parentElement !== bottom) bottom.append(footer);
@@ -255,7 +285,7 @@ export function createContentShell({ document }) {
   // The current page is not focused on entry. Reveal that pill only when
   // keyboard focus is outside this row, so a later pager or Tab move is kept.
   function revealCurrentPage() {
-    if (!navHost || !nav || nav.parentElement !== navHost) return;
+    if (fullFrame() || !navHost || !nav || nav.parentElement !== navHost) return;
     if (nav.contains(document.activeElement)) return;
     revealNavigationTarget(nav.querySelector('[aria-current="page"]'));
   }

@@ -10,10 +10,10 @@ export const atlasPages = Object.freeze([
   {id:'rsi', label:'삼플레·RSI', title:'삼플레·RSI', view:'market', tab:'rsi', href:'/market-lab/rsi/', icon:'M3 4v16h18M4 14l4-3 4 4 4-9 5 4'},
   {id:'housing', label:'부동산', title:'부동산 거래량·가격', view:'market', tab:'housing', href:'/market-lab/housing/', icon:'M3 11l9-8 9 8M5 10v11h14V10M9 21v-7h6v7'},
   {id:'themes', label:'테마·재료', title:'테마·재료', view:'market', tab:'themes', href:'/market-lab/themes/', icon:'M3 5h7l3 3h8v12H3zM7 12h10M7 16h6'},
-  {id:'evidence', label:'리서치', title:'리서치', view:'evidence', href:'/?page=evidence', icon:'M12 6c-3-2-6-2-9-1v14c3-1 6-1 9 1m0-14c3-2 6-2 9-1v14c-3-1-6-1-9 1V6'},
   {id:'data', label:'자산 비교', title:'자산 비교', view:'data', href:'/?page=data', icon:'M3 4h18v16H3zM3 10h18M3 15h18M9 4v16'},
   {id:'ipo', label:'공모주', title:'공모주', view:'ipo', href:'/?page=ipo', icon:'M3 6h18v15H3zM3 11h18M8 3v5M16 3v5'},
   {id:'relay', label:'릴레이 콘텐츠', title:'릴레이 콘텐츠', view:'relay', href:'/?page=relay', icon:'M4 5h16v11H7l-3 3V5Zm4 4h8M8 12h5'},
+  {id:'evidence', label:'리서치', title:'리서치', view:'evidence', href:'/?page=evidence', icon:'M12 6c-3-2-6-2-9-1v14c3-1 6-1 9 1m0-14c3-2 6-2 9-1v14c-3-1-6-1-9 1V6'},
 ]);
 export function isWorkspaceChart(page) {
   const id=typeof page==='string'?page:page?.id;

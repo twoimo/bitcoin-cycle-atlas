@@ -25,13 +25,13 @@ SOFTWARE.
  * Exact source and license: docs/design-system/templates/shadcn-dashboard-01; /vendor/shadcn-ui-LICENSE.txt.
  * Existing chart/data controls retain their original DOM owners and handlers. */
 import {atlasSitePath} from './site-paths.js';
-import { atlasPages, atlasNavigationPages, atlasNavigationId, labPageFromLocation } from './atlas-navigation.js?v=1.36.3';
+import { atlasPages, atlasNavigationPages, atlasNavigationId, labPageFromLocation } from './atlas-navigation.js?v=1.36.4';
 import { readShellPreference, writeShellPreference } from './atlas-shell-state.js';
 import { mountCenterWorkbench } from './center-workbench.js?v=1.36.7';
 import { mountShellSlots } from './ui/shell-slots.js?v=1.0.4';
 import { mountPageDescription } from './ui/page-description.js';
-import { createContentShell, CONTENT_SHELL_PAGES } from './content-shell.js?v=1.38.1';
-import { mountAuthAccount } from './auth-account.js?v=1.1.9';
+import { createContentShell, CONTENT_SHELL_PAGES } from './content-shell.js?v=1.38.2';
+import { mountAuthAccount } from './auth-account.js?v=1.1.10';
 import { syncChartChat } from './chart-chat.js?v=1.0.2';
 import { mountTradeChrome } from './mobile-trade-chrome.js?v=1.0.11';
 
@@ -147,10 +147,13 @@ export function initAtlasShell() {
     // The compare route renders inside the price chart's frame, so it keeps the
     // same four perimeter regions instead of the dashboard composition.
     const chart = page === 'outlook' || page === 'compare';
+    const fullBleed = page === 'relay' || page === 'data' || page === 'ipo';
     document.body.dataset.shell = chart ? 'chart' : 'dashboard';
+    if (fullBleed) document.body.dataset.contentFrame = 'full';
+    else delete document.body.dataset.contentFrame;
     if (chart) delete document.body.dataset.shellWidth;
     else document.body.dataset.shellWidth = ['data', 'market', 'relay'].includes(page) ? 'wide' : 'standard';
-    header.hidden = chart; group.hidden = chart;
+    header.hidden = chart || fullBleed; group.hidden = chart;
     // One top region per route: the chart frame keeps its own toolbar selector, and
     // the page header carries it only while the dashboard composition is active.
     header.classList.toggle('atlas-canvas-heading', !chart);

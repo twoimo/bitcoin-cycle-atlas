@@ -17,7 +17,7 @@ function fixture({page='outlook', center, embedded=false, toolbar=true, beforeMo
 }
 
 test('the registered destinations and saved comparison page describe their actual basis without a shared refresh promise', () => {
-  assert.deepEqual(atlasNavigationPages.map(page => atlasPageDescription(page).title), ['가격 차트','시장 분석','리서치','자산 비교','공모주','릴레이 콘텐츠']);
+  assert.deepEqual(atlasNavigationPages.map(page => atlasPageDescription(page).title), ['가격 차트','시장 분석','자산 비교','공모주','릴레이 콘텐츠','리서치']);
   for (const page of [...atlasNavigationPages, {id:'compare'}]) {
     const info = atlasPageDescription(page);
     assert.ok(info.description.length > 15);

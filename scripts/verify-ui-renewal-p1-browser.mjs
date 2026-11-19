@@ -25,10 +25,10 @@ export const p1Destinations = Object.freeze([
   // The canonical static market route is hosted inside the existing chart
   // perimeter. It remains in the matrix, with its child viewport measured.
   {id:'market-us', page:'market', path:'market-lab/', title:'시장 분석', limit:null, hosted:true},
-  {id:'evidence', page:'evidence', path:'?page=evidence', title:'리서치', limit:1140},
   {id:'data', page:'data', path:'?page=data', title:'자산 비교', limit:1280},
   {id:'ipo', page:'ipo', path:'?page=ipo', title:'공모주', limit:1140},
   {id:'relay', page:'relay', path:'?page=relay', title:'릴레이 콘텐츠', limit:1280},
+  {id:'evidence', page:'evidence', path:'?page=evidence', title:'리서치', limit:1140},
 ].map(Object.freeze));
 export const p1Cases = Object.freeze(p1Widths.flatMap(width => p1Destinations.map(destination => Object.freeze({...destination, width, height:900, caseId:`${destination.id}-${width}`}))));
 

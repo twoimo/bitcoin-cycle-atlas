@@ -1,4 +1,4 @@
-import { mountAtlasFunnestChart, ATLAS_FUNNEST_THEME, paintMountedFunnestChart } from './funnest-chart-runtime.bundle.js?v=1.36.5';
+import { mountAtlasFunnestChart, ATLAS_FUNNEST_THEME, paintMountedFunnestChart } from './funnest-chart-runtime.bundle.js?v=1.36.6';
 import { createPriceDisplay, formatDisplayPrice } from './price-display.js?v=1.29.0';
 import { barPriceChange } from './chart-math.js?v=1.29.0';
 import { resolveMagnetPoint, advanceMeasurement } from './chart-magnet.js?v=1.29.0';

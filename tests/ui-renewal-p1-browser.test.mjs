@@ -50,7 +50,7 @@ test('P1 requires a new output path and rejects incomplete/unknown switches',()=
 });
 test('P1 matrix contains all six destinations at exactly four requested widths',()=>{
   assert.deepEqual(p1Widths,[320,390,768,1440]);
-  assert.deepEqual(p1Destinations.map(s=>s.id),['outlook','market-us','evidence','data','ipo','relay']);
+  assert.deepEqual(p1Destinations.map(s=>s.id),['outlook','market-us','data','ipo','relay','evidence']);
   assert.equal(p1Cases.length,24);assert.equal(new Set(p1Cases.map(s=>s.caseId)).size,24);
   for(const spec of p1Cases)assert.deepEqual(validateP1Layout(layout(spec),spec),[]);
 });

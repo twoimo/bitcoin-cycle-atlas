@@ -5,7 +5,7 @@ import { readChartUrlState, writeChartUrlState } from './ui/chart-url-state.js';
 import {bindPreservedArchiveDownload} from './preserved-archive-download.js?v=1.29.0';
 import {CAPITAL_POLICIES} from './treasury-instruments.js';
 import {EQUITIES,EQUITY_INTERVALS,parseEquityArchive,equityHistoryRange} from './equity-market-data.js?v=1.29.0';
-import { mountObservedPriceChart, atlasCandlesToFunnestBars } from './funnest-observed-price-adapter.js?v=1.36.7';
+import { mountObservedPriceChart, atlasCandlesToFunnestBars } from './funnest-observed-price-adapter.js?v=1.36.8';
 import {bindChartNavigation} from './chart-navigation.js?v=1.36.1';
 import {withChartSpacing,retargetChartRange} from './chart-view-policy.js?v=1.36.1';
 import {normalizePriceDomain} from './price-axis.js?v=1.29.0';
@@ -13,7 +13,7 @@ import {mountChartTouchTracking} from "./chart-touch-tracking.js?v=1.29.0";
 import {clearChartHover} from './chart-hover.js?v=1.29.0';
 import {mountSymbolSelector} from './symbol-selector.js?v=1.35.6';
 import { intervalShortLabel } from './interval-picker.js?v=1.0.0';
-import { compactQuantity, renderChartSymbolLegend, signedChange } from './chart-symbol-legend.js?v=1.0.0';
+import { compactQuantity, renderChartSymbolLegend, signedChange } from './chart-symbol-legend.js?v=1.0.1';
 import {mountDialogViewport} from './dialog-viewport.js?v=1.29.0';
 import {buildTreasuryProjection} from "./treasury-projection.js?v=1.29.0";
 import {forecastAvailabilityForSeries} from './forecast/forecast-ui-gate.js';
@@ -30,7 +30,7 @@ const icon=name=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 const button=(action,label,glyph)=>`<button type="button" class="eth-icon" data-equity-action="${action}" aria-label="${label}" title="${label}">${icon(glyph)}</button>`;
 const COLORS={financing:'#9eaff5',governance:'#b5a5df',treasury:'#e6b66d',capital:'#9eaff5',corporate:'#9eaff5',policy:'#ce94c7',market:'#d8909e',protocol:'#7dcbbb',earnings:'#7dcbbb',claims:'#c4b2ed'};
 
-import {mountChartReplay} from './chart-replay.js?v=1.36.1';
+import {mountChartReplay} from './chart-replay.js?v=1.36.2';
 
 export async function initEquityView({symbol}={}){
   const instrument=EQUITIES[symbol];if(!instrument)throw new RangeError('Unsupported equity view');

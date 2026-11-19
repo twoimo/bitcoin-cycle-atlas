@@ -23,12 +23,12 @@ body[data-page="relay"]{overflow:hidden}
 
 /* 채널 목록 */
 .relay-rooms{
-  display:grid;grid-template-rows:auto auto minmax(88px,1fr) auto;
+  display:grid;grid-template-rows:auto minmax(0,1fr) auto;
   min-width:0;min-height:0;overflow-y:auto;overscroll-behavior:contain;
   border-right:1px solid var(--border);background:var(--surface);
 }
-.relay-rooms-head{display:flex;align-items:center;gap:8px;height:56px;padding:0 6px 0 16px;border-bottom:1px solid var(--border)}
-.relay-rooms-head h2{margin:0;font-size:13px;font-weight:650;letter-spacing:0;color:var(--text)}
+.relay-rooms-head{display:flex;align-items:center;gap:8px;height:48px;padding:0 8px 0 16px;border-bottom:1px solid var(--border)}
+.relay-rooms-head h2{margin:0;font-size:13px;font-weight:500;letter-spacing:0;color:var(--text)}
 .relay-rooms-total{flex:1;color:var(--muted);font-size:var(--type-meta);font-variant-numeric:tabular-nums}
 .relay-refresh{display:grid;place-items:center;flex:none;width:44px;height:44px;padding:0;border:0;border-radius:var(--pill-radius);background:transparent;color:var(--muted);cursor:pointer;transition:background .15s ease,color .15s ease}
 .relay-refresh:hover{background:var(--surface-hover);color:var(--text)}
@@ -49,7 +49,7 @@ body[data-page="relay"]{overflow:hidden}
 .relay-room-item:hover{background:var(--surface-hover)}
 .relay-room-item[aria-current="true"]{background:var(--accent-soft)}
 .relay-room-item[aria-current="true"] .relay-room-name{color:var(--accent-ink)}
-.relay-room-avatar,.relay-peer-avatar{display:grid;place-items:center;flex:none;border:1px solid var(--border);border-radius:50%;font-weight:650;line-height:1}
+.relay-room-avatar,.relay-peer-avatar{display:grid;place-items:center;flex:none;border:1px solid var(--border);border-radius:50%;font-weight:500;line-height:1}
 .relay-room-avatar{width:48px;height:48px;font-size:19px}
 .relay-peer-avatar{width:40px;height:40px;font-size:16px}
 :is(.relay-room-avatar,.relay-peer-avatar)[data-kind="chat"]{background:var(--accent);color:var(--on-accent)}
@@ -57,16 +57,16 @@ body[data-page="relay"]{overflow:hidden}
 :is(.relay-room-avatar,.relay-peer-avatar)[data-kind="editions"]{background:var(--surface-hover);color:var(--text)}
 .relay-room-copy{display:grid;gap:2px;min-width:0}
 .relay-room-top{display:flex;align-items:baseline;gap:8px;min-width:0}
-.relay-room-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);font-size:15px;font-weight:600;line-height:22px}
+.relay-room-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);font-size:15px;font-weight:500;line-height:22px}
 .relay-room-time{flex:none;color:var(--muted);font-size:var(--type-meta);font-variant-numeric:tabular-nums}
 .relay-room-sub{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:14px;line-height:20px}
-.relay-rooms-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 16px;border-top:1px solid var(--border);color:var(--muted);font-size:var(--type-meta);font-variant-numeric:tabular-nums}
+.relay-rooms-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;height:36px;padding:0 16px;border-top:1px solid var(--border);color:var(--muted);font-size:var(--type-meta);font-weight:400;font-variant-numeric:tabular-nums}
 .relay-rooms-foot time{color:var(--text)}
 
 .relay-detail{container:relay-pane/inline-size;display:grid;grid-template-rows:auto auto minmax(0,1fr);min-width:0;min-height:0;background:var(--bg)}
-.relay-detail-head{display:flex;align-items:center;gap:12px;min-width:0;height:56px;padding:0 16px;border-bottom:1px solid var(--border);background:var(--surface)}
+.relay-detail-head{display:flex;align-items:center;gap:12px;min-width:0;height:48px;padding:0 16px;border-bottom:1px solid var(--border);background:var(--surface)}
 .relay-peer{display:grid;gap:1px;min-width:0;flex:1}
-.relay-peer h2{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);font-size:15px;font-weight:650;line-height:22px;letter-spacing:0}
+.relay-peer h2{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);font-size:15px;font-weight:500;line-height:22px;letter-spacing:0}
 .relay-peer-sub{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:var(--type-meta);line-height:18px}
 .relay-peer-updated{flex:none;color:var(--muted);font-size:var(--type-meta);font-variant-numeric:tabular-nums}
 .relay-room-back,.relay-detail-back{place-items:center;flex:none;width:44px;height:44px;padding:0;border:0;border-radius:var(--pill-radius);background:transparent;color:var(--text);cursor:pointer;transition:background .15s ease}

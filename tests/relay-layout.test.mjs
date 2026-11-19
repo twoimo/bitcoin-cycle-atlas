@@ -61,7 +61,7 @@ const heading = root => root.querySelector('.relay-detail .relay-peer h2').textC
 
 test('a room link opens that room and a post link opens that article reader', async () => {
   const deep = await mount({ search: '?room=naver' });
-  assert.equal(heading(deep.root), '인생의 방');
+  assert.equal(heading(deep.root), '플스포 인생의 방 (네프콘)');
   assert.equal(deep.root.dataset.relayPane, 'room');
   assert.equal(deep.root.querySelectorAll('[data-article]').length, 2);
   assert.equal(deep.root.querySelector('[data-room="naver"]').getAttribute('aria-current'), 'true');
@@ -177,14 +177,6 @@ test('a second back before the traversal lands requests no second history step',
   traversal.land();
   assert.deepEqual([address.href, address.index, root.dataset.relayPane], ['', 0, 'list']);
 
-  const split = await mount(), reader = deferBack(split.address);
-  click(split.root, split.window, '[data-room="naver"]');
-  click(split.root, split.window, '[data-article="n1"]');
-  click(split.root, split.window, '[data-relay-action="article-back"]');
-  search(split.root, split.window, '세금');
-  assert.equal(reader.requested(), 1, 'a filter applied while the Back is pending asks for no second one');
-  reader.land();
-  assert.deepEqual([split.address.href, split.address.index], ['?room=naver', 1]);
 });
 
 test('Esc closes a reader onto its card, then in split focuses the room row without navigating', async () => {
@@ -204,26 +196,15 @@ test('Esc closes a reader onto its card, then in split focuses the room row with
   assert.equal(focus(), 'row naver');
 });
 
-const search = (root, window, query) => {
-  root.querySelector('[name="query"]').value = query;
-  root.querySelector('form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
-};
-
-test('a filter applied in the reader pops the reader entry, so one Back then leaves the room', async () => {
-  const { root, window, address } = await mount();
-  click(root, window, '[data-room="naver"]');
-  click(root, window, '[data-article="n1"]');
-  search(root, window, '세금');
-  assert.deepEqual([address.href, address.length, address.index], ['?room=naver', 3, 1], 'the reader entry stays forward, not overwritten');
-  assert.equal(root.querySelectorAll('.relay-reader').length, 0);
-  assert.match(root.querySelector('.relay-filter-note').textContent, /'세금'/);
-  address.back();
-  assert.deepEqual([address.href, address.index], ['', 0], 'the next Back leaves the room');
-
-  const deep = await mount({ search: '?room=naver&post=n1' });
-  search(deep.root, deep.window, '세금');
-  assert.deepEqual([deep.address.href, deep.address.length], ['?room=naver', 1], 'a shared reader link is replaced');
-  assert.equal(deep.root.querySelectorAll('.relay-reader').length, 0);
+test('the channel list does not render a title search or an all-topic count', async () => {
+  const { root } = await mount();
+  assert.equal(root.querySelector('.relay-filter-form'), null);
+  assert.equal(root.querySelector('[name="query"]'), null);
+  assert.equal(root.querySelector('[name="topic"]'), null);
+  assert.equal(root.textContent.includes('제목·본문 검색'), false);
+  assert.doesNotMatch(root.textContent, /전체 \(\d+\)/);
+  assert.equal(root.querySelector('.relay-room-item').dataset.room, 'naver');
+  assert.equal(root.querySelector('.relay-room-name').textContent, '플스포 인생의 방 (네프콘)');
 });
 
 test('arrow keys, Home and End move focus between rows without opening a room', async () => {
@@ -231,15 +212,15 @@ test('arrow keys, Home and End move focus between rows without opening a room', 
   const rows = [...root.querySelectorAll('.relay-room-item')];
   rows[0].focus();
   key(active(), window, 'ArrowDown');
-  assert.equal(focus(), 'row naver');
+  assert.equal(focus(), 'row telegram');
   key(active(), window, 'End');
   assert.equal(focus(), 'row hankyung');
   key(active(), window, 'ArrowDown');
   assert.equal(focus(), 'row hankyung', 'the last row does not wrap');
   key(active(), window, 'Home');
-  assert.equal(focus(), 'row telegram');
+  assert.equal(focus(), 'row naver');
   key(active(), window, 'ArrowUp');
-  assert.equal(focus(), 'row telegram');
+  assert.equal(focus(), 'row naver');
   key(active(), window, 'End');
   assert.deepEqual(rows.map(row => row.getAttribute('tabindex')), ['-1', '-1', '0'], 'the single tab stop follows focus');
   assert.deepEqual([address.href, address.length], ['', 1]);
@@ -286,13 +267,7 @@ test('loading, error, empty, ready and no-match states each have exactly one liv
     mode = 'ready';
     await controller.reload();
     assert.deepEqual([root.dataset.relayState, statuses(), reloads()], ['ready', 1, 1]);
-    root.querySelector('[name="query"]').value = 'not-present';
-    root.querySelector('form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
-    for (const room of ['telegram', 'naver', 'hankyung']) {
-      click(root, window, `[data-room="${room}"]`);
-      assert.match(root.querySelector('.relay-detail-body').textContent, /조건에 맞는 항목이 없습니다/, room);
-      assert.equal(statuses(), 1, `${room} no-match keeps one status`);
-    }
+    assert.equal(root.querySelector('.relay-filter-form'), null);
   } finally { globalThis.fetch = originalFetch; }
 });
 
@@ -374,7 +349,7 @@ async function mountOnWindow(href, options) {
 test('the page address keeps other params, marks each push and pops it on the in-app back', async t => {
   const { root, window, history } = await mountOnWindow('https://atlas.test/?page=relay&room=naver');
   t.after(history.remove);
-  assert.equal(heading(root), '인생의 방');
+  assert.equal(heading(root), '플스포 인생의 방 (네프콘)');
   click(root, window, '[data-article="n1"]');
   assert.equal(history.url(), 'https://atlas.test/?page=relay&room=naver&post=n1');
   assert.deepEqual(history.entries[1].state, { relay: { from: 'room=naver' } });
@@ -391,7 +366,7 @@ test('a document that refuses URL writes still opens rooms and never pops histor
   const { root, window, history } = await mountOnWindow('https://atlas.test/?page=relay', { refuseWrites: true });
   t.after(history.remove);
   click(root, window, '[data-room="naver"]');
-  assert.equal(heading(root), '인생의 방');
+  assert.equal(heading(root), '플스포 인생의 방 (네프콘)');
   click(root, window, '[data-article="n1"]');
   click(root, window, '[data-relay-action="article-back"]');
   assert.equal(root.querySelectorAll('.relay-reader').length, 0);

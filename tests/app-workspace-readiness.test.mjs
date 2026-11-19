@@ -12,10 +12,10 @@ import {readP1RouteReadiness, isP1RouteReady} from '../scripts/verify-ui-renewal
 const app = readFileSync(new URL('../dist/app.js', import.meta.url), 'utf8');
 const shell = readFileSync(new URL('../dist/atlas-shell.js', import.meta.url), 'utf8');
 const lifecycle = app.slice(app.indexOf('let outlookController ='), app.indexOf('function ensureEvidence()'))
-  .replace("import('./viewport-workspace.js?v=1.36.20')", 'loadViewport()')
-  .replace("import('./lab-view.js?v=1.36.19')", 'loadLab()')
-  .replace("import(`./viewport-workspace.js?v=1.36.20&retry=${attempt}`)", 'loadViewport()')
-  .replace("import(`./lab-view.js?v=1.36.19&retry=${attempt}`)", 'loadLab()');
+  .replace("import('./viewport-workspace.js?v=1.36.29')", 'loadViewport()')
+  .replace("import('./lab-view.js?v=1.36.23')", 'loadLab()')
+  .replace("import(`./viewport-workspace.js?v=1.36.29&retry=${attempt}`)", 'loadViewport()')
+  .replace("import(`./lab-view.js?v=1.36.23&retry=${attempt}`)", 'loadLab()');
 assert.doesNotMatch(lifecycle, /\bimport\(/, 'only the two module import boundaries are deferred by this fixture');
 const syncPage = app.slice(app.indexOf('function syncPage()'), app.indexOf('\nsyncPage();'));
 const syncShell = shell.slice(shell.indexOf('  function sync() {'), shell.indexOf('  const pageObserver ='))
@@ -141,7 +141,8 @@ test('a ready dashboard cannot expose an undrawn first chart to the unchanged P1
   for (const width of [320, 1440]) await t.test(`DOM lifecycle with ${width}px media`, async t => {
     const f = fixture(t, width), {document, nav} = f;
     assert.equal(f.ready('relay'), true);
-    assert.ok(nav.parentElement.matches('.atlas-dashboard-nav.content-rail'));
+    assert.ok(nav.parentElement.matches('#content-rail.workbench-rail'));
+    assert.equal(nav.parentElement.dataset.shellRegion, 'right');
     f.navigate('outlook');
     assert.equal(document.documentElement.dataset.boot, 'ready', 'a route transition does not restart document boot');
     assert.equal(f.ready('outlook'), false);
@@ -165,7 +166,8 @@ test('a ready dashboard cannot expose an undrawn first chart to the unchanged P1
     }
     f.navigate('relay');
     assert.equal(f.ready('relay'), true);
-    assert.ok(nav.parentElement.matches('.atlas-dashboard-nav.content-rail'));
+    assert.ok(nav.parentElement.matches('#content-rail.workbench-rail'));
+    assert.equal(nav.parentElement.dataset.shellRegion, 'right');
     f.navigate('outlook');
     assert.equal(f.ready('outlook'), false, 'each visible chart return waits for its own draw');
     f.finishDraw('outlook');
@@ -180,8 +182,9 @@ test('the data dashboard exposes its one live navigation identity and original c
   const f=fixture(t),{document,nav}=f,original=[...nav.children];
   f.navigate('data');
   const owner=document.querySelector('.content-rail');
-  assert.ok(owner?.matches('.atlas-dashboard-nav'));
-  assert.equal(owner.parentElement,document.querySelector('.atlas-dashboard-header'));
+  assert.ok(owner?.matches('.workbench-rail.content-rail'));
+  assert.equal(owner.dataset.shellRegion, 'right');
+  assert.equal(owner.parentElement,document.querySelector('.workspace'));
   assert.equal(owner.hidden,false);assert.equal(document.querySelectorAll('.content-rail').length,1);
   assert.equal(document.querySelectorAll('.atlas-nav').length,1);assert.deepEqual([...nav.children],original);
   // These are the unchanged dataCase's actual service-owner queries. The

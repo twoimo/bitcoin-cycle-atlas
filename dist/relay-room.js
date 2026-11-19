@@ -205,9 +205,16 @@ function countLabel(room) {
   const count = relayEntries(room).length;
   return room.kind === 'chat' ? `메시지 ${count}개` : room.kind === 'articles' ? `글 ${count}편` : `판본 ${count}개`;
 }
+const ROOM_LABELS = { naver: '플스포 인생의 방 (네프콘)' };
+function roomLabel(room) {
+  return ROOM_LABELS[room?.id] || room?.title || room?.id || '';
+}
 function shortTitle(room) {
-  const title = String(room.title || room.id);
+  const title = roomLabel(room);
   return title.replace(/\s*\([^)]*\)\s*$/, '').trim() || title;
+}
+function listedRooms(rooms) {
+  return [...rooms].sort((left, right) => Number(right.id === 'naver') - Number(left.id === 'naver'));
 }
 const graphemes = new Intl.Segmenter('ko', { granularity: 'grapheme' });
 const initial = room => graphemes.segment(shortTitle(room))[Symbol.iterator]().next().value?.segment ?? '';
@@ -427,22 +434,13 @@ function renderPhase(phase) {
 }
 
 function renderFrame(view) {
-  const { data, filters } = view, entries = data.rooms.flatMap(room => relayEntries(room));
-  const topics = entries.map(entry => classifyRelayEntry(entry).topics.map(match => match.id));
-  const options = RELAY_TOPICS.map(tag => `<option value="${tag.id}"${filters.topic === tag.id ? ' selected' : ''}>${tag.label} (${topics.filter(ids => ids.includes(tag.id)).length})</option>`).join('');
+  const { data } = view;
   const generated = data.generatedAt ? hhmm(data.generatedAt) : '';
   return `<div class="relay-panes">
     <aside class="relay-rooms" aria-label="릴레이 채널">
       <header class="relay-rooms-head"><h2>채널</h2><span class="relay-rooms-total">${data.rooms.length}</span><button type="button" class="relay-refresh" data-relay-action="reload" aria-label="릴레이 새로고침" title="새로고침">${GLYPH.refresh}</button></header>
-      <form class="relay-filter-form" role="search" aria-label="릴레이 분류와 검색">
-        <label class="relay-filter-query"><span class="relay-filter-label">원문 검색</span><input type="search" name="query" aria-label="릴레이 제목·본문 검색" value="${esc(filters.query)}" placeholder="제목·본문 검색" enterkeyhint="search"></label>
-        <button type="submit">검색</button>
-        <label class="relay-filter-topic"><span class="relay-filter-label">주제</span><select name="topic" aria-label="릴레이 주제"><option value="all">전체 (${entries.length})</option>${options}</select></label>
-        <button type="button" data-relay-action="clear-filters">초기화</button>
-        <output role="status" aria-live="polite"></output>
-      </form>
       <ul class="relay-room-list" aria-label="채널 목록"></ul>
-      <footer class="relay-rooms-foot">${generated ? `<span>15분마다 갱신</span><time datetime="${esc(data.generatedAt)}">${esc(generated)}</time>` : '<span>RelayDeck</span>'}</footer>
+      <footer class="relay-rooms-foot" role="status">${generated ? `<span>15분마다 갱신</span><time datetime="${esc(data.generatedAt)}">${esc(generated)}</time>` : '<span>RelayDeck</span>'}</footer>
     </aside>
     <section class="relay-detail" aria-labelledby="relay-room-title"></section>
     <div class="relay-backdrop" aria-hidden="true"></div>
@@ -450,13 +448,14 @@ function renderFrame(view) {
 }
 
 function renderRows(view) {
-  return view.data.rooms.map(room => {
+  return listedRooms(view.data.rooms).map(room => {
     const total = relayEntries(room).length, raw = entryTime(relayEntries(room).at(-1));
+    const label = roomLabel(room);
     const sub = view.filtering ? `${view.byRoom.get(room.id).length} / ${total}건 일치` : roomPreview(room);
-    return `<li><button type="button" class="relay-room-item" data-room="${esc(room.id)}" title="${esc(room.title || room.id)}" tabindex="-1">
+    return `<li><button type="button" class="relay-room-item" data-room="${esc(room.id)}" title="${esc(label)}" tabindex="-1">
       <span class="relay-room-avatar" data-kind="${room.kind}" aria-hidden="true">${esc(initial(room))}</span>
       <span class="relay-room-copy">
-        <span class="relay-room-top"><span class="relay-room-name">${esc(room.title || room.id)}</span>${raw ? `<time class="relay-room-time" datetime="${esc(raw)}">${esc(rowTime(raw))}</time>` : ''}</span>
+        <span class="relay-room-top"><span class="relay-room-name">${esc(label)}</span>${raw ? `<time class="relay-room-time" datetime="${esc(raw)}">${esc(rowTime(raw))}</time>` : ''}</span>
         <span class="relay-room-sub">${esc(sub)}</span>
       </span>
     </button></li>`;
@@ -464,7 +463,7 @@ function renderRows(view) {
 }
 
 function renderRoom(view) {
-  const { room, article, data } = view, title = room.title || room.id, src = assetSource(data.assets);
+  const { room, article, data } = view, title = roomLabel(room), src = assetSource(data.assets);
   const lead = article
     ? `<button type="button" class="relay-detail-back" data-relay-action="article-back" aria-label="글 목록으로" title="글 목록">${GLYPH.back}</button>`
     : `<button type="button" class="relay-room-back" data-relay-action="room-back" aria-label="채널 목록으로" title="채널 목록">${GLYPH.back}</button><span class="relay-peer-avatar" data-kind="${room.kind}" aria-hidden="true">${esc(initial(room))}</span>`;
@@ -474,7 +473,7 @@ function renderRoom(view) {
     ? `<p class="relay-filter-note">${esc([query ? `'${query}'` : '', topic, `${view.shown.length} / ${relayEntries(room).length}건`].filter(Boolean).join(' · '))}</p>` : '';
   const body = room.kind === 'chat' ? chatDetail(room, view, src)
     : room.kind === 'editions' ? editionDetail(room, view, src)
-      : article ? articleReader(article, room.title || '인생의 방', src) : articleStream(view, src);
+      : article ? articleReader(article, title, src) : articleStream(view, src);
   return `<header class="relay-detail-head${article ? ' relay-detail-head--reading' : ''}">${lead}
       <div class="relay-peer"><h2 id="relay-room-title">${esc(title)}</h2><p class="relay-peer-sub">${esc([room.subtitle, countLabel(room)].filter(Boolean).join(' · '))}</p></div>
       ${data.generatedAt ? `<span class="relay-peer-updated">최근 갱신 ${esc(hhmm(data.generatedAt))}</span>` : ''}
@@ -703,7 +702,8 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     const filters = `${next.filters.topic}\u0000${next.filters.query}`;
     if (painted.rows !== filters) {
       root.querySelector('.relay-room-list').innerHTML = renderRows(next);
-      for (const option of root.querySelector('[name="topic"]').options) option.selected = option.value === next.filters.topic;
+      const topic = root.querySelector('[name="topic"]');
+      if (topic) for (const option of topic.options) option.selected = option.value === next.filters.topic;
       painted.rows = filters;
       painted.selected = null;
     }
@@ -719,8 +719,8 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     const totals = [...next.byRoom.values()].reduce((sum, rows) => sum + rows.length, 0);
     const status = `${totals} / ${next.data.rooms.reduce((sum, room) => sum + relayEntries(room).length, 0)}건 · 원문 키워드 분류`;
     const output = root.querySelector('.relay-filter-form output');
-    if (output.textContent !== status) output.textContent = status;
-    root.querySelector('[data-relay-action="clear-filters"]').toggleAttribute('hidden', !next.filtering);
+    if (output && output.textContent !== status) output.textContent = status;
+    root.querySelector('[data-relay-action="clear-filters"]')?.toggleAttribute('hidden', !next.filtering);
     const roomKey = [next.room.id, next.article?.id ?? '', next.edition ? `${next.edition.index}.${next.edition.page}` : '', filters].join('\u0000');
     if (painted.room === roomKey) return false;
     root.querySelector('.relay-detail').innerHTML = renderRoom(next);
@@ -889,7 +889,8 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     const pageButton = event.target.closest('.relay-pager [data-page]');
     if (pageButton) { setCursor(view.edition.index, Number(pageButton.dataset.page)); return; }
     if (action === 'clear-filters') {
-      root.querySelector('[name="query"]').value = '';
+      const field = root.querySelector('[name="query"]');
+      if (field) field.value = '';
       applyFilters(NO_FILTERS, 'query');
     } else if (action === 'article-back' || action === 'room-back') leave();
     else if (action === 'page-prev') setCursor(view.edition.index, Math.max(0, view.edition.page - 1));

@@ -1,4 +1,9 @@
-const LOGOS = { BTC: 'https://static.upbit.com/logos/BTC.png', ETH: 'https://static.upbit.com/logos/ETH.png' };
+const LOGOS = {
+  BTC: 'https://static.upbit.com/logos/BTC.png',
+  ETH: 'https://static.upbit.com/logos/ETH.png',
+  MSTR: 'https://financialmodelingprep.com/image-stock/MSTR.png',
+  BMNR: 'https://financialmodelingprep.com/image-stock/BMNR.png',
+};
 
 export function symbolLogo(base) {
   return LOGOS[base] || '';
@@ -42,6 +47,7 @@ export function renderChartSymbolLegend(root, { name = '', logo = '', interval =
     img.alt = '';
     img.width = 18;
     img.height = 18;
+    img.addEventListener('error', () => img.remove(), { once: true });
   }
   add(title, 'b', '', name);
   for (const part of [interval, source].filter(Boolean)) {

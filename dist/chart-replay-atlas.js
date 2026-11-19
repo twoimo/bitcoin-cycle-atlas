@@ -1,5 +1,5 @@
 import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.36.7';
-import {mountAtlasBtcFunnestChart} from './btc-funnest-chart.js?v=1.36.9';
+import {mountAtlasBtcFunnestChart} from './btc-funnest-chart.js?v=1.36.10';
 import {buildCycleMilestones,INTERVAL_RELATIONS} from './cycle-milestones.js?v=1.29.0';
 import {validateDataset,utcDay,dateFromDay} from './cycle-engine.js?v=1.29.0';
 import {detectDirectionalChanges,computeRollingStates} from './market-structure.js?v=1.29.0';

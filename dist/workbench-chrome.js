@@ -9,7 +9,7 @@ import { mountSymbolSelector } from './symbol-selector.js?v=1.35.6';
 import { mountChartDrawbar } from './chart-drawbar.js?v=1.0.4';
 import { createThemeControl } from './ui/theme.js';
 import { createChartColorsControl } from './ui/chart-colors.js';
-import { mountAuthAccount } from './auth-account.js?v=1.1.9';
+import { mountAuthAccount } from './auth-account.js?v=1.1.10';
 const $ = selector => document.querySelector(selector);
 
 const paths = {
@@ -139,17 +139,43 @@ export function mountWorkbenchChrome({icon,stage,workspace,plot,tools,controlSto
     for(const node of axisGroup.children)setPressed(node,node.dataset.toolValue===axis);
   }
   function closeTools(focus=false){if(toolsPanel.hidden)return;toolsPanel.hidden=true;toolsButton.setAttribute('aria-expanded','false');if(focus)toolsButton.focus({preventScroll:true});}
+  function toolsAnchor(){
+    const visible=document.querySelector('.atlas-trade-tools-btn');
+    const bounds=visible?.getBoundingClientRect();
+    return bounds&&bounds.width>0?visible:toolsButton;
+  }
+  function placeTools(){
+    const view=window;
+    if(!Number.isFinite(view.innerWidth)||!Number.isFinite(view.innerHeight))return;
+    const desktop=view.innerWidth>1024;
+    const phone=view.innerWidth<=640;
+    const panelWidth=phone?view.innerWidth-16:!desktop?Math.min(360,view.innerWidth-16):Math.min(560,view.innerWidth-32);
+    const shared=[['position','fixed'],['margin','0'],['right','auto'],['bottom','auto'],['height','auto'],['width',`${panelWidth}px`],['max-width',`${panelWidth}px`]];
+    if(desktop){
+      const maxHeight=Math.min(480,Math.max(240,view.innerHeight-160));
+      for(const [name,value] of [...shared,['left','50%'],['top','50%'],['max-height',`${maxHeight}px`],['transform','translate(-50%, -50%)']])toolsPanel.style.setProperty(name,value);
+      return;
+    }
+    const bounds=toolsAnchor()?.getBoundingClientRect?.()||{right:16,bottom:40,width:32};
+    const top=Math.max(8,(bounds.bottom||40)+8);
+    const margin=phone?8:16;
+    for(const [name,value] of [...shared,
+      ['left',`${phone?8:Math.max(margin,Math.min(view.innerWidth-panelWidth-margin,(bounds.right||panelWidth)-panelWidth))}px`],
+      ['top',`${top}px`],
+      ['max-height',`${Math.min(480,Math.max(240,view.innerHeight-top-96))}px`],
+      ['transform','none'],
+    ])toolsPanel.style.setProperty(name,value);
+  }
   function openTools(){
     if(!toolsPanel.hidden){closeTools(true);return;}
     toolsPanel.hidden=false;toolsButton.setAttribute('aria-expanded','true');syncTools();
-    const bounds=toolsButton.getBoundingClientRect(),width=300;toolsPanel.style.width=`${width}px`;
-    toolsPanel.style.left=`${Math.max(8,Math.min(window.innerWidth-width-8,bounds.left))}px`;
-    toolsPanel.style.top=`${Math.min(window.innerHeight-16,bounds.bottom+6)}px`;
+    placeTools();
     toolsPanel.querySelector('[aria-checked="true"]:not(:disabled),button:not(:disabled)')?.focus({preventScroll:true});
   }
   toolsButton.onclick=openTools;toolsWrap.append(toolsButton);document.body.append(toolsPanel);
+  window.addEventListener('resize',()=>{if(!toolsPanel.hidden)placeTools();});
   document.addEventListener('atlas:workbench-state',event=>{chartToolState={chartType:event.detail?.chartType||chartToolState.chartType,scale:event.detail?.scale||chartToolState.scale,unit:event.detail?.unit||chartToolState.unit};if(!toolsPanel.hidden)syncTools();});
-  document.addEventListener('pointerdown',event=>{if(!toolsPanel.hidden&&!toolsPanel.contains(event.target)&&!toolsButton.contains(event.target))closeTools();},true);
+  document.addEventListener('pointerdown',event=>{if(!toolsPanel.hidden&&!toolsPanel.contains(event.target)&&!toolsButton.contains(event.target)&&!toolsAnchor().contains(event.target))closeTools();},true);
   document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!toolsPanel.hidden){event.preventDefault();closeTools(true);}});
   const scenario=panelButton(button('scenario','미래 가정 선택'),'scenarios');scenario.id='workbench-scenario';
   const scenarioName=document.createElement('span');scenarioName.id='workbench-scenario-name';scenarioName.textContent='기본 가정';scenario.append(scenarioName);

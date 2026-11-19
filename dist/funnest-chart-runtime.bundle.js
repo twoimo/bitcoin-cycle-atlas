@@ -2420,35 +2420,39 @@ function drawMain(layer, m) {
   for (const pane of f.panes) if (pane.kind !== "main") p.hLine(pane.top, 0, f.plotWidth, pal.border);
   p.vLine(f.plotWidth, 0, f.panesHeight, pal.border);
   p.hLine(f.panesHeight, 0, f.width, pal.border);
-  const labelX = f.plotWidth + 8;
+  const labelRight = f.width - 8;
   for (const price of f.priceTicks) {
     const y = main.scale.priceToY(price);
     if (y < 8 || y > main.height - 8) continue;
     if (last && y > lastY - BADGE_HEIGHT && y < lastY + (f.countdown ? BADGE_HEIGHT * 2 - 4 : BADGE_HEIGHT)) continue;
-    p.text((main.tickFormat ?? m.formatPrice)(price), labelX, y, pal.textSecondary);
+    p.text((main.tickFormat ?? m.formatPrice)(price), labelRight, y, pal.textSecondary, "right");
   }
   for (const pane of f.panes) {
     if (pane.kind !== "indicator") continue;
     for (const v of pane.ticks) {
       const y = pane.top + pane.scale.priceToY(v);
       if (y < pane.top + 8 || y > pane.top + pane.height - 8) continue;
-      p.text((pane.tickFormat ?? pane.format)(v), labelX, y, pal.textSecondary);
+      p.text((pane.tickFormat ?? pane.format)(v), labelRight, y, pal.textSecondary, "right");
     }
   }
   for (const badge of badges) {
     const y = Math.min(main.height - BADGE_HEIGHT / 2, Math.max(BADGE_HEIGHT / 2, badge.y));
-    p.roundRect(f.plotWidth + 2, y - BADGE_HEIGHT / 2, f.width - f.plotWidth - 4, BADGE_HEIGHT, 4, badge.bg);
-    p.text(badge.text, labelX, y, badge.fg);
+    const badgeWidth = Math.ceil(p.measure(badge.text)) + 16;
+    p.roundRect(f.width - badgeWidth - 4, y - BADGE_HEIGHT / 2, badgeWidth, BADGE_HEIGHT, 4, badge.bg);
+    p.text(badge.text, labelRight, y, badge.fg, "right");
   }
   if (last && lastY >= 0 && lastY <= main.height) {
     const h = f.countdown ? BADGE_HEIGHT * 2 - 4 : BADGE_HEIGHT;
     const y = Math.min(main.height - h + BADGE_HEIGHT / 2, Math.max(BADGE_HEIGHT / 2, lastY));
-    p.roundRect(f.plotWidth + 2, y - BADGE_HEIGHT / 2, f.width - f.plotWidth - 4, h, 4, lastColor);
-    p.text(main.format(last.close), labelX, y, "#FFFFFF");
+    const lastText = main.format(last.close);
+    const textWidth = Math.max(p.measure(lastText), f.countdown ? p.measure(f.countdown) : 0);
+    const lastBadgeWidth = Math.ceil(textWidth) + 16;
+    p.roundRect(f.width - lastBadgeWidth - 4, y - BADGE_HEIGHT / 2, lastBadgeWidth, h, 4, lastColor);
+    p.text(lastText, labelRight, y, "#FFFFFF", "right");
     if (f.countdown) {
       p.ctx.save();
       p.ctx.globalAlpha = 0.85;
-      p.text(f.countdown, labelX, y + BADGE_HEIGHT - 4, "#FFFFFF");
+      p.text(f.countdown, labelRight, y + BADGE_HEIGHT - 4, "#FFFFFF", "right");
       p.ctx.restore();
     }
   }
@@ -2522,8 +2526,9 @@ function drawCrosshairValue(p, m, ch) {
   const pane = f.panes.find((x) => x.id === ch.pane);
   const valueLabel = pane ? pane.format(ch.value) : m.formatPrice(ch.value);
   const by = Math.min(f.panesHeight - BADGE_HEIGHT / 2, Math.max(BADGE_HEIGHT / 2, ch.y));
-  p.roundRect(f.plotWidth + 2, by - BADGE_HEIGHT / 2, f.width - f.plotWidth - 4, BADGE_HEIGHT, 4, pal.text);
-  p.text(valueLabel, f.plotWidth + 8, by, pal.background);
+  const crosshairBadgeWidth = Math.ceil(p.measure(valueLabel)) + 16;
+  p.roundRect(f.width - crosshairBadgeWidth - 4, by - BADGE_HEIGHT / 2, crosshairBadgeWidth, BADGE_HEIGHT, 4, pal.text);
+  p.text(valueLabel, f.width - 8, by, pal.background, "right");
 }
 var MINUTE = 6e4;
 var DAY_MS = 864e5;
@@ -4442,7 +4447,8 @@ var Chart = class {
 var BAR_FIELDS = ["time", "open", "high", "low", "close"];
 var TIME_SCALE_BUDGET = Object.freeze({ minBarSpacing: 0.5, maxBarSpacing: 64, maxBars: 6e3 });
 var NATIVE_TIME_LABEL_MIN_GAP = 72;
-var ATLAS_PRICE_AXIS_MIN_WIDTH = 80;
+var ATLAS_PRICE_AXIS_MIN_WIDTH = 0;
+var PRICE_AXIS_LABEL_PAD = 24;
 function sourceInterval(bars) {
   let interval = Infinity;
   for (let index = Math.max(1, bars.length - 20); index < bars.length; index++) interval = Math.min(interval, bars[index].time - bars[index - 1].time);
@@ -4582,6 +4588,59 @@ function setFunnestPriceExtrema(chart, domain) {
   scale.autoScale = false;
   scale.setRange(min, max);
   chart.invalidate();
+}
+function measuredPriceAxisWidth(chart, frame) {
+  const canvas = chart.mainLayer?.canvas;
+  const context = canvas?.getContext?.("2d");
+  if (!context || !frame?.font) return 0;
+  context.save();
+  context.font = frame.font;
+  let labelWidth = 0;
+  const measure = (text) => {
+    if (text) labelWidth = Math.max(labelWidth, context.measureText(String(text)).width);
+  };
+  const main = frame.panes?.find((pane) => pane.kind === "main");
+  if (main) {
+    for (const value of main.ticks || frame.priceTicks || []) measure((main.tickFormat ?? main.format)?.(value));
+    const last = chart.bars?.at?.(-1);
+    if (last) measure(main.format?.(last.close));
+  }
+  measure(frame.countdown);
+  for (const pane of frame.panes || []) {
+    if (pane.kind !== "indicator") continue;
+    for (const value of pane.ticks || []) measure((pane.tickFormat ?? pane.format)?.(value));
+  }
+  context.restore();
+  return labelWidth > 0 ? Math.ceil(labelWidth + PRICE_AXIS_LABEL_PAD) : 0;
+}
+function followPriceLabelWidth(chart) {
+  if (typeof chart.computeFrame !== "function") return;
+  const original = chart.computeFrame.bind(chart);
+  let lock = null;
+  chart.computeFrame = function() {
+    if (lock != null) return original();
+    const frame = original();
+    const tight = measuredPriceAxisWidth(chart, frame);
+    if (!(tight > 0) || tight === chart.priceAxisWidth) return frame;
+    const current = Object.getOwnPropertyDescriptor(chart, "priceAxisWidth");
+    if (!current?.get || !current?.set) return frame;
+    lock = tight;
+    Object.defineProperty(chart, "priceAxisWidth", {
+      configurable: true,
+      enumerable: true,
+      get: () => current.get.call(chart),
+      set() {
+        current.set.call(chart, lock);
+      }
+    });
+    try {
+      current.set.call(chart, tight);
+      return original();
+    } finally {
+      Object.defineProperty(chart, "priceAxisWidth", current);
+      lock = null;
+    }
+  };
 }
 function holdFunnestPriceAxisWidth(chart, viewerOwnsViewport, minWidth = 0) {
   if (!chart || typeof chart.priceAxisWidth !== "number") throw new TypeError("Funnest 0.6.22 price-axis width field is unavailable");
@@ -4819,6 +4878,7 @@ function mountAtlasFunnestChart(container, options = {}) {
     chart.timeScale.options.minBarSpacing = Math.min(TIME_SCALE_BUDGET.minBarSpacing, width / span);
   };
   holdFunnestPriceAxisWidth(chart, () => !initialRangeOwned, minPriceAxisWidth);
+  followPriceLabelWidth(chart);
   mapData(bars);
   chart.setData(currentBars);
   chart.setChartType(chartType);

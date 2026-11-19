@@ -1025,7 +1025,7 @@ body.atlas-funnest-compact.atlas-draw-open[data-shell="chart"]:not([data-center-
 }
 body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) .chart-legend-dock { top: 8px !important; }
 body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) .atlas-plot > #lab-metrics { top: 8px !important; }
-body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) .atlas-plot > .workbench-market-info { top: 44px !important; }
+body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) .atlas-plot > .workbench-market-info { top: var(--source-top, 44px) !important; }
 body.atlas-funnest-compact #workbench-frequency button {
   height: 32px !important;
   min-height: 32px !important;
@@ -1252,24 +1252,29 @@ body.atlas-funnest-compact[data-shell="dashboard"] #evidence-view .evidence-cont
 
 /* Indicator browser and chart tools menu, measured from the Funnest trade page. */
 dialog.indicator-library.indicator-browser{
-  width:min(1080px,calc(100vw - 32px));max-width:1080px;height:min(760px,calc(100dvh - 48px));max-height:min(760px,calc(100dvh - 48px));
-  margin:auto;padding:0;border:0;border-radius:14px;background:#17171c;color:#ececef;
-  box-shadow:rgba(0,0,0,.5) 0 24px 80px,#2c2c35 0 0 0 1px;font:14px/1.4 var(--font,Pretendard,sans-serif);overflow:hidden
+  position:fixed;z-index:80;box-sizing:border-box;width:min(560px,calc(100vw - 32px));max-width:min(560px,calc(100vw - 32px));
+  height:auto;max-height:min(480px,calc(100dvh - 160px));margin:0;padding:12px;border:0;border-radius:12px;background:#17171c;color:#e4e4e5;
+  box-shadow:rgba(0,0,0,.16) 0 8px 28px,#2c2c35 0 0 0 1px;font:14px/1.4 var(--font,Pretendard,sans-serif);overflow:auto
+}
+body.atlas-funnest-compact dialog.indicator-library.indicator-browser{
+  width:min(360px,calc(100vw - 16px));max-width:min(360px,calc(100vw - 16px));padding:8px
 }
 dialog.indicator-library.indicator-browser[open]{display:flex;flex-direction:column}
-dialog.indicator-library.indicator-browser::backdrop{background:rgba(0,0,0,.55)}
+dialog.indicator-library.indicator-browser::backdrop{background:transparent}
 dialog.indicator-library.indicator-browser .indicator-browser-title,
 dialog.indicator-library.indicator-browser #indicator-library-description{
   position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0
 }
 dialog.indicator-library.indicator-browser .indicator-library-heading{
-  display:flex;align-items:center;gap:10px;height:56px;min-height:56px;padding:0 10px 0 18px;background:#17171c;border:0
+  display:flex;align-items:center;gap:8px;box-sizing:border-box;height:48px;min-height:48px;padding:4px 4px 4px 8px;background:#17171c;border:0;position:sticky;top:0;z-index:2
 }
 dialog.indicator-library.indicator-browser .indicator-browser-search-icon{display:grid;width:16px;height:16px;flex:none;color:#7e7e87}
 dialog.indicator-library.indicator-browser .indicator-browser-search-icon svg{width:16px;height:16px}
 dialog.indicator-library.indicator-browser #indicator-search{
-  flex:1;width:auto;height:40px;margin:0;padding:0 2px;border:0;border-radius:0;background:transparent;color:#ececef;font:16px/1.4 var(--font,sans-serif);box-shadow:none
+  flex:1;min-width:0;width:auto;box-sizing:border-box;height:32px;min-height:32px;max-height:32px;margin:0;padding:0 8px;border:1px solid #2c2c35;border-radius:8px;background:transparent;color:#ececef;font:16px/30px var(--font,sans-serif);box-shadow:none
 }
+dialog.indicator-library.indicator-browser #indicator-search:focus,
+dialog.indicator-library.indicator-browser #indicator-search:focus-visible{outline:none;border-color:var(--accent)}
 dialog.indicator-library.indicator-browser #indicator-search::placeholder{color:#7e7e87}
 dialog.indicator-library.indicator-browser .indicator-browser-count{
   flex:none;padding:3px 8px;border-radius:6px;background:#202027;color:#b0b0ba;font-size:12px;line-height:14px
@@ -1278,19 +1283,21 @@ dialog.indicator-library.indicator-browser .indicator-library-heading>button{
   width:30px;height:30px;min-height:30px;padding:0;border:0;border-radius:8px;background:transparent;color:#b0b0ba
 }
 dialog.indicator-library.indicator-browser .indicator-library-views{
-  display:flex;gap:4px;padding:8px 14px;background:#17171c
+  display:flex;gap:4px;padding:4px;background:#17171c;position:sticky;top:48px;z-index:1
 }
 dialog.indicator-library.indicator-browser .indicator-library-views button{
-  flex:none;min-height:30px;height:30px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:#7e7e87;font:600 13.5px/30px var(--font,sans-serif)
+  flex:none;min-height:30px;height:30px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:#7e7e87;font:500 13px/30px var(--font,sans-serif)
 }
 dialog.indicator-library.indicator-browser .indicator-library-views button[aria-pressed=true]{background:#202027;color:#ececef}
-dialog.indicator-library.indicator-browser .indicator-browser-body{display:grid;grid-template-columns:minmax(0,1fr) 380px;min-height:0;flex:1}
+dialog.indicator-library.indicator-browser .indicator-browser-body{display:flex;flex-direction:column;min-height:0;flex:1}
 dialog.indicator-library.indicator-browser .indicator-browser-list,
 dialog.indicator-library.indicator-browser .indicator-browser-detail{min-height:0;overflow:auto;overscroll-behavior:contain}
-dialog.indicator-library.indicator-browser .indicator-browser-list{padding:6px 18px 16px}
-dialog.indicator-library.indicator-browser .indicator-browser-detail{background:#101013;padding:16px}
-dialog.indicator-library.indicator-browser .indicator-browser-section-head{display:flex;align-items:baseline;gap:8px;margin:14px 0 8px;color:#ececef}
-dialog.indicator-library.indicator-browser .indicator-browser-section-head strong{font-size:13px;font-weight:650}
+dialog.indicator-library.indicator-browser .indicator-browser-list{padding:0 0 8px}
+dialog.indicator-library.indicator-browser .indicator-browser-detail,
+dialog.indicator-library.indicator-browser .indicator-browser-featured,
+dialog.indicator-library.indicator-browser .indicator-library-help{display:none}
+dialog.indicator-library.indicator-browser .indicator-browser-section-head{display:flex;align-items:baseline;gap:8px;margin:0;padding:8px 10px 4px;color:#7e7e87}
+dialog.indicator-library.indicator-browser .indicator-browser-section-head strong{font-size:12px;font-weight:500;color:#7e7e87}
 dialog.indicator-library.indicator-browser .indicator-browser-section-head span,
 dialog.indicator-library.indicator-browser .indicator-result-count{color:#7e7e87;font-size:12px}
 dialog.indicator-library.indicator-browser .indicator-browser-cards{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
@@ -1309,17 +1316,21 @@ dialog.indicator-library.indicator-browser .indicator-categories button{
 dialog.indicator-library.indicator-browser .indicator-categories button[aria-pressed=true]{background:#ececef;color:#17171c}
 dialog.indicator-library.indicator-browser .indicator-library-results{padding:0;overflow:visible}
 dialog.indicator-library.indicator-browser .indicator-library-row{
-  display:flex;align-items:center;gap:8px;min-height:52px;padding:6px 8px;border-radius:10px
+  display:flex;align-items:center;gap:4px;min-height:36px;padding:2px 4px;border-radius:8px
 }
 dialog.indicator-library.indicator-browser .indicator-library-row[data-selected=true]{background:#202027}
 dialog.indicator-library.indicator-browser .indicator-library-item{
-  min-height:40px;padding:4px 8px;background:transparent;color:#ececef
+  display:flex;flex:1;min-width:0;align-items:center;min-height:40px;padding:4px 6px;background:transparent;color:#ececef;text-align:left
 }
+dialog.indicator-library.indicator-browser .indicator-library-item>span{display:flex;flex-direction:column;min-width:0;align-items:flex-start;line-height:1.3}
+dialog.indicator-library.indicator-browser .indicator-library-item strong,
+dialog.indicator-library.indicator-browser .indicator-library-item small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body[data-shell=chart]:not(.atlas-funnest-compact) dialog.indicator-library.indicator-browser .indicator-library-item small{white-space:normal;text-overflow:clip}
 dialog.indicator-library.indicator-browser .indicator-library-item small{color:#7e7e87}
 dialog.indicator-library.indicator-browser .indicator-browser-row-add{
-  flex:none;min-height:28px;padding:0 10px;border:0;border-radius:8px;background:#ececef;color:#17171c;font:600 12px/28px var(--font,sans-serif);cursor:pointer
+  flex:none;min-height:28px;padding:0 8px;border:0;border-radius:8px;background:transparent;color:#7e7e87;font:500 12px/28px var(--font,sans-serif);cursor:pointer
 }
-dialog.indicator-library.indicator-browser .indicator-browser-row-add[aria-pressed=true]{background:#202027;color:#ececef;box-shadow:inset 0 0 0 1px #3a3a44}
+dialog.indicator-library.indicator-browser .indicator-browser-row-add[aria-pressed=true]{background:transparent;color:#b0b0ba;box-shadow:none}
 dialog.indicator-library.indicator-browser .indicator-browser-preview{
   display:grid;height:190px;place-items:center;margin-bottom:12px;border-radius:7px;background:#17171c;color:#d24b4b
 }
@@ -1349,8 +1360,12 @@ dialog.indicator-library.indicator-browser .indicator-template-panel{margin-top:
 #chart-tools-menu .chart-tools-button span{font-size:13px;color:inherit}
 #chart-tools-menu .chart-tools-chevron{width:14px;height:14px}
 .chart-tools-panel{
-  position:fixed;z-index:80;box-sizing:border-box;width:300px;max-height:min(662px,calc(100dvh - 24px));overflow:auto;padding:8px;border-radius:12px;
-  background:#17171c;color:#e4e4e5;box-shadow:rgba(0,0,0,.16) 0 8px 28px,#2c2c35 0 0 0 1px
+  position:fixed;z-index:80;box-sizing:border-box;width:min(560px,calc(100vw - 32px));max-width:min(560px,calc(100vw - 32px));
+  height:auto;max-height:min(480px,calc(100dvh - 160px));margin:0;overflow:auto;padding:12px;border-radius:12px;
+  background:#17171c;color:#e4e4e5;box-shadow:rgba(0,0,0,.16) 0 8px 28px,#2c2c35 0 0 0 1px;font:14px/1.4 var(--font,Pretendard,sans-serif)
+}
+body.atlas-funnest-compact .chart-tools-panel{
+  width:min(360px,calc(100vw - 16px));max-width:min(360px,calc(100vw - 16px));padding:8px
 }
 .chart-tools-panel[hidden]{display:none}
 .chart-tools-section{padding:8px 10px 4px;color:#7e7e87;font-size:12px;font-weight:700}
@@ -1393,7 +1408,7 @@ dialog.indicator-library.indicator-browser .indicator-template-panel{margin-top:
   body[data-shell=chart] .atlas-canvas-heading #workbench-frequency.interval-picker .interval-more{display:inline-flex}
 }
 .chart-symbol-legend{display:flex;flex-direction:column;gap:1px;min-width:0;color:#7e7e87;font-size:12px;line-height:17px}
-.chart-symbol-legend-title{display:flex;align-items:center;gap:4px;min-height:18px;font-size:13px;white-space:nowrap}
+.chart-symbol-legend-title{display:flex;align-items:center;flex-wrap:wrap;gap:4px;min-height:18px;font-size:13px;white-space:normal}
 .chart-symbol-legend-title b{color:#e4e4e5;font-weight:500}
 .chart-symbol-avatar{width:18px;height:18px;border-radius:50%}
 .chart-symbol-legend-values{display:flex;flex-wrap:wrap;gap:2px 8px;min-height:17px}
@@ -1402,16 +1417,328 @@ dialog.indicator-library.indicator-browser .indicator-template-panel{margin-top:
 .chart-symbol-legend-values b.is-flat{color:#e4e4e5}
 .eth-readout-line,.eth-readout-source{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media(max-width:800px){
-  dialog.indicator-library.indicator-browser{width:calc(100vw - 16px);height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);border-radius:10px}
-  dialog.indicator-library.indicator-browser .indicator-browser-body{grid-template-columns:1fr}
   dialog.indicator-library.indicator-browser .indicator-library-heading>button{width:44px;height:44px;min-height:44px}
 }
 /* A symbol chosen in the outlook chart keeps this plot. Bitcoin research controls stay off that series. */
 html:is([data-symbol="ETHUSD"],[data-symbol="MSTR"],[data-symbol="BMNR"]) :is(#workbench-scenario,#atlas-cycle-panel,#workbench-monthly-backtest,#workbench-replay,#chart-indicator-manager,[data-chart-span]){display:none!important}
 .outlook-symbol-chart{position:absolute;inset:0;z-index:1}
 .atlas-plot.is-guest-symbol>:is(svg,.atlas-funnest-canvas,.atlas-funnest-status,.atlas-funnest-future-date-rail,.chart-legend-dock){visibility:hidden;pointer-events:none}
+.atlas-plot>.outlook-symbol-studies,.atlas-plot[data-compact-layout]>.outlook-symbol-studies{position:absolute;top:var(--indicator-top,72px);left:10px;z-index:3;width:max-content;max-width:min(360px,calc(100% - var(--plot-right-gap,80px) - 16px));min-height:0;height:auto;max-height:none;overflow:visible;pointer-events:none}
+.atlas-plot>.outlook-symbol-studies[hidden]{display:none!important}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-plot>.outlook-symbol-studies{left:8px;max-width:calc(100% - 72px)}
 /* Chart chrome uses 12px meta, 13px controls and 14px titles. Weights stay 400 or 500. */
 body[data-shell=chart] .atlas-brand{font-weight:500;letter-spacing:0}
 body[data-shell=chart] #atlas-cycle-panel :is(h1,h2,h3,h4,strong,b){letter-spacing:0}
 body[data-shell=chart] :is(.chart-legend-row-label,.workbench-magnet-badge,.workbench-zone,.workbench-update,#atlas-update-status){font-size:12px;font-weight:400;letter-spacing:0}
 body[data-shell=chart] .atlas-canvas-heading :is(button,select,summary){letter-spacing:0}
+/* Compact header labels and icons sit in the middle of their 32px controls. */
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading #workbench-frequency.interval-picker {
+  justify-content: safe center;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading #workbench-frequency.interval-picker .lab-segmented {
+  flex: 0 1 auto;
+  width: max-content !important;
+  min-width: 0;
+  max-width: calc(100% - 32px);
+  overflow-x: auto;
+  justify-content: flex-start;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading #workbench-frequency.interval-picker :is(.interval-chip, .interval-more) {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  line-height: 1 !important;
+  text-align: center;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > :is(.atlas-trade-indicators, .atlas-trade-tools-btn, .atlas-trade-draw, .atlas-trade-search, .atlas-trade-account) {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > :is(.atlas-trade-indicators, .atlas-trade-tools-btn, .atlas-trade-draw, .atlas-trade-search, .atlas-trade-account) svg {
+  display: block;
+  flex: none;
+  margin: 0;
+}
+/* Compact indicator window uses the same touch row as the tools menu. */
+body.atlas-funnest-compact dialog.indicator-library.indicator-browser .indicator-library-row,
+body.atlas-funnest-compact dialog.indicator-library.indicator-browser .indicator-library-item {
+  min-height: 44px;
+  height: auto;
+}
+body.atlas-funnest-compact dialog.indicator-library.indicator-browser .indicator-library-views button,
+body.atlas-funnest-compact dialog.indicator-library.indicator-browser .indicator-categories button {
+  min-height: 44px;
+  height: 44px;
+  line-height: 44px;
+}
+/* The account circle takes the Bitcoin mark's top-left place. */
+body[data-shell=chart] .atlas-canvas-heading #workbench-scenario { display: none !important; }
+body.atlas-funnest-compact .atlas-trade-brand { display: none !important; }
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > .atlas-trade-account { order: 0; }
+body[data-shell=chart]:not(.atlas-funnest-compact) .atlas-sidebar > .atlas-brand { display: none !important; }
+body[data-shell=chart]:not(.atlas-funnest-compact) .atlas-sidebar > .auth-account {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  order: -1;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  min-width: 0;
+  max-width: 36px;
+  margin: 0;
+}
+body[data-shell=chart]:not(.atlas-funnest-compact) .atlas-sidebar > .auth-account .auth-account-name {
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-height: 32px;
+  max-width: 32px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+}
+body[data-shell=chart]:not(.atlas-funnest-compact) .atlas-sidebar > .auth-account .auth-account-mark {
+  width: 28px;
+  height: 28px;
+}
+body[data-shell=chart]:not(.atlas-funnest-compact) .atlas-sidebar > .auth-account :is(.auth-account-label, .auth-account-status) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+body.atlas-funnest-compact .chart-tools-section {
+  font-weight: 500;
+}
+body.atlas-funnest-compact .chart-tools-segment button,
+body.atlas-funnest-compact .chart-tools-item {
+  min-height: 44px;
+  line-height: 44px;
+}
+/* Period, backtest and replay sit in the same header row as 지표 and 도구. */
+body[data-shell=chart]:not(.atlas-funnest-compact) .atlas-canvas-heading > .shell-instrument-slot {
+  flex: none;
+  width: max-content;
+  min-width: max-content;
+  max-width: none;
+  overflow: visible;
+  gap: 2px;
+}
+body[data-shell=chart]:not(.atlas-funnest-compact) .atlas-canvas-heading #atlas-cycle-panel {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  margin: 0;
+  padding: 0;
+}
+body[data-shell=chart]:not(.atlas-funnest-compact) .atlas-canvas-heading #atlas-cycle-options {
+  position: relative;
+  height: 32px;
+  margin: 0;
+}
+body[data-shell=chart]:not(.atlas-funnest-compact) .atlas-canvas-heading :is(#atlas-cycle-options > summary, #workbench-monthly-backtest, #workbench-replay) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: auto;
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  margin: 0;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--pill-radius, 4px);
+  background: var(--surface);
+  color: var(--text);
+  font: 13px/32px var(--font, sans-serif);
+  font-weight: 400;
+  letter-spacing: 0;
+  white-space: nowrap;
+  cursor: pointer;
+}
+body[data-shell=chart]:not(.atlas-funnest-compact) .atlas-canvas-heading :is(#atlas-cycle-options > summary, #workbench-monthly-backtest, #workbench-replay):hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+body[data-shell=chart]:not(.atlas-funnest-compact) .atlas-canvas-heading :is(#atlas-cycle-options[open] > summary, #workbench-monthly-backtest[aria-expanded="true"], #workbench-replay[aria-pressed="true"]) {
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+/* Relay, listings and asset comparison fill the viewport. The same links stay on the right rail. */
+body[data-content-frame="full"] {
+  --app-header-height: 0px;
+  --content-bottom-height: 0px;
+}
+body[data-content-frame="full"] .atlas-dashboard-header,
+body[data-content-frame="full"] #content-bottom-bar,
+body[data-content-frame="full"] .footer {
+  display: none !important;
+}
+body[data-content-frame="full"] .workspace,
+body[data-content-frame="full"] #root > .workspace {
+  margin: 0 !important;
+  width: 100% !important;
+  height: 100dvh !important;
+  padding: 0 45px 0 0 !important;
+  background: var(--bg);
+}
+body[data-content-frame="full"] #main {
+  max-width: none;
+  height: 100%;
+}
+body[data-content-frame="full"] #main > :is(#ipo-view, #data-view, #relay-view) {
+  border: 0;
+  box-shadow: none;
+  background: var(--bg);
+}
+body[data-content-frame="full"] #content-rail {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  width: 45px;
+  height: 100dvh;
+  margin: 0;
+  padding: 8px 0;
+  border-left: 1px solid var(--border);
+  background: var(--bg);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+body[data-content-frame="full"] #content-rail .atlas-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  margin: 0;
+  overflow: visible;
+}
+body[data-content-frame="full"] #content-rail .atlas-nav :is(a, button) {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+}
+body[data-content-frame="full"] #content-rail .atlas-nav :is(a, button) > span:last-child:not([data-icon]) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+body[data-content-frame="full"] #content-rail .atlas-nav svg {
+  width: 18px;
+  height: 18px;
+}
+body[data-content-frame="full"] #content-rail .atlas-nav :is(a, button):hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+body[data-content-frame="full"] #content-rail .atlas-nav :is(.active, [aria-current="page"]) {
+  background: var(--surface);
+  color: var(--text);
+}
+body[data-content-frame="full"] #content-rail .atlas-nav :is(a, button):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+body[data-content-frame="full"] #content-rail .atlas-nav-scroll {
+  display: none !important;
+}
+body.atlas-funnest-compact[data-content-frame="full"] .workspace,
+body.atlas-funnest-compact[data-content-frame="full"] #root > .workspace {
+  top: 0 !important;
+  right: 52px !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+body.atlas-funnest-compact[data-content-frame="full"] #content-rail {
+  width: 52px;
+  padding: 4px 0;
+}
+body.atlas-funnest-compact[data-content-frame="full"] #content-rail .atlas-nav :is(a, button) {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+}
+body.atlas-funnest-compact[data-content-frame="full"] :is(.atlas-trade-tabs, .atlas-trade-status, .atlas-trade-upper) {
+  display: none !important;
+}
+body[data-content-frame="full"] #data-view .daily-heading {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  max-width: none;
+  height: 48px;
+  min-height: 48px;
+  margin: 0;
+  padding: 0 16px;
+  overflow: visible;
+  white-space: normal;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  z-index: auto;
+}
+body[data-content-frame="full"] #data-view .daily-heading-title {
+  display: flex !important;
+  align-items: center;
+  min-width: 0;
+}
+body[data-content-frame="full"] :is(.daily-back, .ipo-back, .daily-board-label) {
+  display: none !important;
+}
+body[data-content-frame="full"] :is(#data-view .daily-heading h2, #ipo-view .ipo-heading h2) {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+body[data-content-frame="full"] #ipo-view {
+  padding: 0;
+  gap: 0;
+}
+body[data-content-frame="full"] #ipo-view .ipo-heading {
+  align-items: center;
+  min-height: 48px;
+  padding: 0 16px;
+  gap: 8px;
+}
+body[data-content-frame="full"] #ipo-view .ipo-page-label {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0;
+}

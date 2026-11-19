@@ -1,6 +1,6 @@
 import { initTheme } from './ui/theme.js';
 import { enhanceBootSkeleton } from './loading-surfaces.js?v=1.0.1';
-import { initAtlasShell } from './atlas-shell.js?v=1.36.21';
+import { initAtlasShell } from './atlas-shell.js?v=1.36.23';
 import { canonicalNativeChartEntry, canonicalRetiredPageEntry, canonicalWorkspaceChartEntry, canonicalDefaultChartEntry } from './atlas-navigation.js?v=1.36.3';
 import { mountJournalEntry } from './journal-entry.js?v=1.29.3';
 import { initPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
@@ -23,7 +23,7 @@ if (canonicalEntry) {
   let opened = false, failure = null;
   for (let attempt = 0; attempt < 4 && !opened; attempt += 1) {
     try {
-      const specifier = attempt === 0 ? "./app.js?v=1.37.39" : `./app.js?v=1.37.39&retry=${attempt}`;
+      const specifier = attempt === 0 ? "./app.js?v=1.37.53" : `./app.js?v=1.37.53&retry=${attempt}`;
       await import(specifier);
       opened = true;
     } catch (error) {

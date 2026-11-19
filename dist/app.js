@@ -16,7 +16,7 @@ import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29
 // leave a new long-horizon page running the old three-year workbench.
 import { initDailyDataView } from './daily-data-view.js?v=1.32.3';
 import { extendComparisonToLatest } from './asset-comparison-live.js?v=1.0.1';
-import { initRelayRoomView } from './relay-room.js?v=1.37.8';
+import { initRelayRoomView } from './relay-room.js?v=1.37.9';
 import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.32.2';
 import { initIpoView } from './ipo-view.js?v=1.32.1';
 import { initMarketLabView } from './market-lab-view.js?v=1.31.3';
@@ -142,13 +142,13 @@ function transientModuleError(error) {
 }
 function importWorkspaceModules(attempt) {
   if (attempt === 0) return Promise.all([
-    import('./viewport-workspace.js?v=1.36.20'), import('./lab-view.js?v=1.36.19'),
+    import('./viewport-workspace.js?v=1.36.29'), import('./lab-view.js?v=1.36.23'),
   ]);
   // A failed module URL stays failed for this document, so a dropped response
   // has to be requested again under a new address.
   return Promise.all([
-    import(`./viewport-workspace.js?v=1.36.20&retry=${attempt}`),
-    import(`./lab-view.js?v=1.36.19&retry=${attempt}`),
+    import(`./viewport-workspace.js?v=1.36.29&retry=${attempt}`),
+    import(`./lab-view.js?v=1.36.23&retry=${attempt}`),
   ]);
 }
 async function mountWorkspace() {
