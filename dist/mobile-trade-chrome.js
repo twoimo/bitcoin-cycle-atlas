@@ -25,7 +25,7 @@ export function mountTradeChrome(doc) {
   account.type = 'button';
   account.className = 'atlas-trade-account';
   account.setAttribute('aria-label', '계정');
-  account.innerHTML = icon('M12 12a3.2 3.2 0 1 0-3.2-3.2A3.2 3.2 0 0 0 12 12zM5.5 19.2a6.5 6.5 0 0 1 13 0');
+  account.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="5.6" r="2.3" fill="currentColor"/><path d="M3.1 13.1a4.9 4.9 0 0 1 9.8 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
   account.addEventListener('click', () => doc.querySelector('[data-auth-action="account"]')?.click());
   const search = doc.createElement('button');
   search.type = 'button';
@@ -62,23 +62,52 @@ export function mountTradeChrome(doc) {
   const nav = doc.createElement('nav');
   nav.className = 'atlas-trade-tabs';
   nav.setAttribute('aria-label', '화면');
-  const tabs = [
+  const iconFor = id => atlasPages.find(item => item.id === id)?.icon || '';
+  const primary = [
     { id: 'chart', label: '차트', href: pageHref('outlook'), icon: 'M8 3v3M8 18v3M16 3v6M16 15v6M6 6h4v12H6zM14 9h4v6h-4z' },
     { id: 'data', label: '비교', href: atlasSitePath('/?center=data'), icon: 'M4 5h16v14H4zM4 10h16M4 14h16M9 5v14' },
     { id: 'market', label: '시장', href: pageHref('market-us'), icon: 'M4 20V10M12 20V5M20 20v-7M3 20h18' },
     { id: 'relay', label: '릴레이 콘텐츠', href: pageHref('relay'), icon: 'M4 5h16v11H7l-3 3V5Zm4 4h8M8 12h5' },
     { id: 'chat', label: '채팅', icon: 'M5 6h14v9H9l-4 3v-3H5z' },
   ];
-  for (const tab of tabs) {
-    const node = tab.href ? doc.createElement('a') : doc.createElement('button');
-    node.className = 'atlas-trade-tab';
-    node.dataset.tradeTab = tab.id;
-    if (tab.href) node.href = tab.href;
-    else node.type = 'button';
-    node.innerHTML = `${icon(tab.icon)}<span>${tab.label}</span>`;
-    if (tab.id === 'relay') node.setAttribute('aria-label', '릴레이 콘텐츠');
-    nav.append(node);
+  const more = [
+    { id: 'market-home', label: '시장 분석', href: atlasSitePath('/market-lab/'), icon: iconFor('market-us') },
+    { id: 'assets', label: '자산 비교', href: pageHref('data'), icon: iconFor('data') },
+    { id: 'ipo', label: '공모주', href: pageHref('ipo'), icon: iconFor('ipo') },
+    { id: 'evidence', label: '리서치', href: pageHref('evidence'), icon: iconFor('evidence') },
+    { id: 'scenario', label: '조건 실험', href: pageHref('scenario'), icon: iconFor('scenario') },
+    { id: 'cashflow', label: '현금흐름', href: pageHref('cashflow'), icon: iconFor('cashflow') },
+    { id: 'rsi', label: '삼플레·RSI', href: pageHref('rsi'), icon: iconFor('rsi') },
+    { id: 'housing', label: '부동산', href: pageHref('housing'), icon: iconFor('housing') },
+    { id: 'themes', label: '테마·재료', href: pageHref('themes'), icon: iconFor('themes') },
+  ];
+  const groups = [primary];
+  for (let index = 0; index < more.length; index += 5) groups.push(more.slice(index, index + 5));
+  const scroller = doc.createElement('div');
+  scroller.className = 'atlas-trade-pages';
+  const dots = doc.createElement('div');
+  dots.className = 'atlas-trade-dots';
+  dots.setAttribute('aria-hidden', 'true');
+  for (const [index, group] of groups.entries()) {
+    const page = doc.createElement('div');
+    page.className = 'atlas-trade-page';
+    page.dataset.tradePage = String(index + 1);
+    for (const tab of group) {
+      const node = tab.href ? doc.createElement('a') : doc.createElement('button');
+      node.className = 'atlas-trade-tab';
+      node.dataset.tradeTab = tab.id;
+      if (tab.href) node.href = tab.href;
+      else node.type = 'button';
+      node.innerHTML = `${icon(tab.icon)}<span>${tab.label}</span>`;
+      if (tab.id === 'relay') node.setAttribute('aria-label', '릴레이 콘텐츠');
+      page.append(node);
+    }
+    scroller.append(page);
+    const dot = doc.createElement('span');
+    dot.className = 'atlas-trade-dot';
+    dots.append(dot);
   }
+  nav.append(scroller, dots);
   doc.body.append(upper, status, nav);
 
   const priceBox = doc.createElement('div');
@@ -188,12 +217,41 @@ export function mountTradeChrome(doc) {
   }
   function activeTab() {
     const page = doc.body.dataset.page || 'outlook';
-    if (doc.body.dataset.centerTool === 'data' || page === 'data') return 'data';
-    if (doc.body.dataset.centerTool === 'market-us' || page === 'market') return 'market';
+    const path = view.location?.pathname || '';
+    if (doc.body.dataset.centerTool === 'data') return 'data';
+    if (page === 'data') return 'assets';
+    if (page === 'ipo') return 'ipo';
+    if (page === 'evidence') return 'evidence';
+    if (doc.body.dataset.centerTool === 'market-us') return 'market';
+    if (page === 'market') {
+      if (/\/market-lab\/scenario\/?$/.test(path)) return 'scenario';
+      if (/\/market-lab\/cashflow\/?$/.test(path)) return 'cashflow';
+      if (/\/market-lab\/rsi\/?$/.test(path)) return 'rsi';
+      if (/\/market-lab\/housing\/?$/.test(path)) return 'housing';
+      if (/\/market-lab\/themes\/?$/.test(path)) return 'themes';
+      if (/\/market-lab\/?$/.test(path)) return 'market-home';
+      return 'market';
+    }
     if (page === 'relay') return 'relay';
     if (chatOpen()) return 'chat';
     if (page === 'outlook' || page === 'compare' || doc.body.dataset.shell === 'chart') return 'chart';
     return '';
+  }
+  let pinnedTab = '';
+  function updateDots() {
+    const width = scroller.clientWidth || 1;
+    const index = Math.round(scroller.scrollLeft / width);
+    [...dots.children].forEach((dot, dotIndex) => { dot.dataset.current = String(dotIndex === index); });
+  }
+  function pinActivePage(active) {
+    if (!active || active === pinnedTab) return;
+    const node = nav.querySelector(`[data-trade-tab="${active}"]`);
+    const page = node?.closest('.atlas-trade-page');
+    if (!page) return;
+    if (!scroller.clientWidth) return;
+    pinnedTab = active;
+    if (Math.abs(scroller.scrollLeft - page.offsetLeft) > 1) scroller.scrollTo({ left: page.offsetLeft, behavior: 'instant' });
+    updateDots();
   }
   function syncTabs() {
     const active = activeTab();
@@ -206,6 +264,7 @@ export function mountTradeChrome(doc) {
       if (on) { if (node.getAttribute('aria-current') !== 'page') node.setAttribute('aria-current', 'page'); }
       else if (node.hasAttribute('aria-current')) node.removeAttribute('aria-current');
     }
+    pinActivePage(active);
   }
   function revealInterval() {
     const scroller = doc.querySelector('#workbench-frequency .lab-segmented');
@@ -234,6 +293,13 @@ export function mountTradeChrome(doc) {
     if (frame) return;
     frame = view.requestAnimationFrame(() => { frame = 0; refresh(); });
   }
+  scroller.addEventListener('scroll', updateDots, { passive: true });
+  nav.addEventListener('focusin', event => {
+    const page = event.target instanceof Element ? event.target.closest('.atlas-trade-page') : null;
+    if (!page || !scroller.clientWidth) return;
+    if (Math.abs(scroller.scrollLeft - page.offsetLeft) > 1) scroller.scrollTo({ left: page.offsetLeft, behavior: 'instant' });
+    updateDots();
+  });
   nav.addEventListener('click', event => {
     const tab = event.target instanceof Element ? event.target.closest('[data-trade-tab]') : null;
     if (!tab) return;

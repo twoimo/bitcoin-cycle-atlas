@@ -1,4 +1,4 @@
-import { RELAY_TOPICS, classifyRelayEntry, relayEntries, relayMatches } from './relay-topics.js';
+import { RELAY_TOPICS, relayEntries, relayMatches } from './relay-topics.js';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -34,6 +34,24 @@ function dayHeading(iso) {
   const now = new Date(Date.now() + KST);
   const year = d.getUTCFullYear() === now.getUTCFullYear() ? '' : `${d.getUTCFullYear()}년 `;
   return `${year}${d.getUTCMonth() + 1}월 ${d.getUTCDate()}일 (${weekday})`;
+}
+function dateRail(entries, timeOf, activeKey) {
+  const chips = [];
+  const seen = new Set();
+  for (const entry of entries) {
+    const raw = timeOf(entry);
+    const key = dayKey(raw);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    const d = kst(raw);
+    const label = d ? `${d.getUTCMonth() + 1}.${String(d.getUTCDate()).padStart(2, '0')}` : key.slice(5);
+    chips.push({ key, label, name: dayHeading(raw) || label });
+  }
+  if (!chips.length) return '';
+  return `<div class="relay-date-rail" aria-label="날짜">${chips.map(chip => {
+    const on = chip.key === activeKey;
+    return `<button type="button" class="relay-day-chip${on ? ' active' : ''}" data-relay-day="${esc(chip.key)}" aria-label="${esc(chip.name)}"${on ? ' aria-current="true"' : ''}>${esc(chip.label)}</button>`;
+  }).join('')}</div>`;
 }
 const safeHref = value => {
   const href = typeof value === 'string' ? value.trim() : '';
@@ -199,6 +217,10 @@ const GLYPH = {
   book: svg('<path d="M12 6c-3-2-6-2-10-1v14c4-1 7-1 10 1 3-2 6-2 10-1V5c-4-1-7-1-10 1Zm0 0v14"/>'),
   refresh: svg('<path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V9H15"/>'),
   back: svg('<path d="M15 5l-7 7 7 7"/>'),
+  chevron: svg('<path d="M6 9l6 6 6-6"/>'),
+  close: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
+  prev: svg('<path d="M15 5l-7 7 7 7"/>'),
+  next: svg('<path d="M9 5l7 7-7 7"/>'),
 };
 
 function countLabel(room) {
@@ -421,9 +443,27 @@ function revealsLatest(prev, next, layout) {
 const NO_MATCHES = '<p class="relay-empty">조건에 맞는 항목이 없습니다. 분류나 검색어를 바꿔 주세요.</p>';
 const assetSource = assets => value => Object.hasOwn(assets, value) ? assets[value] : value;
 
-function topicEvidence(entry) {
-  const result = classifyRelayEntry(entry);
-  return `<details class="relay-topic-evidence"><summary>${esc(result.topics.map(match => match.label).join(' · '))} · 분류 근거</summary><ul>${result.topics.map(match => `<li><span class="relay-topic-evidence-label">${esc(match.label)}</span>: ${match.evidence ? `<span class="relay-topic-evidence-keyword">「${esc(match.evidence.quote)}」</span><blockquote class="relay-msg-quote relay-topic-evidence-quote">${esc(match.evidence.excerpt)}</blockquote>` : esc(result.reason)}</li>`).join('')}</ul><p>원문 키워드 기반 다중 분류이며 사실 판단이나 투자 추천이 아닙니다.</p></details>`;
+function editionLabel(entry) {
+  const d = kst(entry?.date);
+  const date = d ? `${d.getUTCMonth() + 1}.${String(d.getUTCDate()).padStart(2, '0')}` : dayLabel(entry?.date);
+  return `${date}${entry?.version ? ` ${entry.version}` : ''}`.trim();
+}
+function editionRail(view) {
+  const editions = relayEntries(view.room);
+  const { index, page: pageIndex } = view.edition;
+  const edition = editions[index];
+  const pages = Array.isArray(edition?.pages) ? edition.pages : [];
+  const page = pages[pageIndex];
+  const current = editionLabel(edition);
+  const items = view.shown.map(entry => {
+    const source = editions.indexOf(entry);
+    const active = source === index;
+    const label = editionLabel(entry);
+    const name = `${entry.version || ''} ${dayLabel(entry.date)}`.trim();
+    return `<button type="button" class="relay-edition-chip${active ? ' active' : ''}" role="option" data-edition="${source}" title="${esc(name)}" aria-label="${esc(name)}" aria-selected="${active ? 'true' : 'false'}"${active ? ' aria-current="true"' : ''}>${esc(label)}</button>`;
+  }).join('');
+  const status = [page?.label || '', `${pageIndex + 1}/${Math.max(pages.length, 1)}`].filter(Boolean).join(' · ');
+  return `<div class="relay-edition-menu"><button type="button" class="relay-edition-trigger" data-relay-action="edition-menu" aria-expanded="false" aria-haspopup="listbox" aria-controls="relay-edition-list">${esc(current)}${GLYPH.chevron}</button><div class="relay-edition-list" id="relay-edition-list" role="listbox" aria-label="신문 날짜" hidden>${items}</div></div><span class="relay-paper-status">${esc(status)}</span>`;
 }
 
 function renderPhase(phase) {
@@ -471,11 +511,16 @@ function renderRoom(view) {
   const query = view.filters.query.trim();
   const note = view.filtering
     ? `<p class="relay-filter-note">${esc([query ? `'${query}'` : '', topic, `${view.shown.length} / ${relayEntries(room).length}건`].filter(Boolean).join(' · '))}</p>` : '';
+  let dates = '';
+  if (!article && room.kind === 'chat' && view.shown.length) dates = dateRail(view.shown, item => item.at, dayKey(view.shown.at(-1).at));
+  else if (!article && room.kind === 'articles' && view.shown.length) dates = dateRail(view.shown, item => item.published_date || item.at, dayKey(view.shown[0].published_date || view.shown[0].at));
+  else if (room.kind === 'editions' && view.edition) dates = editionRail(view);
   const body = room.kind === 'chat' ? chatDetail(room, view, src)
     : room.kind === 'editions' ? editionDetail(room, view, src)
       : article ? articleReader(article, title, src) : articleStream(view, src);
-  return `<header class="relay-detail-head${article ? ' relay-detail-head--reading' : ''}">${lead}
+  return `<header class="relay-detail-head${article ? ' relay-detail-head--reading' : ''}${dates ? ' relay-detail-head--dates' : ''}">${lead}
       <div class="relay-peer"><h2 id="relay-room-title">${esc(title)}</h2><p class="relay-peer-sub">${esc([room.subtitle, countLabel(room)].filter(Boolean).join(' · '))}</p></div>
+      ${dates}
       ${data.generatedAt ? `<span class="relay-peer-updated">최근 갱신 ${esc(hhmm(data.generatedAt))}</span>` : ''}
     </header>${note}
     <div class="relay-detail-body" role="region" aria-label="${esc(title)} 내용" tabindex="0">${body}</div>`;
@@ -492,7 +537,7 @@ function chatDetail(item, view, imageSource) {
     const key = dayKey(message.at);
     const heading = key !== lastDay ? dayHeading(message.at) : '';
     lastDay = key;
-    const divider = heading ? `<li class="relay-day" role="separator"><span>${esc(heading)}</span></li>` : '';
+    const divider = heading ? `<li class="relay-day" data-day="${esc(key)}" role="separator"><span>${esc(heading)}</span></li>` : '';
 
     const text = renderMessageText(message);
     const imageList = (Array.isArray(message.images) ? message.images : []).flatMap(image => {
@@ -505,7 +550,7 @@ function chatDetail(item, view, imageSource) {
       return [{ src: imageSource(src), dims, alt }];
     });
     const images = imageList.length ? `<div class="relay-msg-images" data-count="${imageList.length}">${imageList.map(image =>
-      `<a class="relay-msg-image" href="${esc(image.src)}" target="_blank" rel="noopener noreferrer"><img src="${esc(image.src)}" alt="${esc(image.alt)}" loading="lazy" decoding="async"${image.dims}></a>`
+      `<button type="button" class="relay-msg-image" data-relay-image="${esc(image.src)}" aria-label="${esc(image.alt || '사진 보기')}"><img src="${esc(image.src)}" alt="${esc(image.alt)}" loading="lazy" decoding="async"${image.dims}></button>`
     ).join('')}</div>` : '';
 
     const previews = (Array.isArray(message.previews) ? message.previews : []).flatMap(preview => {
@@ -538,7 +583,7 @@ function chatDetail(item, view, imageSource) {
           ${author}${reply}${quote}${images}
           ${text ? `<p class="relay-msg-text">${text}</p>` : ''}
           ${previews ? `<div class="relay-msg-previews">${previews}</div>` : ''}
-          ${withheld}${linkNote}${topicEvidence(message)}
+          ${withheld}${linkNote}
           <div class="relay-msg-foot"><span>${esc(item.title || item.id)}</span>${!link ? '<span>원문 링크 미제공</span>' : ''}${album}<time datetime="${esc(message.at || '')}">${esc(clock(message.at))}</time></div>
         </div>
       </li>`;
@@ -577,7 +622,6 @@ function articleReader(article, publication, imageSource) {
           </div>
         </div>
       </header>
-      ${topicEvidence(article)}
       <div class="relay-body">${body || '<p class="relay-reader-empty">본문이 아직 없습니다.</p>'}</div>
       <footer class="relay-reader-foot">
         <span>${esc(publication)}</span>
@@ -593,12 +637,13 @@ function articleCard(article, imageSource) {
   const thumb = images.length
     ? `<span class="relay-article-thumb"><img src="${esc(imageSource(images[0].src))}" alt="" loading="lazy" decoding="async"></span>`
     : '<span class="relay-article-thumb relay-article-thumb--empty" aria-hidden="true"></span>';
-  return `<li><button type="button" class="relay-article" data-article="${esc(article.id)}">
+  const day = dayKey(article.published_date || article.at);
+  return `<li${day ? ` data-day="${esc(day)}"` : ''}><button type="button" class="relay-article" data-article="${esc(article.id)}">
       <span class="relay-article-copy">
         <span class="relay-article-meta">${esc(dayLabel(article.published_date || article.at))} · ${articleReadMinutes(article)}분 읽기</span>
         <span class="relay-article-title">${esc(article.title || '제목 없음')}</span>
         ${excerpt ? `<span class="relay-article-excerpt">${esc(excerpt)}</span>` : ''}
-        <span class="relay-article-foot">${esc(classifyRelayEntry(article).topics.map(match => match.label).join(' · '))} · ${images.length ? `사진 ${images.length}장` : '글'}</span>
+        ${images.length ? `<span class="relay-article-foot">사진 ${images.length}장</span>` : ''}
       </span>
       ${thumb}
     </button></li>`;
@@ -614,16 +659,18 @@ function editionDetail(item, view, imageSource) {
   const editions = relayEntries(item), { index, page: pageIndex } = view.edition, edition = editions[index];
   const pages = Array.isArray(edition.pages) ? edition.pages : [];
   const page = pages[pageIndex] || null;
-  const dates = view.shown.map(entry => {
-    const source = editions.indexOf(entry);
-    return `<button type="button" class="relay-edition-chip${source === index ? ' active' : ''}" data-edition="${source}"${source === index ? ' aria-current="true"' : ''}>${esc(entry.version || '')} ${esc(dayLabel(entry.date))}</button>`;
+  const pager = pages.map((entry, at) => {
+    const label = entry.label || String(at + 1);
+    const active = at === pageIndex;
+    const thumb = entry.image
+      ? `<img src="${esc(imageSource(entry.image))}" alt="" loading="${active ? 'eager' : 'lazy'}" decoding="async">`
+      : '';
+    return `<button type="button" class="relay-page-chip${active ? ' active' : ''}" data-page="${at}" aria-label="${esc(label)}"${active ? ' aria-current="true"' : ''}>${thumb}<span>${esc(label)}</span></button>`;
   }).join('');
-  const pager = pages.map((entry, at) => `<button type="button" class="relay-page-chip${at === pageIndex ? ' active' : ''}" data-page="${at}"${at === pageIndex ? ' aria-current="true"' : ''}>${esc(entry.label || String(at + 1))}</button>`).join('');
   const stage = page?.image
-    ? `<img class="relay-paper-image" src="${esc(imageSource(page.image))}" alt="${esc(page.alt || (page.label || ''))}" loading="lazy">`
+    ? `<button type="button" class="relay-paper-open" data-relay-image="${esc(imageSource(page.image))}" aria-label="${esc(page.alt || page.label || '지면 크게 보기')}"><img class="relay-paper-image" src="${esc(imageSource(page.image))}" alt="${esc(page.alt || (page.label || ''))}" loading="lazy"></button>`
     : `<div class="relay-paper-placeholder">${esc(page?.text || '이미지 준비 중')}</div>`;
-  return `<div class="relay-paper">${topicEvidence(edition)}
-      <div class="relay-paper-foot"><div class="relay-edition-list">${dates}</div><span class="relay-paper-status">${esc(page?.label || '')} · ${pageIndex + 1}/${Math.max(pages.length, 1)}</span></div>
+  return `<div class="relay-paper">
       <div class="relay-paper-body">
         <div class="relay-paper-stage">${stage}
           <div class="relay-paper-turn"><button type="button" class="relay-turn" data-relay-action="page-prev"${pageIndex === 0 ? ' disabled' : ''} aria-label="이전 면">‹</button><button type="button" class="relay-turn" data-relay-action="page-next"${pageIndex >= pages.length - 1 ? ' disabled' : ''} aria-label="다음 면">›</button></div>
@@ -725,6 +772,9 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     if (painted.room === roomKey) return false;
     root.querySelector('.relay-detail').innerHTML = renderRoom(next);
     painted.room = roomKey;
+    alignDateRail();
+    alignPaperPager();
+    globalThis.requestAnimationFrame?.(alignPaperPager);
     return true;
   }
 
@@ -734,6 +784,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
       if (at !== version) return;
       const body = root.querySelector('.relay-detail-body');
       if (body) body.scrollTop = body.scrollHeight;
+      alignDateRail();
     };
     reveal();
     globalThis.requestAnimationFrame?.(reveal);
@@ -876,10 +927,128 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     rows[to].focus();
   }
 
+  let viewerItems = [];
+  let viewerIndex = 0;
+  function alignDateRail() {
+    const rail = root.querySelector('.relay-date-rail');
+    const active = rail?.querySelector('.active, [aria-current="true"]');
+    if (!rail || !active) return;
+    rail.scrollLeft = Math.max(0, active.offsetLeft - (rail.clientWidth - active.clientWidth) / 2);
+  }
+  function alignPaperPager() {
+    const pager = root.querySelector('.relay-pager');
+    const active = pager?.querySelector('.relay-page-chip.active');
+    if (!pager || !active || !pager.clientWidth) return;
+    const left = active.getBoundingClientRect().left - pager.getBoundingClientRect().left + pager.scrollLeft;
+    pager.scrollLeft = Math.max(0, left - (pager.clientWidth - active.clientWidth) / 2);
+  }
+  function closeEditionMenu() {
+    const menu = root.querySelector('.relay-edition-list');
+    const trigger = root.querySelector('.relay-edition-trigger');
+    if (menu) menu.hidden = true;
+    trigger?.setAttribute('aria-expanded', 'false');
+  }
+  function toggleEditionMenu() {
+    const menu = root.querySelector('.relay-edition-list');
+    const trigger = root.querySelector('.relay-edition-trigger');
+    if (!menu || !trigger) return;
+    const open = menu.hidden;
+    menu.hidden = !open;
+    trigger.setAttribute('aria-expanded', String(open));
+    if (open) {
+      const active = menu.querySelector('.active');
+      if (active) menu.scrollTop = Math.max(0, active.offsetTop - 8);
+    }
+  }
+  function syncDateRail() {
+    const body = root.querySelector('.relay-detail-body');
+    const rail = root.querySelector('.relay-date-rail');
+    const markers = [...(body?.querySelectorAll('[data-day]') || [])];
+    if (!body || !rail || !markers.length || !rail.querySelector('[data-relay-day]')) return;
+    const edge = body.getBoundingClientRect().top + 12;
+    let current = markers[0];
+    for (const marker of markers) if (marker.getBoundingClientRect().top <= edge) current = marker;
+    const key = current.dataset.day;
+    let changed = false;
+    for (const chip of rail.querySelectorAll('[data-relay-day]')) {
+      const on = chip.dataset.relayDay === key;
+      if (chip.classList.contains('active') !== on) changed = true;
+      chip.classList.toggle('active', on);
+      if (on) chip.setAttribute('aria-current', 'true');
+      else chip.removeAttribute('aria-current');
+    }
+    if (changed) alignDateRail();
+  }
+  function scrollToDay(key) {
+    const body = root.querySelector('.relay-detail-body');
+    const target = body?.querySelector(`[data-day="${key}"]`);
+    if (!body || !target) return;
+    body.scrollTop += target.getBoundingClientRect().top - body.getBoundingClientRect().top;
+    syncDateRail();
+  }
+  function viewerDialog() {
+    let dialog = root.querySelector('.relay-viewer');
+    if (dialog) return dialog;
+    root.insertAdjacentHTML('beforeend', `<dialog class="relay-viewer" aria-label="사진">
+      <div class="relay-viewer-bar"><span class="relay-viewer-count"></span><button type="button" class="relay-viewer-close" data-relay-action="close-image" aria-label="사진 닫기">${GLYPH.close}</button></div>
+      <div class="relay-viewer-stage"><button type="button" class="relay-viewer-step" data-relay-action="image-prev" aria-label="이전 사진">${GLYPH.prev}</button><img class="relay-viewer-image" alt=""><button type="button" class="relay-viewer-step" data-relay-action="image-next" aria-label="다음 사진">${GLYPH.next}</button></div>
+    </dialog>`);
+    dialog = root.querySelector('.relay-viewer');
+    dialog.addEventListener('click', event => { if (event.target === dialog) closeViewer(); });
+    dialog.addEventListener('close', () => dialog.returnFocus?.focus?.({ preventScroll: true }));
+    return dialog;
+  }
+  function paintViewer() {
+    const dialog = root.querySelector('.relay-viewer');
+    const item = viewerItems[viewerIndex];
+    if (!dialog || !item) return;
+    const source = item.querySelector('img');
+    const image = dialog.querySelector('.relay-viewer-image');
+    image.src = source?.currentSrc || source?.getAttribute('src') || '';
+    image.alt = source?.alt || item.getAttribute('aria-label') || '사진';
+    const count = dialog.querySelector('.relay-viewer-count');
+    const several = viewerItems.length > 1;
+    count.hidden = !several;
+    count.textContent = several ? `${viewerIndex + 1} / ${viewerItems.length}` : '';
+    for (const step of dialog.querySelectorAll('.relay-viewer-step')) step.hidden = !several;
+    dialog.querySelector('[data-relay-action="image-prev"]').disabled = viewerIndex === 0;
+    dialog.querySelector('[data-relay-action="image-next"]').disabled = viewerIndex >= viewerItems.length - 1;
+  }
+  function openViewer(button) {
+    const group = button.closest('.relay-msg-images');
+    viewerItems = group ? [...group.querySelectorAll('.relay-msg-image')] : [button];
+    viewerIndex = Math.max(0, viewerItems.indexOf(button));
+    const dialog = viewerDialog();
+    dialog.returnFocus = button;
+    paintViewer();
+    try { if (typeof dialog.showModal === 'function' && !dialog.open) dialog.showModal(); else dialog.setAttribute('open', ''); }
+    catch { dialog.setAttribute('open', ''); }
+    dialog.querySelector('.relay-viewer-close')?.focus?.({ preventScroll: true });
+  }
+  function closeViewer() {
+    const dialog = root.querySelector('.relay-viewer');
+    if (!dialog) return;
+    if (typeof dialog.close === 'function' && dialog.open) dialog.close();
+    else { dialog.removeAttribute('open'); dialog.returnFocus?.focus?.({ preventScroll: true }); }
+  }
+  function stepViewer(delta) {
+    viewerIndex = Math.min(viewerItems.length - 1, Math.max(0, viewerIndex + delta));
+    paintViewer();
+  }
+  const viewerOpen = () => { const dialog = root.querySelector('.relay-viewer'); return Boolean(dialog?.open || dialog?.hasAttribute('open')); };
+
   root.addEventListener('click', event => {
     const action = event.target.closest('[data-relay-action]')?.dataset.relayAction;
+    if (action === 'close-image') { closeViewer(); return; }
+    if (action === 'image-prev') { stepViewer(-1); return; }
+    if (action === 'image-next') { stepViewer(1); return; }
     if (action === 'reload') { void load(); return; }
+    if (action === 'edition-menu') { toggleEditionMenu(); return; }
     if (!view) return;
+    const imageButton = event.target.closest('.relay-msg-image, .relay-paper-open');
+    if (imageButton) { openViewer(imageButton); return; }
+    const dayButton = event.target.closest('[data-relay-day]');
+    if (dayButton) { scrollToDay(dayButton.dataset.relayDay); return; }
     const roomButton = event.target.closest('[data-room]');
     if (roomButton) { selectRoom(roomButton.dataset.room); return; }
     const articleButton = event.target.closest('[data-article]');
@@ -911,9 +1080,24 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
   });
   root.addEventListener('keydown', event => {
     if (event.defaultPrevented || event.isComposing || !view) return;
+    if (viewerOpen() && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
+      event.preventDefault();
+      stepViewer(event.key === 'ArrowRight' ? 1 : -1);
+      return;
+    }
+    if (event.key === 'Escape' && viewerOpen()) { event.preventDefault(); closeViewer(); return; }
+    if (event.key === 'Escape' && root.querySelector('.relay-edition-list:not([hidden])')) { event.preventDefault(); closeEditionMenu(); return; }
     const row = event.target.closest('.relay-room-item');
     if (row && ROW_KEYS.has(event.key)) moveRowFocus(event, row);
     else if (event.key === 'Escape') escape(event);
+  });
+  root.addEventListener('scroll', event => {
+    if (event.target?.classList?.contains('relay-detail-body')) syncDateRail();
+  }, true);
+  root.ownerDocument.addEventListener('pointerdown', event => {
+    if (!root.querySelector('.relay-edition-list:not([hidden])')) return;
+    if (event.target?.closest?.('.relay-edition-menu')) return;
+    closeEditionMenu();
   });
   root.addEventListener('focusin', event => { lastFocus = focusKey(event.target); });
   root.addEventListener('focusout', event => { if (event.relatedTarget && !root.contains(event.relatedTarget)) lastFocus = null; });

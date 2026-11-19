@@ -1,4 +1,4 @@
-# Bitcoin Cycle Atlas
+# MetaUp
 
 **비트코인·이더리움·스트래티지(MSTR)·비트마인(BMNR)의 실제 가격, 역사 사건, 연구 근거를 읽는 한국어 차트 사이트**입니다. BTCUSD는 장기 경제 가정과 사이클 기간을 비교하고, MSTR·BMNR은 공시된 과거 자본구조를 바탕으로 조건부 미래 경로를 계산합니다. ETHUSD는 관측 가격과 역사 사건을 제공합니다. 실제 관측과 미래 가정, 발행사 주장과 앱의 분석을 구분해 표시합니다.
 
@@ -6,7 +6,7 @@ BTC 첫 접속은 최신 관측일 앞뒤 약 **4년**을 보여 주며, ‘장�
 
 ## v1.36.0 · 통합 가격 차트와 Cloudflare 배포
 
-공개 주소는 **[bitcoin-cycle-atlas.twoimo.workers.dev](https://bitcoin-cycle-atlas.twoimo.workers.dev/)**입니다. GitHub Actions 정의는 실행되지 않는 `ops/github-actions-archive/`에 보존하고, 검증·정적 자산 배포는 **Cloudflare Workers Builds**에서 수행합니다.
+제품 이름은 MetaUp이고, 구입 예정인 공개 도메인은 metaup.app입니다. 지금 열리는 주소는 **[bitcoin-cycle-atlas.twoimo.workers.dev](https://bitcoin-cycle-atlas.twoimo.workers.dev/)**입니다. 도메인을 연결하기 전까지 이 주소와 기존 경로를 유지합니다. GitHub Actions 정의는 실행되지 않는 `ops/github-actions-archive/`에 보존하고, 검증·정적 자산 배포는 **Cloudflare Workers Builds**에서 수행합니다.
 
 - **가격 차트 하나:** BTC, ETH, MSTR, BMNR, TQQQ, SOXL, KODEX 233740, HYPE와 네 부동산 지역을 같은 종목 검색과 차트 작업 공간에서 엽니다. 다른 화면에서 돌아오면 마지막으로 선택한 종목을 복원합니다.
 - **좁은 우측 레일:** 데스크톱 우측 아이콘 영역을45px로 유지하고, 상단 한 줄·좌우 도구·하단 기간 영역 안에서 차트가 남은 공간을 채웁니다.
@@ -161,7 +161,7 @@ MSTR·BMNR 기본 미래 경로를 코인의 **매일 가격과 회사 재무 �
 - **요약과 원문을 따로 읽기:** 이번 복구에서 공식 CC0 자료인 EIP-1559와 EIP-3675를 선정했습니다. ‘연구 요약 / 보관 원문’ 선택, 서로 다른 MD 다운로드, 고정 판본·라이선스·원문 해시를 제공합니다. [허용 범위와 원문 증거](docs/RESEARCH_SOURCE_READER.md)를 확인할 수 있습니다.
 - **경영진 주장과 모델 가정 분리:** SEC 공시·회사 보유량 보고·세일러와 톰 리의 조건부 전망·앱의 분석 가정을 대조해 읽습니다. MSTR와 BMNR의 과거 재무 기준일을 유지하며 최신 NAV나 검증된 목표가로 표시하지 않습니다. [공식 근거와 전후 계산](docs/TREASURY_RECOVERY_RESEARCH.md)을 함께 제공합니다.
 
-보유량 경계를 지키더라도 조달 가능성이나 예측력이 입증되지는 않습니다. 특히 MSTR 장기 확대 조건은 매우 큰 누적 조달을 요구합니다. 이번 생성 결과의 자체 요약은 **490개**이며 허용 원문은 **두 개**입니다. 정확한 요약 목록·해시는 [요약 명세](dist/research/manifest.json), 원문 범위·해시는 [원문 명세](dist/research-sources/manifest.json)에서 별도로 확인합니다. **89개 테스트 파일·연구 생성물·정적·사이클·성능·요청 소유권 형식 검사와 단일 HTML 생성·검증을 통과**했습니다. 최종 배포와 릴리스 상태는 해당 커밋의 [Cloudflare 배포·검증](ops/cloudflare-verification.md)와 [릴리스](https://github.com/twoimo/bitcoin-cycle-atlas/releases)를 따릅니다.
+보유량 경계를 지키더라도 조달 가능성이나 예측력이 입증되지는 않습니다. 특히 MSTR 장기 확대 조건은 매우 큰 누적 조달을 요구합니다. 이번 생성 결과의 자체 요약은 **490개**이며 허용 원문은 **두 개**입니다. 정확한 요약 목록·해시는 [요약 명세](dist/research/manifest.json), 원문 범위·해시는 [원문 명세](dist/research-sources/manifest.json)에서 별도로 확인합니다. **89개 테스트 파일·연구 생성물·정적·사이클·성능·요청 소유권 형식 검사와 단일 HTML 생성·검증을 통과**했습니다. 최종 배포와 릴리스 상태는 해당 커밋의 [Cloudflare 배포·검증](ops/cloudflare-verification.md)와 [릴리스](https://github.com/twoimo/metaup/releases)를 따릅니다.
 
 ## v1.18.0 · MSTR·BMNR 차트와 근거를 읽는 미래 전망
 
@@ -225,7 +225,7 @@ ETHUSD에 **프로토콜·보안 사건·시장·제도·생태계**의 역사 �
 
 이전 v1.13.0의 연구 작업 흐름, 최대 축소 이동, **616개 자동 회귀**와 당시 브라우저 검수는 [B01–B12 구현 보고서](docs/RESEARCH_WORKFLOWS_2026-10-23.md)에 보존합니다. 이 수치를 v1.14의 검사 합계로 재사용하지 않습니다.
 
-**[통합 차트 열기](https://bitcoin-cycle-atlas.twoimo.workers.dev/)** · **[사용 안내](docs/GRAPH_WORKSPACE_GUIDE.md)** · **[장기 전망 리서치](docs/LONG_HORIZON_RESEARCH.md)** · **[모델의 반영 범위](docs/MODEL_SCOPE.md)** · **[리서치 표](https://bitcoin-cycle-atlas.twoimo.workers.dev/?page=evidence)** · **[릴리스](https://github.com/twoimo/bitcoin-cycle-atlas/releases)** · **[Cloudflare 배포·검증](ops/cloudflare-verification.md)**
+**[통합 차트 열기](https://bitcoin-cycle-atlas.twoimo.workers.dev/)** · **[사용 안내](docs/GRAPH_WORKSPACE_GUIDE.md)** · **[장기 전망 리서치](docs/LONG_HORIZON_RESEARCH.md)** · **[모델의 반영 범위](docs/MODEL_SCOPE.md)** · **[리서치 표](https://bitcoin-cycle-atlas.twoimo.workers.dev/?page=evidence)** · **[릴리스](https://github.com/twoimo/metaup/releases)** · **[Cloudflare 배포·검증](ops/cloudflare-verification.md)**
 
 ## TradingView 심층 사용법 조사
 
@@ -423,7 +423,7 @@ node scripts/refresh-volume.mjs
 
 저장된 거래량 원문을 이용한 오프라인 재검증은 `node scripts/refresh-volume.mjs --verify`로 실행합니다.
 
-단일 HTML은 `build/Bitcoin_Cycles_Comparison.html`에 생성됩니다. CSS·모듈·일말 자료·거래소 저장 봉·거래량 자료를 내장하며, 새 자료 조회와 외부 원문 열기에는 네트워크를 사용합니다. 테스트와 정적 검사는 구현·자료의 계약을 확인하며 장기 예측 정확도나 모든 브라우저의 검수를 대신하지 않습니다. 배포·릴리스의 실제 완료 여부는 해당 커밋의 [Cloudflare 배포·검증](ops/cloudflare-verification.md)와 [릴리스](https://github.com/twoimo/bitcoin-cycle-atlas/releases)에서 확인합니다.
+단일 HTML은 `build/Bitcoin_Cycles_Comparison.html`에 생성됩니다. CSS·모듈·일말 자료·거래소 저장 봉·거래량 자료를 내장하며, 새 자료 조회와 외부 원문 열기에는 네트워크를 사용합니다. 테스트와 정적 검사는 구현·자료의 계약을 확인하며 장기 예측 정확도나 모든 브라우저의 검수를 대신하지 않습니다. 배포·릴리스의 실제 완료 여부는 해당 커밋의 [Cloudflare 배포·검증](ops/cloudflare-verification.md)와 [릴리스](https://github.com/twoimo/metaup/releases)에서 확인합니다.
 
 원본 [Bitcoin Cycles Comparison](https://www.bitcoincyclescomparison.com/)의 역사 비교 개념에서 출발한 독립 구현입니다. Coin Metrics 가격 자료에는 제공자의 [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) 조건이 적용됩니다. 거래소 캔들과 거래량은 Bitstamp·Coinbase의 별도 출처이며, 데이터 조건을 코드 전체의 라이선스 선언으로 해석하지 않습니다.
 

@@ -91,7 +91,19 @@ export function ipoRowMarkup(row) {
     + `<td>${esc((row['주간사'] ?? []).join(' · ') || '—')}</td></tr>`;
 }
 
+function mountIpoTopbar(root) {
+  const heading = root.querySelector?.('.ipo-heading');
+  const nav = root.querySelector?.('.ipo-calendar-nav');
+  const doc = root.ownerDocument;
+  if (!heading || !nav || !doc?.createElement || typeof heading.before !== 'function' || heading.closest?.('.ipo-topbar')) return;
+  const bar = doc.createElement('div');
+  bar.className = 'ipo-topbar';
+  heading.before(bar);
+  bar.append(heading, nav);
+}
+
 export function initIpoView({ root, load = null, embeddedData = () => null, now = () => new Date(), onReady = null } = {}) {
+  mountIpoTopbar(root);
   const state = { doc: null, rows: [], filter: 'upcoming', query: '', status: 'idle', error: '' };
   const el = sel => root.querySelector(sel);
   let pending = null;

@@ -150,6 +150,27 @@ test('the relay chat renders image albums, inline links, previews, quotes and wi
   assert.equal(root.querySelector('.relay-msg-quote').textContent,'인용문');
   assert.match(root.querySelector('.relay-msg-withheld').textContent,/본문이 제한된 글/);
   assert.equal(root.querySelector('.relay-msg-text script'),null);
+  assert.equal(root.querySelector('.relay-topic-evidence'),null);
+  assert.equal(root.querySelector('.relay-msg-image').tagName,'BUTTON');
+  assert.equal(root.querySelector('.relay-msg-image').getAttribute('href'),null);
+});
+
+test('a photo opens in a viewer and can move across the album',async ()=>{
+  const data=chatPayload(),{document,window}=parseHTML('<section id="relay"></section>');
+  let ready;const loaded=new Promise(resolve=>{ready=resolve;});
+  const root=document.getElementById('relay');
+  initRelayRoomView({root,embeddedData:()=>JSON.stringify(data),onReady:ready}).show(true);await loaded;
+  const button=root.querySelector('.relay-msg-image');
+  button.dispatchEvent(new window.Event('click',{bubbles:true}));
+  const dialog=root.querySelector('.relay-viewer');
+  assert.ok(dialog?.open||dialog?.hasAttribute('open'));
+  assert.equal(dialog.querySelector('.relay-viewer-image').getAttribute('src'),'data/relay/assets/chat-1.jpg');
+  dialog.querySelector('[data-relay-action="image-next"]').dispatchEvent(new window.Event('click',{bubbles:true}));
+  assert.equal(dialog.querySelector('.relay-viewer-image').getAttribute('src'),'data/relay/assets/chat-2.jpg');
+  dialog.querySelector('[data-relay-action="close-image"]').dispatchEvent(new window.Event('click',{bubbles:true}));
+  assert.equal(Boolean(dialog.open||dialog.hasAttribute('open')),false);
+  assert.equal(root.querySelector('.relay-day-chip').textContent,'11.08');
+  assert.doesNotMatch(root.querySelector('.relay-detail').textContent,/분류 근거/);
 });
 
 test('the relay chat groups messages by day and carries the replied excerpt',async t=>{

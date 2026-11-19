@@ -6,7 +6,7 @@ import {resolve} from 'node:path';
 const sha40=/^[a-f0-9]{40}$/,commitRef=/^[a-f0-9]{40}$/i,uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
 const keys=['schemaVersion','kind','sourceCommit','sourceTree','rawRef','refKind','branch','mode','buildUuid','remoteHead'];
 export const cloudflareBrowserSourcePolicy=Object.freeze({
-  schemaVersion:1,repository:'twoimo/bitcoin-cycle-atlas',
+  schemaVersion:1,repository:'twoimo/metaup',
   branchForm:'exact-provider-branch-only-for-browser-with-clean-checkout-and-current-remote-head',
   shaForm:'literal-full-sha-equality-with-no-branch-fallback',
   authority:'complete-same-source-tree-plan-model-and-terminal-provider-success-before-native-and-publication',

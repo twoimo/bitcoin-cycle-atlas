@@ -6,8 +6,8 @@ import {resolve} from 'node:path';
 import {canonicalForecastJson} from '../dist/forecast-records.js';
 import {CLOUDFLARE_BUILD_UUID} from './ethereum-archive-provider-identity.mjs';
 
-export const MARKET_REFRESH_REPOSITORY='twoimo/bitcoin-cycle-atlas';
-export const MARKET_REFRESH_REMOTE='https://github.com/twoimo/bitcoin-cycle-atlas.git';
+export const MARKET_REFRESH_REPOSITORY='twoimo/metaup';
+export const MARKET_REFRESH_REMOTE='https://github.com/twoimo/metaup.git';
 export const MARKET_REFRESH_RECEIPT_PATH='dist/data/refresh-attempts.json';
 export const MARKET_REFRESH_PROVIDER_IDS=Object.freeze(['btc','cycle','ohlc','volume','eth','equities','comparison']);
 export const MARKET_REFRESH_GATE_IDS=Object.freeze(['comparison-validation','judgment-capture','research','forecast-build','forecast-verification','tests','formal','cycle','performance','static']);

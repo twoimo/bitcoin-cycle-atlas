@@ -16,9 +16,9 @@ import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29
 // leave a new long-horizon page running the old three-year workbench.
 import { initDailyDataView } from './daily-data-view.js?v=1.32.3';
 import { extendComparisonToLatest } from './asset-comparison-live.js?v=1.0.1';
-import { initRelayRoomView } from './relay-room.js?v=1.37.9';
+import { initRelayRoomView } from './relay-room.js?v=1.37.12';
 import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.32.2';
-import { initIpoView } from './ipo-view.js?v=1.32.1';
+import { initIpoView } from './ipo-view.js?v=1.32.2';
 import { initMarketLabView } from './market-lab-view.js?v=1.31.3';
 
 const $ = (selector) => document.querySelector(selector);
@@ -142,26 +142,26 @@ function transientModuleError(error) {
 }
 function importWorkspaceModules(attempt) {
   if (attempt === 0) return Promise.all([
-    import('./viewport-workspace.js?v=1.36.29'), import('./lab-view.js?v=1.36.23'),
+    import('./viewport-workspace.js?v=1.36.32'), import('./lab-view.js?v=1.36.26'),
   ]);
   // A failed module URL stays failed for this document, so a dropped response
   // has to be requested again under a new address.
   return Promise.all([
-    import(`./viewport-workspace.js?v=1.36.29&retry=${attempt}`),
-    import(`./lab-view.js?v=1.36.23&retry=${attempt}`),
+    import(`./viewport-workspace.js?v=1.36.32&retry=${attempt}`),
+    import(`./lab-view.js?v=1.36.26&retry=${attempt}`),
   ]);
 }
 async function mountWorkspace() {
   let workspace, lab, error = null;
-  for (let attempt = 0; attempt < 4; attempt += 1) {
+  for (let attempt = 0; attempt < 6; attempt += 1) {
     try {
       [workspace, lab] = await importWorkspaceModules(attempt);
       error = null;
       break;
     } catch (caught) {
       error = caught;
-      if (!transientModuleError(caught) || attempt === 3) break;
-      await new Promise(resolve => setTimeout(resolve, 120 * (attempt + 1)));
+      if (!transientModuleError(caught) || attempt === 5) break;
+      await new Promise(resolve => setTimeout(resolve, [400, 900, 1600, 2500, 3500][attempt]));
     }
   }
   if (!error) {
@@ -261,7 +261,7 @@ function syncPage() {
   }
   document.body.dataset.page=state.view; if(state.view!=='market'){const slot=document.getElementById('market-header-slot'); if(slot){slot.hidden=true; slot.replaceChildren();}}
   btcRefreshStatus.update({page:['ipo','market'].includes(state.view)?'data':state.view});
-  document.title = state.view === 'compare' ? '사이클 비교 · Bitcoin Cycle Atlas' : state.view === 'market' ? '세 축 연구실 · Bitcoin Cycle Atlas' : state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : state.view === 'ipo' ? '공모주 캘린더 · Bitcoin Cycle Atlas' : state.view === 'relay' ? '릴레이 콘텐츠 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
+  document.title = state.view === 'compare' ? '사이클 비교 · MetaUp' : state.view === 'market' ? '세 축 연구실 · MetaUp' : state.view === 'data' ? '자산 비교표 · MetaUp' : state.view === 'ipo' ? '공모주 캘린더 · MetaUp' : state.view === 'relay' ? '릴레이 콘텐츠 · MetaUp' : 'MetaUp';
   const compareFrame = state.view === 'compare' && document.body.dataset.embedded !== 'true';
   for (const view of ['outlook','compare','evidence','data','ipo','market','relay']) document.querySelector(`#${view}-view`).hidden = view === 'outlook' ? state.view !== 'outlook' && !compareFrame : state.view !== view;
   hostCompareCenter(compareFrame);

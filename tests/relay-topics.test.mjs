@@ -73,36 +73,36 @@ test('newly loaded items use the same rules and stale previous results disappear
   await controller.reload();
   assert.equal(root.querySelectorAll('[data-message-id]').length,1);
   assert.equal(root.querySelector('[data-message-id]').dataset.messageId,'new');
-  assert.match(root.querySelector('.relay-topic-evidence').textContent,/부동산/);
+  assert.match(root.querySelector('.relay-msg-text').textContent,/부동산/);
+  assert.equal(root.querySelector('.relay-topic-evidence'),null);
 });
-test('topic evidence quotes the exact source excerpt while labels and keywords remain outside it', async () => {
+test('rooms keep the source text and do not print classification labels', async () => {
   const message={id:'quoted',text:'🎙비트코인과 금리 변화🐒',at:'2026-11-13T10:00:00+09:00'};
-  const matches=classifyRelayEntry(message).topics.filter(topic=>topic.evidence);
-  const {root}=await view({rooms:[{id:'telegram',kind:'chat',title:'원문',messages:[message]}]});
-  const evidence=root.querySelector('.relay-topic-evidence');
-  const rows=[...evidence.querySelectorAll('li')];
-  assert.equal(rows.length,matches.length);
-  for(let index=0;index<matches.length;index++){
-    const row=rows[index],match=matches[index];
-    const label=row.querySelector('.relay-topic-evidence-label');
-    const keyword=row.querySelector('.relay-topic-evidence-keyword');
-    const quote=row.querySelector('blockquote.relay-msg-quote.relay-topic-evidence-quote');
-    assert.equal(label.textContent,match.label);
-    assert.equal(keyword.textContent,`「${match.evidence.quote}」`);
-    assert.equal(label.closest('blockquote'),null);
-    assert.equal(keyword.closest('blockquote'),null);
-    assert.ok(quote,'source excerpt must use the existing semantic quote contract');
-    assert.equal(quote.textContent,match.evidence.excerpt);
-    assert.equal(quote.children.length,0,'the quoted text contains only the original excerpt');
-    assert.ok(quote.textContent.includes('🎙')&&quote.textContent.includes('🐒'));
-  }
+  const {root}=await view({rooms:[
+    {id:'telegram',kind:'chat',title:'원문',messages:[message]},
+    {id:'naver',kind:'articles',title:'인생의 방',articles:[{id:'n',title:'법인 급여',blocks:[{kind:'text',text:'법인세와 세금'}]}]},
+    {id:'hankyung',kind:'editions',title:'모바일한경',editions:[{date:'2026-11-13',version:'v6',pages:[{label:'1면',image:'data/relay/assets/a.webp'}]}]},
+  ]});
+  assert.equal(root.querySelector('.relay-topic-evidence'),null);
+  assert.doesNotMatch(root.querySelector('.relay-detail').textContent,/분류 근거|미분류|경제·정책/);
+  assert.match(root.querySelector('.relay-msg-text').textContent,/🎙비트코인과 금리 변화🐒/);
+  click(root,windowFrom(root),'[data-room="naver"]');
+  assert.equal(root.querySelector('.relay-article-foot'),null);
+  assert.doesNotMatch(root.querySelector('.relay-detail').textContent,/분류 근거|경제·정책/);
+  click(root,windowFrom(root),'[data-room="hankyung"]');
+  assert.equal(root.querySelector('.relay-topic-evidence'),null);
+  assert.doesNotMatch(root.querySelector('.relay-detail').textContent,/분류 근거|미분류/);
 });
 
-test('untrusted classification evidence and search terms remain escaped text', async () => {
+function windowFrom(root){return root.ownerDocument.defaultView;}
+
+test('untrusted message text stays escaped and does not become markup', async () => {
   const data=sample();data.rooms[0].messages[0].text='비트코인 <img src=x onerror=alert(1)>';
-  const {root,window}=await view(data);
-  assert.equal(root.querySelector('.relay-topic-evidence img'),null);
+  const {root}=await view(data);
+  assert.equal(root.querySelector('.relay-msg-text img'),null);
+  assert.equal(root.querySelector('.relay-topic-evidence'),null);
   assert.equal(root.querySelector('script'),null);
+  assert.match(root.querySelector('.relay-msg-text').textContent,/비트코인/);
 });
 
 test('worldwide is not jeonse, and Unicode case folding preserves original offsets', () => {

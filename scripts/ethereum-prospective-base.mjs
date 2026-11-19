@@ -41,7 +41,7 @@ export function validateEthereumCommittedBase({workingBytes,committedBytes,sourc
       bytes:committedBytes.length,sha256:sha(committedBytes),collectedAt:at,
       archiveRetrievedAt:archive.retrievedAt,requestedStart:archive.requestedStart,requestedEnd:archive.requestedEnd,
       firstDate:archive.firstDate,lastDate:archive.lastDate,candles:archive.candles.length,
-      sourceUrl:'https://github.com/twoimo/bitcoin-cycle-atlas/blob/'+sourceCommit+'/'+path,
+      sourceUrl:'https://github.com/twoimo/metaup/blob/'+sourceCommit+'/'+path,
       exactCommittedBytes:true,workingCopyMatched:true,automaticallyRefreshed:false,
       historicalProviderAuthenticityProven:false,
       limitation:'A reviewed committed base can roll forward without changing model code. This reader neither refreshes that base nor authenticates historical provider publication.'}};

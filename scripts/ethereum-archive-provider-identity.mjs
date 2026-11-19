@@ -3,7 +3,7 @@ import { canonicalForecastJson } from '../dist/forecast-records.js';
 export const CLOUDFLARE_ARCHIVE_PROVIDER = 'cloudflare-workers-builds';
 export const CLOUDFLARE_BUILD_UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
 const commit = /^[a-f0-9]{40}$/;
-const repository = 'twoimo/bitcoin-cycle-atlas';
+const repository = 'twoimo/metaup';
 const archiveBranch = 'eth-prospective-archive';
 const copy = value => JSON.parse(canonicalForecastJson(value));
 const exact = (value, keys, label) => {

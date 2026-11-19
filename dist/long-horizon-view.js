@@ -5,7 +5,7 @@ const number = (value, digits = 0) => Number.isFinite(value) ? new Intl.NumberFo
 const usd = value => Number.isFinite(value) ? `$${number(value)}` : '—';
 const percent = (value, digits = 1) => `${number(value, digits)}%`;
 const link = (url, label) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a>`;
-const report = 'https://github.com/twoimo/bitcoin-cycle-atlas/blob/main/docs/LONG_HORIZON_RESEARCH.md';
+const report = 'https://github.com/twoimo/metaup/blob/main/docs/LONG_HORIZON_RESEARCH.md';
 function table(headers, rows) {
   return `<div class="lab-table-scroll"><table class="lab-table"><thead><tr>${headers.map(value => `<th scope="col">${esc(value)}</th>`).join('')}</tr></thead><tbody>${rows.map(row => `<tr>${row.map(value => `<td>${esc(value)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
@@ -44,6 +44,6 @@ export function longHorizonMethodMarkup(model) {
     <p>단기 연결 뒤 잔차에는 ${number(assumptions.residualHalfLifeDays)}일 반감기의 평균회귀 가정을 더합니다. 이 반감기는 데이터에서 추정한 값이 아니며 끝점에 가격을 고정하지 않습니다. 같은 자료·시드·가정은 같은 경로를 재현합니다.</p>
     <p>새 장기 모형의 미래 정확도는 검증되지 않았습니다. 기존 단기 모형의 회고 평가에서는 모든 평가 기간의 MAPE가 당시 가격 유지 기준보다 컸습니다. 그 결과를 새 장기 모형의 적중률로 옮기지 않습니다. 현재 기관 보고서를 과거 관측에 붙이는 것도 당시 정보만 사용한 백테스트가 아닙니다.</p>
     <p>공급은 정수 사토시 보조금 일정으로 계산한 예정 발행량입니다. 분실·소각·미청구 보상·실제로 거래 가능한 물량을 뜻하지 않습니다. 영구적인 수요 상실이나 운영 실패는 기본 음영보다 큰 손실을 만들 수 있습니다.</p>
-    <p>${link(report, '심층 조사·원문 수치·반론·제외 이유')} · ${link('https://github.com/twoimo/bitcoin-cycle-atlas/blob/main/docs/DETAILED_FORECAST_METHOD.md', '기존 단기 모형의 회고 검증 기록')} · ${link('https://github.com/twoimo/bitcoin-cycle-atlas/blob/main/docs/OHLC_CHART_METHOD.md', '실제 캔들의 출처·집계 규칙')}</p>`;
+    <p>${link(report, '심층 조사·원문 수치·반론·제외 이유')} · ${link('https://github.com/twoimo/metaup/blob/main/docs/DETAILED_FORECAST_METHOD.md', '기존 단기 모형의 회고 검증 기록')} · ${link('https://github.com/twoimo/metaup/blob/main/docs/OHLC_CHART_METHOD.md', '실제 캔들의 출처·집계 규칙')}</p>`;
   return { summary, details };
 }

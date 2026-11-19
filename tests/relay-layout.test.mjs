@@ -313,7 +313,9 @@ test('each row previews and dates its newest entry, and the editions room opens 
   assert.doesNotMatch(row('naver').querySelector('time').textContent, /:/, 'a date-only source never gains a time');
   click(root, window, '[data-room="hankyung"]');
   assert.match(root.querySelector('.relay-edition-chip.active').textContent, /v6/);
+  assert.equal(root.querySelector('.relay-edition-trigger').getAttribute('aria-expanded'), 'false');
   assert.equal(root.querySelector('.relay-paper-image').getAttribute('src'), 'data/relay/assets/v6-1.webp');
+  assert.equal(root.querySelector('.relay-page-chip.active img').getAttribute('src'), 'data/relay/assets/v6-1.webp');
 
   const data = sample(), now = new Date().toISOString();
   data.rooms[0].messages.push({ id: 'now', text: '지금', at: now });

@@ -10,7 +10,7 @@ function fixture(role = 'production') {
   const reference = { buildId: ids[0], triggerId: ids[1] }, job = contract.jobs[role];
   const build = { build_uuid: reference.buildId, trigger: { trigger_uuid: reference.triggerId }, status: 'stopped', build_outcome: 'success',
     created_on: '2026-11-06T00:00:00Z', initializing_on: '2026-11-07T01:00:00Z', stopped_on: '2026-11-07T01:07:01Z',
-    build_trigger_metadata: { branch: 'main', provider_type: 'github', provider_account_name: 'twoimo', repo_name: 'bitcoin-cycle-atlas',
+    build_trigger_metadata: { branch: 'main', provider_type: 'github', provider_account_name: 'twoimo', repo_name: 'metaup',
       commit_hash: 'a'.repeat(40), build_trigger_source: role === 'productionModels' ? 'push' : 'deploy_hook', build_command: job.buildCommand, deploy_command: job.deployCommand } };
   return { role, reference, build, contract };
 }

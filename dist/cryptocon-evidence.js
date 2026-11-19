@@ -6,7 +6,7 @@ export const CRYPTOCON_EVIDENCE = [
     originalTitle: 'CryptoCon의 주기·고점·저점 주장 검증',
     publisher: 'Bitcoin Cycle Atlas',
     date: '2026-10-22',
-    url: 'https://github.com/twoimo/bitcoin-cycle-atlas/blob/main/docs/CRYPTOCON_AUDIT.md',
+    url: 'https://github.com/twoimo/metaup/blob/main/docs/CRYPTOCON_AUDIT.md',
     tier: 'A', type: '재현 연구', role: '계산·수정 이력', stance: 'mixed', timing: 'after', family: 'atlas-cryptocon-audit',
     access: '65개 원장 기록·고정 가격 표본 독립 재계산',
     reason: '원래 전망과 수정 전망, 시간 오차와 가격 오차를 먼저 구별한다. 7월 고점권 진입의 선행일·체류·낙폭을 같은 자료로 검산했다.',

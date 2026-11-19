@@ -1,7 +1,7 @@
 import { CLOUDFLARE_ARCHIVE_PROVIDER, CLOUDFLARE_BUILD_UUID, normalizeEthereumArchiveHandoffContext } from './ethereum-archive-provider-identity.mjs';
 
 const sha = /^[a-f0-9]{40}$/;
-const repository = 'twoimo/bitcoin-cycle-atlas';
+const repository = 'twoimo/metaup';
 const api = 'https://api.cloudflare.com/client/v4';
 
 export async function boundedResponse(response, maximumBytes) {

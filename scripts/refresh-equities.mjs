@@ -11,7 +11,7 @@ export function equitySourceUrl(symbol,now=Date.now()){
   return `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?period1=${Date.parse('1998-01-01T00:00:00Z')/1000}&period2=${Math.floor(now/1000)}&interval=1d&events=history%2Csplits%2Cdividends`;
 }
 export async function fetchEquitySnapshot(symbol,{now=Date.now(),fetchImpl=globalThis.fetch}={}){
-  const sourceUrl=equitySourceUrl(symbol,now),response=await fetchImpl(sourceUrl,{headers:{'User-Agent':'Bitcoin-Cycle-Atlas research / https://github.com/twoimo/bitcoin-cycle-atlas'},signal:AbortSignal.timeout(30000)});
+  const sourceUrl=equitySourceUrl(symbol,now),response=await fetchImpl(sourceUrl,{headers:{'User-Agent':'Bitcoin-Cycle-Atlas research / https://github.com/twoimo/metaup'},signal:AbortSignal.timeout(30000)});
   if(!response.ok)throw new Error(`${symbol} provider HTTP ${response.status}`);
   const raw=await response.text(),payload=JSON.parse(raw);
   return {...parseYahooEquity(payload,{symbol,retrievedAt:new Date(now).toISOString(),sourceUrl}),responseSha256:createHash('sha256').update(raw).digest('hex')};

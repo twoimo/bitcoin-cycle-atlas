@@ -3,12 +3,12 @@ import { queueInitialFrame } from './ui/initial-frame.js';
 import {browserCyclePeriodWorkerFactory,buildCyclePeriodComparison,calculateCyclePeriodSensitivity,cyclePeriodComparisonMarkup,cycleComparisonFields,macroClockInspection} from './cycle-period-comparison.js';
 import { setChartLoading } from './loading-surfaces.js';
 import { beginAction, finishAction, measureSync } from './performance-diagnostics.js?v=1.29.0';
-import {mountChartReplay} from './chart-replay.js?v=1.36.2';
+import {mountChartReplay} from './chart-replay.js?v=1.36.3';
 import { createForecastComputation, browserForecastWorkerFactory } from './forecast-computation.js?v=1.29.0';
 import {bitcoinForecastEvidence} from './forecast-evidence.js?v=1.29.0';
 import {openResearchArticle} from './research-reader.js?v=1.36.1';
 import {priceLegendMarkup,priceReadoutKind,observedPriceSourceLabel} from './price-legend.js?v=1.31.3';
-import { intervalShortLabel } from './interval-picker.js?v=1.0.0';
+import { intervalShortLabel } from './interval-picker.js?v=1.0.1';
 import { compactQuantity, renderChartSymbolLegend, signedChange, symbolLogo } from './chart-symbol-legend.js?v=1.0.1';
 import {writeChartLegendMarkup} from './ui/chart-legend.js?v=1.36.4';
 import { buildCycleMilestones, INTERVAL_RELATIONS, MILESTONE_TYPES } from "./cycle-milestones.js?v=1.29.0";
@@ -16,7 +16,7 @@ import { cycleLegendMarkup, cycleMilestoneInspection, cycleIntervalInspection, c
 import { resolveCycleSelection, cycleSelectionViewport, cycleOverviewViewport } from './cycle-selection.js?v=1.29.0';
 import { drawAtlasPriceChart as drawChart, priceChartOverlayObstacles } from "./atlas-price-chart.js?v=1.36.7";
 import { mountAtlasBtcFunnestChart } from './btc-funnest-chart.js?v=1.36.10';
-import { mountOutlookSymbolChart } from './outlook-symbol-chart.js?v=1.0.6';
+import { mountOutlookSymbolChart } from './outlook-symbol-chart.js?v=1.0.8';
 import { renderCryptoConAudit } from './cryptocon-audit.js?v=1.29.0';
 import { bindChartNavigation, panRange } from './chart-navigation.js?v=1.36.1';
 import { renderAtlasAnalysis } from "./atlas-analysis.js?v=1.29.0";
@@ -25,13 +25,13 @@ import { INDICATORS, readIndicatorState, writeIndicatorState, changeIndicatorSta
 import { preparePriceViewData } from './price-view-data.js?v=1.29.0';
 import { chartSelectionHandler } from './inspection-policy.js?v=1.29.0';
 import { buildLongHorizonForecast, LONG_HORIZON_SCENARIOS } from "./long-horizon-forecast.js?v=1.29.0";
-import { longHorizonMethodMarkup } from './long-horizon-view.js?v=1.29.0';
+import { longHorizonMethodMarkup } from './long-horizon-view.js?v=1.29.1';
 import { CHART_INTERVALS, chartInterval, isIntradayInterval } from './ohlc-data.js?v=1.29.0';
 import { createMarketDataController, marketStatusText } from "./market-data-controller.js?v=1.29.0";
 import { parseVolumeSnapshot, aggregateWeeklyVolume } from './volume-data.js?v=1.29.0';
 import { fitVolumeForecastModel, projectVolumeForecast } from './volume-forecast.js?v=1.29.0';
 import { BITCOIN_EVENTS } from './bitcoin-events.js?v=1.29.0';
-import { historicalEventDetail } from './research-workbench.js?v=1.29.0';
+import { historicalEventDetail } from './research-workbench.js?v=1.29.1';
 import { formatBtcVolume } from './chart-overlays.js?v=1.29.0';
 import { analyzeMarketStructure, computeRollingStates, detectDirectionalChanges, STATE_LABELS } from "./market-structure.js?v=1.29.0";
 import { utcDay, dateFromDay } from './cycle-engine.js?v=1.29.0';
@@ -59,7 +59,7 @@ const dateLabel = (date) => date?.replaceAll('-', '.') ?? '—';
 const compact = (value) => value >= 1e6 ? `${nf(value/1e6,1)}M` : value >= 1e3 ? `${nf(value/1e3, value < 1e4 ? 1 : 0)}k` : nf(value,value < 1 ? 2 : 0);
 const tone = (value) => value < 0 ? 'lab-down' : value > 0 ? 'lab-up' : '';
 const COLORS = Object.freeze({ warmup:'#4c5664','price-discovery':'#e8ba6d','bottom-formation':'#8394c9',range:'#8f9ba8',rebound:'#72b9ae',pullback:'#b293ad',advance:'#6e9f87',correction:'#bd7e82',transition:'#617181' });
-const REPORT_ROOT = 'https://github.com/twoimo/bitcoin-cycle-atlas/blob/main/docs/';
+const REPORT_ROOT = 'https://github.com/twoimo/metaup/blob/main/docs/';
 const D = (d) => utcDay(d);
 function download(name, content, type = 'application/json') {
   const url = URL.createObjectURL(new Blob([content], {type})); const a = document.createElement('a'); a.href=url; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(url),1000);
@@ -595,7 +595,7 @@ export function initLabView() {
       return;
     }
     document.documentElement.dataset.symbol='BTCUSD';
-    if(guestChart){clearGuest();document.title='Bitcoin Cycle Atlas';}
+    if(guestChart){clearGuest();document.title='MetaUp';}
     if(!state.dataset||!state.visible)return;
     try{
       if(forecastComputer.supported&&!state.models.has(state.scenario)&&priceSnapshot){
@@ -1097,14 +1097,14 @@ export function initLabView() {
     if(event.detail?.url){try{history.pushState({atlasSymbol:symbol},'',event.detail.url);}catch{}}
     document.documentElement.dataset.symbol=symbol;
     document.dispatchEvent(new CustomEvent('atlas:active-symbol',{detail:{symbol}}));
-    if(symbol==='BTCUSD')document.title='Bitcoin Cycle Atlas';
+    if(symbol==='BTCUSD')document.title='MetaUp';
     schedule();
   });
   window.addEventListener('popstate',()=>{
     const symbol=readChartSymbol();
     document.documentElement.dataset.symbol=symbol;
     document.dispatchEvent(new CustomEvent('atlas:active-symbol',{detail:{symbol}}));
-    if(symbol==='BTCUSD')document.title='Bitcoin Cycle Atlas';
+    if(symbol==='BTCUSD')document.title='MetaUp';
     schedule();
   });
   return {getCycleContext,focusCycleRow,setDataset(dataset){if(state.dataset===dataset)return;forecastComputer.cancel();forecastRequest=null;datasetRevision++;periodComputer.cancel();periodOwner=null;state.cycleComparison=null;state.scenario=state.requestedScenario;touchTracking.cancel();if(state.selectedDate===state.dataset?.prices.at(-1)?.[0])state.selectedDate=null;state.dataset=dataset;state.base=null;state.analysis=null;state.models.clear();state.futureStates.clear();state.cycleAnnotations=null;volumeProjectionCache.clear();state.volumeProjection=null;state.methodKey=null;state.eventsRenderKey=null;state.hoverReadoutKey=null;if(volumeState.series&&volumeState.series.lastDate<dataset.prices.at(-1)[0])void loadVolume({force:true});schedule();},show(value){state.visible=value;if(!value){monthlyOpening++;monthlyWorkbench?.close({focus:false});clockWorkbench?.close({focus:false});}if(!value&&periodOwner){periodResults.set(periodOwner.model,{status:'idle'});periodComputer.cancel();periodOwner=null;}if(value)schedule();},showCompare(value){state.compareVisible=value;if(value)schedule();}};

@@ -66,7 +66,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   const minimumOriginIndex=symbol==='ETHUSD'?365:180;
   const preferredMode=atlasAvailable&&initialMode==='cutoff-backtest'?'cutoff-backtest':'atlas-chart';
   const trigger=doc.createElement('button');trigger.type='button';trigger.id='workbench-replay';
-  trigger.className='chart-replay-trigger';trigger.textContent='봉 리플레이';trigger.title=atlasAvailable?'선택 시점의 예측을 고정하고 이후 실제 봉과 비교':'현재 차트에서 시작 봉을 선택하고 고정 예측과 비교';
+  trigger.className='chart-replay-trigger';trigger.setAttribute('aria-label','리플레이');trigger.innerHTML=replayIcon('M8 5l11 7-11 7Z').replace('<svg ','<svg class="icon" ')+'<span>리플레이</span>';trigger.title=atlasAvailable?'선택 시점의 예측을 고정하고 이후 실제 봉과 비교':'현재 차트에서 시작 봉을 선택하고 고정 예측과 비교';
   trigger.setAttribute('aria-pressed','false');toolbar.insertBefore(trigger,toolbar.querySelector('.workbench-spacer,.eth-top-spacer'));
   const panel=doc.createElement('section');panel.className='chart-replay-controls';panel.hidden=true;
   panel.setAttribute('aria-label','봉 리플레이 제어');

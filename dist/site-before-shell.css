@@ -2581,7 +2581,7 @@ svg [data-replay-retrospective-origin-label] :is(path,circle,text){--accent:var(
 @media(max-width:620px){.clock-history-coverage summary{min-height:44px;line-height:44px}}
 
 
-/* Source: ipo-view.css; SHA-256: 1ec3c41f9f4790c77cea38f8592ced5a208b7a51be99cd9302ca25d3eb7b1ad3 */
+/* Source: ipo-view.css; SHA-256: c5dedf77689358ba426a72e987a30ef4f31fe0579884d1b102507662110e0679 */
 #ipo-view { padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 12px; height: 100%; min-height: 0; overflow: visible; }
 .ipo-heading { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; flex-wrap: nowrap; }
 .ipo-heading-title { display: flex; flex: none; align-items: center; gap: 8px; }
@@ -2696,8 +2696,6 @@ svg [data-replay-retrospective-origin-label] :is(path,circle,text){--accent:var(
   .ipo-month-day { padding: 4px; gap: 4px; }
   .ipo-cal-event { font-size: 11px; gap: 0; }
   .ipo-cal-event > span { display: none; }
-  .ipo-cal-event strong::before { content: '예 '; }
-  .ipo-cal-event[data-kind=subscription] strong::before { content: '청 '; }
 }
 @media (max-height: 480px) {
   .ipo-month-page { min-height: 360px; }

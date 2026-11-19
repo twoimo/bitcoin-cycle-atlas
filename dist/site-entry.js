@@ -1,6 +1,6 @@
 import { initTheme } from './ui/theme.js';
-import { enhanceBootSkeleton } from './loading-surfaces.js?v=1.0.1';
-import { initAtlasShell } from './atlas-shell.js?v=1.36.23';
+import { enhanceBootSkeleton } from './loading-surfaces.js?v=1.0.2';
+import { initAtlasShell } from './atlas-shell.js?v=1.36.26';
 import { canonicalNativeChartEntry, canonicalRetiredPageEntry, canonicalWorkspaceChartEntry, canonicalDefaultChartEntry } from './atlas-navigation.js?v=1.36.3';
 import { mountJournalEntry } from './journal-entry.js?v=1.29.3';
 import { initPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
@@ -21,16 +21,17 @@ if (canonicalEntry) {
   const bootSymbol = document.querySelector('.atlas-boot-symbol');
   if (bootSymbol) bootSymbol.textContent = symbol;
   let opened = false, failure = null;
-  for (let attempt = 0; attempt < 4 && !opened; attempt += 1) {
+  const retryDelay = [400, 900, 1600, 2500, 3500];
+  for (let attempt = 0; attempt < retryDelay.length + 1 && !opened; attempt += 1) {
     try {
-      const specifier = attempt === 0 ? "./app.js?v=1.37.53" : `./app.js?v=1.37.53&retry=${attempt}`;
+      const specifier = attempt === 0 ? "./app.js?v=1.37.60" : `./app.js?v=1.37.60&retry=${attempt}`;
       await import(specifier);
       opened = true;
     } catch (error) {
       failure = error;
       const transient = error instanceof TypeError && /Failed to fetch|Load failed|dynamically imported module|Importing a module script failed/i.test(String(error?.message || error));
-      if (!transient || attempt === 3) break;
-      await new Promise(resolve => setTimeout(resolve, 120 * (attempt + 1)));
+      if (!transient || attempt === retryDelay.length) break;
+      await new Promise(resolve => setTimeout(resolve, retryDelay[attempt]));
     }
   }
   if (!opened) {

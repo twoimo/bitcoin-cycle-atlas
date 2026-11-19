@@ -12,10 +12,10 @@ import {readP1RouteReadiness, isP1RouteReady} from '../scripts/verify-ui-renewal
 const app = readFileSync(new URL('../dist/app.js', import.meta.url), 'utf8');
 const shell = readFileSync(new URL('../dist/atlas-shell.js', import.meta.url), 'utf8');
 const lifecycle = app.slice(app.indexOf('let outlookController ='), app.indexOf('function ensureEvidence()'))
-  .replace("import('./viewport-workspace.js?v=1.36.29')", 'loadViewport()')
-  .replace("import('./lab-view.js?v=1.36.23')", 'loadLab()')
-  .replace("import(`./viewport-workspace.js?v=1.36.29&retry=${attempt}`)", 'loadViewport()')
-  .replace("import(`./lab-view.js?v=1.36.23&retry=${attempt}`)", 'loadLab()');
+  .replace("import('./viewport-workspace.js?v=1.36.32')", 'loadViewport()')
+  .replace("import('./lab-view.js?v=1.36.26')", 'loadLab()')
+  .replace("import(`./viewport-workspace.js?v=1.36.32&retry=${attempt}`)", 'loadViewport()')
+  .replace("import(`./lab-view.js?v=1.36.26&retry=${attempt}`)", 'loadLab()');
 assert.doesNotMatch(lifecycle, /\bimport\(/, 'only the two module import boundaries are deferred by this fixture');
 const syncPage = app.slice(app.indexOf('function syncPage()'), app.indexOf('\nsyncPage();'));
 const syncShell = shell.slice(shell.indexOf('  function sync() {'), shell.indexOf('  const pageObserver ='))

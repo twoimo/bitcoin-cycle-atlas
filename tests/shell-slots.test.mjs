@@ -89,6 +89,33 @@ test('late native identity, history and replay mounts settle without duplicate s
   assert.equal(writes, 0, 'initial boot and symbol announcements do not record navigation or URL state');
 });
 
+test('period, backtest and replay heading actions keep their names and gain an icon', () => {
+  const {document} = fixture();
+  const heading = document.querySelector('.atlas-canvas-heading');
+  const panel = document.createElement('section');
+  panel.id = 'atlas-cycle-panel';
+  panel.innerHTML = '<details id="atlas-cycle-options"><summary>기간선</summary></details>';
+  const backtest = document.createElement('button');
+  backtest.id = 'workbench-monthly-backtest';
+  backtest.textContent = '백테스트';
+  const replay = document.createElement('button');
+  replay.id = 'workbench-replay';
+  replay.textContent = '봉 리플레이';
+  heading.append(panel, backtest, replay);
+  refreshShellSlots(document, {symbol:'BTCUSD'});
+  const summary = document.querySelector('#atlas-cycle-options > summary');
+  assert.equal(summary.textContent, '기간선');
+  assert.equal(summary.querySelector('svg')?.getAttribute('aria-hidden'), 'true');
+  assert.equal(backtest.textContent, '백테스트');
+  assert.ok(backtest.querySelector('svg'));
+  assert.equal(replay.textContent, '리플레이');
+  assert.equal(replay.getAttribute('aria-label'), '리플레이');
+  assert.ok(replay.querySelector('svg'));
+  refreshShellSlots(document, {symbol:'BTCUSD'});
+  assert.equal(summary.querySelectorAll('svg').length, 1);
+  assert.equal(replay.querySelectorAll('svg').length, 1);
+});
+
 test('hosted chart tools share instrument slot; nonchart portals remain direct and usable', () => {
   const {document} = fixture();
   const heading = document.querySelector('.atlas-canvas-heading');

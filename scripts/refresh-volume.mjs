@@ -164,7 +164,7 @@ async function collectEvidence(snapshot, directory) {
     bitstampTrades: { ...metadata(trades), rows: trades.payload.map(row => [Number(row.date), row.amount, row.price]) },
     kraken: { ...metadata(kraken), pair: 'XXBTZUSD', nativeRowsReturned: kraken.payload.result.XXBTZUSD.length,
       rows: kraken.payload.result.XXBTZUSD.filter(row => row[0] >= end + 1 - 7 * DAY) },
-    coinbaseCached: { url: 'https://github.com/twoimo/bitcoin-cycle-atlas/blob/main/dist/data/btc-ohlc.json',
+    coinbaseCached: { url: 'https://github.com/twoimo/metaup/blob/main/dist/data/btc-ohlc.json',
       artifactPath: 'dist/data/btc-ohlc.json', artifactSha256: hash(cachedText), sourceUrls: cached.intervals.daily.sourceUrls,
       retrievedAt: cached.intervals.daily.retrievedAt, daily: cached.intervals.daily.candles,
       hourlyMetadata: { url: cached.intervals['1h'].sourceUrls[0], retrievedAt: cached.intervals['1h'].retrievedAt },

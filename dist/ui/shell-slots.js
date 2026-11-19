@@ -146,7 +146,37 @@ export function refreshShellSlots(document, {symbol} = {}) {
   const plot = $('.atlas-plot');
   if (plot) set(plot, 'data-chart-symbol', currentSymbol);
   for (const node of document.querySelectorAll('[data-shell-region] button,[data-shell-region] select')) explainDisabled(node);
+  paintHeadingAction(document, document.querySelector('#atlas-cycle-options > summary'), 'M5 7v10M19 7v10M5 12h14');
+  paintHeadingAction(document, document.getElementById('workbench-monthly-backtest'), 'M4 12a8 8 0 1 0 2.3-5.7M4 4v4h4M12 8v4l2.5 1.5');
+  paintHeadingAction(document, document.getElementById('workbench-replay'), 'M8 5l11 7-11 7Z', {renameFrom:'봉 리플레이', renameTo:'리플레이'});
   instance?.mobileHeading.update({heading,feature,symbol:currentSymbol});
+}
+
+function headingGlyph(document, path) {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', 'icon');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('focusable', 'false');
+  svg.setAttribute('fill', 'none');
+  svg.setAttribute('stroke', 'currentColor');
+  svg.setAttribute('stroke-width', '1.7');
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
+  const shape = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  shape.setAttribute('d', path);
+  svg.append(shape);
+  return svg;
+}
+
+function paintHeadingAction(document, node, path, {renameFrom, renameTo} = {}) {
+  if (!node) return;
+  if (renameFrom && node.textContent.trim() === renameFrom) {
+    node.textContent = renameTo;
+    if (!node.getAttribute('aria-label')) node.setAttribute('aria-label', renameTo);
+  }
+  if (node.querySelector('svg')) return;
+  node.prepend(headingGlyph(document, path));
 }
 
 /** One observer covers asynchronous shell mounts, not chart paints. It never

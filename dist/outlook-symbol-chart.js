@@ -3,7 +3,7 @@ import { EQUITIES, parseEquityArchive } from './equity-market-data.js?v=1.29.0';
 import { createMarketDataController } from './market-data-controller.js?v=1.29.0';
 import { isIntradayInterval } from './ohlc-data.js?v=1.29.0';
 import { atlasCandlesToFunnestBars, mountObservedPriceChart } from './funnest-observed-price-adapter.js?v=1.36.8';
-import { intervalShortLabel } from './interval-picker.js?v=1.0.0';
+import { intervalShortLabel } from './interval-picker.js?v=1.0.1';
 import { compactQuantity, renderChartSymbolLegend, signedChange, symbolLogo } from './chart-symbol-legend.js?v=1.0.1';
 
 const PROFILES = {
@@ -167,7 +167,7 @@ export function mountOutlookSymbolChart({ plot, metrics, symbol, getState, onRea
     paintLegend(last, series.candles.at(-2));
     const when = String(series.lastDate || last.date || '').slice(0, 16).replace('T', ' ');
     metrics.title = `${profile.source} · ${profile.product} · ${when} UTC · 완료된 관측`;
-    doc.title = `${profile.name} ${formatPrice(last.close)} · Bitcoin Cycle Atlas`;
+    doc.title = `${profile.name} ${formatPrice(last.close)} · MetaUp`;
     ready();
   }
 

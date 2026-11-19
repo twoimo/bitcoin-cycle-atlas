@@ -137,7 +137,7 @@ test('provider authority requires official App, owner, source, account, Worker a
     workerPath:check=>{check.details_url=check.details_url.replace('/bitcoin-cycle-atlas-models-verify/','/other/');},
     buildPath:check=>{check.details_url=check.details_url.replace('11111111-1111-4111-8111-111111111111','33333333-3333-4333-8333-333333333333');},
     query:check=>{check.details_url+='?misleading=1';},
-    wrongApiRepository:check=>{check.url=check.url.replace('twoimo/bitcoin-cycle-atlas','attacker/bitcoin-cycle-atlas');},
+    wrongApiRepository:check=>{check.url=check.url.replace('twoimo/metaup','attacker/metaup');},
     pendingConclusion:check=>{check.status='in_progress';check.conclusion='success';},
   };
   for(const [name,change]of Object.entries(corruptions)){

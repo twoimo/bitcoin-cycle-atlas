@@ -53,6 +53,9 @@ body[data-center-tool] .workspace-toast{display:none!important}
 
 .atlas-skeleton-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr));gap:4px;flex:1;min-height:180px}
 .atlas-skeleton-calendar>[skullet-block]{background:var(--skullet-base);color:transparent;opacity:.55;border-radius:3px}
+.atlas-boot-canvas>.atlas-skeleton,.atlas-chart-pending>.atlas-skeleton,.atlas-center-loading>.atlas-skeleton{height:100%;min-height:0}
+@media(max-height:740px){.atlas-skeleton,.atlas-skeleton-plot,.atlas-skeleton-calendar,.atlas-has-skeleton{min-height:0}.atlas-skeleton-rows{gap:8px}.atlas-skeleton-row{min-height:0;padding-bottom:6px}}
+@media(max-width:640px){.atlas-skeleton-calendar{gap:0;min-height:0}.atlas-skeleton-calendar>[skullet-block]{border-radius:0}.atlas-skeleton-shape{padding:8px 8px 0;gap:8px}}
 
 /* A nested page has a center only; the parent already owns all four tool rails. */
 body[data-embedded=true] #atlas-boot-shell{grid-template-columns:minmax(0,1fr)}

@@ -36,7 +36,7 @@ export function mountMobileWorkspace({workspace,stage,plot,reader,closeReader}) 
   const mobileActions=doc.createElement('nav');mobileActions.className='mobile-extra-actions';mobileActions.setAttribute('aria-label','추가 차트 기능');
   for(const [label,target,path]of [
     ['차트 설정','#atlas-display-options','<path d="M5 3v18M12 3v18M19 3v18M2 8h6m1 8h6m1-10h6"/>'],
-    ['봉 리플레이','#workbench-replay','<path d="M8 5v14l11-7zM4 5v14"/>'],
+    ['리플레이','#workbench-replay','<path d="M8 5v14l11-7zM4 5v14"/>'],
     ['실행 취소','#workbench-undo','<path d="m8 5-5 5 5 5M3 10h10a7 7 0 0 1 7 7"/>'],
     ['다시 실행','#workbench-redo','<path d="m16 5 5 5-5 5M21 10h-10a7 7 0 0 0-7 7"/>'],
     ['미래 가정','#workbench-scenario','<path d="m3 18 7-8 5 3 6-9M10 10l5 10 6-4"/>'],

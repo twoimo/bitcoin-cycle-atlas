@@ -1,4 +1,5 @@
 import { CHART_INTERVALS } from './ohlc-data.js?v=1.29.0';
+import { intervalShortLabel } from './interval-picker.js?v=1.0.1';
 import { mountDialogViewport } from './dialog-viewport.js?v=1.29.0';
 import { readWorkspaces, saveWorkspace, writeWorkspaces, cleanWorkspaceQuery, workspaceQuery, readWorkspaceViewport, readWorkspacePriceDomain, searchWorkspaceCommands } from './workspace-state.js?v=1.29.0';
 
@@ -100,7 +101,7 @@ export function mountWorkspaceTools({trigger, plot, openReader, closeReader}) {
       ...[['crosshair','십자선','C'],['pan','차트 이동','H'],['measure','두 지점 측정','M']].map(([value,label,key])=>({label,description:'차트 도구',key,run:()=>dispatch('tool',value)})),
       {label:'기본 범위로 돌아가기',description:'확대·이동 초기화',keywords:'reset fit',key:'Alt R',run:()=>dispatch('fit')},
       {label:'로그·선형 눈금 전환',description:latest?.scale==='linear'?'현재 선형 · 로그로 변경':'현재 로그 · 선형으로 변경',keywords:'scale log axis',key:'Alt L',run:()=>dispatch('scale')},
-      ...CHART_INTERVALS.map(item=>({label:`${item.label} 간격`,description:item.seconds<86400?'거래소의 실제 완료 봉':'장기 관측과 미래 가정',keywords:`interval timeframe ${item.id}`,run:()=>dispatch('frequency',item.id)})),
+      ...CHART_INTERVALS.map(item=>({label:`${intervalShortLabel(item.id)} 간격`,description:item.seconds<86400?'거래소의 실제 완료 봉':'장기 관측과 미래 가정',keywords:`interval timeframe ${item.id} ${item.label}`,run:()=>dispatch('frequency',item.id)})),
       ...[['line','선 차트'],['candles','캔들 차트']].map(([value,label])=>({label,description:'가격 표시 방식',keywords:'chart type',run:()=>dispatch('chart-type',value)})),
       ...[['focus','기본 4년'],['near','가까운 6개월'],['all','장기 전망'],['history','전체 역사']].map(([value,label])=>({label,description:'차트 표시 기간',hidden:intraday,run:()=>dispatch('span',value)})),
       {label:'차트 설정',description:'가격 단위와 분석 기준',keywords:'settings unit indexed',run:reader('settings')},

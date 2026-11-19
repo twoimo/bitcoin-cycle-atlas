@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "atlas-cloudflare-scheduled-build-contract",
-  "repository": "twoimo/bitcoin-cycle-atlas",
+  "repository": "twoimo/metaup",
   "branch": "main",
   "activationVerified": false,
   "billingPlanReadback": "Unavailable with the connected credential (HTTP403); no account-wide plan claim is made",

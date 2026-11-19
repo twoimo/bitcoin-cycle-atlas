@@ -5,11 +5,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="비트코인 반감기, 저점, 고점, 이전 최고가 돌파 사이클과 방향 전환 시점을 실제 일별 데이터로 비교하세요. 관측일과 확인일, 사이클 속도, 계산 근거를 함께 제공합니다.">
-  <title>비트코인 사이클 | 통합 차트</title>
+  <title>MetaUp | 비트코인 사이클</title>
   <link rel="canonical" href="https://twoimo.github.io/bitcoin-cycle-atlas/">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Bitcoin Cycle Atlas">
-  <meta property="og:title" content="비트코인 사이클 아틀라스">
+  <meta property="og:site_name" content="MetaUp">
+  <meta property="og:title" content="MetaUp">
   <meta property="og:description" content="반감기·고점·저점과 사이클 기간을 실제 데이터로 비교하는 비트코인 차트. 관측과 미래 가정을 구분합니다.">
   <meta property="og:url" content="https://twoimo.github.io/bitcoin-cycle-atlas/">
   <meta property="og:image" content="https://twoimo.github.io/bitcoin-cycle-atlas/social-preview.png?v=20261024">
@@ -18,7 +18,7 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Bitcoin Cycle Atlas · 비트코인을 중심으로 과거 사이클을 표현한 금색·청색·보라색 궤도 일러스트">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="비트코인 사이클 아틀라스">
+  <meta name="twitter:title" content="MetaUp">
   <meta name="twitter:description" content="반감기·고점·저점·사이클 기간을 실제 데이터로 비교합니다.">
   <meta name="twitter:image" content="https://twoimo.github.io/bitcoin-cycle-atlas/social-preview.png?v=20261024">
   <meta name="twitter:image:alt" content="Bitcoin Cycle Atlas · 비트코인과 사이클 궤도 일러스트">
@@ -94,7 +94,7 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
     })();
   </script>
   <!-- Fetch modules during CSS loading; execution still belongs to site-entry. -->
-  <link rel="modulepreload" href="./site-entry.js?v=1.37.68">
+  <link rel="modulepreload" href="./site-entry.js?v=1.37.77">
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link id="atlas-optional-fonts" rel="stylesheet" href="./fonts/pretendard/pretendard-variable.css?v=2973bcae8026" media="print">
   <script id="atlas-fonts-script">
@@ -106,9 +106,9 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
     })();
   </script>
   <link rel="stylesheet" href="./styles.css?v=dd920856be9e">
-  <link rel="stylesheet" href="./site-before-shell.css?v=b22f9a4b5899">
+  <link rel="stylesheet" href="./site-before-shell.css?v=86a14f5d5e92">
   <link rel="stylesheet" href="./atlas-shell.css?v=1.36.5">
-  <link rel="stylesheet" href="./site-after-shell.css?v=695e1c7e8ede">
+  <link rel="stylesheet" href="./site-after-shell.css?v=e96aeb8a1118">
   <link rel="stylesheet" href="./chart-drawbar.css?v=1.0.3">
 </head>
 <body>
@@ -147,12 +147,13 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
         window.clearTimeout(timeout);
         timeout = null;
         document.removeEventListener('atlas:ready', ready);
-        document.removeEventListener('atlas:boot-error', fail);
+        document.removeEventListener('atlas:boot-error', onBootError);
         window.removeEventListener('error', onError, true);
-        window.removeEventListener('unhandledrejection', fail);
+        window.removeEventListener('unhandledrejection', onRejection);
       }
       function ready() {
         if (root.dataset.boot !== 'loading') return;
+        try { sessionStorage.removeItem('atlas-boot-recover'); } catch { /* A closed store cannot block the open page. */ }
         root.dataset.boot = 'ready';
         status.setAttribute('aria-busy', 'false');
         for (const node of document.querySelectorAll('[data-boot-content]')) {
@@ -189,17 +190,62 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
         error.hidden = false;
         detach();
       }
+      const droppedFetch = value => /Failed to fetch|Load failed|dynamically imported module|Importing a module script failed/i.test(String(value?.message || value || ''));
+      let resourceAttempt = 0;
+      function failedResource(event) {
+        const target = event?.target;
+        if (!target || target === window) return null;
+        const stylesheet = target.tagName === 'LINK' && target.id !== 'atlas-optional-fonts' && /(?:^|\s)stylesheet(?:\s|$)/i.test(target.rel || '');
+        if (target.tagName !== 'SCRIPT' && !stylesheet) return null;
+        return { target, stylesheet, url: String(target.src || target.href || '') };
+      }
+      // A dropped connection keeps its failed module address. Ask for a new
+      // address after the burst, and leave the loading screen up until it opens.
+      function retryResource(resource) {
+        const parent = resource.target.parentNode || document.head || document.body || document.documentElement;
+        if (!resource.url || resourceAttempt >= 4 || typeof document.createElement !== 'function' || typeof parent?.appendChild !== 'function') return false;
+        resourceAttempt += 1;
+        const attempt = resourceAttempt;
+        window.setTimeout(() => {
+          if (root.dataset.boot !== 'loading') return;
+          let next;
+          try { next = new URL(resource.url, location.href); }
+          catch { fail(resource.target); return; }
+          next.searchParams.set('boot-retry', String(attempt));
+          const copy = document.createElement(resource.stylesheet ? 'link' : 'script');
+          if (resource.stylesheet) { copy.rel = 'stylesheet'; copy.href = next.href; }
+          else { copy.type = resource.target.type || 'module'; copy.src = next.href; }
+          parent.appendChild(copy);
+        }, 400 * attempt);
+        return true;
+      }
       function onError(event) {
-        const target = event.target;
-        const stylesheet = target?.tagName === 'LINK' && target.id !== 'atlas-optional-fonts' && /(?:^|\s)stylesheet(?:\s|$)/i.test(target.rel || '');
-        if (target === window || target?.tagName === 'SCRIPT' || stylesheet) fail(event);
+        const resource = failedResource(event);
+        if (resource) { if (!retryResource(resource)) fail(event); return; }
+        if (event.target === window) fail(event);
+      }
+      function onRejection(event) {
+        if (droppedFetch(event?.reason)) return;
+        fail(event);
+      }
+      function onBootError(event) {
+        if (droppedFetch(event?.detail?.message)) {
+          try {
+            if (sessionStorage.getItem('atlas-boot-recover') !== '1') {
+              sessionStorage.setItem('atlas-boot-recover', '1');
+              location.reload();
+              return;
+            }
+          } catch { /* The visible failure below is the recovery when storage is closed. */ }
+        }
+        fail(event);
       }
       document.getElementById('atlas-boot-retry').addEventListener('click', () => location.reload());
       document.addEventListener('atlas:ready', ready);
-      document.addEventListener('atlas:boot-error', fail);
+      document.addEventListener('atlas:boot-error', onBootError);
       // Module/runtime failures block setup; optional images and icons do not.
       window.addEventListener('error', onError, true);
-      window.addEventListener('unhandledrejection', fail);
+      window.addEventListener('unhandledrejection', onRejection);
       // Install the regular handler before releasing the early capture.
       if (window.__atlasTakeEarlyStyleFailure?.()) fail();
     })();
@@ -378,6 +424,6 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
   <dialog id="method-dialog" aria-labelledby="method-title"><div class="dialog-top"><span class="eyebrow">자료와 방법론</span><button id="close-method" class="icon-button" aria-label="방법론 닫기"><span data-icon="close"></span></button></div><h2 id="method-title">방법론과 출처</h2><p class="dialog-lead">차트의 출발점부터 가격의 정의까지, 비교에 사용한 기준입니다.</p><div id="method-content"></div><button id="method-done" class="primary-button">확인했습니다</button></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <dialog id="evidence-dialog" aria-labelledby="evidence-detail-title"><div class="dialog-top"><span class="eyebrow">근거와 한계</span><button id="evidence-close" class="icon-button" aria-label="자료 상세 닫기"><span data-icon="close"></span></button></div><h2 id="evidence-detail-title"></h2><div id="evidence-detail-body"></div></dialog>
-  <script type="module" src="./site-entry.js?v=1.37.68"></script>
+  <script type="module" src="./site-entry.js?v=1.37.77"></script>
 </body>
 </html>

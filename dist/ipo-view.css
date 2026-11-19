@@ -112,8 +112,6 @@
   .ipo-month-day { padding: 4px; gap: 4px; }
   .ipo-cal-event { font-size: 11px; gap: 0; }
   .ipo-cal-event > span { display: none; }
-  .ipo-cal-event strong::before { content: '예 '; }
-  .ipo-cal-event[data-kind=subscription] strong::before { content: '청 '; }
 }
 @media (max-height: 480px) {
   .ipo-month-page { min-height: 360px; }

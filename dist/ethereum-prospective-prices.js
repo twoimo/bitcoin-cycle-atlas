@@ -68,7 +68,7 @@ export async function createEthereumResearchSnapshot({base,tail}={}){
   const body={schemaVersion:1,kind:'ethereum-prospective-input',asOf:rebuilt.asOf,
     eventAt:new Date((Date.parse(rebuilt.asOf+'T00:00:00Z')+86400000)).toISOString(),
     base:{text:base.text,sourceCommit:base.sourceCommit,gitBlobSha:base.gitBlobSha,collectedAt:collected,
-      sourceUrl:'https://github.com/twoimo/bitcoin-cycle-atlas/blob/'+base.sourceCommit+'/'+ETH_PROSPECTIVE_PRICE_POLICY.basePath,
+      sourceUrl:'https://github.com/twoimo/metaup/blob/'+base.sourceCommit+'/'+ETH_PROSPECTIVE_PRICE_POLICY.basePath,
       sourceHash:baseHash,bytes:bytes(base.text).length,publishedAt:null},
     tail:{text:tail.text,requestStartedAt:began,bodyCompletedAt:completed,sourceUrl:tail.sourceUrl,
       sourceHash:tailHash,bytes:bytes(tail.text).length,publishedAt:null},

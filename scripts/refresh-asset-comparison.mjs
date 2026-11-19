@@ -207,7 +207,7 @@ export function assetComparisonAcquisitionManifest(bundle){
 async function fetchWithRetry(sourceUrl,{fetchImpl,symbol}){
   for(let attempt=0;attempt<3;attempt++){
     let response;
-    try{response=await fetchImpl(sourceUrl,{headers:{'User-Agent':'Bitcoin-Cycle-Atlas research / https://github.com/twoimo/bitcoin-cycle-atlas'},signal:AbortSignal.timeout(45000)});}
+    try{response=await fetchImpl(sourceUrl,{headers:{'User-Agent':'Bitcoin-Cycle-Atlas research / https://github.com/twoimo/metaup'},signal:AbortSignal.timeout(45000)});}
     catch(error){if(attempt===2)throw error;await new Promise(done=>setTimeout(done,1000*2**attempt));continue;}
     if(response.ok)return response;
     const error=new Error(`${symbol}: provider HTTP ${response.status}`);

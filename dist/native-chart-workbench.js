@@ -6,7 +6,7 @@ import { parseGoToRequest } from './chart-view-policy.js?v=1.36.1';
 import { normalizePriceDomain } from './price-axis.js';
 import { createChartSvgExport, createChartPngFromSvg } from './chart-export.js';
 import { isIntradayInterval } from './ohlc-data.js';
-import { mountIntervalPicker } from './interval-picker.js?v=1.0.0';
+import { mountIntervalPicker } from './interval-picker.js?v=1.0.1';
 import { mountNativeChartLegend } from './ui/native-chart-legend.js?v=1.36.3';
 import { createThemeControl } from './ui/theme.js';
 import { initChartColors, createChartColorsControl } from './ui/chart-colors.js';

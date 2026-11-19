@@ -1,6 +1,6 @@
 {
-  "name": "bitcoin-cycle-atlas",
-  "version": "1.37.5",
+  "name": "metaup",
+  "version": "1.37.6",
   "private": true,
   "type": "module",
   "engines": {

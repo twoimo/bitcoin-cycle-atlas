@@ -1,14 +1,16 @@
 const PICKER_TEXT = {
-  '1m': { chip: '1분', tip: '1분', short: '1분' },
-  '5m': { chip: '5분', tip: '5분', short: '5분' },
-  '15m': { chip: '15분', tip: '15분', short: '15분' },
-  '30m': { chip: '30분', tip: '30분', short: '30분' },
-  '1h': { chip: '1시간', tip: '1시간', short: '1시간' },
-  '4h': { chip: '4시간', tip: '4시간', short: '4시간' },
-  daily: { chip: '일', tip: '1일', short: '일' },
-  weekly: { chip: '주', tip: '1주', short: '주' },
+  '1m': { chip: '1m', tip: '1m', short: '1m' },
+  '5m': { chip: '5m', tip: '5m', short: '5m' },
+  '15m': { chip: '15m', tip: '15m', short: '15m' },
+  '30m': { chip: '30m', tip: '30m', short: '30m' },
+  '1h': { chip: '1h', tip: '1h', short: '1h' },
+  '4h': { chip: '4h', tip: '4h', short: '4h' },
+  daily: { chip: 'D', tip: 'D', short: 'D' },
+  weekly: { chip: 'W', tip: 'W', short: 'W' },
 };
-const PINNED = ['1m', '5m', '15m', '1h', '4h', 'daily'];
+const DESKTOP_PINNED = ['1m', '5m', '15m', '1h', '4h', 'daily', 'weekly'];
+const COMPACT_PINNED = ['15m', '1h', '4h', 'daily'];
+const COMPACT_QUERY = '(max-width: 1024px)';
 
 export function intervalShortLabel(id) {
   return PICKER_TEXT[id]?.short || id;
@@ -19,8 +21,8 @@ export function intervalShortLabel(id) {
 export function mountIntervalPicker({ host, intervals, selected = 'daily', onSelect, datasetKey = null, document = host?.ownerDocument }) {
   const labelFor = interval => PICKER_TEXT[interval.id] || { chip: interval.label, tip: interval.label, short: interval.label };
   const known = intervals.filter(interval => PICKER_TEXT[interval.id]);
-  const pinned = known.filter(interval => PINNED.includes(interval.id));
-  const overflow = known.filter(interval => !PINNED.includes(interval.id));
+  const view = document.defaultView;
+  const media = view?.matchMedia?.(COMPACT_QUERY);
   host.classList.add('interval-picker');
   if (!host.getAttribute('aria-label')) host.setAttribute('aria-label', '가격 표시 간격');
   let chips = host.querySelector('.lab-segmented');
@@ -28,25 +30,28 @@ export function mountIntervalPicker({ host, intervals, selected = 'daily', onSel
   chips.classList.add('interval-chips');
   chips.replaceChildren();
   const buttons = [];
-  const addButton = (interval, className, menu) => {
+  let currentId = known.some(interval => interval.id === selected) ? selected : known[0]?.id || '';
+  const addButton = interval => {
     const text = labelFor(interval);
     const node = document.createElement('button');
     node.type = 'button';
-    node.className = className;
     node.dataset.labFrequency = interval.id;
     if (datasetKey) node.dataset[datasetKey] = interval.id;
     node.id = `workbench-interval-${interval.id}`;
     node.textContent = text.chip;
     node.title = text.tip;
     node.setAttribute('aria-label', text.tip);
-    node.setAttribute('aria-pressed', String(interval.id === selected));
-    node.tabIndex = interval.id === selected ? 0 : -1;
-    if (menu) node.setAttribute('role', 'menuitemradio');
-    node.onclick = () => { close(menu); onSelect?.(interval.id); };
+    node.setAttribute('aria-pressed', String(interval.id === currentId));
+    node.tabIndex = interval.id === currentId ? 0 : -1;
+    node.onclick = () => {
+      currentId = interval.id;
+      close(panel.contains(node));
+      onSelect?.(interval.id);
+    };
     buttons.push(node);
     return node;
   };
-  for (const interval of pinned) chips.append(addButton(interval, 'interval-chip', false));
+  for (const interval of known) addButton(interval);
   const more = document.createElement('button');
   more.type = 'button';
   more.className = 'interval-more';
@@ -56,8 +61,7 @@ export function mountIntervalPicker({ host, intervals, selected = 'daily', onSel
   more.setAttribute('aria-controls', 'interval-more-panel');
   const current = document.createElement('b');
   current.className = 'interval-current';
-  current.textContent = intervalShortLabel(selected);
-  current.hidden = pinned.some(interval => interval.id === selected);
+  current.textContent = intervalShortLabel(currentId);
   more.append(current);
   more.insertAdjacentHTML('beforeend', '<svg class="interval-chevron" width="14" height="14" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>');
   const panel = document.createElement('div');
@@ -66,7 +70,28 @@ export function mountIntervalPicker({ host, intervals, selected = 'daily', onSel
   panel.hidden = true;
   panel.setAttribute('role', 'menu');
   panel.setAttribute('aria-label', '시간 단위');
-  for (const interval of overflow) panel.append(addButton(interval, 'interval-more-item', true));
+  function pinnedIds() {
+    const compact = Boolean(media?.matches);
+    const allow = new Set(compact ? COMPACT_PINNED : DESKTOP_PINNED);
+    return known.filter(interval => allow.has(interval.id)).map(interval => interval.id);
+  }
+  function place() {
+    const pin = new Set(pinnedIds());
+    chips.replaceChildren();
+    panel.replaceChildren();
+    for (const node of buttons) {
+      const menu = !pin.has(node.dataset.labFrequency);
+      node.className = menu ? 'interval-more-item' : 'interval-chip';
+      if (menu) node.setAttribute('role', 'menuitemradio');
+      else node.removeAttribute('role');
+      (menu ? panel : chips).append(node);
+    }
+    const onChip = pin.has(currentId);
+    current.textContent = intervalShortLabel(currentId);
+    current.hidden = onChip;
+    more.classList.toggle('is-overflow', !onChip);
+    more.hidden = panel.childElementCount === 0;
+  }
   function close(focus = false) {
     if (panel.hidden) return;
     panel.hidden = true;
@@ -87,20 +112,24 @@ export function mountIntervalPicker({ host, intervals, selected = 'daily', onSel
   more.onclick = open;
   host.append(more);
   document.body.append(panel);
+  place();
   panel.addEventListener('click', () => close());
   const onPointer = event => { if (!panel.hidden && !panel.contains(event.target) && !more.contains(event.target)) close(); };
   const onKey = event => { if (event.key === 'Escape' && !panel.hidden) { event.preventDefault(); close(true); } };
   const onState = event => {
     const id = event.detail?.frequency;
     if (!id || !PICKER_TEXT[id] || !known.some(interval => interval.id === id)) return;
+    currentId = id;
+    const onChip = chips.contains(buttons.find(node => node.dataset.labFrequency === id));
     current.textContent = intervalShortLabel(id);
-    const onChip = pinned.some(interval => interval.id === id);
     current.hidden = onChip;
     more.classList.toggle('is-overflow', !onChip);
   };
+  const onMedia = () => { close(); place(); };
   document.addEventListener('pointerdown', onPointer, true);
   document.addEventListener('keydown', onKey);
   document.addEventListener('atlas:workbench-state', onState);
+  media?.addEventListener?.('change', onMedia);
   const select = document.createElement('select');
   select.id = 'workbench-interval-select';
   select.setAttribute('aria-label', '가격 표시 간격');
@@ -120,6 +149,7 @@ export function mountIntervalPicker({ host, intervals, selected = 'daily', onSel
       document.removeEventListener('pointerdown', onPointer, true);
       document.removeEventListener('keydown', onKey);
       document.removeEventListener('atlas:workbench-state', onState);
+      media?.removeEventListener?.('change', onMedia);
       panel.remove();
     },
   };

@@ -25,7 +25,7 @@ function gitFixture(options={}){
     if(args[0]==='status')return options.dirty??'';
     if(args[0]==='check-ref-format')return args[2];
     if(args[0]==='ls-remote'){
-      assert.deepEqual(args.slice(0,4),['ls-remote','--exit-code','--refs','https://github.com/twoimo/bitcoin-cycle-atlas.git']);
+      assert.deepEqual(args.slice(0,4),['ls-remote','--exit-code','--refs','https://github.com/twoimo/metaup.git']);
       return options.remote??source.sourceCommit+'\t'+args[4];
     }
     throw new Error('Unexpected Git read '+args.join(' '));

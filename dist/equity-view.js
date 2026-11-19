@@ -1,6 +1,6 @@
 import { setLoadingSurface } from './loading-surfaces.js';
 import { mountInstrumentIndicatorOverlay } from './instrument-indicator-overlay.js?v=1.36.1';
-import { mountNativeChartApp, mountNativeChartWorkbench, nativeDateRange } from './native-chart-workbench.js?v=1.36.6';
+import { mountNativeChartApp, mountNativeChartWorkbench, nativeDateRange } from './native-chart-workbench.js?v=1.36.7';
 import { readChartUrlState, writeChartUrlState } from './ui/chart-url-state.js';
 import {bindPreservedArchiveDownload} from './preserved-archive-download.js?v=1.29.0';
 import {CAPITAL_POLICIES} from './treasury-instruments.js';
@@ -12,7 +12,7 @@ import {normalizePriceDomain} from './price-axis.js?v=1.29.0';
 import {mountChartTouchTracking} from "./chart-touch-tracking.js?v=1.29.0";
 import {clearChartHover} from './chart-hover.js?v=1.29.0';
 import {mountSymbolSelector} from './symbol-selector.js?v=1.35.6';
-import { intervalShortLabel } from './interval-picker.js?v=1.0.0';
+import { intervalShortLabel } from './interval-picker.js?v=1.0.1';
 import { compactQuantity, renderChartSymbolLegend, signedChange } from './chart-symbol-legend.js?v=1.0.1';
 import {mountDialogViewport} from './dialog-viewport.js?v=1.29.0';
 import {buildTreasuryProjection} from "./treasury-projection.js?v=1.29.0";
@@ -30,12 +30,12 @@ const icon=name=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 const button=(action,label,glyph)=>`<button type="button" class="eth-icon" data-equity-action="${action}" aria-label="${label}" title="${label}">${icon(glyph)}</button>`;
 const COLORS={financing:'#9eaff5',governance:'#b5a5df',treasury:'#e6b66d',capital:'#9eaff5',corporate:'#9eaff5',policy:'#ce94c7',market:'#d8909e',protocol:'#7dcbbb',earnings:'#7dcbbb',claims:'#c4b2ed'};
 
-import {mountChartReplay} from './chart-replay.js?v=1.36.2';
+import {mountChartReplay} from './chart-replay.js?v=1.36.3';
 
 export async function initEquityView({symbol}={}){
   const instrument=EQUITIES[symbol];if(!instrument)throw new RangeError('Unsupported equity view');
   const rangeIdentity=range=>range?JSON.stringify(range):null;
-  document.body.dataset.market=symbol;document.title=`${symbol} · ${instrument.name} — Bitcoin Cycle Atlas`;
+  document.body.dataset.market=symbol;document.title=`${symbol} · ${instrument.name} — MetaUp`;
   const params=new URLSearchParams(location.search),valid=(key,values,fallback)=>values.includes(params.get(key))?params.get(key):fallback;
   const urlView=readChartUrlState(params,{spanAliases:['equity-span']});
   const state={frequency:urlView.frequency,chartType:urlView.chartType,scale:urlView.scale,span:urlView.span,scenario:valid('treasury-scenario',['stress','base','bull'],'base'),capitalPolicy:valid('capital-policy',CAPITAL_POLICIES.map(item=>item.id),'cash-at-put'),exitDelayDays:['7','30','90'].includes(params.get('exit-days'))?Number(params.get('exit-days')):undefined,forecastVisible:params.get('forecast')!=='off',funnestMount:null,funnestSeries:null,funnestRangeIdentity:null,funnestType:null,funnestScale:null,funnestVolume:null,funnestInverted:null,funnestReady:false,chartError:null,eventsVisible:params.get('events')!=='off',category:'all',selectedEvent:null,tool:'crosshair',range:null,rangeTouched:false,priceDomain:urlView.priceDomain,controller:null,selectedTime:null,selectedValuationDate:null,measurement:null,magnet:urlView.magnet,showVolume:params.get('vol')!=='0',invertScale:urlView.invertScale,frame:null,loading:false,error:null};

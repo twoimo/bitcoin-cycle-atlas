@@ -25,7 +25,7 @@ const commit = await git('rev-parse', '--verify', 'HEAD');
 await git('diff', '--exit-code', '--quiet');
 await git('diff', '--cached', '--exit-code', '--quiet');
 assert.equal(await git('status', '--porcelain', '--untracked-files=normal'), '', 'Release packaging requires a clean source tree');
-const repository = process.env.GITHUB_REPOSITORY || 'twoimo/bitcoin-cycle-atlas';
+const repository = process.env.GITHUB_REPOSITORY || 'twoimo/metaup';
 assert(/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repository), 'Invalid repository name');
 const output = path.join(root, 'release');
 const assets = path.join(output, 'assets');

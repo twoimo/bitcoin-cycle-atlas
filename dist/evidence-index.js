@@ -1,4 +1,4 @@
-import { CRYPTOCON_EVIDENCE } from './cryptocon-evidence.js?v=1.29.0';
+import { CRYPTOCON_EVIDENCE } from './cryptocon-evidence.js?v=1.29.1';
 import { EVIDENCE, EVIDENCE_SUPPLEMENTS } from './evidence-catalog.js?v=1.29.0';
 import { STRUCTURE_EVIDENCE, STRUCTURE_EVIDENCE_SUPPLEMENTS } from './structure-evidence.js?v=1.29.0';
 import { LONG_HORIZON_CLAIMS } from './long-horizon-evidence.js?v=1.29.0';

@@ -44,6 +44,6 @@ export function ethereumResearchPanel(forecast,error,model=forecast?.researchMod
     demand+'<details><summary>기관 전망·논문·프로토콜 원문 '+ETH_RESEARCH_SOURCES.length+'개</summary>'+
     '<p>자료 기준일과 주장 범위를 대조했습니다. 보고서의 목표가격은 새 중앙선에 자동 입력하지 않습니다.</p>'+
     ETH_RESEARCH_SOURCES.map(s=>'<p><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.label)+' ↗</a><br><small>'+esc(s.date)+'</small><br>'+esc(s.finding)+'</p>').join('')+'</details>'+
-    '<p><a href="https://github.com/twoimo/bitcoin-cycle-atlas/blob/chatgpt/eth-cycle-economics-20261026/docs/ETH_REMODELING_RESEARCH_20261027.md" target="_blank" rel="noopener noreferrer">계산식·출처 대조·과거 비교 결과 전체 보고서 ↗</a></p>'+
-    '<p><a href="https://github.com/twoimo/bitcoin-cycle-atlas/blob/chatgpt/eth-cycle-economics-20261026/docs/ETH_POOLED_FOLLOWUP_20261027.md" target="_blank" rel="noopener noreferrer">전체 수익률 후보·같은 원점 비교·구간 보정 상태 ↗</a></p>';
+    '<p><a href="https://github.com/twoimo/metaup/blob/chatgpt/eth-cycle-economics-20261026/docs/ETH_REMODELING_RESEARCH_20261027.md" target="_blank" rel="noopener noreferrer">계산식·출처 대조·과거 비교 결과 전체 보고서 ↗</a></p>'+
+    '<p><a href="https://github.com/twoimo/metaup/blob/chatgpt/eth-cycle-economics-20261026/docs/ETH_POOLED_FOLLOWUP_20261027.md" target="_blank" rel="noopener noreferrer">전체 수익률 후보·같은 원점 비교·구간 보정 상태 ↗</a></p>';
 }

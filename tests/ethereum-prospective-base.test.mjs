@@ -14,7 +14,7 @@ test('exact committed archive selection preserves every original byte and clock'
   assert.equal(value.base.text,f.base.text);assert.equal(value.base.collectedAt,f.base.collectedAt);
   assert.equal(value.receipt.gitBlobSha,f.base.gitBlobSha);assert.equal(value.receipt.automaticallyRefreshed,false);
   assert.equal(value.receipt.historicalProviderAuthenticityProven,false);
-  assert.equal(value.receipt.sourceUrl,'https://github.com/twoimo/bitcoin-cycle-atlas/blob/'+'a'.repeat(40)+'/dist/data/eth-ohlc.json');
+  assert.equal(value.receipt.sourceUrl,'https://github.com/twoimo/metaup/blob/'+'a'.repeat(40)+'/dist/data/eth-ohlc.json');
 });
 
 test('a reviewed committed rollover keeps the frozen snapshot contract and shortens its next request',async()=>{

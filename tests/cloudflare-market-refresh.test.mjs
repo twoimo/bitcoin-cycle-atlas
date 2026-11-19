@@ -29,8 +29,8 @@ async function fixture(t){
     ATLAS_REFRESH_TRIGGER_UUID:triggerId,CLOUDFLARE_ACCOUNT_ID:'a'.repeat(32),ATLAS_BUILDS_READ_TOKEN:'build-read-fixture-secret',ATLAS_DATA_GITHUB_TOKEN:'repository-write-fixture-secret',
     CLOUDFLARE_API_TOKEN:'must-not-reach-collectors',GIT_TRACE:'1',GIT_CONFIG_COUNT:'1',GIT_CONFIG_KEY_0:'http.extraheader',GIT_CONFIG_VALUE_0:'unused clone credential'};
   const build={build_uuid:buildId,status:'running',created_on:new Date(now-3000).toISOString(),initializing_on:new Date(now-3000).toISOString(),running_on:new Date(now-2000).toISOString(),
-    build_trigger_metadata:{commit_hash:baseSourceCommit,branch:'main',provider_type:'github',provider_account_name:'twoimo',repo_name:'bitcoin-cycle-atlas',build_trigger_source:'deploy_hook'},
-    trigger:{trigger_uuid:triggerId,repo_connection:{provider_type:'github',provider_account_name:'twoimo',repo_name:'bitcoin-cycle-atlas'}}};
+    build_trigger_metadata:{commit_hash:baseSourceCommit,branch:'main',provider_type:'github',provider_account_name:'twoimo',repo_name:'metaup',build_trigger_source:'deploy_hook'},
+    trigger:{trigger_uuid:triggerId,repo_connection:{provider_type:'github',provider_account_name:'twoimo',repo_name:'metaup'}}};
   const calls=[],pushes=[],originals=new Map(await Promise.all([...MARKET_REFRESH_MUTABLE_PATHS,oldJudgment,oldForecast].map(async path=>[path,await readFile(join(root,path))])));
   let tick=now;
   async function execute(step){

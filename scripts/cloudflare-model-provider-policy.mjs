@@ -14,7 +14,7 @@ const freeze=value=>{
 export const cloudflareModelProviderPolicy=freeze({
   schemaVersion:1,kind:'atlas-model-public-provider-policy',
   accountId:'7bd4c42b9400babab532b604f48a86f0',
-  repository:'twoimo/bitcoin-cycle-atlas',
+  repository:'twoimo/metaup',
   trust:'owned-worker-publication-and-official-provider-check',
   reuse:'exact-source-tree-plan-and-mode-not-dispatch-lineage',
   maxAgeMs:6*60*60*1000,maximumFutureClockMs:0,

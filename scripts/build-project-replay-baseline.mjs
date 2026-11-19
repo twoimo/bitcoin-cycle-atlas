@@ -23,10 +23,10 @@ export async function projectReplayBaselineText({directory=root}={}){
   if(!scenario)throw new Error('The original base scenario is absent');
   const context=Object.fromEntries(['version','asOf','referenceDate','referenceTimezone','displayStart','displayEnd','observables','nominalClock'].map(key=>[key,original[key]]));
   const {archivePath,archiveSha256,...provenance}=origin;
-  const url='https://github.com/twoimo/bitcoin-cycle-atlas/blob/'+origin.sourceCommit+'/';
+  const url='https://github.com/twoimo/metaup/blob/'+origin.sourceCommit+'/';
   return canonicalForecastJson({schemaVersion:1,kind:'atlas-project-origin-baseline',context,dataset,scenario,
     provenance:{...provenance,sourceArtifactUrl:url+origin.sourceArtifactPath,sourceInputUrl:url+origin.sourceInputPath,
-      repositoryUrl:'https://github.com/twoimo/bitcoin-cycle-atlas',
+      repositoryUrl:'https://github.com/twoimo/metaup',
       derivation:'Exact first-commit input snapshot and base scenario extracted from the unchanged first-commit result; no model recalculation.'}})+'\n';
 }
 

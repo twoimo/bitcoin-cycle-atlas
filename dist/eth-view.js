@@ -1,15 +1,15 @@
 import { setLoadingSurface } from './loading-surfaces.js';
-import { mountNativeChartApp, mountNativeChartWorkbench, nativeDateRange } from './native-chart-workbench.js?v=1.36.6';
+import { mountNativeChartApp, mountNativeChartWorkbench, nativeDateRange } from './native-chart-workbench.js?v=1.36.7';
 import {bindPreservedArchiveDownload} from './preserved-archive-download.js?v=1.29.0';
 import {buildEthereumForecasts} from './ethereum-forecast.js';
 import {buildEthereumAdaptiveForecast} from './ethereum-adaptive-model.js';
 import {buildEthereumPooledForecast} from './ethereum-pooled-model.js';
-import {ethereumResearchPanel} from './ethereum-research-panel.js';
+import {ethereumResearchPanel} from './ethereum-research-panel.js?v=1.37.6';
 import { CHART_INTERVALS, chartInterval, isIntradayInterval, fetchMarketCandles } from './ohlc-data.js?v=1.29.0';
 import { parseEthArchive, mergeEthArchive } from './eth-market-data.js?v=1.29.0';
 import { createMarketDataController, marketStatusText } from "./market-data-controller.js?v=1.29.0";
 import { mountObservedPriceChart, atlasCandlesToFunnestBars } from './funnest-observed-price-adapter.js?v=1.36.8';
-import { intervalShortLabel } from './interval-picker.js?v=1.0.0';
+import { intervalShortLabel } from './interval-picker.js?v=1.0.1';
 import { compactQuantity, renderChartSymbolLegend, signedChange, symbolLogo } from './chart-symbol-legend.js?v=1.0.1';
 import { bindChartNavigation } from './chart-navigation.js?v=1.36.1';
 import { withChartSpacing, retargetChartRange } from './chart-view-policy.js?v=1.36.1';
@@ -41,12 +41,12 @@ const stamp = value => value ? value.replace('T',' ').slice(0,16) + ' UTC' : '�
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const actionButton = (action,label,glyph) => `<button type="button" class="eth-icon" data-eth-action="${action}" aria-label="${label}" title="${label}">${icon(glyph)}</button>`;
 
-import {mountChartReplay} from './chart-replay.js?v=1.36.2';
+import {mountChartReplay} from './chart-replay.js?v=1.36.3';
 
 export async function initEthView() {
   // The shared shell stays mounted; only this instrument owns its price data.
   document.body.dataset.market = 'ETHUSD';
-  document.title = 'ETHUSD · Ethereum — Bitcoin Cycle Atlas';
+  document.title = 'ETHUSD · Ethereum — MetaUp';
   const params = new URLSearchParams(location.search);
   const state = {...readEthView(params),ethModel:['pooled','valuation'].includes(params.get('eth-model'))?params.get('eth-model'):(!params.has('eth-model')&&params.has('eth-scenario'))?'valuation':'adaptive',forecastVisible:params.get('forecast')!=='off',funnestMount:null,funnestSeries:null,funnestType:null,funnestScale:null,funnestVolume:null,funnestInverted:null,funnestReady:false,chartError:null,ethScenario:['stress','base','bull'].includes(params.get('eth-scenario'))?params.get('eth-scenario'):'base',eventSettings:readEthereumEventSettings(params),selectedHistoryEvent:null,tool:'crosshair',range:null,rangeTouched:false,funnestRangeIdentity:null,priceDomain:null,controller:null,selectedTime:null,measurement:null,magnet:'off',showVolume:params.get('vol')!=='0',invertScale:false,frame:null,loading:false,error:null,refreshError:null};
   const urlView=readChartUrlState(params,{frequencies:[state.frequency]});

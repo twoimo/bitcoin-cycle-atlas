@@ -12,7 +12,7 @@ import {normalizeEthereumArchiveSource,validateEthereumArchivePublicationContext
  * It does not authorize release, authenticate provider observations or prune
  * calibration inputs. PR jobs never call the privileged publish command. */
 export const ETH_PROSPECTIVE_ARCHIVE_REMOTE_POLICY=Object.freeze({
-  version:'eth-prospective-archive-github-1',repository:'twoimo/bitcoin-cycle-atlas',branch:'eth-prospective-archive',
+  version:'eth-prospective-archive-github-1',repository:'twoimo/metaup',branch:'eth-prospective-archive',
   apiOrigin:'https://api.github.com',apiVersion:'2026-03-10',
   maximumRequests:4096,requestTimeoutMs:15000,totalTimeoutMs:600000,
   maximumTreeEntries:37124,maximumFiles:37121,maximumBlobBytes:8*1024*1024,

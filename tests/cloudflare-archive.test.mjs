@@ -20,8 +20,8 @@ const identity = { sourceCommit: 'a'.repeat(40), sourceTree: 'b'.repeat(40) };
 const context = { provider, repository: R.repository, eventName: 'deploy_hook', ref: 'refs/heads/main', defaultBranch: 'main', ...identity,
   runId: buildId, triggerId, acquisitionOutcome: 'success' };
 function build() { return { build_uuid: buildId, status: 'stopped', build_outcome: 'success', stopped_on: '2026-11-07T01:20:00Z',
-  build_trigger_metadata: { branch: 'main', commit_hash: identity.sourceCommit, provider_type: 'github', provider_account_name: 'twoimo', repo_name: 'bitcoin-cycle-atlas', build_trigger_source: 'deploy_hook' },
-  trigger: { trigger_uuid: triggerId, repo_connection: { provider_type: 'github', provider_account_name: 'twoimo', repo_name: 'bitcoin-cycle-atlas' } } }; }
+  build_trigger_metadata: { branch: 'main', commit_hash: identity.sourceCommit, provider_type: 'github', provider_account_name: 'twoimo', repo_name: 'metaup', build_trigger_source: 'deploy_hook' },
+  trigger: { trigger_uuid: triggerId, repo_connection: { provider_type: 'github', provider_account_name: 'twoimo', repo_name: 'metaup' } } }; }
 function receipt(files) {
   const entries = [...files].sort(([a], [b]) => a.localeCompare(b)).map(([path, value]) => ({ path, bytes: value.length, sha256: sha(value), gitBlobSha: blob(value) }));
   const body = { schemaVersion: 1, kind: 'ethereum-prospective-archive-remote-read', policyVersion: R.version, repository: R.repository, branch: R.branch,

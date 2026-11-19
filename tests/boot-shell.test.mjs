@@ -72,7 +72,7 @@ function bootstrap({ earlyErrors = [] } = {}) {
     return content.filter(node => positions.get(node) < parsingPosition);
   };
   let reloads = 0;
-  const location = { pathname: '/', search: '', reload() { reloads += 1; } };
+  const location = { href: 'http://127.0.0.1/', pathname: '/', search: '', reload() { reloads += 1; } };
   window.location = location;
   window.document = document;
   const emit = (type, target = document) => target.dispatchEvent(new Event(type));
@@ -82,7 +82,13 @@ function bootstrap({ earlyErrors = [] } = {}) {
     Object.defineProperty(event, 'target', { value: target });
     window.dispatchEvent(event);
   };
-  const context = { window, document, location, Event, console };
+  const store = new Map();
+  const sessionStorage = {
+    getItem: key => store.has(key) ? store.get(key) : null,
+    setItem: (key, value) => { store.set(key, String(value)); },
+    removeItem: key => { store.delete(key); },
+  };
+  const context = { window, document, location, Event, console, URL, sessionStorage };
   // Preceding stylesheets may fail before the body script is allowed to run.
   // Respect source order and do not expose DOM nodes the parser has not reached.
   const steps = [
@@ -271,4 +277,38 @@ test('runtime boot diagnostics retain the first actual error event, source and p
   assert.equal(f.root.dataset.boot, 'error'); assert.ok(f.content.every(node => node.inert));
   f.emit('atlas:ready'); f.emit('error', f.window);
   assert.deepEqual(JSON.parse(f.root.dataset.bootFailure), first, 'late events cannot overwrite the first causal evidence');
+});
+
+test('a dropped entry script stays on the loading screen and still opens when the next copy is ready', () => {
+  const f = bootstrap();
+  const created = [];
+  f.document.createElement = tag => ({ tagName: tag.toUpperCase() });
+  const parent = { appendChild(node) { created.push(node); } };
+  f.resourceError({ tagName: 'SCRIPT', type: 'module', src: 'http://127.0.0.1/site-entry.js?v=1.37.68', parentNode: parent });
+  assert.equal(f.root.dataset.boot, 'loading');
+  assert.equal(f.byId.get('atlas-boot-error').hidden, true);
+  assert.equal(f.byId.get('atlas-boot-shell').hidden, false);
+  f.advance(399);
+  assert.equal(created.length, 0);
+  f.advance(1);
+  assert.equal(created.length, 1);
+  assert.equal(created[0].type, 'module');
+  assert.equal(created[0].src, 'http://127.0.0.1/site-entry.js?v=1.37.68&boot-retry=1');
+  f.emit('atlas:ready');
+  assert.equal(f.root.dataset.boot, 'ready');
+  assert.equal(f.byId.get('atlas-boot-shell').hidden, true);
+  assert.equal(f.byId.get('atlas-boot-error').hidden, true);
+});
+
+test('a dropped module import reloads once and only the next drop shows the connection failure', () => {
+  const f = bootstrap();
+  const message = 'Failed to fetch dynamically imported module: http://127.0.0.1/viewport-workspace.js?v=1.36.29&retry=3';
+  f.document.dispatchEvent(new CustomEvent('atlas:boot-error', { detail: { message } }));
+  assert.equal(f.root.dataset.boot, 'loading');
+  assert.equal(f.byId.get('atlas-boot-error').hidden, true);
+  assert.equal(f.reloads(), 1);
+  f.document.dispatchEvent(new CustomEvent('atlas:boot-error', { detail: { message } }));
+  assert.equal(f.root.dataset.boot, 'error');
+  assert.equal(f.byId.get('atlas-boot-error').hidden, false);
+  assert.equal(f.reloads(), 1);
 });
