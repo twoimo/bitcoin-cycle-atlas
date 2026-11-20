@@ -4,15 +4,16 @@
 .chart-draw-tools::-webkit-scrollbar{display:none}
 .chart-draw-spacer{flex:1;min-height:8px}
 .chart-draw-sep{width:20px;height:1px;margin:4px 0;background:var(--border)}
-.chart-draw-group{position:relative;width:32px;height:32px;flex:none}
+.chart-draw-group{position:relative;display:flex;align-items:center;width:42px;height:32px;flex:none}
 .chart-drawbar button{display:grid;place-items:center;width:32px;height:32px;margin:0;padding:0;border:0;border-radius:var(--pill-radius);background:transparent;color:var(--workbench-frame-muted);cursor:pointer}
+.chart-draw-group .chart-draw-tool{width:30px;flex:0 0 30px}
 .chart-drawbar button:not(.chart-draw-more) svg{width:22px;height:22px;stroke-width:1.35}
 .chart-drawbar button:hover{background:var(--surface-hover);color:var(--text)}
 .chart-drawbar button[aria-pressed=true]{background:var(--accent-soft);color:var(--accent-ink)}
 .chart-drawbar button:focus-visible,.chart-draw-menu button:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
-.chart-drawbar .chart-draw-more{position:absolute;top:0;right:-2px;width:12px;height:32px;border-radius:0;background:transparent}
-.chart-draw-more:hover,.chart-draw-more[aria-expanded=true]{background:transparent;color:var(--text)}
-.chart-draw-more svg{position:absolute;right:1px;bottom:3px}
+.chart-drawbar .chart-draw-more{position:static;display:grid;place-items:center;flex:0 0 12px;width:12px;height:32px;border-radius:var(--pill-radius);background:transparent}
+.chart-draw-more:hover,.chart-draw-more[aria-expanded=true]{background:var(--surface-hover);color:var(--text)}
+.chart-draw-more svg{position:static}
 .chart-drawbar[data-collapsed=true] .chart-draw-tools,.chart-drawbar[data-collapsed=true] .chart-draw-sep,.chart-drawbar[data-collapsed=true] .chart-draw-utilities,.chart-drawbar[data-collapsed=true] .chart-draw-spacer{display:none}
 .chart-drawbar[data-collapsed=true] .chart-draw-collapse{transform:scaleX(-1)}
 .chart-draw-menu{position:fixed;z-index:80;display:flex;flex-direction:column;width:228px;max-height:min(420px,calc(100vh - 16px));margin:0;padding:6px;overflow:auto;border:1px solid var(--border);border-radius:var(--card-radius-lg);background:var(--surface-raised);color:var(--text);box-shadow:none}
@@ -38,6 +39,7 @@ body[data-shell=chart] .workbench-tools:has(.chart-drawbar)>#workbench-magnet{po
 @media(max-width:620px){
   .chart-drawbar{align-items:stretch}
   .chart-draw-tools,.chart-draw-utilities{flex-direction:row;flex-wrap:wrap;justify-content:flex-start}
-  .chart-draw-group,.chart-drawbar button{width:44px;height:44px}
-  .chart-draw-more{right:0;width:16px;height:44px}
+  .chart-draw-group{width:auto;height:44px}
+  .chart-drawbar button,.chart-draw-group .chart-draw-tool{width:44px;height:44px;flex:0 0 44px}
+  .chart-drawbar .chart-draw-more{width:44px;height:44px;flex:0 0 44px}
 }

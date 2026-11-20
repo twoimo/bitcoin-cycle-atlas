@@ -428,3 +428,55 @@ test('relay aligns telegram bubbles right, keeps a 3-column header, and turns pa
   reader.dispatchEvent(rUp);
   assert.equal(root.querySelector('.relay-reader-head>h2').textContent, '먼저 쓴 글');
 });
+
+test('relay date/edition dropdowns support Arrow/Home/End/Escape and suppress page turns while open', async () => {
+  const { root, window, active } = await mount();
+  click(root, window, '[data-room="hankyung"]');
+  const trigger = root.querySelector('.relay-edition-trigger');
+  trigger.focus();
+  click(root, window, '.relay-edition-trigger');
+  assert.equal(trigger.getAttribute('aria-expanded'), 'true');
+  assert.equal(root.querySelector('.relay-edition-list').hidden, false);
+
+  key(trigger, window, 'ArrowRight');
+  assert.equal(root.querySelector('.relay-head-center .relay-paper-status').textContent, '1면 1/2', 'ArrowRight does not turn pages while menu is open');
+  assert.equal(root.querySelector('.relay-edition-list').hidden, false);
+
+  key(trigger, window, 'ArrowDown');
+  const options = [...root.querySelectorAll('.relay-edition-list [role="option"]')];
+  assert.equal(active(), options[1]);
+  key(active(), window, 'Home');
+  assert.equal(active(), options[0]);
+  key(active(), window, 'End');
+  assert.equal(active(), options[1]);
+  key(active(), window, 'ArrowUp');
+  assert.equal(active(), options[0]);
+  key(active(), window, 'Escape');
+  assert.equal(root.querySelector('.relay-edition-list').hidden, true);
+  assert.equal(trigger.getAttribute('aria-expanded'), 'false');
+  assert.equal(active(), trigger);
+});
+
+test('relay chat windows large histories to newest 100 messages and expands on demand or older date jump', async () => {
+  const messages = Array.from({ length: 240 }, (_, i) => {
+    const day = String(Math.floor(i / 20) + 1).padStart(2, '0');
+    const hour = String(i % 20).padStart(2, '0');
+    return { id: `m${i}`, text: `메시지 ${i}`, at: `2026-11-${day}T${hour}:00:00+09:00` };
+  });
+  const data = { generated_at: '2026-11-13T12:00:00+09:00', rooms: [{ id: 'telegram', kind: 'chat', title: '대용량 방', messages }] };
+  const { root, window } = await mount({ data });
+  assert.equal(root.querySelectorAll('[data-message-id]').length, 100);
+  assert.equal(root.querySelector('[data-message-id]').dataset.messageId, 'm140');
+  const more = root.querySelector('[data-relay-action="chat-more"]');
+  assert.equal(more.textContent, '이전 메시지 더 보기 (140개)');
+
+  click(root, window, '[data-relay-action="chat-more"]');
+  assert.equal(root.querySelectorAll('[data-message-id]').length, 200);
+  assert.equal(root.querySelector('[data-message-id]').dataset.messageId, 'm40');
+  assert.equal(root.querySelector('[data-relay-action="chat-more"]').textContent, '이전 메시지 더 보기 (40개)');
+
+  click(root, window, '[data-relay-day="2026-11-01"]');
+  assert.equal(root.querySelectorAll('[data-message-id]').length, 240);
+  assert.equal(root.querySelector('[data-message-id]').dataset.messageId, 'm0');
+  assert.equal(root.querySelector('[data-relay-action="chat-more"]'), null);
+});

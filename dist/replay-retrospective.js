@@ -3,7 +3,7 @@ import {DETAILED_FORECAST_DEFAULTS} from './detailed-forecast.js';
 import {LONG_HORIZON_CLAIMS} from './long-horizon-evidence.js';
 import {forecastHash} from './forecast-records.js';
 import {normalizeForecastTimestamp} from './forecast-information-time.js';
-import {utcDay,dateFromDay,validateDataset} from './cycle-engine.js';
+import {utcDay,dateFromDay,validateDataset} from './cycle-engine.js?v=1.29.0';
 
 export const REPLAY_RETROSPECTIVE_KIND='atlas-replay-retrospective-forecast';
 const MODEL_VERSION='source-anchored-long-horizon-2';

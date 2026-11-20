@@ -19,8 +19,9 @@
 .indicator-value{font-size:11px;line-height:1.6;font-weight:450;letter-spacing:0;font-variant-numeric:tabular-nums;color:var(--analysis-dock-ink-8)}
 .indicator-value[data-tone=up]{color:var(--analysis-dock-ink-9)}.indicator-value[data-tone=down]{color:var(--analysis-dock-ink-10)}.indicator-value[data-tone=extended]{color:var(--analysis-dock-ink-11)}.indicator-value[data-tone=scenario]{color:var(--analysis-dock-ink-12)}.indicator-value[data-tone=muted]{color:var(--analysis-dock-ink-13);font-weight:400}
 .indicator-row[data-visible=false] .indicator-label{text-decoration:line-through}
-.indicator-row[data-visible=false] .indicator-value{opacity:.58}
-.indicator-row[data-unavailable=true] .indicator-name{opacity:.55}
+.indicator-row[data-visible=false] .indicator-value{opacity:.82}
+.indicator-row[data-unavailable=true] .indicator-name{opacity:.82}
+.indicator-row[data-visible=false][data-unavailable=true] .indicator-value{opacity:1}
 .indicator-row .indicator-row-action{width:24px;height:24px;padding:4px}
 /* Keep transparent controls in keyboard order. Focus reveals them before use. */
 @media(hover:hover) and (pointer:fine){

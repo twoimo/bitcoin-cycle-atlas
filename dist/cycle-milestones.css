@@ -3,7 +3,7 @@
 .cycle-marker:hover .cycle-marker-ring,.cycle-marker:focus-visible .cycle-marker-ring{stroke-width:3;fill-opacity:.22}
 .cycle-marker:focus-visible{filter:drop-shadow(0 0 3px var(--cycle-milestones-ink))}
 .cycle-marker.is-active .cycle-marker-label-bg{stroke-opacity:.85}
-.cycle-marker.is-active .cycle-marker-label{font-weight:700}
+.cycle-marker.is-active .cycle-marker-label{font-weight:600}
 .cycle-selected-interval-band,.cycle-selected-endpoint-guide{pointer-events:none}
 .cycle-marker:is(:hover,:focus) .cycle-marker-preview{visibility:visible}
 .cycle-marker text{paint-order:stroke;stroke:var(--cycle-milestones-rule);stroke-width:3px;stroke-linejoin:round}
@@ -11,7 +11,7 @@
 .cycle-interval:hover,.cycle-interval:focus-visible{filter:brightness(1.25)}
 .cycle-interval-preview{visibility:hidden;pointer-events:none}
 .cycle-interval:is(:hover,:focus) .cycle-interval-preview{visibility:visible}
-.cycle-interval.is-active .cycle-interval-duration{font-weight:700}
+.cycle-interval.is-active .cycle-interval-duration{font-weight:600}
 .cycle-interval.is-related .cycle-interval-duration{text-decoration:underline;text-underline-offset:3px}
 .cycle-interval .cycle-interval-label,.cycle-interval .cycle-interval-duration{paint-order:stroke;stroke:var(--cycle-milestones-rule);stroke-width:3px;stroke-linejoin:round}
 /* Chart annotations are data, not decorative microcopy: keep their smallest

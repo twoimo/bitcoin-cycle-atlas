@@ -19,5 +19,7 @@ export function atlasSitePath(path,root=atlasRootPath()){
 export const isAtlasStatic=(doc=globalThis.document)=>doc?.querySelector('meta[name="atlas-static"]')?.getAttribute('content')==='1';
 
 export function atlasResourcePath(relative,doc=globalThis.document){
-  return doc?.querySelector('meta[name="atlas-root"]') ? atlasSitePath('/'+relative,atlasRootPath(doc)) : './'+relative;
+  const hasRoot=doc?.querySelector('meta[name="atlas-root"]');
+  const proto=doc?.defaultView?.location?.protocol||new URL(import.meta.url).protocol;
+  return (hasRoot||/^https?:$/.test(proto))?atlasSitePath('/'+relative,atlasRootPath(doc)):'./'+relative;
 }

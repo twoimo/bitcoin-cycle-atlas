@@ -64,3 +64,34 @@ test('mountLiveQuote serves HYPE on themes workspace and skips non-chart SPA rou
   assert.equal(badge?.hidden, true);
   unmount();
 });
+
+test('mountLiveQuote circuit-breaks a Yahoo symbol after a network/CORS fetch error', async () => {
+  const { window } = parseHTML('<!doctype html><html><body data-page="outlook"><div class="bar"><button class="workbench-symbol"><span class="symbol-selector-label">MSTR</span></button></div></body></html>');
+  window.location = new URL('https://atlas.example/?symbol=MSTR');
+  const calls = [];
+  const unmount = mountLiveQuote(window.document, {
+    intervalMs: 10,
+    fetchImpl: async (url) => {
+      calls.push(url);
+      if (url.includes('yahoo.com')) throw new TypeError('Failed to fetch');
+      return { ok: true, json: async () => ({ price: '95123.4', time: '2026-11-19T13:00:00.000Z' }) };
+    },
+  });
+  await new Promise(resolve => setTimeout(resolve, 45));
+  const mstrCalls = calls.filter(url => url.includes('MSTR')).length;
+  assert.equal(mstrCalls, 1, 'failed Yahoo symbol must not retry on the 10s interval');
+  const badge = window.document.querySelector('.workbench-live-quote');
+  assert.equal(badge?.hidden, true);
+
+  window.document.querySelector('.symbol-selector-label').textContent = 'BTCUSD';
+  window.document.documentElement.dataset.symbol = 'BTCUSD';
+  await new Promise(resolve => setTimeout(resolve, 25));
+  assert.equal(calls.some(url => url.includes('coinbase.com')), true, 'non-Yahoo symbols continue fetching');
+  assert.equal(badge?.hidden, false);
+
+  window.document.querySelector('.symbol-selector-label').textContent = 'MSTR';
+  window.document.documentElement.dataset.symbol = 'MSTR';
+  await new Promise(resolve => setTimeout(resolve, 35));
+  assert.equal(calls.filter(url => url.includes('MSTR')).length, 1, 'circuit-broken Yahoo symbol stays suppressed in the session');
+  unmount();
+});

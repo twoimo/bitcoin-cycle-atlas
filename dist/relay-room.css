@@ -172,7 +172,7 @@ body[data-page="relay"]{overflow:hidden}
 .relay-body p:last-child{margin-bottom:0}
 .relay-body h2{margin:44px 0 14px;color:var(--text);font:600 23px/30px var(--font);letter-spacing:-.012em}
 .relay-body h3{margin:34px 0 10px;color:var(--text);font:600 19px/26px var(--font);letter-spacing:-.008em}
-.relay-body blockquote{margin:32px 0;padding:0 0 0 20px;border-left:3px solid var(--border-strong);color:var(--text);font-style:italic}
+.relay-body blockquote{margin:32px 0;padding:0 0 0 20px;border-left:3px solid var(--border-strong);color:var(--text)}
 .relay-reader-figure{margin:44px 0}
 .relay-reader-figure:first-child{margin-top:0}
 .relay-reader-figure img{display:block;width:100%;height:auto;border:0;border-radius:0;background:var(--surface)}

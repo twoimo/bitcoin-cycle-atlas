@@ -2,7 +2,7 @@ import {forecastHash,verifyForecastRecord,restoreForecastPath} from './forecast-
 import {verifyAssetForecastRecord,restoreAssetForecastPath} from './asset-forecast-records.js';
 import {normalizeForecastTimestamp,selectPriceVintages} from './forecast-information-time.js';
 import {sessionCloseUtc,isEquitySession} from './data-freshness.js';
-import {utcDay,dateFromDay,validateDataset} from './cycle-engine.js';
+import {utcDay,dateFromDay,validateDataset} from './cycle-engine.js?v=1.29.0';
 import {buildIndependentBenchmarks,BENCHMARK_POLICY} from './forecast-evaluation.js';
 import {requireVerifiedProjectReplayBaseline,PROJECT_REPLAY_ORIGIN} from './project-replay-baseline.js';
 

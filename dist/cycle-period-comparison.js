@@ -1,6 +1,6 @@
-import {placePlotLabel} from './ui/chart-legend-layout.js';
-import {utcDay,dateFromDay} from './cycle-engine.js';
-import {buildCycleMilestones,INTERVAL_RELATIONS} from './cycle-milestones.js';
+import {placePlotLabel} from './ui/chart-legend-layout.js?v=1.36.3';
+import {utcDay,dateFromDay} from './cycle-engine.js?v=1.29.0';
+import {buildCycleMilestones,INTERVAL_RELATIONS} from './cycle-milestones.js?v=1.29.0';
 import {esc} from './ui/html-escape.js';
 
 const conditional=item=>item.selectionKind==='scenario'||['scenario','mixed'].includes(item.kind);

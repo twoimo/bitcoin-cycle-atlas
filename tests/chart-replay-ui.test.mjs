@@ -551,7 +551,7 @@ const interactionCases=[
     const builds=h.builds.length;h.pointer('pointermove',dateAt(182));
     assert.equal(h.svg.dataset.pickerDate,dateAt(182));assert.equal(h.builds.length,builds);
     assert.equal(h.svg.dataset.replayOrigin,undefined);assert.equal(h.svg.dataset.replayCursor,undefined);
-    assert.match(h.svg.querySelector('[data-chart-replay-scissors]').textContent,/✂.*선택 전/);
+    assert.match(h.svg.querySelector('[data-chart-replay-scissors]').textContent,/선택 전/);
     assert.equal(h.svg.querySelector('[data-chart-replay-picker]').getAttribute('aria-label'),'시작점 미리보기 · 아직 확정하지 않음');
     assert.equal(h.savedText(),raw);h.pointer('pointerleave');assert.equal(h.svg.dataset.pickerDate,undefined);assert.equal(h.svg.querySelector('[data-chart-replay-picker]'),null);
     h.controls.get('pick-cancel').click();assert.equal(h.mounted.isActive(),false);assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);

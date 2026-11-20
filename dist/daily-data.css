@@ -3,7 +3,7 @@
   --asset-paper: var(--bg);
   --asset-ink: var(--text);
   --asset-grid: var(--border-soft);
-  --asset-sign: var(--accent);
+  --asset-sign: var(--accent-ink);
   --asset-route: var(--accent);
   --asset-muted: var(--muted);
   display: flex; flex-direction: column; gap: 0; grid-column: 1; width: 100%; min-width: 0; max-width: 100%;
@@ -88,12 +88,12 @@ body[data-embedded=true] #data-view .daily-heading { position: relative; inset: 
 #data-view .asset-identity:hover .asset-name-label { color: var(--asset-sign); }
 #data-view .asset-name-symbol { color: var(--asset-ink); font: 650 14px/1.4 var(--font-mono); letter-spacing: .03em; }
 #data-view .asset-name-label { color: var(--asset-ink); font: 600 13px/1.5 var(--font); overflow: hidden; text-overflow: ellipsis; }
-#data-view .asset-samples { color: var(--asset-muted); background: var(--asset-paper); font: 13px/1.5 var(--font-mono); }
+#data-view .asset-samples { color: var(--asset-muted); background: var(--asset-paper); font: 13px/1.5 var(--font-mono); font-variant-numeric: tabular-nums; }
 #data-view .asset-samples sup { margin-left: 2px; color: var(--asset-sign); font-size: 11px; }
-#data-view .asset-comparison-table .asset-price { text-align: right; background: var(--asset-paper); color: var(--asset-ink); font: 13px/1.35 var(--font-mono); }
+#data-view .asset-comparison-table .asset-price { text-align: right; background: var(--asset-paper); color: var(--asset-ink); font: 13px/1.35 var(--font-mono); font-variant-numeric: tabular-nums; }
 #data-view .asset-comparison-table .asset-latest { color: var(--asset-ink); }
 #data-view .asset-cell-date { display: block; color: var(--text); font-size: 11px; line-height: 1.2; font-weight: 500; white-space: nowrap; }
-#data-view .asset-comparison-table .asset-return { text-align: right; font: 500 14px/1.5 var(--font-mono); white-space: nowrap; }
+#data-view .asset-comparison-table .asset-return { text-align: right; font: 500 14px/1.5 var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
 #data-view .asset-comparison-table .asset-return-gain { color: var(--green, var(--daily-data-ink)); background: var(--asset-paper); }
 #data-view .asset-comparison-table .asset-return-loss { color: var(--red, var(--daily-data-ink-2)); background: var(--asset-paper); }
 #data-view .asset-comparison-table .asset-return-flat { color: var(--asset-muted); background: var(--asset-paper); }

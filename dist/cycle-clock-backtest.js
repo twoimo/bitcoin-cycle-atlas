@@ -1,6 +1,6 @@
 import {calibrateCycleTiming,CYCLE_CALIBRATION_VERSION} from './cycle-calibration.js';
 import {shiftCalendarMonths} from './cycle-timing.js';
-import {HALVINGS,utcDay,dateFromDay,validateDataset} from './cycle-engine.js';
+import {HALVINGS,utcDay,dateFromDay,validateDataset} from './cycle-engine.js?v=1.29.0';
 
 const KIND='atlas-cycle-clock-backtest';
 const mean=values=>values.length?values.reduce((a,b)=>a+b,0)/values.length:null;

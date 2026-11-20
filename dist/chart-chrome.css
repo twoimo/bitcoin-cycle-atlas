@@ -98,6 +98,7 @@ body[data-shell=chart] .workbench-bottom.workbench-bottom-bar {
 /* The side rails use the same frame, ink and pressed chip as the header. */
 body[data-shell=chart] {
   background: var(--workbench-frame);
+  color: var(--workbench-frame-ink);
 }
 body[data-shell=chart] :is(.atlas-sidebar, .workbench-rail) {
   background: var(--workbench-frame);
@@ -295,7 +296,12 @@ body.atlas-funnest-compact {
   --zt-rail: 0px;
   --zt-status: 56px;
   --atlas-trade-tabs: 56px;
-  background: rgb(16, 16, 19);
+  background: var(--bg);
+  color: var(--text);
+}
+body.atlas-funnest-compact[data-shell="chart"] {
+  background: var(--workbench-frame);
+  color: var(--workbench-frame-ink);
 }
 body.atlas-funnest-compact .atlas-trade-upper {
   display: none !important;
@@ -308,18 +314,20 @@ body.atlas-funnest-compact .atlas-trade-draw {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: none;
-  width: 36px;
-  height: 36px;
+  flex: 0 0 auto;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
   margin: 0;
   padding: 0;
   border: 0;
   border-radius: 8px;
   background: transparent;
-  color: rgb(176, 176, 186);
+  color: var(--workbench-frame-muted);
   pointer-events: auto;
 }
-body.atlas-funnest-compact .atlas-trade-search { background: transparent; color: rgb(176, 176, 186); }
+body.atlas-funnest-compact .atlas-trade-search { background: transparent; color: var(--workbench-frame-muted); }
 body.atlas-funnest-compact .atlas-trade-search svg,
 body.atlas-funnest-compact .atlas-trade-account svg,
 body.atlas-funnest-compact .atlas-trade-indicators svg,
@@ -350,8 +358,9 @@ body.atlas-funnest-compact .atlas-trade-tabs {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: rgb(16, 16, 19);
+  background: var(--sidebar);
   border: 0;
+  border-top: 1px solid var(--border);
   box-sizing: border-box;
 }
 body.atlas-funnest-compact .atlas-trade-pages {
@@ -389,9 +398,9 @@ body.atlas-funnest-compact .atlas-trade-dot {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: rgb(90, 90, 98);
+  background: var(--subtle);
 }
-body.atlas-funnest-compact .atlas-trade-dot[data-current="true"] { background: rgb(236, 236, 239); }
+body.atlas-funnest-compact .atlas-trade-dot[data-current="true"] { background: var(--text); }
 body.atlas-funnest-compact .atlas-trade-tab {
   display: flex;
   flex: none;
@@ -407,7 +416,7 @@ body.atlas-funnest-compact .atlas-trade-tab {
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: rgb(126, 126, 135);
+  color: var(--muted);
   font: 500 12px/14px var(--font);
   text-decoration: none;
   cursor: pointer;
@@ -431,7 +440,7 @@ body.atlas-funnest-compact .atlas-trade-tab svg {
 body.atlas-funnest-compact .atlas-trade-tab[aria-current="page"],
 body.atlas-funnest-compact .atlas-trade-tab[aria-pressed="true"] {
   background: transparent;
-  color: rgb(236, 236, 239);
+  color: var(--text);
 }
 body.atlas-funnest-compact .atlas-trade-tab:focus-visible,
 body.atlas-funnest-compact .atlas-trade-brand:focus-visible {
@@ -704,8 +713,8 @@ body.atlas-funnest-compact .workspace.atlas-details-layout[data-details-open="tr
     height: auto;
     min-height: 0;
     padding: 4px 0;
-    border-right: 1px solid rgb(44, 44, 53);
-    background: rgb(16, 16, 19);
+    border-right: 1px solid var(--border);
+    background: var(--workbench-frame);
     z-index: 40;
     overflow: hidden;
   }
@@ -741,7 +750,10 @@ body.atlas-funnest-compact[data-shell="chart"][data-center-tool]:not([data-chart
   margin: 0 !important;
   padding: 0 !important;
   overflow: hidden;
-  background: rgb(16, 16, 19);
+  background: var(--bg);
+}
+body.atlas-funnest-compact[data-shell="chart"] .workspace {
+  background: var(--workbench-frame);
 }
 body.atlas-funnest-compact .atlas-canvas-heading:not([hidden]),
 body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading,
@@ -767,9 +779,9 @@ body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading[data-mobile
   overflow-y: hidden;
   overscroll-behavior-x: contain;
   touch-action: pan-x;
-  background: rgb(23, 23, 28);
+  background: var(--workbench-frame);
   border: 0;
-  color: rgb(236, 236, 239);
+  color: var(--workbench-frame-ink);
 }
 body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading[data-mobile-heading="phone-dock"]::before,
 body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading[data-mobile-heading="phone-dock"]::after {
@@ -791,14 +803,14 @@ body.atlas-funnest-compact[data-shell="chart"][data-center-tool] .atlas-canvas-h
   box-sizing: border-box;
   width: auto;
   min-width: 0;
-  height: 32px;
-  min-height: 32px;
-  max-height: 32px;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
   margin: 0;
   overflow-x: auto;
   overflow-y: hidden;
   background: transparent;
-  color: rgb(236, 236, 239);
+  color: var(--workbench-frame-ink);
   font-size: 12px;
 }
 body.atlas-funnest-compact[data-shell="chart"][data-center-tool] .center-workspace-toolbar :is(.compact-toolbar-field, .compact-toolbar-muted, .workspace-region-code) {
@@ -833,17 +845,17 @@ body.atlas-funnest-compact[data-page="compare"] .atlas-canvas-heading > .lab-too
   box-sizing: border-box;
   width: auto;
   min-width: 0;
-  height: 32px;
-  min-height: 32px;
-  max-height: 32px;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
   margin: 0;
   padding: 0;
   gap: 8px;
   overflow-x: auto;
   overflow-y: hidden;
   overscroll-behavior-x: contain;
-  background: rgb(16, 16, 19);
-  color: rgb(236, 236, 239);
+  background: var(--workbench-frame);
+  color: var(--workbench-frame-ink);
 }
 body.atlas-funnest-compact[data-page="compare"] .lab-toolbar-group {
   width: auto;
@@ -853,8 +865,8 @@ body.atlas-funnest-compact[data-page="compare"] .lab-toolbar-group {
 }
 body.atlas-funnest-compact[data-page="compare"] .lab-toolbar :is(select, button) {
   box-sizing: border-box;
-  min-height: 32px;
-  max-height: 32px;
+  min-height: 44px;
+  max-height: 44px;
   font-size: 12px;
 }
 body.atlas-funnest-compact[data-page="compare"] #compare-view {
@@ -867,40 +879,40 @@ body.atlas-funnest-compact[data-page="compare"] #compare-view {
   max-height: none;
   margin: 0;
   overflow: auto;
-  background: rgb(16, 16, 19);
+  background: var(--bg);
 }
 body.atlas-funnest-compact[data-center-tool]:not([data-chart-controls]) .atlas-canvas-heading > :is(.atlas-trade-indicators, .atlas-trade-tools-btn, .atlas-trade-draw) {
   display: none !important;
 }
 body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > :is(.symbol-selector-trigger, .workbench-symbol),
 body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading[data-mobile-heading="phone-dock"] > :is(.symbol-selector-trigger, .workbench-symbol) {
-  flex: 1 1 auto !important;
+  flex: 0 0 auto !important;
   width: auto !important;
-  min-width: 0 !important;
+  min-width: 44px !important;
   max-width: none !important;
   height: 44px !important;
   min-height: 44px !important;
   max-height: 44px !important;
-  padding: 0 !important;
+  padding: 0 6px !important;
   overflow: hidden;
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: rgb(236, 236, 239);
+  color: var(--workbench-frame-ink);
 }
 body.atlas-funnest-compact[data-shell="chart"] .atlas-trade-price {
   display: none !important;
 }
 body.atlas-funnest-compact .atlas-trade-price[hidden] { display: none !important; }
 body.atlas-funnest-compact .atlas-trade-price strong {
-  color: rgb(236, 236, 239);
+  color: var(--workbench-frame-ink);
   font-size: 14px;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   line-height: 16px;
 }
 body.atlas-funnest-compact .atlas-trade-change {
-  color: rgb(179, 188, 204);
+  color: var(--workbench-frame-muted);
   font-size: 12px;
   font-variant-numeric: tabular-nums;
   line-height: 14px;
@@ -911,11 +923,11 @@ body.atlas-funnest-compact .atlas-trade-brand {
   display: grid !important;
   place-items: center;
   flex: none;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   margin-right: 0;
   border-radius: 6px;
-  color: rgb(236, 236, 239);
+  color: var(--workbench-frame-ink);
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -923,9 +935,9 @@ body.atlas-funnest-compact .atlas-trade-brand {
 }
 body.atlas-funnest-compact .atlas-trade-account {
   position: static;
-  width: 36px;
-  height: 36px;
-  color: rgb(236, 236, 239);
+  width: 44px;
+  height: 44px;
+  color: var(--workbench-frame-ink);
 }
 body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) #workbench-frequency {
   position: static !important;
@@ -939,9 +951,9 @@ body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) #workbenc
   width: auto !important;
   min-width: 0 !important;
   max-width: none !important;
-  height: 32px !important;
-  min-height: 32px !important;
-  max-height: 32px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
   margin: 0 !important;
   padding: 0;
   overflow: hidden !important;
@@ -964,7 +976,7 @@ body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) #workbenc
   align-items: center;
   flex: 1 1 auto;
   width: auto !important;
-  height: 32px;
+  height: 44px;
   min-width: 0;
   max-width: 100%;
   overflow-x: auto;
@@ -972,11 +984,12 @@ body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) #workbenc
 }
 body.atlas-funnest-compact[data-shell="chart"] #workbench-frequency .interval-more {
   display: inline-flex;
-  flex: none;
+  flex: 0 0 auto;
   align-items: center;
-  width: 32px;
-  height: 32px;
-  min-height: 32px;
+  min-width: 44px;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
   padding: 0;
   justify-content: center;
 }
@@ -987,10 +1000,11 @@ body.atlas-funnest-compact[data-center-tool]:not([data-chart-controls]) #workben
   display: none !important;
 }
 body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) #workbench-frequency .lab-segmented button {
-  min-width: 32px;
-  height: 32px;
-  min-height: 32px;
-  padding: 0 6px;
+  flex: 0 0 auto;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0 8px;
   font-size: 12px;
 }
 body.atlas-funnest-compact[data-shell="chart"] #workbench-interval-select { display: none !important; }
@@ -1013,7 +1027,7 @@ body.atlas-funnest-compact.atlas-draw-open[data-shell="chart"]:not([data-center-
   padding: 8px 0 !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
-  background: rgb(16, 16, 19);
+  background: var(--workbench-frame);
   border: 0;
 }
 body.atlas-funnest-compact .workbench-tools,
@@ -1030,10 +1044,25 @@ body.atlas-funnest-compact .chart-draw-utilities {
   margin: 0 !important;
   overflow: visible !important;
 }
-body.atlas-funnest-compact .chart-draw-group,
+body.atlas-funnest-compact .chart-draw-group {
+  display: flex !important;
+  align-items: center !important;
+  width: 44px !important;
+  height: 44px !important;
+}
 body.atlas-funnest-compact .chart-drawbar button {
+  width: 44px !important;
+  height: 44px !important;
+}
+body.atlas-funnest-compact .chart-draw-group .chart-draw-tool {
   width: 32px !important;
-  height: 32px !important;
+  height: 44px !important;
+  flex: 0 0 32px !important;
+}
+body.atlas-funnest-compact .chart-drawbar .chart-draw-more {
+  width: 12px !important;
+  height: 44px !important;
+  flex: 0 0 12px !important;
 }
 body.atlas-funnest-compact[data-shell="chart"] :is(.symbol-selector-name, .symbol-selector-label) {
   flex: 0 1 auto;
@@ -1064,9 +1093,11 @@ body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) .chart-le
 body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) .atlas-plot > #lab-metrics { top: 8px !important; }
 body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) .atlas-plot > .workbench-market-info { top: var(--source-top, 44px) !important; }
 body.atlas-funnest-compact #workbench-frequency button {
-  height: 32px !important;
-  min-height: 32px !important;
-  max-height: 32px !important;
+  flex: 0 0 auto;
+  min-width: 44px;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
 }
 body.atlas-funnest-compact .atlas-trade-brand { order: 0; }
 body.atlas-funnest-compact .atlas-trade-price { order: 2; }
@@ -1078,32 +1109,32 @@ body.atlas-funnest-compact[data-shell="chart"] .atlas-sidebar > :not(.workbench-
 body.atlas-funnest-compact[data-shell="chart"][data-center-tool]:not([data-chart-controls]) .atlas-sidebar { display: none !important; }
 body.atlas-funnest-compact .atlas-trade-tab[aria-current="page"] {
   background: transparent;
-  color: rgb(236, 236, 239);
+  color: var(--text);
 }
 body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) .atlas-canvas-heading > :is(#atlas-mode-menu, #chart-tools-menu) {
   display: inline-flex !important;
-  flex: 0 0 30px !important;
+  flex: 0 0 44px !important;
   align-items: center;
   justify-content: center;
-  width: 30px !important;
-  min-width: 30px !important;
-  max-width: 30px !important;
-  height: 30px !important;
-  min-height: 30px !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
   margin: 0 !important;
   padding: 0 !important;
   overflow: hidden;
   border: 0;
   background: transparent;
-  color: rgb(176, 176, 186);
+  color: var(--workbench-frame-muted);
   font-size: 0 !important;
 }
-body.atlas-funnest-compact #chart-tools-menu { width: 30px !important; max-width: 30px !important; }
+body.atlas-funnest-compact #chart-tools-menu { width: 44px !important; max-width: 44px !important; }
 body.atlas-funnest-compact #chart-tools-menu .chart-tools-button {
-  width: 30px !important;
-  min-width: 30px !important;
-  height: 30px !important;
-  min-height: 30px !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
   padding: 0 !important;
   gap: 0 !important;
 }
@@ -1112,18 +1143,20 @@ body.atlas-funnest-compact :is(#atlas-mode-menu, #chart-tools-menu) svg { displa
 body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) .atlas-canvas-heading > :is(.atlas-trade-indicators, .atlas-trade-tools-btn) {
   display: inline-flex !important;
   order: 3;
-  flex: 0 0 32px;
-  width: 32px !important;
-  min-width: 32px !important;
-  max-width: 32px !important;
-  height: 32px !important;
-  min-height: 32px !important;
-  max-height: 32px !important;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > :is(.atlas-trade-indicators, .atlas-trade-tools-btn) {
+  flex: 0 0 44px !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
   margin: 0;
   padding: 0;
   border: 0;
   background: transparent;
-  color: rgb(176, 176, 186);
+  color: var(--workbench-frame-muted);
 }
 body.atlas-funnest-compact[data-shell="chart"][data-page="compare"] .atlas-canvas-heading > :is(.atlas-trade-indicators, .atlas-trade-tools-btn, .atlas-trade-draw, .atlas-trade-price) {
   display: none !important;
@@ -1133,31 +1166,33 @@ body.atlas-funnest-compact .atlas-trade-draw {
   top: auto;
   right: auto;
   z-index: auto;
-  width: 36px !important;
-  min-width: 36px !important;
-  height: 36px !important;
-  min-height: 36px !important;
-  max-height: 36px !important;
-  color: rgb(176, 176, 186);
+  flex: 0 0 44px !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  color: var(--workbench-frame-muted);
 }
-body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) .atlas-canvas-heading > :is(.atlas-trade-draw, .atlas-trade-search, .atlas-trade-account) {
-  width: 32px !important;
-  min-width: 32px !important;
-  max-width: 32px !important;
-  height: 32px !important;
-  min-height: 32px !important;
-  max-height: 32px !important;
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > :is(.atlas-trade-draw, .atlas-trade-search, .atlas-trade-account) {
+  flex: 0 0 44px !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
 }
-body.atlas-funnest-compact .atlas-trade-draw[aria-pressed="true"] { color: rgb(236, 236, 239); }
+body.atlas-funnest-compact .atlas-trade-draw[aria-pressed="true"] { color: var(--workbench-frame-ink); }
 body.atlas-funnest-compact[data-center-tool] .atlas-trade-draw { display: none !important; }
 body.atlas-funnest-compact[data-center-tool]:not([data-chart-controls]) .atlas-canvas-heading > :is(.symbol-selector-trigger, .workbench-symbol) {
-  flex: 0 0 32px !important;
-  width: 32px !important;
-  min-width: 32px !important;
-  max-width: 32px !important;
-  height: 32px !important;
-  min-height: 32px !important;
-  max-height: 32px !important;
+  flex: 0 0 44px !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
 }
 body.atlas-funnest-compact[data-center-tool]:not([data-chart-controls]) .symbol-selector-trigger :is(.symbol-selector-name, .symbol-selector-label) {
   display: none !important;
@@ -1171,7 +1206,7 @@ body.atlas-funnest-compact #main,
 body.atlas-funnest-compact .atlas-workbench {
   height: 100%;
   min-height: 0;
-  background: rgb(16, 16, 19);
+  background: var(--bg);
 }
 
 /* Content pages keep the same app bar and bottom tabs, with a title row
@@ -1189,8 +1224,9 @@ body.atlas-funnest-compact[data-shell="dashboard"] .atlas-dashboard-header.atlas
   gap: 8px;
   padding: 0 8px;
   overflow: hidden;
-  background: rgb(23, 23, 28);
-  color: rgb(236, 236, 239);
+  background: var(--sidebar);
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
 }
 body.atlas-funnest-compact[data-shell="dashboard"] .atlas-shell-copy {
   display: flex;
@@ -1241,10 +1277,11 @@ body.atlas-funnest-compact[data-shell="dashboard"] .atlas-dashboard-nav .atlas-n
   display: inline-flex;
   align-items: center;
   width: auto !important;
-  height: 32px;
-  min-height: 32px;
-  padding: 0 8px;
-  flex: none;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0 10px;
+  flex: 0 0 auto;
 }
 body.atlas-funnest-compact #ipo-view .ipo-table-shell,
 body.atlas-funnest-compact #compare-view :is(.lab-table-scroll, .table-scroll) {
@@ -1257,10 +1294,11 @@ body.atlas-funnest-compact #ipo-view .ipo-table {
   min-width: 100%;
 }
 body.atlas-funnest-compact[data-shell="chart"] .center-workspace-toolbar :is(button, a, select, .compact-toolbar-action) {
-  flex: none;
-  height: 32px;
-  min-height: 32px;
-  max-height: 32px;
+  flex: 0 0 auto;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
 }
 body.atlas-funnest-compact[data-shell="dashboard"] .content-bottom-bar {
   position: fixed;
@@ -1271,7 +1309,9 @@ body.atlas-funnest-compact[data-shell="dashboard"] .content-bottom-bar {
   height: 44px;
   z-index: 71;
   padding-inline: 12px;
-  background: rgb(16, 16, 19);
+  background: var(--sidebar);
+  color: var(--muted);
+  border-top: 1px solid var(--border);
 }
 body.atlas-funnest-compact[data-shell="dashboard"] .content-bottom-bar .footer {
   font-size: 12px;
@@ -1290,8 +1330,8 @@ body.atlas-funnest-compact[data-shell="dashboard"] #evidence-view .evidence-cont
 /* Indicator browser and chart tools menu, measured from the Funnest trade page. */
 dialog.indicator-library.indicator-browser{
   position:fixed;z-index:80;box-sizing:border-box;width:min(560px,calc(100vw - 32px));max-width:min(560px,calc(100vw - 32px));
-  height:auto;max-height:min(480px,calc(100dvh - 160px));margin:0;padding:12px;border:0;border-radius:12px;background:#17171c;color:#e4e4e5;
-  box-shadow:rgba(0,0,0,.16) 0 8px 28px,#2c2c35 0 0 0 1px;font:14px/1.4 var(--font,Pretendard,sans-serif);overflow:auto
+  height:auto;max-height:min(480px,calc(100dvh - 160px));margin:0;padding:12px;border:1px solid var(--border);border-radius:12px;background:#17171c;color:#e4e4e5;
+  box-shadow:0 2px 8px var(--shadow-color);font:14px/1.4 var(--font,Pretendard,sans-serif);overflow:auto
 }
 body.atlas-funnest-compact dialog.indicator-library.indicator-browser{
   width:min(360px,calc(100vw - 16px));max-width:min(360px,calc(100vw - 16px));padding:8px
@@ -1305,14 +1345,14 @@ dialog.indicator-library.indicator-browser #indicator-library-description{
 dialog.indicator-library.indicator-browser .indicator-library-heading{
   display:flex;align-items:center;gap:8px;box-sizing:border-box;height:48px;min-height:48px;padding:4px 4px 4px 8px;background:#17171c;border:0;position:sticky;top:0;z-index:2
 }
-dialog.indicator-library.indicator-browser .indicator-browser-search-icon{display:grid;width:16px;height:16px;flex:none;color:#7e7e87}
+dialog.indicator-library.indicator-browser .indicator-browser-search-icon{display:grid;width:16px;height:16px;flex:none;color:var(--workbench-frame-muted)}
 dialog.indicator-library.indicator-browser .indicator-browser-search-icon svg{width:16px;height:16px}
 dialog.indicator-library.indicator-browser #indicator-search{
   flex:1;min-width:0;width:auto;box-sizing:border-box;height:32px;min-height:32px;max-height:32px;margin:0;padding:0 8px;border:1px solid #2c2c35;border-radius:8px;background:transparent;color:#ececef;font:16px/30px var(--font,sans-serif);box-shadow:none
 }
 dialog.indicator-library.indicator-browser #indicator-search:focus,
 dialog.indicator-library.indicator-browser #indicator-search:focus-visible{outline:none;border-color:var(--accent)}
-dialog.indicator-library.indicator-browser #indicator-search::placeholder{color:#7e7e87}
+dialog.indicator-library.indicator-browser #indicator-search::placeholder{color:var(--workbench-frame-muted)}
 dialog.indicator-library.indicator-browser .indicator-browser-count{
   flex:none;padding:3px 8px;border-radius:6px;background:#202027;color:#b0b0ba;font-size:12px;line-height:14px
 }
@@ -1323,7 +1363,7 @@ dialog.indicator-library.indicator-browser .indicator-library-views{
   display:flex;gap:4px;padding:4px;background:#17171c;position:sticky;top:48px;z-index:1
 }
 dialog.indicator-library.indicator-browser .indicator-library-views button{
-  flex:none;min-height:30px;height:30px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:#7e7e87;font:500 13px/30px var(--font,sans-serif)
+  flex:none;min-height:30px;height:30px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:var(--workbench-frame-muted);font:500 13px/30px var(--font,sans-serif)
 }
 dialog.indicator-library.indicator-browser .indicator-library-views button[aria-pressed=true]{background:#202027;color:#ececef}
 dialog.indicator-library.indicator-browser .indicator-browser-body{display:flex;flex-direction:column;min-height:0;flex:1}
@@ -1333,10 +1373,10 @@ dialog.indicator-library.indicator-browser .indicator-browser-list{padding:0 0 8
 dialog.indicator-library.indicator-browser .indicator-browser-detail,
 dialog.indicator-library.indicator-browser .indicator-browser-featured,
 dialog.indicator-library.indicator-browser .indicator-library-help{display:none}
-dialog.indicator-library.indicator-browser .indicator-browser-section-head{display:flex;align-items:baseline;gap:8px;margin:0;padding:8px 10px 4px;color:#7e7e87}
-dialog.indicator-library.indicator-browser .indicator-browser-section-head strong{font-size:12px;font-weight:500;color:#7e7e87}
+dialog.indicator-library.indicator-browser .indicator-browser-section-head{display:flex;align-items:baseline;gap:8px;margin:0;padding:8px 10px 4px;color:var(--workbench-frame-muted)}
+dialog.indicator-library.indicator-browser .indicator-browser-section-head strong{font-size:12px;font-weight:500;color:var(--workbench-frame-muted)}
 dialog.indicator-library.indicator-browser .indicator-browser-section-head span,
-dialog.indicator-library.indicator-browser .indicator-result-count{color:#7e7e87;font-size:12px}
+dialog.indicator-library.indicator-browser .indicator-result-count{color:var(--workbench-frame-muted);font-size:12px}
 dialog.indicator-library.indicator-browser .indicator-browser-cards{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
 dialog.indicator-library.indicator-browser .indicator-browser-card{
   flex:none;width:148px;height:140px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:8px;border:0;border-radius:10px;background:#202027;color:#ececef;text-align:left;cursor:pointer
@@ -1345,7 +1385,7 @@ dialog.indicator-library.indicator-browser .indicator-browser-card[data-selected
 dialog.indicator-library.indicator-browser .indicator-browser-card-art{display:grid;width:100%;height:72px;place-items:center;color:#d24b4b}
 dialog.indicator-library.indicator-browser .indicator-browser-card-art svg{width:132px;height:48px}
 dialog.indicator-library.indicator-browser .indicator-browser-card strong{font-size:13px;font-weight:650;line-height:1.3}
-dialog.indicator-library.indicator-browser .indicator-browser-card small{color:#7e7e87;font-size:11px}
+dialog.indicator-library.indicator-browser .indicator-browser-card small{color:var(--workbench-frame-muted);font-size:11px}
 dialog.indicator-library.indicator-browser .indicator-categories{display:flex;flex-wrap:wrap;gap:4px;padding:0}
 dialog.indicator-library.indicator-browser .indicator-categories button{
   min-height:28px;padding:0 10px;border:0;border-radius:8px;background:#202027;color:#b0b0ba;font-size:12px
@@ -1363,17 +1403,17 @@ dialog.indicator-library.indicator-browser .indicator-library-item>span{display:
 dialog.indicator-library.indicator-browser .indicator-library-item strong,
 dialog.indicator-library.indicator-browser .indicator-library-item small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 body[data-shell=chart]:not(.atlas-funnest-compact) dialog.indicator-library.indicator-browser .indicator-library-item small{white-space:normal;text-overflow:clip}
-dialog.indicator-library.indicator-browser .indicator-library-item small{color:#7e7e87}
+dialog.indicator-library.indicator-browser .indicator-library-item small{color:var(--workbench-frame-muted)}
 dialog.indicator-library.indicator-browser .indicator-browser-row-add{
-  flex:none;min-height:28px;padding:0 8px;border:0;border-radius:8px;background:transparent;color:#7e7e87;font:500 12px/28px var(--font,sans-serif);cursor:pointer
+  flex:none;min-height:28px;padding:0 8px;border:0;border-radius:8px;background:transparent;color:var(--workbench-frame-muted);font:500 12px/28px var(--font,sans-serif);cursor:pointer
 }
 dialog.indicator-library.indicator-browser .indicator-browser-row-add[aria-pressed=true]{background:transparent;color:#b0b0ba;box-shadow:none}
 dialog.indicator-library.indicator-browser .indicator-browser-preview{
   display:grid;height:190px;place-items:center;margin-bottom:12px;border-radius:7px;background:#17171c;color:#d24b4b
 }
 dialog.indicator-library.indicator-browser .indicator-browser-preview svg{width:280px;height:72px}
-dialog.indicator-library.indicator-browser .indicator-browser-detail h3{margin:0;font-size:17px;line-height:20px;font-weight:700}
-dialog.indicator-library.indicator-browser .indicator-browser-by{display:block;margin:4px 0 12px;color:#7e7e87;font-size:12.5px}
+dialog.indicator-library.indicator-browser .indicator-browser-detail h3{margin:0;font-size:17px;line-height:20px;font-weight:600}
+dialog.indicator-library.indicator-browser .indicator-browser-by{display:block;margin:4px 0 12px;color:var(--workbench-frame-muted);font-size:12.5px}
 dialog.indicator-library.indicator-browser .indicator-browser-actions{display:flex;gap:6px;margin-bottom:12px}
 dialog.indicator-library.indicator-browser .indicator-browser-add{
   flex:1;height:38px;border:0;border-radius:8px;background:#ececef;color:#17171c;font:600 14px/38px var(--font,sans-serif);cursor:pointer
@@ -1383,14 +1423,14 @@ dialog.indicator-library.indicator-browser .indicator-browser-star{width:38px;he
 dialog.indicator-library.indicator-browser .indicator-browser-desc{margin:0 0 14px;color:#b0b0ba;font-size:13px;line-height:1.6}
 dialog.indicator-library.indicator-browser .indicator-browser-facts{display:grid;gap:8px;margin:0;padding-top:14px;border-top:1px solid #2c2c35}
 dialog.indicator-library.indicator-browser .indicator-browser-facts div{display:flex;justify-content:space-between;gap:12px}
-dialog.indicator-library.indicator-browser .indicator-browser-facts dt{color:#7e7e87}
+dialog.indicator-library.indicator-browser .indicator-browser-facts dt{color:var(--workbench-frame-muted)}
 dialog.indicator-library.indicator-browser .indicator-browser-facts dd{margin:0;color:#ececef}
 dialog.indicator-library.indicator-browser .indicator-browser-related{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;padding-top:14px;border-top:1px solid #2c2c35}
-dialog.indicator-library.indicator-browser .indicator-browser-related strong{flex-basis:100%;font-size:12px;color:#7e7e87}
+dialog.indicator-library.indicator-browser .indicator-browser-related strong{flex-basis:100%;font-size:12px;color:var(--workbench-frame-muted)}
 dialog.indicator-library.indicator-browser .indicator-browser-related button{
   min-height:28px;padding:0 10px;border:0;border-radius:8px;background:#202027;color:#ececef;cursor:pointer
 }
-dialog.indicator-library.indicator-browser footer{padding:12px 0 0;border-top:1px solid #2c2c35;color:#7e7e87}
+dialog.indicator-library.indicator-browser footer{padding:12px 0 0;border-top:1px solid #2c2c35;color:var(--workbench-frame-muted)}
 dialog.indicator-library.indicator-browser .indicator-template-panel{margin-top:12px}
 #chart-tools-menu{position:relative;display:flex;width:auto;max-width:none}
 #chart-tools-menu .chart-tools-button{width:auto;max-width:none;height:32px;min-height:32px;padding:0 8px;gap:4px}
@@ -1398,17 +1438,17 @@ dialog.indicator-library.indicator-browser .indicator-template-panel{margin-top:
 #chart-tools-menu .chart-tools-chevron{width:14px;height:14px}
 .chart-tools-panel{
   position:fixed;z-index:80;box-sizing:border-box;width:min(560px,calc(100vw - 32px));max-width:min(560px,calc(100vw - 32px));
-  height:auto;max-height:min(480px,calc(100dvh - 160px));margin:0;overflow:auto;padding:12px;border-radius:12px;
-  background:#17171c;color:#e4e4e5;box-shadow:rgba(0,0,0,.16) 0 8px 28px,#2c2c35 0 0 0 1px;font:14px/1.4 var(--font,Pretendard,sans-serif)
+  height:auto;max-height:min(480px,calc(100dvh - 160px));margin:0;overflow:auto;padding:12px;border:1px solid var(--border);border-radius:12px;
+  background:#17171c;color:#e4e4e5;box-shadow:0 2px 8px var(--shadow-color);font:14px/1.4 var(--font,Pretendard,sans-serif)
 }
 body.atlas-funnest-compact .chart-tools-panel{
   width:min(360px,calc(100vw - 16px));max-width:min(360px,calc(100vw - 16px));padding:8px
 }
 .chart-tools-panel[hidden]{display:none}
-.chart-tools-section{padding:8px 10px 4px;color:#7e7e87;font-size:12px;font-weight:700}
+.chart-tools-section{padding:8px 10px 4px;color:var(--workbench-frame-muted);font-size:12px;font-weight:500}
 .chart-tools-segment,.chart-tools-layouts{display:flex;gap:4px;padding:0 4px 8px}
 .chart-tools-segment button,.chart-tools-layouts button,.chart-tools-item{
-  min-height:34px;border:0;border-radius:8px;background:transparent;color:#7e7e87;font:14px/34px var(--font,sans-serif);cursor:pointer
+  min-height:34px;border:0;border-radius:8px;background:transparent;color:var(--workbench-frame-muted);font:14px/34px var(--font,sans-serif);cursor:pointer
 }
 .chart-tools-segment button{flex:1}
 .chart-tools-segment button[aria-checked=true]{background:#202027;color:#ececef}
@@ -1424,18 +1464,18 @@ body.atlas-funnest-compact .chart-tools-panel{
   body[data-shell=chart] #workbench-frequency.interval-picker>legend{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   body[data-shell=chart] #workbench-frequency.interval-picker .lab-segmented.interval-chips{display:flex;align-items:center;flex:none;width:max-content;height:32px;gap:2px;overflow:visible}
   body[data-shell=chart] #workbench-frequency.interval-picker #workbench-interval-select{display:none}
-  body[data-shell=chart] .atlas-canvas-heading #workbench-frequency.interval-picker .interval-chip{width:auto;min-width:0;max-width:none;height:32px;min-height:32px;padding:0 10px;border:0;border-radius:8px;background:transparent;color:#7e7e87;font-size:13px;font-weight:600;line-height:32px}
+  body[data-shell=chart] .atlas-canvas-heading #workbench-frequency.interval-picker .interval-chip{width:auto;min-width:0;max-width:none;height:32px;min-height:32px;padding:0 10px;border:0;border-radius:8px;background:transparent;color:var(--workbench-frame-muted);font-size:13px;font-weight:600;line-height:32px}
   body[data-shell=chart] .atlas-canvas-heading #workbench-frequency.interval-picker .interval-chip[aria-pressed=true]{background:#202027;color:#e4e4e5;font-weight:600}
   body[data-shell=chart] .atlas-canvas-heading #workbench-frequency.interval-picker .interval-chip:hover:not(:disabled){color:#ececef}
-  body[data-shell=chart] .atlas-canvas-heading #workbench-frequency.interval-picker .interval-more{display:inline-flex;align-items:center;gap:2px;width:auto;height:36px;min-height:36px;padding:0 6px;border:0;border-radius:8px;background:transparent;color:#7e7e87;font-size:13px;font-weight:600}
+  body[data-shell=chart] .atlas-canvas-heading #workbench-frequency.interval-picker .interval-more{display:inline-flex;align-items:center;gap:2px;width:auto;height:36px;min-height:36px;padding:0 6px;border:0;border-radius:8px;background:transparent;color:var(--workbench-frame-muted);font-size:13px;font-weight:600}
   body[data-shell=chart] .atlas-canvas-heading #workbench-frequency.interval-picker .interval-more:hover:not(:disabled){background:transparent;color:#ececef}
   body[data-shell=chart] .atlas-canvas-heading #workbench-frequency.interval-picker .interval-current{display:none;font:600 13px/32px inherit;color:#e4e4e5}
   body[data-shell=chart] .atlas-canvas-heading #workbench-frequency.interval-picker .interval-more.is-overflow .interval-current{display:inline}
-  body[data-shell=chart] .atlas-canvas-heading #workbench-frequency.interval-picker .interval-chevron{width:14px;height:14px;color:#7e7e87}
+  body[data-shell=chart] .atlas-canvas-heading #workbench-frequency.interval-picker .interval-chevron{width:14px;height:14px;color:var(--workbench-frame-muted)}
 }
-.interval-more-panel{position:fixed;z-index:80;box-sizing:border-box;width:148px;padding:6px;border-radius:12px;background:#17171c;color:#e4e4e5;box-shadow:rgba(0,0,0,.16) 0 8px 28px,#2c2c35 0 0 0 1px}
+.interval-more-panel{position:fixed;z-index:80;box-sizing:border-box;width:148px;padding:6px;border:1px solid var(--border);border-radius:12px;background:#17171c;color:#e4e4e5;box-shadow:0 2px 8px var(--shadow-color)}
 .interval-more-panel[hidden]{display:none}
-.interval-more-panel button{display:flex;align-items:center;width:100%;height:36px;min-height:36px;padding:0 10px;border:0;border-radius:8px;background:transparent;color:#7e7e87;font-size:14px;text-align:left;cursor:pointer}
+.interval-more-panel button{display:flex;align-items:center;width:100%;height:36px;min-height:36px;padding:0 10px;border:0;border-radius:8px;background:transparent;color:var(--workbench-frame-muted);font-size:14px;text-align:left;cursor:pointer}
 .interval-more-panel button[aria-pressed=true],.interval-more-panel button:hover{background:#202027;color:#ececef}
 @media(max-width:620px){
   .shell-feature-actions #chart-tools-menu .chart-tools-button{height:44px;min-height:44px;min-width:44px}
@@ -1444,7 +1484,7 @@ body.atlas-funnest-compact .chart-tools-panel{
   body[data-shell=chart] .atlas-canvas-heading #workbench-frequency.interval-picker .interval-more{width:auto;height:44px;min-height:44px;line-height:44px}
   body[data-shell=chart] .atlas-canvas-heading #workbench-frequency.interval-picker .interval-more{display:inline-flex}
 }
-.chart-symbol-legend{display:flex;flex-direction:column;gap:1px;min-width:0;color:#7e7e87;font-size:12px;line-height:17px}
+.chart-symbol-legend{display:flex;flex-direction:column;gap:1px;min-width:0;color:var(--workbench-frame-muted);font-size:12px;line-height:17px}
 .chart-symbol-legend-title{display:flex;align-items:center;flex-wrap:wrap;gap:4px;min-height:18px;font-size:13px;white-space:normal}
 .chart-symbol-legend-title b{color:#e4e4e5;font-weight:500}
 .chart-symbol-avatar{width:18px;height:18px;border-radius:50%}
@@ -1484,17 +1524,24 @@ body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading #workbench-
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  height: 32px !important;
-  min-height: 32px !important;
-  max-height: 32px !important;
+  flex: 0 0 auto;
+  min-width: 44px;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
   line-height: 1 !important;
   text-align: center;
 }
-body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > :is(.atlas-trade-indicators, .atlas-trade-tools-btn, .atlas-trade-draw, .atlas-trade-search, .atlas-trade-account) {
+body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) .atlas-canvas-heading > :is(.atlas-trade-indicators, .atlas-trade-tools-btn, .atlas-trade-draw, .atlas-trade-search, .atlas-trade-account) {
   display: inline-flex !important;
+}
+body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > :is(.atlas-trade-indicators, .atlas-trade-tools-btn, .atlas-trade-draw, .atlas-trade-search, .atlas-trade-account) {
   align-items: center !important;
   justify-content: center !important;
   padding: 0 !important;
+}
+body.atlas-funnest-compact[data-shell="chart"][data-center-tool]:not([data-chart-controls]) .atlas-canvas-heading > :is(.atlas-trade-indicators, .atlas-trade-tools-btn, .atlas-trade-draw) {
+  display: none !important;
 }
 body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > :is(.atlas-trade-indicators, .atlas-trade-tools-btn, .atlas-trade-draw, .atlas-trade-search, .atlas-trade-account) svg {
   display: block;
@@ -1789,16 +1836,16 @@ body[data-content-frame="full"] #ipo-view .ipo-page-label {
 }
 /* Compact account uses the same blue circle as the desktop sidebar mark. */
 body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > .atlas-trade-account {
-  flex: 0 0 28px;
-  width: 28px !important;
-  min-width: 28px !important;
-  max-width: 28px !important;
-  height: 28px !important;
-  min-height: 28px !important;
-  max-height: 28px !important;
+  flex: 0 0 44px;
+  width: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
   border-radius: 50% !important;
-  background: #2962ff !important;
-  color: #fff !important;
+  background: var(--accent) !important;
+  color: var(--on-accent) !important;
 }
 body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > .atlas-trade-account svg {
   width: 16px;
@@ -1815,19 +1862,19 @@ body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > .atlas-tr
 @media (min-width: 641px) and (max-width: 1024px) {
   body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) .atlas-canvas-heading > :is(.symbol-selector-trigger, .workbench-symbol) {
     display: inline-flex !important;
-    flex: 0 1 auto !important;
+    flex: 0 0 auto !important;
     align-items: center;
     gap: 6px;
     width: auto !important;
-    min-width: 0 !important;
+    min-width: 44px !important;
     max-width: 240px !important;
-    height: 32px !important;
-    min-height: 32px !important;
-    max-height: 32px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    max-height: 44px !important;
     margin: 0 !important;
     padding: 0 4px 0 0 !important;
     overflow: hidden !important;
-    color: rgb(236, 236, 239);
+    color: var(--workbench-frame-ink);
     font-size: 14px;
     font-weight: 500;
   }
@@ -1838,7 +1885,7 @@ body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > .atlas-tr
     white-space: nowrap;
   }
   body.atlas-funnest-compact[data-shell="chart"]:not([data-center-tool]) .symbol-selector-label {
-    color: rgb(176, 176, 186);
+    color: var(--workbench-frame-muted);
     font-size: 12px;
     font-weight: 400;
   }
@@ -1851,5 +1898,26 @@ body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading > .atlas-tr
   }
   body.atlas-funnest-compact[data-shell="chart"] .atlas-canvas-heading #workbench-frequency.interval-picker .lab-segmented {
     justify-content: flex-start;
+  }
+}
+body #ipo-view .ipo-day-number { font-variant-numeric: tabular-nums; }
+@media (max-width: 760px), (pointer: coarse) {
+  body #ipo-view .ipo-topbar { height: 52px; min-height: 52px; max-height: 52px; }
+  body #ipo-view .ipo-topbar :is(.ipo-segmented button, .ipo-calendar-nav button, .ipo-source-disclosure summary, input.ipo-search),
+  body[data-shell=dashboard] #ipo-view .ipo-topbar input.ipo-search {
+    flex: 0 0 auto;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+    line-height: 42px;
+  }
+  body #ipo-view .ipo-topbar .ipo-month-controls button {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+  }
+  body #ipo-view .ipo-topbar .ipo-page-label {
+    line-height: 44px;
   }
 }

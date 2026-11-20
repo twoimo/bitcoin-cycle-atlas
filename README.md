@@ -4,6 +4,12 @@
 
 BTC 첫 접속은 최신 관측일 앞뒤 약 **4년**을 보여 주며, ‘장기 전망’·‘전체’ 또는 축소·이동으로 검토한 출처의 마지막 목표 연도인 **2050년 말**까지 볼 수 있습니다. 미래 가격과 음영은 검증된 목표가·확률구간을 뜻하지 않습니다. [종목별 모델 범위](docs/MODEL_SCOPE.md) · [BTC 표시 종료일 규칙](dist/long-horizon-forecast.js)
 
+## v1.37.9 · 초기 구동·경로 전환·대비·터치 영역·릴레이 DOM 개선
+
+- **초기 렌더링 차단 제거 및 비활성 코드 분할:** `/`와 `/?page=data` 첫 화면이 외부 시세 응답을 기다리지 않고 보관된 `btc-daily.json`·`asset-comparison.json`으로 즉시 그려진 뒤 백그라운드에서 최신 종가를 반영하며, `research-reader.js`·비활성 라우트 컨트롤러(`relay-room.js`, `ipo-view.js`, `market-lab-view.js`, `daily-data-view.js`)·보조 차트 모듈을 필요 시점에 동적 로드하고 `cycle-engine.js`·`cycle-milestones.js`·`chart-magnet.js`·`ui/chart-legend-layout.js`의 중복 `?v=` 임포트를 통일했습니다. 번들 CSS(`site-before-shell.css`, `site-after-shell.css`)에서 라이선스 외 주석과 빈 줄을 정리했습니다.
+- **내비게이션·릴레이 키보드/DOM 윈도잉·오류 처리:** `atlasResourcePath()`가 `history.replaceState` 이후에도 루트 경로를 유지해 `/?page=market` 404를 막고, 모바일 하단 탭·URL 복원·`market-home` 직접 이동을 정리했습니다. `/?page=relay` 채팅 방은 120개 초과 시 최신 100개만 우선 렌더하고 `"이전 메시지 더 보기"` 배치 확장을 제공하며 드롭다운 목록 화살표 탐색을 지원합니다. `replaceStaleSeries`의 잘못된 날짜 방어와 Yahoo CORS 실패 시 재시도 중단을 추가했습니다.
+- **UI 정리·라이트/다크 대비·44px 터치 영역:** 리플레이 미리보기 문구의 이모지 제거, 배지 둥근 모서리(`var(--pill-radius, 4px)`)와 그림자·글꼴 두께·`tabular-nums` 정비, 라이트/다크 모드 WCAG AA(4.5:1 이상) 대비 보정, 760px 이하 모바일 버튼 44×44px 최소 터치 크기 및 그리기 도구 모음 비겹침 배치를 적용했습니다.
+
 ## v1.37.8 · 라우팅·스크롤·스와이프·현재가·스냅샷 검증 보완
 
 - **부팅 제목·모바일 탭·우측 레일 스크롤:** `site-entry.js`가 비차트(`?page=relay`, `?page=data` 등)와 `/market-lab/` 경로에서 `#atlas-boot-symbol`을 `BTCUSD`로 덮어쓰지 않도록 고쳤고, 낮은 데스크톱 화면(`1280×420`)에서 `.workbench-rail` 세로 스크롤을 허용했으며, 모바일 하단 `차트`·`자산/시장` 탭이 `themes` 등 워크벤치나 대시보드에서도 전체 새로고침 없이 전환됩니다.

@@ -2,7 +2,7 @@ import * as cutoffModel from './replay-cutoff-forecast.js';
 import {cutoffBacktestSettings} from './replay-retrospective.js';
 import {createCutoffBacktestReplaySession,buildReplayFrame} from './forecast-replay.js';
 import {forecastHash} from './forecast-records.js';
-import {utcDay,dateFromDay,validateDataset} from './cycle-engine.js';
+import {utcDay,dateFromDay,validateDataset} from './cycle-engine.js?v=1.29.0';
 import {normalizeForecastTimestamp} from './forecast-information-time.js';
 
 export const MONTHLY_HORIZONS=Object.freeze([30,90,180,365]);

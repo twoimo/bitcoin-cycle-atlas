@@ -90,6 +90,7 @@ export function mountLiveQuote(doc = document, { fetchImpl, intervalMs = 10000 }
   let lastArmedSymbol = '';
   let requestId = 0;
   let stopped = false;
+  const blockedSymbols = new Set();
 
   function activeSymbol() {
     const centerTool = doc.body?.dataset?.centerTool;
@@ -125,7 +126,7 @@ export function mountLiveQuote(doc = document, { fetchImpl, intervalMs = 10000 }
     if (stopped) return;
     const symbol = activeSymbol();
     const request = liveQuoteRequest(symbol);
-    if (!request || !place()) {
+    if (!request || blockedSymbols.has(request.symbol) || !place()) {
       shown = '';
       quote.hidden = true;
       return;
@@ -134,10 +135,12 @@ export function mountLiveQuote(doc = document, { fetchImpl, intervalMs = 10000 }
       quote.hidden = true;
     }
     const id = ++requestId;
+    let responseReceived = false;
     try {
       const fetchFn = fetchImpl || view.fetch;
       const options = request.init ? { cache: 'no-store', ...request.init } : { cache: 'no-store' };
       const response = await fetchFn(request.url, options);
+      responseReceived = true;
       if (!response?.ok) throw new Error('Live quote request failed');
       const parsed = parseLiveQuote(request.kind, await response.json());
       if (stopped || id !== requestId || activeSymbol() !== request.symbol) return;
@@ -146,6 +149,7 @@ export function mountLiveQuote(doc = document, { fetchImpl, intervalMs = 10000 }
       quote.hidden = false;
       shown = request.symbol;
     } catch {
+      if (request.kind === 'yahoo' && !responseReceived) blockedSymbols.add(request.symbol);
       if (!stopped && shown !== request.symbol) quote.hidden = true;
     }
   }
@@ -153,6 +157,8 @@ export function mountLiveQuote(doc = document, { fetchImpl, intervalMs = 10000 }
   function arm(delay) {
     view.clearTimeout(timer);
     if (stopped || doc.visibilityState === 'hidden') return;
+    const request = liveQuoteRequest(activeSymbol());
+    if (request && blockedSymbols.has(request.symbol)) return;
     const wait = typeof delay === 'number' ? delay : (quote.isConnected ? intervalMs : 400);
     timer = view.setTimeout(async () => {
       await tick();
@@ -164,10 +170,11 @@ export function mountLiveQuote(doc = document, { fetchImpl, intervalMs = 10000 }
     if (stopped) return;
     const placed = place();
     const request = liveQuoteRequest(activeSymbol());
-    if (!request) {
+    if (!request || blockedSymbols.has(request.symbol)) {
       shown = '';
       lastArmedSymbol = '';
       quote.hidden = true;
+      view.clearTimeout(timer);
       return;
     }
     if (shown && shown !== request.symbol) quote.hidden = true;

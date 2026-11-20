@@ -1,5 +1,5 @@
 import { mountAtlasFunnestChart } from './funnest-chart-runtime.bundle.js?v=1.36.6';
-import { advanceMeasurement, measurePriceAnchors, resolveMagnetPoint } from './chart-magnet.js';
+import { advanceMeasurement, measurePriceAnchors, resolveMagnetPoint } from './chart-magnet.js?v=1.29.0';
 import { refreshChartLegendGeometry } from './ui/chart-legend.js?v=1.36.4';
 
 let futureCrosshairSequence = 0;

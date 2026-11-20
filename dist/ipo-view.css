@@ -25,7 +25,7 @@
 .ipo-name { font-weight: 600; }
 .ipo-num { font-variant-numeric: tabular-nums; text-align: right; }
 .ipo-num::before { content: ''; }
-.ipo-badge { display: inline-block; padding: 4px 8px; border-radius: 999px; font-size: 11px; white-space: nowrap; }
+.ipo-badge { display: inline-block; padding: 4px 8px; border-radius: var(--pill-radius, 4px); font-size: 11px; white-space: nowrap; }
 .ipo-badge-forecast { background: var(--accent-soft); color: var(--accent-ink); }
 .ipo-badge-subscribe { background: color-mix(in srgb, var(--green) 12%, var(--surface)); color: var(--green); }
 .ipo-badge-closed { background: var(--surface-raised); color: var(--muted); }

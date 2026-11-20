@@ -548,7 +548,7 @@ body[data-shell="dashboard"] .compact-toolbar-dialog,
 body[data-shell="dashboard"] .workspace-dialog {
   border-color: var(--border-strong);
   border-radius: 4px;
-  box-shadow: 0 8px 24px var(--shadow-color);
+  box-shadow: 0 2px 8px var(--shadow-color);
 }
 body[data-shell="dashboard"] :is(.research-reader, .forecast-journal-dialog, .compact-toolbar-dialog, .workspace-dialog) :is(h1, h2, h3) {
   font-weight: 500;
@@ -745,7 +745,7 @@ body[data-shell="dashboard"] .research-article :is(.research-provenance, .resear
 .atlas-chat-form input{flex:1;min-width:0;height:36px;padding:0 8px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
 .atlas-chat-form button{height:36px;padding:0 12px;border:0;border-radius:8px;background:var(--text);color:var(--bg);font:inherit;cursor:pointer}
 @media(max-width:900px){
-  .workspace.atlas-details-layout>.atlas-chat{position:absolute;grid-column:1;inset:0 var(--rail-width) 0 auto;width:min(340px,calc(100% - var(--rail-width)));height:100%;box-shadow:-10px 0 28px var(--atlas-shadow-2)}
+  .workspace.atlas-details-layout>.atlas-chat{position:absolute;grid-column:1;inset:0 var(--rail-width) 0 auto;width:min(340px,calc(100% - var(--rail-width)));height:100%;box-shadow:0 2px 8px var(--shadow-color)}
   .atlas-chat-form input,.atlas-chat-form button,.atlas-chat-head button{min-height:44px;height:44px}
 }
 @media(max-width:620px){

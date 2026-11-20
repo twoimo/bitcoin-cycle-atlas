@@ -2,7 +2,7 @@ import { atlasResourcePath } from './site-paths.js';
 import { linearScale, logScale, ticks, logTicks, linePath as funnestLinePath, areaPath, segments } from './funnest-research-primitives.bundle.js?v=1.29.0';
 import { buildComparison, getAnchors, getPointAtDay, comparisonToCsv, validateDataset, utcDay } from './cycle-engine.js?v=1.29.0';
 import { fetchLatestDataset } from "./data-source.js?v=1.29.0";
-import { inspectPublishedDataset, replaceStaleSeries, shouldCheckPublishedSnapshot } from "./published-data.js?v=1.37.8";
+import { inspectPublishedDataset, replaceStaleSeries, shouldCheckPublishedSnapshot } from "./published-data.js?v=1.37.9";
 import { createCompareShellHost } from './compare-shell-host.js?v=1.37.8';
 import { parseComparisonUrl, comparisonUrlChanged } from './comparison-url-state.js?v=1.37.8';
 import { mountBtcRefreshStatus } from "./btc-refresh-status.js?v=1.29.0";
@@ -14,12 +14,6 @@ import { renderPeakView } from './peak-view.js?v=1.29.0';
 import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29.0';
 // Changed release modules use a versioned URL so a cached v1.5 module cannot
 // leave a new long-horizon page running the old three-year workbench.
-import { initDailyDataView } from './daily-data-view.js?v=1.32.4';
-import { extendComparisonToLatest } from './asset-comparison-live.js?v=1.0.1';
-import { initRelayRoomView } from './relay-room.js?v=1.37.14';
-import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.32.2';
-import { initIpoView } from './ipo-view.js?v=1.32.2';
-import { initMarketLabView } from './market-lab-view.js?v=1.31.3';
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -142,13 +136,13 @@ function transientModuleError(error) {
 }
 function importWorkspaceModules(attempt) {
   if (attempt === 0) return Promise.all([
-    import('./viewport-workspace.js?v=1.36.32'), import('./lab-view.js?v=1.36.26'),
+    import('./viewport-workspace.js?v=1.36.32'), import('./lab-view.js?v=1.36.27'),
   ]);
   // A failed module URL stays failed for this document, so a dropped response
   // has to be requested again under a new address.
   return Promise.all([
     import(`./viewport-workspace.js?v=1.36.32&retry=${attempt}`),
-    import(`./lab-view.js?v=1.36.26&retry=${attempt}`),
+    import(`./lab-view.js?v=1.36.27&retry=${attempt}`),
   ]);
 }
 async function mountWorkspace() {
@@ -190,55 +184,136 @@ function ensureEvidence() {
   }).catch(error => { evidencePromise = null; console.error('Evidence initialization failed', error); if (state.view === 'evidence') document.dispatchEvent(new CustomEvent('atlas:boot-error')); });
   return evidencePromise;
 }
-const ipoController = initIpoView({
-  root: $('#ipo-view'),
-  now: () => new Date(),
-  onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'ipo' } })),
-  embeddedData: () => document.getElementById('embedded-ipo-calendar-data')?.textContent ?? null,
-});
-const marketController = initMarketLabView({
-  root: $('#market-view'), now: () => new Date(),
-  onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'market' } })),
-  embeddedData: document.getElementById('embedded-market-lab-data')?.textContent ?? undefined,
-});
-const relayController = initRelayRoomView({
-  root: $('#relay-view'),
-  onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'relay' } })),
-  embeddedData: () => document.getElementById('embedded-relay-data')?.textContent ?? null,
-  embeddedAssets: () => document.getElementById('embedded-relay-assets')?.textContent ?? null,
-});
+let ipoInstance = null, ipoPromise = null;
+function ensureIpo() {
+  if (ipoInstance) return Promise.resolve(ipoInstance);
+  if (!ipoPromise) ipoPromise = import('./ipo-view.js?v=1.32.2').then(module => {
+    ipoInstance = module.initIpoView({
+      root: $('#ipo-view'),
+      now: () => new Date(),
+      onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'ipo' } })),
+      embeddedData: () => document.getElementById('embedded-ipo-calendar-data')?.textContent ?? null,
+    });
+    return ipoInstance;
+  }).catch(error => {
+    ipoPromise = null;
+    console.error('IPO initialization failed', error);
+    if (state.view === 'ipo') document.dispatchEvent(new CustomEvent('atlas:boot-error', { detail: { message: String(error?.message || error) } }));
+    return null;
+  });
+  return ipoPromise;
+}
+const ipoController = { render: () => ensureIpo().then(ctrl => ctrl?.render()) };
+
+let marketInstance = null, marketPromise = null;
+function ensureMarket() {
+  if (marketInstance) return Promise.resolve(marketInstance);
+  if (!marketPromise) marketPromise = import('./market-lab-view.js?v=1.31.3').then(module => {
+    marketInstance = module.initMarketLabView({
+      root: $('#market-view'), now: () => new Date(),
+      onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'market' } })),
+      embeddedData: document.getElementById('embedded-market-lab-data')?.textContent ?? undefined,
+    });
+    return marketInstance;
+  }).catch(error => {
+    marketPromise = null;
+    console.error('Market lab initialization failed', error);
+    if (state.view === 'market') document.dispatchEvent(new CustomEvent('atlas:boot-error', { detail: { message: String(error?.message || error) } }));
+    return null;
+  });
+  return marketPromise;
+}
+const marketController = { render: () => ensureMarket().then(ctrl => ctrl?.render()) };
+
+let relayInstance = null, relayPromise = null;
+function ensureRelay() {
+  if (relayInstance) return Promise.resolve(relayInstance);
+  if (!relayPromise) relayPromise = import('./relay-room.js?v=1.37.15').then(module => {
+    relayInstance = module.initRelayRoomView({
+      root: $('#relay-view'),
+      onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'relay' } })),
+      embeddedData: () => document.getElementById('embedded-relay-data')?.textContent ?? null,
+      embeddedAssets: () => document.getElementById('embedded-relay-assets')?.textContent ?? null,
+    });
+    return relayInstance;
+  }).catch(error => {
+    relayPromise = null;
+    console.error('Relay initialization failed', error);
+    if (state.view === 'relay') document.dispatchEvent(new CustomEvent('atlas:boot-error', { detail: { message: String(error?.message || error) } }));
+    return null;
+  });
+  return relayPromise;
+}
+const relayController = { show: value => ensureRelay().then(ctrl => ctrl?.show(value)) };
+
 $('#market-view').addEventListener('click', event => {
   if (state.view !== 'market' || !event.target.closest('[data-view="outlook"]')) return;
   state.view = 'outlook'; syncPage(); persistUrl(); void ensureDataset();
 });
-const loadAssetComparison = createAssetComparisonLoader({
-  embeddedData: () => document.getElementById('embedded-asset-comparison-data')?.textContent ?? null,
-});
+let loadAssetComparison = null;
+let dailyDataController = null, dailyDataPromise = null;
 let publishedComparison = null;
+let comparisonLoadPromise = null;
 let comparisonExtend = null;
-function currentComparison() {
-  if (publishedComparison) {
-    if (comparisonExtend) return comparisonExtend;
-    const base = publishedComparison;
-    const pending = extendComparisonToLatest(base)
-      .then(next => { if (next) publishedComparison = next; return publishedComparison; })
-      .catch(() => publishedComparison);
-    comparisonExtend = pending.finally(() => { comparisonExtend = null; });
-    return pending;
-  }
+function scheduleComparisonExtension(base) {
   if (comparisonExtend) return comparisonExtend;
-  const pending = loadAssetComparison().then(archive =>
-    extendComparisonToLatest(archive)
-      .then(next => { publishedComparison = next || archive; return publishedComparison; })
-      .catch(() => { publishedComparison = archive; return publishedComparison; })
-  );
+  const pending = import('./asset-comparison-live.js?v=1.0.1')
+    .then(({ extendComparisonToLatest }) => extendComparisonToLatest(base))
+    .then(next => {
+      if (next && next !== base) {
+        publishedComparison = next;
+        if (state.view === 'data' && dailyDataController) {
+          void dailyDataController.replaceDataset(next);
+        }
+      }
+      return publishedComparison;
+    })
+    .catch(() => publishedComparison);
   comparisonExtend = pending.finally(() => { comparisonExtend = null; });
-  return pending;
+  return comparisonExtend;
 }
-const dailyDataController = initDailyDataView({
-  root: $('#data-view'), download, toast,
-  getComparisonDataset: () => currentComparison(),
-});
+async function currentComparison() {
+  if (publishedComparison) {
+    if (!document.getElementById('embedded-asset-comparison-data')) {
+      void scheduleComparisonExtension(publishedComparison);
+    }
+    return publishedComparison;
+  }
+  if (!comparisonLoadPromise) {
+    comparisonLoadPromise = loadAssetComparison()
+      .then(archive => {
+        publishedComparison = archive;
+        if (!document.getElementById('embedded-asset-comparison-data')) {
+          void scheduleComparisonExtension(archive);
+        }
+        return archive;
+      })
+      .finally(() => { comparisonLoadPromise = null; });
+  }
+  return comparisonLoadPromise;
+}
+function ensureDailyData() {
+  if (dailyDataController) return Promise.resolve(dailyDataController);
+  if (!dailyDataPromise) dailyDataPromise = Promise.all([
+    import('./daily-data-view.js?v=1.32.4'),
+    import('./asset-comparison-source.js?v=1.32.2'),
+  ]).then(([viewMod, sourceMod]) => {
+    loadAssetComparison = sourceMod.createAssetComparisonLoader({
+      embeddedData: () => document.getElementById('embedded-asset-comparison-data')?.textContent ?? null,
+    });
+    dailyDataController = viewMod.initDailyDataView({
+      root: $('#data-view'), download, toast,
+      getComparisonDataset: () => currentComparison(),
+    });
+    return dailyDataController;
+  }).catch(error => {
+    dailyDataPromise = null;
+    console.error('Daily data initialization failed', error);
+    if (state.view === 'data') document.dispatchEvent(new CustomEvent('atlas:boot-error', { detail: { message: String(error?.message || error) } }));
+    return null;
+  });
+  return dailyDataPromise;
+}
 // The compare route uses the price chart's four perimeter regions. Only its
 // center is replaced: the existing section is moved into the plot, never
 // rebuilt, so its rendered values, sources and handlers stay with their owner.
@@ -545,11 +620,14 @@ $('#close-method').addEventListener('click', () => $('#method-dialog').close());
 $('#method-dialog').addEventListener('click', e => { if(e.target === $('#method-dialog')) { const r=e.target.getBoundingClientRect(); if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom) e.target.close(); } });
 
 function renderData() {
-  return dailyDataController.render().then(() => {
-    if (state.view !== 'data') return;
-    document.dispatchEvent(new CustomEvent('atlas:page-ready',{detail:{page:'data'}}));
-    initialPageRendered = true;
-    finishInitialPage();
+  return ensureDailyData().then(controller => {
+    if (!controller) return null;
+    return controller.render().then(() => {
+      if (state.view !== 'data') return;
+      document.dispatchEvent(new CustomEvent('atlas:page-ready',{detail:{page:'data'}}));
+      initialPageRendered = true;
+      finishInitialPage();
+    });
   });
 }
 $$('[data-view]').forEach(b => b.addEventListener('click', () => {
@@ -683,22 +761,32 @@ async function init() {
       if (cached && inspectPublishedDataset(cached, bundled).changed) dataset = cached;
     } catch { /* An unusable cache cannot replace a verified archive. */ }
     if (!dataset) throw new Error('Bundled data unavailable');
-    const today = new Date().toISOString().slice(0, 10);
-    if (!embedded && utcDay(today) - utcDay(dataset.prices.at(-1)[0]) > 1) {
-      document.dispatchEvent(new CustomEvent('atlas:dataset', { detail: { pending: true, latestObservationDate: dataset.prices.at(-1)[0] } }));
-      btcRefreshStatus.update({ phase: 'refreshing', asOf: dataset.prices.at(-1)[0] });
-      const next = await replaceStaleSeries(dataset, today, () => fetchLatestDataset({ signal: AbortSignal.timeout(22000) }));
-      if (next !== dataset) {
-        dataset = next;
-        try { localStorage.setItem('btc-cycles-daily-v1', JSON.stringify(dataset)); } catch { /* Storage is optional. */ }
-        btcRefreshStatus.update({ phase: 'checked', asOf: dataset.prices.at(-1)[0] });
-      } else {
-        btcRefreshStatus.update({ phase: 'failed', asOf: dataset.prices.at(-1)[0] });
-      }
-    }
     state.dataset = dataset;
     render();
     publishComparisonReadiness(true);
+    const today = new Date().toISOString().slice(0, 10);
+    if (!embedded && utcDay(today) - utcDay(dataset.prices.at(-1)[0]) > 1) {
+      const requestedDataset = state.dataset;
+      btcRefreshStatus.update({ phase: 'refreshing', asOf: requestedDataset.prices.at(-1)[0] });
+      void replaceStaleSeries(requestedDataset, today, () => fetchLatestDataset({ signal: AbortSignal.timeout(22000) }))
+        .then(next => {
+          if (state.dataset !== requestedDataset) return;
+          if (next !== requestedDataset) {
+            state.dataset = next;
+            try { localStorage.setItem('btc-cycles-daily-v1', JSON.stringify(next)); } catch { /* Storage is optional. */ }
+            render();
+            btcRefreshStatus.update({ phase: 'checked', asOf: next.prices.at(-1)[0] });
+            document.dispatchEvent(new CustomEvent('atlas:data-update', { detail: { status: 'success', checkedAt: new Date().toISOString(), latestObservationDate: next.prices.at(-1)[0], source: 'stale-background-refresh' } }));
+          } else {
+            btcRefreshStatus.update({ phase: 'failed', asOf: requestedDataset.prices.at(-1)[0] });
+          }
+        })
+        .catch(() => {
+          if (state.dataset === requestedDataset) {
+            btcRefreshStatus.update({ phase: 'failed', asOf: requestedDataset.prices.at(-1)[0] });
+          }
+        });
+    }
   } catch (error) {
     console.error('Initial dataset or page setup failed', error);
     publishComparisonReadiness(false);

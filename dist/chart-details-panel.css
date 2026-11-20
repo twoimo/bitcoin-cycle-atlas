@@ -48,7 +48,7 @@
 .chart-details-panel .atlas-mode-tabs button:hover{background:var(--chart-details-panel-surface-5);color:var(--chart-details-panel-ink-13)}
 @media(max-width:900px){
   .workspace.atlas-details-layout[data-details-open=true]{grid-template-columns:minmax(0,1fr) 0 var(--rail-width)}
-  .chart-details-panel{position:absolute;grid-column:1;grid-row:1;inset:0 var(--rail-width) 0 auto;width:min(340px,calc(100% - var(--rail-width)));height:100%;padding:8px 12px;gap:8px;z-index:40;box-shadow:-10px 0 28px var(--chart-details-panel-shadow)}
+  .chart-details-panel{position:absolute;grid-column:1;grid-row:1;inset:0 var(--rail-width) 0 auto;width:min(340px,calc(100% - var(--rail-width)));height:100%;padding:8px 12px;gap:8px;z-index:40;box-shadow:0 2px 8px var(--shadow-color)}
   .chart-details-panel .reader-heading h2{font-size:12px}
   .chart-details-panel .reader-body p,.chart-details-panel .reader-body li{font-size:11px;line-height:1.65}
 }
@@ -64,9 +64,9 @@
 .atlas-chart-stage{height:auto;min-height:0}
 .atlas-canvas-heading{height:40px;min-height:40px;box-sizing:border-box;display:flex;align-items:center;gap:4px;padding:2px 4px;flex:none;background:var(--chrome);border-bottom:1px solid var(--chrome-border)}
 .workbench-symbol{font-size:13px;font-weight:650;letter-spacing:.1px;padding:0 12px 0 4px;color:var(--chart-details-panel-ink-14);white-space:nowrap;border-right:1px solid var(--chrome-border);line-height:24px}
-.workbench-live-quote{display:inline-flex;align-items:baseline;gap:6px;margin:0 8px 0 4px;color:var(--chart-details-panel-ink-14);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+.workbench-live-quote{display:inline-flex;align-items:baseline;gap:6px;margin:0 8px 0 4px;color:var(--workbench-frame-ink);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
 .workbench-live-quote[hidden]{display:none}
-.workbench-live-quote small{color:var(--chart-details-panel-ink-8,#8e9aac);font-size:11px;font-weight:400}
+.workbench-live-quote small{color:var(--workbench-frame-muted);font-size:11px;font-weight:400}
 .workbench-icon,.workbench-rail .atlas-nav button{display:flex;align-items:center;justify-content:center;gap:4px;flex:none;min-height:32px;width:32px;height:32px;margin:0;padding:8px;border:0;border-radius:3px;box-sizing:border-box;background:transparent;color:var(--chart-bottom-bar-ink);cursor:pointer;position:relative}
 .workbench-icon .icon{width:19px;height:19px;flex:none;pointer-events:none}
 .workbench-icon:hover,.workbench-ranges button:hover,.workbench-axis button:hover,.workbench-update:hover{background:var(--chart-details-panel-surface-6);color:var(--chart-details-panel-ink-15)}
@@ -153,7 +153,7 @@ body:not([data-page=outlook]) .workbench-detail-tools>[data-reader=selection],bo
 @media(max-width:900px){
   .reader-resize{display:none}
   .workspace.atlas-details-layout[data-details-open=true]{grid-template-columns:minmax(0,1fr) 0 var(--rail-width)}
-  .chart-details-panel{position:absolute;grid-column:1;grid-row:1;inset:0 var(--rail-width) 0 auto;width:min(340px,calc(100% - var(--rail-width)));height:100%;box-shadow:-10px 0 28px var(--atlas-shadow-2)}
+  .chart-details-panel{position:absolute;grid-column:1;grid-row:1;inset:0 var(--rail-width) 0 auto;width:min(340px,calc(100% - var(--rail-width)));height:100%;box-shadow:0 2px 8px var(--shadow-color)}
 }
 @media(max-width:620px){
   :root{--sidebar-width:36px;--rail-width:34px}

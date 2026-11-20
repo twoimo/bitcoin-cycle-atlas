@@ -405,6 +405,10 @@ function shownByRoom(data, filters) {
   shownMemo.set(data, { key, byRoom });
   return byRoom;
 }
+const CHAT_WINDOW_THRESHOLD = 120;
+const CHAT_WINDOW_INITIAL = 100;
+const CHAT_WINDOW_BATCH = 100;
+
 function deriveView(model) {
   const { phase, filters } = model;
   if (phase.kind !== 'ready') return null;
@@ -420,8 +424,9 @@ function deriveView(model) {
     const pages = Array.isArray(editions[index].pages) ? editions[index].pages.length : 0;
     edition = { index, page: cursor ? Math.max(0, Math.min(cursor.page, pages - 1)) : 0 };
   }
+  const chatLimit = room.kind === 'chat' ? (model.chatLimits?.[room.id] ?? CHAT_WINDOW_INITIAL) : null;
   return {
-    data, address, room, article, edition, filters, byRoom, shown,
+    data, address, room, article, edition, filters, byRoom, shown, chatLimit,
     filtering: filtering(filters),
     pane: address.room === null ? 'list' : 'room',
     mode: article ? 'reading' : room.kind === 'articles' ? 'articles' : 'default',
@@ -558,10 +563,17 @@ function renderRoom(view) {
 }
 
 function chatDetail(item, view, imageSource) {
-  const messages = view.shown;
-  if (!messages.length) return view.filtering ? NO_MATCHES : '<p class="relay-empty">아직 받은 메시지가 없습니다.</p>';
+  const allMessages = view.shown;
+  if (!allMessages.length) return view.filtering ? NO_MATCHES : '<p class="relay-empty">아직 받은 메시지가 없습니다.</p>';
+  const windowed = !view.filtering && allMessages.length > CHAT_WINDOW_THRESHOLD;
+  const limit = windowed ? Math.max(CHAT_WINDOW_INITIAL, view.chatLimit || CHAT_WINDOW_INITIAL) : allMessages.length;
+  const start = windowed ? Math.max(0, allMessages.length - limit) : 0;
+  const messages = start > 0 ? allMessages.slice(start) : allMessages;
+  const moreButton = start > 0
+    ? `<li class="relay-chat-more" style="display:flex;justify-content:center;padding:8px 0"><button type="button" class="relay-retry" data-relay-action="chat-more">이전 메시지 더 보기 (${start}개)</button></li>`
+    : '';
   const byId = new Map(relayEntries(item).map(message => [String(message.id), message]));
-  const authors = new Set(messages.map(message => String(message.author || '').trim()).filter(Boolean));
+  const authors = new Set(allMessages.map(message => String(message.author || '').trim()).filter(Boolean));
   const showAuthor = authors.size > 1;
   let lastDay = null;
   const rows = messages.map(message => {
@@ -619,7 +631,7 @@ function chatDetail(item, view, imageSource) {
         </div>
       </li>`;
   }).join('');
-  return `<ol class="relay-chat" aria-label="${esc(item.title || '텔레그램')} 메시지">${rows}</ol>`;
+  return `<ol class="relay-chat" aria-label="${esc(item.title || '텔레그램')} 메시지">${moreButton}${rows}</ol>`;
 }
 
 function articleReader(article, publication, imageSource) {
@@ -735,7 +747,7 @@ const ROW_KEYS = new Set(['ArrowDown', 'ArrowUp', 'Home', 'End']);
 export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady, address } = {}) {
   if (!root) throw new TypeError('relay view root is required');
   const port = address ?? relayAddressFor(root.ownerDocument?.defaultView);
-  let model = { phase: { kind: 'idle', pending: port.read() ?? HOME }, filters: NO_FILTERS };
+  let model = { phase: { kind: 'idle', pending: port.read() ?? HOME }, filters: NO_FILTERS, chatLimits: {} };
   let view = null;
   let token = 0, fetching = false, readySent = false, version = 0;
   let lastFocus = null;
@@ -799,7 +811,10 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     const output = root.querySelector('.relay-filter-form output');
     if (output && output.textContent !== status) output.textContent = status;
     root.querySelector('[data-relay-action="clear-filters"]')?.toggleAttribute('hidden', !next.filtering);
-    const roomKey = [next.room.id, next.article?.id ?? '', next.edition ? `${next.edition.index}.${next.edition.page}` : '', filters].join('\u0000');
+    const chatKey = next.room.kind === 'chat' && !next.filtering && next.shown.length > CHAT_WINDOW_THRESHOLD
+      ? Math.min(next.shown.length, Math.max(CHAT_WINDOW_INITIAL, next.chatLimit || CHAT_WINDOW_INITIAL))
+      : '';
+    const roomKey = [next.room.id, next.article?.id ?? '', next.edition ? `${next.edition.index}.${next.edition.page}` : '', chatKey, filters].join('\u0000');
     if (painted.room === roomKey) return false;
     root.querySelector('.relay-detail').innerHTML = renderRoom(next);
     painted.room = roomKey;
@@ -976,8 +991,10 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
   function closeEditionMenu() {
     const menu = root.querySelector('.relay-edition-list');
     const trigger = root.querySelector('.relay-edition-trigger');
+    const returnFocus = Boolean(menu && root.ownerDocument?.activeElement && menu.contains(root.ownerDocument.activeElement));
     if (menu) menu.hidden = true;
     trigger?.setAttribute('aria-expanded', 'false');
+    if (returnFocus) trigger?.focus?.({ preventScroll: true });
   }
   function toggleEditionMenu() {
     const menu = root.querySelector('.relay-edition-list');
@@ -989,6 +1006,22 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     if (open) {
       const active = menu.querySelector('.active');
       if (active) menu.scrollTop = Math.max(0, active.offsetTop - 8);
+    }
+  }
+  function expandChat(nextLimit, { preserveScroll = true } = {}) {
+    if (!view || view.room?.kind !== 'chat') return;
+    const roomId = view.room.id;
+    const body = root.querySelector('.relay-detail-body');
+    const prevHeight = body?.scrollHeight ?? 0;
+    const prevTop = body?.scrollTop ?? 0;
+    const current = Math.min(view.shown.length, Math.max(CHAT_WINDOW_INITIAL, model.chatLimits?.[roomId] ?? CHAT_WINDOW_INITIAL));
+    const limit = Math.min(view.shown.length, Math.max(current, nextLimit));
+    if (limit === current) return;
+    const next = { ...model, chatLimits: { ...model.chatLimits, [roomId]: limit } };
+    commit(next, { focus: limit >= view.shown.length ? CONTENT : KEEP, reveal: false });
+    if (preserveScroll) {
+      const updatedBody = root.querySelector('.relay-detail-body');
+      if (updatedBody) updatedBody.scrollTop = prevTop + Math.max(0, updatedBody.scrollHeight - prevHeight);
     }
   }
   function syncDateRail() {
@@ -1014,8 +1047,16 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     if (changed) alignDateRail();
   }
   function scrollToDay(key) {
-    const body = root.querySelector('.relay-detail-body');
-    const target = body?.querySelector(`[data-day="${key}"]`);
+    let body = root.querySelector('.relay-detail-body');
+    let target = body?.querySelector(`[data-day="${key}"]`);
+    if (!target && view?.room?.kind === 'chat') {
+      const idx = view.shown.findIndex(message => dayKey(message.at) === key);
+      if (idx >= 0) {
+        expandChat(view.shown.length - idx, { preserveScroll: false });
+        body = root.querySelector('.relay-detail-body');
+        target = body?.querySelector(`[data-day="${key}"]`);
+      }
+    }
     if (!body || !target) return;
     body.scrollTop += target.getBoundingClientRect().top - body.getBoundingClientRect().top;
     syncDateRail();
@@ -1132,6 +1173,11 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
     if (action === 'reload') { void load(); return; }
     if (action === 'edition-menu') { toggleEditionMenu(); return; }
     if (!view) return;
+    if (action === 'chat-more') {
+      const current = Math.min(view.shown.length, Math.max(CHAT_WINDOW_INITIAL, model.chatLimits?.[view.room.id] ?? CHAT_WINDOW_INITIAL));
+      expandChat(current + CHAT_WINDOW_BATCH, { preserveScroll: true });
+      return;
+    }
     const imageButton = event.target.closest('.relay-msg-image, .relay-paper-open');
     if (imageButton) {
       if (suppressImageClick) { suppressImageClick = false; event.preventDefault(); return; }
@@ -1174,10 +1220,30 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
       return;
     }
     if (event.key === 'Escape' && viewerOpen()) { event.preventDefault(); closeViewer(); return; }
-    if (event.key === 'Escape' && root.querySelector('.relay-edition-list:not([hidden])')) { event.preventDefault(); closeEditionMenu(); return; }
+    const openMenu = root.querySelector('.relay-edition-list:not([hidden])');
+    if (event.key === 'Escape' && openMenu) { event.preventDefault(); closeEditionMenu(); return; }
+    if (openMenu && ROW_KEYS.has(event.key) && event.target.closest?.('.relay-edition-menu')) {
+      const options = [...openMenu.querySelectorAll('[role="option"], .relay-edition-chip')];
+      if (options.length) {
+        event.preventDefault();
+        const at = options.indexOf(event.target.closest('[role="option"], .relay-edition-chip'));
+        let to;
+        if (at < 0) {
+          const activeIndex = Math.max(0, options.findIndex(el => el.classList.contains('active') || el.getAttribute('aria-selected') === 'true'));
+          if (event.key === 'Home') to = 0;
+          else if (event.key === 'End') to = options.length - 1;
+          else if (event.key === 'ArrowUp') to = Math.max(activeIndex - 1, 0);
+          else to = activeIndex;
+        } else {
+          to = { ArrowDown: Math.min(at + 1, options.length - 1), ArrowUp: Math.max(at - 1, 0), Home: 0, End: options.length - 1 }[event.key];
+        }
+        options[to]?.focus?.({ preventScroll: true });
+        return;
+      }
+    }
     const row = event.target.closest('.relay-room-item');
     if (row && ROW_KEYS.has(event.key)) { moveRowFocus(event, row); return; }
-    if (!viewerOpen() && !event.target?.closest?.('input, textarea, select') && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
+    if (!openMenu && !viewerOpen() && !event.target?.closest?.('input, textarea, select') && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
       const delta = event.key === 'ArrowRight' ? 1 : -1;
       if (view.room?.kind === 'editions') { event.preventDefault(); turnPaper(delta); return; }
       if (view.room?.kind === 'articles' && view.article) { event.preventDefault(); turnArticle(delta); return; }

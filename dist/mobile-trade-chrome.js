@@ -186,6 +186,20 @@ export function mountTradeChrome(doc) {
     const match = text.match(/최근 종가\s*(20\d\d\.\d\d\.\d\d)/);
     return match ? `최근 종가  ${match[1]}` : '';
   }
+  const TAB_LABELS = {
+    data: '자산 비교',
+    'market-us': '시장',
+    'market-kr': '시장',
+    market: '시장',
+    evidence: '리서치',
+    ipo: '공모주',
+    relay: '릴레이',
+    scenario: '조건 실험',
+    cashflow: '현금흐름',
+    rsi: '삼플레·RSI',
+    housing: '부동산',
+    themes: '테마·재료',
+  };
   function syncQuote() {
     const quote = legendQuote();
     const close = quote?.close || '';
@@ -198,14 +212,9 @@ export function mountTradeChrome(doc) {
     writeAttr(change, 'aria-label', raw ? `직전 봉 대비 ${raw}` : '');
     writeAttr(price, 'aria-label', close ? `가격 ${close}` : '');
     const center = doc.body.dataset.centerTool;
-    const statusText = center && center !== 'chart' ? (boardStamp() || upperTab.textContent) : [quote?.name, close, raw].filter(Boolean).join('  ');
+    const label = TAB_LABELS[center || doc.body.dataset.page || ''] || '가격 차트';
+    const statusText = center && center !== 'chart' ? (boardStamp() || label) : [quote?.name, close, raw].filter(Boolean).join('  ');
     writeText(status, statusText);
-    const label = center === 'data' ? '자산 비교'
-      : center === 'market-us' || doc.body.dataset.page === 'market' ? '시장'
-      : doc.body.dataset.page === 'evidence' ? '리서치'
-      : doc.body.dataset.page === 'ipo' ? '공모주'
-      : doc.body.dataset.page === 'relay' ? '릴레이'
-      : '가격 차트';
     writeText(upperTab, label);
   }
   function syncLogin() {
@@ -216,13 +225,15 @@ export function mountTradeChrome(doc) {
     return Boolean(panel && !panel.hidden && doc.body.dataset.shell === 'chart' && !doc.body.dataset.centerTool);
   }
   function activeTab() {
+    const center = doc.body.dataset.centerTool;
+    if (center === 'data') return 'data';
+    if (center === 'market-us' || center === 'market-kr') return 'market';
+    if (center && Object.hasOwn(TAB_LABELS, center)) return center;
     const page = doc.body.dataset.page || 'outlook';
     const path = view.location?.pathname || '';
-    if (doc.body.dataset.centerTool === 'data') return 'data';
     if (page === 'data') return 'assets';
     if (page === 'ipo') return 'ipo';
     if (page === 'evidence') return 'evidence';
-    if (doc.body.dataset.centerTool === 'market-us') return 'market';
     if (page === 'market') {
       if (/\/market-lab\/scenario\/?$/.test(path)) return 'scenario';
       if (/\/market-lab\/cashflow\/?$/.test(path)) return 'cashflow';
@@ -302,16 +313,27 @@ export function mountTradeChrome(doc) {
   });
   const SPA_VIEWS = { relay: 'relay', assets: 'data', data: 'data', ipo: 'ipo', evidence: 'evidence', market: 'market', 'market-home': 'market', chart: 'outlook' };
   const WORKBENCH_PAGES = { data: 'data', market: 'market-us', 'market-home': 'market-us', scenario: 'scenario', cashflow: 'cashflow', rsi: 'rsi', housing: 'housing', themes: 'themes' };
-  const triggerWorkbenchPage = pageId => {
-    const existing = doc.querySelector(`[data-atlas-page="${pageId}"]`);
+  const triggerWorkbenchPage = (pageId, { direct = false } = {}) => {
+    const existing = !direct ? doc.querySelector(`[data-atlas-page="${pageId}"]`) : null;
     if (existing) { existing.click(); return true; }
     const trigger = doc.createElement('button');
     trigger.type = 'button';
     trigger.hidden = true;
     trigger.dataset.atlasPage = pageId;
+    if (direct) trigger.dataset.atlasDirect = '1';
     doc.body.append(trigger);
     try { trigger.click(); }
     finally { trigger.remove(); }
+    return true;
+  };
+  const clickSpaView = (viewName, { bypassWorkbench = false } = {}) => {
+    const target = (bypassWorkbench && doc.querySelector(`[data-view="${viewName}"]:not([data-atlas-page])`))
+      || doc.querySelector(`[data-view="${viewName}"]`);
+    if (!target) return false;
+    const saved = bypassWorkbench ? target.dataset.atlasPage : '';
+    if (saved) delete target.dataset.atlasPage;
+    try { target.click(); }
+    finally { if (saved) target.dataset.atlasPage = saved; }
     return true;
   };
   nav.addEventListener('click', event => {
@@ -328,16 +350,15 @@ export function mountTradeChrome(doc) {
       if (doc.body.dataset.centerTool) {
         event.preventDefault();
         if (chatOpen()) doc.querySelector('[data-chart-chat]')?.click();
-        doc.dispatchEvent(new (view.CustomEvent || CustomEvent)('atlas:restore-chart'));
-        doc.querySelector('[data-view="outlook"]')?.click();
+        doc.dispatchEvent(new (view.CustomEvent || CustomEvent)('atlas:restore-chart', { detail: { restoreUrl: true } }));
+        clickSpaView('outlook', { bypassWorkbench: true });
         schedule();
         return;
       }
-      const outlook = doc.querySelector('[data-view="outlook"]');
-      if (outlook) {
+      if (doc.querySelector('[data-view="outlook"]')) {
         event.preventDefault();
         if (chatOpen()) doc.querySelector('[data-chart-chat]')?.click();
-        outlook.click();
+        clickSpaView('outlook', { bypassWorkbench: true });
         schedule();
       }
       return;
@@ -345,16 +366,23 @@ export function mountTradeChrome(doc) {
     if (Object.hasOwn(WORKBENCH_PAGES, id) && doc.querySelector('.atlas-plot')) {
       event.preventDefault();
       if (chatOpen()) doc.querySelector('[data-chart-chat]')?.click();
-      triggerWorkbenchPage(WORKBENCH_PAGES[id]);
+      triggerWorkbenchPage(WORKBENCH_PAGES[id], {
+        direct: id === 'market-home' || (id === 'market' && ['cashflow', 'scenario'].includes(doc.body.dataset.centerTool)),
+      });
       schedule();
       return;
     }
     if (Object.hasOwn(SPA_VIEWS, id)) {
-      const target = doc.querySelector(`[data-view="${SPA_VIEWS[id]}"]`);
-      if (target) {
+      const viewName = SPA_VIEWS[id];
+      const bypassWorkbench = id === 'assets' || !doc.querySelector('.atlas-plot');
+      const hasTarget = Boolean((bypassWorkbench && doc.querySelector(`[data-view="${viewName}"]:not([data-atlas-page])`)) || doc.querySelector(`[data-view="${viewName}"]`));
+      if (hasTarget) {
         event.preventDefault();
         if (chatOpen()) doc.querySelector('[data-chart-chat]')?.click();
-        target.click();
+        if (id === 'assets' && doc.body.dataset.centerTool) {
+          doc.dispatchEvent(new (view.CustomEvent || CustomEvent)('atlas:restore-chart', { detail: { replaceUrl: true } }));
+        }
+        clickSpaView(viewName, { bypassWorkbench });
         schedule();
         return;
       }

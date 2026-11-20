@@ -83,6 +83,14 @@ test('a stale series is replaced once before paint, and a failed or older refres
   unfinished.meta.count = unfinished.prices.length;
   unfinished.meta.retrievedAt = `${day(3)}T12:00:00.000Z`;
   assert.equal(await replaceStaleSeries(data, day(3), async () => unfinished), data);
+
+  let invalidCalls = 0;
+  for (const badToday of ['2026-02-30', 'not-a-date', '', null]) {
+    assert.equal(await replaceStaleSeries(data, badToday, async () => { invalidCalls += 1; return newer; }), data);
+  }
+  const badDataset = { prices: [['2026-02-30', 100]] };
+  assert.equal(await replaceStaleSeries(badDataset, day(3), async () => { invalidCalls += 1; return newer; }), badDataset);
+  assert.equal(invalidCalls, 0);
 });
 
 test('visibility and a six-hour throttle bound revalidation even under repeated focus events',()=>{

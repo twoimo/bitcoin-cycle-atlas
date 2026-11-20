@@ -308,11 +308,17 @@ export function mountCenterWorkbench() {
       const outerView=document.body.dataset.page||new URLSearchParams(location.search).get('page');
       if(outerView&&outerView!=='outlook'&&outerView!==page.id){location.assign(centerHref(page,activeSymbol,activeRegion));return;}
     }
-    const selected=page.id==='market-us'?lastMarket:page;
+    const selected=page.id==='market-us'&&!item?.dataset?.atlasDirect?lastMarket:page;
     open(selected,isWorkspaceChart(page)&&lastChart?.page.id===page.id?lastChart.symbol:activeSymbol,{region:isWorkspaceChart(page)?lastChart?.region:undefined});
   }
   document.addEventListener('click',click,true);
-  document.addEventListener('atlas:restore-chart',()=>restore());
+  document.addEventListener('atlas:restore-chart',event=>{
+    if(!activePage)return;
+    const targetUrl=originalUrl && !originalUrl.includes('/market-lab/') ? originalUrl : home;
+    restore();
+    if(event.detail?.replaceUrl)window.history.replaceState(null,'',targetUrl);
+    else if(event.detail?.restoreUrl!==false)window.history.pushState(null,'',targetUrl);
+  });
   document.addEventListener('atlas:symbol-select',event=>{
     if(event.detail?.symbol===originalSymbol && activePage) {event.preventDefault();restore();window.history.pushState(null,'',originalUrl && !originalUrl.includes('/market-lab/') ? originalUrl : home);return;}
     const instrument=workspaceInstrument(event.detail?.symbol);

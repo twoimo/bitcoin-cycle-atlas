@@ -1,4 +1,4 @@
-import {chartLegendSlot,overlayBoxesIntersect,placePlotLabel} from './chart-legend-layout.js';
+import {chartLegendSlot,overlayBoxesIntersect,placePlotLabel} from './chart-legend-layout.js?v=1.36.3';
 
 export const RSI_CRITERIA_AREA_LIMIT=.22;
 export const RSI_CRITERIA_CARD_HEIGHT=190;

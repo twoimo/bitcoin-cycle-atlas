@@ -32,7 +32,7 @@
 .chart-replay-actions [data-cr=select-menu]{padding-inline:8px}
 .chart-replay-actions [data-cr=mode-badge]{display:block;max-width:calc(100% - 4px);overflow:hidden;text-overflow:ellipsis}
 .chart-replay-actions [data-cr=select-menu][aria-expanded=true],.chart-replay-actions [data-cr=pick][aria-pressed=true]{background:var(--surface-hover);color:var(--focus)}
-.chart-replay-actions [data-cr=play]{color:var(--accent-ink);min-width:max(36px,var(--replay-control-size));font-weight:700}
+.chart-replay-actions [data-cr=play]{color:var(--accent-ink);min-width:max(36px,var(--replay-control-size));font-weight:600}
 .chart-replay-actions [data-cr=speed]{width:60px;font-variant-numeric:tabular-nums}
 .chart-replay-actions [data-cr=update-interval]{width:32px;appearance:none;text-align:center;opacity:1;color:var(--muted);cursor:not-allowed}
 .chart-replay-actions .chart-replay-live-label{display:none}
@@ -44,7 +44,7 @@
 .chart-replay-origin,.chart-replay-update{display:flex;align-items:center;gap:4px;white-space:nowrap}
 .chart-replay-update{color:var(--muted)}
 .chart-replay-bar>.chart-replay-exit{width:var(--replay-control-size);font-size:20px;line-height:1;pointer-events:auto}
-.chart-replay-controls>[data-cr=pick-cancel]{position:absolute;bottom:calc(var(--replay-bottom) + var(--replay-bar-height) + 8px);left:50%;transform:translateX(-50%);max-width:calc(100% - 16px);height:auto;min-height:var(--replay-control-size);padding:8px 12px;white-space:normal;background:var(--surface-raised);box-shadow:var(--shadow);pointer-events:auto}
+.chart-replay-controls>[data-cr=pick-cancel]{position:absolute;bottom:calc(var(--replay-bottom) + var(--replay-bar-height) + 8px);left:50%;transform:translateX(-50%);max-width:calc(100% - 16px);height:auto;min-height:var(--replay-control-size);padding:8px 12px;white-space:normal;background:var(--surface-raised);box-shadow:0 2px 8px var(--shadow-color);pointer-events:auto}
 
 /* Menus scroll inside the chart; their heading and close action stay visible. */
 .chart-replay-select-menu,.chart-replay-choice,.chart-replay-transport-menu{position:absolute;bottom:calc(var(--replay-bottom) + var(--replay-bar-height) + 8px);left:50%;transform:translateX(-50%);z-index:22;box-sizing:border-box;width:420px;max-width:calc(100% - 24px);max-height:min(540px,calc(100% - var(--replay-bottom) - var(--replay-bar-height) - 16px));overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;background:var(--surface-raised);border:1px solid var(--border);border-radius:6px;padding:12px;box-shadow:none;line-height:1.6;pointer-events:auto}

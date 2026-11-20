@@ -618,7 +618,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     if(!active||!value||painting)return;
     const date=typeof value==='string'?value:value.date;
     if(picking||getState().status==='selecting'){
-      const selected=nearestOrigin(date);if(selected){pickerDate=selected;inspect.textContent=selected+' · ✂ 클릭하면 이 날짜부터 실제 봉을 숨기고 선택을 확정합니다.';showPickLine(selected);}
+      const selected=nearestOrigin(date);if(selected){pickerDate=selected;inspect.textContent=selected+' · 클릭하면 이 날짜부터 실제 봉을 숨기고 선택을 확정합니다.';showPickLine(selected);}
     }else inspect.textContent=inspectionText(value);
   }
   function inspectionText(value){
@@ -636,7 +636,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     const line=doc.createElementNS('http://www.w3.org/2000/svg','line'),label=doc.createElementNS('http://www.w3.org/2000/svg','text');
     const x=rendered.x(date);for(const [key,value]of Object.entries({x1:x,x2:x,y1:axis.top,y2:axis.bottom}))line.setAttribute(key,String(value));
     line.setAttribute('class','chart-replay-picker');label.setAttribute('class','chart-replay-picker-label');label.setAttribute('data-chart-replay-scissors','true');
-    const right=Number.isFinite(axis.right)&&x>axis.right-180;label.setAttribute('x',String(x+(right?-6:6)));label.setAttribute('text-anchor',right?'end':'start');label.setAttribute('y',String(Math.min(axis.bottom-12,axis.top+72)));label.textContent='✂ '+date+' · 선택 전';
+    const right=Number.isFinite(axis.right)&&x>axis.right-180;label.setAttribute('x',String(x+(right?-6:6)));label.setAttribute('text-anchor',right?'end':'start');label.setAttribute('y',String(Math.min(axis.bottom-12,axis.top+72)));label.textContent=date+' · 선택 전';
     group.append(line,label);svg.append(group);svg.dataset.pickerDate=date;
   }
   function beginPick(){
@@ -710,7 +710,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
           onAtlasFrame({session:atlasPreview.session,data:previewData,...range,chartType:q('display').value,context:atlasPreview.context,frequency:replayFrequency,window:replayWindow,customRange,axis:rendered.getPriceScale?.()});
         }else rendered=selectingAtlas?selectionRenderer():modules[1].drawReplaySelection({svg,observations:archive.observations,...range,symbol,source:archive.source.provider,chartType:q('display').value,frequency:replayFrequency,priceDomain:replayPriceDomain,onInspect});
         frame=null;q('metric').textContent='';q('cursor').textContent='시작 봉 선택';
-        announce(symbol+' · ✂ 파란 가위선은 선택 미리보기입니다. 클릭 또는 날짜 선택으로 확정하세요.');
+        announce(symbol+' · 파란 기준선은 선택 미리보기입니다. 클릭 또는 날짜 선택으로 확정하세요.');
         q('model-label').textContent=backtest?'기준시점 백테스트 · 시작점 선택 중':selectingAtlas?'현재 주황색 예측선 고정 · 시작점 선택 중':symbol==='BTCUSD'?'BTC 축소 추세 기준모형 · 과거 재구성':'ETH 가격 모형 · 과거 재구성';
         svg.dataset.replaySelecting='true';if(pickerDate)showPickLine(pickerDate);return;
       }
@@ -762,7 +762,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       inspect.textContent=inspectionText({date,actual:point.actual??chartData.observedRows?.findLast(row=>row.date===date)?.price??null,predicted:point.predicted??retrospectivePoint?.price??null,predictedKind:point.predicted!==null?'original':retrospectivePoint?'retrospective':null,
         source:chartData.priceSource,candleSource:chartData.candleSource,candle:q('display').value==='candles'?chartData.observedCandles?.findLast(row=>row.date===date):null});
       q('export').disabled=hasChoice()||picking;
-      if(picking){announce('✂ 시작점 선택 중 · 파란 선을 클릭하면 그 날짜부터 실제 봉을 숨깁니다. Esc로 취소합니다.');if(pickerDate)showPickLine(pickerDate);}
+      if(picking){announce('시작점 선택 중 · 파란 선을 클릭하면 그 날짜부터 실제 봉을 숨깁니다. Esc로 취소합니다.');if(pickerDate)showPickLine(pickerDate);}
       if(state.status!=='playing'||Date.now()-lastSave>1000)preserve();
     }catch(error){controller.fail(error);}finally{painting=false;}
   }

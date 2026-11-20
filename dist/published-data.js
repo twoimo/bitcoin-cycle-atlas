@@ -43,13 +43,18 @@ export function shouldCheckPublishedSnapshot(lastAttempt, now = Date.now(), visi
   return visible && Number.isFinite(now) && (!Number.isFinite(lastAttempt) || now - lastAttempt >= PUBLISHED_REFRESH_INTERVAL_MS);
 }
 
+function validUtcDate(value) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+  const date = new Date(`${value}T23:59:59.999Z`);
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value ? date : null;
+}
+
 // Keep a stale archive series off the first paint so users do not see an old
 // close jump to the refreshed close right after boot.
 export async function replaceStaleSeries(dataset, today, refresh) {
   const last = dataset?.prices?.at?.(-1)?.[0];
-  if (typeof last !== 'string' || typeof today !== 'string' || utcDay(today) - utcDay(last) <= 1) return dataset;
-  const now = new Date(`${today}T23:59:59.999Z`);
-  if (!Number.isFinite(now.getTime()) || now.toISOString().slice(0, 10) !== today) return dataset;
+  const now = validUtcDate(today);
+  if (!now || !validUtcDate(last) || utcDay(today) - utcDay(last) <= 1) return dataset;
   try {
     const next = await refresh();
     const inspection = inspectPublishedDataset(next, dataset, { now });

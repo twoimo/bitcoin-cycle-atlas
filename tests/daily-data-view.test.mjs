@@ -333,7 +333,7 @@ test('comparison uses the shared chart theme and keeps navigation and actions in
   assert.match(css, /--asset-paper: var\(--bg\)/);
   assert.match(css, /--asset-ink: var\(--text\)/);
   assert.match(css, /--asset-grid: var\(--border-soft\)/);
-  assert.match(css, /--asset-sign: var\(--accent\)/);
+  assert.match(css, /--asset-sign: var\(--accent-ink\)/);
   assert.match(css, /--asset-muted: var\(--muted\)/);
   assert.match(css, /\.daily-board-label \{ display: none;/);
   assert.doesNotMatch(css, /background:\s*(?:#fff(?:fff)?\b|white\b|#d9dcda|#f7d0d5|#c9eed0)/i);

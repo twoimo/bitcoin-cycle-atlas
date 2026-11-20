@@ -3,7 +3,7 @@ import {cutoffBacktestSettings} from './replay-retrospective.js';
 import {LONG_HORIZON_CLAIMS} from './long-horizon-evidence.js';
 import {forecastHash} from './forecast-records.js';
 import {normalizeForecastTimestamp} from './forecast-information-time.js';
-import {utcDay,dateFromDay,validateDataset} from './cycle-engine.js';
+import {utcDay,dateFromDay,validateDataset} from './cycle-engine.js?v=1.29.0';
 
 const KIND='atlas-cutoff-backtest-forecast';
 const HEX=/^[a-f0-9]{64}$/;
