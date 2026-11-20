@@ -5,12 +5,15 @@
 body[data-shell=dashboard] .atlas-dashboard-header>.auth-account{grid-area:1 / 2;align-self:center;justify-self:end;height:44px}
 .auth-account-name,.auth-account-status{font:12px/1.2 var(--font);white-space:nowrap}
 .auth-account button.auth-account-name{display:inline-flex;align-items:center;gap:6px;max-width:11em;padding:2px 8px 2px 2px;border-radius:var(--pill-radius,4px);color:var(--text)}
-.auth-account-mark{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#2962ff;color:#fff;font-size:11px;font-weight:650;line-height:1;flex:none;overflow:hidden}
+.auth-account-mark{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:var(--surface-raised);color:var(--text);font-size:11px;font-weight:650;line-height:1;flex:none;overflow:hidden}
 .auth-account-mark img{width:100%;height:100%;object-fit:cover;display:block}
 .auth-account-label{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .auth-account-status{color:var(--muted);padding-inline:4px}
 .auth-account button{box-sizing:border-box;min-height:28px;padding:4px 8px;border:1px solid transparent;border-radius:4px;background:transparent;color:var(--text);font:12px/1.2 var(--font);cursor:pointer;white-space:nowrap;flex:none;touch-action:manipulation}
 .auth-account button:hover{background:var(--surface-hover)}
+.auth-account button[data-auth-action="account"]{width:32px;min-width:32px;height:32px;padding:0;border:1px solid var(--border);border-radius:50%;justify-content:center;background:var(--surface-raised);color:var(--muted)}
+.auth-account button[data-auth-action="account"]:hover{background:var(--surface-hover);color:var(--text)}
+.auth-account button[data-auth-action="account"] .auth-account-mark{width:18px;height:18px;border:0;background:transparent;color:inherit}
 .auth-account button:focus-visible,.auth-account-dialog :focus-visible{outline:2px solid var(--focus,var(--accent));outline-offset:2px}
 .auth-account-dialog{box-sizing:border-box;width:min(400px,calc(100% - 24px));max-height:min(640px,calc(100dvh - 24px));margin:auto;padding:0;border:1px solid var(--border,#27303e);border-radius:6px;background:var(--surface,#14202e);color:var(--text);color-scheme:dark;box-shadow:0 2px 4px #00000080;overflow:hidden}
 .auth-account-dialog [hidden]{display:none !important}
@@ -84,10 +87,10 @@ body[data-center-tool] .atlas-canvas-heading:has(>.auth-account){overflow-x:auto
 @media(max-width:620px){
   .auth-account{gap:8px}
   .auth-account button,.auth-account-name{min-width:44px;min-height:44px}
-  .atlas-canvas-heading>.auth-account{position:absolute;right:8px;top:var(--mobile-top,0);height:48px;margin-left:0;background:var(--bg,#0c0f14);z-index:4}
-  .atlas-canvas-heading:has(>.auth-account){padding-right:60px}
+  .atlas-canvas-heading:not(.atlas-dashboard-header)>.auth-account{position:absolute;right:8px;top:var(--mobile-top,0);height:48px;margin-left:0;background:transparent;z-index:4}
+  .atlas-canvas-heading:not(.atlas-dashboard-header):has(>.auth-account){padding-right:60px}
   .auth-account-label{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-  .auth-account button.auth-account-name{width:44px;padding:0;border-radius:50%;justify-content:center}
+  .auth-account button.auth-account-name,.auth-account button[data-auth-action="account"]{width:44px;height:44px;padding:0;border-radius:50%;justify-content:center}
   .auth-account-mark{width:28px;height:28px;font-size:12px}
   .auth-account-dialog select{min-height:44px;font-size:16px}
   .auth-account-dialog{width:calc(100% - 16px)}

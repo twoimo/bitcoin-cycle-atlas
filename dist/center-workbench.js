@@ -166,7 +166,7 @@ export function mountCenterWorkbench() {
       const selected=item.dataset.atlasPage===atlasNavigationId(page);item.classList.toggle('active',selected);
       if (selected) item.setAttribute('aria-current','page'); else item.removeAttribute('aria-current');
     }
-    document.title=`${isWorkspaceChart(page)?workspaceInstrument(activeSymbol).koreanName+' · 가격 차트':page.title} · Cycle Atlas`;
+    document.title=`${isWorkspaceChart(page)?workspaceInstrument(activeSymbol).koreanName+' · 가격 차트':page.title} · MetaUp`;
     syncPriceLink();
     document.dispatchEvent(new CustomEvent('atlas:active-symbol',{detail:{symbol:lastChart?.symbol||originalSymbol}}));
     const heading=document.querySelector('.atlas-canvas-heading');

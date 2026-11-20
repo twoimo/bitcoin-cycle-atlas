@@ -9,6 +9,14 @@
   margin:0;padding:0 4px;border:1px solid var(--border);border-radius:2px;background:var(--surface);color:var(--muted);
   overflow:visible;pointer-events:auto;touch-action:manipulation;z-index:8;
 }
+@media(max-width:620px){
+  .atlas-plot>.lab-chart-foot.chart-legend-dock,
+  .atlas-plot>.lab-chart-foot.chart-legend-dock[data-legend-mode=chip],
+  .chart-replay-active.chart-replay-atlas.atlas-plot:not([data-chart-focus=true])>.lab-chart-foot.chart-legend-dock:not([hidden]),
+  .chart-replay-active.chart-replay-atlas.atlas-plot[data-chart-replay-mode="cutoff-backtest"]>.lab-chart-foot.chart-legend-dock:not([hidden]){
+    right:max(var(--chart-legend-right,0px),calc(var(--price-axis-width,66px) + 8px));
+  }
+}
 .atlas-plot>.lab-chart-foot.chart-legend-dock[hidden],
 .atlas-plot[data-chart-focus=true]>.lab-chart-foot.chart-legend-dock{display:none!important}
 .chart-legend-dock [hidden]{display:none!important}

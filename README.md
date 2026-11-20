@@ -4,6 +4,11 @@
 
 BTC 첫 접속은 최신 관측일 앞뒤 약 **4년**을 보여 주며, ‘장기 전망’·‘전체’ 또는 축소·이동으로 검토한 출처의 마지막 목표 연도인 **2050년 말**까지 볼 수 있습니다. 미래 가격과 음영은 검증된 목표가·확률구간을 뜻하지 않습니다. [종목별 모델 범위](docs/MODEL_SCOPE.md) · [BTC 표시 종료일 규칙](dist/long-horizon-forecast.js)
 
+## v1.37.10 · 차트·대시보드 크롬, 모바일 헤더, 증거/테마/시장 UI 및 브랜드 정리
+
+- **차트 외곽 다크 톤·모노크롬 계정 아바타·모바일 헤더:** 라이트 모드에서도 차트 외곽 툴바·레일·그리기 막대·하단 바를 다크 차트 프레임(`--workbench-frame`)으로 통일하고, 로그아웃 상태 계정 아이콘을 모노크롬으로 정리했습니다. 모바일(`390×844`) `/` 상단 헤더의 종목 선택(`비트코인 ▾`)과 5개 도구 아이콘을 겹침·잘림 없이 배치하고 `범례` 배지를 우측 가격축 왼쪽으로 띄웠으며, 비BTC 데스크톱 보조 도구 화면에서 불필요한 그리기·하단 막대를 숨겼습니다.
+- **리서치·테마·시장 분석·브랜드:** `/?page=evidence` 표 아래 빈 테두리 여백을 제거하고 `620px` 이하 필터 바를 2단 래핑(`검색 100%`, `종목·분류 각 50%`)으로 정리했습니다. `/market-lab/themes/` 저장본 모드에서 중복된 비활성 `판정 기록` 버튼을 숨겨 `새로고침`이 잘리지 않게 했고, `/?page=market` 관측일 범위 슬라이더를 슬림 다크 트랙(`4px`)과 골드 썸으로 다듬었으며, `center-workbench.js`·`indicator-workbench.js`·`app.tsx`의 잔여 `Cycle Atlas` 표기를 `MetaUp`으로 통일했습니다.
+
 ## v1.37.9 · 초기 구동·경로 전환·대비·터치 영역·릴레이 DOM 개선
 
 - **초기 렌더링 차단 제거 및 비활성 코드 분할:** `/`와 `/?page=data` 첫 화면이 외부 시세 응답을 기다리지 않고 보관된 `btc-daily.json`·`asset-comparison.json`으로 즉시 그려진 뒤 백그라운드에서 최신 종가를 반영하며, `research-reader.js`·비활성 라우트 컨트롤러(`relay-room.js`, `ipo-view.js`, `market-lab-view.js`, `daily-data-view.js`)·보조 차트 모듈을 필요 시점에 동적 로드하고 `cycle-engine.js`·`cycle-milestones.js`·`chart-magnet.js`·`ui/chart-legend-layout.js`의 중복 `?v=` 임포트를 통일했습니다. 번들 CSS(`site-before-shell.css`, `site-after-shell.css`)에서 라이선스 외 주석과 빈 줄을 정리했습니다.

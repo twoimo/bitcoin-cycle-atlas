@@ -1007,9 +1007,17 @@ body[data-shell=dashboard] #evidence-view .evidence-controls button:hover {
   background: var(--surface-hover);
 }
 body[data-shell=dashboard] #evidence-view .evidence-table-shell {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+body[data-shell=dashboard] #evidence-view .evidence-table {
   border: 1px solid var(--border);
-  border-radius: var(--card-radius-sm);
   background: var(--surface);
+}
+body[data-shell=dashboard] #evidence-view .evidence-table tfoot[hidden],
+body[data-shell=dashboard] #evidence-view .evidence-table tbody:empty {
+  display: none;
 }
 body[data-shell=dashboard] #evidence-view .evidence-pagination {
   min-width: 0;
@@ -1034,6 +1042,33 @@ body[data-shell=dashboard] #evidence-view .evidence-pagination button:disabled {
 body[data-shell=dashboard] #evidence-view :is(input,select,button):focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: -3px;
+}
+@media (max-width: 620px) {
+  body.atlas-funnest-compact[data-shell=dashboard][data-page=evidence] #evidence-view .evidence-controls,
+  body[data-shell=dashboard][data-page=evidence] #evidence-view .evidence-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    overflow-x: hidden;
+    touch-action: manipulation;
+  }
+  body[data-shell=dashboard][data-page=evidence] #evidence-view .evidence-controls .evidence-search {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  body[data-shell=dashboard][data-page=evidence] #evidence-view .evidence-controls .evidence-filter {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 0;
+  }
+  body[data-shell=dashboard][data-page=evidence] #evidence-view .evidence-controls select {
+    width: 100%;
+    max-width: none;
+  }
+  body[data-shell=dashboard][data-page=evidence] #evidence-view .evidence-controls #evidence-clear {
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
 }
 
 /* Preserve the wide action/filter grid's height and the table's bottom edge.

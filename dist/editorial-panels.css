@@ -121,13 +121,69 @@
   color: var(--text);
   font-variant-numeric: tabular-nums;
 }
+#market-view input[type="range"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  accent-color: var(--data-gold);
+  cursor: pointer;
+}
+#market-view input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  border: 0;
+  border-radius: 2px;
+  background: var(--border);
+}
+#market-view input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  margin-top: -4px;
+  border: 1.5px solid var(--surface);
+  border-radius: 50%;
+  background: var(--data-gold);
+  box-shadow: 0 0 0 1px var(--border-strong);
+}
+#market-view input[type="range"]::-moz-range-track {
+  height: 4px;
+  border: 0;
+  border-radius: 2px;
+  background: var(--border);
+}
+#market-view input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid var(--surface);
+  border-radius: 50%;
+  background: var(--data-gold);
+  box-shadow: 0 0 0 1px var(--border-strong);
+}
+#market-view input[type="range"]:hover::-webkit-slider-thumb,
+#market-view input[type="range"]:focus-visible::-webkit-slider-thumb {
+  background: var(--text);
+}
+#market-view input[type="range"]:hover::-moz-range-thumb,
+#market-view input[type="range"]:focus-visible::-moz-range-thumb {
+  background: var(--text);
+}
+#market-view input[type="range"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
 #market-view .ml-axis-chart .ml-date-selector {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin: 0;
+  gap: 10px;
+  margin: 4px 0 0;
   color: var(--muted);
   font-size: 11px;
+  white-space: nowrap;
 }
 #market-view .ml-axis-chart input[type="range"] {
   flex: 1 1 auto;
@@ -874,7 +930,7 @@ body:not([data-rsi-workbench=true]) main:not([data-loading-kind=rsi]) #market-vi
 #market-view .ml-scenario-layout .ml-shock-row > input[type="range"] {
   align-self: end;
   min-height: 32px;
-  accent-color: var(--ui-primary);
+  accent-color: var(--data-gold);
 }
 #market-view .ml-sensitivity-field,
 #market-view .ml-input-group .ml-field-inline {

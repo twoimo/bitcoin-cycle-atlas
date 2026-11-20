@@ -60,7 +60,14 @@ body[data-sidebar=compact][data-shell=dashboard] .atlas-sidebar :is(.atlas-brand
   body[data-shell=chart] .workbench-rail :is(.atlas-nav,.workbench-detail-tools){display:flex;flex-direction:column;flex-wrap:nowrap;gap:4px;align-items:center;width:100%;max-width:100%;margin:8px 0;overflow:hidden}
   body[data-shell=chart] .workbench-rail :is(a,button){display:grid;place-items:center;width:34px;max-width:34px;min-height:34px;height:34px;padding:8px;overflow:hidden}
   body[data-shell=chart] .workbench-rail :is(a,button)>span:last-child:not([data-icon]){position:absolute!important;display:block!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important}
+  body[data-shell=chart][data-center-tool]:not([data-chart-controls]) .atlas-sidebar,
+  body[data-shell=chart][data-center-tool="themes"] .atlas-sidebar,
+  body[data-shell=chart][data-center-tool]:not([data-chart-controls]) :is(.chart-drawbar,.workbench-tools),
+  body[data-shell=chart][data-center-tool="themes"] :is(.chart-drawbar,.workbench-tools){display:none!important}
+  body[data-shell=chart][data-center-tool]:not([data-chart-controls]) .workspace,
+  body[data-shell=chart][data-center-tool="themes"] .workspace{margin-left:0!important;width:100%!important}
 }
+body[data-shell=chart][data-center-tool]:not([data-chart-controls]) .workbench-bottom.workbench-bottom-bar{display:none!important}
 @media(max-width:1000px){
   .atlas-dashboard-header>.atlas-sidebar-toggle{display:none}
   body[data-shell=dashboard]{--app-sidebar-width:68px}

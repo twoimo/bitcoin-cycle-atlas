@@ -118,7 +118,7 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
   const currentInstrument = workspaceInstrument(navigation.tab === 'themes' ? 'HYPE' : navigation.tab === 'housing' ? `HOUSING-${housingRegion.toUpperCase()}` : rsiSymbol)!;
   const workspaceTitle = chartWorkspace ? '가격 차트' : '시장 분석';
   useEffect(() => {
-    document.title = `${chartWorkspace ? currentInstrument.koreanName : page.title} · ${workspaceTitle} · Cycle Atlas`;
+    document.title = `${chartWorkspace ? currentInstrument.koreanName : page.title} · ${workspaceTitle} · MetaUp`;
   }, [page.title,chartWorkspace,currentInstrument.koreanName,workspaceTitle]);
   useEffect(() => {
     const back = () => {

@@ -116,7 +116,7 @@ export function mountIndicatorWorkbench({plot,stage}) {
   const detail=doc.createElement('aside');detail.className='indicator-browser-detail';detail.setAttribute('aria-label','선택한 지표');
   const detailPreview=doc.createElement('div');detailPreview.className='indicator-browser-preview';
   const detailTitle=doc.createElement('h3');detailTitle.id='indicator-browser-detail-title';
-  const detailBy=doc.createElement('span');detailBy.className='indicator-browser-by';detailBy.textContent='Cycle Atlas';
+  const detailBy=doc.createElement('span');detailBy.className='indicator-browser-by';detailBy.textContent='MetaUp';
   const detailActions=doc.createElement('div');detailActions.className='indicator-browser-actions';
   const detailAdd=doc.createElement('button');detailAdd.type='button';detailAdd.className='indicator-browser-add';
   const detailStar=doc.createElement('button');detailStar.type='button';detailStar.className='indicator-library-favorite indicator-browser-star';detailStar.innerHTML=glyph('star');

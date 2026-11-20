@@ -26,7 +26,7 @@ export function mountTradeChrome(doc) {
   account.className = 'atlas-trade-account';
   account.setAttribute('aria-label', '계정');
   account.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="5.6" r="2.3" fill="currentColor"/><path d="M3.1 13.1a4.9 4.9 0 0 1 9.8 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
-  account.addEventListener('click', () => doc.querySelector('[data-auth-action="account"]')?.click());
+  account.addEventListener('click', () => doc.querySelector('[data-auth-action="menu"]:not([hidden]), [data-auth-action="account"]:not([hidden]), [data-auth-action="account"]')?.click());
   const search = doc.createElement('button');
   search.type = 'button';
   search.className = 'atlas-trade-search';
