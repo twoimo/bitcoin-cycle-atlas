@@ -6,9 +6,9 @@ export function createAssetComparisonLoader({ embeddedData = () => null, fetchIm
     pending = Promise.resolve().then(async () => {
       const embedded = embeddedData();
       if (embedded != null) return JSON.parse(embedded);
-      const response = await fetchImpl('./data/asset-comparison.json', {
+      const response = await (globalThis.__atlasEarlyData?.take?.('data/asset-comparison.json') || fetchImpl('./data/asset-comparison.json', {
         cache: 'no-cache', signal: AbortSignal.timeout(12000),
-      });
+      }));
       if (!response.ok) throw new Error(`자산 비교 자료를 불러오지 못했습니다 (${response.status}).`);
       return response.json();
     }).finally(() => { pending = null; });

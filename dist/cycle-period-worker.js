@@ -1,4 +1,4 @@
-import {buildLongHorizonForecast} from './long-horizon-forecast.js';
+import {buildLongHorizonForecast} from './long-horizon-forecast.js?v=1.29.0';
 import {calculateCyclePeriodSensitivity} from './cycle-period-comparison.js';
 self.onmessage=event=>{
   const {id,revision,dataset,options}=event.data??{};

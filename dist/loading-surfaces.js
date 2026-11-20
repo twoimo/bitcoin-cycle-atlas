@@ -82,9 +82,13 @@ export function enhanceBootSkeleton(){
   const page=new URLSearchParams(location.search).get('page'),path=location.pathname,canvas=shell.querySelector('.atlas-boot-canvas');
   const kind=page==='ipo'?'calendar':page==='data'?'table':['research','evidence','relay'].includes(page)?'list':path.includes('/rsi/')?'rsi':path.includes('/scenario/')?'scenario':path.includes('/cashflow/')?'cashflow':path.includes('/us/')||path.includes('/kr/')?'diagnosis':'chart';
   setLoadingSurface(canvas,true,{kind,label:'화면 로딩'});
+  const pending=[...shell.querySelectorAll('.atlas-boot-bar')].map(old=>{
+    const style=getComputedStyle(old);
+    return [old,style.width,style.height,style.borderRadius];
+  });
   const boxes=[];
-  for(const old of shell.querySelectorAll('.atlas-boot-bar')){
-    const style=getComputedStyle(old),box=createSkeletonBox({width:style.width,height:style.height,radius:style.borderRadius});box.className=old.className;box.dataset.skulletBoot='true';old.replaceWith(box);boxes.push(box);
+  for(const [old,width,height,radius] of pending){
+    const box=createSkeletonBox({width,height,radius});box.className=old.className;box.dataset.skulletBoot='true';old.replaceWith(box);boxes.push(box);
   }
   const stop=()=>{clearLoadingSurface(canvas);for(const box of boxes){for(const animation of box.getAnimations?.()||[])animation.cancel();box.remove();}bootObserver.disconnect();document.removeEventListener('atlas:ready',stop);};
   const bootObserver=new MutationObserver(()=>{if(document.documentElement.dataset.boot!=='loading')stop();});

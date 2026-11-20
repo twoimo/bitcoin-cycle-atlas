@@ -6,12 +6,6 @@ import { inspectPublishedDataset, replaceStaleSeries, shouldCheckPublishedSnapsh
 import { createCompareShellHost } from './compare-shell-host.js?v=1.37.8';
 import { parseComparisonUrl, comparisonUrlChanged } from './comparison-url-state.js?v=1.37.8';
 import { mountBtcRefreshStatus } from "./btc-refresh-status.js?v=1.29.0";
-import { analyzeCycleTiming } from './cycle-timing.js?v=1.29.0';
-import { renderTimingView } from './timing-view.js?v=1.29.0';
-import { analyzePeakZones } from './peak-zones.js?v=1.29.0';
-import { analyzeCycleForecast } from './forecast-engine.js?v=1.29.0';
-import { renderPeakView } from './peak-view.js?v=1.29.0';
-import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29.0';
 // Changed release modules use a versioned URL so a cached v1.5 module cannot
 // leave a new long-horizon page running the old three-year workbench.
 
@@ -440,23 +434,54 @@ function render(recalculate = true) {
   // evidence renderers report their own completion after their scheduled frame.
   finishInitialPage();
 }
-function renderTiming() {
+let researchModules = null;
+let researchModulesPromise = null;
+function ensureResearchModules() {
+  if (researchModules) return Promise.resolve(researchModules);
+  if (!researchModulesPromise) {
+    researchModulesPromise = Promise.all([
+      import('./cycle-timing.js?v=1.29.0'),
+      import('./timing-view.js?v=1.29.0'),
+      import('./peak-zones.js?v=1.29.0'),
+      import('./forecast-engine.js?v=1.29.0'),
+      import('./peak-view.js?v=1.29.0'),
+      import('./forecast-view.js?v=1.29.0'),
+    ]).then(([timing, timingView, peakZones, forecastEngine, peakView, forecastView]) => {
+      researchModules = {
+        analyzeCycleTiming: timing.analyzeCycleTiming,
+        renderTimingView: timingView.renderTimingView,
+        analyzePeakZones: peakZones.analyzePeakZones,
+        analyzeCycleForecast: forecastEngine.analyzeCycleForecast,
+        renderPeakView: peakView.renderPeakView,
+        renderForecastView: forecastView.renderForecastView,
+        exportForecastSvg: forecastView.exportForecastSvg,
+      };
+      return researchModules;
+    }).catch(err => {
+      researchModulesPromise = null;
+      throw err;
+    });
+  }
+  return researchModulesPromise;
+}
+async function renderTiming() {
   if (!state.dataset) return;
   try {
+    const mods = await ensureResearchModules();
     if (state.timingDataset !== state.dataset || state.timing?.selectedBaseline !== state.timingBaseline) {
-      state.timing = analyzeCycleTiming(state.dataset, { baseline: state.timingBaseline });
+      state.timing = mods.analyzeCycleTiming(state.dataset, { baseline: state.timingBaseline });
       state.timingDataset = state.dataset;
     }
-    renderTimingView(state.timing, state.timingBaseline);
+    mods.renderTimingView(state.timing, state.timingBaseline);
   } catch {
     $('#timing-verdict').innerHTML = '<p>현재 자료로 전환 시점 분석을 계산하지 못했습니다. 원자료와 기준일을 확인해 주세요.</p>';
     $('#timing-body').innerHTML = ''; $('#timing-turns').innerHTML = ''; $('#timing-current').textContent = '';
     $('#timing-details-content').innerHTML = ''; state.timing = null;
   }
 }
-$('#timing-baseline').addEventListener('change', e => { state.timingBaseline = e.target.value; renderTiming(); renderResearch(); persistUrl(); });
+$('#timing-baseline').addEventListener('change', e => { state.timingBaseline = e.target.value; void renderTiming().then(() => renderResearch()); persistUrl(); });
 
-function renderResearch() {
+async function renderResearch() {
   if (!state.dataset || state.view !== 'compare') return;
   $$('.analysis-tabs button').forEach(b=>{const active=b.dataset.analysis===state.analysisView;b.setAttribute('aria-selected',String(active));b.tabIndex=active?0:-1;});
   $('#forecast-analysis').hidden=state.analysisView!=='forecast';
@@ -464,15 +489,16 @@ function renderResearch() {
   $('#timing-analysis').hidden=state.analysisView!=='timing';
   $('#analysis-asof').textContent=`관측 종료 ${state.dataset.prices.at(-1)[0].replaceAll('-','.')} UTC`;
   try {
-    if(state.analysisView==='timing'||state.analysisView==='peak')renderTiming();
+    const mods = await ensureResearchModules();
+    if(state.analysisView==='timing'||state.analysisView==='peak') await renderTiming();
     if(state.analysisView==='peak'&&(state.peakDataset!==state.dataset||state.peakAnalysis?.threshold!==state.peakThreshold||state.peakAnalysis?.baseline!==state.timingBaseline)){
-      state.peakAnalysis=analyzePeakZones(state.dataset,{threshold:state.peakThreshold,baseline:state.timingBaseline});state.peakDataset=state.dataset;
+      state.peakAnalysis=mods.analyzePeakZones(state.dataset,{threshold:state.peakThreshold,baseline:state.timingBaseline});state.peakDataset=state.dataset;
     }
     if(state.analysisView==='forecast'&&(state.forecastDataset!==state.dataset||state.forecast?.methodology?.highZoneFraction!==state.peakThreshold)){
-      state.forecast=analyzeCycleForecast(state.dataset,{highZoneFraction:state.peakThreshold});state.forecastDataset=state.dataset;
+      state.forecast=mods.analyzeCycleForecast(state.dataset,{highZoneFraction:state.peakThreshold});state.forecastDataset=state.dataset;
     }
-    if(state.analysisView==='peak')renderPeakView(state.peakAnalysis,state.dataset,state.timing);
-    if(state.analysisView==='forecast')renderForecastView(state.forecast,state.dataset,{view:state.forecastView,scenarioId:state.forecastScenario});
+    if(state.analysisView==='peak')mods.renderPeakView(state.peakAnalysis,state.dataset,state.timing);
+    if(state.analysisView==='forecast')mods.renderForecastView(state.forecast,state.dataset,{view:state.forecastView,scenarioId:state.forecastScenario});
     $('#forecast-scenario').value=state.forecastScenario;
     $$('[data-forecast-view]').forEach(b=>{const active=b.dataset.forecastView===state.forecastView;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',String(active));});
   } catch(error) {
@@ -486,7 +512,7 @@ $$('[data-analysis]').forEach((b,i,all)=>{
   b.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const next=e.key==='Home'?0:e.key==='End'?all.length-1:(i+(e.key==='ArrowRight'?1:-1)+all.length)%all.length;all[next].click();all[next].focus();});
 });
 $('#peak-threshold').addEventListener('change',e=>{state.peakThreshold=Number(e.target.value);renderResearch();persistUrl();});
-$('#peak-baseline').addEventListener('change',e=>{state.timingBaseline=e.target.value;renderTiming();renderResearch();persistUrl();});
+$('#peak-baseline').addEventListener('change',e=>{state.timingBaseline=e.target.value;void renderTiming().then(() => renderResearch());persistUrl();});
 $('#forecast-scenario').addEventListener('change',e=>{state.forecastScenario=e.target.value;renderResearch();persistUrl();});
 $$('[data-forecast-view]').forEach(b=>b.addEventListener('click',()=>{state.forecastView=b.dataset.forecastView;renderResearch();persistUrl();}));
 $('#jump-forecast').addEventListener('click',()=>{state.analysisView='forecast';renderResearch();persistUrl();});
@@ -659,7 +685,7 @@ document.addEventListener('click',e=>{if(!e.target.closest('.export-wrap'))close
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeExport();$('#chart-tooltip').hidden=true;}});
 $('#export-timing').addEventListener('click',()=>{if(!state.timing)return;download(`bitcoin-cycle-timing-${state.timing.asOf}.json`,new Blob([JSON.stringify(state.timing,null,2)],{type:'application/json'}));closeExport();toast('계산 조건, 전환 날짜, 민감도와 이전 실패 사례를 저장했습니다.');});
 $('#export-research').addEventListener('click',()=>{if(!state.forecast)return;download(`bitcoin-peak-forecast-${state.forecast.asOf}.json`,new Blob([JSON.stringify({peakZones:state.peakAnalysis,forecast:state.forecast},null,2)],{type:'application/json'}));closeExport();toast('고점권 비교와 미래 시나리오의 계산 결과를 저장했습니다.');});
-$('#export-forecast-svg').addEventListener('click',()=>{if(!state.forecast)return;download(`bitcoin-future-scenarios-${state.forecast.asOf}.svg`,new Blob([exportForecastSvg()],{type:'image/svg+xml;charset=utf-8'}));toast('조건과 기준일을 포함한 미래 시나리오 그래프를 저장했습니다.');});
+$('#export-forecast-svg').addEventListener('click',()=>{if(!state.forecast)return;void ensureResearchModules().then(mods=>{download(`bitcoin-future-scenarios-${state.forecast.asOf}.svg`,new Blob([mods.exportForecastSvg()],{type:'image/svg+xml;charset=utf-8'}));toast('조건과 기준일을 포함한 미래 시나리오 그래프를 저장했습니다.');});});
 $('#export-csv').addEventListener('click',()=>{if(!state.comparison)return;const c={...state.comparison,series:state.comparison.series.filter(s=>!state.hidden.has(s.id))};download(`bitcoin-cycles-${state.mode}-${c.latest.date}.csv`,new Blob(['\uFEFF'+comparisonToCsv(c)],{type:'text/csv;charset=utf-8'}));closeExport();toast('현재 표시한 사이클의 비교 데이터를 저장했습니다.');});
 function chartExport() {
   const c=state.chart, comp=state.comparison, clone=$('#cycle-chart').cloneNode(true);clone.querySelector('#chart-hitarea')?.remove();
@@ -746,7 +772,7 @@ async function init() {
       embedded = document.getElementById('embedded-btc-data');
       if (embedded) bundled = JSON.parse(embedded.textContent);
       else {
-        const response = await fetch(atlasResourcePath('data/btc-daily.json'), { signal: AbortSignal.timeout(15000) });
+        const response = await (globalThis.__atlasEarlyData?.take?.('data/btc-daily.json') || fetch(atlasResourcePath('data/btc-daily.json'), { signal: AbortSignal.timeout(15000) }));
         if (!response.ok) throw new Error('Bundled data unavailable');
         bundled = await response.json();
       }

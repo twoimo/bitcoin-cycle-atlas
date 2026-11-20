@@ -1,4 +1,4 @@
-import { atlasNavigationPages } from './atlas-navigation.js?v=1.36.3';
+import { atlasNavigationPages } from './atlas-navigation.js?v=1.36.4';
 import { mountChartBottomBar } from './chart-bottom-bar.js';
 import { mountMobileWorkspace } from './mobile-workspace.js';
 import { createWorkspaceHistory } from './workspace-history.js';

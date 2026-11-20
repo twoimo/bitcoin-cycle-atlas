@@ -482,7 +482,19 @@ function setActive(id, {keep = false, silent = false} = {}) {
   refresh();
 }
 
+function ensureDrawbarStyle() {
+  if (typeof document === 'undefined' || document.getElementById('atlas-drawbar-style')) return;
+  const link = document.createElement('link');
+  link.id = 'atlas-drawbar-style';
+  link.rel = 'stylesheet';
+  link.href = new URL('./chart-drawbar.css?v=1.0.4', import.meta.url).href;
+  const afterShell = document.querySelector('link[href*="site-after-shell"]');
+  if (afterShell?.parentNode) afterShell.parentNode.insertBefore(link, afterShell);
+  else document.head?.append(link);
+}
+
 export function mountChartDrawbar(left, {command} = {}) {
+  ensureDrawbarStyle();
   ensureLoaded();
   const listeners = new AbortController();
   const {signal} = listeners;

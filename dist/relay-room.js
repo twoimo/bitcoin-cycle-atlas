@@ -870,7 +870,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady,
         const assets = embeddedAssets?.();
         parsed = parseRelayPayload(JSON.parse(inline), ++token, assets ? JSON.parse(assets) : {});
       } else {
-        const response = await fetch('./data/relay/index.json', { signal: AbortSignal.timeout(15000) });
+        const response = await (globalThis.__atlasEarlyData?.take?.('data/relay/index.json') || fetch('./data/relay/index.json', { signal: AbortSignal.timeout(15000) }));
         if (!response.ok) throw new Error('relay data unavailable');
         parsed = parseRelayPayload(await response.json(), ++token, {});
       }

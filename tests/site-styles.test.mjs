@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {SITE_STYLE_GROUPS, SITE_STYLE_SOURCES, buildSiteStyles, siteStyleBundleContents,
-  siteStylesheetEntries, inlineSiteStyles, checkCombinableStyle} from '../scripts/build-site-styles.mjs';
+  siteStylesheetEntries, inlineSiteStyles, checkCombinableStyle, trimBundledStyle} from '../scripts/build-site-styles.mjs';
 
 const dist = fileURLToPath(new URL('../dist/', import.meta.url));
 const html = await readFile(resolve(dist, 'index.html'), 'utf8');
@@ -32,11 +32,11 @@ test('four root requests retain every source sheet in its original cascade posit
     const bundled = await readFile(resolve(dist, group.file), 'utf8');
     let cursor = 0;
     for (const file of group.sources) {
-      const source = await readFile(resolve(dist, file), 'utf8');
+      const source = trimBundledStyle(await readFile(resolve(dist, file), 'utf8'));
       const marker = bundled.indexOf(`/* Source: ${file}; SHA-256: `, cursor);
       assert.ok(marker >= cursor, `${file} retains cascade order`);
       const start = bundled.indexOf(' */\n', marker) + ' */\n'.length;
-      assert.equal(bundled.slice(start, start + source.length), source, `${file} retains exact authored CSS`);
+      assert.equal(bundled.slice(start, start + source.length), source, `${file} retains exact trimmed CSS`);
       cursor = start + source.length;
     }
   }

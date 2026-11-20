@@ -95,7 +95,9 @@ html[data-boot="loading"]{background:var(--boot-surface,#0f0f0f);overflow:clip}
     })();
   </script>
   <!-- Fetch modules during CSS loading; execution still belongs to site-entry. -->
-  <link rel="modulepreload" href="../../site-entry.js?v=1.37.81">
+  <link rel="modulepreload" href="../../site-entry.js?v=1.37.82">
+  <link rel="modulepreload" href="../../atlas-shell.js?v=1.36.31">
+  <link rel="modulepreload" href="../../app.js?v=1.37.64">
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
   <link id="atlas-optional-fonts" rel="stylesheet" href="../../fonts/pretendard/pretendard-variable.css?v=2973bcae8026" media="print">
   <script id="atlas-fonts-script">
@@ -106,11 +108,94 @@ html[data-boot="loading"]{background:var(--boot-surface,#0f0f0f);overflow:clip}
       if (fonts.sheet) activate();
     })();
   </script>
-  <link rel="stylesheet" href="../../styles.css?v=dd920856be9e">
-  <link rel="stylesheet" href="../../site-before-shell.css?v=192e01054d0a">
-  <link rel="stylesheet" href="../../atlas-shell.css?v=1.36.9">
-  <link rel="stylesheet" href="../../site-after-shell.css?v=cf363659eade">
-  <link rel="stylesheet" href="../../chart-drawbar.css?v=1.0.4">
+  <link rel="stylesheet" href="../../styles.css?v=dd920856be9e" media="print" data-atlas-defer-style="">
+  <link rel="stylesheet" href="../../site-before-shell.css?v=52af9915af3b" media="print" data-atlas-defer-style="">
+  <link rel="stylesheet" href="../../atlas-shell.css?v=1.36.10" media="print" data-atlas-defer-style="">
+  <link rel="stylesheet" href="../../site-after-shell.css?v=13e749bf9803" media="print" data-atlas-defer-style="">
+  <script id="atlas-styles-script">
+    (function () {
+      var links = [].slice.call(document.getElementsByTagName('link')).filter(function (link) {
+        return link.hasAttribute('data-atlas-defer-style');
+      });
+      var pending = links.length;
+      var ready = pending === 0;
+      var callbacks = [];
+      function flush() {
+        ready = true;
+        clearTimeout(timer);
+        for (var i = 0; i < links.length; i += 1) {
+          if (!links[i].__atlasFailed && links[i].media === 'print') links[i].media = 'all';
+        }
+        var list = callbacks.splice(0, callbacks.length);
+        for (var i = 0; i < list.length; i += 1) { try { list[i](); } catch {} }
+      }
+      function finish(link, failed) {
+        if (link.__atlasSettled) return;
+        link.__atlasSettled = true;
+        link.__atlasFailed = Boolean(failed);
+        pending -= 1;
+        if (pending <= 0) flush();
+      }
+      for (var i = 0; i < links.length; i += 1) {
+        (function (link) {
+          if (link.sheet) { finish(link, false); return; }
+          link.addEventListener('load', function () { finish(link, false); }, { once: true });
+          link.addEventListener('error', function () { finish(link, true); }, { once: true });
+        })(links[i]);
+      }
+      var timer = setTimeout(function () {
+        for (var i = 0; i < links.length; i += 1) {
+          if (!links[i].__atlasSettled && links[i].media === 'print') links[i].media = 'all';
+        }
+        flush();
+      }, 6000);
+      window.__atlasWhenStylesReady = function (fn) {
+        if (typeof fn !== 'function') return;
+        if (ready) { clearTimeout(timer); fn(); return; }
+        callbacks.push(fn);
+      };
+    })();
+  </script>
+  <script id="atlas-early-data-script">
+    (function () {
+      if (!/^https?:$/.test(location.protocol)) return;
+      var meta = document.querySelector('meta[name="atlas-root"]');
+      var declared = meta ? meta.getAttribute('content') : null;
+      var path = String(location.pathname || '');
+      var root = declared != null ? ((declared !== '/' && path.charAt(0) === '/' && path.indexOf(declared) !== 0) ? '/' : declared) : '/';
+      if (!root || root.charAt(root.length - 1) !== '/') root = '/';
+      var params = null;
+      try { params = new URLSearchParams(location.search); } catch { params = null; }
+      var page = String(params ? (params.get('page') || '') : '').toLowerCase();
+      var targets = [];
+      if (page === 'relay' || /\/relay(?:\/|$)/.test(path)) {
+        targets.push(['data/relay/index.json', null]);
+      } else if (page === 'data' || /\/data(?:\/|$)/.test(path)) {
+        targets.push(['data/btc-daily.json', null]);
+        targets.push(['data/asset-comparison.json', { cache: 'no-cache' }]);
+      } else {
+        targets.push(['data/btc-daily.json', null]);
+      }
+      var cache = {};
+      for (var i = 0; i < targets.length; i += 1) {
+        var rel = targets[i][0];
+        var opts = targets[i][1] || {};
+        if (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) {
+          opts.signal = AbortSignal.timeout(15000);
+        }
+        try {
+          cache[rel] = fetch(root + rel, opts);
+        } catch {}
+      }
+      window.__atlasEarlyData = {
+        take: function (rel) {
+          var p = cache[rel] || null;
+          delete cache[rel];
+          return p;
+        }
+      };
+    })();
+  </script>
 </head>
 <body>
   <script id="atlas-compact-boot">if(matchMedia('(max-width:1024px)').matches)document.body.classList.add('atlas-funnest-compact')</script>
@@ -169,16 +254,24 @@ html[data-boot="loading"]{background:var(--boot-surface,#0f0f0f);overflow:clip}
       }
       function ready() {
         if (root.dataset.boot === 'ready') return;
-        try { sessionStorage.removeItem('atlas-boot-recover'); sessionStorage.removeItem('atlas-boot-retry'); } catch { /* A closed store cannot block the open page. */ }
-        root.dataset.boot = 'ready';
-        status.setAttribute('aria-busy', 'false');
-        for (const node of document.querySelectorAll('[data-boot-content]')) {
-          node.inert = false;
-          node.removeAttribute('aria-hidden');
+        function commitReady() {
+          if (root.dataset.boot === 'ready') return;
+          try { sessionStorage.removeItem('atlas-boot-recover'); sessionStorage.removeItem('atlas-boot-retry'); } catch { /* A closed store cannot block the open page. */ }
+          root.dataset.boot = 'ready';
+          status.setAttribute('aria-busy', 'false');
+          for (const node of document.querySelectorAll('[data-boot-content]')) {
+            node.inert = false;
+            node.removeAttribute('aria-hidden');
+          }
+          shell.hidden = true;
+          error.hidden = true;
+          detach();
         }
-        shell.hidden = true;
-        error.hidden = true;
-        detach();
+        if (typeof window.__atlasWhenStylesReady === 'function') {
+          window.__atlasWhenStylesReady(commitReady);
+        } else {
+          commitReady();
+        }
       }
       function reloadOnce() {
         let done = false;
@@ -423,6 +516,6 @@ html[data-boot="loading"]{background:var(--boot-surface,#0f0f0f);overflow:clip}
   <dialog id="method-dialog" aria-labelledby="method-title"><div class="dialog-top"><span class="eyebrow">자료와 방법론</span><button id="close-method" class="icon-button" aria-label="방법론 닫기"><span data-icon="close"></span></button></div><h2 id="method-title">방법론과 출처</h2><p class="dialog-lead">차트의 출발점부터 가격의 정의까지, 비교에 사용한 기준입니다.</p><div id="method-content"></div><button id="method-done" class="primary-button">확인했습니다</button></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <dialog id="evidence-dialog" aria-labelledby="evidence-detail-title"><div class="dialog-top"><span class="eyebrow">근거와 한계</span><button id="evidence-close" class="icon-button" aria-label="자료 상세 닫기"><span data-icon="close"></span></button></div><h2 id="evidence-detail-title"></h2><div id="evidence-detail-body"></div></dialog>
-  <script type="module" src="../../site-entry.js?v=1.37.81"></script>
+  <script type="module" src="../../site-entry.js?v=1.37.82"></script>
 </body>
 </html>

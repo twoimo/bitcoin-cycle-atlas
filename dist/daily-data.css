@@ -382,3 +382,11 @@ body[data-embedded=true] #data-view .daily-heading { position: relative; inset: 
   body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #data-view > .asset-context { grid-area: status; }
   body[data-shell=dashboard][data-page=data]:not([data-embedded=true]) #data-view > .asset-table-panel { grid-area: table; }
 }
+
+@media (max-width: 1024px) {
+  #data-view .asset-filters { flex-wrap: wrap; overflow-x: visible; gap: 6px; padding: 6px 8px; }
+  #data-view .asset-filters .asset-search { flex: 1 1 150px; min-width: 130px; }
+  #data-view .asset-filters label { flex: 1 1 110px; }
+  #data-view .asset-filters input, #data-view .asset-filters select, #data-view .asset-filter-reset { min-height: 44px; }
+  #data-view .asset-identity, #data-view .asset-judgment { min-height: 44px; }
+}

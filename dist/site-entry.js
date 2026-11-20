@@ -1,7 +1,7 @@
 import { initTheme } from './ui/theme.js';
-import { enhanceBootSkeleton } from './loading-surfaces.js?v=1.0.3';
-import { initAtlasShell } from './atlas-shell.js?v=1.36.30';
-import { canonicalNativeChartEntry, canonicalRetiredPageEntry, canonicalWorkspaceChartEntry, canonicalDefaultChartEntry } from './atlas-navigation.js?v=1.36.3';
+import { enhanceBootSkeleton } from './loading-surfaces.js?v=1.0.4';
+import { initAtlasShell } from './atlas-shell.js?v=1.36.31';
+import { canonicalNativeChartEntry, canonicalRetiredPageEntry, canonicalWorkspaceChartEntry, canonicalDefaultChartEntry } from './atlas-navigation.js?v=1.36.4';
 import { mountJournalEntry } from './journal-entry.js?v=1.29.3';
 import { initPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
 
@@ -19,6 +19,7 @@ const canonicalEntry = canonicalRetiredPageEntry(location) || (embeddedChartFram
 if (canonicalEntry) {
   location.replace(canonicalEntry);
 } else {
+  const preloadedApp = import("./app.js?v=1.37.64");
   enhanceBootSkeleton();
   initAtlasShell();
   initPerformanceDiagnostics();
@@ -36,8 +37,8 @@ if (canonicalEntry) {
   const retryDelay = [400, 900, 1600, 2500, 3500];
   for (let attempt = 0; attempt < retryDelay.length + 1 && !opened; attempt += 1) {
     try {
-      const specifier = attempt === 0 ? "./app.js?v=1.37.63" : `./app.js?v=1.37.63&retry=${attempt}`;
-      await import(specifier);
+      const specifier = `./app.js?v=1.37.64&retry=${attempt}`;
+      await (attempt === 0 ? preloadedApp : import(specifier));
       opened = true;
     } catch (error) {
       failure = error;

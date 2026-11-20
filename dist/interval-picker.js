@@ -70,6 +70,7 @@ export function mountIntervalPicker({ host, intervals, selected = 'daily', onSel
   panel.hidden = true;
   panel.setAttribute('role', 'menu');
   panel.setAttribute('aria-label', '시간 단위');
+  const phone = document.defaultView?.matchMedia?.('(max-width: 640px)');
   function pinnedIds() {
     const compact = Boolean(media?.matches);
     const allow = new Set(compact ? COMPACT_PINNED : DESKTOP_PINNED);
@@ -86,11 +87,11 @@ export function mountIntervalPicker({ host, intervals, selected = 'daily', onSel
       else node.removeAttribute('role');
       (menu ? panel : chips).append(node);
     }
-    const onChip = pin.has(currentId);
+    const onChip = !phone?.matches && pin.has(currentId);
     current.textContent = intervalShortLabel(currentId);
     current.hidden = onChip;
     more.classList.toggle('is-overflow', !onChip);
-    more.hidden = panel.childElementCount === 0;
+    more.hidden = !phone?.matches && panel.childElementCount === 0;
   }
   function close(focus = false) {
     if (panel.hidden) return;
@@ -120,7 +121,7 @@ export function mountIntervalPicker({ host, intervals, selected = 'daily', onSel
     const id = event.detail?.frequency;
     if (!id || !PICKER_TEXT[id] || !known.some(interval => interval.id === id)) return;
     currentId = id;
-    const onChip = chips.contains(buttons.find(node => node.dataset.labFrequency === id));
+    const onChip = !phone?.matches && chips.contains(buttons.find(node => node.dataset.labFrequency === id));
     current.textContent = intervalShortLabel(id);
     current.hidden = onChip;
     more.classList.toggle('is-overflow', !onChip);
@@ -130,6 +131,7 @@ export function mountIntervalPicker({ host, intervals, selected = 'daily', onSel
   document.addEventListener('keydown', onKey);
   document.addEventListener('atlas:workbench-state', onState);
   media?.addEventListener?.('change', onMedia);
+  phone?.addEventListener?.('change', onMedia);
   const select = document.createElement('select');
   select.id = 'workbench-interval-select';
   select.setAttribute('aria-label', '가격 표시 간격');
@@ -150,6 +152,7 @@ export function mountIntervalPicker({ host, intervals, selected = 'daily', onSel
       document.removeEventListener('keydown', onKey);
       document.removeEventListener('atlas:workbench-state', onState);
       media?.removeEventListener?.('change', onMedia);
+      phone?.removeEventListener?.('change', onMedia);
       panel.remove();
     },
   };

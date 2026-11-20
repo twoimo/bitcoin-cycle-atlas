@@ -279,3 +279,7 @@ body[data-page="relay"]{overflow:hidden}
 @media (prefers-reduced-motion:reduce){
   .relay-room,.relay-room *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
+
+@media (max-width: 1024px){
+  .relay-edition-trigger,.relay-day-chip,.relay-date-rail .relay-edition-chip{height:44px;min-height:44px;line-height:42px}
+}

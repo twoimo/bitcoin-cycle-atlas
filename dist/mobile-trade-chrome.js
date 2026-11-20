@@ -1,5 +1,5 @@
 import { atlasSitePath } from './site-paths.js';
-import { atlasPages } from './atlas-navigation.js?v=1.36.3';
+import { atlasPages } from './atlas-navigation.js?v=1.36.4';
 
 const COMPACT = '(max-width: 1024px)';
 const CHAT_KEY = 'atlas-chart-chat-open';
@@ -71,20 +71,26 @@ export function mountTradeChrome(doc) {
     { id: 'chat', label: '채팅', icon: 'M5 6h14v9H9l-4 3v-3H5z' },
   ];
   const more = [
-    { id: 'market-home', label: '시장 분석', href: atlasSitePath('/market-lab/'), icon: iconFor('market-us') },
-    { id: 'assets', label: '자산 비교', href: pageHref('data'), icon: iconFor('data') },
     { id: 'ipo', label: '공모주', href: pageHref('ipo'), icon: iconFor('ipo') },
     { id: 'evidence', label: '리서치', href: pageHref('evidence'), icon: iconFor('evidence') },
+    { id: 'themes', label: '테마·재료', href: pageHref('themes'), icon: iconFor('themes') },
+    { id: 'housing', label: '부동산', href: pageHref('housing'), icon: iconFor('housing') },
     { id: 'scenario', label: '조건 실험', href: pageHref('scenario'), icon: iconFor('scenario') },
     { id: 'cashflow', label: '현금흐름', href: pageHref('cashflow'), icon: iconFor('cashflow') },
     { id: 'rsi', label: '삼플레·RSI', href: pageHref('rsi'), icon: iconFor('rsi') },
-    { id: 'housing', label: '부동산', href: pageHref('housing'), icon: iconFor('housing') },
-    { id: 'themes', label: '테마·재료', href: pageHref('themes'), icon: iconFor('themes') },
   ];
   const groups = [primary];
   for (let index = 0; index < more.length; index += 5) groups.push(more.slice(index, index + 5));
+  const barRow = doc.createElement('div');
+  barRow.className = 'atlas-trade-bar';
   const scroller = doc.createElement('div');
   scroller.className = 'atlas-trade-pages';
+  const moreBtn = doc.createElement('button');
+  moreBtn.type = 'button';
+  moreBtn.className = 'atlas-trade-more-btn';
+  moreBtn.setAttribute('aria-label', `다음 메뉴 (1/${groups.length})`);
+  moreBtn.dataset.pageIndex = '0';
+  moreBtn.innerHTML = icon('m9 6 6 6-6 6');
   const dots = doc.createElement('div');
   dots.className = 'atlas-trade-dots';
   dots.setAttribute('aria-hidden', 'true');
@@ -107,7 +113,8 @@ export function mountTradeChrome(doc) {
     dot.className = 'atlas-trade-dot';
     dots.append(dot);
   }
-  nav.append(scroller, dots);
+  barRow.append(scroller, moreBtn);
+  nav.append(barRow, dots);
   doc.body.append(upper, status, nav);
 
   const priceBox = doc.createElement('div');
@@ -231,7 +238,7 @@ export function mountTradeChrome(doc) {
     if (center && Object.hasOwn(TAB_LABELS, center)) return center;
     const page = doc.body.dataset.page || 'outlook';
     const path = view.location?.pathname || '';
-    if (page === 'data') return 'assets';
+    if (page === 'data') return 'data';
     if (page === 'ipo') return 'ipo';
     if (page === 'evidence') return 'evidence';
     if (page === 'market') {
@@ -240,7 +247,7 @@ export function mountTradeChrome(doc) {
       if (/\/market-lab\/rsi\/?$/.test(path)) return 'rsi';
       if (/\/market-lab\/housing\/?$/.test(path)) return 'housing';
       if (/\/market-lab\/themes\/?$/.test(path)) return 'themes';
-      if (/\/market-lab\/?$/.test(path)) return 'market-home';
+      if (/\/market-lab\/?$/.test(path)) return 'market';
       return 'market';
     }
     if (page === 'relay') return 'relay';
@@ -251,9 +258,18 @@ export function mountTradeChrome(doc) {
   let pinnedTab = '';
   function updateDots() {
     const width = scroller.clientWidth || 1;
-    const index = Math.round(scroller.scrollLeft / width);
+    const index = Math.max(0, Math.min(groups.length - 1, Math.round(scroller.scrollLeft / width)));
     [...dots.children].forEach((dot, dotIndex) => { dot.dataset.current = String(dotIndex === index); });
+    moreBtn.dataset.pageIndex = String(index);
+    moreBtn.setAttribute('aria-label', index === groups.length - 1 ? '첫 메뉴로' : `다음 메뉴 (${index + 1}/${groups.length})`);
   }
+  moreBtn.addEventListener('click', () => {
+    const width = scroller.clientWidth || 1;
+    const current = Math.round(scroller.scrollLeft / width);
+    const next = (current + 1) % groups.length;
+    scroller.scrollTo({ left: next * width, behavior: 'smooth' });
+    view.setTimeout(updateDots, 260);
+  });
   function pinActivePage(active) {
     if (!active || active === pinnedTab) return;
     const node = nav.querySelector(`[data-trade-tab="${active}"]`);

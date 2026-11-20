@@ -111,7 +111,7 @@ export async function buildSiteStyles(dist, {check = false} = {}) {
 }
 
 export function siteStylesheetEntries(html) {
-  const entries = [...html.matchAll(/<link rel="stylesheet" href="\.\/([^"?]+)(?:\?[^"\s]*)?">/g)]
+  const entries = [...html.matchAll(/<link(?:\s+(?:media="print"|data-atlas-defer-style(?:="[^"]*")?))*\s+rel="stylesheet"\s+href="\.\/([^"?]+)(?:\?[^"\s]*)?"(?:\s+(?:media="print"|data-atlas-defer-style(?:="[^"]*")?))*>/g)]
     .map(match => ({tag:match[0], file:match[1]}));
   assert.deepEqual(entries.map(entry => entry.file), SITE_STYLE_GROUPS.map(group => group.file),
     'Root stylesheet links must preserve the complete base/before-shell/shell/after-shell cascade');

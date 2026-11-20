@@ -413,7 +413,7 @@ export function initLabView() {
   const inspectPriceSelection=chartSelectionHandler(inspect);
   function analysisDate(detail=state.lastAnalysisDetail){return analysisCalendarDate(detail,{firstDate:state.dataset?.prices[0]?.[0],lastDate:state.dataset?.prices.at(-1)?.[0]});}
   function publishAnalysisState(extra={}){document.dispatchEvent(new CustomEvent('atlas:analysis-state',{detail:{mode:state.analysisMode,metric:state.atlasMetric,open:state.analysisOpen,...extra}}));}
-  const indicatorLayout=window.matchMedia('(max-width:620px)');
+  const indicatorLayout=window.matchMedia('(max-width:620px), (max-height:500px)');
   indicatorLayout.addEventListener('change',()=>{publishIndicators();syncAtlasUrl();});
   function publishIndicators(){
     state.indicators=applyIndicatorLayout(state.indicators,{mobile:indicatorLayout.matches});
@@ -637,7 +637,8 @@ export function initLabView() {
       plot.dataset.mode='price';plot.dataset.intraday=String(intraday);if(intraday)plot.style.removeProperty('--plot-legend-bottom');plot.dataset.cyclePeriodsVisible=String(!intraday&&shown('cycle-intervals')&&!state.cycleCollapsed);$('#lab-metrics').hidden=!shown('readout');
       $('#lab-chart').removeAttribute('hidden');$('#lab-tooltip').hidden=true;
       $('#atlas-price-controls').hidden=false;
-      $('[data-lab-frequency]').closest('fieldset').hidden=false;
+      const freqField = $('#workbench-frequency') || $('[data-lab-frequency]')?.closest('fieldset');
+      if (freqField) freqField.hidden = false;
       for(const id of ['lab-unit','lab-band','lab-turns','lab-milestones','lab-cycle-intervals','lab-fib','atlas-drawdown','atlas-states'])$(`#${id}`).closest('label').hidden=intraday&&id!=='lab-unit';
       $('#lab-json').hidden=false;
       $('#atlas-cryptocon-view').value=state.cryptoView;
