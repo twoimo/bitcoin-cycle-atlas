@@ -1,223 +1,15 @@
 {
   "schema": 1,
   "source": "RelayDeck",
-  "generated_at": "2026-11-21T11:10:22+09:00",
+  "generated_at": "2026-11-21T12:07:04+09:00",
   "rooms": [
     {
       "id": "telegram",
       "kind": "chat",
       "title": "소수의견(26년 4분기)",
       "subtitle": "Telegram",
-      "updated_at": "2026-11-21T10:36:19+09:00",
+      "updated_at": "2026-11-21T11:31:35+09:00",
       "messages": [
-        {
-          "id": "2291",
-          "at": "2026-11-06T11:57:28+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2291.webp",
-              "width": 441,
-              "height": 281,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2292",
-          "at": "2026-11-06T11:57:57+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "<⚠️앤트로픽 시총하향 또는 IPO 지연 가능성>\n아직 로이터발 루머 단계지만\n만약 이게 현실화된다면\n더 악재로 해석될 수도 있습니다\n(자금조달 악화=투심악화)"
-        },
-        {
-          "id": "2293",
-          "at": "2026-11-06T12:58:38+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2293.webp",
-              "width": 642,
-              "height": 598,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2294",
-          "at": "2026-11-06T12:58:49+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "⚠️AI인프라 신용리스크 고점 경신 중"
-        },
-        {
-          "id": "2295",
-          "at": "2026-11-06T13:00:11+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "🐒데이터센터 규제 or 건설 연기\n무엇이 되었든\n많은 빚을 지고 있는 AI인프라주들은\n비용이 늘어날 수밖에 없게 됩니다\n\n코어위브도 신용리스크 신고가\n스페이스X, 브로드컴, 오라클 등도\n신용리스크 위험도가 치솟고 있습니다"
-        },
-        {
-          "id": "2296",
-          "at": "2026-11-06T16:06:15+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2296.webp",
-              "width": 439,
-              "height": 507,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2297",
-          "at": "2026-11-06T16:06:20+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2297.webp",
-              "width": 465,
-              "height": 496,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2298",
-          "at": "2026-11-06T16:08:30+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "<😨오늘은 역사적인 날😔>\n\n정말 엄청난 하루였습니다(N)\n나스닥100 -6.4%\n반도체 -12.3% 이면\n\n코로나 최저점인 2020.3월 중순\n이후 최대 낙폭입니다\n\n전염병이 전세계를\n멈출 것이다 공포 이후\n\n최악의 공포라고 보시면 되겠습니다"
-        },
-        {
-          "id": "2299",
-          "at": "2026-11-06T16:12:54+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "withheld": true,
-          "withheld_reasons": [
-            "unsupported_reference_namespace"
-          ]
-        },
-        {
-          "id": "2300",
-          "at": "2026-11-06T16:17:28+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "2020 전염병이 전세계를 멈출 것이다\n2026 민주당이 데이터센터를 멈출 것이다(?)"
-        },
-        {
-          "id": "2301",
-          "at": "2026-11-06T16:19:04+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2301.webp",
-              "width": 472,
-              "height": 196,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2302",
-          "at": "2026-11-06T16:19:21+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "🎙머스크 또 경고\n\"소프트뱅크가 돈이 없어서\n터빈(AI 발전기) 대금을 지급 못하고 있다\""
-        },
-        {
-          "id": "2303",
-          "at": "2026-11-06T16:19:53+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "소프트뱅크=오픈AI=스타게이트\n=블룸에너지=오라클 \n\n한몸이라고 보시면 됩니다 \n\n머스크가 오픈AI를 엄청 싫어해서\n집중 공격 중입니다"
-        },
-        {
-          "id": "2304",
-          "at": "2026-11-06T16:20:39+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "가스터빈 주력회사는\nGE버노바 같은 회사인데\n결국 전력회사들이\n돈을 (제때, 제대로) 못받을수 있다는 우려도\n계속 확산되는 중입니다"
-        },
-        {
-          "id": "2305",
-          "at": "2026-11-06T16:37:56+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2305.webp",
-              "width": 695,
-              "height": 653,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2306",
-          "at": "2026-11-06T16:38:21+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "<🐒주요 지수 흐름 참고용>"
-        },
-        {
-          "id": "2307",
-          "at": "2026-11-06T17:35:34+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2307.webp",
-              "width": 571,
-              "height": 733,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2308",
-          "at": "2026-11-06T17:36:15+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "<🐒주요 AI인프라주 흐름 참고용>\n*기술적으로 반등하더라도\n상승추세 전환으로 매우 오랜시간\n소요될 것으로 판단\n- 추가매수에 유의 필요"
-        },
-        {
-          "id": "2309",
-          "at": "2026-11-06T19:32:04+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2309.webp",
-              "width": 1280,
-              "height": 714,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2310",
-          "at": "2026-11-06T19:33:14+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "🔔프리) 오늘은 AI인프라주 위주 반등 시도\n->낙폭과대 저가 매수 유입,\n\n워낙 급하게 하락해서\n반등 가능하나\n\n다음주 로드맵 예정인 앤트로픽의\nIPO 흥행 여부가\n다시 한번 관건이 되겠습니다\n(자금조달 우려 해소 필요)"
-        },
-        {
-          "id": "2311",
-          "at": "2026-11-06T19:34:06+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "",
-          "images": [
-            {
-              "src": "data/relay/assets/telegram-2311.webp",
-              "width": 469,
-              "height": 480,
-              "alt": "텔레그램 사진"
-            }
-          ]
-        },
-        {
-          "id": "2312",
-          "at": "2026-11-06T19:35:03+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "↗️프리) 주요 상승 ETF 현황\n\nAI인프라 관련 ETF 위주 강세입니다"
-        },
         {
           "id": "2313",
           "at": "2026-11-06T22:21:12+09:00",
@@ -8836,6 +8628,133 @@
           "author": "소수의견(26년 4분기)",
           "text": "",
           "reply_to": "3095"
+        },
+        {
+          "id": "3097",
+          "at": "2026-11-21T11:31:35+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<🗞소몽선정 데일리 뉴스,11/21>\n<시황/테크>\n트럼프, 해외 데이터센터 금지 추진\nSEC, 엔비디아 회계조사\n브로드컴, 구글 주문 우려에 12%↓\n엔비디아, 메가스피드 관련사 칩 신청\n스페이스X 채권단 \"AI칩 지상에\"\n앤트로픽, IPO 흥행에도 8%↓\n애플, 범용 AI 에이전트 개발\n엔비디아 7주간 46% 폭락\n\n<빅마우스>\n트럼프, 젠슨 황 복귀 촉구\n머스크 \"난 중국 열혈팬\"…증산 선언\n美재무, 월러 \"종잡을 수 없다\"\n리사 쿡 \"인내할 사치 없어\"\n필리 연은 \"연속 인상도 검토\"\n\n<지정학/매크로>\n호르무즈 케슘섬 미사일 피격\n美 10년물 6bp↓…국채 강세\n美의회, 中 자동차 영구 차단\n비트코인 6만달러선 붕괴\n금값 4%↓…3500달러선 위태\n\n<기타>\n필수소비재株, 25년來 최대 격차\n줄줄이 장애…美 사이버국장 해임\n\"클로드, 리만가설 증명\" 주장\n지스케일러, 크라우드스트라이크 인수 협상\n\n\n출처 : 소수의견 🐒\n(기사 누르면 링크 연결됩니다)",
+          "links": [
+            {
+              "offset": 30,
+              "length": 19,
+              "url": "https://www.edaily.co.kr/News/Read?newsId=01807286645648016&mediaCodeNo=257"
+            },
+            {
+              "offset": 50,
+              "length": 14,
+              "url": "https://www.yna.co.kr/view/AKR20261121008700072"
+            },
+            {
+              "offset": 65,
+              "length": 20,
+              "url": "https://www.edaily.co.kr/News/Read?newsId=01236566645648016"
+            },
+            {
+              "offset": 86,
+              "length": 20,
+              "url": "https://www.yna.co.kr/view/AKR20261121007800091"
+            },
+            {
+              "offset": 107,
+              "length": 19,
+              "url": "https://biz.chosun.com/science-chosun/science/2026/11/20/MBAO6FR3XRCQ3M5LOU3AUCIARI/"
+            },
+            {
+              "offset": 127,
+              "length": 18,
+              "url": "https://www.edaily.co.kr/News/Read?newsId=01640006645648016"
+            },
+            {
+              "offset": 146,
+              "length": 17,
+              "url": "https://www.aitimes.com/news/articleView.html?idxno=217602"
+            },
+            {
+              "offset": 164,
+              "length": 15,
+              "url": "https://n.news.naver.com/mnews/article/014/0005607598"
+            },
+            {
+              "offset": 188,
+              "length": 15,
+              "url": "https://n.news.naver.com/mnews/article/009/0005766933"
+            },
+            {
+              "offset": 204,
+              "length": 20,
+              "url": "https://www.sedaily.com/article/20117117"
+            },
+            {
+              "offset": 225,
+              "length": 18,
+              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4445826"
+            },
+            {
+              "offset": 244,
+              "length": 16,
+              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4445833"
+            },
+            {
+              "offset": 261,
+              "length": 17,
+              "url": "https://n.news.naver.com/mnews/article/018/0006413382"
+            },
+            {
+              "offset": 290,
+              "length": 15,
+              "url": "https://www.news1.kr/world/middleeast-africa/6361469"
+            },
+            {
+              "offset": 306,
+              "length": 17,
+              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4445824"
+            },
+            {
+              "offset": 324,
+              "length": 16,
+              "url": "https://www.mk.co.kr/news/economy/12214839"
+            },
+            {
+              "offset": 341,
+              "length": 13,
+              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4445827"
+            },
+            {
+              "offset": 355,
+              "length": 17,
+              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4445829"
+            },
+            {
+              "offset": 379,
+              "length": 18,
+              "url": "https://www.edaily.co.kr/News/Read?newsId=01289046645648016"
+            },
+            {
+              "offset": 398,
+              "length": 17,
+              "url": "https://www.joongang.co.kr/article/25480574"
+            },
+            {
+              "offset": 416,
+              "length": 17,
+              "url": "https://www.yna.co.kr/view/AKR20261121011500009"
+            },
+            {
+              "offset": 434,
+              "length": 22,
+              "url": "https://www.edaily.co.kr/News/Read?newsId=01469446645648016"
+            }
+          ],
+          "previews": [
+            {
+              "url": "https://edaily.co.kr/News/Read?mediaCodeNo=257&newsId=01807286645648016",
+              "title": "트럼프 \"美기업, 해외에 데이터센터 지으면 고액 세금\"",
+              "description": "도널드 트럼프 미국 대통령이 해외에 인공지능(AI) 데이터센터를 건설하는 자국 기업에 막대한 세금을 부과하겠다고 경고했다. 미국 기업들의 글로벌 데이터센터 투자가 확대되는 가운데 AI 인프라를 자국에 집중시키겠다는 구상이다.  트럼프 대통령은 이날 백악관 기자회견에서...",
+              "site_name": "이데일리",
+              "display_url": "edaily.co.kr/News/Read?newsId=01807286645648016&mediaCodeNo=257"
+            }
+          ]
         }
       ]
     },
