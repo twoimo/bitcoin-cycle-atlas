@@ -1,6 +1,6 @@
 import { initTheme } from './ui/theme.js';
 import { enhanceBootSkeleton } from './loading-surfaces.js?v=1.0.4';
-import { initAtlasShell } from './atlas-shell.js?v=1.36.31';
+import { initAtlasShell } from './atlas-shell.js?v=1.36.32';
 import { canonicalNativeChartEntry, canonicalRetiredPageEntry, canonicalWorkspaceChartEntry, canonicalDefaultChartEntry } from './atlas-navigation.js?v=1.36.4';
 import { mountJournalEntry } from './journal-entry.js?v=1.29.3';
 import { initPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';

@@ -31,6 +31,10 @@ function priceSurface(doc, chart) {
 }
 function placeChat(doc, panel, open) {
   panel.hidden = !open;
+  if (doc.body) {
+    if (open) doc.body.dataset.chatOpen = 'true';
+    else delete doc.body.dataset.chatOpen;
+  }
   const host = panel.closest('.workspace');
   if (!host) return;
   if (open) host.dataset.detailsOpen = 'true';

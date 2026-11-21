@@ -32,7 +32,7 @@ import { mountShellSlots } from './ui/shell-slots.js?v=1.0.5';
 import { mountPageDescription } from './ui/page-description.js';
 import { createContentShell, CONTENT_SHELL_PAGES } from './content-shell.js?v=1.38.2';
 import { mountAuthAccount } from './auth-account.js?v=1.1.10';
-import { syncChartChat } from './chart-chat.js?v=1.0.2';
+import { syncChartChat } from './chart-chat.js?v=1.0.3';
 import { mountTradeChrome } from './mobile-trade-chrome.js?v=1.0.18';
 import { mountLiveQuote } from './live-quote.js?v=1.0.2';
 

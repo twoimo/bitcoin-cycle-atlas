@@ -4301,7 +4301,7 @@ body[data-shell=dashboard] .atlas-dashboard-header .atlas-page-description { dis
 body[data-shell=dashboard] .atlas-dashboard-nav .atlas-nav :is(a, button) { padding-inline: 12px; }
 }
 
-/* Source: chart-chrome.css; SHA-256: 6d88c4a2c248df93dbdf25f2427e261099ad808710d665d0608b4eef787f15c2 */
+/* Source: chart-chrome.css; SHA-256: 363003bf7774268fbee61b9c499b3f38ba406c212b86d60742c8907d3578fe62 */
 :root[data-chart-colors=international] :is(.atlas-plot, .chart-legend-dialog) {
 --chart-candle-up: var(--positive-ink);
 --chart-candle-down: var(--negative-ink);
@@ -5067,16 +5067,28 @@ padding: 0;
 body.atlas-funnest-compact[data-center-tool]:not([data-chart-controls]) .symbol-selector-trigger :is(.symbol-selector-name, .symbol-selector-label) {
 display: none;
 }
-body.atlas-funnest-compact .workspace.atlas-details-layout > .atlas-chat {
-top: var(--zt-top) !important;
+body.atlas-funnest-compact .workspace.atlas-details-layout > .atlas-chat,
+body.atlas-funnest-compact[data-shell="chart"] .workspace.atlas-details-layout > .atlas-chat:not([hidden]) {
+position: fixed !important;
+top: 0 !important;
 right: 0 !important;
-bottom: var(--zt-status) !important;
+bottom: var(--atlas-trade-tabs, 56px) !important;
 left: 0 !important;
+z-index: 71 !important;
 width: auto !important;
 height: auto !important;
-border: 0;
-border-radius: 0;
-border-left: 1px solid var(--border);
+max-height: none !important;
+margin: 0 !important;
+padding: 0 !important;
+border: 0 !important;
+border-radius: 0 !important;
+background: var(--surface) !important;
+box-shadow: none !important;
+}
+body.atlas-funnest-compact .workspace.atlas-details-layout > .atlas-chat .atlas-chat-head {
+height: 48px;
+min-height: 48px;
+padding: 0 8px 0 16px;
 }
 body.atlas-funnest-compact .workspace.atlas-details-layout,
 body.atlas-funnest-compact .workspace.atlas-details-layout[data-details-open="true"] {
@@ -6442,4 +6454,39 @@ overflow: hidden;
 }
 body.atlas-funnest-compact #data-view .asset-table-scroll {
 padding-bottom: calc(var(--atlas-trade-tabs, 56px) + 20px);
+}
+body.atlas-funnest-compact[data-chat-open="true"] .atlas-canvas-heading:not([hidden]),
+body.atlas-funnest-compact[data-shell="chart"][data-chat-open="true"] .atlas-canvas-heading,
+body.atlas-funnest-compact:has(.atlas-chat:not([hidden])) .atlas-canvas-heading:not([hidden]),
+body.atlas-funnest-compact[data-shell="chart"]:has(.atlas-chat:not([hidden])) .atlas-canvas-heading,
+body.atlas-funnest-compact[data-chat-open="true"] .atlas-sidebar,
+body.atlas-funnest-compact:has(.atlas-chat:not([hidden])) .atlas-sidebar {
+display: none !important;
+}
+body.atlas-funnest-compact[data-shell="chart"][data-center-tool="relay"] {
+--zt-bar: 0px;
+--zt-top: 0px;
+}
+body.atlas-funnest-compact[data-shell="chart"][data-center-tool="relay"] .atlas-canvas-heading:not([hidden]),
+body.atlas-funnest-compact[data-shell="chart"][data-center-tool="relay"] .atlas-canvas-heading,
+body.atlas-funnest-compact[data-shell="chart"][data-center-tool="relay"] .atlas-sidebar {
+display: none !important;
+}
+body.atlas-funnest-compact[data-shell="chart"][data-center-tool="relay"] .workspace {
+top: 0 !important;
+}
+body[data-embedded="true"][data-page="relay"] .workspace,
+body[data-embedded="true"][data-page="relay"] #root > .workspace {
+margin: 0 !important;
+padding: 0 !important;
+height: 100dvh !important;
+background: var(--bg) !important;
+}
+body[data-embedded="true"][data-page="relay"] #main {
+max-width: none !important;
+}
+body[data-embedded="true"][data-page="relay"] #main > #relay-view {
+border: 0 !important;
+box-shadow: none !important;
+background: var(--bg) !important;
 }
